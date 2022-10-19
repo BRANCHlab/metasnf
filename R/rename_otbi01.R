@@ -23,6 +23,10 @@
 #'
 #' otbi01_renamed <- rename_otbi01(abcd_otbi01)
 rename_otbi01 <- function(otbi01) {
+    if (!is.data.frame(otbi01)) {
+        rlang::abort("Object is not a dataframe.",
+            class = "non_df")
+    }
     renamed_otbi01 <- otbi01 |>
         dplyr::rename_with(
             ~ dplyr::case_when(
@@ -67,7 +71,8 @@ rename_otbi01 <- function(otbi01) {
                 TRUE ~ .)
             )
     if (identical(renamed_otbi01, otbi01)) {
-        warning("No changes were made to the object.")
+        rlang::warn("No changes were made to the object.",
+            class = "no_effect")
     }
     return(renamed_otbi01)
 }

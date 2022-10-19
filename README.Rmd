@@ -1,5 +1,17 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # branchabcd
 
@@ -10,8 +22,7 @@ A collection of useful functions for working with the ABCD dataset.
 
 ## Installation
 
-You can install the development version of branchabcd from
-[GitHub](https://github.com/) with:
+You can install the development version of branchabcd from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -32,7 +43,7 @@ remotes::install_github("psvelayudhan/branchabcd", auth_token = "your_pat_here")
 
 This is a basic example which shows you how to solve a common problem:
 
-``` r
+```{r example}
 library(branchabcd)
 ## basic example code - TO-DO
 ```

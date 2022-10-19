@@ -26,5 +26,13 @@ test_that("rename_otbi01() warns if nothing was changed", {
         "tbi_7l", "tbi_8g", "tbi_8i", "tbi_8k", "tbi_8l")
     colnames(abcd_otbi01) <- original_colnames
     otbi01_renamed <- rename_otbi01(abcd_otbi01)
-    expect_equal(5, 5)
+    expect_warning(rename_otbi01(otbi01_renamed), class = "no_effect")
+})
+
+test_that("rename_otbi01() errors if argument is not a data.frame", {
+    expect_error(rename_otbi01(NA), class = "non_df")
+})
+
+test_that("original_otbi_names() prints expected table of old otbi01 colnames", {
+    expect_snapshot(original_otbi_names())
 })
