@@ -11,7 +11,6 @@
 #' @examples
 #' # Mock abcd_otbi01.txt
 #' abcd_otbi01 <- data.frame(matrix(NA, nrow = 2, ncol = 49))
-#'
 #' colnames(abcd_otbi01) <- c("collection_id", "abcd_otbi01_id", "dataset_id", 
 #'     "subjectkey", "src_subject_id", "interview_date", "interview_age", "sex", 
 #'     "eventname", "tbi_select_language___1", "tbi_1", "tbi_1b", "tbi_1c",
@@ -65,6 +64,10 @@ rename_otbi01 <- function(otbi01) {
             "other_other_multi_effect_start_age" = "tbi_8k", # start age of effects?
             "other_other_multi_effect_end_age" = "tbi_8l" # end age of effects?
         )
+    if (identical(renamed_otbi01, otbi01)) {
+        warning("No changes were made to the object.")
+    }
+    return(renamed_otbi01)
 }
 
 

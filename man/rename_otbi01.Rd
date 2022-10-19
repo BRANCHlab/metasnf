@@ -19,7 +19,6 @@ Use 'original_otbi_names()' to print out a conversion table of old and new colum
 \examples{
 # Mock abcd_otbi01.txt
 abcd_otbi01 <- data.frame(matrix(NA, nrow = 2, ncol = 49))
-
 colnames(abcd_otbi01) <- c("collection_id", "abcd_otbi01_id", "dataset_id", 
     "subjectkey", "src_subject_id", "interview_date", "interview_age", "sex", 
     "eventname", "tbi_select_language___1", "tbi_1", "tbi_1b", "tbi_1c",
