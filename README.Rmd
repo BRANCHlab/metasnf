@@ -39,6 +39,15 @@ remotes::install_github("psvelayudhan/branchabcd", auth_token = "your_pat_here")
 # devtools::install_github("psvelayudhan/branchabcd")
 ```
 
+## Contribution
+
+This package was developed following the instruction in the R Packages book: https://r-pkgs.org/
+
+If you would like to contribute to this package, you can either:
+
+1. Create a new branch with your changes and submit a pull request (preferred)
+2. Clone the package and send over a copy of your changes
+
 ## Example
 
 This is a basic example which shows you how to solve a common problem:
