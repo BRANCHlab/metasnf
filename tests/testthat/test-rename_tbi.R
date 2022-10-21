@@ -1,4 +1,4 @@
-test_that("rename_otbi01() does not leave behind ambiguous colnames", {
+test_that("rename_tbi() does not leave behind ambiguous colnames", {
     # Mock abcd_otbi01.txt
     abcd_otbi01 <- data.frame(matrix(NA, nrow = 2, ncol = 38))
     original_colnames <- c(
@@ -9,12 +9,12 @@ test_that("rename_otbi01() does not leave behind ambiguous colnames", {
         "tbl_7c2", "tbi_7e", "tbi_7f", "tbi_7g", "tbi_7i", "tbi_7k",
         "tbi_7l", "tbi_8g", "tbi_8i", "tbi_8k", "tbi_8l")
     colnames(abcd_otbi01) <- original_colnames
-    otbi01_renamed <- rename_otbi01(abcd_otbi01)
+    otbi01_renamed <- rename_tbi(abcd_otbi01)
     num_unnamed_cols <- sum(original_colnames %in% colnames(otbi01_renamed))
     expect_equal(num_unnamed_cols, 0)
 })
 
-test_that("rename_otbi01() warns if nothing was changed", {
+test_that("rename_tbi() warns if nothing was changed", {
     # Mock abcd_otbi01.txt
     abcd_otbi01 <- data.frame(matrix(NA, nrow = 2, ncol = 38))
     original_colnames <- c(
@@ -25,12 +25,12 @@ test_that("rename_otbi01() warns if nothing was changed", {
         "tbl_7c2", "tbi_7e", "tbi_7f", "tbi_7g", "tbi_7i", "tbi_7k",
         "tbi_7l", "tbi_8g", "tbi_8i", "tbi_8k", "tbi_8l")
     colnames(abcd_otbi01) <- original_colnames
-    otbi01_renamed <- rename_otbi01(abcd_otbi01)
-    expect_warning(rename_otbi01(otbi01_renamed), class = "no_effect")
+    otbi01_renamed <- rename_tbi(abcd_otbi01)
+    expect_warning(rename_tbi(otbi01_renamed), class = "no_effect")
 })
 
-test_that("rename_otbi01() errors if argument is not a data.frame", {
-    expect_error(rename_otbi01(NA), class = "non_df")
+test_that("rename_tbi() errors if argument is not a data.frame", {
+    expect_error(rename_tbi(NA), class = "non_df")
 })
 
 test_that("original_otbi_names() prints expected table of old otbi01 colnames", {

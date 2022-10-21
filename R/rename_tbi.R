@@ -3,9 +3,9 @@
 #' Renames column names of ABCD's Ohio TBI Screen data to meaningful names that are easier to work with.
 #' Use 'original_otbi_names()' to print out a conversion table of old and new column names.
 #'
-#' @param otbi01 The complete file abcd_otbi01.txt
+#' @param tbi_df The complete file abcd_otbi01.txt
 #'
-#' @return renamed_otbi01 A modified form of otbi01 with clearer column names
+#' @return renamed_tbi A modified form of tbi_df with clearer column names
 #' @export
 #'
 #' @examples
@@ -21,13 +21,13 @@
 #'     "tbi_7i", "tbi_7k", "tbi_7l", "tbi_8g", "tbi_8i", "tbi_8k", "tbi_8l",
 #'     "collection_title")
 #'
-#' otbi01_renamed <- rename_otbi01(abcd_otbi01)
-rename_otbi01 <- function(otbi01) {
-    if (!is.data.frame(otbi01)) {
+#' otbi01_renamed <- rename_tbi(abcd_otbi01)
+rename_tbi <- function(tbi_df) {
+    if (!is.data.frame(tbi_df)) {
         rlang::abort("Object is not a dataframe.",
             class = "non_df")
     }
-    renamed_otbi01 <- otbi01 |>
+    renamed_tbi <- tbi_df |>
         dplyr::rename_with(
             ~ dplyr::case_when(
                 . == "tbi_1" ~ "hosp_er_inj",
@@ -70,11 +70,11 @@ rename_otbi01 <- function(otbi01) {
                 . == "tbi_8l" ~ "other_other_multi_effect_end_age",
                 TRUE ~ .)
             )
-    if (identical(renamed_otbi01, otbi01)) {
+    if (identical(renamed_tbi, tbi_df)) {
         rlang::warn("No changes were made to the object.",
             class = "no_effect")
     }
-    return(renamed_otbi01)
+    return(renamed_tbi)
 }
 
 
