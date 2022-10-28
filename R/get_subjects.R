@@ -9,7 +9,8 @@
 #'
 get_mtbi_subjects <- function(tbi_df, min_latest_mtbi_mpi) {
     subjects <- tbi_df |>
-        dplyr::filter("mtbi" == 1 & "latest_mtbi_mpi" >= min_latest_mtbi_mpi) |>
+        dplyr::filter(tbi_df$"mtbi" == 1 &
+                      tbi_df$"latest_mtbi_mpi" >= min_latest_mtbi_mpi) |>
         dplyr::select("subjectkey")
     return(subjects)
 }
