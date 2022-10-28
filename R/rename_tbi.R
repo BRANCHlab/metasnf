@@ -42,10 +42,10 @@ rename_tbi <- function(tbi_df) {
                 . == "tbi_3b" ~ "fall_hit_loc",
                 . == "tbi_3c" ~ "fall_hit_mem_daze",
                 . == "tbi_3d" ~ "fall_hit_age",
-                . == "tbi_4" ~ "violent_hit_inj",
-                . == "tbi_4b" ~ "violent_hit_loc",
-                . == "tbi_4c" ~ "violent_hit_mem_daze",
-                . == "tbi_4d" ~ "violent_hit_age",
+                . == "tbi_4" ~ "violent_inj",
+                . == "tbi_4b" ~ "violent_loc",
+                . == "tbi_4c" ~ "violent_mem_daze",
+                . == "tbi_4d" ~ "violent_age",
                 . == "tbi_5" ~ "blast_inj",
                 . == "tbi_5b" ~ "blast_loc",
                 . == "tbi_5c" ~ "blast_mem_daze",
@@ -96,10 +96,10 @@ original_otbi_names <- function() {
     print("| fall_hit_loc                       | tbi_3b   | if LOC, how long?                            |")
     print("| fall_hit_mem_daze                  | tbi_3c   | were they dazed or have memory gap?          |")
     print("| fall_hit_age                       | tbi_3d   | how old were they?                           |")
-    print("| violent_hit_inj                    | tbi_4    | ever injure head/neck from violence?         |")
-    print("| violent_hit_loc                    | tbi_4b   | if LOC, how long?                            |")
-    print("| violent_hit_mem_daze               | tbi_4c   | were they dazed or have memory gap?          |")
-    print("| violent_hit_age                    | tbi_4d   | how old were they?                           |")
+    print("| violent_inj                    | tbi_4    | ever injure head/neck from violence?         |")
+    print("| violent_loc                    | tbi_4b   | if LOC, how long?                            |")
+    print("| violent_mem_daze               | tbi_4c   | were they dazed or have memory gap?          |")
+    print("| violent_age                    | tbi_4d   | how old were they?                           |")
     print("| blast_inj                          | tbi_5    | ever injure head or neck from blast?         |")
     print("| blast_loc                          | tbi_5b   | if LOC, how long?                            |")
     print("| blast_mem_daze                     | tbi_5c   | were they dazed or have memory gap?          |")

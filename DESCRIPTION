@@ -11,6 +11,8 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Imports:
     dplyr,
+    ggplot2,
+    here,
     rlang
 Suggests: 
     testthat (>= 3.0.0)
