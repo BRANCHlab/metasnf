@@ -18,6 +18,16 @@ branch_hist <- function(df, xval, xlabel, size = 20) {
         ggplot2::theme_light(base_size = size)
 }
 
+#' Wrapper for ggsave
+#'
+#' Saves figures to one internal and one external location.
+#' The internal path is set as "figures/abcd/"
+#'
+#' @param path the external path location ending in trailing slash
+#' @param plotname the name of the gg figure to be saved ending in .png
+#'
+#' @export
+#'
 branch_ggsave <- function(path, plotname) {
     carbon_path <- paste0(path, plotname)
     repo_path <- paste0("figures/abcd/", plotname)
@@ -30,7 +40,6 @@ branch_ggsave <- function(path, plotname) {
         ggplot2::ggsave(here::here(carbon_path),
             width = 10,
             height = 10)
-
         # For this repo
         ggplot2::ggsave(here::here(repo_path),
             width = 10,
