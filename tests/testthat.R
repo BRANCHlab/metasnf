@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(branchabcd)
+library(scabcd)
 
-test_check("branchabcd")
+test_check("scabcd")
