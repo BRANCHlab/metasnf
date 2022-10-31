@@ -9,7 +9,7 @@
 #'
 #' @export
 #'
-branch_hist <- function(df, xval, xlabel, size = 20) {
+scabcd_hist <- function(df, xval, xlabel, size = 20) {
     ggplot2::ggplot(df, ggplot2::aes_string(x = xval)) +
         ggplot2::geom_histogram(color = "darkblue", fill = "lightblue") +
         ggplot2::ggtitle("Histogram of times since latest mTBI") +
@@ -28,7 +28,7 @@ branch_hist <- function(df, xval, xlabel, size = 20) {
 #'
 #' @export
 #'
-branch_ggsave <- function(path, plotname) {
+scabcd_ggsave <- function(path, plotname) {
     carbon_path <- paste0(path, plotname)
     repo_path <- paste0("figures/abcd/", plotname)
     print("Warning: This will overwrite files located at:")
