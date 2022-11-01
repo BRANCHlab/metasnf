@@ -4,15 +4,16 @@
 #' @param xval x-value for histogram passed as a string
 #' @param xlabel x-axis label
 #' @param size x-axis label
+#' @param title plot title
 #'
 #' @return renamed_tbi A modified form of tbi_df with clearer column names
 #'
 #' @export
 #'
-scabcd_hist <- function(df, xval, xlabel, size = 20) {
+scabcd_hist <- function(df, xval, xlabel = "", title = "", size = 20) {
     ggplot2::ggplot(df, ggplot2::aes_string(x = xval)) +
         ggplot2::geom_histogram(color = "darkblue", fill = "lightblue") +
-        ggplot2::ggtitle("Histogram of times since latest mTBI") +
+        ggplot2::ggtitle(title) +
         ggplot2::xlab(xlabel) +
         ggplot2::ylab("Count") +
         ggplot2::theme_light(base_size = size)

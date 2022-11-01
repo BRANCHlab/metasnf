@@ -4,7 +4,7 @@
 \alias{scabcd_hist}
 \title{Wrapper for geom_hist}
 \usage{
-scabcd_hist(df, xval, xlabel, size = 20)
+scabcd_hist(df, xval, xlabel = "", title = "", size = 20)
 }
 \arguments{
 \item{df}{A dataframe}
@@ -12,6 +12,8 @@ scabcd_hist(df, xval, xlabel, size = 20)
 \item{xval}{x-value for histogram passed as a string}
 
 \item{xlabel}{x-axis label}
+
+\item{title}{plot title}
 
 \item{size}{x-axis label}
 }

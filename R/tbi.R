@@ -147,7 +147,7 @@ identify_mtbi_times <- function(tbi_df) {
             tbi_df$"blast_mtbi" == 1 ~
                 tbi_df$"interview_age" - tbi_df$"blast_age"),
         other_loc_mtbi_mpi = dplyr::case_when(
-            tbi_df$"other_loc_mtbi" == 1 ~
+            tbi_df$"other_loc_mtbi" > 0 ~
                 tbi_df$"interview_age" - tbi_df$"other_loc_min_age"),
         multi_mtbi_mpi = dplyr::case_when(
             tbi_df$"multi_mtbi" == 1 ~
