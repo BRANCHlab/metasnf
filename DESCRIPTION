@@ -13,6 +13,7 @@ Imports:
     dplyr,
     ggplot2,
     here,
+    readr,
     rlang
 Suggests: 
     testthat (>= 3.0.0)

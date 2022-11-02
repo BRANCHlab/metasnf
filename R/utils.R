@@ -28,12 +28,30 @@ filter_baseline <- function(abcd_df) {
 #' Subset a dataframe to a given subject list
 #'
 #' @param abcd_df An ABCD dataframe
-#' @param subject_list A dataframe containing subjects in the 'subjectkey' col
+#' @param subjects A dataframe containing subjects in the 'subjectkey' col
 #'
 #' @return filtered_df The subsetted dataframe
 #'
 #' @export
-filter_subjects <- function(abcd_df, subject_list) {
-    filtered_df <- dplyr::inner_join(abcd_df, subject_list, by = "subjectkey")
+filter_subjects <- function(abcd_df, subjects) {
+    filtered_df <- dplyr::inner_join(abcd_df, subjects, by = "subjectkey")
     return(filtered_df)
+}
+
+
+#' Import a raw ABCD dataframe for selected subjects at baseline
+#'
+#' @param abcd_df An ABCD dataframe
+#' @param subjects A dataframe containing subjects in the 'subjectkey' col
+#'
+#' @return abcd_clean_df The subsetted dataframe
+#'
+#' @export
+abcd_import <- function(abcd_df, subjects) {
+    abcd_clean_df <-
+        readr::read_delim(abcd_df) |>
+        remove_dd() |>
+        filter_baseline() |>
+        filter_subjects(subjects)
+    return(abcd_clean_df)
 }

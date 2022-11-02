@@ -59,6 +59,9 @@ get_income <- function(parent_demographics) {
             parent_demographics$"demo_comb_income_v2" < 11 ~ 3,
             TRUE ~ NA_real_,
             ))
+    income_df <- income_df |>
+        dplyr::select("subjectkey", "household_income") |>
+        dplyr::filter(!(is.na(income_df$"household_income")))
     return(income_df)
 }
 
@@ -129,6 +132,7 @@ get_race <- function(parent_demographics) {
                "white",
                "black",
                "hispanic")
+    # Assign mixed race for those in multiple categories
     race_df <- race_df |>
         dplyr::mutate(mixed = dplyr::case_when(
             race_df$"white" +
@@ -139,6 +143,7 @@ get_race <- function(parent_demographics) {
             race_df$"hispanic" > 1 ~ 1,
             TRUE ~ 0
             ))
+    # Remove original race category for those who are mixed
     race_df <- race_df |>
         dplyr::mutate(
             black = dplyr::case_when(
@@ -153,6 +158,9 @@ get_race <- function(parent_demographics) {
             hispanic = dplyr::case_when(
                 race_df$"hispanic" == 1 & race_df$"mixed" == 0 ~ 1,
                 TRUE ~ 0))
+    # Pool together mixed / other race
+    # As only a very small number of asian & hispanic subjects are non-mixed,
+    # pool them in as well.
     race_df <- race_df |>
         dplyr::mutate(
             mixed_or_other = dplyr::case_when(
@@ -166,6 +174,7 @@ get_race <- function(parent_demographics) {
                       "white",
                       "black",
                       "mixed_or_other")
+    # Undummy the dataframe
     race_df <- race_df |>
         dplyr::mutate(
             race = dplyr::case_when(
