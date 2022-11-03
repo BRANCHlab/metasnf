@@ -33,7 +33,7 @@ get_pubertal_status <- function(ssphp01, ssphy01, subjects) {
         dplyr::select(
             "subjectkey",
             "pubertal_status")
-    return(pubertal_status)
+    return(stats::na.omit(pubertal_status))
 }
 
 #' Returns combined household incomes split into low, medium, and high groups
@@ -66,19 +66,32 @@ get_income <- function(pdem02, subjects) {
     income_df <- income_df |>
         dplyr::select("subjectkey", "household_income") |>
         dplyr::filter(!(is.na(income_df$"household_income")))
-    return(income_df)
+    return(stats::na.omit(income_df))
 }
 
 #' Returns race information
 #'
 #' @param pdem02 Dataframe containing parent demographic information
 #' @param subjects Dataframe containing list of required subjects
+#' @param format String indicating format to output race data
 #'
 #' @return race_df Dataframe containing subject race
 #'
 #' @export
-get_race <- function(pdem02, subjects) {
+get_race <- function(pdem02, subjects, format) {
+    options <- c("condensed_dummied",
+                 "condensed_undummied",
+                 "expanded_dummied")
+    if (!(format %in% options)) {
+        print("The 'format argument should be one of the following options:")
+        print("[1] 'condensed_dummied'")
+        print("[2] 'condensed_undummied'")
+        print("[3] 'expanded_dummied'")
+        print("See ?get_race for more information about these options.")
+        return(NULL)
+    }
     parent_demographics <- abcd_import(pdem02, subjects)
+    # Rename columns
     race_df <- parent_demographics |>
         dplyr::rename("white" = "demo_race_a_p___10",
                "black" = "demo_race_a_p___11",
@@ -98,99 +111,107 @@ get_race <- function(pdem02, subjects) {
                "other" = "demo_race_a_p___25",
                "refuse_to_answer" = "demo_race_a_p___77",
                "dont_know" = "demo_race_a_p___99",
-               "hispanic" = "demo_ethn_v2")
+               "hispanic" = "demo_ethn_v2") |>
+    # Select relevant variables
+    dplyr::select("subjectkey",
+                  "white":"hispanic",
+                  -"demo_race_notes_v2") |>
+    # Assign numeric column types to help with later transformations
+    dplyr::mutate(
+        dplyr::across(
+            "white":"hispanic", as.numeric))
     # Fix the hispanic category
     race_df <- race_df |>
         dplyr::mutate(hispanic = dplyr::case_when(race_df$"hispanic" == 1 ~ 1,
-                                    TRUE ~ 0))
-    # Assign proper column types
-    race_df <- race_df |>
-        dplyr::mutate(
-            dplyr::across(
-                "white":"hispanic", as.numeric))
+                                    TRUE ~ 0)) |>
     # Based on known frequencies of races among subject list, pool groups
-    race_df <- race_df |> dplyr::mutate(
-        asian =
-            race_df$"asian" +
-            race_df$"filipino" +
-            race_df$"korean" +
-            race_df$"other_asian" +
-            race_df$"chinese" +
-            race_df$"japanese" +
-            race_df$"vietnamese",
-        other =
-            pmax(
-            race_df$"native_american",
-            race_df$"samoan",
-            race_df$"guamanian",
-            race_df$"other_pacific_islander",
-            race_df$"native_hawaiian",
-            race_df$"native_alaskan",
-            race_df$"other"),
-        na =
-            race_df$"dont_know" +
-            race_df$"refuse_to_answer") |>
-        dplyr::select("subjectkey",
-               "asian",
-               "other",
-               "na",
-               "white",
-               "black",
-               "hispanic")
-    # Assign mixed race for those in multiple categories
-    race_df <- race_df |>
-        dplyr::mutate(mixed = dplyr::case_when(
-            race_df$"white" +
-            race_df$"black" +
-            race_df$"asian" +
-            race_df$"other" +
-            race_df$"na" +
-            race_df$"hispanic" > 1 ~ 1,
-            TRUE ~ 0
-            ))
-    # Remove original race category for those who are mixed
-    race_df <- race_df |>
-        dplyr::mutate(
-            black = dplyr::case_when(
-                race_df$"black" == 1 & race_df$"mixed" == 0 ~ 1,
-                TRUE ~ 0),
-            white = dplyr::case_when(
-                race_df$"white" == 1 & race_df$"mixed" == 0 ~ 1,
-                TRUE ~ 0),
-            asian = dplyr::case_when(
-                race_df$"asian" == 1 & race_df$"mixed" == 0 ~ 1,
-                TRUE ~ 0),
-            hispanic = dplyr::case_when(
-                race_df$"hispanic" == 1 & race_df$"mixed" == 0 ~ 1,
-                TRUE ~ 0))
-    # Pool together mixed / other race
-    # As only a very small number of asian & hispanic subjects are non-mixed,
-    # pool them in as well.
-    race_df <- race_df |>
-        dplyr::mutate(
-            mixed_or_other = dplyr::case_when(
-                race_df$"asian" == 1 ~ 1,
-                race_df$"hispanic" == 1 ~ 1,
-                race_df$"mixed" == 1 ~ 1,
-                race_df$"other" == 1 ~ 1,
-                TRUE ~ 0)) |>
-        dplyr::filter(race_df$"na" == 0) |>
-        dplyr::select("subjectkey",
-                      "white",
-                      "black",
-                      "mixed_or_other")
-    # Undummy the dataframe
-    race_df <- race_df |>
-        dplyr::mutate(
-            race = dplyr::case_when(
-                race_df$"white" == 1 ~ "white",
-                race_df$"black" == 1 ~ "black",
-                race_df$"mixed_or_other" == 1 ~ "mixed_or_other",
-            )) |>
-        dplyr::select("subjectkey", "race")
-    race_df <- race_df |>
-        dplyr::filter(!(is.na(race_df$"race")))
-    return(race_df)
+    dplyr::mutate(asian_other_pi = pmax(
+        race_df$"asian",
+        race_df$"filipino",
+        race_df$"korean",
+        race_df$"other_asian",
+        race_df$"chinese",
+        race_df$"japanese",
+        race_df$"vietnamese",
+        race_df$"other_pacific_islander",
+        race_df$"samoan",
+        race_df$"guamanian",
+        race_df$"native_hawaiian",
+        race_df$"native_alaskan"),
+    na = pmax(
+        race_df$"dont_know",
+        race_df$"refuse_to_answer")) |>
+    dplyr::select("subjectkey",
+           "asian_other_pi",
+           "native_american",
+           "other",
+           "na",
+           "white",
+           "black",
+           "hispanic")
+    # three columns of white, black, mixed/other
+    if (format == "condensed_dummied" || format == "condensed_undummied") {
+        # Assign mixed race for those in multiple categories
+        race_df <- race_df |>
+            dplyr::mutate(mixed = dplyr::case_when(
+                full_race_df2$"white" +
+                full_race_df2$"black" +
+                full_race_df2$"asian_other_pi" +
+                full_race_df2$"native_american" +
+                full_race_df2$"other" +
+                full_race_df2$"hispanic" > 1 ~ 1,
+                TRUE ~ 0
+                ))
+        # Remove original race category for those who are mixed
+        race_df <- race_df |>
+            dplyr::mutate(
+                black = dplyr::case_when(
+                    full_race_df3$"black" == 1 &
+                        full_race_df3$"mixed" == 0 ~ 1,
+                    TRUE ~ 0),
+                white = dplyr::case_when(
+                    full_race_df3$"white" == 1 &
+                        full_race_df3$"mixed" == 0 ~ 1,
+                    TRUE ~ 0),
+                asian_other_pi = dplyr::case_when(
+                    full_race_df3$"asian_other_pi" == 1 &
+                        full_race_df3$"mixed" == 0 ~ 1,
+                    TRUE ~ 0),
+                hispanic = dplyr::case_when(
+                    full_race_df3$"hispanic" == 1 &
+                        full_race_df3$"mixed" == 0 ~ 1,
+                    TRUE ~ 0),
+                native_american = dplyr::case_when(
+                    full_race_df3$"native_american" == 1 &
+                        full_race_df3$"mixed" == 0 ~ 1,
+                    TRUE ~ 0))
+        # Pool together mixed / other race. As only a very small number of
+        # asian & hispanic subjects are non-mixed, pool them in as well.
+        race_df <- race_df |>
+            dplyr::mutate(
+                mixed_or_other = dplyr::case_when(
+                    race_df$"asian_other_pi" == 1 ~ 1,
+                    race_df$"hispanic" == 1 ~ 1,
+                    race_df$"mixed" == 1 ~ 1,
+                    race_df$"other" == 1 ~ 1,
+                    TRUE ~ 0)) |>
+            dplyr::select("subjectkey",
+                          "white",
+                          "black",
+                          "mixed_or_other")
+    }
+    if (format == "condensed_undummied") {
+        # Undummy the dataframe
+        race_df <- race_df |>
+            dplyr::mutate(
+                race = dplyr::case_when(
+                    race_df$"white" == 1 ~ "white",
+                    race_df$"black" == 1 ~ "black",
+                    race_df$"mixed_or_other" == 1 ~ "mixed_or_other",
+                )) |>
+            dplyr::select("subjectkey", "race")
+    }
+    return(stats::na.omit(race_df))
 }
 
 #' Return dataframe containing interview age of specified subjects
@@ -204,7 +225,7 @@ get_race <- function(pdem02, subjects) {
 get_interview_age <- function(abcd_df, subjects) {
     interview_age <- abcd_import(abcd_df, subjects) |>
         dplyr::select("subjectkey", "interview_age")
-    return(interview_age)
+    return(stats::na.omit(interview_age))
 }
 
 #' Return dataframe containing sex of specified subjects
@@ -218,7 +239,7 @@ get_interview_age <- function(abcd_df, subjects) {
 get_sex <- function(abcd_df, subjects) {
     sex <- abcd_import(abcd_df, subjects) |>
         dplyr::select("subjectkey", "sex")
-    return(sex)
+    return(stats::na.omit(sex))
 }
 
 #' Get acute symptom input variable 'latest_mtbi_age'
@@ -235,5 +256,5 @@ get_mtbi_age <- function(otbi01, subjects) {
             "subjectkey",
             "latest_mtbi_age"
         )
-    return(mtbi_age)
+    return(stats::na.omit(mtbi_age))
 }
