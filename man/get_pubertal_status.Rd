@@ -2,18 +2,20 @@
 % Please edit documentation in R/demographics.R
 \name{get_pubertal_status}
 \alias{get_pubertal_status}
-\title{Select columns relevant for demographic inputs}
+\title{Return dataframe containing pubertal status of specified subjects}
 \usage{
-get_pubertal_status(youth_pubertal_df, parent_pubertal_df)
+get_pubertal_status(ssphp01, ssphy01, subjects)
 }
 \arguments{
-\item{youth_pubertal_df}{x}
+\item{ssphp01}{Dataframe containing parent pubertal status report}
 
-\item{parent_pubertal_df}{x}
+\item{ssphy01}{Dataframe containing youth pubertal status report}
+
+\item{subjects}{Dataframe containing list of required subjects}
 }
 \value{
-pubertal_status x
+pubertal_status Dataframe containing average pubertal status
 }
 \description{
-Select columns relevant for demographic inputs
+Return dataframe containing pubertal status of specified subjects
 }

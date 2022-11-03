@@ -9,7 +9,7 @@ get_subc_v(smrip10201, subjects)
 \arguments{
 \item{smrip10201}{Data file containing subcortical data}
 
-\item{subjects}{Optional dataframe containing needed subjectkeys}
+\item{subjects}{Dataframe containing list of required subjects}
 }
 \value{
 subc_v_df Dataframe of subcortical volumes

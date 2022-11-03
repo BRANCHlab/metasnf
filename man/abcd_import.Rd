@@ -9,7 +9,7 @@ abcd_import(abcd_df, subjects)
 \arguments{
 \item{abcd_df}{An ABCD dataframe}
 
-\item{subjects}{A dataframe containing subjects in the 'subjectkey' col}
+\item{subjects}{Dataframe containing list of required subjects}
 }
 \value{
 abcd_clean_df The subsetted dataframe

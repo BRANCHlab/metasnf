@@ -4,13 +4,15 @@
 \alias{get_race}
 \title{Returns race information}
 \usage{
-get_race(parent_demographics)
+get_race(pdem02, subjects)
 }
 \arguments{
-\item{parent_demographics}{x}
+\item{pdem02}{Dataframe containing parent demographic information}
+
+\item{subjects}{Dataframe containing list of required subjects}
 }
 \value{
-race_df x
+race_df Dataframe containing subject race
 }
 \description{
 Returns race information

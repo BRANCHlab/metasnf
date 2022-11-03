@@ -1,18 +1,50 @@
-#' Select columns relevant for acute symptoms
+#' Get acute symptom input variable 'latest_mtbi_mechanism'
 #'
-#' @param tbi_df A TBI dataframe
+#' @param otbi01 The baseline TBI dataframe
+#' @param subjects Dataframe containing list of required subjects
 #'
-#' @return acute_symptoms Dataframe containing acute symptom information
+#' @return mtbi_mechanism Dataframe containing latest_mtbi_mechanism
 #'
 #' @export
-get_acute_symptoms <- function(tbi_df) {
-    acute_symptoms <- tbi_df |>
+get_mtbi_mechanism <- function(otbi01, subjects) {
+    mtbi_mechanism <- detail_mtbi(otbi01, subjects) |>
         dplyr::select(
             "subjectkey",
-            "latest_mtbi_mechanism",
-            "latest_mtbi_age",
-            "latest_mtbi_loc",
+            "latest_mtbi_mechanism"
+        )
+    return(mtbi_mechanism)
+}
+
+#' Get acute symptom input variable 'latest_mtbi_loc'
+#'
+#' @param otbi01 The baseline TBI dataframe
+#' @param subjects Dataframe containing list of required subjects
+#'
+#' @return mtbi_loc Dataframe containing latest_mtbi_loc
+#'
+#' @export
+get_mtbi_loc <- function(otbi01, subjects) {
+    mtbi_loc <- detail_mtbi(otbi01, subjects) |>
+        dplyr::select(
+            "subjectkey",
+            "latest_mtbi_loc"
+        )
+    return(mtbi_loc)
+}
+
+#' Get acute symptom input variable 'latest_mtbi_mem_daze'
+#'
+#' @param otbi01 The baseline TBI dataframe
+#' @param subjects Dataframe containing list of required subjects
+#'
+#' @return mtbi_mem_daze Dataframe containing latest_mtbi_mem_daze
+#'
+#' @export
+get_mtbi_mem_daze <- function(otbi01, subjects) {
+    mtbi_mem_daze <- detail_mtbi(otbi01, subjects) |>
+        dplyr::select(
+            "subjectkey",
             "latest_mtbi_mem_daze"
         )
-    return(acute_symptoms)
+    return(mtbi_mem_daze)
 }

@@ -4,13 +4,15 @@
 \alias{get_income}
 \title{Returns combined household incomes split into low, medium, and high groups}
 \usage{
-get_income(parent_demographics)
+get_income(pdem02, subjects)
 }
 \arguments{
-\item{parent_demographics}{x}
+\item{pdem02}{Dataframe containing parent demographic information}
+
+\item{subjects}{Dataframe containing list of required subjects}
 }
 \value{
-income_df x
+income_df Dataframe containing household incomes
 }
 \description{
 Low: $0 - $50k, Medium: $50k - $100k, High: > $100k

@@ -9,7 +9,7 @@ get_wmnd(drsip201, subjects)
 \arguments{
 \item{drsip201}{Data file containing neurite density data}
 
-\item{subjects}{Optional dataframe containing needed subjectkeys}
+\item{subjects}{Dataframe containing list of required subjects}
 }
 \value{
 wmnd_df Dataframe of white matter neurite densities

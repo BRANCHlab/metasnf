@@ -17,14 +17,12 @@
 #'
 identify_all_tbi <- function(tbi_df) {
     print("Note: This function converts the mTBI column types to numeric.")
-
     # Assign column types
     dfct <- tbi_df |>
         dplyr::mutate(
             dplyr::across(
                 "hosp_er_inj":"other_other_multi_effect_end_age", as.numeric))
     dfct$"interview_age" <- as.numeric(dfct$"interview_age")
-
     # Generate mtbi and moderate_or_severe_tbi columns
     df_all_tbi <- dfct |> dplyr::mutate(
         mtbi = dplyr::case_when(
@@ -128,7 +126,6 @@ identify_mtbi_times <- function(tbi_df) {
         tbi_df$"multi_effect_end_age" <-
             tbi_df$"multi_effect_end_age" * 12
     }
-
     # Time since each type of mTBI
     dft <- tbi_df |> dplyr::mutate(
         hosp_er_mtbi_mpi = dplyr::case_when(
@@ -152,7 +149,6 @@ identify_mtbi_times <- function(tbi_df) {
         multi_mtbi_mpi = dplyr::case_when(
             tbi_df$"multi_mtbi" == 1 ~
                 tbi_df$"interview_age" - tbi_df$"multi_effect_end_age"))
-
     # Time since latest mTBI
     dft2 <- dft |>
         dplyr::mutate(latest_mtbi_mpi = pmin(
@@ -165,7 +161,6 @@ identify_mtbi_times <- function(tbi_df) {
             dft$"multi_mtbi_mpi",
             na.rm = TRUE
         ))
-
     # Age at latest mTBI
     dfa <- dft2 |>
         dplyr::mutate(latest_mtbi_age = pmax(
@@ -242,7 +237,6 @@ identify_latest_mtbi_loc <- function(tbi_df) {
             tbi_df$"other_loc_max_loc_mins" > 1440 ~ 3,
             TRUE ~ NA_real_
         ))
-
     # Create column indicating loc of latest mTBI
     dfll <- dfol |>
         dplyr::mutate(latest_mtbi_loc = dplyr::case_when(
@@ -278,4 +272,26 @@ identify_latest_mtbi_mem_daze <- function(tbi_df) {
             TRUE ~ NA_real_
         ))
     return(dfmd)
+}
+
+
+#' Chain several TBI annotation functions to add multiple helpful mTBI columns
+#'
+#' @param otbi01 The baseline TBI dataframe
+#' @param subjects Dataframe containing list of required subjects
+#'
+#' @return detailed_otbi01 The modified dataframe
+#'
+#' @export
+detail_mtbi <- function(otbi01, subjects) {
+    detailed_otbi01 <- abcd_import(otbi01, subjects) |>
+        rename_tbi() |>
+        identify_all_tbi() |>
+        identify_mtbi() |>
+        identify_mtbi_times() |>
+        identify_latest_mtbi_mechanism() |>
+        identify_num_mtbi() |>
+        identify_latest_mtbi_loc() |>
+        identify_latest_mtbi_mem_daze()
+    return(detailed_otbi01)
 }

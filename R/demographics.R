@@ -1,49 +1,53 @@
-#' Select columns relevant for demographic inputs
+#' Return dataframe containing pubertal status of specified subjects
 #'
-#' @param youth_pubertal_df x
-#' @param parent_pubertal_df x
+#' @param ssphp01 Dataframe containing parent pubertal status report
+#' @param ssphy01 Dataframe containing youth pubertal status report
+#' @param subjects Dataframe containing list of required subjects
 #'
-#' @return pubertal_status x
+#' @return pubertal_status Dataframe containing average pubertal status
 #'
 #' @export
-get_pubertal_status <- function(youth_pubertal_df, parent_pubertal_df) {
+get_pubertal_status <- function(ssphp01, ssphy01, subjects) {
+    youth_pubertal_df <- abcd_import(ssphy01, subjects)
+    parent_pubertal_df <- abcd_import(ssphp01, subjects)
     # Merge parent and youth dataframes
-    pubertal_df_full <- dplyr::inner_join(youth_pubertal_df, parent_pubertal_df,
+    puberty_full <- dplyr::inner_join(youth_pubertal_df, parent_pubertal_df,
         by = c("subjectkey", "sex"))
     # Assign proper column types
-    pubertal_df_full$"pds_y_ss_female_category" <-
-        as.numeric(pubertal_df_full$"pds_y_ss_female_category")
-    pubertal_df_full$"pds_p_ss_female_category" <-
-        as.numeric(pubertal_df_full$"pds_p_ss_female_category")
-    pubertal_df_full$"pds_y_ss_male_category" <-
-        as.numeric(pubertal_df_full$"pds_y_ss_male_category")
-    pubertal_df_full$"pds_p_ss_male_category" <-
-        as.numeric(pubertal_df_full$"pds_p_ss_male_category")
+    puberty_full$"pds_y_ss_female_category" <-
+        as.numeric(puberty_full$"pds_y_ss_female_category")
+    puberty_full$"pds_p_ss_female_category" <-
+        as.numeric(puberty_full$"pds_p_ss_female_category")
+    puberty_full$"pds_y_ss_male_category" <-
+        as.numeric(puberty_full$"pds_y_ss_male_category")
+    puberty_full$"pds_p_ss_male_category" <-
+        as.numeric(puberty_full$"pds_p_ss_male_category")
     # Composite pubertal status by averaging parent and youth reports
-    pubertal_df_full$pubertal_status <- rowMeans(pubertal_df_full[,
+    puberty_full$pubertal_status <- rowMeans(puberty_full[,
         c("pds_y_ss_female_category",
           "pds_p_ss_female_category",
           "pds_y_ss_male_category",
           "pds_p_ss_male_category")], na.rm = TRUE)
     # Select relevant variables
-    pubertal_status <- pubertal_df_full |>
+    pubertal_status <- puberty_full |>
         dplyr::select(
             "subjectkey",
             "pubertal_status")
     return(pubertal_status)
 }
 
-
 #' Returns combined household incomes split into low, medium, and high groups
 #'
 #' Low: $0 - $50k, Medium: $50k - $100k, High: > $100k
 #'
-#' @param parent_demographics x
+#' @param pdem02 Dataframe containing parent demographic information
+#' @param subjects Dataframe containing list of required subjects
 #'
-#' @return income_df x
+#' @return income_df Dataframe containing household incomes
 #'
 #' @export
-get_income <- function(parent_demographics) {
+get_income <- function(pdem02, subjects) {
+    parent_demographics <- abcd_import(pdem02, subjects)
     parent_demographics$"demo_comb_income_v2" <-
         as.numeric(parent_demographics$"demo_comb_income_v2")
     income_df <- parent_demographics |>
@@ -65,15 +69,16 @@ get_income <- function(parent_demographics) {
     return(income_df)
 }
 
-
 #' Returns race information
 #'
-#' @param parent_demographics x
+#' @param pdem02 Dataframe containing parent demographic information
+#' @param subjects Dataframe containing list of required subjects
 #'
-#' @return race_df x
+#' @return race_df Dataframe containing subject race
 #'
 #' @export
-get_race <- function(parent_demographics) {
+get_race <- function(pdem02, subjects) {
+    parent_demographics <- abcd_import(pdem02, subjects)
     race_df <- parent_demographics |>
         dplyr::rename("white" = "demo_race_a_p___10",
                "black" = "demo_race_a_p___11",
@@ -188,22 +193,47 @@ get_race <- function(parent_demographics) {
     return(race_df)
 }
 
-
-#' Returns race information
+#' Return dataframe containing interview age of specified subjects
 #'
-#' @param puberty x
-#' @param age x
-#' @param sex x
-#' @param income x
-#' @param race x
+#' @param abcd_df Any ABCD dataframe containing interview age
+#' @param subjects Dataframe containing list of required subjects
 #'
-#' @return race_df x
+#' @return interview_age Dataframe containing interview age
 #'
 #' @export
-generate_demographic <- function(puberty, age, sex, income, race) {
-    merge_1 <- dplyr::inner_join(puberty, age, by = "subjectkey")
-    merge_2 <- dplyr::inner_join(sex, income, by = "subjectkey")
-    merge_3 <- dplyr::inner_join(merge_1, merge_2, by = "subjectkey")
-    demographic_df <- dplyr::inner_join(merge_3, race, by = "subjectkey")
-    return(demographic_df)
+get_interview_age <- function(abcd_df, subjects) {
+    interview_age <- abcd_import(abcd_df, subjects) |>
+        dplyr::select("subjectkey", "interview_age")
+    return(interview_age)
+}
+
+#' Return dataframe containing sex of specified subjects
+#'
+#' @param abcd_df Any ABCD dataframe containing sex
+#' @param subjects Dataframe containing list of required subjects
+#'
+#' @return sex Dataframe containing sex
+#'
+#' @export
+get_sex <- function(abcd_df, subjects) {
+    sex <- abcd_import(abcd_df, subjects) |>
+        dplyr::select("subjectkey", "sex")
+    return(sex)
+}
+
+#' Get acute symptom input variable 'latest_mtbi_age'
+#'
+#' @param otbi01 The baseline TBI dataframe
+#' @param subjects Dataframe containing list of required subjects
+#'
+#' @return mtbi_age Dataframe containing latest_mtbi_age
+#'
+#' @export
+get_mtbi_age <- function(otbi01, subjects) {
+    mtbi_age <- detail_mtbi(otbi01, subjects) |>
+        dplyr::select(
+            "subjectkey",
+            "latest_mtbi_age"
+        )
+    return(mtbi_age)
 }

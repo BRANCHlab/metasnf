@@ -1,7 +1,7 @@
 #' Extract subcortical volumes
 #'
 #' @param smrip10201 Data file containing subcortical data
-#' @param subjects Optional dataframe containing needed subjectkeys
+#' @param subjects Dataframe containing list of required subjects
 #'
 #' @return subc_v_df Dataframe of subcortical volumes
 #'
@@ -19,7 +19,7 @@ get_subc_v <- function(smrip10201, subjects) {
 #' Extract cortical thicknesses
 #'
 #' @param mrisdp10201 Data file containing cortical data
-#' @param subjects Optional dataframe containing needed subjectkeys
+#' @param subjects Dataframe containing list of required subjects
 #'
 #' @return cort_t_df Dataframe of cortical thicknesses
 #'
@@ -37,9 +37,9 @@ get_cort_t <- function(mrisdp10201, subjects) {
 #' Extract cortical surface areas
 #'
 #' @param mrisdp10201 Data file containing cortical data
-#' @param subjects Optional dataframe containing needed subjectkeys
+#' @param subjects Dataframe containing list of required subjects
 #'
-#' @return cort_t_df Dataframe of cortical surface areas
+#' @return cort_sa_df Dataframe of cortical surface areas
 #'
 #' @export
 get_cort_sa <- function(mrisdp10201, subjects) {
@@ -55,7 +55,7 @@ get_cort_sa <- function(mrisdp10201, subjects) {
 #' Extract white matter neurite densities
 #'
 #' @param drsip201 Data file containing neurite density data
-#' @param subjects Optional dataframe containing needed subjectkeys
+#' @param subjects Dataframe containing list of required subjects
 #'
 #' @return wmnd_df Dataframe of white matter neurite densities
 #'
@@ -73,7 +73,7 @@ get_wmnd <- function(drsip201, subjects) {
 #' Extract cortical network correlations
 #'
 #' @param betnet02 Data file containing neurite density data
-#' @param subjects Optional dataframe containing needed subjectkeys
+#' @param subjects Dataframe containing list of required subjects
 #'
 #' @return gord_cor Dataframe of white matter neurite densities
 #'
@@ -91,7 +91,7 @@ get_gord_cor <- function(betnet02, subjects) {
 #' Extract subcortical network correlations
 #'
 #' @param mrirscor02 Data file containing neurite density data
-#' @param subjects Optional dataframe containing needed subjectkeys
+#' @param subjects Dataframe containing list of required subjects
 #'
 #' @return subc_cor Dataframe of white matter neurite densities
 #'
@@ -109,7 +109,7 @@ get_subc_cor <- function(mrirscor02, subjects) {
 #' Extract cortical temporal variances
 #'
 #' @param mrirstv02 Data file containing neurite density data
-#' @param subjects Optional dataframe containing needed subjectkeys
+#' @param subjects Dataframe containing list of required subjects
 #'
 #' @return subc_cor Dataframe of white matter neurite densities
 #'
@@ -126,7 +126,7 @@ get_gord_var <- function(mrirstv02, subjects) {
 #' Extract cortical temporal variances
 #'
 #' @param mrirstv02 Data file containing neurite density data
-#' @param subjects Optional dataframe containing needed subjectkeys
+#' @param subjects Dataframe containing list of required subjects
 #'
 #' @return subc_cor Dataframe of white matter neurite densities
 #'

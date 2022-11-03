@@ -9,7 +9,7 @@ get_cort_t(mrisdp10201, subjects)
 \arguments{
 \item{mrisdp10201}{Data file containing cortical data}
 
-\item{subjects}{Optional dataframe containing needed subjectkeys}
+\item{subjects}{Dataframe containing list of required subjects}
 }
 \value{
 cort_t_df Dataframe of cortical thicknesses

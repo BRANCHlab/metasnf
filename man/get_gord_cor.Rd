@@ -9,7 +9,7 @@ get_gord_cor(betnet02, subjects)
 \arguments{
 \item{betnet02}{Data file containing neurite density data}
 
-\item{subjects}{Optional dataframe containing needed subjectkeys}
+\item{subjects}{Dataframe containing list of required subjects}
 }
 \value{
 gord_cor Dataframe of white matter neurite densities

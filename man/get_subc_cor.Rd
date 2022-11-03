@@ -9,7 +9,7 @@ get_subc_cor(mrirscor02, subjects)
 \arguments{
 \item{mrirscor02}{Data file containing neurite density data}
 
-\item{subjects}{Optional dataframe containing needed subjectkeys}
+\item{subjects}{Dataframe containing list of required subjects}
 }
 \value{
 subc_cor Dataframe of white matter neurite densities

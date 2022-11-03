@@ -1,18 +1,32 @@
-#' Returns race information
+#' Get number of mtbis sustained by subject
 #'
-#' @param med_df Dataframe containing medical history information
-#' @param detailed_tbi_df Dataframe containing tbi information
+#' @param otbi01 The baseline TBI dataframe
+#' @param subjects Dataframe containing list of required subjects
 #'
-#' @return med_history_df Dataframe containing important medical history vars
+#' @return mtbi_count Dataframe containing number of previous mTBIs
 #'
 #' @export
-get_med_history <- function(med_df, detailed_tbi_df) {
-    headaches <- med_df |>
+get_mtbi_count <- function(otbi01, subjects) {
+    mtbi_count <- detail_mtbi(otbi01, subjects) |>
+        dplyr::select(
+            "subjectkey",
+            "mtbi_count"
+        )
+    return(mtbi_count)
+}
+
+
+#' Get subject headache history
+#'
+#' @param mx01 Dataframe containing medical history
+#' @param subjects Dataframe containing list of required subjects
+#'
+#' @return headaches Dataframe containing headache history
+#'
+#' @export
+get_headaches <- function(mx01, subjects) {
+    headaches <- abcd_import(mx01, subjects) |>
         dplyr::rename("headache" = "medhx_2q") |>
         dplyr::select("subjectkey", "headache")
-    mtbi_count <- detailed_tbi_df |>
-        dplyr::select("subjectkey", "mtbi_count")
-    med_history_df <-
-        dplyr::inner_join(headaches, mtbi_count, by = "subjectkey")
-    return(med_history_df)
+    return(headaches)
 }
