@@ -78,7 +78,7 @@ get_income <- function(pdem02, subjects) {
 #' @return race_df Dataframe containing subject race
 #'
 #' @export
-get_race <- function(pdem02, subjects, format) {
+get_race <- function(pdem02, subjects, format = "") {
     options <- c("condensed_dummied",
                  "condensed_undummied",
                  "expanded_dummied")
