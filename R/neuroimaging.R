@@ -12,7 +12,7 @@ get_subc_v <- function(smrip10201, subjects) {
         dplyr::select(
             "subjectkey",
             "smri_vol_scs_cbwmatterlh":"smri_vol_scs_subcorticalgv")
-    return(subc_v_df)
+    return(stats::na.omit(subc_v_df))
 }
 
 
@@ -30,7 +30,7 @@ get_cort_t <- function(mrisdp10201, subjects) {
         dplyr::select(
             "subjectkey",
             "mrisdp_1":"mrisdp_151")
-    return(cort_t_df)
+    return(stats::na.omit(cort_t_df))
 }
 
 
@@ -48,7 +48,7 @@ get_cort_sa <- function(mrisdp10201, subjects) {
         dplyr::select(
             "subjectkey",
             "mrisdp_303":"mrisdp_453")
-    return(cort_sa_df)
+    return(stats::na.omit(cort_sa_df))
 }
 
 
@@ -66,7 +66,7 @@ get_wmnd <- function(drsip201, subjects) {
         dplyr::select(
             "subjectkey",
             dplyr::contains("rsirndwm"))
-    return(wmnd_df)
+    return(stats::na.omit(wmnd_df))
 }
 
 
@@ -84,7 +84,7 @@ get_gord_cor <- function(betnet02, subjects) {
         dplyr::select(
             "subjectkey",
             "rsfmri_c_ngd_ad_ngd_ad":"rsfmri_c_ngd_vs_ngd_vs")
-    return(gord_cor)
+    return(stats::na.omit(gord_cor))
 }
 
 
@@ -102,7 +102,7 @@ get_subc_cor <- function(mrirscor02, subjects) {
         dplyr::select(
             "subjectkey",
             dplyr::contains("rsfmri_cor_ngd_"))
-    return(subc_cor)
+    return(stats::na.omit(subc_cor))
 }
 
 
@@ -120,7 +120,7 @@ get_gord_var <- function(mrirstv02, subjects) {
         dplyr::select(
             "subjectkey",
             dplyr::contains("rsfmri_var_cortgordon_"))
-    return(gord_var)
+    return(stats::na.omit(gord_var))
 }
 
 #' Extract cortical temporal variances
@@ -137,5 +137,5 @@ get_subc_var <- function(mrirstv02, subjects) {
         dplyr::select(
             "subjectkey",
             dplyr::contains("rsfmri_var_scs_"))
-    return(subc_var)
+    return(stats::na.omit(subc_var))
 }

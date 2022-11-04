@@ -12,7 +12,7 @@ get_mtbi_count <- function(otbi01, subjects) {
             "subjectkey",
             "mtbi_count"
         )
-    return(mtbi_count)
+    return(stats::na.omit(mtbi_count))
 }
 
 
@@ -28,5 +28,5 @@ get_headaches <- function(mx01, subjects) {
     headaches <- abcd_import(mx01, subjects) |>
         dplyr::rename("headache" = "medhx_2q") |>
         dplyr::select("subjectkey", "headache")
-    return(headaches)
+    return(stats::na.omit(headaches))
 }
