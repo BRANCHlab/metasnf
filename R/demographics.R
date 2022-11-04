@@ -154,36 +154,36 @@ get_race <- function(pdem02, subjects, format = "") {
         # Assign mixed race for those in multiple categories
         race_df <- race_df |>
             dplyr::mutate(mixed = dplyr::case_when(
-                full_race_df2$"white" +
-                full_race_df2$"black" +
-                full_race_df2$"asian_other_pi" +
-                full_race_df2$"native_american" +
-                full_race_df2$"other" +
-                full_race_df2$"hispanic" > 1 ~ 1,
+                race_df$"white" +
+                race_df$"black" +
+                race_df$"asian_other_pi" +
+                race_df$"native_american" +
+                race_df$"other" +
+                race_df$"hispanic" > 1 ~ 1,
                 TRUE ~ 0
                 ))
         # Remove original race category for those who are mixed
         race_df <- race_df |>
             dplyr::mutate(
                 black = dplyr::case_when(
-                    full_race_df3$"black" == 1 &
-                        full_race_df3$"mixed" == 0 ~ 1,
+                    race_df$"black" == 1 &
+                        race_df$"mixed" == 0 ~ 1,
                     TRUE ~ 0),
                 white = dplyr::case_when(
-                    full_race_df3$"white" == 1 &
-                        full_race_df3$"mixed" == 0 ~ 1,
+                    race_df$"white" == 1 &
+                        race_df$"mixed" == 0 ~ 1,
                     TRUE ~ 0),
                 asian_other_pi = dplyr::case_when(
-                    full_race_df3$"asian_other_pi" == 1 &
-                        full_race_df3$"mixed" == 0 ~ 1,
+                    race_df$"asian_other_pi" == 1 &
+                        race_df$"mixed" == 0 ~ 1,
                     TRUE ~ 0),
                 hispanic = dplyr::case_when(
-                    full_race_df3$"hispanic" == 1 &
-                        full_race_df3$"mixed" == 0 ~ 1,
+                    race_df$"hispanic" == 1 &
+                        race_df$"mixed" == 0 ~ 1,
                     TRUE ~ 0),
                 native_american = dplyr::case_when(
-                    full_race_df3$"native_american" == 1 &
-                        full_race_df3$"mixed" == 0 ~ 1,
+                    race_df$"native_american" == 1 &
+                        race_df$"mixed" == 0 ~ 1,
                     TRUE ~ 0))
         # Pool together mixed / other race. As only a very small number of
         # asian & hispanic subjects are non-mixed, pool them in as well.
