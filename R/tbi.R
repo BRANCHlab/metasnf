@@ -16,7 +16,6 @@
 #' @export
 #'
 identify_all_tbi <- function(tbi_df) {
-    print("Note: This function converts the mTBI column types to numeric.")
     # Assign column types
     dfct <- tbi_df |>
         dplyr::mutate(
@@ -108,9 +107,6 @@ identify_mtbi <- function(tbi_df) {
 identify_mtbi_times <- function(tbi_df) {
     # Scale injury ages to match interview ages if necessary
     if (mean(tbi_df$"hosp_er_age", na.rm = TRUE) < 20) {
-        print(paste0("Note: Interview ages are provided in months, but ",
-            "injury ages are provided in years. Injury ages will be scaled ",
-            "up to determine time between interview and latest mTBI."))
         tbi_df$"blast_age" <-
             tbi_df$"blast_age" * 12
         tbi_df$"hosp_er_age" <-
