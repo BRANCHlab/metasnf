@@ -1,6 +1,9 @@
 #' Extract family function
 #'
-#' @param abcd_fes01
+#' @param fes02 ABCD Parent Family Environment Scale-Family Conflict Subscale
+#' Modified from PhenX
+#' @param abcd_fes01 ABCD Parent Family Environment Scale-Family Conflict
+#' Subscale Modified from PhenX
 #' @param subjects Dataframe containing list of required subjects
 #'
 #' @return family_function
@@ -16,7 +19,8 @@ get_family_function <- function(fes02, abcd_fes01, subjects) {
 
 #' Extract prosocial behaviour
 #'
-#' @param
+#' @param psb01 Parent Prosocial Behavior Survey
+#' @param abcd_psb01 Youth Prosocial Behavior Survey
 #' @param subjects Dataframe containing list of required subjects
 #'
 #' @return prosocial_behaviour
@@ -32,7 +36,7 @@ get_prosocial_behaviour <- function(psb01, abcd_psb01, subjects) {
 
 #' Extract loneliness
 #'
-#' @param
+#' @param abcd_ysr01 ABCD Other Resilience
 #' @param subjects Dataframe containing list of required subjects
 #'
 #' @return loneliness
@@ -45,7 +49,8 @@ get_loneliness <- function(abcd_ysr01, subjects) {
 
 #' Extract screen time
 #'
-#' @param
+#' @param stq01 ABCD Parent Screen Time Survey
+#' @param abcd_stq01 ABCD Youth Screen Time Survey
 #' @param subjects Dataframe containing list of required subjects
 #'
 #' @return screen_time
@@ -60,7 +65,8 @@ get_screen_time <- function(stq01, abcd_stq01, subjects) {
 
 #' Extract activities
 #'
-#' @param
+#' @param abcd_saiq02 ABCD Parent Sports and Activities Involvement
+#' Questionnaire
 #' @param subjects Dataframe containing list of required subjects
 #'
 #' @return activities
@@ -73,7 +79,8 @@ get_activities <- function(abcd_saiq02, subjects) {
 
 #' Extract exercise
 #'
-#' @param
+#' @param abcd_yrb01 ABCD Youth Youth Risk Behavior Survey Exercise Physical
+#' Activity
 #' @param subjects Dataframe containing list of required subjects
 #'
 #' @return exercise
@@ -86,7 +93,7 @@ get_exercise <- function(abcd_yrb01, subjects) {
 
 #' Extract parent psychopathology
 #'
-#' @param
+#' @param abcd_asrs01 ABCD Parent Adult Self Report Scores Aseba
 #' @param subjects Dataframe containing list of required subjects
 #'
 #' @return parent_psychopathology
