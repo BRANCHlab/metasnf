@@ -52,5 +52,7 @@ abcd_import <- function(abcd_df, subjects) {
         remove_dd() |>
         filter_baseline() |>
         filter_subjects(subjects)
+    abcd_clean_df <- abcd_clean_df |>
+        dplyr::arrange(abcd_clean_df$"subjectkey")
     return(abcd_clean_df)
 }
