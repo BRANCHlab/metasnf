@@ -11,7 +11,9 @@ get_subc_v <- function(smrip10201, subjects = NULL) {
     subc_v_df <- smri_raw |>
         dplyr::select(
             "subjectkey",
-            "smri_vol_scs_cbwmatterlh":"smri_vol_scs_subcorticalgv")
+            "smri_vol_scs_cbwmatterlh":"smri_vol_scs_vedcrh") |>
+        dplyr::select(
+            -c(dplyr::contains("lesion")))
     return(stats::na.omit(subc_v_df))
 }
 
@@ -65,7 +67,11 @@ get_wmnd <- function(drsip201, subjects = NULL) {
     wmnd_df <- nd_raw |>
         dplyr::select(
             "subjectkey",
-            dplyr::contains("rsirndwm"))
+            dplyr::contains("rsirndwm")) |>
+        dplyr::select(-c(
+            "dmri_rsirndwm_cdx_mean",
+            "dmri_rsirndwm_cdx_meanlh",
+            "dmri_rsirndwm_cdx_meanrh"))
     return(stats::na.omit(wmnd_df))
 }
 
@@ -136,6 +142,12 @@ get_subc_var <- function(mrirstv02, subjects = NULL) {
     subc_var <- subc_var_raw |>
         dplyr::select(
             "subjectkey",
-            dplyr::contains("rsfmri_var_scs_"))
+            dplyr::contains("rsfmri_var_scs_")) |>
+        dplyr::select(
+            -c("rsfmri_var_scs_wmhypin",
+               "rsfmri_var_scs_wmhypinrh",
+               "rsfmri_var_scs_wmhypinlh",
+               "rsfmri_var_scs_lesionlh",
+               "rsfmri_var_scs_lesionrh"))
     return(stats::na.omit(subc_var))
 }
