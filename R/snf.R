@@ -1,6 +1,6 @@
 # Given a dataframe of numerical variables, return a euclidean distance matrix
 ed <- function(dataframe) {
-    return(as.matrix(dist(dataframe, method = "euclidean")))
+    return(as.matrix(stats::dist(dataframe, method = "euclidean")))
 }
 
 # Given list of similarity matrices, return fused network
