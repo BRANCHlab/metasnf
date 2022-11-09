@@ -4,12 +4,14 @@
 \alias{get_mtbi_mechanism}
 \title{Get acute symptom input variable 'latest_mtbi_mechanism'}
 \usage{
-get_mtbi_mechanism(otbi01, subjects)
+get_mtbi_mechanism(otbi01, subjects = NULL, format = "dummied")
 }
 \arguments{
 \item{otbi01}{The baseline TBI dataframe}
 
 \item{subjects}{Dataframe containing list of required subjects}
+
+\item{format}{Variable indicating if df is dummied or undummied}
 }
 \value{
 mtbi_mechanism Dataframe containing latest_mtbi_mechanism

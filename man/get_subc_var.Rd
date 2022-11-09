@@ -4,7 +4,7 @@
 \alias{get_subc_var}
 \title{Extract cortical temporal variances}
 \usage{
-get_subc_var(mrirstv02, subjects)
+get_subc_var(mrirstv02, subjects = NULL)
 }
 \arguments{
 \item{mrirstv02}{Data file containing neurite density data}

@@ -4,7 +4,7 @@
 \alias{filter_subjects}
 \title{Subset a dataframe to a given subject list}
 \usage{
-filter_subjects(abcd_df, subjects)
+filter_subjects(abcd_df, subjects = NULL)
 }
 \arguments{
 \item{abcd_df}{An ABCD dataframe}

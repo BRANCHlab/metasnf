@@ -4,7 +4,7 @@
 \alias{get_cort_sa}
 \title{Extract cortical surface areas}
 \usage{
-get_cort_sa(mrisdp10201, subjects)
+get_cort_sa(mrisdp10201, subjects = NULL)
 }
 \arguments{
 \item{mrisdp10201}{Data file containing cortical data}

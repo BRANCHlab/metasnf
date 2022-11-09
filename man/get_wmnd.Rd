@@ -4,7 +4,7 @@
 \alias{get_wmnd}
 \title{Extract white matter neurite densities}
 \usage{
-get_wmnd(drsip201, subjects)
+get_wmnd(drsip201, subjects = NULL)
 }
 \arguments{
 \item{drsip201}{Data file containing neurite density data}

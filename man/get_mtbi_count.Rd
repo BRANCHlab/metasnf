@@ -4,7 +4,7 @@
 \alias{get_mtbi_count}
 \title{Get number of mtbis sustained by subject}
 \usage{
-get_mtbi_count(otbi01, subjects)
+get_mtbi_count(otbi01, subjects = NULL)
 }
 \arguments{
 \item{otbi01}{The baseline TBI dataframe}

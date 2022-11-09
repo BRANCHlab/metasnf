@@ -4,7 +4,7 @@
 \alias{get_activities}
 \title{Extract activities}
 \usage{
-get_activities(abcd_saiq02, subjects)
+get_activities(abcd_saiq02, subjects = NULL)
 }
 \arguments{
 \item{abcd_saiq02}{ABCD Parent Sports and Activities Involvement

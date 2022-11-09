@@ -4,7 +4,7 @@
 \alias{get_cort_t}
 \title{Extract cortical thicknesses}
 \usage{
-get_cort_t(mrisdp10201, subjects)
+get_cort_t(mrisdp10201, subjects = NULL)
 }
 \arguments{
 \item{mrisdp10201}{Data file containing cortical data}

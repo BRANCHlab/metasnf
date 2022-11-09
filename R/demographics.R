@@ -7,7 +7,7 @@
 #' @return pubertal_status Dataframe containing average pubertal status
 #'
 #' @export
-get_pubertal_status <- function(ssphp01, ssphy01, subjects) {
+get_pubertal_status <- function(ssphp01, ssphy01, subjects = NULL) {
     youth_pubertal_df <- abcd_import(ssphy01, subjects)
     parent_pubertal_df <- abcd_import(ssphp01, subjects)
     # Merge parent and youth dataframes
@@ -46,7 +46,7 @@ get_pubertal_status <- function(ssphp01, ssphy01, subjects) {
 #' @return income_df Dataframe containing household incomes
 #'
 #' @export
-get_income <- function(pdem02, subjects) {
+get_income <- function(pdem02, subjects = NULL) {
     parent_demographics <- abcd_import(pdem02, subjects)
     parent_demographics$"demo_comb_income_v2" <-
         as.numeric(parent_demographics$"demo_comb_income_v2")
@@ -78,7 +78,7 @@ get_income <- function(pdem02, subjects) {
 #' @return race_df Dataframe containing subject race
 #'
 #' @export
-get_race <- function(pdem02, subjects, format = "") {
+get_race <- function(pdem02, subjects = NULL, format = "") {
     options <- c("condensed_dummied",
                  "condensed_undummied",
                  "expanded_dummied")
@@ -248,7 +248,7 @@ format_race <- function(race_df, format) {
 #' @return interview_age Dataframe containing interview age
 #'
 #' @export
-get_interview_age <- function(abcd_df, subjects) {
+get_interview_age <- function(abcd_df, subjects = NULL) {
     interview_age <- abcd_import(abcd_df, subjects) |>
         dplyr::select("subjectkey", "interview_age")
     return(stats::na.omit(interview_age))
@@ -267,7 +267,7 @@ get_interview_age <- function(abcd_df, subjects) {
 #' @return sex Dataframe containing sex
 #'
 #' @export
-get_sex <- function(abcd_df, subjects, format = "dummied") {
+get_sex <- function(abcd_df, subjects = NULL, format = "dummied") {
     options <- c("undummied", "dummied")
     if (!(format %in% options)) {
         print("The 'format argument should be one of the following options:")
@@ -297,7 +297,7 @@ get_sex <- function(abcd_df, subjects, format = "dummied") {
 #' @return mtbi_age Dataframe containing latest_mtbi_age
 #'
 #' @export
-get_mtbi_age <- function(otbi01, subjects) {
+get_mtbi_age <- function(otbi01, subjects = NULL) {
     mtbi_age <- detail_mtbi(otbi01, subjects) |>
         dplyr::select(
             "subjectkey",

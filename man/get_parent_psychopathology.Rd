@@ -4,7 +4,7 @@
 \alias{get_parent_psychopathology}
 \title{Extract parent psychopathology}
 \usage{
-get_parent_psychopathology(abcd_asrs01, subjects)
+get_parent_psychopathology(abcd_asrs01, subjects = NULL)
 }
 \arguments{
 \item{abcd_asrs01}{ABCD Parent Adult Self Report Scores Aseba}

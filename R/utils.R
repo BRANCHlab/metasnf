@@ -33,9 +33,13 @@ filter_baseline <- function(abcd_df) {
 #' @return filtered_df The subsetted dataframe
 #'
 #' @export
-filter_subjects <- function(abcd_df, subjects) {
-    filtered_df <- dplyr::inner_join(abcd_df, subjects, by = "subjectkey")
-    return(filtered_df)
+filter_subjects <- function(abcd_df, subjects = NULL) {
+    if (is.null(subjects)) {
+        return(abcd_df)
+    } else {
+        filtered_df <- dplyr::inner_join(abcd_df, subjects, by = "subjectkey")
+        return(filtered_df)
+    }
 }
 
 
@@ -47,7 +51,7 @@ filter_subjects <- function(abcd_df, subjects) {
 #' @return abcd_clean_df The subsetted dataframe
 #'
 #' @export
-abcd_import <- function(abcd_df, subjects) {
+abcd_import <- function(abcd_df, subjects = NULL) {
     abcd_clean_df <- abcd_df |>
         remove_dd() |>
         filter_baseline() |>

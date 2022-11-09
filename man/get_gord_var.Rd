@@ -4,7 +4,7 @@
 \alias{get_gord_var}
 \title{Extract cortical temporal variances}
 \usage{
-get_gord_var(mrirstv02, subjects)
+get_gord_var(mrirstv02, subjects = NULL)
 }
 \arguments{
 \item{mrirstv02}{Data file containing neurite density data}

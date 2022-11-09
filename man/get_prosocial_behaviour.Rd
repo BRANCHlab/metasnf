@@ -4,7 +4,7 @@
 \alias{get_prosocial_behaviour}
 \title{Extract prosocial behaviour}
 \usage{
-get_prosocial_behaviour(psb01, abcd_psb01, subjects)
+get_prosocial_behaviour(psb01, abcd_psb01, subjects = NULL)
 }
 \arguments{
 \item{psb01}{Parent Prosocial Behavior Survey}

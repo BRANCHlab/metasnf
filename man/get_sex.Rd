@@ -4,12 +4,18 @@
 \alias{get_sex}
 \title{Return dataframe containing sex of specified subjects}
 \usage{
-get_sex(abcd_df, subjects)
+get_sex(abcd_df, subjects = NULL, format = "dummied")
 }
 \arguments{
 \item{abcd_df}{Any ABCD dataframe containing sex}
 
 \item{subjects}{Dataframe containing list of required subjects}
+
+\item{format}{String indicating format to output sex data.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{* `"dummied"` single binary column `M`. This is the default.
+* `"undummied"` single column `sex` containing factor values `M` and `F`.
+}\if{html}{\out{</div>}}}
 }
 \value{
 sex Dataframe containing sex

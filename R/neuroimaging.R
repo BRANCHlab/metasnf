@@ -6,7 +6,7 @@
 #' @return subc_v_df Dataframe of subcortical volumes
 #'
 #' @export
-get_subc_v <- function(smrip10201, subjects) {
+get_subc_v <- function(smrip10201, subjects = NULL) {
     smri_raw <- abcd_import(smrip10201, subjects)
     subc_v_df <- smri_raw |>
         dplyr::select(
@@ -24,7 +24,7 @@ get_subc_v <- function(smrip10201, subjects) {
 #' @return cort_t_df Dataframe of cortical thicknesses
 #'
 #' @export
-get_cort_t <- function(mrisdp10201, subjects) {
+get_cort_t <- function(mrisdp10201, subjects = NULL) {
     cort_raw <- abcd_import(mrisdp10201, subjects)
     cort_t_df <- cort_raw |>
         dplyr::select(
@@ -42,7 +42,7 @@ get_cort_t <- function(mrisdp10201, subjects) {
 #' @return cort_sa_df Dataframe of cortical surface areas
 #'
 #' @export
-get_cort_sa <- function(mrisdp10201, subjects) {
+get_cort_sa <- function(mrisdp10201, subjects = NULL) {
     cort_raw <- abcd_import(mrisdp10201, subjects)
     cort_sa_df <- cort_raw |>
         dplyr::select(
@@ -60,7 +60,7 @@ get_cort_sa <- function(mrisdp10201, subjects) {
 #' @return wmnd_df Dataframe of white matter neurite densities
 #'
 #' @export
-get_wmnd <- function(drsip201, subjects) {
+get_wmnd <- function(drsip201, subjects = NULL) {
     nd_raw <- abcd_import(drsip201, subjects)
     wmnd_df <- nd_raw |>
         dplyr::select(
@@ -78,7 +78,7 @@ get_wmnd <- function(drsip201, subjects) {
 #' @return gord_cor Dataframe of white matter neurite densities
 #'
 #' @export
-get_gord_cor <- function(betnet02, subjects) {
+get_gord_cor <- function(betnet02, subjects = NULL) {
     gord_cor_raw <- abcd_import(betnet02, subjects)
     gord_cor <- gord_cor_raw |>
         dplyr::select(
@@ -96,7 +96,7 @@ get_gord_cor <- function(betnet02, subjects) {
 #' @return subc_cor Dataframe of white matter neurite densities
 #'
 #' @export
-get_subc_cor <- function(mrirscor02, subjects) {
+get_subc_cor <- function(mrirscor02, subjects = NULL) {
     subc_cor_raw <- abcd_import(mrirscor02, subjects)
     subc_cor <- subc_cor_raw |>
         dplyr::select(
@@ -114,7 +114,7 @@ get_subc_cor <- function(mrirscor02, subjects) {
 #' @return subc_cor Dataframe of white matter neurite densities
 #'
 #' @export
-get_gord_var <- function(mrirstv02, subjects) {
+get_gord_var <- function(mrirstv02, subjects = NULL) {
     gord_var_raw <- abcd_import(mrirstv02, subjects)
     gord_var <- gord_var_raw |>
         dplyr::select(
@@ -131,7 +131,7 @@ get_gord_var <- function(mrirstv02, subjects) {
 #' @return subc_cor Dataframe of white matter neurite densities
 #'
 #' @export
-get_subc_var <- function(mrirstv02, subjects) {
+get_subc_var <- function(mrirstv02, subjects = NULL) {
     subc_var_raw <- abcd_import(mrirstv02, subjects)
     subc_var <- subc_var_raw |>
         dplyr::select(

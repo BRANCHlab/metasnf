@@ -4,7 +4,7 @@
 \alias{get_pubertal_status}
 \title{Return dataframe containing pubertal status of specified subjects}
 \usage{
-get_pubertal_status(ssphp01, ssphy01, subjects)
+get_pubertal_status(ssphp01, ssphy01, subjects = NULL)
 }
 \arguments{
 \item{ssphp01}{Dataframe containing parent pubertal status report}

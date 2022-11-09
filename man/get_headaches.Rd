@@ -4,7 +4,7 @@
 \alias{get_headaches}
 \title{Get subject headache history}
 \usage{
-get_headaches(mx01, subjects)
+get_headaches(mx01, subjects = NULL)
 }
 \arguments{
 \item{mx01}{Dataframe containing medical history}

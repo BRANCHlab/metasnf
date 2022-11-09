@@ -4,7 +4,7 @@
 \alias{abcd_import}
 \title{Import a raw ABCD dataframe for selected subjects at baseline}
 \usage{
-abcd_import(abcd_df, subjects)
+abcd_import(abcd_df, subjects = NULL)
 }
 \arguments{
 \item{abcd_df}{An ABCD dataframe}

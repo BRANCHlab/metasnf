@@ -6,7 +6,7 @@
 #' @return mtbi_count Dataframe containing number of previous mTBIs
 #'
 #' @export
-get_mtbi_count <- function(otbi01, subjects) {
+get_mtbi_count <- function(otbi01, subjects = NULL) {
     mtbi_count <- detail_mtbi(otbi01, subjects) |>
         dplyr::select(
             "subjectkey",
@@ -24,7 +24,7 @@ get_mtbi_count <- function(otbi01, subjects) {
 #' @return headaches Dataframe containing headache history
 #'
 #' @export
-get_headaches <- function(mx01, subjects) {
+get_headaches <- function(mx01, subjects = NULL) {
     headaches <- abcd_import(mx01, subjects) |>
         dplyr::rename("headache" = "medhx_2q") |>
         dplyr::select("subjectkey", "headache")

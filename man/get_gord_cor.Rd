@@ -4,7 +4,7 @@
 \alias{get_gord_cor}
 \title{Extract cortical network correlations}
 \usage{
-get_gord_cor(betnet02, subjects)
+get_gord_cor(betnet02, subjects = NULL)
 }
 \arguments{
 \item{betnet02}{Data file containing neurite density data}

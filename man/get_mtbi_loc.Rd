@@ -4,7 +4,7 @@
 \alias{get_mtbi_loc}
 \title{Get acute symptom input variable 'latest_mtbi_loc'}
 \usage{
-get_mtbi_loc(otbi01, subjects)
+get_mtbi_loc(otbi01, subjects = NULL)
 }
 \arguments{
 \item{otbi01}{The baseline TBI dataframe}

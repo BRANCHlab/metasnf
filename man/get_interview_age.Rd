@@ -4,7 +4,7 @@
 \alias{get_interview_age}
 \title{Return dataframe containing interview age of specified subjects}
 \usage{
-get_interview_age(abcd_df, subjects)
+get_interview_age(abcd_df, subjects = NULL)
 }
 \arguments{
 \item{abcd_df}{Any ABCD dataframe containing interview age}

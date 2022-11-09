@@ -4,7 +4,7 @@
 \alias{get_screen_time}
 \title{Extract screen time}
 \usage{
-get_screen_time(stq01, abcd_stq01, subjects)
+get_screen_time(stq01, abcd_stq01, subjects = NULL)
 }
 \arguments{
 \item{stq01}{ABCD Parent Screen Time Survey}

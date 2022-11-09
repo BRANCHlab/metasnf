@@ -1,3 +1,8 @@
+# Given a dataframe of numerical variables, return a euclidean distance matrix
+ed <- function(dataframe) {
+    return(as.matrix(dist(dataframe, method = "euclidean")))
+}
+
 # Given list of similarity matrices, return fused network
 snf <- function() {
     return(NULL)
@@ -26,7 +31,6 @@ evaluate_clustering <- function() {
 #' @export
 build_design_matrix_base <- function() {
     design_matrix <- data.frame(
-        inc_mtbi_age = numeric(),
         inc_mtbi_loc = numeric(),
         inc_mtbi_mechanism = numeric(),
         inc_mtbi_mem_daze = numeric(),
@@ -91,21 +95,30 @@ add_design_matrix_rows <- function(design_matrix, nrows) {
         new_row <- t(data.frame(new_row))
         colnames(new_row) <- colnames(design_matrix)
         design_matrix <- rbind(design_matrix, t(t(data.frame(new_row))))
-        print(n)
-        print(design_matrix)
+        print(paste0("Adding row...", as.character(n)))
     }
     return(design_matrix)
 }
 
-iterate_design_matrix <- function() {
-    design_matrix <- build_design_matrix_base()
+
+#' Execute variations of SNF as described by a design matrix
+#'
+#' @param design_matrix Design matrix
+#'     * as built by fns `build_design_matrix_base` and `add_design_matrix_rows`
+#'
+#' @return design_matrix_executed Design matrix with populated subtype
+#' membership and target variable columns
+#'
+#' @export
+execute_design_matrix <- function(design_matrix) {
+    design_matrix_executed <- design_matrix
     # build design matrix rows
     # for each option, randomly select a value
     # check if that vector of options has been done before
     # feed those options into SNF
   # execute design matrix rows
   # update design matrix output columns
-  return(design_matrix)
+  return(design_matrix_executed)
 }
 
 visualize_design_matrix <- function() {

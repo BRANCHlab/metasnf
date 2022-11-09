@@ -4,7 +4,7 @@
 \alias{get_subc_cor}
 \title{Extract subcortical network correlations}
 \usage{
-get_subc_cor(mrirscor02, subjects)
+get_subc_cor(mrirscor02, subjects = NULL)
 }
 \arguments{
 \item{mrirscor02}{Data file containing neurite density data}

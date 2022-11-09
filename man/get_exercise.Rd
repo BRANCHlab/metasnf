@@ -4,7 +4,7 @@
 \alias{get_exercise}
 \title{Extract exercise}
 \usage{
-get_exercise(abcd_yrb01, subjects)
+get_exercise(abcd_yrb01, subjects = NULL)
 }
 \arguments{
 \item{abcd_yrb01}{ABCD Youth Youth Risk Behavior Survey Exercise Physical

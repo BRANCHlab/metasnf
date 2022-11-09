@@ -9,7 +9,7 @@
 #' @return family_function
 #'
 #' @export
-get_family_function <- function(fes02, abcd_fes01, subjects) {
+get_family_function <- function(fes02, abcd_fes01, subjects = NULL) {
     p_family_function  <- abcd_import(fes02, subjects)
     y_family_function  <- abcd_import(abcd_fes01, subjects)
     family_function  <- dplyr::inner_join(
@@ -26,7 +26,7 @@ get_family_function <- function(fes02, abcd_fes01, subjects) {
 #' @return prosocial_behaviour
 #'
 #' @export
-get_prosocial_behaviour <- function(psb01, abcd_psb01, subjects) {
+get_prosocial_behaviour <- function(psb01, abcd_psb01, subjects = NULL) {
     pr_prosocial <- abcd_import(psb01, subjects)
     yr_prosocial <- abcd_import(abcd_psb01, subjects)
     prosocial <- dplyr::inner_join(
@@ -42,7 +42,7 @@ get_prosocial_behaviour <- function(psb01, abcd_psb01, subjects) {
 #' @return loneliness
 #'
 #' @export
-get_loneliness <- function(abcd_ysr01, subjects) {
+get_loneliness <- function(abcd_ysr01, subjects = NULL) {
     loneliness <- abcd_import(abcd_ysr01)
     return(stats::na.omit(loneliness))
 }
@@ -56,7 +56,7 @@ get_loneliness <- function(abcd_ysr01, subjects) {
 #' @return screen_time
 #'
 #' @export
-get_screen_time <- function(stq01, abcd_stq01, subjects) {
+get_screen_time <- function(stq01, abcd_stq01, subjects = NULL) {
     p_screen_time <- abcd_import(stq01)
     y_screen_time <- abcd_import(abcd_stq01)
     screen_time <- dplyr::inner_join(p_screen_time, y_screen_time)
@@ -72,7 +72,7 @@ get_screen_time <- function(stq01, abcd_stq01, subjects) {
 #' @return activities
 #'
 #' @export
-get_activities <- function(abcd_saiq02, subjects) {
+get_activities <- function(abcd_saiq02, subjects = NULL) {
     activities <- abcd_import(abcd_saiq02)
     return(stats::na.omit(activities))
 }
@@ -86,7 +86,7 @@ get_activities <- function(abcd_saiq02, subjects) {
 #' @return exercise
 #'
 #' @export
-get_exercise <- function(abcd_yrb01, subjects) {
+get_exercise <- function(abcd_yrb01, subjects = NULL) {
     exercise <- abcd_import(abcd_yrb01)
     return(stats::na.omit(exercise))
 }
@@ -99,7 +99,7 @@ get_exercise <- function(abcd_yrb01, subjects) {
 #' @return parent_psychopathology
 #'
 #' @export
-get_parent_psychopathology <- function(abcd_asrs01, subjects) {
+get_parent_psychopathology <- function(abcd_asrs01, subjects = NULL) {
     parent_psychopathology <- abcd_import(abcd_asrs01)
     return(stats::na.omit(parent_psychopathology))
 }

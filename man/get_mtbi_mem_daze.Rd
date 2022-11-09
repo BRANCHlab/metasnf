@@ -4,7 +4,7 @@
 \alias{get_mtbi_mem_daze}
 \title{Get acute symptom input variable 'latest_mtbi_mem_daze'}
 \usage{
-get_mtbi_mem_daze(otbi01, subjects)
+get_mtbi_mem_daze(otbi01, subjects = NULL)
 }
 \arguments{
 \item{otbi01}{The baseline TBI dataframe}

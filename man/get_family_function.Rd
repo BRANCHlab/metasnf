@@ -4,7 +4,7 @@
 \alias{get_family_function}
 \title{Extract family function}
 \usage{
-get_family_function(fes02, abcd_fes01, subjects)
+get_family_function(fes02, abcd_fes01, subjects = NULL)
 }
 \arguments{
 \item{fes02}{ABCD Parent Family Environment Scale-Family Conflict Subscale

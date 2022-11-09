@@ -4,7 +4,7 @@
 \alias{get_loneliness}
 \title{Extract loneliness}
 \usage{
-get_loneliness(abcd_ysr01, subjects)
+get_loneliness(abcd_ysr01, subjects = NULL)
 }
 \arguments{
 \item{abcd_ysr01}{ABCD Other Resilience}

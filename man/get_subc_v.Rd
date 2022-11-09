@@ -4,7 +4,7 @@
 \alias{get_subc_v}
 \title{Extract subcortical volumes}
 \usage{
-get_subc_v(smrip10201, subjects)
+get_subc_v(smrip10201, subjects = NULL)
 }
 \arguments{
 \item{smrip10201}{Data file containing subcortical data}
