@@ -258,13 +258,34 @@ get_interview_age <- function(abcd_df, subjects) {
 #'
 #' @param abcd_df Any ABCD dataframe containing sex
 #' @param subjects Dataframe containing list of required subjects
+#' @param format
+#'     String indicating format to output sex data.
+#'
+#'     * `"dummied"` single binary column `M`. This is the default.
+#'     * `"undummied"` single column `sex` containing factor values `M` and `F`.
 #'
 #' @return sex Dataframe containing sex
 #'
 #' @export
-get_sex <- function(abcd_df, subjects) {
+get_sex <- function(abcd_df, subjects, format = "dummied") {
+    options <- c("undummied", "dummied")
+    if (!(format %in% options)) {
+        print("The 'format argument should be one of the following options:")
+        print("[1] 'dummied'")
+        print("[2] 'undummied'")
+        print("See ?get_sex for more information about these options.")
+        return(NULL)
+    }
     sex <- abcd_import(abcd_df, subjects) |>
         dplyr::select("subjectkey", "sex")
+    if (format == "dummied") {
+        sex <- fastDummies::dummy_cols(
+            .data = sex,
+            select_columns = "sex",
+            remove_first_dummy = TRUE,
+            remove_selected_columns = TRUE)
+        colnames(sex) <- c("subjectkey", "M")
+    }
     return(stats::na.omit(sex))
 }
 

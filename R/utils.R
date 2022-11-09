@@ -56,3 +56,11 @@ abcd_import <- function(abcd_df, subjects) {
         dplyr::arrange(abcd_clean_df$"subjectkey")
     return(abcd_clean_df)
 }
+
+dummy <- function(abcd_df, cols) {
+    abcd_df <- fastDummies::dummy_cols(
+        .data = abcd_df,
+        select_columns = cols,
+        remove_selected_columns = TRUE)
+    return(abcd_df)
+}

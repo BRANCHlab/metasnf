@@ -6,12 +6,19 @@
 #' @return mtbi_mechanism Dataframe containing latest_mtbi_mechanism
 #'
 #' @export
-get_mtbi_mechanism <- function(otbi01, subjects) {
+get_mtbi_mechanism <- function(otbi01, subjects, format = "dummied") {
     mtbi_mechanism <- detail_mtbi(otbi01, subjects) |>
         dplyr::select(
             "subjectkey",
             "latest_mtbi_mechanism"
         )
+    if (format != "dummied" && format != "undummied") {
+        print("Fomat must either be 'dummied' or 'undummied'.")
+        return(NULL)
+    } else if (format == "dummied") {
+        mtbi_mechanism <- mtbi_mechanism |>
+            dummy(cols = "latest_mtbi_mechanism")
+    }
     return(stats::na.omit(mtbi_mechanism))
 }
 
