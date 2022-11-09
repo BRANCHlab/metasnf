@@ -15,6 +15,7 @@ Imports:
     ggplot2,
     here,
     rlang,
+    SNFtool,
     stats
 Suggests: 
     testthat (>= 3.0.0)
