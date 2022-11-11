@@ -1,7 +1,9 @@
 #' Rename ambiguous columns in otbi01 file.
 #'
-#' Renames column names of ABCD's Ohio TBI Screen data to meaningful names that are easier to work with.
-#' Use 'original_otbi_names()' to print out a conversion table of old and new column names.
+#' Renames column names of ABCD's Ohio TBI Screen data to meaningful names
+#' that are easier to work with.
+#' Use 'original_otbi_names()' to print out a conversion table of old and new
+#'  column names.
 #'
 #' @param tbi_df The complete file abcd_otbi01.txt
 #'
@@ -22,6 +24,7 @@
 #'     "collection_title")
 #'
 #' otbi01_renamed <- rename_tbi(abcd_otbi01)
+#' otbi01_renamed
 rename_tbi <- function(tbi_df) {
     if (!is.data.frame(tbi_df)) {
         rlang::abort("Object is not a dataframe.",

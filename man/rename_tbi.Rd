@@ -13,8 +13,10 @@ rename_tbi(tbi_df)
 renamed_tbi A modified form of tbi_df with clearer column names
 }
 \description{
-Renames column names of ABCD's Ohio TBI Screen data to meaningful names that are easier to work with.
-Use 'original_otbi_names()' to print out a conversion table of old and new column names.
+Renames column names of ABCD's Ohio TBI Screen data to meaningful names
+that are easier to work with.
+Use 'original_otbi_names()' to print out a conversion table of old and new
+column names.
 }
 \examples{
 # Mock abcd_otbi01.txt
@@ -30,4 +32,5 @@ colnames(abcd_otbi01) <- c("collection_id", "abcd_otbi01_id", "dataset_id",
     "collection_title")
 
 otbi01_renamed <- rename_tbi(abcd_otbi01)
+otbi01_renamed
 }
