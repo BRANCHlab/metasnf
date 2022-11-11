@@ -4,10 +4,14 @@ get_dist_matrix <- function(df, input_type) {
     df <- data.frame(df, row.names = 1)
     if (input_type == "numeric") {
         dist_matrix <- as.matrix(stats::dist(df, method = "euclidean"))
+        print("a")
     } else if (input_type == "categorical") {
         dist_matrix <- as.matrix(stats::dist(df, method = "binary"))
+        print("b")
+    } else {
+        return(input_type)
     }
-    return(dist_matrix)
+    return("c")
 }
 
 get_sim_matrix <- function(df, input_type) {
@@ -170,13 +174,13 @@ generate_data_list <- function(mtbi_loc = NULL,
     mtbi_mem_daze_list <-
         list(mtbi_mem_daze, "mtbi_mem_daze", "none", "as", "categorical")
     income_list <-
-        list(income, "income", "none", "d", "numerical")
+        list(income, "income", "none", "d", "numeric")
     interview_age_list <-
-        list(interview_age, "interview_age", "none", "d", "numerical")
+        list(interview_age, "interview_age", "none", "d", "numeric")
     mtbi_age_list <-
-        list(mtbi_age, "mtbi_age", "none", "d", "numerical")
+        list(mtbi_age, "mtbi_age", "none", "d", "numeric")
     pubertal_status_list <-
-        list(pubertal_status, "pubertal_status", "none", "d", "numerical")
+        list(pubertal_status, "pubertal_status", "none", "d", "numeric")
     race_list <-
         list(race, "race", "none", "d", "categorical")
     sex_list <-
@@ -184,23 +188,23 @@ generate_data_list <- function(mtbi_loc = NULL,
     headaches_list <-
         list(headaches, "headaches", "none", "mh", "categorical")
     mtbi_count_list <-
-        list(mtbi_count, "mtbi_count", "none", "mh", "numerical")
+        list(mtbi_count, "mtbi_count", "none", "mh", "numeric")
     wmndf_list <-
-        list(wmndf, "wmndf", "dmri", "n", "numerical")
+        list(wmndf, "wmndf", "dmri", "n", "numeric")
     gord_cor_list <-
-        list(gord_cor, "gord_cor", "rsfmri", "n", "numerical")
+        list(gord_cor, "gord_cor", "rsfmri", "n", "numeric")
     gord_var_list <-
-        list(gord_var, "gord_var", "rsfmri", "n", "numerical")
+        list(gord_var, "gord_var", "rsfmri", "n", "numeric")
     subc_cor_list <-
-        list(subc_cor, "subc_cor", "rsfmri", "n", "numerical")
+        list(subc_cor, "subc_cor", "rsfmri", "n", "numeric")
     subc_var_list <-
-        list(subc_var, "subc_var", "rsfmri", "n", "numerical")
+        list(subc_var, "subc_var", "rsfmri", "n", "numeric")
     cort_sa_list <-
-        list(cort_sa, "cort_sa", "smri", "n", "numerical")
+        list(cort_sa, "cort_sa", "smri", "n", "numeric")
     cort_t_list <-
-        list(cort_t, "cort_t", "smri", "n", "numerical")
+        list(cort_t, "cort_t", "smri", "n", "numeric")
     subc_v_list <-
-        list(subc_v, "subc_v", "smri", "n", "numerical")
+        list(subc_v, "subc_v", "smri", "n", "numeric")
     # The object that will contain all the data
     full_list <-
         list(mtbi_loc_list,
@@ -226,6 +230,59 @@ generate_data_list <- function(mtbi_loc = NULL,
     data_list <- Filter(function(x) !(is.null(x[[1]])), full_list)
     return(data_list)
 }
+
+
+#' Given a `data_list` object, print out the dimensions of each nested dataframe
+#'
+#' @param data_list The data_list object to be reduced
+#'
+#' @export
+print_data_list_dims <- function(data_list) {
+    for (i in seq_along(data_list)) {
+        print(dim(data_list[[i]][[1]]))
+    }
+}
+
+
+#' Given a `data_list` object, reduce each nested dataframe to contain only the
+#'  set of subjects that are shared by all nested dataframes
+#'
+#' @param data_list The data_list object to be reduced
+#'
+#' @return reduced_data_list The data_list object subsetted only to subjectssnf
+#'  shared across all nested dataframes
+#' @export
+reduce_dl_to_common <- function(data_list) {
+    subjects <- lapply(data_list, function(x) x[[1]]$"subjectkey")
+    data_objects <- lapply(data_list, function(x) x[[1]])
+    common_subjects <- Reduce(intersect, subjects)
+    filtered_data_objects <-
+        lapply(data_objects,
+        function(x) {
+            dplyr::filter(x, x$"subjectkey" %in% common_subjects)
+        })
+    reduced_data_list <- data_list
+    for (i in seq_along(data_list)) {
+        reduced_data_list[[i]][[1]] <- filtered_data_objects[[i]]
+    }
+    return(reduced_data_list)
+}
+
+
+arrange_dl <- function(data_list) {
+    data_objects <- lapply(data_list, function(x) x[[1]])
+    arranged_data_objects <-
+        lapply(data_objects,
+        function(x) {
+            dplyr::arrange(x, x$"subjectkey")
+        })
+    arranged_data_list <- data_list
+    for (i in seq_along(data_list)) {
+        arranged_data_list[[i]][[1]] <- arranged_data_objects[[i]]
+    }
+    return(arranged_data_list)
+}
+
 
 # Given 'data_list' object and scheme, return SNF results
 snf_step <- function(data_list, scheme) {
