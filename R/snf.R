@@ -28,6 +28,7 @@ get_dist_matrix <- function(df, input_type) {
 
 # Given clustered subjects and outcome measures, evaluate clustering utility
 evaluate_clustering <- function() {
+    # Did eigenvalue and rot matrix give same number of clusters?
     return(NULL)
 }
 
@@ -47,6 +48,7 @@ evaluate_clustering <- function() {
 #' @export
 build_design_matrix_base <- function() {
     design_matrix <- data.frame(
+        row_id = numeric(),
         inc_mtbi_loc = numeric(),
         inc_mtbi_mechanism = numeric(),
         inc_mtbi_mem_daze = numeric(),
@@ -67,7 +69,14 @@ build_design_matrix_base <- function() {
         inc_cort_sa = numeric(),
         inc_cort_t = numeric(),
         inc_subc_v = numeric(),
+        snf_scheme = numeric(),
+        neuroimaging_domain = numeric(),
+        variable_weighting = numeric(),
+        pca = numeric(),
+        output_vars = numeric(),
+        eigen_or_rot = numeric(),
         stringsAsFactors = FALSE)
+    row.names(design_matrix) <- NULL
     return(design_matrix)
 }
 
@@ -105,14 +114,36 @@ random_removal <- function(num_cols) {
 #' @export
 add_design_matrix_rows <- function(design_matrix, nrows) {
     for (n in 1:nrows) {
+        row_id <- nrow(design_matrix) + 1
         new_row <- vector()
+        # Inclusion columns
         num_inclusion_cols <- sum(startsWith(colnames(design_matrix), "inc"))
-        new_row <- random_removal(num_inclusion_cols)
-        new_row <- t(data.frame(new_row))
+        inclusions <- t(data.frame(random_removal(num_inclusion_cols)))
+        inclusion_names <-
+            colnames(design_matrix)[startsWith(colnames(design_matrix), "inc")]
+        colnames(inclusions) <- inclusion_names
+        # Other free parameters
+        snf_scheme <- sample(1:3, 1)
+        neuroimaging_domain <- sample(1:2, 1)
+        variable_weighting <- sample(1:4, 1)
+        pca <- sample(1:3, 1)
+        output_vars <- sample(1:2, 1)
+        eigen_or_rot <- sample(1:2, 1)
+        # Putting it all together
+        new_row <- cbind(
+            row_id,
+            inclusions,
+            snf_scheme,
+            neuroimaging_domain,
+            variable_weighting,
+            pca,
+            output_vars,
+            eigen_or_rot)
+        # Appending to design matrix
         colnames(new_row) <- colnames(design_matrix)
-        design_matrix <- rbind(design_matrix, t(t(data.frame(new_row))))
-        print(paste0("Adding row...", as.character(n)))
+        design_matrix <- rbind(design_matrix, data.frame(new_row))
     }
+    row.names(design_matrix) <- NULL
     return(design_matrix)
 }
 
@@ -329,9 +360,9 @@ snf_step <- function(data_list, scheme) {
         fused_network <- SNFtool::SNF(sim_list)
         num_clusters <-
             SNFtool::estimateNumberOfClustersGivenGraph(fused_network, 2:10)
-        print(num_clusters)
     }
-    return(fused_network)
+    #return(fused_network)
+    return(num_clusters)
 }
 
 
