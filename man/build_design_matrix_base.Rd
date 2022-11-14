@@ -2,7 +2,7 @@
 % Please edit documentation in R/snf.R
 \name{build_design_matrix_base}
 \alias{build_design_matrix_base}
-\title{Construct the base of the design matrix}
+\title{Build a design matrix skeleton}
 \usage{
 build_design_matrix_base()
 }
@@ -10,5 +10,11 @@ build_design_matrix_base()
 design_matrix A skeleton dataframe to build a design matrix out of
 }
 \description{
-Construct the base of the design matrix
+Construct the base of the design matrix, a dataframe that initially contains
+rows that each provide information about the hyperparamters with which
+patient subtyping should occur for a single iteration. After executing the
+subtyping specified by a given row, that row is extended with detailed
+information about the resulting subtype membership of each included subject
+and the efficacy of the subtyping solution in distinguishing subjects by
+PPCS.
 }

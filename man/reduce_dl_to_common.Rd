@@ -11,7 +11,7 @@ reduce_dl_to_common(data_list)
 \item{data_list}{The data_list object to be reduced}
 }
 \value{
-reduced_data_list The data_list object subsetted only to subjects
+reduced_data_list The data_list object subsetted only to subjectssnf
 shared across all nested dataframes
 }
 \description{
