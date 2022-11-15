@@ -2,7 +2,7 @@
 % Please edit documentation in R/snf.R
 \name{print_data_list_dims}
 \alias{print_data_list_dims}
-\title{Given a \code{data_list} object, print out the dimensions of each nested dataframe}
+\title{Print data_list nested dims}
 \usage{
 print_data_list_dims(data_list)
 }
@@ -10,5 +10,5 @@ print_data_list_dims(data_list)
 \item{data_list}{The data_list object to be reduced}
 }
 \description{
-Given a \code{data_list} object, print out the dimensions of each nested dataframe
+Print data_list nested dims
 }

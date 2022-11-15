@@ -2,7 +2,7 @@
 % Please edit documentation in R/snf.R
 \name{add_design_matrix_rows}
 \alias{add_design_matrix_rows}
-\title{Add and populate rows to an existing design matrix}
+\title{Add design matrix rows}
 \usage{
 add_design_matrix_rows(design_matrix, nrows)
 }
@@ -15,5 +15,5 @@ add_design_matrix_rows(design_matrix, nrows)
 design_matrix New design matrix containing additional rows
 }
 \description{
-Add and populate rows to an existing design matrix
+Add design matrix rows
 }

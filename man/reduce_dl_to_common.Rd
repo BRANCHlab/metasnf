@@ -2,8 +2,7 @@
 % Please edit documentation in R/snf.R
 \name{reduce_dl_to_common}
 \alias{reduce_dl_to_common}
-\title{Given a \code{data_list} object, reduce each nested dataframe to contain only the
-set of subjects that are shared by all nested dataframes}
+\title{Reduce data_list to common subjects}
 \usage{
 reduce_dl_to_common(data_list)
 }

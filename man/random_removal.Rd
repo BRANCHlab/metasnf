@@ -2,7 +2,7 @@
 % Please edit documentation in R/snf.R
 \name{random_removal}
 \alias{random_removal}
-\title{Generate random sequence for column exclusions component of design matrix}
+\title{Generate random removal sequence}
 \usage{
 random_removal(num_cols)
 }

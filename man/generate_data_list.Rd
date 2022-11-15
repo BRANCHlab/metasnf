@@ -2,7 +2,7 @@
 % Please edit documentation in R/snf.R
 \name{generate_data_list}
 \alias{generate_data_list}
-\title{Generates a list of lists containing all input data}
+\title{Generate data_list object}
 \usage{
 generate_data_list(
   mtbi_loc = NULL,
