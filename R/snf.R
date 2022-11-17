@@ -378,7 +378,7 @@ snf_step <- function(data_list, scheme) {
         reduce_dl_to_common() |>
         arrange_dl()
     # Remove NAs function can go here later
-    if (scheme == "individual") {
+    if (scheme == "individual") { # This is functioning properly
         dist_list <- lapply(data_list,
             function(x) {
                 get_dist_matrix(df = x$"data", input_type = x$"type")
@@ -388,8 +388,7 @@ snf_step <- function(data_list, scheme) {
                 SNFtool::affinityMatrix(x)
             })
         fused_network <- SNFtool::SNF(sim_list)
-    } else if (scheme == "domain") {
-        # untested
+    } else if (scheme == "domain") { # This works
         data_list <- domain_merge(data_list)
         dist_list <- lapply(data_list,
             function(x) {
@@ -401,7 +400,15 @@ snf_step <- function(data_list, scheme) {
             })
         fused_network <- SNFtool::SNF(sim_list)
     } else if (scheme == "subdomain") {
-        #continue from here
+        affinity_list <- data_list
+        dist_list <- lapply(data_list,
+            function(x) {
+                get_dist_matrix(df = x$"data", input_type = x$"type")
+            })
+        sim_list <- lapply(dist_list,
+            function(x) {
+                SNFtool::affinityMatrix(x)
+            })
     }
     return(fused_network)
 }
@@ -465,6 +472,7 @@ sdl <- function(data_list) {
     dl_summary <-
         data.frame(
             name = unlist(lapply(data_list, function(x) x$"name")),
+            type = unlist(lapply(data_list, function(x) x$"type")),
             domain = unlist(domains(data_list)),
             length = unlist(lapply(data_list, function(x) dim(x$"data")[1])),
             width = unlist(lapply(data_list, function(x) dim(x$"data")[2])))
@@ -507,6 +515,52 @@ subdomains <- function(data_list) {
 #'
 #' @export
 domain_merge <- function(data_list) {
+    domain_dl <- list()
+    for (i in seq_along(data_list)) {
+        current_component <- data_list[[i]]
+        current_name <- data_list[[i]]$"name"
+        current_domain <- data_list[[i]]$"domain"
+        if (length(domain_dl) == 0) {
+            print(paste0("Adding component #", i, ": ",
+                         current_name, ", ",
+                         "domain: ",
+                         current_domain))
+            domain_dl <- append(domain_dl, list(current_component))
+        } else if (current_domain %in% domains(domain_dl)) {
+            print(paste0("Merging component #", i, ": ",
+                         current_name, ", ",
+                         "domain: ",
+                         current_domain))
+            existing_match_pos <- which(domains(domain_dl) == current_domain)
+            existing_component <- domain_dl[[existing_match_pos]]
+            existing_match_data <- existing_component$"data"
+            data_to_merge <- current_component$"data"
+            merged_data <- dplyr::inner_join(
+                existing_match_data, data_to_merge, by = "subjectkey")
+            merged_component <- existing_component
+            merged_component$"data" <- merged_data
+            merged_component$"name" <-
+                paste0("merged_", merged_component$"domain")
+            merged_component$"type" <- dplyr::case_when(
+                existing_component$"type" == current_component$"type" ~
+                    current_component$"type",
+                existing_component$"type" != current_component$"type" ~
+                    "mixed"
+            )
+            domain_dl[[existing_match_pos]] <- merged_component
+        } else {
+            print(paste0("Adding component #", i, ": ",
+                         current_name, ", ",
+                         "domain: ",
+                         current_domain))
+            domain_dl <- append(domain_dl, list(current_component))
+        }
+    }
+    return(domain_dl)
+}
+
+
+subdomain_append <- function(data_list) {
     domain_dl <- list()
     for (i in seq_along(data_list)) {
         current_component <- data_list[[i]]
