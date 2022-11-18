@@ -2,7 +2,7 @@
 % Please edit documentation in R/snf.R
 \name{sdl}
 \alias{sdl}
-\title{Summarize a data list}
+\title{Summarize data list}
 \usage{
 sdl(data_list)
 }
@@ -14,5 +14,5 @@ sdl(data_list)
 dl_summary Summarized output
 }
 \description{
-Summarize a data list
+Summarize data list
 }

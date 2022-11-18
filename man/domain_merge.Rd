@@ -2,7 +2,7 @@
 % Please edit documentation in R/snf.R
 \name{domain_merge}
 \alias{domain_merge}
-\title{Merge data_list by domain}
+\title{Domain merge}
 \usage{
 domain_merge(data_list)
 }
@@ -14,5 +14,5 @@ domain_merge(data_list)
 domain_dl
 }
 \description{
-Merge data_list by domain
+Domain merge
 }

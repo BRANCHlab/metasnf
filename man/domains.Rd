@@ -2,7 +2,7 @@
 % Please edit documentation in R/snf.R
 \name{domains}
 \alias{domains}
-\title{Return domains of a data list}
+\title{Domains}
 \usage{
 domains(data_list)
 }
@@ -14,5 +14,5 @@ domains(data_list)
 domain_list list of domains
 }
 \description{
-Return domains of a data list
+Domains
 }

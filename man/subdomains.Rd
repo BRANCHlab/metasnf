@@ -2,7 +2,7 @@
 % Please edit documentation in R/snf.R
 \name{subdomains}
 \alias{subdomains}
-\title{Return subdomains of a data list}
+\title{Subdomains}
 \usage{
 subdomains(data_list)
 }
@@ -14,5 +14,5 @@ subdomains(data_list)
 subdomain_list list of subdomains
 }
 \description{
-Return subdomains of a data list
+Subdomains
 }
