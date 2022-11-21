@@ -7,9 +7,9 @@
 get_cbcl_anxiety_r(abcd_cbcls01, subjects = NULL)
 }
 \arguments{
-\item{subjects}{list of subjects to receive data for}
+\item{abcd_cbcls01}{NDA cbcl dataframe}
 
-\item{abcd_cbcl01}{NDA cbcl dataframe}
+\item{subjects}{list of subjects to receive data for}
 }
 \value{
 cbcl_anxiety_r anxiety data

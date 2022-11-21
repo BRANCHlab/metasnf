@@ -126,7 +126,7 @@ get_cbcl_sleeping_less <- function(abcd_cbcl01, subjects = NULL) {
 
 #' Get CBCL depression data
 #'
-#' @param abcd_cbcl01 NDA cbcl dataframe
+#' @param abcd_cbcls01 NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #'
 #' @return cbcl_depress_r depression data
@@ -144,7 +144,7 @@ get_cbcl_depress_r <- function(abcd_cbcls01, subjects = NULL) {
 
 #' Get CBCL anxiety data
 #'
-#' @param abcd_cbcl01 NDA cbcl dataframe
+#' @param abcd_cbcls01 NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #'
 #' @return cbcl_anxiety_r anxiety data
@@ -162,7 +162,7 @@ get_cbcl_anxiety_r <- function(abcd_cbcls01, subjects = NULL) {
 
 #' Get CBCL attention data
 #'
-#' @param abcd_cbcl01 NDA cbcl dataframe
+#' @param abcd_cbcls01 NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #'
 #' @return cbcl_attention_r attention data
@@ -178,10 +178,9 @@ get_cbcl_attention_r <- function(abcd_cbcls01, subjects = NULL) {
         return(cbcl_attention_r)
 }
 
-
 #' Get CBCL aggressive data
 #'
-#' @param abcd_cbcl01 NDA cbcl dataframe
+#' @param abcd_cbcls01 NDA cbcl dataframe
 #' @param subjects list of subjects to receive data for
 #'
 #' @return cbcl_aggressive_r aggressive data
