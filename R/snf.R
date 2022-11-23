@@ -296,6 +296,82 @@ generate_data_list <- function(mtbi_loc = NULL,
     return(data_list)
 }
 
+#' Generate outcome_list object
+#'
+#' The major object containing all outcome variables
+#'
+#' @export
+generate_outcome_list <- function(cbcl_headaches = NULL,
+                                  cbcl_nausea = NULL,
+                                  cbcl_vomiting = NULL,
+                                  cbcl_dizzy = NULL,
+                                  cbcl_overtired = NULL,
+                                  cbcl_sleeping_more = NULL,
+                                  cbcl_sleeping_less = NULL,
+                                  cbcl_depress_r = NULL,
+                                  cbcl_anxiety_r = NULL,
+                                  cbcl_attention_r = NULL,
+                                  cbcl_aggressive_r = NULL,
+                                  nihtbx_list_fc = NULL,
+                                  nihtbx_pattern_fc = NULL,
+                                  nihtbx_cardsort_fc = NULL,
+                                  sds_sleep = NULL) {
+    cbcl_vomiting_list <-
+        list(cbcl_vomiting, "cbcl_vomiting", "ordinal")
+    cbcl_headaches_list <-
+        list(cbcl_headaches, "cbcl_headaches", "ordinal")
+    cbcl_nausea_list <-
+        list(cbcl_nausea, "cbcl_nausea", "ordinal")
+    cbcl_vomiting_list <-
+        list(cbcl_vomiting, "cbcl_vomiting", "ordinal")
+    cbcl_dizzy_list <-
+        list(cbcl_dizzy, "cbcl_dizzy", "ordinal")
+    cbcl_overtired_list <-
+        list(cbcl_overtired, "cbcl_overtired", "ordinal")
+    cbcl_sleeping_more_list <-
+        list(cbcl_sleeping_more, "cbcl_sleeping_more", "ordinal")
+    cbcl_sleeping_less_list <-
+        list(cbcl_sleeping_less, "cbcl_sleeping_less", "ordinal")
+    cbcl_depress_r_list <-
+        list(cbcl_depress_r, "cbcl_depress_r", "numeric")
+    cbcl_anxiety_r_list <-
+        list(cbcl_anxiety_r, "cbcl_anxiety_r", "numeric")
+    cbcl_attention_r_list <-
+        list(cbcl_attention_r, "cbcl_attention_r", "numeric")
+    cbcl_aggressive_r_list <-
+        list(cbcl_aggressive_r, "cbcl_aggressive_r", "numeric")
+    nihtbx_list_fc_list <-
+        list(nihtbx_list_fc, "nihtbx_list_fc", "numeric")
+    nihtbx_pattern_fc_list <-
+        list(nihtbx_pattern_fc, "nihtbx_pattern_fc", "numeric")
+    nihtbx_cardsort_fc_list <-
+        list(nihtbx_cardsort_fc, "nihtbx_cardsort_fc", "numeric")
+    sds_sleep_list <-
+        list(sds_sleep, "sleep_total_problems", "numeric")
+    # The object that will contain all the data
+    full_list <- list(cbcl_headaches_list,
+                      cbcl_nausea_list,
+                      cbcl_vomiting_list,
+                      cbcl_dizzy_list,
+                      cbcl_overtired_list,
+                      cbcl_sleeping_more_list,
+                      cbcl_sleeping_less_list,
+                      cbcl_depress_r_list,
+                      cbcl_anxiety_r_list,
+                      cbcl_attention_r_list,
+                      cbcl_aggressive_r_list,
+                      nihtbx_list_fc_list,
+                      nihtbx_pattern_fc_list,
+                      nihtbx_cardsort_fc_list,
+                      sds_sleep_list)
+    # Assign names to the nested list elements
+    full_list_names <- c("data", "name", "type")
+    full_list <- lapply(full_list, stats::setNames, full_list_names)
+    # Only keep measurement types where object[[1]] (the data) was provided
+    data_list <- Filter(function(x) !(is.null(x$"data")), full_list)
+    return(data_list)
+}
+
 #' Print data_list nested dims
 #'
 #' @param data_list The data_list object to be reduced
@@ -431,8 +507,6 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
             dm_row$"snf_scheme" == 2 ~ "domain",
             dm_row$"snf_scheme" == 3 ~ "twostep",
         )
-        print(sdl(current_data_list))
-        print(current_snf_scheme)
         fused_network <- snf_step(current_data_list, current_snf_scheme)
         all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
         eigen_best <- all_clust$`Eigen-gap best`
@@ -451,21 +525,47 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
                     "a valid input type."), class = "invalid_input")
         }
         cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
-        print(length(cluster_results))
-        print(length(rownames(fused_network)))
         # Assign subtype membership
         output_matrix[i, rownames(fused_network)] <- cluster_results
         # Pull clustered subjects in a useful way for outcome evaluation
         clustered_subs <- get_clustered_subs(output_matrix[i, ])
+        assigned_subs <- clustered_subs |>
+            dplyr::filter(clustered_subs$"cluster" != 0)
         # CONTINUE FROM HERE!
-        min_p <- ord_reg_min_p(clustered_subs, outcome_list[[1]]$"data", outcome_list[[1]]$"name") 
-        return(min_p)
-        print(outcome_list[[1]]$"data")
+        for (j in seq_along(outcome_list)) {
+            current_outcome_component <- outcome_list[[j]]
+            current_outcome_name <- current_outcome_component$"name"
+            #current_outcome <- outcome_list[[j]]$"data"
+            #current_outcome_name <- outcome_list[[j]]$"name"
+            #current_outcome_type
+            #min_p <-
+            #    ord_reg_min_p(
+            #        assigned_subs,
+            #        current_outcome,
+            #        current_outcome_name) 
+            min_p <- get_min_p(assigned_subs, current_outcome_component)
+            print(current_outcome_component$"type")
+            target_col <- grep(current_outcome_name, colnames(output_matrix))
+            output_matrix[i, target_col] <- min_p
+        }
+        return(output_matrix)
+        #print(outcome_list[[1]]$"data")
         # Indicating which rows were not filled by this iteration (last step)
         #output_matrix[1, which(output_matrix[1, ] == 0 &
         #    startsWith(colnames(output_matrix), "NDAR"))] <- NA
     }
     #return(output_matrix)
+}
+
+get_min_p <- function(assigned_subs, outcome_component) {
+    outcome <- outcome_component$"data"
+    outcome_name <- outcome_component$"name"
+    outcome_type <- outcome_component$"type"
+    if (outcome_type == "ordinal") {
+        return(ord_reg_min_p(assigned_subs, outcome, outcome_name))
+    } else {
+        return("cheese")
+    }
 }
 
 #' Execute inclusion
@@ -662,11 +762,23 @@ build_output_matrix <- function(data_list, design_matrix) {
     other_cols <- c(
         "eigen_best",
         "rot_best",
-        "eigen_is_rot",
-        "cbcl_vomiting_p")
+        "cbcl_headaches_p",
+        "cbcl_nausea_p",
+        "cbcl_vomiting_p",
+        "cbcl_dizzy_p",
+        "cbcl_overtired_p",
+        "cbcl_sleeping_more_p",
+        "cbcl_sleeping_less_p",
+        "cbcl_depress_r_p",
+        "cbcl_anxiety_r_p",
+        "cbcl_attention_r_p",
+        "cbcl_aggressive_r_p",
+        "sds_sleep_p")
     output_matrix <- add_char_vec_as_cols(output_matrix, other_cols, 0)
     return(output_matrix)
 }
+
+
 
 #' Add character vector as columns
 #'
