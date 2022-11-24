@@ -300,6 +300,24 @@ generate_data_list <- function(mtbi_loc = NULL,
 #'
 #' The major object containing all outcome variables
 #'
+#' @param cbcl_headaches an outcome measure
+#' @param cbcl_nausea an outcome measure
+#' @param cbcl_vomiting an outcome measure
+#' @param cbcl_dizzy an outcome measure
+#' @param cbcl_overtired an outcome measure
+#' @param cbcl_sleeping_more an outcome measure
+#' @param cbcl_sleeping_less an outcome measure
+#' @param cbcl_depress_r an outcome measure
+#' @param cbcl_anxiety_r an outcome measure
+#' @param cbcl_attention_r an outcome measure
+#' @param cbcl_aggressive_r an outcome measure
+#' @param nihtbx_list_fc an outcome measure
+#' @param nihtbx_pattern_fc an outcome measure
+#' @param nihtbx_cardsort_fc an outcome measure
+#' @param sds_sleep an outcome measure
+#'
+#' @return outcome_list structure containing all outcome measure data
+#'
 #' @export
 generate_outcome_list <- function(cbcl_headaches = NULL,
                                   cbcl_nausea = NULL,
@@ -368,8 +386,8 @@ generate_outcome_list <- function(cbcl_headaches = NULL,
     full_list_names <- c("data", "name", "type")
     full_list <- lapply(full_list, stats::setNames, full_list_names)
     # Only keep measurement types where object[[1]] (the data) was provided
-    data_list <- Filter(function(x) !(is.null(x$"data")), full_list)
-    return(data_list)
+    outcome_list <- Filter(function(x) !(is.null(x$"data")), full_list)
+    return(outcome_list)
 }
 
 #' Print data_list nested dims
@@ -531,41 +549,51 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
         clustered_subs <- get_clustered_subs(output_matrix[i, ])
         assigned_subs <- clustered_subs |>
             dplyr::filter(clustered_subs$"cluster" != 0)
-        # CONTINUE FROM HERE!
         for (j in seq_along(outcome_list)) {
             current_outcome_component <- outcome_list[[j]]
-            current_outcome_name <- current_outcome_component$"name"
-            #current_outcome <- outcome_list[[j]]$"data"
-            #current_outcome_name <- outcome_list[[j]]$"name"
-            #current_outcome_type
-            #min_p <-
-            #    ord_reg_min_p(
-            #        assigned_subs,
-            #        current_outcome,
-            #        current_outcome_name) 
-            min_p <- get_min_p(assigned_subs, current_outcome_component)
-            print(current_outcome_component$"type")
-            target_col <- grep(current_outcome_name, colnames(output_matrix))
-            output_matrix[i, target_col] <- min_p
+            #current_outcome_name <- current_outcome_component$"name"
+            p <- get_p(assigned_subs, current_outcome_component)
+            return(p)
+            #if (current_outcome_name == "sleep_total_problems") {
+            #    return(list(assigned_subs, current_outcome_component))
+            #}
+            #target_col <- grep(current_outcome_name, colnames(output_matrix))
+            #output_matrix[i, target_col] <- min_p
         }
         return(output_matrix)
         #print(outcome_list[[1]]$"data")
         # Indicating which rows were not filled by this iteration (last step)
-        #output_matrix[1, which(output_matrix[1, ] == 0 &
+        #output_matrix[0, which(output_matrix[1, ] == 0 &
         #    startsWith(colnames(output_matrix), "NDAR"))] <- NA
     }
     #return(output_matrix)
 }
 
-get_min_p <- function(assigned_subs, outcome_component) {
+#' Get minimum p-value across clusters
+#'
+#' @description
+#' Depending on outcome measure, perform ordinal regression or linear regression
+#'  and return smallest p-value as a benchmark measure of how well-separated
+#'  clusters are by the outcome measure
+#'
+#' @param assigned_subs dataframe of subjects who were assigned to a cluster and
+#'  the cluster they were assigned to
+#' @param outcome_component the outcome_list element of interest
+#'
+#' @return p_val the smallest p-value of interest
+#'
+#' @export
+get_p <- function(assigned_subs, outcome_component) {
     outcome <- outcome_component$"data"
     outcome_name <- outcome_component$"name"
     outcome_type <- outcome_component$"type"
     if (outcome_type == "ordinal") {
-        return(ord_reg_min_p(assigned_subs, outcome, outcome_name))
+        p_val <- ord_reg_p(assigned_subs, outcome, outcome_name)
     } else {
         return("cheese")
     }
+    # return(p_val)
+    return(list(assigned_subs, outcome, outcome_name))
 }
 
 #' Execute inclusion
@@ -852,12 +880,13 @@ get_clustered_subs <- function(output_matrix_row) {
 #' @param outcome_df Dataframe containing DV
 #' @param outcome_var DV as a string
 #'
-#' @return min_p_val The smallest p-value distinguishing clusters by the DV
+#' @return p_val The overall p-value distinguishing clusters by the DV
 #'
 #' @export
-ord_reg_min_p <- function(clust_membership, outcome_df, outcome_var) {
+ord_reg_p <- function(clust_membership, outcome_df, outcome_var) {
     merged_df <-
         dplyr::inner_join(clust_membership, outcome_df, by = "subjectkey")
+    merged_df$"cluster" <- as.factor(merged_df$"cluster")
     merged_df[, outcome_var] <- as.ordered(merged_df[, outcome_var])
     olr_model <- MASS::polr(
         merged_df[, outcome_var] ~ merged_df[, "cluster"],
@@ -867,6 +896,6 @@ ord_reg_min_p <- function(clust_membership, outcome_df, outcome_var) {
     ctable <- cbind(ctable, "p value" = p)
     p_df <- data.frame(names = row.names(ctable), ctable) |>
         dplyr::filter(grepl("cluster", row.names(ctable), fixed = TRUE))
-    min_p_val <- min(p_df$"p.value")
-    return(min_p_val)
+    p_val <- min(p_df$"p.value")
+    return(p_val)
 }

@@ -22,6 +22,40 @@ generate_outcome_list(
   sds_sleep = NULL
 )
 }
+\arguments{
+\item{cbcl_headaches}{an outcome measure}
+
+\item{cbcl_nausea}{an outcome measure}
+
+\item{cbcl_vomiting}{an outcome measure}
+
+\item{cbcl_dizzy}{an outcome measure}
+
+\item{cbcl_overtired}{an outcome measure}
+
+\item{cbcl_sleeping_more}{an outcome measure}
+
+\item{cbcl_sleeping_less}{an outcome measure}
+
+\item{cbcl_depress_r}{an outcome measure}
+
+\item{cbcl_anxiety_r}{an outcome measure}
+
+\item{cbcl_attention_r}{an outcome measure}
+
+\item{cbcl_aggressive_r}{an outcome measure}
+
+\item{nihtbx_list_fc}{an outcome measure}
+
+\item{nihtbx_pattern_fc}{an outcome measure}
+
+\item{nihtbx_cardsort_fc}{an outcome measure}
+
+\item{sds_sleep}{an outcome measure}
+}
+\value{
+outcome_list structure containing all outcome measure data
+}
 \description{
 The major object containing all outcome variables
 }
