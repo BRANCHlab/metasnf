@@ -16,10 +16,11 @@ get_dist_matrix <- function(df, input_type) {
     df <- data.frame(df, row.names = 1)
     if (input_type == "numeric") {
         dist_matrix <- as.matrix(stats::dist(df, method = "euclidean"))
-    } else if (input_type == "categorical") {
-        dist_matrix <- as.matrix(stats::dist(df, method = "binary"))
-    } else if (input_type == "mixed") {
+#    } else if (input_type == "categorical") {
+#        dist_matrix <- as.matrix(stats::dist(df, method = "binary"))
+    } else if (input_type %in% c("mixed", "categorical")) {
         dist_matrix <- as.matrix(cluster::daisy(df, metric = "gower"))
+        print("hej")
     } else {
         rlang::abort(
             paste0("The value ", input_type, " is not a valid input type."),
@@ -523,8 +524,9 @@ snf_step <- function(data_list, scheme) {
 execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
     output_matrix <- build_output_matrix(data_list, design_matrix)
     # Iterate through the rows of the design matrix
+    remaining_seconds_vector <- vector()
     for (i in seq_len(nrow(design_matrix))) {
-        print(i)
+        start_time <- Sys.time()
         dm_row <- design_matrix[i, ]
         current_data_list <- execute_inclusion(data_list, dm_row)
         # Execute the current row's SNF scheme
@@ -572,6 +574,19 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
         # Indicating which rows were not filled by this iteration (last step)
         #output_matrix[0, which(output_matrix[1, ] == 0 &
         #    startsWith(colnames(output_matrix), "NDAR"))] <- NA
+        end_time <- Sys.time()
+        seconds_per_row <- as.numeric(end_time - start_time)
+        rows_remaining <- nrow(design_matrix) - i
+        remaining_seconds_vector <- c(remaining_seconds_vector, seconds_per_row)
+        remaining_seconds <-
+            round(mean(remaining_seconds_vector) * rows_remaining, 0)
+        print(
+            paste0(
+                "Row: ", i, "/", nrow(design_matrix),
+                " | ",
+                "Time remaining: ",
+                remaining_seconds,
+                " seconds"))
     }
     return(output_matrix)
 }
