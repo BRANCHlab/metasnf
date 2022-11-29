@@ -107,7 +107,9 @@ get_subc_cor <- function(mrirscor02, subjects = NULL) {
     subc_cor <- subc_cor_raw |>
         dplyr::select(
             "subjectkey",
-            dplyr::contains("rsfmri_cor_ngd_"))
+            dplyr::contains("rsfmri_cor_ngd_")) |>
+        dplyr::select(
+            -dplyr::contains("cor_ngd_scs"))
     return(stats::na.omit(subc_cor))
 }
 
