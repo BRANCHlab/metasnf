@@ -43,7 +43,47 @@ get_prosocial_behaviour <- function(psb01, abcd_psb01, subjects = NULL) {
 #'
 #' @export
 get_loneliness <- function(abcd_ysr01, subjects = NULL) {
-    loneliness <- abcd_import(abcd_ysr01)
+    loneliness <- abcd_import(abcd_ysr01, subjects) |>
+        dplyr::select(
+            "subjectkey",
+            "sex",
+            "resiliency5a_y",
+            "resiliency5b_y",
+            "resiliency6a_y",
+            "resiliency6b_y") |>
+        dplyr::rename(
+            "friend_boy" = "resiliency5a_y",
+            "close_friend_boy" = "resiliency5b_y",
+            "friend_girl" = "resiliency6a_y",
+            "close_friend_girl" = "resiliency6b_y")
+    loneliness <- loneliness |>
+        dplyr::mutate(
+            "ss_friend" = dplyr::case_when(
+                loneliness$"sex" == "M" ~
+                    as.numeric(loneliness$"friend_boy"),
+                loneliness$"sex" == "F" ~
+                    as.numeric(loneliness$"friend_girl")),
+            "os_friend" = dplyr::case_when(
+                loneliness$"sex" == "M" ~
+                    as.numeric(loneliness$"friend_girl"),
+                loneliness$"sex" == "F" ~
+                    as.numeric(loneliness$"friend_boy")),
+            "ss_close_friend" = dplyr::case_when(
+                loneliness$"sex" == "M" ~
+                    as.numeric(loneliness$"close_friend_boy"),
+                loneliness$"sex" == "F" ~
+                    as.numeric(loneliness$"close_friend_girl")),
+            "os_close_friend" = dplyr::case_when(
+                loneliness$"sex" == "M" ~
+                    as.numeric(loneliness$"close_friend_girl"),
+                loneliness$"sex" == "F" ~
+                    as.numeric(loneliness$"close_friend_boy"))) |>
+        dplyr::select(
+            "subjectkey",
+            "ss_friend",
+            "os_friend",
+            "ss_close_friend",
+            "os_close_friend")
     return(stats::na.omit(loneliness))
 }
 
@@ -59,8 +99,10 @@ get_loneliness <- function(abcd_ysr01, subjects = NULL) {
 get_screen_time <- function(stq01, abcd_stq01, subjects = NULL) {
     p_screen_time <- abcd_import(stq01)
     y_screen_time <- abcd_import(abcd_stq01)
-    screen_time <- dplyr::inner_join(p_screen_time, y_screen_time)
-    return(stats::na.omit(screen_time))
+    screen_time <- dplyr::inner_join(p_screen_time, y_screen_time,
+        by = "subjectkey")
+    #return(stats::na.omit(screen_time))
+    return(screen_time)
 }
 
 #' Extract activities
