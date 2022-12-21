@@ -97,8 +97,8 @@ get_loneliness <- function(abcd_ysr01, subjects = NULL) {
 #'
 #' @export
 get_screen_time <- function(stq01, abcd_stq01, subjects = NULL) {
-    p_screen_time <- abcd_import(stq01)
-    y_screen_time <- abcd_import(abcd_stq01)
+    p_screen_time <- abcd_import(stq01, subjects)
+    y_screen_time <- abcd_import(abcd_stq01, subjects)
     screen_time <- dplyr::inner_join(p_screen_time, y_screen_time,
         by = "subjectkey")
     #return(stats::na.omit(screen_time))
