@@ -2,7 +2,7 @@
 % Please edit documentation in R/psych_resilience.R
 \name{get_exercise}
 \alias{get_exercise}
-\title{Extract exercise}
+\title{Extract healthy behaviours: exercise questionnaire}
 \usage{
 get_exercise(abcd_yrb01, subjects = NULL)
 }
@@ -16,5 +16,5 @@ Activity}
 exercise
 }
 \description{
-Extract exercise
+Extract healthy behaviours: exercise questionnaire
 }

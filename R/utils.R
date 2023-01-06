@@ -68,3 +68,31 @@ dummy <- function(abcd_df, cols) {
         remove_selected_columns = TRUE)
     return(abcd_df)
 }
+
+
+#' Convert specific columns to numeric
+#'
+#' @param df The dataframe containing columns to be converted
+#' @param col_indices The positions of the columns to be converted
+#'
+#' @return df The dataframe with numeric columns
+col_to_num <- function(df, col_indices) {
+    key_cols <- colnames(df)[col_indices]
+    df[key_cols] <- sapply(df[key_cols], as.numeric)
+    return(df)
+}
+
+#' Open data dictionary link
+#'
+#' @param short_name The short name of the abcd data object
+#'
+#' @export
+abcd_dd <- function(short_name) {
+    if (class(short_name)[1] != "character") {
+        short_name <- deparse(substitute(short_name))
+    }
+    url <- paste0(
+        "https://nda.nih.gov/data_structure.html?short_name=",
+        short_name)
+    utils::browseURL(url)
+}

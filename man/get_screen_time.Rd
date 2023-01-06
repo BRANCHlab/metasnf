@@ -2,14 +2,12 @@
 % Please edit documentation in R/psych_resilience.R
 \name{get_screen_time}
 \alias{get_screen_time}
-\title{Extract screen time}
+\title{Extract healthy behaviours: screen time questionnaire}
 \usage{
-get_screen_time(stq01, abcd_stq01, subjects = NULL)
+get_screen_time(stq01, subjects = NULL)
 }
 \arguments{
 \item{stq01}{ABCD Parent Screen Time Survey}
-
-\item{abcd_stq01}{ABCD Youth Screen Time Survey}
 
 \item{subjects}{Dataframe containing list of required subjects}
 }
@@ -17,5 +15,5 @@ get_screen_time(stq01, abcd_stq01, subjects = NULL)
 screen_time
 }
 \description{
-Extract screen time
+Extract healthy behaviours: screen time questionnaire
 }
