@@ -96,3 +96,20 @@ abcd_dd <- function(short_name) {
         short_name)
     utils::browseURL(url)
 }
+
+
+#' Search the abcd data dictionary
+#'
+#' @param search_string The string to be searched
+#'
+#' @export
+search_dd <- function(search_string) {
+    if (class(search_string)[1] != "character") {
+        search_string <- deparse(substitute(short_name))
+    }
+    url <- paste0(
+        "https://nda.nih.gov/general-query.html",
+        "?q=query=data-structure ~and~ searchTerm=",
+        search_string)
+    utils::browseURL(url)
+}
