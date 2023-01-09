@@ -109,7 +109,7 @@ search_dd <- function(search_string) {
     }
     url <- paste0(
         "https://nda.nih.gov/general-query.html",
-        "?q=query=data-structure ~and~ searchTerm=",
-        search_string)
+        "?q=query=data-structure ~and~ searchTerm=", search_string,
+        " ~and~ resultsView=table-view")
     utils::browseURL(url)
 }
