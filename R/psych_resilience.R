@@ -75,6 +75,16 @@ get_prosocial_behaviour <- function(psb01, abcd_psb01, subjects = NULL) {
     yr_prosocial <- abcd_import(abcd_psb01, subjects)
     prosocial <- dplyr::inner_join(
         pr_prosocial, yr_prosocial, by = "subjectkey")
+    prosocial <- prosocial |>
+        dplyr::select("subjectkey",
+                      dplyr::ends_with(c("_y", "_p")))
+    prosocial <- col_to_num(prosocial, 2:length(prosocial))
+    prosocial <- prosocial |>
+        dplyr::mutate(
+            "q1" = prosocial$"prosocial_q1_y" + prosocial$"prosocial_q1_p",
+            "q2" = prosocial$"prosocial_q2_y" + prosocial$"prosocial_q2_p",
+            "q3" = prosocial$"prosocial_q3_y" + prosocial$"prosocial_q3_p") |>
+        dplyr::select("subjectkey", dplyr::starts_with("q"))
     return(stats::na.omit(prosocial))
 }
 
@@ -171,9 +181,29 @@ get_screen_time <- function(stq01, subjects = NULL) {
 #'
 #' @export
 get_sports_and_activities <- function(abcd_saiq02, subjects = NULL) {
-    sports_and_activities <- abcd_import(abcd_saiq02, subjects)
-    #return(stats::na.omit(sports_and_activities))
-    return(sports_and_activities)
+    sports <- abcd_import(abcd_saiq02, subjects)
+    sports <- sports |> dplyr::select("subjectkey", dplyr::starts_with("sai"))
+    sports <- col_to_num(sports, 2:length(sports))
+    # Number of activities organized inside of school
+    org_school_cols <- colnames(sports)[endsWith(colnames(sports), "school")]
+    sports$"organized_school_activities" <-
+        rowSums(sports[, org_school_cols], na.rm = TRUE)
+    # Number of activities organized outside of school
+    org_out_cols <- colnames(sports)[endsWith(colnames(sports), "outside")]
+    sports$"organized_outside_activities" <-
+        rowSums(sports[, org_out_cols], na.rm = TRUE)
+    # Number of activities receiving private instruction
+    private_cols <- colnames(sports)[endsWith(colnames(sports), "private")]
+    sports$"private_instruction_activities" <-
+        rowSums(sports[, private_cols], na.rm = TRUE)
+    # Number of activities participated in the last year
+    p12_cols <- colnames(sports)[endsWith(colnames(sports), "p12")]
+    sports$"p12_activities" <-
+        rowSums(sports[, p12_cols], na.rm = TRUE)
+    # Select columns
+    sports <- sports |>
+        dplyr::select("subjectkey", dplyr::ends_with("activities"))
+    return(stats::na.omit(sports))
 }
 
 #' Extract healthy behaviours: exercise questionnaire
@@ -186,7 +216,8 @@ get_sports_and_activities <- function(abcd_saiq02, subjects = NULL) {
 #'
 #' @export
 get_exercise <- function(abcd_yrb01, subjects = NULL) {
-    exercise <- abcd_import(abcd_yrb01)
+    exercise <- abcd_import(abcd_yrb01, subjects) |>
+        dplyr::select("subjectkey", dplyr::ends_with("y"))
     return(stats::na.omit(exercise))
 }
 
@@ -199,6 +230,7 @@ get_exercise <- function(abcd_yrb01, subjects = NULL) {
 #'
 #' @export
 get_parent_psychopathology <- function(abcd_asrs01, subjects = NULL) {
-    parent_psychopathology <- abcd_import(abcd_asrs01)
+    parent_psychopathology <- abcd_import(abcd_asrs01, subjects) |>
+        dplyr::select("subjectkey", dplyr::ends_with("r"))
     return(stats::na.omit(parent_psychopathology))
 }
