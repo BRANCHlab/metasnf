@@ -4,12 +4,14 @@
 \alias{add_design_matrix_rows}
 \title{Add design matrix rows}
 \usage{
-add_design_matrix_rows(design_matrix, nrows)
+add_design_matrix_rows(design_matrix, nrows, retry_limit = 10)
 }
 \arguments{
 \item{design_matrix}{The existing design matrix}
 
 \item{nrows}{The number of rows to be added to the design matrix}
+
+\item{retry_limit}{The maximum number of attempts to generate a novel row}
 }
 \value{
 design_matrix New design matrix containing additional rows

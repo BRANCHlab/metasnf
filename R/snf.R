@@ -28,12 +28,6 @@ get_dist_matrix <- function(df, input_type) {
     return(dist_matrix)
 }
 
-# Given clustered subjects and outcome measures, evaluate clustering utility
-evaluate_clustering <- function() {
-    # Did eigenvalue and rot matrix give same number of clusters?
-    return(NULL)
-}
-
 #' Build a design matrix skeleton
 #'
 #' @description
@@ -150,12 +144,15 @@ random_removal <- function(num_cols) {
 #'
 #' @param design_matrix The existing design matrix
 #' @param nrows The number of rows to be added to the design matrix
+#' @param retry_limit The maximum number of attempts to generate a novel row
 #'
 #' @return design_matrix New design matrix containing additional rows
 #'
 #' @export
-add_design_matrix_rows <- function(design_matrix, nrows) {
-    for (n in 1:nrows) {
+add_design_matrix_rows <- function(design_matrix, nrows, retry_limit = 10) {
+    i <- 0
+    num_retries <- 0
+    while (i < nrows) {
         row_id <- nrow(design_matrix) + 1
         new_row <- vector()
         # Inclusion columns
@@ -183,7 +180,29 @@ add_design_matrix_rows <- function(design_matrix, nrows) {
             eigen_or_rot)
         # Appending to design matrix
         colnames(new_row) <- colnames(design_matrix)
-        design_matrix <- rbind(design_matrix, data.frame(new_row))
+        new_row <- data.frame(new_row)
+        design_matrix <- rbind(design_matrix, new_row)
+        i <- i + 1
+        # Check if newly added row already exists
+        dm_no_id <- design_matrix[, 2:length(design_matrix)]
+        num_duplicates <- length(which(
+            duplicated(dm_no_id) |
+            duplicated(dm_no_id, fromLast = TRUE)))
+        if (num_duplicates > 0) {
+            i <- i - 1
+            design_matrix <- design_matrix[seq_len(nrow(design_matrix)) - 1, ]
+            num_retries <- num_retries + 1
+        } else {
+            num_retries <- 0
+        }
+        # Limit how many times a new row ended up already existing
+        if (num_retries > retry_limit) {
+            break
+        }
+    }
+    if (num_retries > retry_limit) {
+       print("Matrix row building aborted.")
+       print("To keep adding rows, try raising the retry_limit parameter.")
     }
     row.names(design_matrix) <- NULL
     return(design_matrix)
@@ -521,6 +540,7 @@ snf_step <- function(data_list, scheme) {
 #'
 #' @export
 execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
+    start <- Sys.time()
     output_matrix <- build_output_matrix(data_list, design_matrix)
     # Iterate through the rows of the design matrix
     remaining_seconds_vector <- vector()
@@ -577,6 +597,10 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
         seconds_per_row <- as.numeric(end_time - start_time)
         rows_remaining <- nrow(design_matrix) - i
         remaining_seconds_vector <- c(remaining_seconds_vector, seconds_per_row)
+        if (length(remaining_seconds_vector) > 10) {
+            remaining_seconds_vector <-
+                remaining_seconds_vector[2:length(remaining_seconds_vector)]
+        }
         remaining_seconds <-
             round(mean(remaining_seconds_vector) * rows_remaining, 0)
         print(
@@ -587,6 +611,8 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
                 remaining_seconds,
                 " seconds"))
     }
+    end <- Sys.time()
+    print(end - start)
     return(output_matrix)
 }
 
