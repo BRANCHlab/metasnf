@@ -638,7 +638,6 @@ p_val_select <- function(output_matrix) {
     return(p_val_matrix)
 }
 
-
 #' Get minimum p-value
 #'
 #' @description
@@ -913,8 +912,6 @@ build_output_matrix <- function(data_list, design_matrix) {
     return(output_matrix)
 }
 
-
-
 #' Add character vector as columns
 #'
 #' @description
@@ -953,7 +950,6 @@ no_subs <- function(df) {
     df_no_subs <- df |> dplyr::select(!(dplyr::starts_with("NDAR")))
     return(df_no_subs)
 }
-
 
 #' Get clustered subjects
 #'
@@ -1028,4 +1024,17 @@ lin_reg_p <- function(clust_membership, outcome_df, outcome_var) {
     p <- stats::pf(fstat[1], fstat[2], fstat[3], lower.tail = FALSE)
     attributes(p) <- NULL
     return(p)
+}
+
+#' Heatmap p-value matrix
+#'
+#' @param p_val_matrix matrix of p-values
+#' @param file_path where to store heatmap
+#'
+#' @export
+heatmap_pvals <- function(p_val_matrix, file_path = NA) {
+    my_colors <- colorRampPalette(c("cyan", "deeppink3"))
+    pheatmap::pheatmap(p_val_matrix, col = rev(my_colors(100)))
+    pheatmap::pheatmap(p_val_matrix, col = rev(my_colors(100)),
+        filename = file_path)
 }
