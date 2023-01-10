@@ -624,10 +624,18 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
 }
 
 #' Select p-values from output matrix
+#'
+#' @param output_matrix The output of execute_design_matrix()
+#'
+#' @return p_val_matrix P-values ready for heatmap plotting
+#'
+#' @export
 p_val_select <- function(output_matrix) {
-    dplyr::select(dplyr::ends_with("_p"), -c("min_p_val", "mean_p_val")) |>
-    sapply(as.numeric) |>
-    as.matrix()
+    p_val_matrix <- output_matrix |>
+        dplyr::select(dplyr::ends_with("_p"), -c("min_p_val", "mean_p_val")) |>
+        sapply(as.numeric) |>
+        as.matrix()
+    return(p_val_matrix)
 }
 
 
