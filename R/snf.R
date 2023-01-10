@@ -16,11 +16,10 @@ get_dist_matrix <- function(df, input_type) {
     df <- data.frame(df, row.names = 1)
     if (input_type == "numeric") {
         dist_matrix <- as.matrix(stats::dist(df, method = "euclidean"))
-#    } else if (input_type == "categorical") {
-#        dist_matrix <- as.matrix(stats::dist(df, method = "binary"))
     } else if (input_type %in% c("mixed", "categorical")) {
+        df <- char_to_fac(df)
         dist_matrix <- as.matrix(cluster::daisy(df, metric = "gower"))
-        print("hej")
+        print("hey")
     } else {
         rlang::abort(
             paste0("The value ", input_type, " is not a valid input type."),

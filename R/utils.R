@@ -84,6 +84,20 @@ col_to_num <- function(df, col_indices) {
     return(df)
 }
 
+#' Convert char columns to factors
+#'
+#' @param df The dataframe containing char columns to be converted
+#'
+#' @return df The dataframe with factor columns
+#'
+#' @export
+char_to_fac <- function(df) {
+    df[sapply(df, is.character)] <-
+        lapply(df[sapply(df, is.character)], as.factor)
+    return(df)
+}
+
+
 #' Open data dictionary link
 #'
 #' @param short_name The short name of the abcd data object
