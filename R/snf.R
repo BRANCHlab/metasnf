@@ -611,10 +611,25 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
                 remaining_seconds,
                 " seconds"))
     }
+    # Add number of clusters to output matrix
+    output_matrix <- output_matrix[, 2: length(output_matrix)] |>
+        dplyr::mutate(nclust = dplyr::case_when(
+            eigen_or_rot == 1 ~ eigen_best,
+            eigen_or_rot == 2 ~ rot_best),
+            .keep = "unused") |>
+    unique()
     end <- Sys.time()
     print(end - start)
     return(output_matrix)
 }
+
+#' Select p-values from output matrix
+p_val_select <- function(output_matrix) {
+    dplyr::select(dplyr::ends_with("_p"), -c("min_p_val", "mean_p_val")) |>
+    sapply(as.numeric) |>
+    as.matrix()
+}
+
 
 #' Get minimum p-value
 #'
