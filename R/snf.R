@@ -262,7 +262,14 @@ generate_data_list <- function(mtbi_loc = NULL,
                                subc_var = NULL,
                                cort_sa = NULL,
                                cort_t = NULL,
-                               subc_v = NULL) {
+                               subc_v = NULL,
+                               loneliness = NULL,
+                               screen_time = NULL,
+                               family_function = NULL,
+                               sports = NULL,
+                               prosocial = NULL,
+                               parent_psych = NULL,
+                               exercise = NULL) {
     mtbi_loc_list <-
         list(mtbi_loc, "mtbi_loc", "none", "as", "categorical")
     mtbi_mechanism_list <-
@@ -301,27 +308,48 @@ generate_data_list <- function(mtbi_loc = NULL,
         list(cort_t, "cort_t", "smri", "n", "numeric")
     subc_v_list <-
         list(subc_v, "subc_v", "smri", "n", "numeric")
+    loneliness_list <-
+        list(loneliness, "loneliness", "none", "p", "numeric")
+    screen_time_list <-
+        list(screen_time, "screen_time", "none", "p", "numeric")
+    family_function_list <-
+        list(family_function, "family_function", "none", "p", "numeric")
+    sports_list <-
+        list(sports, "sports", "none", "p", "numeric")
+    prosocial_list <-
+        list(prosocial, "prosocial", "none", "p", "numeric")
+    parent_psych_list <-
+        list(parent_psych, "parent_psych", "none", "p", "numeric")
+    exercise_list <-
+        list(exercise, "exercise", "none", "p", "numeric")
     # The object that will contain all the data
-    full_list <-
-        list(mtbi_loc_list,
-             mtbi_mechanism_list,
-             mtbi_mem_daze_list,
-             income_list,
-             interview_age_list,
-             mtbi_age_list,
-             pubertal_status_list,
-             race_list,
-             sex_list,
-             headaches_list,
-             mtbi_count_list,
-             wmndf_list,
-             gord_cor_list,
-             gord_var_list,
-             subc_cor_list,
-             subc_var_list,
-             cort_sa_list,
-             cort_t_list,
-             subc_v_list)
+    full_list <- list(
+        mtbi_loc_list,
+        mtbi_mechanism_list,
+        mtbi_mem_daze_list,
+        income_list,
+        interview_age_list,
+        mtbi_age_list,
+        pubertal_status_list,
+        race_list,
+        sex_list,
+        headaches_list,
+        mtbi_count_list,
+        wmndf_list,
+        gord_cor_list,
+        gord_var_list,
+        subc_cor_list,
+        subc_var_list,
+        cort_sa_list,
+        cort_t_list,
+        subc_v_list,
+        loneliness_list,
+        screen_time_list,
+        family_function_list,
+        sports_list,
+        prosocial_list,
+        parent_psych_list,
+        exercise_list)
     # Assign names to the nested list elements
     full_list_names <- c("data", "name", "subdomain", "domain", "type")
     full_list <- lapply(full_list, stats::setNames, full_list_names)
