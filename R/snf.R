@@ -1033,7 +1033,7 @@ lin_reg_p <- function(clust_membership, outcome_df, outcome_var) {
 #'
 #' @export
 heatmap_pvals <- function(p_val_matrix, file_path = NA) {
-    my_colors <- colorRampPalette(c("cyan", "deeppink3"))
+    my_colors <- grDevices::colorRampPalette(c("cyan", "deeppink3"))
     pheatmap::pheatmap(p_val_matrix, col = rev(my_colors(100)))
     pheatmap::pheatmap(p_val_matrix, col = rev(my_colors(100)),
         filename = file_path)

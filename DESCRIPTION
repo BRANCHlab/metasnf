@@ -16,6 +16,7 @@ Imports:
     ggplot2,
     here,
     MASS,
+    pheatmap,
     rlang,
     SNFtool,
     stats
