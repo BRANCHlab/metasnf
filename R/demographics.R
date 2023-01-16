@@ -64,8 +64,7 @@ get_income <- function(pdem02, subjects = NULL) {
             TRUE ~ NA_real_,
             ))
     income_df <- income_df |>
-        dplyr::select("subjectkey", "household_income") |>
-        dplyr::filter(!(is.na(income_df$"household_income")))
+        dplyr::select("subjectkey", "household_income")
     return(income_df)
 }
 
