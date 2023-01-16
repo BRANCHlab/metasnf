@@ -33,7 +33,7 @@ get_pubertal_status <- function(ssphp01, ssphy01, subjects = NULL) {
         dplyr::select(
             "subjectkey",
             "pubertal_status")
-    return(stats::na.omit(pubertal_status))
+    return(pubertal_status)
 }
 
 #' Returns combined household incomes split into low, medium, and high groups
@@ -66,7 +66,7 @@ get_income <- function(pdem02, subjects = NULL) {
     income_df <- income_df |>
         dplyr::select("subjectkey", "household_income") |>
         dplyr::filter(!(is.na(income_df$"household_income")))
-    return(stats::na.omit(income_df))
+    return(income_df)
 }
 
 #' Returns race information
@@ -211,7 +211,7 @@ get_race <- function(pdem02, subjects = NULL, format = "") {
                 )) |>
             dplyr::select("subjectkey", "race")
     }
-    return(stats::na.omit(race_df))
+    return(race_df)
 }
 
 #' Print summary of subjects by race
@@ -251,7 +251,7 @@ format_race <- function(race_df, format) {
 get_interview_age <- function(abcd_df, subjects = NULL) {
     interview_age <- abcd_import(abcd_df, subjects) |>
         dplyr::select("subjectkey", "interview_age")
-    return(stats::na.omit(interview_age))
+    return(interview_age)
 }
 
 #' Return dataframe containing sex of specified subjects
@@ -286,7 +286,7 @@ get_sex <- function(abcd_df, subjects = NULL, format = "dummied") {
             remove_selected_columns = TRUE)
         colnames(sex) <- c("subjectkey", "M")
     }
-    return(stats::na.omit(sex))
+    return(sex)
 }
 
 #' Get acute symptom input variable 'latest_mtbi_age'
@@ -303,5 +303,5 @@ get_mtbi_age <- function(otbi01, subjects = NULL) {
             "subjectkey",
             "latest_mtbi_age"
         )
-    return(stats::na.omit(mtbi_age))
+    return(mtbi_age)
 }

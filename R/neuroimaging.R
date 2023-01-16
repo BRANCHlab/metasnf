@@ -14,7 +14,7 @@ get_subc_v <- function(smrip10201, subjects = NULL) {
             "smri_vol_scs_cbwmatterlh":"smri_vol_scs_vedcrh") |>
         dplyr::select(
             -c(dplyr::contains("lesion")))
-    return(stats::na.omit(subc_v_df))
+    return(subc_v_df)
 }
 
 
@@ -32,7 +32,7 @@ get_cort_t <- function(mrisdp10201, subjects = NULL) {
         dplyr::select(
             "subjectkey",
             "mrisdp_1":"mrisdp_151")
-    return(stats::na.omit(cort_t_df))
+    return(cort_t_df)
 }
 
 
@@ -50,7 +50,7 @@ get_cort_sa <- function(mrisdp10201, subjects = NULL) {
         dplyr::select(
             "subjectkey",
             "mrisdp_303":"mrisdp_453")
-    return(stats::na.omit(cort_sa_df))
+    return(cort_sa_df)
 }
 
 
@@ -72,7 +72,7 @@ get_wmnd <- function(drsip201, subjects = NULL) {
             "dmri_rsirndwm_cdx_mean",
             "dmri_rsirndwm_cdx_meanlh",
             "dmri_rsirndwm_cdx_meanrh"))
-    return(stats::na.omit(wmnd_df))
+    return(wmnd_df)
 }
 
 
@@ -90,7 +90,7 @@ get_gord_cor <- function(betnet02, subjects = NULL) {
         dplyr::select(
             "subjectkey",
             "rsfmri_c_ngd_ad_ngd_ad":"rsfmri_c_ngd_vs_ngd_vs")
-    return(stats::na.omit(gord_cor))
+    return(gord_cor)
 }
 
 
@@ -110,7 +110,7 @@ get_subc_cor <- function(mrirscor02, subjects = NULL) {
             dplyr::contains("rsfmri_cor_ngd_")) |>
         dplyr::select(
             -dplyr::contains("cor_ngd_scs"))
-    return(stats::na.omit(subc_cor))
+    return(subc_cor)
 }
 
 
@@ -128,7 +128,7 @@ get_gord_var <- function(mrirstv02, subjects = NULL) {
         dplyr::select(
             "subjectkey",
             dplyr::contains("rsfmri_var_cortgordon_"))
-    return(stats::na.omit(gord_var))
+    return(gord_var)
 }
 
 #' Extract cortical temporal variances
@@ -151,5 +151,5 @@ get_subc_var <- function(mrirstv02, subjects = NULL) {
                "rsfmri_var_scs_wmhypinlh",
                "rsfmri_var_scs_lesionlh",
                "rsfmri_var_scs_lesionrh"))
-    return(stats::na.omit(subc_var))
+    return(subc_var)
 }

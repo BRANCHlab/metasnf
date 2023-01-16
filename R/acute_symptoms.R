@@ -20,7 +20,7 @@ get_mtbi_mechanism <- function(otbi01, subjects = NULL, format = "dummied") {
         mtbi_mechanism <- mtbi_mechanism |>
             dummy(cols = "latest_mtbi_mechanism")
     }
-    return(stats::na.omit(mtbi_mechanism))
+    return(mtbi_mechanism)
 }
 
 #' Get acute symptom input variable 'latest_mtbi_loc'
@@ -37,7 +37,7 @@ get_mtbi_loc <- function(otbi01, subjects = NULL) {
             "subjectkey",
             "latest_mtbi_loc"
         )
-    return(stats::na.omit(mtbi_loc))
+    return(mtbi_loc)
 }
 
 #' Get acute symptom input variable 'latest_mtbi_mem_daze'
@@ -54,5 +54,5 @@ get_mtbi_mem_daze <- function(otbi01, subjects = NULL) {
             "subjectkey",
             "latest_mtbi_mem_daze"
         )
-    return(stats::na.omit(mtbi_mem_daze))
+    return(mtbi_mem_daze)
 }

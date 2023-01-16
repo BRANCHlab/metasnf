@@ -12,7 +12,7 @@ get_nihtbx_list_fc <- function(abcd_tbss01, subjects = NULL) {
         dplyr::select(
             "subjectkey",
             "nihtbx_list_fc")
-        return(stats::na.omit(nihtbx_list_fc))
+        return(nihtbx_list_fc)
 }
 
 #' Get nihtbx cardsort data
@@ -29,7 +29,7 @@ get_nihtbx_cardsort_fc <- function(abcd_tbss01, subjects = NULL) {
         dplyr::select(
             "subjectkey",
             "nihtbx_cardsort_fc")
-        return(stats::na.omit(nihtbx_cardsort_fc))
+        return(nihtbx_cardsort_fc)
 }
 
 #' Get nihtbx pattern data
@@ -46,5 +46,5 @@ get_nihtbx_pattern_fc <- function(abcd_tbss01, subjects = NULL) {
         dplyr::select(
             "subjectkey",
             "nihtbx_pattern_fc")
-        return(stats::na.omit(nihtbx_pattern_fc))
+        return(nihtbx_pattern_fc)
 }

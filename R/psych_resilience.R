@@ -58,7 +58,7 @@ get_family_function <- function(fes02, abcd_fes01, subjects = NULL) {
             "q9_yell" = family_function$"fes_youth_q9" +
                 family_function$"fam_enviro9r_p") |>
         dplyr::select("subjectkey", dplyr::starts_with("q"))
-    return(stats::na.omit(family_function))
+    return(family_function)
 }
 
 #' Extract prosocial behaviour
@@ -85,7 +85,7 @@ get_prosocial_behaviour <- function(psb01, abcd_psb01, subjects = NULL) {
             "q2" = prosocial$"prosocial_q2_y" + prosocial$"prosocial_q2_p",
             "q3" = prosocial$"prosocial_q3_y" + prosocial$"prosocial_q3_p") |>
         dplyr::select("subjectkey", dplyr::starts_with("q"))
-    return(stats::na.omit(prosocial))
+    return(prosocial)
 }
 
 #' Extract loneliness
@@ -138,7 +138,7 @@ get_loneliness <- function(abcd_ysr01, subjects = NULL) {
             "os_friend",
             "ss_close_friend",
             "os_close_friend")
-    return(stats::na.omit(loneliness))
+    return(loneliness)
 }
 
 #' Extract healthy behaviours: screen time questionnaire
@@ -168,7 +168,7 @@ get_screen_time <- function(stq01, subjects = NULL) {
             "screentime_wkday_hrs" = screen_time$"screentime2_p_hours" +
                 (screen_time$"screentime2_p_minutes" / 60)) |>
         dplyr::select(dplyr::contains(c("subjectkey", "wknd", "wkday")))
-    return(stats::na.omit(screen_time))
+    return(screen_time)
 }
 
 #' Extract healthy behaviours: spots and activities questionnaire
@@ -203,7 +203,7 @@ get_sports_and_activities <- function(abcd_saiq02, subjects = NULL) {
     # Select columns
     sports <- sports |>
         dplyr::select("subjectkey", dplyr::ends_with("activities"))
-    return(stats::na.omit(sports))
+    return(sports)
 }
 
 #' Extract healthy behaviours: exercise questionnaire
@@ -218,7 +218,7 @@ get_sports_and_activities <- function(abcd_saiq02, subjects = NULL) {
 get_exercise <- function(abcd_yrb01, subjects = NULL) {
     exercise <- abcd_import(abcd_yrb01, subjects) |>
         dplyr::select("subjectkey", dplyr::ends_with("y"))
-    return(stats::na.omit(exercise))
+    return(exercise)
 }
 
 #' Extract parent psychopathology
@@ -232,5 +232,5 @@ get_exercise <- function(abcd_yrb01, subjects = NULL) {
 get_parent_psychopathology <- function(abcd_asrs01, subjects = NULL) {
     parent_psychopathology <- abcd_import(abcd_asrs01, subjects) |>
         dplyr::select("subjectkey", dplyr::ends_with("r"))
-    return(stats::na.omit(parent_psychopathology))
+    return(parent_psychopathology)
 }

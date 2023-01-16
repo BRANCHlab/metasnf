@@ -18,5 +18,5 @@ get_mtbi_subjects <- function(otbi01, min_latest_mtbi_mpi) {
         dplyr::filter(otbi01$"mtbi" == 1 &
                       otbi01$"latest_mtbi_mpi" >= min_latest_mtbi_mpi) |>
         dplyr::select("subjectkey")
-    return(stats::na.omit(subjects))
+    return(subjects)
 }
