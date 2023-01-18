@@ -17,7 +17,7 @@ get_dist_matrix <- function(df, input_type) {
     if (input_type == "numeric") {
         dist_matrix <- as.matrix(stats::dist(df, method = "euclidean"))
     } else if (input_type %in% c("mixed", "categorical")) {
-        df <- char_to_fac(df)
+        df <- abcdutils::char_to_fac(df)
         dist_matrix <-
             as.matrix(cluster::daisy(df, metric = "gower", warnBin = FALSE))
     } else {
