@@ -38,6 +38,8 @@ meta_cluster <- function(mc_om) {
     # Calculating pairwise ARIs across rows
     for (i in seq_len(nrow(mc_sm))) {
         for (j in seq_len(ncol(mc_sm))) {
+            print(i)
+            print(j)
             mc_sm[i, j] <- calc_ari(i, j, mc_om_no_id)
         }
     }
