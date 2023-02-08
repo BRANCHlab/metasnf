@@ -28,6 +28,7 @@ get_dist_matrix <- function(df, input_type) {
     return(dist_matrix)
 }
 
+
 #' Build a design matrix skeleton
 #'
 #' @description
@@ -106,11 +107,9 @@ build_design_matrix_base_t <- function() {
         inc_cort_t = numeric(),
         inc_subc_v = numeric(),
         snf_scheme = numeric(),
-        #neuroimaging_domain = numeric(),
-        #variable_weighting = numeric(),
-        #pca = numeric(),
-        #output_vars = numeric(),
         eigen_or_rot = numeric(),
+        K = numeric(),
+        alpha = numeric(),
         stringsAsFactors = FALSE)
     row.names(design_matrix) <- NULL
     return(design_matrix)
@@ -163,21 +162,18 @@ add_design_matrix_rows <- function(design_matrix, nrows, retry_limit = 10) {
         colnames(inclusions) <- inclusion_names
         # Other free parameters
         snf_scheme <- sample(1:3, 1)
-        #neuroimaging_domain <- sample(1:2, 1)
-        #variable_weighting <- sample(1:4, 1)
-        #pca <- sample(1:3, 1)
-        #output_vars <- sample(1:2, 1)
         eigen_or_rot <- sample(1:2, 1)
+        # K and alpha range based on prior hyperparameter scans
+        K <- sample(10:30, 1)
+        alpha <- (sample(6:10, 1))/10
         # Putting it all together
         new_row <- cbind(
             row_id,
             inclusions,
             snf_scheme,
-            #neuroimaging_domain,
-            #variable_weighting,
-            #pca,
-            #output_vars,
-            eigen_or_rot)
+            eigen_or_rot,
+            K,
+            alpha)
         # Appending to design matrix
         colnames(new_row) <- colnames(design_matrix)
         new_row <- data.frame(new_row)
@@ -205,6 +201,23 @@ add_design_matrix_rows <- function(design_matrix, nrows, retry_limit = 10) {
        print("To keep adding rows, try raising the retry_limit parameter.")
     }
     row.names(design_matrix) <- NULL
+    return(design_matrix)
+}
+
+#' Build standard design matrix
+#'
+#' @param design_matrix The existing design matrix
+#'
+#' @return design_matrix Adds the standard grid expansion for SNF hyperparams
+#'
+#' @export
+build_design_matrix_s <- function() {
+    design_matrix <- build_design_matrix_base_t()
+    design_matrix[1:80, ] <- 1
+    hyperparam_grid <- expand.grid(1:10, 3:10)
+    colnames(hyperparam_grid) <- c("K", "alpha")
+    design_matrix$K <- hyperparam_grid$K * 10
+    design_matrix$alpha <- hyperparam_grid$alpha / 10
     return(design_matrix)
 }
 
@@ -533,7 +546,7 @@ arrange_dl <- function(data_list) {
 #' @return fused_network The final fused network for clustering
 #'
 #' @export
-snf_step <- function(data_list, scheme) {
+snf_step <- function(data_list, scheme, K = 20, alpha = 0.5) {
     # Subset just to those patients who are common in all inputs
     data_list <- data_list |>
         reduce_dl_to_common() |>
@@ -546,9 +559,9 @@ snf_step <- function(data_list, scheme) {
             })
         sim_list <- lapply(dist_list,
             function(x) {
-                SNFtool::affinityMatrix(x)
+                SNFtool::affinityMatrix(x, K = K, sigma = alpha)
             })
-        fused_network <- SNFtool::SNF(sim_list)
+        fused_network <- SNFtool::SNF(sim_list, K = K)
     } else if (scheme == "domain") { # This works
         data_list <- domain_merge(data_list)
         dist_list <- lapply(data_list,
@@ -557,9 +570,9 @@ snf_step <- function(data_list, scheme) {
             })
         sim_list <- lapply(dist_list,
             function(x) {
-                SNFtool::affinityMatrix(x)
+                SNFtool::affinityMatrix(x, K = K, sigma = alpha)
             })
-        fused_network <- SNFtool::SNF(sim_list)
+        fused_network <- SNFtool::SNF(sim_list, K = K)
     } else if (scheme == "twostep") {
         fused_network <- two_step_merge(data_list)
     } else {
@@ -596,7 +609,13 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
             dm_row$"snf_scheme" == 2 ~ "domain",
             dm_row$"snf_scheme" == 3 ~ "twostep",
         )
-        fused_network <- snf_step(current_data_list, current_snf_scheme)
+        K <- design_matrix[i, "K"]
+        alpha <- design_matrix[i, "alpha"]
+        fused_network <- snf_step(
+            current_data_list,
+            current_snf_scheme,
+            K = K,
+            alpha = alpha)
         all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
         eigen_best <- all_clust$`Eigen-gap best`
         rot_best <- all_clust$`Rotation cost best`
@@ -866,14 +885,14 @@ domain_merge <- function(data_list) {
 #' @return fused_network The final fused network for clustering
 #'
 #' @export
-two_step_merge <- function(data_list) {
+two_step_merge <- function(data_list, K = 20, alpha = 0.5) {
     dist_list <- lapply(data_list,
         function(x) {
             get_dist_matrix(df = x$"data", input_type = x$"type")
         })
     sim_list <- lapply(dist_list,
         function(x) {
-            SNFtool::affinityMatrix(x)
+            SNFtool::affinityMatrix(x, K = K, sigma = alpha)
         })
     affinity_list <- data_list
     for (i in seq_along(affinity_list)) {
@@ -899,12 +918,12 @@ two_step_merge <- function(data_list) {
            if (length(x) == 1) {
                x[[1]]
            } else {
-               SNFtool::SNF(x)
+               SNFtool::SNF(x, K = K)
            }
        })
     # Fusing domain affinity matrices into final fused network
     if (length(step_one) > 1) {
-        fused_network <- SNFtool::SNF(step_one)
+        fused_network <- SNFtool::SNF(step_one, K = K)
     } else {
         fused_network <- step_one[[1]]
     }
