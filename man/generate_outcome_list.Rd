@@ -12,10 +12,10 @@ generate_outcome_list(
   cbcl_overtired = NULL,
   cbcl_sleeping_more = NULL,
   cbcl_sleeping_less = NULL,
-  cbcl_depress_r = NULL,
-  cbcl_anxiety_r = NULL,
-  cbcl_attention_r = NULL,
-  cbcl_aggressive_r = NULL,
+  cbcl_depress = NULL,
+  cbcl_anxiety = NULL,
+  cbcl_attention = NULL,
+  cbcl_aggressive = NULL,
   nihtbx_list_fc = NULL,
   nihtbx_pattern_fc = NULL,
   nihtbx_cardsort_fc = NULL,
@@ -37,14 +37,6 @@ generate_outcome_list(
 
 \item{cbcl_sleeping_less}{an outcome measure}
 
-\item{cbcl_depress_r}{an outcome measure}
-
-\item{cbcl_anxiety_r}{an outcome measure}
-
-\item{cbcl_attention_r}{an outcome measure}
-
-\item{cbcl_aggressive_r}{an outcome measure}
-
 \item{nihtbx_list_fc}{an outcome measure}
 
 \item{nihtbx_pattern_fc}{an outcome measure}
@@ -52,6 +44,14 @@ generate_outcome_list(
 \item{nihtbx_cardsort_fc}{an outcome measure}
 
 \item{sds_sleep}{an outcome measure}
+
+\item{cbcl_depress_r}{an outcome measure}
+
+\item{cbcl_anxiety_r}{an outcome measure}
+
+\item{cbcl_attention_r}{an outcome measure}
+
+\item{cbcl_aggressive_r}{an outcome measure}
 }
 \value{
 outcome_list structure containing all outcome measure data

@@ -459,10 +459,10 @@ generate_outcome_list <- function(cbcl_headaches = NULL,
                                   cbcl_overtired = NULL,
                                   cbcl_sleeping_more = NULL,
                                   cbcl_sleeping_less = NULL,
-                                  cbcl_depress_r = NULL,
-                                  cbcl_anxiety_r = NULL,
-                                  cbcl_attention_r = NULL,
-                                  cbcl_aggressive_r = NULL,
+                                  cbcl_depress = NULL,
+                                  cbcl_anxiety = NULL,
+                                  cbcl_attention = NULL,
+                                  cbcl_aggressive = NULL,
                                   nihtbx_list_fc = NULL,
                                   nihtbx_pattern_fc = NULL,
                                   nihtbx_cardsort_fc = NULL,
@@ -483,14 +483,14 @@ generate_outcome_list <- function(cbcl_headaches = NULL,
         list(cbcl_sleeping_more, "cbcl_sleeping_more", "ordinal")
     cbcl_sleeping_less_list <-
         list(cbcl_sleeping_less, "cbcl_sleeping_less", "ordinal")
-    cbcl_depress_r_list <-
-        list(cbcl_depress_r, "cbcl_depress_r", "numeric")
-    cbcl_anxiety_r_list <-
-        list(cbcl_anxiety_r, "cbcl_anxiety_r", "numeric")
-    cbcl_attention_r_list <-
-        list(cbcl_attention_r, "cbcl_attention_r", "numeric")
-    cbcl_aggressive_r_list <-
-        list(cbcl_aggressive_r, "cbcl_aggressive_r", "numeric")
+    cbcl_depress_list <-
+        list(cbcl_depress, "cbcl_depress", "numeric")
+    cbcl_anxiety_list <-
+        list(cbcl_anxiety, "cbcl_anxiety", "numeric")
+    cbcl_attention_list <-
+        list(cbcl_attention, "cbcl_attention", "numeric")
+    cbcl_aggressive_list <-
+        list(cbcl_aggressive, "cbcl_aggressive", "numeric")
     nihtbx_list_fc_list <-
         list(nihtbx_list_fc, "nihtbx_list_fc", "numeric")
     nihtbx_pattern_fc_list <-
@@ -507,10 +507,10 @@ generate_outcome_list <- function(cbcl_headaches = NULL,
                       cbcl_overtired_list,
                       cbcl_sleeping_more_list,
                       cbcl_sleeping_less_list,
-                      cbcl_depress_r_list,
-                      cbcl_anxiety_r_list,
-                      cbcl_attention_r_list,
-                      cbcl_aggressive_r_list,
+                      cbcl_depress_list,
+                      cbcl_anxiety_list,
+                      cbcl_attention_list,
+                      cbcl_aggressive_list,
                       nihtbx_list_fc_list,
                       nihtbx_pattern_fc_list,
                       nihtbx_cardsort_fc_list,
