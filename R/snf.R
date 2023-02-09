@@ -440,10 +440,10 @@ generate_data_list <- function(mtbi_loc = NULL,
 #' @param cbcl_overtired an outcome measure
 #' @param cbcl_sleeping_more an outcome measure
 #' @param cbcl_sleeping_less an outcome measure
-#' @param cbcl_depress_r an outcome measure
-#' @param cbcl_anxiety_r an outcome measure
-#' @param cbcl_attention_r an outcome measure
-#' @param cbcl_aggressive_r an outcome measure
+#' @param cbcl_depress an outcome measure
+#' @param cbcl_anxiety an outcome measure
+#' @param cbcl_attention an outcome measure
+#' @param cbcl_aggressive an outcome measure
 #' @param nihtbx_list_fc an outcome measure
 #' @param nihtbx_pattern_fc an outcome measure
 #' @param nihtbx_cardsort_fc an outcome measure

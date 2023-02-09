@@ -37,6 +37,14 @@ generate_outcome_list(
 
 \item{cbcl_sleeping_less}{an outcome measure}
 
+\item{cbcl_depress}{an outcome measure}
+
+\item{cbcl_anxiety}{an outcome measure}
+
+\item{cbcl_attention}{an outcome measure}
+
+\item{cbcl_aggressive}{an outcome measure}
+
 \item{nihtbx_list_fc}{an outcome measure}
 
 \item{nihtbx_pattern_fc}{an outcome measure}
@@ -44,14 +52,6 @@ generate_outcome_list(
 \item{nihtbx_cardsort_fc}{an outcome measure}
 
 \item{sds_sleep}{an outcome measure}
-
-\item{cbcl_depress_r}{an outcome measure}
-
-\item{cbcl_anxiety_r}{an outcome measure}
-
-\item{cbcl_attention_r}{an outcome measure}
-
-\item{cbcl_aggressive_r}{an outcome measure}
 }
 \value{
 outcome_list structure containing all outcome measure data
