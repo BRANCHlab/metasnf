@@ -11,10 +11,13 @@
 #' @return dist_matrix Matrix of inter-observation distances
 #'
 #' @export
-get_dist_matrix <- function(df, input_type) {
+get_dist_matrix <- function(df, input_type, scale = FALSE) {
     # Move subject keys into dataframe rownames
     df <- data.frame(df, row.names = 1)
     if (input_type == "numeric") {
+        if (scale) {
+            df <- SNFtool::standardNormalization(df)
+        }
         dist_matrix <- as.matrix(stats::dist(df, method = "euclidean"))
     } else if (input_type %in% c("mixed", "categorical")) {
         df <- abcdutils::char_to_fac(df)
@@ -617,7 +620,8 @@ snf_step <- function(data_list, scheme, K = 20, alpha = 0.5) {
         data_list <- domain_merge(data_list)
         dist_list <- lapply(data_list,
             function(x) {
-                get_dist_matrix(df = x$"data", input_type = x$"type")
+                get_dist_matrix(df = x$"data", input_type = x$"type",
+                    scale = TRUE)
             })
         sim_list <- lapply(dist_list,
             function(x) {
