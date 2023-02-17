@@ -7,6 +7,8 @@
 #' @param input_type Either "numeric" (resulting in euclidean distances),
 #'  "categorical" (resulting in binary distances), or "mixed" (resulting in
 #'  gower distances)
+#' @param scale Whether or not the data should be standard normalized prior to
+#'  distance calculations
 #'
 #' @return dist_matrix Matrix of inter-observation distances
 #'
@@ -179,7 +181,7 @@ add_design_matrix_rows <- function(design_matrix, nrows, retry_limit = 10) {
 #'
 #' @export
 build_design_matrix_ak <- function() {
-    design_matrix <- build_design_matrix_base_t()
+    design_matrix <- build_design_matrix_base()
     design_matrix[1:80, ] <- 1
     hyperparam_grid <- expand.grid(1:10, 3:10)
     colnames(hyperparam_grid) <- c("K", "alpha")

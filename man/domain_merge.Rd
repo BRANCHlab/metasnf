@@ -14,5 +14,6 @@ domain_merge(data_list)
 domain_dl
 }
 \description{
-Domain merge
+Given a data_list, returns a new data_list where all original data objects of
+a particlar domain have been concatenated
 }

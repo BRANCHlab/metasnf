@@ -4,7 +4,7 @@
 \alias{get_dist_matrix}
 \title{Calculate distance matrices}
 \usage{
-get_dist_matrix(df, input_type)
+get_dist_matrix(df, input_type, scale = FALSE)
 }
 \arguments{
 \item{df}{Raw dataframe with subject IDs in column 1}
@@ -12,6 +12,9 @@ get_dist_matrix(df, input_type)
 \item{input_type}{Either "numeric" (resulting in euclidean distances),
 "categorical" (resulting in binary distances), or "mixed" (resulting in
 gower distances)}
+
+\item{scale}{Whether or not the data should be standard normalized prior to
+distance calculations}
 }
 \value{
 dist_matrix Matrix of inter-observation distances
