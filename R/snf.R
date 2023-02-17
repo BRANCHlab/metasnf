@@ -17,7 +17,6 @@ get_dist_matrix <- function(df, input_type, scale = FALSE) {
     if (input_type == "numeric") {
         if (scale) {
             df <- SNFtool::standardNormalization(df)
-            print("scaling")
         }
         dist_matrix <- as.matrix(stats::dist(df, method = "euclidean"))
     } else if (input_type %in% c("mixed", "categorical")) {
@@ -32,27 +31,6 @@ get_dist_matrix <- function(df, input_type, scale = FALSE) {
     return(dist_matrix)
 }
 
-get_dist_matrix2 <- function(df, input_type, scale = FALSE) {
-    # Move subject keys into dataframe rownames
-    df <- data.frame(df, row.names = 1)
-    if (input_type == "numeric") {
-        if (scale) {
-            print("not_scaling")
-        }
-        dist_matrix <- as.matrix(stats::dist(df, method = "euclidean"))
-    } else if (input_type %in% c("mixed", "categorical")) {
-        df <- abcdutils::char_to_fac(df)
-        dist_matrix <-
-            as.matrix(cluster::daisy(df, metric = "gower", warnBin = FALSE))
-    } else {
-        rlang::abort(
-            paste0("The value ", input_type, " is not a valid input type."),
-            class = "invalid_input")
-    }
-    return(dist_matrix)
-}
-
-k
 #' Build a design matrix skeleton
 #'
 #' @description
@@ -68,86 +46,6 @@ k
 #'
 #' @export
 build_design_matrix_base <- function() {
-    design_matrix <- data.frame(
-        row_id = numeric(),
-        inc_mtbi_loc = numeric(),
-        inc_mtbi_mechanism = numeric(),
-        inc_mtbi_mem_daze = numeric(),
-        inc_income = numeric(),
-        inc_interview_age = numeric(),
-        inc_mtbi_age = numeric(),
-        inc_pubertal_status = numeric(),
-        inc_race = numeric(),
-        inc_sex = numeric(),
-        inc_wmndf = numeric(),
-        inc_headaches = numeric(),
-        inc_mtbi_count = numeric(),
-        inc_gord_cor = numeric(),
-        inc_gord_var = numeric(),
-        inc_subc_cor = numeric(),
-        inc_subc_var = numeric(),
-        inc_cort_sa = numeric(),
-        inc_cort_t = numeric(),
-        inc_subc_v = numeric(),
-        snf_scheme = numeric(),
-        neuroimaging_domain = numeric(),
-        variable_weighting = numeric(),
-        pca = numeric(),
-        output_vars = numeric(),
-        eigen_or_rot = numeric(),
-        stringsAsFactors = FALSE)
-    row.names(design_matrix) <- NULL
-    return(design_matrix)
-}
-
-#' Build a design matrix skeleton FOR TESTING - It's just smaller
-#'
-#' @description
-#' Construct the base of the design matrix for small testing purposes
-#'
-#' @return design_matrix A skeleton dataframe to build a design matrix out of
-#'
-#' @export
-build_design_matrix_base_t <- function() {
-    design_matrix <- data.frame(
-        row_id = numeric(),
-        inc_mtbi_loc = numeric(),
-        inc_mtbi_mechanism = numeric(),
-        inc_mtbi_mem_daze = numeric(),
-        inc_income = numeric(),
-        inc_interview_age = numeric(),
-        inc_mtbi_age = numeric(),
-        inc_pubertal_status = numeric(),
-        inc_race = numeric(),
-        inc_sex = numeric(),
-        inc_wmndf = numeric(),
-        inc_headaches = numeric(),
-        inc_mtbi_count = numeric(),
-        inc_gord_cor = numeric(),
-        inc_gord_var = numeric(),
-        inc_subc_cor = numeric(),
-        inc_subc_var = numeric(),
-        inc_cort_sa = numeric(),
-        inc_cort_t = numeric(),
-        inc_subc_v = numeric(),
-        snf_scheme = numeric(),
-        eigen_or_rot = numeric(),
-        K = numeric(),
-        alpha = numeric(),
-        stringsAsFactors = FALSE)
-    row.names(design_matrix) <- NULL
-    return(design_matrix)
-}
-
-#' Build a design matrix skeleton FOR TESTING 2 - Contains psychosocial vars
-#'
-#' @description
-#' Construct the base of the design matrix for small testing purposes
-#'
-#' @return design_matrix A skeleton dataframe to build a design matrix out of
-#'
-#' @export
-build_design_matrix_base_t2 <- function() {
     design_matrix <- data.frame(
         row_id = numeric(),
         inc_mtbi_loc = numeric(),
@@ -275,12 +173,12 @@ add_design_matrix_rows <- function(design_matrix, nrows, retry_limit = 10) {
     return(design_matrix)
 }
 
-#' Build standard design matrix
+#' Build design matrix for scanning alpha and K
 #'
 #' @return design_matrix Adds the standard grid expansion for SNF hyperparams
 #'
 #' @export
-build_design_matrix_s <- function() {
+build_design_matrix_ak <- function() {
     design_matrix <- build_design_matrix_base_t()
     design_matrix[1:80, ] <- 1
     hyperparam_grid <- expand.grid(1:10, 3:10)
@@ -289,6 +187,7 @@ build_design_matrix_s <- function() {
     design_matrix$alpha <- hyperparam_grid$alpha / 10
     return(design_matrix)
 }
+
 
 #' Generate data_list object
 #'
@@ -662,50 +561,6 @@ snf_step <- function(data_list, scheme, K = 20, alpha = 0.5) {
 }
 
 
-snf_step2 <- function(data_list, scheme, K = 20, alpha = 0.5) {
-    # Subset just to those patients who are common in all inputs
-    data_list <- data_list |>
-        reduce_dl_to_common() |>
-        arrange_dl()
-    # Remove NAs function can go here later
-    # The individual scheme creates similarity matrices for each dl element
-    #  and pools them all into a single SNF run
-    if (scheme == "individual") { # This is functioning properly
-        dist_list <- lapply(data_list,
-            function(x) {
-                get_dist_matrix2(df = x$"data", input_type = x$"type")
-            })
-        sim_list <- lapply(dist_list,
-            function(x) {
-                SNFtool::affinityMatrix(x, K = K, sigma = alpha)
-            })
-        fused_network <- SNFtool::SNF(sim_list, K = K)
-    # The domain scheme first runs domain merge on the data list (concatenates
-    #  any data of the same domain) and then pools the concatenated data into a
-    #  single SNF run
-    } else if (scheme == "domain") { # This works
-        data_list <- domain_merge(data_list)
-        dist_list <- lapply(data_list,
-            function(x) {
-                get_dist_matrix2(df = x$"data", input_type = x$"type",
-                    scale = TRUE)
-            })
-        sim_list <- lapply(dist_list,
-            function(x) {
-                SNFtool::affinityMatrix(x, K = K, sigma = alpha)
-            })
-        fused_network <- SNFtool::SNF(sim_list, K = K)
-    # The twostep scheme
-    } else if (scheme == "twostep") {
-        fused_network <- two_step_merge2(data_list)
-    } else {
-        rlang::abort(
-            paste0("The value '", scheme, "' is not a valid snf scheme."),
-            class = "invalid_input")
-    }
-    return(fused_network)
-}
-
 #' Execute variations of SNF as described by a design matrix
 #'
 #' @param data_list nested list of input data generated by the function
@@ -804,93 +659,6 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
     return(output_matrix)
 }
 
-
-execute_design_matrix2 <- function(data_list, design_matrix, outcome_list) {
-    start <- Sys.time()
-    output_matrix <- build_output_matrix(data_list, design_matrix)
-    # Iterate through the rows of the design matrix
-    remaining_seconds_vector <- vector()
-    for (i in seq_len(nrow(design_matrix))) {
-        start_time <- Sys.time()
-        dm_row <- design_matrix[i, ]
-        current_data_list <- execute_inclusion(data_list, dm_row)
-        # Execute the current row's SNF scheme
-        current_snf_scheme <- dplyr::case_when(
-            dm_row$"snf_scheme" == 1 ~ "individual",
-            dm_row$"snf_scheme" == 2 ~ "domain",
-            dm_row$"snf_scheme" == 3 ~ "twostep",
-        )
-        K <- design_matrix[i, "K"]
-        alpha <- design_matrix[i, "alpha"]
-        fused_network <- snf_step2(
-            current_data_list,
-            current_snf_scheme,
-            K = K,
-            alpha = alpha)
-        all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
-        eigen_best <- all_clust$`Eigen-gap best`
-        rot_best <- all_clust$`Rotation cost best`
-        output_matrix[i, ]$"eigen_best" <- eigen_best
-        output_matrix[i, ]$"rot_best" <- rot_best
-        # Execute the current row's clustering
-        if (dm_row$"eigen_or_rot" == 1) {
-            nclust <- eigen_best
-        } else if (dm_row$"eigen_or_rot" == 2) {
-            nclust <- rot_best
-        } else {
-            rlang::abort(
-                paste0(
-                    "The eigen_or_rot value ", dm_row$"eigen_or_rot", " is not",
-                    "a valid input type."), class = "invalid_input")
-        }
-        cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
-        # Assign subtype membership
-        output_matrix[i, rownames(fused_network)] <- cluster_results
-        # Pull clustered subjects in a useful way for outcome evaluation
-        clustered_subs <- get_clustered_subs(output_matrix[i, ])
-        assigned_subs <- clustered_subs |>
-            dplyr::filter(clustered_subs$"cluster" != 0)
-        # Assign p-values
-        for (j in seq_along(outcome_list)) {
-            current_outcome_component <- outcome_list[[j]]
-            current_outcome_name <- current_outcome_component$"name"
-            p_value <- get_p(assigned_subs, current_outcome_component)
-            target_col <- grep(current_outcome_name, colnames(output_matrix))
-            output_matrix[i, target_col] <- p_value
-        }
-        min_p <- get_min_p(output_matrix[i, ])
-        mean_p <- get_mean_p(output_matrix[i, ])
-        output_matrix[i, "min_p_val"] <- min_p
-        output_matrix[i, "mean_p_val"] <- mean_p
-        end_time <- Sys.time()
-        seconds_per_row <- as.numeric(end_time - start_time)
-        rows_remaining <- nrow(design_matrix) - i
-        remaining_seconds_vector <- c(remaining_seconds_vector, seconds_per_row)
-        if (length(remaining_seconds_vector) > 10) {
-            remaining_seconds_vector <-
-                remaining_seconds_vector[2:length(remaining_seconds_vector)]
-        }
-        remaining_seconds <-
-            round(mean(remaining_seconds_vector) * rows_remaining, 0)
-        print(
-            paste0(
-                "Row: ", i, "/", nrow(design_matrix),
-                " | ",
-                "Time remaining: ",
-                remaining_seconds,
-                " seconds"))
-    }
-    # Add number of clusters to output matrix
-    output_matrix <- output_matrix |>
-        dplyr::mutate(nclust = dplyr::case_when(
-            eigen_or_rot == 1 ~ eigen_best,
-            eigen_or_rot == 2 ~ rot_best),
-            .keep = "unused") |>
-        unique()
-    end <- Sys.time()
-    print(end - start)
-    return(output_matrix)
-}
 
 #' Select p-values from output matrix
 #'
@@ -1146,53 +914,6 @@ two_step_merge <- function(data_list, K = 20, alpha = 0.5) {
     }
     return(fused_network)
 }
-
-
-two_step_merge2 <- function(data_list, K = 20, alpha = 0.5) {
-    dist_list <- lapply(data_list,
-        function(x) {
-            get_dist_matrix2(df = x$"data", input_type = x$"type")
-        })
-    sim_list <- lapply(dist_list,
-        function(x) {
-            SNFtool::affinityMatrix(x, K = K, sigma = alpha)
-        })
-    affinity_list <- data_list
-    for (i in seq_along(affinity_list)) {
-        affinity_list[[i]]$"data" <- sim_list[[i]]
-    }
-    affinity_unique_dl <- list()
-    unique_domains <- unique(unlist(domains(affinity_list)))
-    for (i in seq_along(unique_domains)) {
-        affinity_unique_dl <- append(affinity_unique_dl, list(list()))
-    }
-    names(affinity_unique_dl) <- unique_domains
-    for (i in seq_along(affinity_list)) {
-        al_current_domain <- affinity_list[[i]]$"domain"
-        al_current_amatrix <- affinity_list[[i]]$"data"
-        audl_domain_pos <- which(names(affinity_unique_dl) == al_current_domain)
-        affinity_unique_dl[[audl_domain_pos]] <-
-            append(affinity_unique_dl[[audl_domain_pos]],
-            list(al_current_amatrix))
-    }
-    # Fusing individual matrices into domain affinity matrices
-    step_one <- lapply(affinity_unique_dl,
-       function(x) {
-           if (length(x) == 1) {
-               x[[1]]
-           } else {
-               SNFtool::SNF(x, K = K)
-           }
-       })
-    # Fusing domain affinity matrices into final fused network
-    if (length(step_one) > 1) {
-        fused_network <- SNFtool::SNF(step_one, K = K)
-    } else {
-        fused_network <- step_one[[1]]
-    }
-    return(fused_network)
-}
-
 
 
 #' Build output matrix
