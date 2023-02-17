@@ -940,18 +940,16 @@ build_output_matrix <- function(data_list, design_matrix) {
     other_cols <- c(
         "eigen_best",
         "rot_best",
-        "cbcl_headaches_p",
         "cbcl_nausea_p",
         "cbcl_vomiting_p",
         "cbcl_dizzy_p",
         "cbcl_overtired_p",
         "cbcl_sleeping_more_p",
         "cbcl_sleeping_less_p",
-        "cbcl_depress_r_p",
-        "cbcl_anxiety_r_p",
-        "cbcl_attention_r_p",
-        "cbcl_aggressive_r_p",
-        "sleep_total_problems_p",
+        "cbcl_depress_p",
+        "cbcl_anxiety_p",
+        "cbcl_attention_p",
+        "cbcl_aggressive_p",
         "min_p_val",
         "mean_p_val")
     output_matrix <- add_char_vec_as_cols(output_matrix, other_cols, 0)
