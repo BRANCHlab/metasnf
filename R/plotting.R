@@ -364,3 +364,58 @@ assigned_clust_hist <- function(om, save = NULL) {
         xlab = "Mean assigned cluster",
         main = NULL)
 }
+
+
+#' Bar chart CBCL values for a characterization dataframe
+#'
+#' @param characterization_df A merged list containing cluster, subjectkey, and
+#'  various CBCL outcomes
+#' @param outcome string specifying outcome of interest, e.g. `cbcl_nausea`
+#'
+#' @export
+cbcl_bar_chart <- function(characterization_df, outcome) {
+    # A lot of trickery had to go into making this plotting function work.
+    # `dplyr::count` cannot accept string parameters. To avoid this, I had to
+    # rename the column of interest into the same thing every time the function
+    # is run (in this case, 'keycol'). The double bangs are so that the rename
+    # function can evaluate the string stored in the `outcome` variable.
+    cluster <- ""
+    percent <- ""
+    n <- ""
+    keycol <- ""
+    outcome_label <- stringr::str_to_title(gsub("cbcl_", "", "cbcl_nausea"))
+    characterization_df <- characterization_df |>
+        dplyr::rename("keycol" = !!outcome) # wizardry
+    summary <- characterization_df |>
+        dplyr::group_by(cluster) |>
+        dplyr::count(keycol) |>
+        dplyr::mutate(percent = round(n / sum(n) * 100, 1))
+    summary$"keycol" <- factor(summary$"keycol", levels = c("2", "1", "0"))
+    summary$"cluster" <- factor(summary$"cluster")
+    ggplot2::ggplot(
+        data = summary,
+        ggplot2::aes(
+            x = cluster,
+            y = percent,
+            fill = keycol
+            )) +
+        ggplot2::geom_bar(
+            stat = "identity",
+            position = ggplot2::position_stack()) +
+        ggplot2::geom_text(
+            mapping = ggplot2::aes(
+                label = paste(percent, "%"),
+                y = percent),
+            position = ggplot2::position_stack(
+                vjust = 0.5)) +
+        ggplot2::scale_y_continuous(
+            expand = ggplot2::expansion(mult = c(0, .1))) +
+        ggplot2::labs(
+            x = "Cluster",
+            y = "Percentage",
+            fill = outcome_label) +
+        ggplot2::theme_bw() +
+        ggplot2::theme(
+            text = ggplot2::element_text(
+                size = 20))
+}
