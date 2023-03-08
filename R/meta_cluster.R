@@ -45,3 +45,22 @@ meta_cluster <- function(mc_om) {
     }
     return(mc_sm)
 }
+
+
+#' Return the row ordering of a meta-clustering solution
+#'
+#' @description
+#' Pheatmap reorders meta clustering results to enable meta-cluster
+#'  visualization. This function extracts the new row orders to apply to other
+#'  matrices.
+#'
+#' @param mc_results
+#'
+#' @return pheatmap_order Row orders of the clustered pheatmap
+#'
+#' @export
+get_pheatmap_order <- function(matrix) {
+    out <- pheatmap::pheatmap(matrix)
+    pheatmap_order <- out$"tree_row"[["order"]]
+    return(pheatmap_order)
+}
