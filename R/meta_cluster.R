@@ -54,7 +54,7 @@ meta_cluster <- function(mc_om) {
 #'  visualization. This function extracts the new row orders to apply to other
 #'  matrices.
 #'
-#' @param mc_results
+#' @param matrix matrix used as pheatmap input
 #'
 #' @return pheatmap_order Row orders of the clustered pheatmap
 #'

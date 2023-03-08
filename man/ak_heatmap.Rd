@@ -4,7 +4,7 @@
 \alias{ak_heatmap}
 \title{Heatmap alpha and k hyperparameter results by minimum and mean p-values}
 \usage{
-ak_heatmap(ak_scan_om, min_or_mean = "min", save_path = NULL)
+ak_heatmap(ak_scan_om, min_or_mean = "min", save = NULL)
 }
 \arguments{
 \item{ak_scan_om}{output matrix containing alpha, K, and min/mean p-values}
@@ -12,7 +12,7 @@ ak_heatmap(ak_scan_om, min_or_mean = "min", save_path = NULL)
 \item{min_or_mean}{string specifying whether min or mean p-value should be
 visualized}
 
-\item{save_path}{optional path to save figure to}
+\item{save}{optional path to save figure to}
 }
 \description{
 Heatmap alpha and k hyperparameter results by minimum and mean p-values

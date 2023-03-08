@@ -173,7 +173,6 @@ mc_heatmap <- function(mc_results, save = NULL) {
 #'  match the row-clustering present within a provided meta-clustering result.
 #'
 #' @param design_matrix matrix indicating parameters to iterate SNF through
-#' @param mc_results results from meta_cluster function
 #' @param save optional path to save figure to
 #'
 #' @export
@@ -218,10 +217,10 @@ dm_heatmap <- function(design_matrix, save = NULL) {
 #' @export
 pvals_pheatmap <- function(pvals, save = NULL, reverse_colours = FALSE) {
     if (reverse_colours) {
-        colours <- colorRampPalette(
+        colours <- grDevices::colorRampPalette(
             RColorBrewer::brewer.pal(n = 7, name = "RdYlBu"))(100)
     } else {
-        colours <- colorRampPalette(
+        colours <- grDevices::colorRampPalette(
             rev(RColorBrewer::brewer.pal(n = 7, name = "RdYlBu")))(100)
     }
     if (!(is.null(grDevices::dev.list())) && !(is.null(save))) {
@@ -249,8 +248,7 @@ pvals_pheatmap <- function(pvals, save = NULL, reverse_colours = FALSE) {
 
 #' Scatter plot alpha and k hyperparameter results by minimum and mean p-values
 #'
-#' @param ak_scan_om output matrix containing alpha, K, and min/mean p-values
-#' @param a_or_k string specifying whether alpha or K should be visualized
+#' @param om output matrix
 #'
 #' @export
 om_scatter <- function(om) {
@@ -268,5 +266,3 @@ om_scatter <- function(om) {
         ggplot2::theme_bw() +
         ggplot2::theme(text = ggplot2::element_text(size = 20))
 }
-
-om_scatter(output_matrix_full)
