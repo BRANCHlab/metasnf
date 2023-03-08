@@ -266,3 +266,101 @@ om_scatter <- function(om) {
         ggplot2::theme_bw() +
         ggplot2::theme(text = ggplot2::element_text(size = 20))
 }
+
+
+#' Pheatmap of cluster membership across an output matrix
+#'
+#' @param om output matrix
+#' @param save optional path to save figure to
+#'
+#' @export
+assigned_clust_pheatmap <- function(om, save = NULL) {
+    cluster_matrix <- as.matrix(subs(om)[, -1])
+    if (!(is.null(grDevices::dev.list())) && !(is.null(save))) {
+        grDevices::dev.off()
+    }
+    if (!(is.null(save))) {
+        pheatmap::pheatmap(
+            cluster_matrix,
+            cluster_rows = FALSE,
+            show_rownames = FALSE,
+            show_colnames = FALSE,
+            legend = FALSE,
+            cellwidth = 2.2,
+            filename = save)
+    }
+    pheatmap::pheatmap(
+        cluster_matrix,
+        cluster_rows = FALSE,
+        show_rownames = FALSE,
+        show_colnames = FALSE,
+        legend = FALSE,
+        cellwidth = 2.2)
+}
+
+
+#' Scatter plot of cluster membership across an output matrix
+#'
+#' @param om output matrix
+#' @param save optional path to save figure to
+#'
+#' @export
+assigned_clust_scatter <- function(om, save = NULL) {
+    best_mc_subs <- t(subs(om))
+    colnames(best_mc_subs) <- best_mc_subs["row_id", ]
+    best_mc_subs <- best_mc_subs[2:nrow(best_mc_subs), ]
+    best_mc_subs <- as.data.frame(best_mc_subs)
+    best_mc_subs <- sapply(best_mc_subs, as.numeric)
+    row_means <- apply(X = best_mc_subs, MARGIN = 1, FUN = mean, na.rm = TRUE)
+    names(row_means) <- colnames(subs(om))[-1]
+    if (!(is.null(grDevices::dev.list())) && !(is.null(save))) {
+        grDevices::dev.off()
+    }
+    if (!(is.null(save))) {
+        grDevices::png(save,
+            height = 5,
+            width = 5,
+            units = "in",
+            res = 300)
+        plot(row_means,
+            xlab = "Subject",
+            ylab = "Mean assigned cluster")
+        grDevices::dev.off()
+    }
+    plot(row_means,
+        xlab = "Subject",
+        ylab = "Mean assigned cluster")
+}
+
+#' Histogram of cluster membership across an output matrix
+#'
+#' @param om output matrix
+#' @param save optional path to save figure to
+#'
+#' @export
+assigned_clust_hist <- function(om, save = NULL) {
+    best_mc_subs <- t(subs(om))
+    colnames(best_mc_subs) <- best_mc_subs["row_id", ]
+    best_mc_subs <- best_mc_subs[2:nrow(best_mc_subs), ]
+    best_mc_subs <- as.data.frame(best_mc_subs)
+    best_mc_subs <- sapply(best_mc_subs, as.numeric)
+    row_means <- apply(X = best_mc_subs, MARGIN = 1, FUN = mean, na.rm = TRUE)
+    names(row_means) <- colnames(subs(om))[-1]
+    if (!(is.null(grDevices::dev.list())) && !(is.null(save))) {
+        grDevices::dev.off()
+    }
+    if (!(is.null(save))) {
+        grDevices::png(save,
+            height = 5,
+            width = 5,
+            units = "in",
+            res = 300)
+        graphics::hist(row_means,
+            xlab = "Mean assigned cluster",
+            main = NULL)
+        grDevices::dev.off()
+    }
+    graphics::hist(row_means,
+        xlab = "Mean assigned cluster",
+        main = NULL)
+}

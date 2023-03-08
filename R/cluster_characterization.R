@@ -44,3 +44,16 @@ subs <- function(df) {
         dplyr::starts_with("NDAR"))
     return(df_subs)
 }
+
+#' Select specific row_ids from an output matrix
+#'
+#' @param om output matrix
+#' @param row_ids vector of row_id values to be selected
+#'
+#' @return selected_om
+#'
+#' @export
+select_om <- function(om, row_ids) {
+    selected_om <- om[om$"row_id" %in% row_ids, ]
+    return(selected_om)
+}
