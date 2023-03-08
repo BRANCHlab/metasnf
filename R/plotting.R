@@ -99,10 +99,10 @@ ak_scan_plot <- function(ak_scan_om, a_or_k = "k") {
 #' @param ak_scan_om output matrix containing alpha, K, and min/mean p-values
 #' @param min_or_mean string specifying whether min or mean p-value should be
 #'  visualized
-#' @param save_path optional path to save figure to
+#' @param save optional path to save figure to
 #'
 #' @export
-ak_heatmap <- function(ak_scan_om, min_or_mean = "min", save_path = NULL) {
+ak_heatmap <- function(ak_scan_om, min_or_mean = "min", save = NULL) {
     if (min_or_mean == "min") {
         min_or_mean <- "min_p_val"
     } else if (min_or_mean == "mean") {
@@ -124,15 +124,149 @@ ak_heatmap <- function(ak_scan_om, min_or_mean = "min", save_path = NULL) {
     if (!(is.null(grDevices::dev.list()))) {
         grDevices::dev.off()
     }
-    if (!(is.null(save_path))) {
+    if (!(is.null(save))) {
         pheatmap::pheatmap(
             a_k_matrix,
             cluster_rows = FALSE,
             cluster_cols = FALSE,
-            filename = save_path)
+            filename = save)
     }
     pheatmap::pheatmap(
         a_k_matrix,
         cluster_rows = FALSE,
         cluster_cols = FALSE)
 }
+
+
+#' Heatmap meta-clustering results
+#'
+#' @param mc_results results from meta_cluster function
+#' @param save optional path to save figure to
+#'
+#' @export
+mc_heatmap <- function(mc_results, save = NULL) {
+    colnames(mc_results) <- NULL
+    rownames(mc_results) <- NULL
+    if (!(is.null(grDevices::dev.list()))) {
+        grDevices::dev.off()
+    }
+    if (!(is.null(save))) {
+        pheatmap::pheatmap(mc_results,
+            legend_breaks = c(0, 0.5, 1, max(mc_results)),
+            main = "",
+            legend_labels = c("0", "0.5", "1", "ARI\n\n"),
+            legend = TRUE, border_color = FALSE,
+            filename = save)
+    }
+    pheatmap::pheatmap(mc_results,
+        legend_breaks = c(0, 0.5, 1, max(mc_results)),
+        main = "",
+        legend_labels = c("0", "0.5", "1", "ARI\n\n"),
+        legend = TRUE, border_color = FALSE)
+}
+
+
+#' Heatmap design matrix based on meta-clustering results
+#'
+#' @description
+#' Normalizes the design matrix and plots as a heatmap. Rows are reordered to
+#'  match the row-clustering present within a provided meta-clustering result.
+#'
+#' @param design_matrix matrix indicating parameters to iterate SNF through
+#' @param mc_results results from meta_cluster function
+#' @param save optional path to save figure to
+#'
+#' @export
+dm_heatmap <- function(design_matrix, save = NULL) {
+    dm_scaled <- design_matrix
+    dm_scaled$"row_id" <- dm_scaled$"row_id" / max(dm_scaled$"row_id")
+    dm_scaled$"K" <- dm_scaled$"K" / max(dm_scaled$"K")
+    dm_scaled$"alpha" <- dm_scaled$"alpha" / max(dm_scaled$"alpha")
+    dm_scaled$"snf_scheme" <-
+        dm_scaled$"snf_scheme" / max(dm_scaled$"snf_scheme")
+    dm_scaled$"eigen_or_rot" <-
+        dm_scaled$"eigen_or_rot" / max(dm_scaled$"eigen_or_rot")
+    if (!(is.null(grDevices::dev.list())) && !(is.null(save))) {
+        grDevices::dev.off()
+    }
+    if (!(is.null(save))) {
+        pheatmap::pheatmap(
+            dm_scaled,
+            cluster_rows = FALSE,
+            cluster_cols = FALSE,
+            labels_row = "",
+            legend = FALSE,
+            fontsize = 12,
+            filename = save)
+    }
+    pheatmap::pheatmap(
+        dm_scaled,
+        cluster_rows = FALSE,
+        cluster_cols = FALSE,
+        labels_row = "",
+        legend = FALSE,
+        fontsize = 12)
+}
+
+
+#' Pheatmap a matrix of p-values
+#'
+#' @param pvals a matrix of p-values
+#' @param save optional path to save figure to
+#' @param reverse_colours boolean to invert colours
+#'
+#' @export
+pvals_pheatmap <- function(pvals, save = NULL, reverse_colours = FALSE) {
+    if (reverse_colours) {
+        colours <- colorRampPalette(
+            RColorBrewer::brewer.pal(n = 7, name = "RdYlBu"))(100)
+    } else {
+        colours <- colorRampPalette(
+            rev(RColorBrewer::brewer.pal(n = 7, name = "RdYlBu")))(100)
+    }
+    if (!(is.null(grDevices::dev.list())) && !(is.null(save))) {
+        grDevices::dev.off()
+    }
+    if (!(is.null(save))) {
+        pheatmap::pheatmap(pvals,
+            legend_breaks = c(0, 0.2, 0.4, 0.6, 0.8, max(pvals)),
+            main = "",
+            color = colours,
+            legend_labels = c("0", "0.2", "0.4", "0.6", "0.8", "p-value\n\n"),
+            cluster_rows = FALSE,
+            legend = TRUE,
+            filename = save)
+    }
+    pheatmap::pheatmap(pvals,
+        legend_breaks = c(0, 0.2, 0.4, 0.6, 0.8, max(pvals)),
+        main = "",
+        color = colours,
+        legend_labels = c("0", "0.2", "0.4", "0.6", "0.8", "p-value\n\n"),
+        cluster_rows = FALSE,
+        legend = TRUE)
+}
+
+
+#' Scatter plot alpha and k hyperparameter results by minimum and mean p-values
+#'
+#' @param ak_scan_om output matrix containing alpha, K, and min/mean p-values
+#' @param a_or_k string specifying whether alpha or K should be visualized
+#'
+#' @export
+om_scatter <- function(om) {
+    min_p_val <- ""
+    mean_p_val <- ""
+    row_id <- ""
+    ggplot2::ggplot(om,
+        ggplot2::aes(x = min_p_val, y = mean_p_val, label = row_id)) +
+        ggplot2::geom_point() +
+        ggplot2::scale_x_continuous(trans = "log10") +
+        ggplot2::scale_y_continuous(trans = "log10") +
+        ggplot2::geom_text(hjust = 0, vjust = 0) +
+        ggplot2::xlab("Minimum CBCL log(p-value)") +
+        ggplot2::ylab("Mean CBCL log(p-value)") +
+        ggplot2::theme_bw() +
+        ggplot2::theme(text = ggplot2::element_text(size = 20))
+}
+
+om_scatter(output_matrix_full)
