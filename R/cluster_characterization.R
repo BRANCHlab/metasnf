@@ -91,8 +91,9 @@ cbcl_ord_reg <- function(characterization_df, bonferroni = FALSE) {
     outcomes <- characterization_df |>
         dplyr::select(dplyr::starts_with("cbcl")) |>
         colnames()
-    print("Ordinal regression p-values:")
-    print("----------------------------")
+    ord_reg_df <- data.frame(
+        outcome = as.character(),
+        pval = as.numeric())
     for (outcome in outcomes) {
         outcome_df <- characterization_df[, c("subjectkey", outcome)]
         cluster_df <- characterization_df[, c("cluster", "subjectkey")]
@@ -100,9 +101,11 @@ cbcl_ord_reg <- function(characterization_df, bonferroni = FALSE) {
         if (bonferroni) {
             pval <- pval * length(outcomes)
         }
-        pval <- min(pval, 1)
-        print(paste0(outcome, ": ", format(pval, scientific = FALSE)))
+        pval <- format(min(pval, 1), scientific = FALSE)
+        #ord_reg_df <- rbind(ord_reg_df, c(outcome, pval))
+        ord_reg_df[nrow(ord_reg_df) + 1, ] <- c(outcome, pval)
     }
+    return(ord_reg_df)
 }
 
 
