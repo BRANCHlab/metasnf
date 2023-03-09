@@ -189,18 +189,54 @@ top_om_per_cluster <- function(om) {
     three_clust <- om[om$"nclust" == 3, ]
     four_clust <- om[om$"nclust" == 4, ]
     five_clust <- om[om$"nclust" == 5, ]
-    top_two_clust <-
-        two_clust[two_clust$min_p_val == min(two_clust$min_p_val) |
-                  two_clust$mean_p_val == min(two_clust$mean_p_val), ]
-    top_three_clust <-
-        three_clust[three_clust$min_p_val == min(three_clust$min_p_val) |
-                  three_clust$mean_p_val == min(three_clust$mean_p_val), ]
-    top_four_clust <-
-        four_clust[four_clust$min_p_val == min(four_clust$min_p_val) |
-                  four_clust$mean_p_val == min(four_clust$mean_p_val), ]
-    top_five_clust <-
-        five_clust[five_clust$min_p_val == min(five_clust$min_p_val) |
-                  five_clust$mean_p_val == min(five_clust$mean_p_val), ]
+    two_clust_min <-
+        two_clust[two_clust$min_p_val == min(two_clust$min_p_val), ]
+    two_clust_mean <-
+        two_clust[two_clust$mean_p_val == min(two_clust$mean_p_val), ]
+    if (identical(two_clust_min, two_clust_mean)) {
+        two_clust_min$"significance" <- "two_clust_min_and_mean"
+        top_two_clust <- two_clust_min
+    } else {
+        two_clust_min$"significance" <- "two_clust_min"
+        two_clust_mean$"significance" <- "two_clust_mean"
+        top_two_clust <- rbind(two_clust_min, two_clust_mean)
+    }
+    three_clust_min <-
+        three_clust[three_clust$min_p_val == min(three_clust$min_p_val), ]
+    three_clust_mean <-
+        three_clust[three_clust$mean_p_val == min(three_clust$mean_p_val), ]
+    if (identical(three_clust_min, three_clust_mean)) {
+        three_clust_min$"significance" <- "three_clust_min_and_mean"
+        top_three_clust <- three_clust_min
+    } else {
+        three_clust_min$"significance" <- "three_clust_min"
+        three_clust_mean$"significance" <- "three_clust_mean"
+        top_three_clust <- rbind(three_clust_min, three_clust_mean)
+    }
+    four_clust_min <-
+        four_clust[four_clust$min_p_val == min(four_clust$min_p_val), ]
+    four_clust_mean <-
+        four_clust[four_clust$mean_p_val == min(four_clust$mean_p_val), ]
+    if (identical(four_clust_min, four_clust_mean)) {
+        four_clust_min$"significance" <- "four_clust_min_and_mean"
+        top_four_clust <- four_clust_min
+    } else {
+        four_clust_min$"significance" <- "four_clust_min"
+        four_clust_mean$"significance" <- "four_clust_mean"
+        top_four_clust <- rbind(four_clust_min, four_clust_mean)
+    }
+    five_clust_min <-
+        five_clust[five_clust$min_p_val == min(five_clust$min_p_val), ]
+    five_clust_mean <-
+        five_clust[five_clust$mean_p_val == min(five_clust$mean_p_val), ]
+    if (identical(five_clust_min, five_clust_mean)) {
+        five_clust_min$"significance" <- "five_clust_min_and_mean"
+        top_five_clust <- five_clust_min
+    } else {
+        five_clust_min$"significance" <- "five_clust_min"
+        five_clust_mean$"significance" <- "five_clust_mean"
+        top_five_clust <- rbind(five_clust_min, five_clust_mean)
+    }
     top_clusts <- list(
         top_two_clust,
         top_three_clust,
