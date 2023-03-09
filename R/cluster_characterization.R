@@ -84,9 +84,10 @@ get_cluster_df <- function(om_row) {
 #'
 #' @param characterization_df A merged list containing cluster, subjectkey, and
 #'  various CBCL outcomes
+#' @param bonferroni boolean for reporting bonferroni corrected p-values
 #'
 #' @export
-cbcl_ord_reg <- function(characterization_df) {
+cbcl_ord_reg <- function(characterization_df, bonferroni = FALSE) {
     outcomes <- characterization_df |>
         dplyr::select(dplyr::starts_with("cbcl")) |>
         colnames()
@@ -96,6 +97,37 @@ cbcl_ord_reg <- function(characterization_df) {
         outcome_df <- characterization_df[, c("subjectkey", outcome)]
         cluster_df <- characterization_df[, c("cluster", "subjectkey")]
         pval <- signif(ord_reg_p(cluster_df, outcome_df, outcome), 2)
+        if (bonferroni) {
+            pval <- pval * length(outcomes)
+        }
+        pval <- min(pval, 1)
         print(paste0(outcome, ": ", format(pval, scientific = FALSE)))
+    }
+}
+
+
+#' Calculate anova p-values for a characterization_df
+#'
+#' @param characterization_df A merged list containing cluster, subjectkey, and
+#'  various CBCL outcomes
+#' @param bonferroni boolean for reporting bonferroni corrected p-values
+#'
+#' @export
+cbcl_anova <- function(characterization_df, bonferroni = FALSE) {
+    characterization_df$"cluster" <- as.factor(characterization_df$"cluster")
+    outcomes <- characterization_df |>
+        dplyr::select(dplyr::starts_with("cbcl")) |>
+        colnames()
+    print("ANOVA p-values:")
+    print("---------------")
+    for (outcome in outcomes) {
+        aov_summary <- summary(stats::aov(
+            characterization_df[, outcome] ~ characterization_df[, "cluster"]))
+        pval <- aov_summary[[1]][["Pr(>F)"]][1]
+        if (bonferroni) {
+            pval <- pval * length(outcomes)
+        }
+        pval <- min(pval, 1)
+        print(paste0(outcome, ": ", signif(pval, 2)))
     }
 }

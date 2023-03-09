@@ -383,16 +383,16 @@ cbcl_bar_chart <- function(characterization_df, outcome) {
     percent <- ""
     n <- ""
     keycol <- ""
-    outcome_label <- stringr::str_to_title(gsub("cbcl_", "", "cbcl_nausea"))
+    outcome_label <- stringr::str_to_title(gsub("cbcl_", "", outcome))
     characterization_df <- characterization_df |>
         dplyr::rename("keycol" = !!outcome) # wizardry
     summary <- characterization_df |>
         dplyr::group_by(cluster) |>
         dplyr::count(keycol) |>
-        dplyr::mutate(percent = round(n / sum(n) * 100, 1))
+        dplyr::mutate(percent = round(n / sum(n) * 100))
     summary$"keycol" <- factor(summary$"keycol", levels = c("2", "1", "0"))
     summary$"cluster" <- factor(summary$"cluster")
-    ggplot2::ggplot(
+    plot <- ggplot2::ggplot(
         data = summary,
         ggplot2::aes(
             x = cluster,
@@ -404,7 +404,8 @@ cbcl_bar_chart <- function(characterization_df, outcome) {
             position = ggplot2::position_stack()) +
         ggplot2::geom_text(
             mapping = ggplot2::aes(
-                label = paste(percent, "%"),
+                #label = paste0(percent, "%\n(", n, ")"),
+                label = n,
                 y = percent),
             position = ggplot2::position_stack(
                 vjust = 0.5)) +
@@ -418,4 +419,5 @@ cbcl_bar_chart <- function(characterization_df, outcome) {
         ggplot2::theme(
             text = ggplot2::element_text(
                 size = 20))
+    return(plot)
 }
