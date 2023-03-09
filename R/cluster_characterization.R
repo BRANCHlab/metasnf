@@ -172,3 +172,40 @@ calc_nmi <- function(om_row, data_list) {
     nmi_df <- nmi_df |> dplyr::arrange(dplyr::desc(nmi_df$"nmi"))
     return(nmi_df)
 }
+
+
+#' Select the top output matrix rows for each cluster
+#'
+#' Given an output matrix, returns a dataframe containing the row with the
+#' lowest mean p-value and lowest min p-value for cluster sizes 2-5
+#'
+#' @param om an output matrix
+#'
+#' @return top_clusts_df dataframe with top om rows
+#'
+#' @export
+top_om_per_cluster <- function(om) {
+    two_clust <- om[om$"nclust" == 2, ]
+    three_clust <- om[om$"nclust" == 3, ]
+    four_clust <- om[om$"nclust" == 4, ]
+    five_clust <- om[om$"nclust" == 5, ]
+    top_two_clust <-
+        two_clust[two_clust$min_p_val == min(two_clust$min_p_val) |
+                  two_clust$mean_p_val == min(two_clust$mean_p_val), ]
+    top_three_clust <-
+        three_clust[three_clust$min_p_val == min(three_clust$min_p_val) |
+                  three_clust$mean_p_val == min(three_clust$mean_p_val), ]
+    top_four_clust <-
+        four_clust[four_clust$min_p_val == min(four_clust$min_p_val) |
+                  four_clust$mean_p_val == min(four_clust$mean_p_val), ]
+    top_five_clust <-
+        five_clust[five_clust$min_p_val == min(five_clust$min_p_val) |
+                  five_clust$mean_p_val == min(five_clust$mean_p_val), ]
+    top_clusts <- list(
+        top_two_clust,
+        top_three_clust,
+        top_four_clust,
+        top_five_clust)
+    top_clusts_df <- do.call(rbind, top_clusts)
+    return(top_clusts_df)
+}
