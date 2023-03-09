@@ -4,10 +4,12 @@
 \alias{om_scatter}
 \title{Scatter plot alpha and k hyperparameter results by minimum and mean p-values}
 \usage{
-om_scatter(om)
+om_scatter(om, save = NULL)
 }
 \arguments{
 \item{om}{output matrix}
+
+\item{save}{optional path to save figure to}
 }
 \description{
 Scatter plot alpha and k hyperparameter results by minimum and mean p-values

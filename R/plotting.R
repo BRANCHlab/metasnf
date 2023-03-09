@@ -249,14 +249,21 @@ pvals_pheatmap <- function(pvals, save = NULL, reverse_colours = FALSE) {
 #' Scatter plot alpha and k hyperparameter results by minimum and mean p-values
 #'
 #' @param om output matrix
+#' @param save optional path to save figure to
 #'
 #' @export
-om_scatter <- function(om) {
+om_scatter <- function(om, save = NULL) {
+    om$"nclust" <- as.factor(om$"nclust")
     min_p_val <- ""
     mean_p_val <- ""
     row_id <- ""
-    ggplot2::ggplot(om,
-        ggplot2::aes(x = min_p_val, y = mean_p_val, label = row_id)) +
+    nclust <- ""
+    plot <- ggplot2::ggplot(om,
+        ggplot2::aes(
+            x = min_p_val,
+            y = mean_p_val,
+            label = row_id,
+            color = nclust)) +
         ggplot2::geom_point() +
         ggplot2::scale_x_continuous(trans = "log10") +
         ggplot2::scale_y_continuous(trans = "log10") +
@@ -265,6 +272,10 @@ om_scatter <- function(om) {
         ggplot2::ylab("Mean CBCL log(p-value)") +
         ggplot2::theme_bw() +
         ggplot2::theme(text = ggplot2::element_text(size = 20))
+    if (!(is.null(save))) {
+        ggplot2::ggsave(filename = save, plot = plot)
+    }
+    return(plot)
 }
 
 
