@@ -219,6 +219,8 @@ om_to_nmi_df <- function(om, data_list) {
     }
     return(nmi_df)
 }
+
+
 #' Select the top output matrix rows for each cluster
 #'
 #' Given an output matrix, returns a dataframe containing the row with the
@@ -290,3 +292,56 @@ top_om_per_cluster <- function(om) {
     top_clusts_df <- do.call(rbind, top_clusts)
     return(top_clusts_df)
 }
+
+
+#' Check subject orders for label propagation
+#'
+#' Prior to label propagation, it is essential that the subject orders of the
+#'  full fused network and the supplied clustering information are consistent.
+#'
+#' @param data_list A data list
+#' @param om_row An output matrix row
+#' @param n_train number of training subjects
+#' @param n_test number of testing subjects
+#'
+#' @return all_checks_passed boolean indicating if all subs are in order
+#'
+#' @export
+check_subj_orders_for_lp <- function(data_list, om_row, n_train, n_test) {
+    train_indices <- seq_len(n_train)
+    test_indices <- seq_len(n_test) + n_train
+    # Comparing training subject orders in data list
+    for (i in 1:(length(data_list) - 1)) {
+        current_check <-
+            identical(data_list[[i]]$"data"$"subjectkey"[train_indices],
+                  data_list[[i + 1]]$"data"$"subjectkey"[train_indices])
+        if (current_check == FALSE) {
+            print(paste0("Mismatch found at position ", i))
+            return(NULL)
+        }
+    }
+    # Comparing testing subject orders in data list
+    for (i in 1:(length(data_list) - 1)) {
+        current_check <-
+            identical(data_list[[i]]$"data"$"subjectkey"[test_indices],
+                  data_list[[i + 1]]$"data"$"subjectkey"[test_indices])
+        if (current_check == FALSE) {
+            print(paste0("Mismatch found at position ", i))
+            return(NULL)
+        }
+    }
+    # Comparing training subjects between data list and output matrix...
+    current_row_names <- subs(om_row) |>
+        dplyr::select(dplyr::starts_with("NDAR")) |>
+        colnames()
+    current_check <-
+        identical(data_list[[i]]$"data"$"subjectkey"[train_indices],
+                  current_row_names)
+    if (current_check == FALSE) {
+        print("Mismatch found between OM colnames and data list subject order.")
+        return(NULL)
+    }
+    all_checks_passed <- TRUE
+    return(all_checks_passed)
+}
+
