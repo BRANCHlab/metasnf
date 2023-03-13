@@ -16,6 +16,7 @@ Imports:
     ggplot2,
     graphics,
     grDevices,
+    gridExtra,
     here,
     MASS,
     mclust,
