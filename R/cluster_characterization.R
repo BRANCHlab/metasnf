@@ -79,6 +79,27 @@ get_cluster_df <- function(om_row) {
 }
 
 
+#' Extract list of assigned clusters
+#'
+#' @param om_row Output matrix row
+#'
+#' @return clusters list of assigned clusters
+#'
+#' @export
+get_clusters <- function(om_row) {
+    cluster_df <-
+        subs(om_row) |>
+        t() |>
+        data.frame()
+    cluster_df$id <- rownames(cluster_df)
+    rownames(cluster_df) <- NULL
+    colnames(cluster_df) <- c("cluster", "subjectkey")
+    cluster_df <- cluster_df[2:nrow(cluster_df), ]
+    clusters <- cluster_df$"cluster"
+    return(clusters)
+}
+
+
 
 #' Calculate overall p-values for a characterization_df
 #'
