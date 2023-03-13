@@ -432,3 +432,64 @@ cbcl_bar_chart <- function(characterization_df, outcome) {
                 size = 20))
     return(plot)
 }
+
+
+#' Plot clusters across all CBCL measures
+#'
+#' Arrange and optionally save a grid of bar charts with cluster on the x-axis
+#'  and each CBCL measure on the y-axis.
+#'
+#' @param om_row Row of an output matrix to be plotted
+#' @param outcome_list List containing all CBCL dataframes
+#' @param save optional path to save figure to
+#'
+#' @export
+plot_all_cbcl <- function(om_row, outcome_list, save = NULL) {
+    cluster_df <- get_cluster_df(om_row)
+    cluster_outcome_list <- append(list(cluster_df), outcome_list)
+    characterization_df <- abcdutils::merge_df_list(cluster_outcome_list)
+    print(paste0("Characterization for row_id ",
+                 om_row$"row_id",
+                 ". Number of clusters: ",
+                 om_row$"nclust"))
+    print(cbcl_ord_reg(characterization_df, bonferroni = TRUE))
+    # Making the bar charts
+    nausea <- cbcl_bar_chart(characterization_df, "cbcl_nausea")
+    vomiting <- cbcl_bar_chart(characterization_df, "cbcl_vomiting")
+    dizzy <- cbcl_bar_chart(characterization_df, "cbcl_dizzy")
+    overtired <- cbcl_bar_chart(characterization_df, "cbcl_overtired")
+    sleeping_more <- cbcl_bar_chart(characterization_df, "cbcl_sleeping_more")
+    sleeping_less <- cbcl_bar_chart(characterization_df, "cbcl_sleeping_less")
+    depress <- cbcl_bar_chart(characterization_df, "cbcl_depress")
+    anxiety <- cbcl_bar_chart(characterization_df, "cbcl_anxiety")
+    attention <- cbcl_bar_chart(characterization_df, "cbcl_attention")
+    aggressive <- cbcl_bar_chart(characterization_df, "cbcl_aggressive")
+    gridExtra::grid.arrange(
+        abcdutils::clean_plot(nausea, "y"),
+        abcdutils::clean_plot(vomiting, "y"),
+        abcdutils::clean_plot(dizzy, "y"),
+        abcdutils::clean_plot(overtired, "y"),
+        abcdutils::clean_plot(sleeping_more, "y"),
+        abcdutils::clean_plot(sleeping_less, "y"),
+        abcdutils::clean_plot(depress, "y"),
+        abcdutils::clean_plot(anxiety, "y"),
+        abcdutils::clean_plot(attention, "y"),
+        abcdutils::clean_plot(aggressive)
+    )
+    if (!is.null(save)) {
+        grid <-
+            gridExtra::arrangeGrob(
+                abcdutils::clean_plot(nausea, "y"),
+                abcdutils::clean_plot(vomiting, "y"),
+                abcdutils::clean_plot(dizzy, "y"),
+                abcdutils::clean_plot(overtired, "y"),
+                abcdutils::clean_plot(sleeping_more, "y"),
+                abcdutils::clean_plot(sleeping_less, "y"),
+                abcdutils::clean_plot(depress, "y"),
+                abcdutils::clean_plot(anxiety, "y"),
+                abcdutils::clean_plot(attention, "y"),
+                abcdutils::clean_plot(aggressive)
+            )
+        ggplot2::ggsave(file = save, grid, width = 25, height = 20)
+    }
+}
