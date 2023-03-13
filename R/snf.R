@@ -526,7 +526,7 @@ snf_step <- function(data_list, scheme, K = 20, alpha = 0.5) {
     # Remove NAs function can go here later
     # The individual scheme creates similarity matrices for each dl element
     #  and pools them all into a single SNF run
-    if (scheme == "individual") { # This is functioning properly
+    if (scheme %in% c("individual", 1)) { # This is functioning properly
         dist_list <- lapply(data_list,
             function(x) {
                 get_dist_matrix(df = x$"data", input_type = x$"type")
@@ -539,7 +539,7 @@ snf_step <- function(data_list, scheme, K = 20, alpha = 0.5) {
     # The domain scheme first runs domain merge on the data list (concatenates
     #  any data of the same domain) and then pools the concatenated data into a
     #  single SNF run
-    } else if (scheme == "domain") { # This works
+    } else if (scheme %in% c("domain", 2)) { # This works
         data_list <- domain_merge(data_list)
         dist_list <- lapply(data_list,
             function(x) {
@@ -552,7 +552,7 @@ snf_step <- function(data_list, scheme, K = 20, alpha = 0.5) {
             })
         fused_network <- SNFtool::SNF(sim_list, K = K)
     # The twostep scheme
-    } else if (scheme == "twostep") {
+    } else if (scheme %in% c("twostep", 3)) {
         fused_network <- two_step_merge(data_list)
     } else {
         rlang::abort(
