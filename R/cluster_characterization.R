@@ -195,6 +195,30 @@ calc_nmi <- function(om_row, data_list) {
 }
 
 
+#' Calculate NMI scores for an output matrix
+#'
+#' Given an output matrix in dataframe form with "significance" columns,
+#'  calculate NMIs for all inputs and combine results into a single dataframe
+#'
+#' @param om Output matrix
+#' @param data_list A data list
+#'
+#' @return nmi_df Merged dataframe of all NMI values
+#'
+#' @export
+om_to_nmi_df <- function(om, data_list) {
+    for (row in seq_len(nrow(om))) {
+        if (row == 1) {
+            nmi_df <- calc_nmi(om[row, ], data_list)
+            colnames(nmi_df) <- c("input", om$"significance"[row])
+        } else {
+            current_df <- calc_nmi(om[row, ], data_list)
+            colnames(current_df) <- c("input", om$"significance"[row])
+            nmi_df <- dplyr::inner_join(nmi_df, current_df, by = "input")
+        }
+    }
+    return(nmi_df)
+}
 #' Select the top output matrix rows for each cluster
 #'
 #' Given an output matrix, returns a dataframe containing the row with the
