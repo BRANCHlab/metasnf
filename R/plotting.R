@@ -491,3 +491,24 @@ plot_all_cbcl <- function(cluster_df, sig, cbcl_list, save = NULL) {
         ggplot2::ggsave(file = save, grid, width = 25, height = 20)
     }
 }
+
+#' Make a full CBCL grid plot for an output matrix
+#'
+#' @param om An output matrix (or dataframe with om-like structure)
+#' @param cbcl_list A list of all cbcl dataframes
+#' @param fig_path_fn A function that generates a figure path
+#'
+#' @export
+om_plot_all_cbcl <- function(om, cbcl_list, fig_path_fn) {
+    for (row in seq_len(nrow(om))) {
+        current_om <- om[row, ]
+        current_sig <- current_om$"significance"
+        cluster_df <- get_cluster_df(current_om)
+        temp <- plot_all_cbcl(
+            cluster_df,
+            current_sig,
+            cbcl_list,
+            save = fig_path_fn(paste0(current_sig, ".png"), date = TRUE))
+        return(temp)
+    }
+}
