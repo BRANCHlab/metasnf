@@ -4,12 +4,14 @@
 \alias{plot_all_cbcl}
 \title{Plot clusters across all CBCL measures}
 \usage{
-plot_all_cbcl(om_row, outcome_list, save = NULL)
+plot_all_cbcl(cluster_df, sig, cbcl_list, save = NULL)
 }
 \arguments{
-\item{om_row}{Row of an output matrix to be plotted}
+\item{cluster_df}{a dataframe containing cluster and subjectkey}
 
-\item{outcome_list}{List containing all CBCL dataframes}
+\item{sig}{a name for the current set of plots}
+
+\item{cbcl_list}{List containing all CBCL dataframes}
 
 \item{save}{optional path to save figure to}
 }

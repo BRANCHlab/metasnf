@@ -439,20 +439,18 @@ cbcl_bar_chart <- function(characterization_df, outcome) {
 #' Arrange and optionally save a grid of bar charts with cluster on the x-axis
 #'  and each CBCL measure on the y-axis.
 #'
-#' @param om_row Row of an output matrix to be plotted
-#' @param outcome_list List containing all CBCL dataframes
+#' @param cluster_df a dataframe containing cluster and subjectkey
+#' @param sig a name for the current set of plots
+#' @param cbcl_list List containing all CBCL dataframes
 #' @param save optional path to save figure to
 #'
 #' @export
-plot_all_cbcl <- function(om_row, outcome_list, save = NULL) {
-    cluster_df <- get_cluster_df(om_row)
-    cluster_outcome_list <- append(list(cluster_df), outcome_list)
-    characterization_df <- abcdutils::merge_df_list(cluster_outcome_list)
-    print(paste0("Characterization for row_id ",
-                 om_row$"row_id",
-                 ". Number of clusters: ",
-                 om_row$"nclust"))
-    print(cbcl_ord_reg(characterization_df, bonferroni = TRUE))
+plot_all_cbcl <- function(cluster_df, sig, cbcl_list, save = NULL) {
+    cluster_cbcl_list <- append(list(cluster_df), cbcl_list)
+    characterization_df <- abcdutils::merge_df_list(cluster_cbcl_list)
+    nclust <- length(unique(cluster_df$"cluster"))
+    print(paste0("Row: ", sig, ". Number of clusters: ", nclust))
+    print(cbcl_ord_reg(characterization_df, bonferroni = FALSE))
     # Making the bar charts
     nausea <- cbcl_bar_chart(characterization_df, "cbcl_nausea")
     vomiting <- cbcl_bar_chart(characterization_df, "cbcl_vomiting")
@@ -474,7 +472,7 @@ plot_all_cbcl <- function(om_row, outcome_list, save = NULL) {
         abcdutils::clean_plot(depress, "y"),
         abcdutils::clean_plot(anxiety, "y"),
         abcdutils::clean_plot(attention, "y"),
-        abcdutils::clean_plot(aggressive)
+        abcdutils::clean_plot(aggressive, "y")
     )
     if (!is.null(save)) {
         grid <-
@@ -488,7 +486,7 @@ plot_all_cbcl <- function(om_row, outcome_list, save = NULL) {
                 abcdutils::clean_plot(depress, "y"),
                 abcdutils::clean_plot(anxiety, "y"),
                 abcdutils::clean_plot(attention, "y"),
-                abcdutils::clean_plot(aggressive)
+                abcdutils::clean_plot(aggressive, "y")
             )
         ggplot2::ggsave(file = save, grid, width = 25, height = 20)
     }
