@@ -180,10 +180,14 @@ calc_nmi <- function(om_row, data_list) {
         function(x) {
             SNFtool::affinityMatrix(x, K = K, sigma = alpha)
         })
+    # the problem spot
+    return(sim_list)
     input_solutions <- lapply(sim_list,
         function(x) {
+            print(head(x))
             SNFtool::spectralClustering(x, nclust)
         })
+    print(5)
     nmi_scores <- lapply(input_solutions,
         function(x) {
             SNFtool::calNMI(full_solution, x)
@@ -208,6 +212,7 @@ calc_nmi <- function(om_row, data_list) {
 #' @export
 om_to_nmi_df <- function(om, data_list) {
     for (row in seq_len(nrow(om))) {
+        print(om[row, ]$"row_id")
         if (row == 1) {
             nmi_df <- calc_nmi(om[row, ], data_list)
             colnames(nmi_df) <- c("input", om$"significance"[row])
