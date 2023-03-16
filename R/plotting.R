@@ -511,3 +511,41 @@ om_plot_all_cbcl <- function(om, cbcl_list, fig_path_fn) {
             save = fig_path_fn(paste0(current_sig, ".png"), date = TRUE))
     }
 }
+
+
+#' Scatter plot the NMI values for each row of an nmi_df
+#'
+#' @param nmi_df A dataframe an input column and any number of NMI columns
+#' @param fig_path_fn A function that returns a full file path location
+#'
+#' @export
+plot_nmis <- function(nmi_df, fig_path_fn = NULL) {
+    solutions <- colnames(nmi_df)[2:length(colnames(nmi_df))]
+    nmi <- ""
+    solution <- ""
+    input <- ""
+    for (solution in solutions) {
+        solution_df <- nmi_df |>
+            dplyr::select("input", !!solution)
+        colnames(solution_df) <- c("input", "nmi")
+        solution_df <- dplyr::arrange(solution_df, dplyr::desc(nmi))
+        solution_df$"input" <- factor(solution_df$"input",
+                                      levels = solution_df$"input")
+        solution_df$"nmi" <- as.numeric(solution_df$"nmi")
+        nmi_plot <- ggplot2::ggplot(
+            solution_df, ggplot2::aes(x = input, y = nmi)) +
+            ggplot2::geom_point() +
+            ggplot2::theme(axis.text.x = ggplot2::element_text(
+                angle = 90, vjust = 0.5, hjust = 1)) +
+            ggplot2::ylab("NMI") +
+            ggplot2::xlab("Input") +
+            ggplot2::ggtitle(solution) +
+            ggplot2::theme(text = ggplot2::element_text(size = 20))
+        if (!is.null(fig_path_fn)) {
+            path <-
+                (fig_path_fn(paste0(solution, "_nmi_scatter.png"), date = TRUE))
+            ggplot2::ggsave(file = path, nmi_plot, width = 10, height = 10)
+        }
+        print(nmi_plot)
+    }
+}
