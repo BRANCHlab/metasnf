@@ -4,13 +4,15 @@
 \alias{cbcl_bar_chart}
 \title{Bar chart CBCL values for a characterization dataframe}
 \usage{
-cbcl_bar_chart(characterization_df, outcome)
+cbcl_bar_chart(characterization_df, outcome, nclust = NULL)
 }
 \arguments{
 \item{characterization_df}{A merged list containing cluster, subjectkey, and
 various CBCL outcomes}
 
 \item{outcome}{string specifying outcome of interest, e.g. \code{cbcl_nausea}}
+
+\item{nclust}{number of clusters}
 }
 \description{
 Bar chart CBCL values for a characterization dataframe

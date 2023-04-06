@@ -382,9 +382,10 @@ assigned_clust_hist <- function(om, save = NULL) {
 #' @param characterization_df A merged list containing cluster, subjectkey, and
 #'  various CBCL outcomes
 #' @param outcome string specifying outcome of interest, e.g. `cbcl_nausea`
+#' @param nclust number of clusters
 #'
 #' @export
-cbcl_bar_chart <- function(characterization_df, outcome) {
+cbcl_bar_chart <- function(characterization_df, outcome, nclust = NULL) {
     # A lot of trickery had to go into making this plotting function work.
     # `dplyr::count` cannot accept string parameters. To avoid this, I had to
     # rename the column of interest into the same thing every time the function
@@ -395,6 +396,7 @@ cbcl_bar_chart <- function(characterization_df, outcome) {
     n <- ""
     keycol <- ""
     outcome_label <- stringr::str_to_title(gsub("cbcl_", "", outcome))
+    outcome_label <- gsub("_", "\n", outcome_label)
     characterization_df <- characterization_df |>
         dplyr::rename("keycol" = !!outcome) # wizardry
     summary <- characterization_df |>
@@ -402,7 +404,12 @@ cbcl_bar_chart <- function(characterization_df, outcome) {
         dplyr::count(keycol) |>
         dplyr::mutate(percent = round(n / sum(n) * 100))
     summary$"keycol" <- factor(summary$"keycol", levels = c("2", "1", "0"))
-    summary$"cluster" <- factor(summary$"cluster")
+    if (is.null(nclust)) {
+        summary$"cluster" <- factor(summary$"cluster")
+    } else {
+        summary$"cluster" <- factor(summary$"cluster",
+            levels = c(as.character(1:nclust)))
+    }
     plot <- ggplot2::ggplot(
         data = summary,
         ggplot2::aes(
@@ -412,16 +419,19 @@ cbcl_bar_chart <- function(characterization_df, outcome) {
             )) +
         ggplot2::geom_bar(
             stat = "identity",
-            position = ggplot2::position_stack()) +
+            position = ggplot2::position_stack(),
+            width = 0.8) +
         ggplot2::geom_text(
             mapping = ggplot2::aes(
                 #label = paste0(percent, "%\n(", n, ")"),
                 label = n,
                 y = percent),
             position = ggplot2::position_stack(
-                vjust = 0.5)) +
+                vjust = 0.5),
+            size = 10) +
         ggplot2::scale_y_continuous(
             expand = ggplot2::expansion(mult = c(0, .1))) +
+        ggplot2::scale_x_discrete(drop = FALSE) +
         ggplot2::labs(
             x = "Cluster",
             y = "Percentage",
@@ -429,7 +439,7 @@ cbcl_bar_chart <- function(characterization_df, outcome) {
         ggplot2::theme_bw() +
         ggplot2::theme(
             text = ggplot2::element_text(
-                size = 20))
+                size = 30))
     return(plot)
 }
 
@@ -443,25 +453,39 @@ cbcl_bar_chart <- function(characterization_df, outcome) {
 #' @param sig a name for the current set of plots
 #' @param cbcl_list List containing all CBCL dataframes
 #' @param save optional path to save figure to
+#' @param nclust number of clusters being plotted - relevant for LP results
 #'
 #' @export
-plot_all_cbcl <- function(cluster_df, sig, cbcl_list, save = NULL) {
+plot_all_cbcl <- function(cluster_df, sig, cbcl_list, save = NULL,
+                          nclust = NULL) {
     cluster_cbcl_list <- append(list(cluster_df), cbcl_list)
     characterization_df <- abcdutils::merge_df_list(cluster_cbcl_list)
-    nclust <- length(unique(cluster_df$"cluster"))
+    if (is.null(nclust)) {
+        nclust <- length(unique(cluster_df$"cluster"))
+    }
     print(paste0("Row: ", sig, ". Number of clusters: ", nclust))
     print(cbcl_ord_reg(characterization_df, bonferroni = FALSE))
     # Making the bar charts
-    nausea <- cbcl_bar_chart(characterization_df, "cbcl_nausea")
-    vomiting <- cbcl_bar_chart(characterization_df, "cbcl_vomiting")
-    dizzy <- cbcl_bar_chart(characterization_df, "cbcl_dizzy")
-    overtired <- cbcl_bar_chart(characterization_df, "cbcl_overtired")
-    sleeping_more <- cbcl_bar_chart(characterization_df, "cbcl_sleeping_more")
-    sleeping_less <- cbcl_bar_chart(characterization_df, "cbcl_sleeping_less")
-    depress <- cbcl_bar_chart(characterization_df, "cbcl_depress")
-    anxiety <- cbcl_bar_chart(characterization_df, "cbcl_anxiety")
-    attention <- cbcl_bar_chart(characterization_df, "cbcl_attention")
-    aggressive <- cbcl_bar_chart(characterization_df, "cbcl_aggressive")
+    nausea <-
+    cbcl_bar_chart(characterization_df, "cbcl_nausea", nclust)
+    vomiting <-
+    cbcl_bar_chart(characterization_df, "cbcl_vomiting", nclust)
+    dizzy <-
+    cbcl_bar_chart(characterization_df, "cbcl_dizzy", nclust)
+    overtired <-
+    cbcl_bar_chart(characterization_df, "cbcl_overtired", nclust)
+    sleeping_more <-
+    cbcl_bar_chart(characterization_df, "cbcl_sleeping_more", nclust)
+    sleeping_less <-
+    cbcl_bar_chart(characterization_df, "cbcl_sleeping_less", nclust)
+    depress <-
+    cbcl_bar_chart(characterization_df, "cbcl_depress", nclust)
+    anxiety <-
+    cbcl_bar_chart(characterization_df, "cbcl_anxiety", nclust)
+    attention <-
+    cbcl_bar_chart(characterization_df, "cbcl_attention", nclust)
+    aggressive <-
+    cbcl_bar_chart(characterization_df, "cbcl_aggressive", nclust)
     gridExtra::grid.arrange(
         abcdutils::clean_plot(nausea, "y"),
         abcdutils::clean_plot(vomiting, "y"),
