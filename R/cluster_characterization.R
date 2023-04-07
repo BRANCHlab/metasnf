@@ -129,34 +129,41 @@ cbcl_ord_reg <- function(characterization_df, bonferroni = FALSE) {
     return(ord_reg_df)
 }
 
-#' Calculate overall p-values for an om_row
+#' Calculate overall p-values for an om
 #'
-#' @param om_row a row of an output matrix
+#' @param om an output matrix
 #' @param cbcl_list a list of CBCL measures
 #' @param bonferroni boolean for reporting bonferroni corrected p-values
 #'
 #' @export
-cbcl_ord_reg_from_om <- function(om_row, cbcl_list, bonferroni = FALSE) {
-    cluster_df <- get_cluster_df(om_row)
-    cluster_cbcl_list <- append(list(cluster_df), cbcl_list)
-    characterization_df <- abcdutils::merge_df_list(cluster_cbcl_list)
-    outcomes <- characterization_df |>
-        dplyr::select(dplyr::starts_with("cbcl")) |>
-        colnames()
-    ord_reg_df <- data.frame(
-        outcome = as.character(),
-        pval = as.numeric())
-    for (outcome in outcomes) {
-        outcome_df <- characterization_df[, c("subjectkey", outcome)]
-        cluster_df <- characterization_df[, c("cluster", "subjectkey")]
-        pval <- signif(ord_reg_p(cluster_df, outcome_df, outcome), 2)
-        if (bonferroni) {
-            pval <- pval * length(outcomes)
+cbcl_ord_reg_from_om <- function(om, cbcl_list, bonferroni = FALSE) {
+    ord_p_vals <- list()
+    for (row in seq_len(nrow(om))) {
+        current_row <- om[row, ]
+        ord_p_vals
+        cluster_df <- get_cluster_df(current_row)
+        cluster_cbcl_list <- append(list(cluster_df), cbcl_list)
+        characterization_df <- abcdutils::merge_df_list(cluster_cbcl_list)
+        outcomes <- characterization_df |>
+            dplyr::select(dplyr::starts_with("cbcl")) |>
+            colnames()
+        ord_reg_df <- data.frame(
+            outcome = as.character(),
+            pval = as.numeric())
+        for (outcome in outcomes) {
+            outcome_df <- characterization_df[, c("subjectkey", outcome)]
+            cluster_df <- characterization_df[, c("cluster", "subjectkey")]
+            pval <- signif(ord_reg_p(cluster_df, outcome_df, outcome), 2)
+            if (bonferroni) {
+                pval <- pval * length(outcomes)
+            }
+            pval <- format(min(pval, 1), scientific = FALSE)
+            ord_reg_df[nrow(ord_reg_df) + 1, ] <- c(outcome, pval)
         }
-        pval <- format(min(pval, 1), scientific = FALSE)
-        ord_reg_df[nrow(ord_reg_df) + 1, ] <- c(outcome, pval)
+        ord_p_vals <- append(ord_p_vals, list(ord_reg_df))
     }
-    return(ord_reg_df)
+    names(ord_p_vals) <- om$"significance"
+    return(ord_p_vals)
 }
 
 
