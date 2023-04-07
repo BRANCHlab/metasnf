@@ -2,17 +2,17 @@
 % Please edit documentation in R/cluster_characterization.R
 \name{cbcl_ord_reg_from_om}
 \alias{cbcl_ord_reg_from_om}
-\title{Calculate overall p-values for an om_row}
+\title{Calculate overall p-values for an om}
 \usage{
-cbcl_ord_reg_from_om(om_row, cbcl_list, bonferroni = FALSE)
+cbcl_ord_reg_from_om(om, cbcl_list, bonferroni = FALSE)
 }
 \arguments{
-\item{om_row}{a row of an output matrix}
+\item{om}{an output matrix}
 
 \item{cbcl_list}{a list of CBCL measures}
 
 \item{bonferroni}{boolean for reporting bonferroni corrected p-values}
 }
 \description{
-Calculate overall p-values for an om_row
+Calculate overall p-values for an om
 }

@@ -85,6 +85,25 @@ build_design_matrix_base <- function() {
 }
 
 
+#' Build a design matrix
+#'
+#' @param nrow number of design matrix rows
+#' @param seed set a seed for the random matrix generation. Note that this
+#'  affects the global seed.
+#'
+#' @return design_matrix A design matrix
+#'
+#' @export
+build_design_matrix <- function(nrow, seed = NULL) {
+    if (!is.null(seed)) {
+        set.seed(seed)
+    }
+    design_matrix_base <- build_design_matrix_base()
+    design_matrix <- add_design_matrix_rows(design_matrix_base, nrow)
+    return(design_matrix)
+}
+
+
 
 #' Generate random removal sequence
 #'
@@ -576,6 +595,7 @@ snf_step <- function(data_list, scheme, K = 20, alpha = 0.5) {
 #' @export
 execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
     start <- Sys.time()
+    design_matrix <- data.frame(design_matrix)
     output_matrix <- build_output_matrix(data_list, design_matrix)
     # Iterate through the rows of the design matrix
     remaining_seconds_vector <- vector()
@@ -658,6 +678,7 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
         unique()
     end <- Sys.time()
     print(end - start)
+    output_matrix <- abcdutils::col_to_num_all_possible(output_matrix)
     return(output_matrix)
 }
 
