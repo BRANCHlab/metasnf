@@ -394,9 +394,11 @@ cbcl_bar_chart <- function(characterization_df, outcome, nclust = NULL) {
     cluster <- ""
     percent <- ""
     n <- ""
+    n_thresh <- ""
     keycol <- ""
     outcome_label <- stringr::str_to_title(gsub("cbcl_", "", outcome))
     outcome_label <- gsub("_", "\n", outcome_label)
+    outcome_label <- paste0(outcome_label, " ") # give some legend padding
     characterization_df <- characterization_df |>
         dplyr::rename("keycol" = !!outcome) # wizardry
     summary <- characterization_df |>
@@ -410,6 +412,14 @@ cbcl_bar_chart <- function(characterization_df, outcome, nclust = NULL) {
         summary$"cluster" <- factor(summary$"cluster",
             levels = c(as.character(1:nclust)))
     }
+    summary <- summary |>
+        dplyr::mutate(
+            n_thresh = dplyr::case_when(
+                percent < 6 ~ "",
+                TRUE ~ as.character(n)),
+            n_small = dplyr::case_when(
+                percent < 6 ~ as.character(n),
+                TRUE ~ ""))
     plot <- ggplot2::ggplot(
         data = summary,
         ggplot2::aes(
@@ -424,11 +434,21 @@ cbcl_bar_chart <- function(characterization_df, outcome, nclust = NULL) {
         ggplot2::geom_text(
             mapping = ggplot2::aes(
                 #label = paste0(percent, "%\n(", n, ")"),
-                label = n,
+                label = n_thresh,
+                #label = n,
                 y = percent),
             position = ggplot2::position_stack(
                 vjust = 0.5),
             size = 10) +
+        ggplot2::geom_text(
+            mapping = ggplot2::aes(
+                #label = paste0(percent, "%\n(", n, ")"),
+                label = n_small,
+                #label = n,
+                y = percent),
+            position = ggplot2::position_stack(
+                vjust = 0.5),
+            size = 4) +
         ggplot2::scale_y_continuous(
             expand = ggplot2::expansion(mult = c(0, .1))) +
         ggplot2::scale_x_discrete(drop = FALSE) +
@@ -486,7 +506,7 @@ plot_all_cbcl <- function(cluster_df, sig, cbcl_list, save = NULL,
     cbcl_bar_chart(characterization_df, "cbcl_attention", nclust)
     aggressive <-
     cbcl_bar_chart(characterization_df, "cbcl_aggressive", nclust)
-    gridExtra::grid.arrange(
+    grid <- gridExtra::grid.arrange(
         abcdutils::clean_plot(nausea, "y"),
         abcdutils::clean_plot(vomiting, "y"),
         abcdutils::clean_plot(dizzy, "y"),
@@ -499,19 +519,6 @@ plot_all_cbcl <- function(cluster_df, sig, cbcl_list, save = NULL,
         abcdutils::clean_plot(aggressive, "y")
     )
     if (!is.null(save)) {
-        grid <-
-            gridExtra::arrangeGrob(
-                abcdutils::clean_plot(nausea, "y"),
-                abcdutils::clean_plot(vomiting, "y"),
-                abcdutils::clean_plot(dizzy, "y"),
-                abcdutils::clean_plot(overtired, "y"),
-                abcdutils::clean_plot(sleeping_more, "y"),
-                abcdutils::clean_plot(sleeping_less, "y"),
-                abcdutils::clean_plot(depress, "y"),
-                abcdutils::clean_plot(anxiety, "y"),
-                abcdutils::clean_plot(attention, "y"),
-                abcdutils::clean_plot(aggressive, "y")
-            )
         ggplot2::ggsave(file = save, grid, width = 25, height = 20)
     }
 }
