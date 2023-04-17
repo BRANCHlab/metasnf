@@ -536,26 +536,6 @@ plot_all_cbcl <- function(om, cbcl_list, fig_path_fn, save_prefix = NULL,
     }
 }
 
-#' Make a full CBCL grid plot for an output matrix
-#'
-#' @param om An output matrix (or dataframe with om-like structure)
-#' @param cbcl_list A list of all cbcl dataframes
-#' @param fig_path_fn A function that generates a figure path
-#'
-#' @export
-om_plot_all_cbcl <- function(om, cbcl_list, fig_path_fn) {
-    for (row in seq_len(nrow(om))) {
-        current_om <- om[row, ]
-        current_sig <- current_om$"significance"
-        cluster_df <- get_cluster_df(current_om)
-        plot_all_cbcl(
-            cluster_df,
-            current_sig,
-            cbcl_list,
-            save = fig_path_fn(paste0(current_sig, ".png"), date = TRUE))
-    }
-}
-
 
 #' Scatter plot the NMI values for each row of an nmi_df
 #'
