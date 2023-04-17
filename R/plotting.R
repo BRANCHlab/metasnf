@@ -470,56 +470,69 @@ cbcl_bar_chart <- function(characterization_df, outcome, nclust = NULL) {
 #'  and each CBCL measure on the y-axis.
 #'
 #' @param cluster_df a dataframe containing cluster and subjectkey
-#' @param sig a name for the current set of plots
 #' @param cbcl_list List containing all CBCL dataframes
 #' @param save optional path to save figure to
 #' @param nclust number of clusters being plotted - relevant for LP results
 #'
 #' @export
-plot_all_cbcl <- function(cluster_df, sig, cbcl_list, save = NULL,
-                          nclust = NULL) {
-    cluster_cbcl_list <- append(list(cluster_df), cbcl_list)
-    characterization_df <- abcdutils::merge_df_list(cluster_cbcl_list)
-    if (is.null(nclust)) {
-        nclust <- length(unique(cluster_df$"cluster"))
+plot_all_cbcl <- function(om, cbcl_list, fig_path_fn, save_prefix = NULL,
+                          save_suffix = NULL, include = NULL, exclude = NULL,
+                          nclust = NULL, w = 25, h = 20) {
+    # Optional filtering to specified CBCL measures
+    cbcl_names <- lapply(cbcl_list, function(x) { colnames(x)[2] })
+    cbcl_names_short <- gsub("cbcl_", "", cbcl_names)
+    print(cbcl_names_short)
+    # If exclude is not null, remove any CBCL measures specified
+    if (!is.null(exclude) && is.null(include)) {
+        exclude <- gsub("cbcl_", "", exclude)
+        cbcl_names <- cbcl_names[!cbcl_names_short %in% exclude]
+    # If include is not null, keep any CBCL measures specified
+    } else if (!is.null(include) && is.null(exclude)) {
+        include <- gsub("cbcl_", "", include)
+        cbcl_names <- cbcl_names[cbcl_names_short %in% include]
+        print(cbcl_names)
+    # There should be no reason to include and exclude at the same time
+    } else if (!is.null(include) && !is.null(exclude)) {
+        print(exclude)
+        print(include)
+        print(is.null(include))
+        print(is.null(exclude)) 
+        stop("Only one of `include` or `exclude` params should be given.")
     }
-    print(paste0("Row: ", sig, ". Number of clusters: ", nclust))
-    print(cbcl_ord_reg(characterization_df, bonferroni = FALSE))
-    # Making the bar charts
-    nausea <-
-    cbcl_bar_chart(characterization_df, "cbcl_nausea", nclust)
-    vomiting <-
-    cbcl_bar_chart(characterization_df, "cbcl_vomiting", nclust)
-    dizzy <-
-    cbcl_bar_chart(characterization_df, "cbcl_dizzy", nclust)
-    overtired <-
-    cbcl_bar_chart(characterization_df, "cbcl_overtired", nclust)
-    sleeping_more <-
-    cbcl_bar_chart(characterization_df, "cbcl_sleeping_more", nclust)
-    sleeping_less <-
-    cbcl_bar_chart(characterization_df, "cbcl_sleeping_less", nclust)
-    depress <-
-    cbcl_bar_chart(characterization_df, "cbcl_depress", nclust)
-    anxiety <-
-    cbcl_bar_chart(characterization_df, "cbcl_anxiety", nclust)
-    attention <-
-    cbcl_bar_chart(characterization_df, "cbcl_attention", nclust)
-    aggressive <-
-    cbcl_bar_chart(characterization_df, "cbcl_aggressive", nclust)
-    grid <- gridExtra::grid.arrange(
-        abcdutils::clean_plot(nausea, "y"),
-        abcdutils::clean_plot(vomiting, "y"),
-        abcdutils::clean_plot(dizzy, "y"),
-        abcdutils::clean_plot(overtired, "y"),
-        abcdutils::clean_plot(sleeping_more, "y"),
-        abcdutils::clean_plot(sleeping_less, "y"),
-        abcdutils::clean_plot(depress, "y"),
-        abcdutils::clean_plot(anxiety, "y"),
-        abcdutils::clean_plot(attention, "y"),
-        abcdutils::clean_plot(aggressive, "y")
-    )
-    if (!is.null(save)) {
-        ggplot2::ggsave(file = save, grid, width = 25, height = 20)
+    # Iterate through the output matrix one row at a time
+    for (row in seq_len(nrow(om))) {
+        # Dataframe with subjectkey and assigned cluster as columns
+        cluster_df <- get_cluster_df(om[row, ])
+        # Where the plot for this row will be saved
+        current_sig <- om[row, ]$"significance"
+        save <- fig_path_fn(paste0(
+            save_prefix,
+            current_sig,
+            save_suffix,
+            ".png"), date = TRUE)
+        # Making the dataframe that contains both cluster and CBCL information
+        cluster_cbcl_list <- append(list(cluster_df), cbcl_list)
+        characterization_df <- abcdutils::merge_df_list(cluster_cbcl_list)
+        # nclust is needed for plotting functions
+        if (is.null(nclust)) {
+            nclust <- length(unique(cluster_df$"cluster"))
+        }
+        # A quick print of some stats
+        print(paste0("Row: ", current_sig, ". Number of clusters: ", nclust))
+        print(cbcl_ord_reg(characterization_df, bonferroni = FALSE))
+        # Making the bar charts and adding them to a list
+        plot_list <- list()
+        for (cbcl_name in cbcl_names) {
+            cbcl_plot <- cbcl_bar_chart(characterization_df, cbcl_name, nclust)
+            # Remove y-axis from plots
+            cbcl_plot <- abcdutils::clean_plot(cbcl_plot, c("y", "x"))
+            plot_list <- append(plot_list, list(cbcl_plot))
+        }
+        a <- lapply(plot_list, class)
+        grid <- gridExtra::grid.arrange(grobs = plot_list)
+        if (!is.null(fig_path_fn)) {
+            ggplot2::ggsave(file = save, grid, width = w, height = h)
+        }
     }
 }
 
