@@ -4,18 +4,41 @@
 \alias{plot_all_cbcl}
 \title{Plot clusters across all CBCL measures}
 \usage{
-plot_all_cbcl(cluster_df, sig, cbcl_list, save = NULL, nclust = NULL)
+plot_all_cbcl(
+  om,
+  cbcl_list,
+  fig_path_fn,
+  save_prefix = NULL,
+  save_suffix = NULL,
+  include = NULL,
+  exclude = NULL,
+  nclust = NULL,
+  w = 25,
+  h = 20
+)
 }
 \arguments{
-\item{cluster_df}{a dataframe containing cluster and subjectkey}
-
-\item{sig}{a name for the current set of plots}
+\item{om}{An output matrix-like structure}
 
 \item{cbcl_list}{List containing all CBCL dataframes}
 
-\item{save}{optional path to save figure to}
+\item{fig_path_fn}{Closure specifying the location to save the final figure}
+
+\item{save_prefix}{prefix to add to each file saved}
+
+\item{save_suffix}{suffix to add to each file saved}
+
+\item{include}{a string or list of strings specifying which CBCL measures
+should be included. All other CBCL measures will be excluded.}
+
+\item{exclude}{a string or list of strings specifying which CBCL measures
+should be excluded. All other CBCL measures will be excluded.}
 
 \item{nclust}{number of clusters being plotted - relevant for LP results}
+
+\item{w}{the width of the final saved plots}
+
+\item{h}{the height of the final saved plots}
 }
 \description{
 Arrange and optionally save a grid of bar charts with cluster on the x-axis

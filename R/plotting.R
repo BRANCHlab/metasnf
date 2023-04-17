@@ -395,6 +395,7 @@ cbcl_bar_chart <- function(characterization_df, outcome, nclust = NULL) {
     percent <- ""
     n <- ""
     n_thresh <- ""
+    n_small <- ""
     keycol <- ""
     outcome_label <- stringr::str_to_title(gsub("cbcl_", "", outcome))
     outcome_label <- gsub("_", "\n", outcome_label)
@@ -469,10 +470,18 @@ cbcl_bar_chart <- function(characterization_df, outcome, nclust = NULL) {
 #' Arrange and optionally save a grid of bar charts with cluster on the x-axis
 #'  and each CBCL measure on the y-axis.
 #'
-#' @param cluster_df a dataframe containing cluster and subjectkey
+#' @param om An output matrix-like structure
 #' @param cbcl_list List containing all CBCL dataframes
-#' @param save optional path to save figure to
+#' @param fig_path_fn Closure specifying the location to save the final figure
+#' @param save_prefix prefix to add to each file saved
+#' @param save_suffix suffix to add to each file saved
+#' @param include a string or list of strings specifying which CBCL measures
+#'  should be included. All other CBCL measures will be excluded.    
+#' @param exclude a string or list of strings specifying which CBCL measures
+#'  should be excluded. All other CBCL measures will be excluded.
 #' @param nclust number of clusters being plotted - relevant for LP results
+#' @param w the width of the final saved plots
+#' @param h the height of the final saved plots
 #'
 #' @export
 plot_all_cbcl <- function(om, cbcl_list, fig_path_fn, save_prefix = NULL,
