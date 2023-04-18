@@ -525,7 +525,7 @@ plot_all_cbcl <- function(om, cbcl_list, fig_path_fn, save_prefix = NULL,
         nclust <- length(unique(cluster_df$"cluster"))
         # A quick print of some stats
         print(paste0("Row: ", current_sig, ". Number of clusters: ", nclust))
-        print(cbcl_ord_reg(characterization_df, bonferroni = FALSE))
+        print(cbcl_ord_reg(characterization_df, bonferroni = TRUE))
         # Making the bar charts and adding them to a list
         plot_list <- list()
         for (cbcl_name in cbcl_names) {
