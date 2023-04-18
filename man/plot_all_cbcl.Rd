@@ -12,7 +12,6 @@ plot_all_cbcl(
   save_suffix = NULL,
   include = NULL,
   exclude = NULL,
-  nclust = NULL,
   w = 25,
   h = 20
 )
@@ -33,8 +32,6 @@ should be included. All other CBCL measures will be excluded.}
 
 \item{exclude}{a string or list of strings specifying which CBCL measures
 should be excluded. All other CBCL measures will be excluded.}
-
-\item{nclust}{number of clusters being plotted - relevant for LP results}
 
 \item{w}{the width of the final saved plots}
 

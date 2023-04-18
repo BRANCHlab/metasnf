@@ -479,14 +479,13 @@ cbcl_bar_chart <- function(characterization_df, outcome, nclust = NULL) {
 #'  should be included. All other CBCL measures will be excluded.    
 #' @param exclude a string or list of strings specifying which CBCL measures
 #'  should be excluded. All other CBCL measures will be excluded.
-#' @param nclust number of clusters being plotted - relevant for LP results
 #' @param w the width of the final saved plots
 #' @param h the height of the final saved plots
 #'
 #' @export
 plot_all_cbcl <- function(om, cbcl_list, fig_path_fn, save_prefix = NULL,
                           save_suffix = NULL, include = NULL, exclude = NULL,
-                          nclust = NULL, w = 25, h = 20) {
+                          w = 25, h = 20) {
     # Optional filtering to specified CBCL measures
     cbcl_names <- lapply(cbcl_list, function(x) { colnames(x)[2] })
     cbcl_names_short <- gsub("cbcl_", "", cbcl_names)
@@ -523,9 +522,7 @@ plot_all_cbcl <- function(om, cbcl_list, fig_path_fn, save_prefix = NULL,
         cluster_cbcl_list <- append(list(cluster_df), cbcl_list)
         characterization_df <- abcdutils::merge_df_list(cluster_cbcl_list)
         # nclust is needed for plotting functions
-        if (is.null(nclust)) {
-            nclust <- length(unique(cluster_df$"cluster"))
-        }
+        nclust <- length(unique(cluster_df$"cluster"))
         # A quick print of some stats
         print(paste0("Row: ", current_sig, ". Number of clusters: ", nclust))
         print(cbcl_ord_reg(characterization_df, bonferroni = FALSE))
