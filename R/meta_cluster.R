@@ -29,19 +29,21 @@ calc_ari <- function(r1, r2, df) {
 #'
 #' @export
 meta_cluster <- function(mc_om) {
+    print("Please wait - this may take a minute.")
     # Only row id and subject label cols
     mc_om_subs <- subs(mc_om)
     # Only subject label cols
     mc_om_no_id <- mc_om_subs[, 2:length(mc_om_subs)]
     # The skeleton of the inter-cluster similarity matrix
-    mc_sm <- matrix(0, nrow(mc_om_subs), nrow(mc_om_subs))
+    mc_sm <- matrix(1, nrow(mc_om_subs), nrow(mc_om_subs))
+    pairwise_indices <- utils::combn(nrow(mc_sm), 2)
     # Calculating pairwise ARIs across rows
-    for (i in seq_len(nrow(mc_sm))) {
-        for (j in seq_len(ncol(mc_sm))) {
-            print(i)
-            print(j)
-            mc_sm[i, j] <- calc_ari(i, j, mc_om_no_id)
-        }
+    for (col in seq_len(ncol(pairwise_indices))) {
+        v1 <- pairwise_indices[1, col]
+        v2 <- pairwise_indices[2, col]
+        ari <- calc_ari(v1, v2, mc_om_no_id)
+        mc_sm[v1, v2] <- ari
+        mc_sm[v2, v1] <- ari
     }
     return(mc_sm)
 }
