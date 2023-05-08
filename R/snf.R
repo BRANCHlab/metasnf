@@ -73,6 +73,7 @@ build_design_matrix_base <- function() {
         inc_screen_time = numeric(),
         inc_family_function = numeric(),
         inc_sports = numeric(),
+        inc_exercise = numeric(),
         inc_prosocial = numeric(),
         inc_parent_psych = numeric(),
         snf_scheme = numeric(),
