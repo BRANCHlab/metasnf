@@ -522,7 +522,7 @@ plot_all_cbcl <- function(om, cbcl_list, fig_path_fn, save_prefix = NULL,
         cluster_cbcl_list <- append(list(cluster_df), cbcl_list)
         characterization_df <- abcdutils::merge_df_list(cluster_cbcl_list)
         # nclust is needed for plotting functions
-        nclust <- length(unique(cluster_df$"cluster"))
+        nclust <- om[row, ]$"nclust"
         # A quick print of some stats
         print(paste0("Row: ", current_sig, ". Number of clusters: ", nclust))
         print(cbcl_ord_reg(characterization_df, bonferroni = TRUE))
