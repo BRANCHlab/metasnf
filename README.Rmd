@@ -21,6 +21,8 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
+**NOTE:** Repo is currently undergoing major changes in the `softcoding` branch to become ABCD-independent and generally more accessible.
+
 ## Overview
 
 *metasnf* is a package that facilitates usage of the meta clustering paradigm described in [@caruanaMeta2006] with the similarity network fusion (SNF) data integration procedure developed in [@wangSimilarity2014].
