@@ -23,6 +23,8 @@ knitr::opts_chunk$set(
 
 ## Overview
 
+Test commit
+
 *metasnf* is a package that facilitates usage of the meta clustering paradigm described in [@caruanaMeta2006] with the similarity network fusion (SNF) data integration procedure developed in [@wangSimilarity2014].
 
 This package makes use of a few key structures to enable repeated iterations of SNF with distinct clustering hyperparameters and combinations of input variables.
