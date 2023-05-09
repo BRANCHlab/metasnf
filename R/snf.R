@@ -33,78 +33,34 @@ get_dist_matrix <- function(df, input_type, scale = FALSE) {
     return(dist_matrix)
 }
 
-#' Build a design matrix skeleton
+#' Build a design matrix - but softcoded
 #'
-#' @description
-#' Construct the base of the design matrix, a dataframe that initially contains
-#'  rows that each provide information about the hyperparamters with which
-#'  patient subtyping should occur for a single iteration. After executing the
-#'  subtyping specified by a given row, that row is extended with detailed
-#'  information about the resulting subtype membership of each included subject
-#'  and the efficacy of the subtyping solution in distinguishing subjects by
-#'  PPCS.
-#'
-#' @return design_matrix A skeleton dataframe to build a design matrix out of
-#'
-#' @export
-build_design_matrix_base <- function() {
-    design_matrix <- data.frame(
-        row_id = numeric(),
-        inc_mtbi_loc = numeric(),
-        inc_mtbi_mechanism = numeric(),
-        inc_mtbi_mem_daze = numeric(),
-        inc_income = numeric(),
-        inc_interview_age = numeric(),
-        inc_mtbi_age = numeric(),
-        inc_pubertal_status = numeric(),
-        inc_race = numeric(),
-        inc_sex = numeric(),
-        inc_wmndf = numeric(),
-        inc_headaches = numeric(),
-        inc_mtbi_count = numeric(),
-        inc_gord_cor = numeric(),
-        inc_gord_var = numeric(),
-        inc_subc_cor = numeric(),
-        inc_subc_var = numeric(),
-        inc_cort_sa = numeric(),
-        inc_cort_t = numeric(),
-        inc_subc_v = numeric(),
-        inc_loneliness = numeric(),
-        inc_screen_time = numeric(),
-        inc_family_function = numeric(),
-        inc_sports = numeric(),
-        inc_exercise = numeric(),
-        inc_prosocial = numeric(),
-        inc_parent_psych = numeric(),
-        snf_scheme = numeric(),
-        eigen_or_rot = numeric(),
-        K = numeric(),
-        alpha = numeric(),
-        stringsAsFactors = FALSE)
-    row.names(design_matrix) <- NULL
-    return(design_matrix)
-}
-
-
-#' Build a design matrix
-#'
-#' @param nrow number of design matrix rows
+#' @param data_list a data list object to determine variables for inclusion/exclusion
+#' @param nrows number of design matrix rows
 #' @param seed set a seed for the random matrix generation. Note that this
+#' @param retry_limit The maximum number of attempts to generate a novel row
 #'  affects the global seed.
 #'
 #' @return design_matrix A design matrix
 #'
 #' @export
-build_design_matrix <- function(nrow, seed = NULL) {
+build_design_matrix_soft <- function(data_list, nrows = 0, seed = NULL, retry_limit = 10) {
     if (!is.null(seed)) {
         set.seed(seed)
+        print("The global seed has been changed!")
     }
-    design_matrix_base <- build_design_matrix_base()
-    design_matrix <- add_design_matrix_rows(design_matrix_base, nrow)
+    dm_cols <- c(
+        "row_id",
+        paste0("inc_", sdl(data_list)$"name"),
+        "snf_scheme",
+        "eigen_or_rot",
+        "K",
+        "alpha")
+    design_matrix_base <- as.data.frame(matrix(0, ncol = length(dm_cols), nrow = 0))
+    colnames(design_matrix_base) <- dm_cols
+    design_matrix <- add_design_matrix_rows(design_matrix_base, nrows)
     return(design_matrix)
 }
-
-
 
 #' Generate random removal sequence
 #'
@@ -201,7 +157,7 @@ add_design_matrix_rows <- function(design_matrix, nrows, retry_limit = 10) {
 #'
 #' @export
 build_design_matrix_ak <- function() {
-    design_matrix <- build_design_matrix_base()
+    design_matrix <- build_design_matrix_soft()
     design_matrix[1:80, ] <- 1
     hyperparam_grid <- expand.grid(1:10, 3:10)
     colnames(hyperparam_grid) <- c("K", "alpha")
@@ -403,7 +359,7 @@ generate_data_list <- function(mtbi_loc = NULL,
 #'
 #' The major object containing all outcome variables
 #'
-#' @param ...
+#' @param ... Lists of outcomes formatted as (dataframe, "name", "type")
 #'
 #' @return outcome_list structure containing all outcome measure data
 #'
