@@ -211,6 +211,29 @@ build_design_matrix_ak <- function() {
 }
 
 
+#' Generate data_list object - but softcoded
+#'
+#' This is the major data object that will be processed when iterating through
+#'  the design matrix. The full list contains one list per measurement type.
+#'  Within each measurement type's list, elements include the actual data
+#'  structure, the name, the domain, and the data 'type' (i.e, numeric or
+#'  categorical).
+#' 
+#' To-do: include checks to make sure format of data list is correct
+#'
+#' @param ... Lists formatted as (df, "df_name", "df_domain", "df_type")
+#'
+#' @export
+generate_data_list_soft <- function(...) {
+    # The object that will contain all the data
+    data_list <- list(...)
+    # Assign names to the nested list elements
+    data_list_names <- c("data", "name", "domain", "type")
+    data_list <- lapply(data_list, stats::setNames, data_list_names)
+    return(data_list)
+}
+
+
 #' Generate data_list object
 #'
 #' This is the major data object that will be processed when iterating through
@@ -373,6 +396,25 @@ generate_data_list <- function(mtbi_loc = NULL,
     # Only keep measurement types where object[[1]] (the data) was provided
     data_list <- Filter(function(x) !(is.null(x$"data")), full_list)
     return(data_list)
+}
+
+
+#' Generate outcome_list object - but softcoded
+#'
+#' The major object containing all outcome variables
+#'
+#' @param ...
+#'
+#' @return outcome_list structure containing all outcome measure data
+#'
+#' @export
+generate_outcome_list_soft <- function(...) {
+    # The object that will contain all the data
+    outcome_list <- list(...)
+    # Assign names to the nested list elements
+    outcome_list_names <- c("data", "name", "type")
+    outcome_list <- lapply(outcome_list, stats::setNames, outcome_list_names)
+    return(outcome_list)
 }
 
 #' Generate outcome_list object
