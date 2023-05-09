@@ -10,6 +10,19 @@
 **NOTE:** Repo is currently undergoing major changes in the `softcoding`
 branch to become ABCD-independent and generally more accessible.
 
+The urgent to-do list:
+
+  - Account for different identifier than ABCD’s “subjectkey”
+  - Build design matrix off of data list
+  - Make outcome list optional
+
+Longer-term goals:
+
+  - More customization of design matrix
+  - Zipf-distribution scaling as described in meta-clustering paper
+    (this may not make sense for SNF?)
+  - More snf digestion schemes
+
 ## Overview
 
 *metasnf* is a package that facilitates usage of the meta clustering
