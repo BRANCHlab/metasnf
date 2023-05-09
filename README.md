@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Meta-clustering with Similarity Network Fusion (metasnf)
+# Meta clustering with Similarity Network Fusion (metasnf)
 
 <!-- badges: start -->
 
@@ -14,17 +14,14 @@ paradigm described in (Caruana et al. [2006](#ref-caruanaMeta2006)) with
 the similarity network fusion (SNF) data integration procedure developed
 in (Wang et al. [2014](#ref-wangSimilarity2014)).
 
-This package makes use of a few key structures to enable repeated
-iterations of SNF with distinct clustering hyperparameters and
-combinations of input variables.
+This package enables repeated iterations of SNF with distinct clustering
+hyperparameters and combinations of input variables by making use of a
+few key data structures.
 
-The clarity and performance of this package likely would have benefited
-from an [object-oriented
-approach](https://en.wikipedia.org/wiki/Object-oriented_programming),
-but because I didn’t know what object-oriented programming was and
-nobody talks about [object-oriented programming in
-R](https://adv-r.hadley.nz/oo.html), this package just uses lots and
-lots of nested lists : ).
+Because I didn’t know what object-oriented programming was and nobody
+talks about [object-oriented programming in
+R](https://adv-r.hadley.nz/oo.html), these structures are all just lots
+of nested lists : ).
 
 The major structures are:
 
