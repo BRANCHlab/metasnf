@@ -7,6 +7,9 @@
 
 <!-- badges: end -->
 
+**NOTE:** Repo is currently undergoing major changes in the `softcoding`
+branch to become ABCD-independent and generally more accessible.
+
 ## Overview
 
 *metasnf* is a package that facilitates usage of the meta clustering
