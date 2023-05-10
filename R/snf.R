@@ -470,7 +470,43 @@ execute_design_matrix_soft <- function(data_list, design_matrix) {
     return(output_matrix)
 }
 
-
+#' Extend an output matrix to include outcome evaluations
+#'
+#' @param output_matrix an output_matrix
+#' @param outcome_list an outcome_list
+#'
+#' @return extended_output_matrix an extended output matrix that contains
+#'  p-value columns for each outcome in the provided outcome_list
+#'
+#' @export
+extend_om <- function(output_matrix, outcome_list) {
+    output_matrix <- add_char_vec_as_cols(
+        output_matrix,
+        paste0(sol(outcome_list)$"name", "_p"),
+        NA
+    )
+    # Iterate across rows of the output matrix
+    for (i in seq_len(nrow(output_matrix))) {
+        clustered_subs <- get_clustered_subs(output_matrix[i, ])
+        # This really shouldn't be different from clustered_subs
+        assigned_subs <- clustered_subs |>
+            dplyr::filter(clustered_subs$"cluster" != 0)
+        # Iterate across each outcome measure included
+        # Assign p-values
+        for (j in seq_along(outcome_list)) {
+            current_outcome_component <- outcome_list[[j]]
+            current_outcome_name <- current_outcome_component$"name"
+            p_value <- get_p(assigned_subs, current_outcome_component)
+            target_col <- grep(current_outcome_name, colnames(output_matrix))
+            output_matrix[i, target_col] <- p_value
+        }
+        min_p <- get_min_p(output_matrix[i, ])
+        mean_p <- get_mean_p(output_matrix[i, ])
+        output_matrix[i, "min_p_val"] <- min_p
+        output_matrix[i, "mean_p_val"] <- mean_p
+    }
+    return(output_matrix)
+}
 
 #' Execute variations of SNF as described by a design matrix
 #'
