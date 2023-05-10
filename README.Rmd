@@ -27,7 +27,8 @@ To-do list (in order of priority):
 
 - ~Build design matrix off of data list~
 - Make outcome list optional
-- Account for different identifier than ABCD's "subjectkey"
+- Cleaner organization of functions across .R files
+- ~Account for different identifier than ABCD's "subjectkey"~
 - More customization of design matrix
 - More snf digestion schemes
 - Zipf-distribution scaling as described in meta-clustering paper (this may not make sense for SNF?)
