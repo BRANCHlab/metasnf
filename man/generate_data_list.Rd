@@ -4,10 +4,12 @@
 \alias{generate_data_list}
 \title{Generate data_list object - but softcoded}
 \usage{
-generate_data_list(...)
+generate_data_list(..., old_uid = NULL)
 }
 \arguments{
 \item{...}{Lists formatted as (df, "df_name", "df_domain", "df_type")}
+
+\item{old_uid}{(string) the name of the uid column currently used data}
 }
 \description{
 This is the major data object that will be processed when iterating through
@@ -18,4 +20,23 @@ categorical).
 }
 \details{
 To-do: include checks to make sure format of data list is correct
+}
+\examples{
+heart_rate_df <- data.frame(
+    patient_id = c("1", "2", "3"),
+    var1 = c(0.04, 0.1, 0.3),
+    var2 = c(30, 2, 0.3)
+)
+
+personality_test_df <- data.frame(
+    patient_id = c("1", "2", "3"),
+    var3 = c(900, 1990, 373),
+    var4 = c(509, 2209, 83)
+)
+
+dl <- generate_data_list(
+    list(heart_rate_df, "data1", "domain1", "numeric"),
+    list(personality_test_df, "data2", "domain2", "numeric"),
+    old_uid = "patient_id"
+)
 }
