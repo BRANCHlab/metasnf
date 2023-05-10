@@ -81,7 +81,7 @@ Alternatively, a top clustering solution can be selected from a regular `output_
 
 ## Installation
 
-You can install the development version of metasnf from [GitHub](https://github.com/) with:
+You can install the development version of metasnf with:
 
 ``` r
 # install.packages("devtools")

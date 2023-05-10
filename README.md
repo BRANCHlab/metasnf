@@ -101,8 +101,7 @@ the qualitatively distinct “meta clusters” that emerge.
 
 ## Installation
 
-You can install the development version of metasnf from
-[GitHub](https://github.com/) with:
+You can install the development version of metasnf with:
 
 ``` r
 # install.packages("devtools")
