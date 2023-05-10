@@ -646,6 +646,12 @@ get_p <- function(assigned_subs, outcome_component) {
         p_val <- ord_reg_p(assigned_subs, outcome, outcome_name)
     } else if (outcome_type == "numeric") {
         p_val <- lin_reg_p(assigned_subs, outcome, outcome_name)
+    } else {
+        stop(paste0(
+            "Unsupported outcome type: ",
+            outcome_type,
+            ". Accepted types for now are numeric and ordinal."
+        ))
     }
     return(p_val)
 }
