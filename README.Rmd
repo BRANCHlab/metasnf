@@ -27,6 +27,8 @@ To-do list (in order of priority):
 
 - ~Build design matrix off of data list~
 - Make outcome list optional
+- Consider moving reduce_dl_to_common / arrange_dl to start of execute_dm
+- Add check to make sure no columns end in "_p" prior to extending the OM
 - Cleaner organization of functions across .R files
 - ~Account for different identifier than ABCD's "subjectkey"~
 - More customization of design matrix

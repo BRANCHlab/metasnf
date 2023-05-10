@@ -10,18 +10,20 @@
 **NOTE:** Repo is currently undergoing major changes in the `softcoding`
 branch to become ABCD-independent and generally more accessible.
 
-The urgent to-do list:
+To-do list (in order of priority):
 
-  - Account for different identifier than ABCD’s “subjectkey”
-  - Build design matrix off of data list
+  - \~Build design matrix off of data list\~
   - Make outcome list optional
-
-Longer-term goals:
-
+  - Consider moving reduce\_dl\_to\_common / arrange\_dl to start of
+    execute\_dm
+  - Add check to make sure no columns end in "\_p" prior to extending
+    the OM
+  - Cleaner organization of functions across .R files
+  - \~Account for different identifier than ABCD’s “subjectkey”\~
   - More customization of design matrix
+  - More snf digestion schemes
   - Zipf-distribution scaling as described in meta-clustering paper
     (this may not make sense for SNF?)
-  - More snf digestion schemes
 
 ## Overview
 
