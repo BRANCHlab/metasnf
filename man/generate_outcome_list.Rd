@@ -2,56 +2,12 @@
 % Please edit documentation in R/snf.R
 \name{generate_outcome_list}
 \alias{generate_outcome_list}
-\title{Generate outcome_list object}
+\title{Generate outcome_list object - but softcoded}
 \usage{
-generate_outcome_list(
-  cbcl_headaches = NULL,
-  cbcl_nausea = NULL,
-  cbcl_vomiting = NULL,
-  cbcl_dizzy = NULL,
-  cbcl_overtired = NULL,
-  cbcl_sleeping_more = NULL,
-  cbcl_sleeping_less = NULL,
-  cbcl_depress = NULL,
-  cbcl_anxiety = NULL,
-  cbcl_attention = NULL,
-  cbcl_aggressive = NULL,
-  nihtbx_list_fc = NULL,
-  nihtbx_pattern_fc = NULL,
-  nihtbx_cardsort_fc = NULL,
-  sds_sleep = NULL
-)
+generate_outcome_list(...)
 }
 \arguments{
-\item{cbcl_headaches}{an outcome measure}
-
-\item{cbcl_nausea}{an outcome measure}
-
-\item{cbcl_vomiting}{an outcome measure}
-
-\item{cbcl_dizzy}{an outcome measure}
-
-\item{cbcl_overtired}{an outcome measure}
-
-\item{cbcl_sleeping_more}{an outcome measure}
-
-\item{cbcl_sleeping_less}{an outcome measure}
-
-\item{cbcl_depress}{an outcome measure}
-
-\item{cbcl_anxiety}{an outcome measure}
-
-\item{cbcl_attention}{an outcome measure}
-
-\item{cbcl_aggressive}{an outcome measure}
-
-\item{nihtbx_list_fc}{an outcome measure}
-
-\item{nihtbx_pattern_fc}{an outcome measure}
-
-\item{nihtbx_cardsort_fc}{an outcome measure}
-
-\item{sds_sleep}{an outcome measure}
+\item{...}{Lists of outcomes formatted as (dataframe, "name", "type")}
 }
 \value{
 outcome_list structure containing all outcome measure data
