@@ -1,0 +1,146 @@
+---
+title: "An example metasnf pipeline"
+output: rmarkdown::html_vignette
+bibliography: bibliography.bib
+link-citations: yes
+linkcolor: blue
+vignette: >
+  %\VignetteIndexEntry{An example metasnf pipeline}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+**What is this package?**
+
+*metasnf* is a package that facilitates usage of the meta clustering paradigm described in [@caruanaMeta2006] with the similarity network fusion (SNF) data integration procedure developed in [@wangSimilarity2014].
+
+This package enables repeated iterations of SNF with distinct clustering hyperparameters and combinations of input variables by making use of a few key data structures.
+
+<br>
+
+**Why use meta clustering?**
+
+Clustering algorithms strive to give you a solution that is optimal in terms of some metric of clustering compactness.
+Perhaps in some cases with huge amounts of data and a simple set of features to consider, like examining the preferred genres of Netflix customers, the most compact solution will immediately produce something useful (distinct tastes that can quickly be used to inform advertising).
+
+When clustering noisy biological data over a wide range of data domains, however, you're probably not going to get a crisp and "correct" answer that shines above all other clustering solutions.
+Depending on how things are preprocessed, how things are weighted, what features are included, what hyperparameters are used, you may end up with all sorts of qualitatively different solutions that tell you different interesting things about the starting dataset.
+
+What are the chances that the best clustering solution for your use case is also the one with the best [silhouette score](https://en.wikipedia.org/wiki/Silhouette_(clustering)) or other [evaluation metric](https://en.wikipedia.org/wiki/Cluster_analysis#Evaluation_and_assessment)?
+
+To address this issue, the meta clustering procedure [@caruanaMeta2006] generates a large number of reasonable clustering solutions, clusters those solutions into qualitatively similar ones, and lets the user examine those "meta clusters" to find something that seems like it'll be the most useful.
+
+In this vignette, we work through a slightly different approach also mentioned in the original meta clustering paper, which involved using our own clustering usefulness rule to enable automatic solution from the pool of large cluster solutions (without needing to cluster the cluster solutions themselves or do any manual inspections).
+We also go through some functions that will help you go through the authentic clustering-of-clusters based approach if that is what you prefer.
+
+
+## The (fake) data
+
+NIMH it's not real ABCD data.
+
+```{r setup}
+library(metasnf)
+library(tibble) # To make printing big dataframes a little less unwieldy
+```
+
+The metansf package comes with a few mock dataframes based on real data from the Adolescent Brain Cognitive Development study:
+
+- `abcd_anxiety` (anxiety scores from the CBCL)
+- `abcd_depress` (depression scores from the CBCL)
+- `abcd_cort_t` (cortical thicknesses)
+- `abcd_cort_sa` (cortical surface areas in mm^2)
+- `abcd_subc_v` (subcortical volumes in mm^3)
+- `abcd_income` (household income on a 1-3 scale)
+- `abcd_pubertal` (pubertal status on a 1-5 scale)
+
+Here's what the cortical thickness data looks like:
+
+```{r}
+abcd_cort_t
+```
+
+The first column `subjectkey` is the unique identifier (UID) for all subjects in the ABCD study.
+This will also be the required UID for your data, but don't worry about that just yet.
+
+
+Here's the household income data:
+
+```{r}
+abcd_income
+```
+
+Putting everything in a list will help us get quicker summaries of all the data.
+
+```{r}
+abcd_data <- list(
+    abcd_anxiety,
+    abcd_depress,
+    abcd_cort_t,
+    abcd_cort_sa,
+    abcd_subc_v,
+    abcd_income,
+    abcd_pubertal
+)
+
+# The number of rows:
+lapply(abcd_data, dim)
+
+# Whether or not the data has missing values:
+lapply(abcd_data,
+    function(x) {
+        any(is.na(x))
+    }
+)
+```
+
+Some of our data has missing values and not all of our dataframes have the same number of participants.
+
+Now let's roll up our sleeves and do some clustering!
+
+## 1. Generating the `data_list`
+
+The `data_list` structure is the first important structure of the `metasnf` package.
+It's basically just a list of the dataframes (like the one already created), but with some additional features to facilitate repeated SNF.
+It should only contain the variables we want to directly use as inputs for the clustering.
+I'll set aside the anxiety and depression variables for now and just use the other variables as clustering inputs.
+
+```{r}
+dl <- generate_data_list(
+    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
+    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
+    list(abcd_income, "household_income", "demographics", "numeric"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
+    old_uid = "subjectkey"
+)
+```
+
+Building the `data_list` is the most laborious part of the process.
+The first entries are all lists which contains the following elements:
+
+1. The actual dataframe
+2. A name for the dataframe (string)
+3. A name for the *domain* of the dataframe (string)
+4. The type of variable stored in the dataframe (options are numeric, categorical, and mixed)
+
+Finally, there's an argument for the `old_uid` (the column name that currently uniquely identifies all the subjects in your data).
+
+Behind the scenes, this function is building a nested list that keeps track of all this information, but it is also:
+
+- Converting the UID of the data into "subjectkey"
+- Arranging the subjects in all the dataframe by their UID
+- **Removing all the NAs**
+
+Sorry, no NAs are allowed past this point.
+If you don't want a bunch of your data to get slashed because there are a few NAs sprinkled around here and there, consider using [imputation](https://en.wikipedia.org/wiki/Imputation_(statistics)).
+The `mice` package in R is nice for this.
+
+
+## References
