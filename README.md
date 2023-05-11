@@ -14,14 +14,14 @@ To-do list (in order of priority):
 
   - ~~Build design matrix off of data list~~
   - ~~Make outcome list optional~~
+  - Make a vignette/minimal example of walking through the main steps of
+    the pipeline
   - Consider moving reduce\_dl\_to\_common / arrange\_dl to start of
     execute\_dm
   - Add check to make sure no columns end in "\_p" prior to extending
     the OM
   - Cleaner organization of functions across .R files
   - ~~Account for different identifier than ABCD’s “subjectkey”~~
-  - Make a vignette/minimal example of walking through the main steps of
-    the pipeline
   - Share repo\!
   - Create a github pages
   - Allow categorical comparisons in outcome list
