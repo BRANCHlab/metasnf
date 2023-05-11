@@ -7,8 +7,8 @@
 
 <!-- badges: end -->
 
-**NOTE:** Repo is currently undergoing major changes in the `softcoding`
-branch to become ABCD-independent and generally more accessible.
+**NOTE:** Repo is currently undergoing major changes in the branch to
+become ABCD-independent and generally more accessible.
 
 To-do list (in order of priority):
 
