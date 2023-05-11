@@ -2,3 +2,4 @@
 ^README\.Rmd$
 build.R
 bibliography.bib
+^data-raw$

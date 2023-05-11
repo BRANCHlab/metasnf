@@ -1,0 +1,91 @@
+library(abcdutils)
+library(readr)
+
+# Neuroimaging variables ======================================================
+smrip10201 <- read_delim(
+    "~/documents/research/data/abcd/raw/abcd_smrip10201.txt"
+)
+
+mrisdp10201 <- read_delim(
+    "~/documents/research/data/abcd/raw/abcd_mrisdp10201.txt"
+)
+
+mock_smrip10201 <- smrip10201 |> generate_mock_data(n = 300, seed = 42)
+mock_mrisdp10201 <- mrisdp10201 |> generate_mock_data(n = 300, seed = 43)
+
+## Subcortical volumes
+abcd_subc_v <- abcdutils::get_subc_v(mock_smrip10201, t = 0)
+
+## Cortical thickness
+abcd_cort_t <- abcdutils::get_cort_t(mock_mrisdp10201, t = 0)
+
+## Cortical volumes
+abcd_cort_sa <- abcdutils::get_cort_sa(mock_mrisdp10201, t = 0)
+
+# Demographic variables =======================================================
+pdem02 <- read_delim(
+    "~/documents/research/data/abcd/raw/pdem02.txt"
+)
+
+ssphp01 <- read_delim(
+    "~/documents/research/data/abcd/raw/abcd_ssphp01.txt"
+)
+
+ssphy01 <- read_delim(
+    "~/documents/research/data/abcd/raw/abcd_ssphy01.txt"
+)
+
+mock_pdem02 <- pdem02 |> generate_mock_data(n = 300, seed = 44)
+mock_ssphp01 <- ssphp01 |> generate_mock_data(n = 3000, seed = 45)
+mock_ssphy01 <- ssphy01 |> generate_mock_data(n = 3000, seed = 46)
+
+
+# These two need to align for the pubertal status function to work
+mock_ssphy01$"subjectkey" <- mock_ssphp01$"subjectkey"
+mock_ssphy01$"sex" <- mock_ssphp01$"sex"
+
+## Household income
+abcd_income <- abcdutils::get_income(mock_pdem02, t = 0)
+
+## Pubertal status
+abcd_pubertal <- abcdutils::get_pubertal_status(
+    mock_ssphp01,
+    mock_ssphy01,
+    t = 0
+)
+
+# Two outcome variables: depression and anxiety ===============================
+abcd_cbcls01 <- read_delim(
+    "~/documents/research/data/abcd/raw/abcd_cbcls01.txt"
+)
+
+mock_abcd_cbcls01 <- generate_mock_data(abcd_cbcls01, n = 3000, seed = 47)
+
+abcd_depress <- get_cbcl_depress(mock_abcd_cbcls01, t = 0)
+abcd_anxiety <- get_cbcl_anxiety(mock_abcd_cbcls01, t = 0)
+
+abcd_depress <- abcd_depress[1:275, ]
+abcd_anxiety <- abcd_anxiety[1:275, ]
+
+# Matching the subjectkeys ====================================================
+(abcd_subc_v$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_subc_v)])
+
+(abcd_cort_t$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_cort_t)])
+
+(abcd_cort_sa$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_cort_sa)])
+
+(abcd_income$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_income)])
+
+(abcd_pubertal$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_pubertal)])
+
+(abcd_depress$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_depress)])
+
+(abcd_anxiety$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_anxiety)])
+
+usethis::use_data(abcd_subc_v, overwrite = TRUE)
+usethis::use_data(abcd_cort_t, overwrite = TRUE)
+usethis::use_data(abcd_cort_sa, overwrite = TRUE)
+usethis::use_data(abcd_income, overwrite = TRUE)
+usethis::use_data(abcd_pubertal, overwrite = TRUE)
+usethis::use_data(abcd_depress, overwrite = TRUE)
+usethis::use_data(abcd_anxiety, overwrite = TRUE)
