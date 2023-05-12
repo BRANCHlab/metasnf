@@ -1,13 +1,13 @@
 ---
 title: "An example metasnf pipeline"
 output: rmarkdown::html_vignette
-bibliography: bibliography.bib
-link-citations: yes
-linkcolor: blue
 vignette: >
   %\VignetteIndexEntry{An example metasnf pipeline}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: bibliography.bib
+#link-citations: yes
+#linkcolor: blue
 ---
 
 ```{r, include = FALSE}
@@ -16,6 +16,13 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
+```{r}
+a <- getwd()
+print(a)
+```
+
+
 
 **What is this package?**
 
@@ -43,11 +50,9 @@ We also go through some functions that will help you go through the authentic cl
 
 ## The (fake) data
 
-NIMH it's not real ABCD data.
-
 ```{r setup}
 library(metasnf)
-library(tibble) # To make printing big dataframes a little less unwieldy
+#library(tibble) # To make printing big dataframes a little less unwieldy
 ```
 
 The metansf package comes with a few mock dataframes based on real data from the Adolescent Brain Cognitive Development study:
