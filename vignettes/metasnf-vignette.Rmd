@@ -5,9 +5,6 @@ vignette: >
   %\VignetteIndexEntry{An example metasnf pipeline}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-bibliography: bibliography.bib
-#link-citations: yes
-#linkcolor: blue
 ---
 
 ```{r, include = FALSE}
@@ -17,16 +14,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r}
-a <- getwd()
-print(a)
-```
-
-
-
 **What is this package?**
 
-*metasnf* is a package that facilitates usage of the meta clustering paradigm described in [@caruanaMeta2006] with the similarity network fusion (SNF) data integration procedure developed in [@wangSimilarity2014].
+*metasnf* is a package that facilitates usage of the meta clustering paradigm described in [Caruana et al., 2006](https://doi.org/10.1109/ICDM.2006.103) with the similarity network fusion (SNF) data integration procedure developed in [Wang et al., 2014](https://doi.org/10.1038/nmeth.2810).
 
 This package enables repeated iterations of SNF with distinct clustering hyperparameters and combinations of input variables by making use of a few key data structures.
 
@@ -42,7 +32,7 @@ Depending on how things are preprocessed, how things are weighted, what features
 
 What are the chances that the best clustering solution for your use case is also the one with the best [silhouette score](https://en.wikipedia.org/wiki/Silhouette_(clustering)) or other [evaluation metric](https://en.wikipedia.org/wiki/Cluster_analysis#Evaluation_and_assessment)?
 
-To address this issue, the meta clustering procedure [@caruanaMeta2006] generates a large number of reasonable clustering solutions, clusters those solutions into qualitatively similar ones, and lets the user examine those "meta clusters" to find something that seems like it'll be the most useful.
+To address this issue, the meta clustering procedure [Caruana et al., 2006](https://doi.org/10.1109/ICDM.2006.103) generates a large number of reasonable clustering solutions, clusters those solutions into qualitatively similar ones, and lets the user examine those "meta clusters" to find something that seems like it'll be the most useful.
 
 In this vignette, we work through a slightly different approach also mentioned in the original meta clustering paper, which involved using our own clustering usefulness rule to enable automatic solution from the pool of large cluster solutions (without needing to cluster the cluster solutions themselves or do any manual inspections).
 We also go through some functions that will help you go through the authentic clustering-of-clusters based approach if that is what you prefer.
@@ -52,7 +42,6 @@ We also go through some functions that will help you go through the authentic cl
 
 ```{r setup}
 library(metasnf)
-#library(tibble) # To make printing big dataframes a little less unwieldy
 ```
 
 The metansf package comes with a few mock dataframes based on real data from the Adolescent Brain Cognitive Development study:
@@ -68,7 +57,11 @@ The metansf package comes with a few mock dataframes based on real data from the
 Here's what the cortical thickness data looks like:
 
 ```{r}
-abcd_cort_t
+dim(abcd_cort_t)
+
+str(abcd_cort_t[1:5, 1:5])
+
+abcd_cort_t[1:5, 1:5]
 ```
 
 The first column `subjectkey` is the unique identifier (UID) for all subjects in the ABCD study.
@@ -78,7 +71,11 @@ This will also be the required UID for your data, but don't worry about that jus
 Here's the household income data:
 
 ```{r}
-abcd_income
+dim(abcd_income)
+
+str(abcd_income[1:5, ])
+
+abcd_income[1:5, ]
 ```
 
 Putting everything in a list will help us get quicker summaries of all the data.
@@ -107,7 +104,6 @@ lapply(abcd_data,
 
 Some of our data has missing values and not all of our dataframes have the same number of participants.
 
-Now let's roll up our sleeves and do some clustering!
 
 ## 1. Generating the `data_list`
 
@@ -149,3 +145,8 @@ The `mice` package in R is nice for this.
 
 
 ## References
+
+Caruana, Rich, Mohamed Elhawary, Nam Nguyen, and Casey Smith. 2006. “Meta Clustering.” In Sixth International Conference on Data Mining (ICDM’06), 107–18. https://doi.org/10.1109/ICDM.2006.103.
+
+Wang, Bo, Aziz M. Mezlini, Feyyaz Demir, Marc Fiume, Zhuowen Tu, Michael Brudno, Benjamin Haibe-Kains, and Anna Goldenberg. 2014. “Similarity Network Fusion for Aggregating Data Types on a Genomic Scale.” Nature Methods 11 (3): 333–37. https://doi.org/10.1038/nmeth.2810.
+
