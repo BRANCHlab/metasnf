@@ -38,7 +38,7 @@ In this vignette, we work through a slightly different approach also mentioned i
 We also go through some functions that will help you go through the authentic clustering-of-clusters based approach if that is what you prefer.
 
 
-## The (fake) data
+## 0. Examining the (fake) data
 
 ```{r setup}
 library(metasnf)
@@ -91,10 +91,10 @@ abcd_data <- list(
     abcd_pubertal
 )
 
-# The number of rows:
+# The number of rows in each dataframe:
 lapply(abcd_data, dim)
 
-# Whether or not the data has missing values:
+# Whether or not each dataframe has missing values:
 lapply(abcd_data,
     function(x) {
         any(is.na(x))
@@ -107,10 +107,9 @@ Some of our data has missing values and not all of our dataframes have the same 
 
 ## 1. Generating the `data_list`
 
-The `data_list` structure is the first important structure of the `metasnf` package.
-It's basically just a list of the dataframes (like the one already created), but with some additional features to facilitate repeated SNF.
-It should only contain the variables we want to directly use as inputs for the clustering.
-I'll set aside the anxiety and depression variables for now and just use the other variables as clustering inputs.
+The `data_list` structure is basically just a list of dataframes (like the one already created), but with some additional features to facilitate repeated clustering.
+It should only contain the input dataframes we want to directly use as inputs for the clustering.
+I'll set aside the anxiety and depression dataframes for now and just use the other dataframes as clustering inputs.
 
 ```{r}
 dl <- generate_data_list(
@@ -121,6 +120,7 @@ dl <- generate_data_list(
     list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
     old_uid = "subjectkey"
 )
+
 ```
 
 Building the `data_list` is the most laborious part of the process.
