@@ -37,6 +37,10 @@ generate_data_list <- function(..., old_uid = NULL) {
     data_list_names <- c("data", "name", "domain", "type")
     data_list <- lapply(data_list, stats::setNames, data_list_names)
     data_list <- convert_uids(data_list, old_uid)
+    data_list <- data_list |>
+        remove_dl_na() |>
+        reduce_dl_to_common() |>
+        arrange_dl()
     return(data_list)
 }
 
@@ -97,6 +101,24 @@ convert_uids <- function(data_list, old_uid = NULL) {
     return(dl_renamed_id)
 }
 
+#' Remove NAs from a data_list object
+#'
+#' @param data_list A data_list
+#'
+#' @return data_list A data_list without NAs
+#'
+#' @export
+remove_dl_na <- function(data_list) {
+    dl_no_nas <- lapply(
+        data_list,
+        function(x) {
+            x[[1]] <- stats::na.omit(x[[1]])
+            return(x)
+        }
+    )
+    return(dl_no_nas)
+}
+
 #' Reduce data_list to common subjects
 #'
 #' Given a `data_list` object, reduce each nested dataframe to contain only the
@@ -152,7 +174,7 @@ arrange_dl <- function(data_list) {
 #' @return dl_summary Summarized output
 #'
 #' @export
-sdl <- function(data_list) {
+summarize_dl <- function(data_list) {
     dl_summary <-
         data.frame(
             name = unlist(lapply(data_list, function(x) x$"name")),

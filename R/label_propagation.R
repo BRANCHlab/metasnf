@@ -12,7 +12,7 @@
 lp_om <- function(om, full_data_list) {
     # Keep a track of the number of train and test subjects
     n_train <- length(colnames(subs(om))) - 1
-    n_test <- sdl(full_data_list)$length[1] - n_train
+    n_test <- summarize_dl(full_data_list)$length[1] - n_train
     train_indices <- 1:n_train
     test_indices <- (1 + n_train):(n_test + n_train)
     # Subject keys of subjects

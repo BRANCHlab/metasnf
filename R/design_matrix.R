@@ -16,7 +16,7 @@ build_design_matrix <- function(data_list, nrows = 0, seed = NULL, retry_limit =
     }
     dm_cols <- c(
         "row_id",
-        paste0("inc_", sdl(data_list)$"name"),
+        paste0("inc_", summarize_dl(data_list)$"name"),
         "snf_scheme",
         "eigen_or_rot",
         "K",
