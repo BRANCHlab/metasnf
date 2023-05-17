@@ -112,7 +112,7 @@ It should only contain the input dataframes we want to directly use as inputs fo
 I'll set aside the anxiety and depression dataframes for now and just use the other dataframes as clustering inputs.
 
 ```{r}
-dl <- generate_data_list(
+data_list <- generate_data_list(
     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
     list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
@@ -120,7 +120,6 @@ dl <- generate_data_list(
     list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
     old_uid = "subjectkey"
 )
-
 ```
 
 Building the `data_list` is the most laborious part of the process.
@@ -136,12 +135,48 @@ Finally, there's an argument for the `old_uid` (the column name that currently u
 Behind the scenes, this function is building a nested list that keeps track of all this information, but it is also:
 
 - Converting the UID of the data into "subjectkey"
+- Removing all observations that contain any NAs
+- Removing all subjects who are not present in all input dataframes
 - Arranging the subjects in all the dataframe by their UID
-- **Removing all the NAs**
 
-Sorry, no NAs are allowed past this point.
+Any rows containing NAs are removed.
 If you don't want a bunch of your data to get slashed because there are a few NAs sprinkled around here and there, consider using [imputation](https://en.wikipedia.org/wiki/Imputation_(statistics)).
 The `mice` package in R is nice for this.
+
+We can get a summary of our constructed `data_list` with the `summarize_dl` function:
+
+! Change sdl and all its calls to summarize_dl
+
+```{r}
+#summarize_dl(data_list)
+```
+
+## Generating the `design_matrix`
+
+The design matrix stores all the information about the settings we'd like to use for each of our SNF runs.
+Here is an empty one that we can use to just look at the columns:
+
+! Ensure any function responsible for building an object begins with generate
+
+```{r}
+#generate_design_matrix(data_list)
+```
+
+The columns are:
+- inc* - binary columns indicating whether or not an input dataframe is included (1) or excluded (0) from the corresponding SNF run
+- K - the nearest neighbors hyperparameter used for SNF (an input to the function SNFtool::SNF)
+- alpha - Referred to as eta in the manuscript and alpha in the SNFtool code, this is a hyperparameter for affinity matrix generation
+- snf_scheme - the specific way in which input data gets collapsed into a final fused network:
+
+One important consideration of SNF is choosing how to organize features into dataframes. In the original SNF paper, reference was made to data of the same measurement type.
+If a set of features are all measurements of the same 
+
+`generate_design_matrix` uses `data_list` as a parameter
+
+The purpose of adjusting these settings is to give us access to a broader space of reasonable SNF solutions.
+The broader the space, the better of an approximation our top chosen solution will be to the top possible solution.
+This is by no means the objectively best (irony not intended) set of settings to 
+
 
 
 ## References
@@ -149,4 +184,3 @@ The `mice` package in R is nice for this.
 Caruana, Rich, Mohamed Elhawary, Nam Nguyen, and Casey Smith. 2006. “Meta Clustering.” In Sixth International Conference on Data Mining (ICDM’06), 107–18. https://doi.org/10.1109/ICDM.2006.103.
 
 Wang, Bo, Aziz M. Mezlini, Feyyaz Demir, Marc Fiume, Zhuowen Tu, Michael Brudno, Benjamin Haibe-Kains, and Anna Goldenberg. 2014. “Similarity Network Fusion for Aggregating Data Types on a Genomic Scale.” Nature Methods 11 (3): 333–37. https://doi.org/10.1038/nmeth.2810.
-
