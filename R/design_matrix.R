@@ -9,7 +9,10 @@
 #' @return design_matrix A design matrix
 #'
 #' @export
-build_design_matrix <- function(data_list, nrows = 0, seed = NULL, retry_limit = 10) {
+generate_design_matrix <- function(data_list,
+                                   nrows = 0,
+                                   seed = NULL,
+                                   retry_limit = 10) {
     if (!is.null(seed)) {
         set.seed(seed)
         print("The global seed has been changed!")
@@ -121,8 +124,8 @@ add_design_matrix_rows <- function(design_matrix, nrows, retry_limit = 10) {
 #' @return design_matrix Adds the standard grid expansion for SNF hyperparams
 #'
 #' @export
-build_design_matrix_ak <- function() {
-    design_matrix <- build_design_matrix()
+generate_design_matrix_ak <- function() {
+    design_matrix <- generate_design_matrix()
     design_matrix[1:80, ] <- 1
     hyperparam_grid <- expand.grid(1:10, 3:10)
     colnames(hyperparam_grid) <- c("K", "alpha")

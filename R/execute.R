@@ -12,7 +12,7 @@
 execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
     start <- Sys.time()
     design_matrix <- data.frame(design_matrix)
-    output_matrix <- build_output_matrix(data_list, design_matrix)
+    output_matrix <- generate_output_matrix(data_list, design_matrix)
     # Iterate through the rows of the design matrix
     remaining_seconds_vector <- vector()
     for (i in seq_len(nrow(design_matrix))) {

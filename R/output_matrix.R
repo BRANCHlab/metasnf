@@ -10,7 +10,7 @@
 #' @return output_matrix The output matrix
 #'
 #' @export
-build_output_matrix <- function(data_list, design_matrix) {
+generate_output_matrix <- function(data_list, design_matrix) {
     subjects <- list()
     for (i in seq_along(data_list)) {
         subjects <- append(subjects, (data_list[[i]][[1]]$"subjectkey"))

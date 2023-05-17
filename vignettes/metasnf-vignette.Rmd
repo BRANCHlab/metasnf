@@ -148,7 +148,7 @@ We can get a summary of our constructed `data_list` with the `summarize_dl` func
 ! Change sdl and all its calls to summarize_dl
 
 ```{r}
-#summarize_dl(data_list)
+summarize_dl(data_list)
 ```
 
 ## Generating the `design_matrix`
@@ -159,7 +159,7 @@ Here is an empty one that we can use to just look at the columns:
 ! Ensure any function responsible for building an object begins with generate
 
 ```{r}
-#generate_design_matrix(data_list)
+generate_design_matrix(data_list)
 ```
 
 The columns are:
