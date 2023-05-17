@@ -1,3 +1,40 @@
+#' Label propagation
+#'
+#' Given a full fused network (one containing both pre-labeled training subjects
+#'  and unlabeled test-subjects) and the clusters of the pre-labeled subjects,
+#'  return a label propagated list of clusters for all subjects.
+#'
+#' @param full_fused_network Network made by running SNF on training and test
+#'  subjects together
+#' @param clusters a vector of training subject assigned clusters in matching
+#'  order as they appear in full_fused_network
+#'
+#' @return new_clusters list of cluster labels for all subjects
+#'
+#' @export
+label_prop <- function(full_fused_network, clusters) {
+    num_subjects <- nrow(full_fused_network)
+    # The y0 matrix stores which cluster everybody belongs to. It is one-hot
+    #  encoded. Here it is initialized.
+    y0 <- matrix(0, num_subjects, max(clusters))
+    # Next, we assign the clusters we already know to be true.
+    for (i in seq_along(clusters)){
+        y0[i, clusters[i]] <- 1
+    }
+    p <- full_fused_network / rowSums(full_fused_network)
+    nlabel <- which(rowSums(y0) == 0)[1] - 1
+    y <- y0
+    for (i in 1:1000){
+        y <- p %*% y
+        y[1:nlabel, ] <- y0[1:nlabel, ]
+    }
+    new_clusters <- rep(0, num_subjects)
+    for (i in seq_len(nrow(y))){
+        new_clusters[i] <- which(y[i, ] == max(y[i, ]))
+    }
+    return(new_clusters)
+}
+
 #' Adaptation of SNFtool's discretisation function
 #'
 #' @param eigenvectors Eigenvectors

@@ -16,7 +16,6 @@ calc_ari <- function(r1, r2, df) {
     return(ari)
 }
 
-
 #' Meta-cluster calculations
 #'
 #' @description
@@ -47,7 +46,6 @@ meta_cluster <- function(mc_om) {
     }
     return(mc_sm)
 }
-
 
 #' Return the row ordering of a meta-clustering solution
 #'

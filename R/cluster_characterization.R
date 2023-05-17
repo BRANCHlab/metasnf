@@ -1,17 +1,3 @@
-#' Heatmap p-value matrix
-#'
-#' @param p_val_matrix matrix of p-values
-#' @param file_path where to store heatmap
-#'
-#' @export
-heatmap_pvals <- function(p_val_matrix, file_path = NA) {
-    my_colors <- grDevices::colorRampPalette(c("cyan", "deeppink3"))
-    pheatmap::pheatmap(p_val_matrix, col = rev(my_colors(100)),
-        filename = file_path)
-    pheatmap::pheatmap(p_val_matrix, col = rev(my_colors(100)))
-}
-
-
 #' Select all output_matrix columns except for subjects
 #'
 #' @description
@@ -26,7 +12,6 @@ no_subs <- function(df) {
     df_no_subs <- df |> dplyr::select(!(dplyr::starts_with("NDAR")))
     return(df_no_subs)
 }
-
 
 #' Select only output_matrix columns containing subjects
 #'
@@ -58,7 +43,6 @@ select_om <- function(om, row_ids) {
     return(selected_om)
 }
 
-
 #' Extract dataframe of cluster and subject key from output matrix row
 #'
 #' @param om_row Output matrix row
@@ -77,7 +61,6 @@ get_cluster_df <- function(om_row) {
     cluster_df <- cluster_df[2:nrow(cluster_df), ]
     return(cluster_df)
 }
-
 
 #' Extract list of assigned clusters
 #'
@@ -98,8 +81,6 @@ get_clusters <- function(om_row) {
     clusters <- cluster_df$"cluster"
     return(clusters)
 }
-
-
 
 #' Calculate overall p-values for a characterization_df
 #'
@@ -166,8 +147,6 @@ cbcl_ord_reg_from_om <- function(om, cbcl_list, bonferroni = FALSE) {
     return(ord_p_vals)
 }
 
-
-
 #' Calculate anova p-values for a characterization_df
 #'
 #' @param characterization_df A merged list containing cluster, subjectkey, and
@@ -193,7 +172,6 @@ cbcl_anova <- function(characterization_df, bonferroni = FALSE) {
         print(paste0(outcome, ": ", signif(pval, 2)))
     }
 }
-
 
 #' Calculate NMI scores for SNF inputs
 #'
@@ -238,7 +216,6 @@ calc_nmi <- function(om_row, data_list) {
     return(nmi_df)
 }
 
-
 #' Calculate NMI scores for an output matrix
 #'
 #' Given an output matrix in dataframe form with "significance" columns,
@@ -263,7 +240,6 @@ om_to_nmi_df <- function(om, data_list) {
     }
     return(nmi_df)
 }
-
 
 #' Select the top output matrix rows for each cluster
 #'
@@ -337,7 +313,6 @@ top_om_per_cluster <- function(om) {
     return(top_clusts_df)
 }
 
-
 #' Check subject orders for label propagation
 #'
 #' Prior to label propagation, it is essential that the subject orders of the
@@ -388,4 +363,3 @@ check_subj_orders_for_lp <- function(data_list, om_row, n_train, n_test) {
     all_checks_passed <- TRUE
     return(all_checks_passed)
 }
-

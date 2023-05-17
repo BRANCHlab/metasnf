@@ -1,3 +1,16 @@
+#' Heatmap p-value matrix
+#'
+#' @param p_val_matrix matrix of p-values
+#' @param file_path where to store heatmap
+#'
+#' @export
+heatmap_pvals <- function(p_val_matrix, file_path = NA) {
+    my_colors <- grDevices::colorRampPalette(c("cyan", "deeppink3"))
+    pheatmap::pheatmap(p_val_matrix, col = rev(my_colors(100)),
+        filename = file_path)
+    pheatmap::pheatmap(p_val_matrix, col = rev(my_colors(100)))
+}
+
 #' Wrapper for geom_hist
 #'
 #' @param df A dataframe

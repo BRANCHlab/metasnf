@@ -1,0 +1,177 @@
+#' Generate data_list object - but softcoded
+#'
+#' This is the major data object that will be processed when iterating through
+#'  the design matrix. The full list contains one list per measurement type.
+#'  Within each measurement type's list, elements include the actual data
+#'  structure, the name, the domain, and the data 'type' (i.e, numeric or
+#'  categorical).
+#'
+#' To-do: include checks to make sure format of data list is correct
+#'
+#' @param ... Lists formatted as (df, "df_name", "df_domain", "df_type")
+#' @param old_uid (string) the name of the uid column currently used data
+#'
+#' @export
+#' @examples
+#' heart_rate_df <- data.frame(
+#'     patient_id = c("1", "2", "3"),
+#'     var1 = c(0.04, 0.1, 0.3),
+#'     var2 = c(30, 2, 0.3)
+#' )
+#'
+#' personality_test_df <- data.frame(
+#'     patient_id = c("1", "2", "3"),
+#'     var3 = c(900, 1990, 373),
+#'     var4 = c(509, 2209, 83)
+#' )
+#'
+#' dl <- generate_data_list(
+#'     list(heart_rate_df, "data1", "domain1", "numeric"),
+#'     list(personality_test_df, "data2", "domain2", "numeric"),
+#'     old_uid = "patient_id"
+#' )
+generate_data_list <- function(..., old_uid = NULL) {
+    # The object that will contain all the data
+    data_list <- list(...)
+    # Assign names to the nested list elements
+    data_list_names <- c("data", "name", "domain", "type")
+    data_list <- lapply(data_list, stats::setNames, data_list_names)
+    data_list <- convert_uids(data_list, old_uid)
+    return(data_list)
+}
+
+#' Convert unique identifiers of data_list to 'subjectkey'
+#'
+#' Column name "subjectkey" is reserved for the unique identifier of subjects.
+#'  This function ensures all dataframes have their UID set as "subjectkey".
+#'
+#' @param data_list a data_list
+#' @param old_uid (string) the name of the uid column currently used data
+#'
+#' @return dl_renamed_id data list with 'subjectkey' as UID
+#'
+#' @export
+convert_uids <- function(data_list, old_uid = NULL) {
+    # Column names of the first dataframe
+    d1 <- data_list[[1]]$"data"
+    d1_cols  <- colnames(d1)
+    # Check to see if subjectkey is already present in the first dataframe
+    if ("subjectkey" %in% d1_cols) {
+        # If subjectkey exists and is a UID, leave the data_list alone
+        if (length(unique(d1$"subjectkey")) == length(d1$"subjectkey")) {
+            print("Existing `subjectkey` column will be treated as UID.")
+            return(data_list)
+        # If subjectkey exists and is not a UID, raise error
+        } else {
+            stop(paste0(
+                "Column `subjectkey` exists, but it is not a unique ID.",
+                " Please regenerate this data_list after renaming",
+                " the subjectkey column or converting it to a UID column."
+            ))
+        }
+    }
+    # This if only executes if subjectkey doesn't exist as a column, but also
+    #  there was no old_uid specified.
+    if (is.null(old_uid)) {
+        stop(paste0(
+            "Please specify parameter 'old_uid' with the name of the column",
+            " currently used as each row's unique identifier. This row will",
+            " be converted to 'subjectkey' for the remaining metasnf analyses."
+        ))
+    }
+    # Check to ensure that the user specified UID exists in the data_list
+    if (!old_uid %in% d1_cols) {
+        stop(paste0(
+            "The specified original UID (", old_uid, ") is not present in",
+            " this data list. Are you sure you spelled it correctly?"
+        ))
+    }
+    # Convert the user specified original UID to 'subjectkey'
+    dl_renamed_id <- lapply(data_list,
+        function(x) {
+            colnames(x$"data")[colnames(x$"data") == old_uid] <- "subjectkey"
+            x
+        }
+    )
+    print("UID successfully converted to subjectkey.")
+    return(dl_renamed_id)
+}
+
+#' Reduce data_list to common subjects
+#'
+#' Given a `data_list` object, reduce each nested dataframe to contain only the
+#'  set of subjects that are shared by all nested dataframes
+#'
+#' @param data_list The data_list object to be reduced
+#'
+#' @return reduced_data_list The data_list object subsetted only to subjectssnf
+#'  shared across all nested dataframes
+#' @export
+reduce_dl_to_common <- function(data_list) {
+    subjects <- lapply(data_list, function(x) x[[1]]$"subjectkey")
+    data_objects <- lapply(data_list, function(x) x[[1]])
+    common_subjects <- Reduce(intersect, subjects)
+    filtered_data_objects <-
+        lapply(data_objects,
+        function(x) {
+            dplyr::filter(x, x$"subjectkey" %in% common_subjects)
+        })
+    reduced_data_list <- data_list
+    for (i in seq_along(data_list)) {
+        reduced_data_list[[i]][[1]] <- filtered_data_objects[[i]]
+    }
+    return(reduced_data_list)
+}
+
+#' Given a data_list object, sort data elements by subjectkey
+#'
+#' @param data_list The data_list object to be arranged
+#'
+#' @return arranged_data_list The arranged data_list object
+#'
+#' @export
+arrange_dl <- function(data_list) {
+    data_objects <- lapply(data_list, function(x) x[[1]])
+    arranged_data_objects <-
+        lapply(data_objects,
+        function(x) {
+            dplyr::arrange(x, x$"subjectkey")
+        })
+    arranged_data_list <- data_list
+    for (i in seq_along(data_list)) {
+        arranged_data_list[[i]][[1]] <- arranged_data_objects[[i]]
+    }
+    return(arranged_data_list)
+}
+
+#' Summarize data list
+#'
+#' @param data_list nested list of input data generated by the function
+#'  `get_data_list()`
+#'
+#' @return dl_summary Summarized output
+#'
+#' @export
+sdl <- function(data_list) {
+    dl_summary <-
+        data.frame(
+            name = unlist(lapply(data_list, function(x) x$"name")),
+            type = unlist(lapply(data_list, function(x) x$"type")),
+            domain = unlist(domains(data_list)),
+            length = unlist(lapply(data_list, function(x) dim(x$"data")[1])),
+            width = unlist(lapply(data_list, function(x) dim(x$"data")[2])))
+    return(dl_summary)
+}
+
+#' Domains
+#'
+#' @param data_list nested list of input data generated by the function
+#'  `get_data_list()`
+#'
+#' @return domain_list list of domains
+#'
+#' @export
+domains <- function(data_list) {
+    domain_list <- lapply(data_list, function(x) x$"domain")
+    return(domain_list)
+}
