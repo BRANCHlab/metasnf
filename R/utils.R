@@ -68,7 +68,7 @@ char_to_fac <- function(df) {
 #'
 #' @export
 no_subs <- function(df) {
-    df_no_subs <- df |> dplyr::select(!(dplyr::starts_with("NDAR")))
+    df_no_subs <- df |> dplyr::select(!(dplyr::starts_with("subject_")))
     return(df_no_subs)
 }
 
@@ -86,7 +86,7 @@ no_subs <- function(df) {
 subs <- function(df) {
     df_subs <- df |> dplyr::select(
         "row_id",
-        dplyr::starts_with("NDAR"))
+        dplyr::starts_with("subject_"))
     return(df_subs)
 }
 

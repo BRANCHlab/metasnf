@@ -223,7 +223,7 @@ lin_reg_p <- function(clust_membership, outcome_df, outcome_var) {
 get_clustered_subs <- function(output_matrix_row) {
     clustered_subs <-
         data.frame(t(output_matrix_row[1,
-                     which(startsWith(colnames(output_matrix_row), "NDAR"))]))
+                     which(startsWith(colnames(output_matrix_row), "subject_"))]))
     clustered_subs$"subjectkey" <- rownames(clustered_subs)
     rownames(clustered_subs) <- NULL
     clustered_subs <- clustered_subs |>

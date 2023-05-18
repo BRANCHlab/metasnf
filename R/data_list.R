@@ -40,7 +40,8 @@ generate_data_list <- function(..., old_uid = NULL) {
     data_list <- data_list |>
         remove_dl_na() |>
         reduce_dl_to_common() |>
-        arrange_dl()
+        arrange_dl() |>
+        prefix_dl_sk()
     return(data_list)
 }
 
@@ -117,6 +118,24 @@ remove_dl_na <- function(data_list) {
         }
     )
     return(dl_no_nas)
+}
+
+#' Remove NAs from a data_list object
+#'
+#' @param data_list A data_list
+#'
+#' @return data_list A data_list without NAs
+#'
+#' @export
+prefix_dl_sk <- function(data_list) {
+    dl_prefixed <- lapply(
+        data_list,
+        function(x) {
+            x[[1]]$"subjectkey" <- paste0("subject_", x[[1]]$"subjectkey" )
+            return(x)
+        }
+    )
+    return(dl_prefixed)
 }
 
 #' Reduce data_list to common subjects

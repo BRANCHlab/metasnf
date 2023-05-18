@@ -291,7 +291,6 @@ om_scatter <- function(om, save = NULL) {
     return(plot)
 }
 
-
 #' Pheatmap of cluster membership across an output matrix
 #'
 #' @param om output matrix
@@ -321,7 +320,6 @@ assigned_clust_pheatmap <- function(om, save = NULL) {
         legend = FALSE,
         cellwidth = 2.2)
 }
-
 
 #' Scatter plot of cluster membership across an output matrix
 #'

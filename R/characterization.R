@@ -251,7 +251,7 @@ check_subj_orders_for_lp <- function(data_list, om_row, n_train, n_test) {
     }
     # Comparing training subjects between data list and output matrix...
     current_row_names <- subs(om_row) |>
-        dplyr::select(dplyr::starts_with("NDAR")) |>
+        dplyr::select(dplyr::starts_with("subject_")) |>
         colnames()
     current_check <-
         identical(data_list[[i]]$"data"$"subjectkey"[train_indices],

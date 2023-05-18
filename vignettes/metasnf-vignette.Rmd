@@ -144,6 +144,7 @@ Behind the scenes, this function is building a nested list that keeps track of a
 - Removing all observations that contain any NAs
 - Removing all subjects who are not present in all input dataframes
 - Arranging the subjects in all the dataframe by their UID
+- Prefixing the UID values with the string "subject_" to help with cluster result characterization
 
 Any rows containing NAs are removed.
 If you don't want a bunch of your data to get slashed because there are a few NAs sprinkled around here and there, consider using [imputation](https://en.wikipedia.org/wiki/Imputation_(statistics)).
@@ -174,17 +175,27 @@ The columns are:
 - `snf_scheme` - the specific way in which input data gets collapsed into a final fused network (discussed further in the [appendix][snf_scheme])
 - `eigen_or_rot` binary variable indicating if the eigengap (1) or rotation cost (2) heuristic was used to select the number of clusters specified for applying spectral clustering to the final fused network
 - `K` - the nearest neighbors hyperparameter used for SNF (an input to the function SNFtool::SNF)
-- `alpha` - Referred to as $\eta$ in the original SNF manuscript and alpha in the SNFtool code, this is a hyperparameter for affinity matrix generation
+- `alpha` - Referred to as $\eta$ in the original SNF manuscript, alpha in the SNFtool code examples, and sigma in the SNFtool source code*, this is a hyperparameter for affinity matrix generation
 
 `generate_design_matrix` randomly populates these columns and ensures that no generated rows are identical.
 
-## Executing the design matrix
-
+## Executing the `design_matrix`
 
 ```{r}
 output_matrix <- execute_design_matrix(data_list, design_matrix)
+```
+
+The `execute_design_matrix` function integrates the data in the `data_list` using each of the sets of settings contained in the `design_matrix`.
+The resulting structure is an `output_matrix` which is an extension of the `design_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `design_matrix` row.
+Just like that, the clustering is done!
+
+## Characterizing the clustering results: examining meta clusters
 
 
+```{r}
+subs(output_matrix)
+
+colnames(output_matrix)
 ```
 
 
