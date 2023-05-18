@@ -533,7 +533,7 @@ plot_all_cbcl <- function(om, cbcl_list, fig_path_fn, save_prefix = NULL,
             ".png"), date = TRUE)
         # Making the dataframe that contains both cluster and CBCL information
         cluster_cbcl_list <- append(list(cluster_df), cbcl_list)
-        characterization_df <- abcdutils::merge_df_list(cluster_cbcl_list)
+        characterization_df <- merge_df_list(cluster_cbcl_list)
         # nclust is needed for plotting functions
         nclust <- om[row, ]$"nclust"
         # A quick print of some stats
@@ -544,7 +544,7 @@ plot_all_cbcl <- function(om, cbcl_list, fig_path_fn, save_prefix = NULL,
         for (cbcl_name in cbcl_names) {
             cbcl_plot <- cbcl_bar_chart(characterization_df, cbcl_name, nclust)
             # Remove y-axis from plots
-            cbcl_plot <- abcdutils::clean_plot(cbcl_plot, c("y", "x"))
+            cbcl_plot <- clean_plot(cbcl_plot, c("y", "x"))
             plot_list <- append(plot_list, list(cbcl_plot))
         }
         a <- lapply(plot_list, class)
@@ -591,4 +591,29 @@ plot_nmis <- function(nmi_df, fig_path_fn = NULL) {
         }
         print(nmi_plot)
     }
+}
+
+#' Clean a plot
+#'
+#' Given a ggplot object and a list of elements to be removed, return a cleaned
+#'  version of the plot.
+#'
+#' @param plot A ggplot object
+#' @param removables A character vector of items to be removed. Can contain "x"
+#'  for x-axis label, "y" for y-axis label, and "legend" to remove the legend.
+#'
+#' @return plot A cleaned ggplot object
+#'
+#' @export
+clean_plot <- function(plot, removables = c()) {
+    if ("x" %in% removables) {
+        plot <- plot + ggplot2::xlab("")
+    }
+    if ("y" %in% removables) {
+        plot <- plot + ggplot2::ylab("")
+    }
+    if ("legend" %in% removables) {
+        plot <- plot + ggplot2::theme(legend.position = "none")
+    }
+    return(plot)
 }

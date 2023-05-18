@@ -182,7 +182,7 @@ The columns are:
 
 
 ```{r}
-output_matrix <- execute_design_matrix_soft(data_list, design_matrix)
+output_matrix <- execute_design_matrix(data_list, design_matrix)
 
 
 ```

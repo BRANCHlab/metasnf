@@ -92,7 +92,7 @@ cbcl_ord_reg_from_om <- function(om, cbcl_list, bonferroni = FALSE) {
         ord_p_vals
         cluster_df <- get_cluster_df(current_row)
         cluster_cbcl_list <- append(list(cluster_df), cbcl_list)
-        characterization_df <- abcdutils::merge_df_list(cluster_cbcl_list)
+        characterization_df <- merge_df_list(cluster_cbcl_list)
         outcomes <- characterization_df |>
             dplyr::select(dplyr::starts_with("cbcl")) |>
             colnames()

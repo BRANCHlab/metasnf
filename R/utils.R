@@ -22,6 +22,40 @@ add_char_vec_as_cols <- function(df, char_vector, filler) {
     return(extended_df)
 }
 
+#' Convert all possible columns to numeric
+#'
+#' @param df A dataframe or tibble
+#'
+#' @return df The same dataframe with all possible columns made numeric
+#'
+#' @export
+col_to_num_all_possible <- function(df) {
+    df[] <- lapply(df,
+        function(x) {
+            tryCatch({
+                return(as.numeric(x))
+            },
+            warning = function(cond) {
+                if (cond$"message" == "NAs introduced by coercion")
+                return(x)
+            })
+        })
+    return(df)
+}
+
+#' Convert char columns to factors
+#'
+#' @param df The dataframe containing char columns to be converted
+#'
+#' @return df The dataframe with factor columns
+#'
+#' @export
+char_to_fac <- function(df) {
+    df[sapply(df, is.character)] <-
+        lapply(df[sapply(df, is.character)], as.factor)
+    return(df)
+}
+
 #' Select all columns of a dataframe not starting with a given string prefix.
 #'
 #' @description
@@ -55,4 +89,27 @@ subs <- function(df) {
         dplyr::starts_with("NDAR"))
     return(df_subs)
 }
+
+#' Merge list of dataframes
+#'
+#' @param df_list list of dataframes
+#' @param join String indicating if join should be "inner" or "full"
+#'
+#' @return merged_df inner join of all dataframes in list
+#'
+#' @export
+merge_df_list <- function(df_list, join = "inner") {
+    if (join == "inner") {
+        merged_df <- df_list |>
+            purrr::reduce(dplyr::inner_join, by = "subjectkey")
+    } else if (join == "full") {
+        merged_df <- df_list |>
+            purrr::reduce(dplyr::full_join, by = "subjectkey")
+    } else {
+        print("Invalid join type specified. Options are 'inner' and 'full'.")
+        return(NULL)
+    }
+    return(merged_df)
+}
+
 

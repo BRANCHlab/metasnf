@@ -9,7 +9,7 @@
 #'  subtype membership and cluster performance
 #'
 #' @export
-execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
+execute_design_matrix_hard <- function(data_list, design_matrix, outcome_list) {
     start <- Sys.time()
     design_matrix <- data.frame(design_matrix)
     output_matrix <- generate_output_matrix(data_list, design_matrix)
@@ -94,7 +94,7 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
         unique()
     end <- Sys.time()
     print(end - start)
-    output_matrix <- abcdutils::col_to_num_all_possible(output_matrix)
+    output_matrix <- col_to_num_all_possible(output_matrix)
     return(output_matrix)
 }
 
@@ -108,7 +108,7 @@ execute_design_matrix <- function(data_list, design_matrix, outcome_list) {
 #'  subtype membership
 #'
 #' @export
-execute_design_matrix_soft <- function(data_list, design_matrix) {
+execute_design_matrix <- function(data_list, design_matrix) {
     start <- Sys.time()
     design_matrix <- data.frame(design_matrix)
     subjects <- data_list[[1]]$"data"$"subjectkey"
@@ -178,7 +178,7 @@ execute_design_matrix_soft <- function(data_list, design_matrix) {
         unique()
     end <- Sys.time()
     print(end - start)
-    output_matrix <- abcdutils::col_to_num_all_possible(output_matrix)
+    output_matrix <- col_to_num_all_possible(output_matrix)
     return(output_matrix)
 }
 
@@ -236,7 +236,7 @@ get_dist_matrix <- function(df, input_type, scale = FALSE) {
         }
         dist_matrix <- as.matrix(stats::dist(df, method = "euclidean"))
     } else if (input_type %in% c("mixed", "categorical")) {
-        df <- abcdutils::char_to_fac(df)
+        df <- char_to_fac(df)
         dist_matrix <-
             as.matrix(cluster::daisy(df, metric = "gower", warnBin = FALSE))
     } else {
