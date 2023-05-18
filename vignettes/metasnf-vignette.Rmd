@@ -1,11 +1,17 @@
 ---
 title: "An example metasnf pipeline"
-output: rmarkdown::html_vignette
+output:
+    rmarkdown::html_vignette:
+        toc: true
 vignette: >
   %\VignetteIndexEntry{An example metasnf pipeline}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+<style>
+div.aside { background-color:#fff2e6; }
+</style>
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -38,7 +44,7 @@ In this vignette, we work through a slightly different approach also mentioned i
 We also go through some functions that will help you go through the authentic clustering-of-clusters based approach if that is what you prefer.
 
 
-## 0. Examining the (fake) data
+## Examining the (fake) data
 
 ```{r setup}
 library(metasnf)
@@ -105,7 +111,7 @@ lapply(abcd_data,
 Some of our data has missing values and not all of our dataframes have the same number of participants.
 
 
-## 1. Generating the `data_list`
+## Generating the `data_list`
 
 The `data_list` structure is basically just a list of dataframes (like the one already created), but with some additional features to facilitate repeated clustering.
 It should only contain the input dataframes we want to directly use as inputs for the clustering.
@@ -122,7 +128,7 @@ data_list <- generate_data_list(
 )
 ```
 
-Building the `data_list` is the most laborious part of the process.
+Building the `data_list` may be the most laborious part of this process.
 The first entries are all lists which contains the following elements:
 
 1. The actual dataframe
@@ -164,24 +170,235 @@ design_matrix
 
 The columns are:
 
-- `inc*` - binary columns indicating whether or not an input dataframe is included (1) or excluded (0) from the corresponding SNF run
-- `snf_scheme` - the specific way in which input data gets collapsed into a final fused network (discussed below)
+- `inc*` - binary columns indicating whether or not an input dataframe is included (1) or excluded (0) from the corresponding SNF run (discussed further in the [appendix][inc*])
+- `snf_scheme` - the specific way in which input data gets collapsed into a final fused network (discussed further in the [appendix][snf_scheme])
 - `eigen_or_rot` binary variable indicating if the eigengap (1) or rotation cost (2) heuristic was used to select the number of clusters specified for applying spectral clustering to the final fused network
 - `K` - the nearest neighbors hyperparameter used for SNF (an input to the function SNFtool::SNF)
 - `alpha` - Referred to as $\eta$ in the original SNF manuscript and alpha in the SNFtool code, this is a hyperparameter for affinity matrix generation
 
+`generate_design_matrix` randomly populates these columns and ensures that no generated rows are identical.
+
+## Executing the design matrix
+
+
+```{r}
+output_matrix <- execute_design_matrix_soft(data_list, design_matrix)
+
+
+```
+
+
+
+## Appendix
+
+### inc*
+
+This section describes how the `generate_design_matrix` function randomly assigns input dataframess to be dropped from different SNF runs to access a wider space of possible solutions.
+
+By default, `generate_design_matrix` will build an empty dataframe containing the columns outlined in the [design matrix][Generating the `design_matrix`] section.
+If a non-zero number of rows are specified when calling `generate_design_matrix`, the function calls on `add_design_matrix_rows` to add rows with randomly valid values.
+The input dataframe inclusion variables rely on yet another helper function:
+
+```{r}
+random_removal
+```
+
+This `random_removal` function randomly picks a number of columns to remove according to an exponential function.
+The most likely number of input dataframes to be removed is 0, followed by 1, all the way up to $D - 1$ dataframes where $D$ is the number of provided input dataframes.
+The exponential distribution seemed preferrable to a uniform one, which would lead to a large number of input dataframes being dropped on every SNF run.
+
+### snf_scheme
+
+This section describes how individual input dataframes are converted into a final fused network in different ways using the `snf_scheme` parameter.
+
 `snf_scheme`: One consideration of SNF is choosing how to organize individual features (columns) into the input dataframes that get fused by SNF.
+
 In the original SNF paper, input dataframes were organized according to "measurement type": three input dataframes each containing several features related to miRNA, mRNA, or DNA methylation.
-When 
+In my own work, I had a very large set of input dataframes that had varying amounts of overlap in expected information content, which made the grouping of features a little bit less clear.
+For example, consider having input dataframes for (1) the thicknesses of cortical brain regions, (2) the surface areas of cortical brain regions, (3) the volumes of subcortical brain regions, and (4) mean blood pressure.
+We have 4 distinct sets of features, 3 distinct sets of units (cortical thickness and subcortical volume both being in $mm^3$), and (arguably) 2 distinct sources of information: structural brain data and blood pressure data.
+
+It is not immediately clear that collapsing the data into any one of those mentioned sets will give rise to the most useful clustering solution for our purpose.
+The number of ways in which we can take these individual features and produce a single SNF-fused similarity matrix at the end is quite large.
+
+Here are two examples of getting a single similarity matrix from two single-feature input dataframes:
+
+**Example 1: Concatenation -> single similarity matrix**
+
+```{r}
+df1 <- data.frame(
+    subjectkey = c("person1", "person2", "person3", "person4"),
+    feature1 = c(1, 2, 3, 4)
+)
+
+df2 <- data.frame(
+    subjectkey = c("person1", "person2", "person3", "person4"),
+    feature2 = c(3, 3, 4, 5)
+)
+```
+
+```{r echo = FALSE}
+knitr::kable(
+    list(df1, df2),
+    format = "pipe",
+    caption = "Two individual dataframes, prior to concatenation"
+)
+```
+
+We start by joining our two features by concatenation:
+
+
+```{r}
+df3 <- dplyr::inner_join(df1, df2, by = "subjectkey")
+```
+
+```{r echo = FALSE}
+knitr::kable(
+    df3,
+    format = "pipe",
+    caption = "A single concatenated dataframe"
+)
+```
+
+Giving rise to the following distance matrix:
+
+```{r}
+df3_dist <- df3[, 2:3] |>
+    stats::dist() |>
+    as.matrix() |>
+    round(2)
+```
+
+```{r echo = FALSE, results = 'asis'}
+write_matex <- function(x) {
+  begin <- "$$\\begin{bmatrix}"
+  end <- "\\end{bmatrix}$$"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  writeLines(c(begin, X, end))
+}
+
+write_matex(df3_dist)
+```
+
+And subsequent similarity matrix:
+
+```{r}
+df3_sim <- SNFtool::affinityMatrix(df3_dist, K = 3, sigma = 0.5) |>
+    round(2)
+```
+
+```{r echo = FALSE, results = 'asis'}
+write_matex(df3_sim)
+```
+
+$~$
+
+**Example 2: Similarity matrices -> integration by SNF**
+
+```{r}
+df1 <- data.frame(
+    subjectkey = c("person1", "person2", "person3", "person4"),
+    feature1 = c(1, 2, 3, 4)
+)
+
+df2 <- data.frame(
+    subjectkey = c("person1", "person2", "person3", "person4"),
+    feature2 = c(3, 3, 4, 5)
+)
+```
+
+We first convert each of our input dataframes into distance matrices:
+
+```{r}
+df1_dist <- df1[, 2] |>
+    stats::dist() |>
+    as.matrix() |>
+    round(2)
+
+df2_dist <- df2[, 2] |>
+    stats::dist() |>
+    as.matrix() |>
+    round(2)
+
+```
+
+```{r echo = FALSE, results = 'asis'}
+write_matex(df1_dist)
+
+write_matex(df2_dist)
+```
+
+We then convert these distance matrices into similarity matrices:
+
+```{r}
+df1_sim <- SNFtool::affinityMatrix(df1_dist, K = 3, sigma = 0.5) |>
+    round(2)
+
+df2_sim <- SNFtool::affinityMatrix(df2_dist, K = 3, sigma = 0.5) |>
+    round(2)
+```
+
+```{r echo = FALSE, results = 'asis'}
+write_matex(df1_sim)
+
+write_matex(df2_sim)
+```
+
+And then we fuse these similarity matrices together using SNF:
+
+```{r}
+df1_df2_fused <- SNFtool::SNF(list(df1_sim, df2_sim), K = 3) |>
+    round(2)
+```
+
+```{r echo = FALSE, results = 'asis'}
+write_matex(df1_df2_fused)
+```
+
+Contrast this with the similarity matrix we obtained in **Example 1**:
+
+
+
+
+
+
+```{r echo = FALSE, results = 'asis'}
+write_matex(df3_sim)
+```
+
+
+I'm not entirely sure about what is happening with the diagonal values not being identical in the second matrix, but that aside, the results here seem mostly similar. Person 1 is most similar to person 2, person 2 is most similar to person 1, person 3 is most similar to person 4, and person 4 is most similar to person 3.
+
+*But*
+
+The values aren't identical, and you could imagine that for a more complicated example or a slightly different choice in feature collapsing, the resulting clustering solution would be different.
+
+Going back to the example where our input dataframes are:
+
+1. cortical thicknesses
+2. cortical surface areas
+3. subcortical volumes
+4. mean blood pressure
+
+You could imagine that individually converting each of these 4 input dataframes into 4 separate distance matrices, converting those into similarity matrices, and then fusing those 4 matrices into one single network by SNF could be a little bit skewed in favour of the brain imaging information.
+3 of our sources are all describing structural brain features, while 1 source is about the blood.
+
+Varying the `snf_scheme` parameter gives us access to a wider range of possible clustering solutions by changing which of the following approaches are taken to digest the initial input dataframes to a final fused network:
+
+1. Individual: Input dataframes are combined into a final network by SNF.
+2. Two-step: Input dataframes are combined within user-specified data domains by one round of SNF and then combined across domains by a second round of SNF.
+3. Domain: Input dataframes are combined within domains by concatenation and then combined into a single fused network by SNF.
 
 If a set of features are all measurements of the same 
 
-`generate_design_matrix` uses `data_list` as a parameter
-
-The purpose of adjusting these settings is to give us access to a broader space of reasonable SNF solutions.
-The broader the space, the better of an approximation our top chosen solution will be to the top possible solution.
-This is by no means the objectively best (irony not intended) set of settings to 
-
+These options are not comprehensive.
+If there are other schemes you would like to be added into the package, feel free to make a request on GitHub.
 
 
 ## References
