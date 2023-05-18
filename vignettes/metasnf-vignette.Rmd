@@ -153,22 +153,27 @@ summarize_dl(data_list)
 
 ## Generating the `design_matrix`
 
-The design matrix stores all the information about the settings we'd like to use for each of our SNF runs.
-Here is an empty one that we can use to just look at the columns:
-
-! Ensure any function responsible for building an object begins with generate
+The `design_matrix` stores all the information about the settings we'd like to use for each of our SNF runs.
+Calling the `generate_design_matrix` function with a specified number of rows will automatically build a randomly populated `design_matrix`.
 
 ```{r}
-generate_design_matrix(data_list)
+design_matrix <- generate_design_matrix(data_list, nrow = 5)
+
+design_matrix
 ```
 
 The columns are:
-- inc* - binary columns indicating whether or not an input dataframe is included (1) or excluded (0) from the corresponding SNF run
-- K - the nearest neighbors hyperparameter used for SNF (an input to the function SNFtool::SNF)
-- alpha - Referred to as eta in the manuscript and alpha in the SNFtool code, this is a hyperparameter for affinity matrix generation
-- snf_scheme - the specific way in which input data gets collapsed into a final fused network:
 
-One important consideration of SNF is choosing how to organize features into dataframes. In the original SNF paper, reference was made to data of the same measurement type.
+- `inc*` - binary columns indicating whether or not an input dataframe is included (1) or excluded (0) from the corresponding SNF run
+- `snf_scheme` - the specific way in which input data gets collapsed into a final fused network (discussed below)
+- `eigen_or_rot` binary variable indicating if the eigengap (1) or rotation cost (2) heuristic was used to select the number of clusters specified for applying spectral clustering to the final fused network
+- `K` - the nearest neighbors hyperparameter used for SNF (an input to the function SNFtool::SNF)
+- `alpha` - Referred to as $\eta$ in the original SNF manuscript and alpha in the SNFtool code, this is a hyperparameter for affinity matrix generation
+
+`snf_scheme`: One consideration of SNF is choosing how to organize individual features (columns) into the input dataframes that get fused by SNF.
+In the original SNF paper, input dataframes were organized according to "measurement type": three input dataframes each containing several features related to miRNA, mRNA, or DNA methylation.
+When 
+
 If a set of features are all measurements of the same 
 
 `generate_design_matrix` uses `data_list` as a parameter
