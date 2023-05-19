@@ -157,10 +157,18 @@ ak_heatmap <- function(ak_scan_om, min_or_mean = "min", save = NULL) {
 #'  match the row-clustering present within a provided meta-clustering result.
 #'
 #' @param design_matrix matrix indicating parameters to iterate SNF through
+#' @param order numeric vector indicating row ordering of design matrix
 #' @param save optional path to save figure to
+#' @param hide_ids boolean indicating if row_id numbers should be hidden
 #'
 #' @export
-dm_heatmap <- function(design_matrix, save = NULL) {
+dm_heatmap <- function(design_matrix,
+                       order = NULL,
+                       save = NULL,
+                       hide_ids = FALSE) {
+    if (!is.null(order)) {
+        design_matrix <- design_matrix[order, ]
+    }
     dm_scaled <- design_matrix
     dm_scaled$"row_id" <- dm_scaled$"row_id" / max(dm_scaled$"row_id")
     dm_scaled$"K" <- dm_scaled$"K" / max(dm_scaled$"K")
@@ -169,6 +177,11 @@ dm_heatmap <- function(design_matrix, save = NULL) {
         dm_scaled$"snf_scheme" / max(dm_scaled$"snf_scheme")
     dm_scaled$"eigen_or_rot" <-
         dm_scaled$"eigen_or_rot" / max(dm_scaled$"eigen_or_rot")
+    if (hide_ids == TRUE) {
+        row_labels <- ""
+    } else {
+        row_labels <- rownames(dm_scaled)
+    }
     if (!(is.null(grDevices::dev.list())) && !(is.null(save))) {
         grDevices::dev.off()
     }
@@ -177,7 +190,7 @@ dm_heatmap <- function(design_matrix, save = NULL) {
             dm_scaled,
             cluster_rows = FALSE,
             cluster_cols = FALSE,
-            labels_row = "",
+            labels_row = row_labels,
             legend = FALSE,
             fontsize = 12,
             filename = save)
@@ -186,7 +199,7 @@ dm_heatmap <- function(design_matrix, save = NULL) {
         dm_scaled,
         cluster_rows = FALSE,
         cluster_cols = FALSE,
-        labels_row = "",
+        labels_row = row_labels,
         legend = FALSE,
         fontsize = 12)
 }
