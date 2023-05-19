@@ -25,19 +25,21 @@ knitr::opts_chunk$set(
 
 To-do list (in order of priority):
 
-- ~~Build design matrix off of data list~~
-- ~~Make outcome list optional~~
 - Make a vignette/minimal example of walking through the main steps of the pipeline
-- Consider moving reduce_dl_to_common / arrange_dl to start of execute_dm
+- Allow multi-feature dataframes to be used when generating an outcome list
+- Write tests for non-trivial functions
 - Add check to make sure no columns end in "_p" prior to extending the OM
-- Cleaner organization of functions across .R files
-- ~~Account for different identifier than ABCD's "subjectkey"~~
 - Share repo!
 - Create a github pages
 - Allow categorical comparisons in outcome list
 - More customization of design matrix
 - More snf digestion schemes
 - Zipf-distribution scaling as described in meta-clustering paper (this may not make sense for SNF?)
+- ~~Build design matrix off of data list~~
+- ~~Make outcome list optional~~
+- ~~Consider moving reduce_dl_to_common / arrange_dl to start of execute_dm~~
+- ~~Cleaner organization of functions across .R files~~
+- ~~Account for different identifier than ABCD's "subjectkey"~~
 
 ## Overview
 

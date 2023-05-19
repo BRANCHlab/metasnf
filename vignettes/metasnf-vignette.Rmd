@@ -188,22 +188,17 @@ You can also add random rows to an already existing dataframe using the `add_des
 
 ## Executing the design matrix
 
-```{r}
-output_matrix <- execute_design_matrix(data_list, design_matrix)
-```
-
-```{r}
-output_matrix
-
-colnames(output_matrix)[1:20]
-
-colnames(output_matrix)[105:length(colnames(output_matrix))]
-
-colnames(output_matrix)
-```
-
 The `execute_design_matrix` function integrates the data in the `data_list` using each of the sets of settings contained in the `design_matrix`.
 The resulting structure is an `output_matrix` which is an extension of the `design_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `design_matrix` row.
+
+```{r}
+output_matrix <- execute_design_matrix(data_list, design_matrix)
+
+colnames(output_matrix)
+
+output_matrix[1:5, 1:20]
+```
+
 Just like that, the clustering is done!
 
 ## Picking a solution #1: examining meta clusters
@@ -214,7 +209,8 @@ In this section, we'll take a look at the cluster-of-clusters approach to pickin
 I believe this approach is best for truly exploratory clustering (read: when you have some sort of vague vibes about when one solution is better than another) and it is difficult to specify exactly what you are looking for.
 
 ```{r}
-subs(output_matrix)
+# Only row_id and the subject columns
+subs(output_matrix)[1:5, 1:10]
 
 colnames(output_matrix)
 
@@ -294,6 +290,8 @@ From there, you're on your own (until the next vignette, maybe?)
 
 ## Picking a solution #2: specifying an objective function
 
+**Warning: This approach can very easily result in [overfitting](https://en.wikipedia.org/wiki/Overfitting) your data and producing clustering results that generalize poorly to subjects outside of your dataset. Set aside some subjects to validate your results to avoid this issue.** 
+
 If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
 
 There are many ways to go about doing this, but this package offers one way through the `outcome_list` structure.
@@ -306,13 +304,133 @@ outcome_list <- generate_outcome_list(
     list(abcd_depress, "depressed", "ordinal")
 )
 
+outcome_list
+
 summarize_ol(outcome_list)
 ```
 
 The `outcome_list` is like the `data_list`, but without the domain attribute.
+At this time, each dataframe used to build an outcome_list must be a single-feature.
+We can use it to extend our `output_matrix` with p-values from regressing the `outcome_list` features onto our generated clusters.
 
+```{r}
+extended_output_matrix <- extend_om(output_matrix, outcome_list)
 
+extended_output_matrix
+```
 
+If you just want the p-values:
+
+```{r}
+p_val_select(extended_output_matrix)
+```
+
+Please do not interpret these p-values in the typical hypothesis-testing way.
+In this context, they are just a tool to find clustering solutions that are well-separated according to the outcome measures you've specified.
+Finding a cluster solution like this is a bit of a supervised learning problem, but where the optimization method is just random sampling.
+The risk for overfitting your data with this approach is large, so make sure you have some rigorous external validation before reporting your findings.
+
+I've relied on label propagation (provided by the SNFtool package in the `groupPredict` function) to take my top clustering solution in some training data, assign predicted clusters to some held out test subjects, and then characterized those test subjects to see how well the clustering solution seemed to have worked.
+
+This package provides a wrapper for `SNFtool::groupPredict` to make the label propagation process a little easier to apply to the `output_matrix` structure.
+
+## Validating results with label propagation
+
+Here's a quick step through of the complete procedure, from the beginning, with label propagation to validate our findings.
+
+The `metasnf` package comes equipped with a function to do the training/testing split for you :)
+
+```{r}
+# All the subjects present in all dataframes with no NAs
+all_subjects <- data_list[[1]]$"data"$"subjectkey"
+
+# Remove the "subject_" prefix to allow merges with the original data
+all_subjects <- gsub("subject_", "", all_subjects)
+
+# Dataframe assigning 80% of subjects to train and 20% to test
+assigned_splits <- train_test_assign(train_frac = 0.8, subjects = all_subjects)
+
+# Partition a training set
+train_abcd_cort_t <- keep_split(abcd_cort_t, assigned_splits, "train")
+train_abcd_cort_sa <- keep_split(abcd_cort_sa, assigned_splits, "train")
+train_abcd_subc_v <- keep_split(abcd_subc_v, assigned_splits, "train")
+train_abcd_income <- keep_split(abcd_income, assigned_splits, "train")
+train_abcd_pubertal <- keep_split(abcd_pubertal, assigned_splits, "train")
+train_abcd_anxiety <- keep_split(abcd_anxiety, assigned_splits, "train")
+train_abcd_depress <- keep_split(abcd_depress, assigned_splits, "train")
+
+# Partition a test set
+test_abcd_cort_t <- keep_split(abcd_cort_t, assigned_splits, "test")
+test_abcd_cort_sa <- keep_split(abcd_cort_sa, assigned_splits, "test")
+test_abcd_subc_v <- keep_split(abcd_subc_v, assigned_splits, "test")
+test_abcd_income <- keep_split(abcd_income, assigned_splits, "test")
+test_abcd_pubertal <- keep_split(abcd_pubertal, assigned_splits, "test")
+test_abcd_anxiety <- keep_split(abcd_anxiety, assigned_splits, "test")
+test_abcd_depress <- keep_split(abcd_depress, assigned_splits, "test")
+
+# Construct the data lists
+train_data_list <- generate_data_list(
+    list(train_abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
+    list(train_abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
+    list(train_abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
+    list(train_abcd_income, "household_income", "demographics", "numeric"),
+    list(train_abcd_pubertal, "pubertal_status", "demographics", "numeric"),
+    old_uid = "subjectkey"
+)
+
+test_data_list <- generate_data_list(
+    list(test_abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
+    list(test_abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
+    list(test_abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
+    list(test_abcd_income, "household_income", "demographics", "numeric"),
+    list(test_abcd_pubertal, "pubertal_status", "demographics", "numeric"),
+    old_uid = "subjectkey"
+)
+
+## Note, the training_subjects and testing_subjects parameters are necessary
+## to construct the full_data_list in the right subject order for
+## label propagation.
+full_data_list <- generate_data_list(
+    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
+    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
+    list(abcd_income, "household_income", "demographics", "numeric"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
+    old_uid = "subjectkey",
+    assigned_splits = assigned_splits
+)
+
+# Construct the outcome lists
+train_outcome_list <- generate_outcome_list(
+    list(train_abcd_anxiety, "anxiety", "ordinal"),
+    list(train_abcd_depress, "depressed", "ordinal")
+)
+
+# Find a clustering solution in your training data
+design_matrix <- generate_design_matrix(train_data_list, nrow = 5, seed = 42)
+
+train_output_matrix <- execute_design_matrix(train_data_list, design_matrix)
+
+extended_output_matrix <- extend_om(train_output_matrix, train_outcome_list)
+
+# The fourth row had the lowest minimum p-value across our outcomes
+which(extended_output_matrix$"min_p_val" ==
+      min(extended_output_matrix$"min_p_val"))
+
+# Keep track of your top solution
+top_om_row <- extended_output_matrix[4, ]
+
+# Hand over the output matrix as well as the full data list to propagate labels
+#  to the test subjects
+propagated_labels <- lp_om(top_om_row, full_data_list)
+head(propagated_labels)
+
+# You could, in theory, see how all of your clustering solutions propagated,
+#  but that would mean reusing your validation set and removing the protection
+#  against overfitting conferred by this procedure.
+propagated_labels_all <- lp_om(extended_output_matrix, full_data_list)
+head(propagated_labels_all)
+```
 
 ## Appendix
 
