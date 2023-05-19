@@ -52,6 +52,14 @@ label_prop <- function(full_fused_network, clusters) {
 #'
 #' @export
 lp_om <- function(om, full_data_list) {
+    if (!"significance" %in% colnames(om)) {
+        print(paste0(
+            "If you add a 'significance' column to your output matrix",
+            " those values will be used to name each solution (instead of",
+            " row IDs)"
+        ))
+        om$"significance" <- om$"row_id"
+    }
     # Keep a track of the number of train and test subjects
     n_train <- length(colnames(subs(om))) - 1
     n_test <- summarize_dl(full_data_list)$length[1] - n_train
