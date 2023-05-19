@@ -54,6 +54,8 @@ calc_om_aris <- function(om) {
         om_aris[v1, v2] <- ari
         om_aris[v2, v1] <- ari
     }
+    colnames(om_aris) <- om$"row_id"
+    rownames(om_aris) <- om$"row_id"
     return(om_aris)
 }
 
@@ -90,11 +92,21 @@ mc_heatmap <- function(mc_results, save = NULL) {
 #'
 #' @param output_matrix_aris results from meta_cluster function
 #' @param save optional path to save figure to
+#' @param cluster_cols boolean indicating if columns shold be clustered
+#' @param cluster_rows boolean indicating if rows shold be clustered
+#' @param hide_ids boolean indicating if row_id numbers should be hidden
 #'
 #' @export
-ari_heatmap <- function(output_matrix_aris, save = NULL) {
-    colnames(output_matrix_aris) <- NULL
-    rownames(output_matrix_aris) <- NULL
+ari_heatmap <- function(output_matrix_aris,
+                        save = NULL,
+                        cluster_cols = TRUE,
+                        cluster_rows = TRUE,
+                        hide_ids = FALSE) {
+    print(output_matrix_aris)
+    if (hide_ids) {
+        colnames(output_matrix_aris) <- NULL
+        rownames(output_matrix_aris) <- NULL
+    }
     if (!(is.null(grDevices::dev.list()))) {
         grDevices::dev.off()
     }
@@ -103,12 +115,19 @@ ari_heatmap <- function(output_matrix_aris, save = NULL) {
             legend_breaks = c(0, 0.5, 1, max(output_matrix_aris)),
             main = "",
             legend_labels = c("0", "0.5", "1", "ARI\n\n"),
-            legend = TRUE, border_color = FALSE,
+            legend = TRUE,
+            border_color = FALSE,
+            cluster_cols = cluster_cols,
+            cluster_rows = cluster_rows,
             filename = save)
     }
     pheatmap::pheatmap(output_matrix_aris,
         legend_breaks = c(0, 0.5, 1, max(output_matrix_aris)),
         main = "",
         legend_labels = c("0", "0.5", "1", "ARI\n\n"),
-        legend = TRUE, border_color = FALSE)
+        legend = TRUE,
+        border_color = FALSE,
+        cluster_cols = cluster_cols,
+        cluster_rows = cluster_rows
+    )
 }

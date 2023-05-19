@@ -4,12 +4,24 @@
 \alias{ari_heatmap}
 \title{Heatmap meta-clustering results}
 \usage{
-ari_heatmap(output_matrix_aris, save = NULL)
+ari_heatmap(
+  output_matrix_aris,
+  save = NULL,
+  cluster_cols = TRUE,
+  cluster_rows = TRUE,
+  hide_ids = FALSE
+)
 }
 \arguments{
 \item{output_matrix_aris}{results from meta_cluster function}
 
 \item{save}{optional path to save figure to}
+
+\item{cluster_cols}{boolean indicating if columns shold be clustered}
+
+\item{cluster_rows}{boolean indicating if rows shold be clustered}
+
+\item{hide_ids}{boolean indicating if row_id numbers should be hidden}
 }
 \description{
 Heatmap meta-clustering results

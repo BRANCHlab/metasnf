@@ -4,12 +4,16 @@
 \alias{dm_heatmap}
 \title{Heatmap design matrix based on meta-clustering results}
 \usage{
-dm_heatmap(design_matrix, save = NULL)
+dm_heatmap(design_matrix, order = NULL, save = NULL, hide_ids = FALSE)
 }
 \arguments{
 \item{design_matrix}{matrix indicating parameters to iterate SNF through}
 
+\item{order}{numeric vector indicating row ordering of design matrix}
+
 \item{save}{optional path to save figure to}
+
+\item{hide_ids}{boolean indicating if row_id numbers should be hidden}
 }
 \description{
 Normalizes the design matrix and plots as a heatmap. Rows are reordered to
