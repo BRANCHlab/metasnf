@@ -257,8 +257,14 @@ check_subj_orders_for_lp <- function(data_list, om_row, n_train, n_test) {
         identical(data_list[[i]]$"data"$"subjectkey"[train_indices],
                   current_row_names)
     if (current_check == FALSE) {
-        print("Mismatch found between OM colnames and data list subject order.")
-        return(NULL)
+        stop(paste0(
+            "\n",
+            "Mismatch found between OM colnames and data list subject order.\n",
+            "\nIn order to perform label propagation, the order of subjects in",
+            " the full data list must match equal the training order followed",
+            " by the testing order. \n\nTo remedy this issue, rebuild your",
+            " full_data_list object while specifying the train_subjects",
+            " and test_subjects arguments."))
     }
     all_checks_passed <- TRUE
     return(all_checks_passed)
