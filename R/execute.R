@@ -113,7 +113,6 @@ execute_design_matrix <- function(data_list, design_matrix) {
     design_matrix <- data.frame(design_matrix)
     subjects <- c("nclust", data_list[[1]]$"data"$"subjectkey")
     output_matrix <- add_char_vec_as_cols(design_matrix, subjects, 0)
-    print(colnames(output_matrix))
     # Iterate through the rows of the design matrix
     remaining_seconds_vector <- vector()
     for (i in seq_len(nrow(design_matrix))) {
@@ -149,6 +148,8 @@ execute_design_matrix <- function(data_list, design_matrix) {
                     "The eigen_or_rot value ", dm_row$"eigen_or_rot", " is not",
                     "a valid input type."), class = "invalid_input")
         }
+        print(nclust)
+        output_matrix[i, "nclust"] <- nclust
         cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
         # Assign subtype membership
         output_matrix[i, rownames(fused_network)] <- cluster_results
@@ -171,7 +172,6 @@ execute_design_matrix <- function(data_list, design_matrix) {
                 " seconds"))
     }
     # Add number of clusters to output matrix
-    print("cheese")
     output_matrix <- output_matrix |>
         unique()
         #dplyr::mutate(nclust = dplyr::case_when(
