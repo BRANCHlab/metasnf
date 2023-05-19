@@ -46,11 +46,34 @@ generate_output_matrix <- function(data_list, design_matrix) {
 #'
 #' @export
 extend_om <- function(output_matrix, outcome_list) {
+    # Single vector of all feature names
+    ol_features <- lapply(
+        outcome_list,
+        function(x) {
+            # All the features from each outcome list dataframe
+            colnames(x[[1]])[-1]
+        }
+    ) |> unlist()
+    # Single vector of all feature types
+    ol_feature_types <- lapply(
+        outcome_list,
+        function(x) {
+            n_features <- ncol(x$"data") - 1
+            outcome_type <- rep(x$"type", n_features)
+        }
+    ) |> unlist()
+    # Add columns tracking p-values of all features
     output_matrix <- add_char_vec_as_cols(
         output_matrix,
-        paste0(sol(outcome_list)$"name", "_p"),
-        NA
+        paste0(ol_features, "_p"),
+        filler = NA
     )
+    # Single DF to contain all outcome features
+    merged_df <- lapply(
+        outcome_list,
+        function(x) {
+            x[[1]]
+        }) |> merge_df_list()
     # Iterate across rows of the output matrix
     for (i in seq_len(nrow(output_matrix))) {
         clustered_subs <- get_clustered_subs(output_matrix[i, ])
@@ -59,10 +82,17 @@ extend_om <- function(output_matrix, outcome_list) {
             dplyr::filter(clustered_subs$"cluster" != 0)
         # Iterate across each outcome measure included
         # Assign p-values
-        for (j in seq_along(outcome_list)) {
-            current_outcome_component <- outcome_list[[j]]
-            current_outcome_name <- current_outcome_component$"name"
-            p_value <- get_p(assigned_subs, current_outcome_component)
+        for (j in 1:length(ol_features)) {
+            #current_outcome_component <- outcome_list[[j]]
+            current_outcome_component <- merged_df[, c(1, j + 1)]
+            current_outcome_type <- ol_feature_types[j]
+            current_outcome_name <- colnames(current_outcome_component)[2]
+            p_value <- get_p(
+                assigned_subs,
+                current_outcome_component,
+                ol_feature_types[j],
+                ol_features[j]
+            )
             target_col <- grep(current_outcome_name, colnames(output_matrix))
             output_matrix[i, target_col] <- p_value
         }
@@ -83,9 +113,11 @@ extend_om <- function(output_matrix, outcome_list) {
 #' @export
 p_val_select <- function(output_matrix) {
     p_val_matrix <- output_matrix |>
-        dplyr::select(dplyr::ends_with("_p"), -c("min_p_val", "mean_p_val")) |>
-        sapply(as.numeric) |>
-        as.matrix()
+        dplyr::select(
+            "row_id",
+            dplyr::ends_with("_p"),
+            -c("min_p_val", "mean_p_val")) |>
+        data.frame()
     return(p_val_matrix)
 }
 
@@ -132,21 +164,20 @@ get_mean_p <- function(output_matrix_row) {
 #'  and return p-value as a benchmark measure of how well-separated clusters
 #'  are by the outcome measure
 #'
-#' @param assigned_subs dataframe of subjects who were assigned to a cluster and
-#'  the cluster they were assigned to
-#' @param outcome_component the outcome_list element of interest
+#' @param assigned_subs dataframe of subjects who were assigned to a cluster
+#'  and the cluster they were assigned to
+#' @param outcome_df dataframe containing subjectkey and outcome feautre column
+#' @param outcome_type string indicating the outcome type (numeric or ordinal)
+#' @param outcome_name string indicating the name of the feature
 #'
 #' @return p_val the smallest p-value of interest
 #'
 #' @export
-get_p <- function(assigned_subs, outcome_component) {
-    outcome <- outcome_component$"data"
-    outcome_name <- outcome_component$"name"
-    outcome_type <- outcome_component$"type"
+get_p <- function(assigned_subs, outcome_df, outcome_type, outcome_name) {
     if (outcome_type == "ordinal") {
-        p_val <- ord_reg_p(assigned_subs, outcome, outcome_name)
+        p_val <- ord_reg_p(assigned_subs, outcome_df, outcome_name)
     } else if (outcome_type == "numeric") {
-        p_val <- lin_reg_p(assigned_subs, outcome, outcome_name)
+        p_val <- lin_reg_p(assigned_subs, outcome_df, outcome_name)
     } else {
         stop(paste0(
             "Unsupported outcome type: ",

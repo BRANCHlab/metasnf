@@ -4,13 +4,17 @@
 \alias{get_p}
 \title{Get p-value}
 \usage{
-get_p(assigned_subs, outcome_component)
+get_p(assigned_subs, outcome_df, outcome_type, outcome_name)
 }
 \arguments{
-\item{assigned_subs}{dataframe of subjects who were assigned to a cluster and
-the cluster they were assigned to}
+\item{assigned_subs}{dataframe of subjects who were assigned to a cluster
+and the cluster they were assigned to}
 
-\item{outcome_component}{the outcome_list element of interest}
+\item{outcome_df}{dataframe containing subjectkey and outcome feautre column}
+
+\item{outcome_type}{string indicating the outcome type (numeric or ordinal)}
+
+\item{outcome_name}{string indicating the name of the feature}
 }
 \value{
 p_val the smallest p-value of interest
