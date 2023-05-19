@@ -111,8 +111,9 @@ execute_design_matrix_hard <- function(data_list, design_matrix, outcome_list) {
 execute_design_matrix <- function(data_list, design_matrix) {
     start <- Sys.time()
     design_matrix <- data.frame(design_matrix)
-    subjects <- data_list[[1]]$"data"$"subjectkey"
+    subjects <- c("nclust", data_list[[1]]$"data"$"subjectkey")
     output_matrix <- add_char_vec_as_cols(design_matrix, subjects, 0)
+    print(colnames(output_matrix))
     # Iterate through the rows of the design matrix
     remaining_seconds_vector <- vector()
     for (i in seq_len(nrow(design_matrix))) {
@@ -170,12 +171,14 @@ execute_design_matrix <- function(data_list, design_matrix) {
                 " seconds"))
     }
     # Add number of clusters to output matrix
+    print("cheese")
     output_matrix <- output_matrix |>
-        dplyr::mutate(nclust = dplyr::case_when(
-            eigen_or_rot == 1 ~ eigen_best,
-            eigen_or_rot == 2 ~ rot_best),
-            .keep = "unused") |>
         unique()
+        #dplyr::mutate(nclust = dplyr::case_when(
+        #    eigen_or_rot == 1 ~ eigen_best,
+        #    eigen_or_rot == 2 ~ rot_best)) |>
+#            eigen_or_rot == 2 ~ rot_best),
+#            .keep = "unused") |>
     end <- Sys.time()
     print(end - start)
     output_matrix <- col_to_num_all_possible(output_matrix)

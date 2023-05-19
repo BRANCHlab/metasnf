@@ -2,17 +2,13 @@
 % Please edit documentation in R/meta_cluster.R
 \name{meta_cluster}
 \alias{meta_cluster}
-\title{Meta-cluster calculations}
+\title{Outdated calc_om_aris}
 \usage{
 meta_cluster(mc_om)
 }
 \arguments{
-\item{mc_om}{output_matrix}
-}
-\value{
-mc_sm meta-clustering similarity matrix
+\item{mc_om}{output matrix}
 }
 \description{
-Generate matrix of pairwise cluster-solution similarities by Adjusted Rand
-index calculations
+Outdated calc_om_aris
 }

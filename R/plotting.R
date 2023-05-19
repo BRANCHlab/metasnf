@@ -150,35 +150,6 @@ ak_heatmap <- function(ak_scan_om, min_or_mean = "min", save = NULL) {
         cluster_cols = FALSE)
 }
 
-
-#' Heatmap meta-clustering results
-#'
-#' @param mc_results results from meta_cluster function
-#' @param save optional path to save figure to
-#'
-#' @export
-mc_heatmap <- function(mc_results, save = NULL) {
-    colnames(mc_results) <- NULL
-    rownames(mc_results) <- NULL
-    if (!(is.null(grDevices::dev.list()))) {
-        grDevices::dev.off()
-    }
-    if (!(is.null(save))) {
-        pheatmap::pheatmap(mc_results,
-            legend_breaks = c(0, 0.5, 1, max(mc_results)),
-            main = "",
-            legend_labels = c("0", "0.5", "1", "ARI\n\n"),
-            legend = TRUE, border_color = FALSE,
-            filename = save)
-    }
-    pheatmap::pheatmap(mc_results,
-        legend_breaks = c(0, 0.5, 1, max(mc_results)),
-        main = "",
-        legend_labels = c("0", "0.5", "1", "ARI\n\n"),
-        legend = TRUE, border_color = FALSE)
-}
-
-
 #' Heatmap design matrix based on meta-clustering results
 #'
 #' @description

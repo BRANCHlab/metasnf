@@ -111,7 +111,7 @@ lapply(abcd_data,
 Some of our data has missing values and not all of our dataframes have the same number of participants.
 
 
-## Generating the `data_list`
+## Generating the data list
 
 The `data_list` structure is basically just a list of dataframes (like the one already created), but with some additional features to facilitate repeated clustering.
 It should only contain the input dataframes we want to directly use as inputs for the clustering.
@@ -158,12 +158,13 @@ We can get a summary of our constructed `data_list` with the `summarize_dl` func
 summarize_dl(data_list)
 ```
 
-## Generating the `design_matrix`
+## Generating the design matrix
 
 The `design_matrix` stores all the information about the settings we'd like to use for each of our SNF runs.
 Calling the `generate_design_matrix` function with a specified number of rows will automatically build a randomly populated `design_matrix`.
 
 ```{r}
+#design_matrix <- generate_design_matrix(data_list, nrow = 30)
 design_matrix <- generate_design_matrix(data_list, nrow = 5)
 
 design_matrix
@@ -179,11 +180,23 @@ The columns are:
 
 `generate_design_matrix` randomly populates these columns and ensures that no generated rows are identical.
 
-## Executing the `design_matrix`
+## Executing the design matrix
 
 ```{r}
 output_matrix <- execute_design_matrix(data_list, design_matrix)
+
 ```
+
+```{r}
+output_matrix
+
+colnames(output_matrix)[1:20]
+
+colnames(output_matrix)[105:length(colnames(output_matrix))]
+
+colnames(output_matrix)
+```
+
 
 The `execute_design_matrix` function integrates the data in the `data_list` using each of the sets of settings contained in the `design_matrix`.
 The resulting structure is an `output_matrix` which is an extension of the `design_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `design_matrix` row.
@@ -191,11 +204,17 @@ Just like that, the clustering is done!
 
 ## Characterizing the clustering results: examining meta clusters
 
+We have a group of cluster solutions 
 
 ```{r}
 subs(output_matrix)
 
 colnames(output_matrix)
+
+output_matrix_aris <- calc_om_aris(output_matrix)
+
+ari_heatmap(output_matrix_aris)
+
 ```
 
 
@@ -206,7 +225,7 @@ colnames(output_matrix)
 
 This section describes how the `generate_design_matrix` function randomly assigns input dataframess to be dropped from different SNF runs to access a wider space of possible solutions.
 
-By default, `generate_design_matrix` will build an empty dataframe containing the columns outlined in the [design matrix][Generating the `design_matrix`] section.
+By default, `generate_design_matrix` will build an empty dataframe containing the columns outlined in the [design matrix][Generating the design matrix] section.
 If a non-zero number of rows are specified when calling `generate_design_matrix`, the function calls on `add_design_matrix_rows` to add rows with randomly valid values.
 The input dataframe inclusion variables rely on yet another helper function:
 
@@ -374,15 +393,9 @@ write_matex(df1_df2_fused)
 
 Contrast this with the similarity matrix we obtained in **Example 1**:
 
-
-
-
-
-
 ```{r echo = FALSE, results = 'asis'}
 write_matex(df3_sim)
 ```
-
 
 I'm not entirely sure about what is happening with the diagonal values not being identical in the second matrix, but that aside, the results here seem mostly similar. Person 1 is most similar to person 2, person 2 is most similar to person 1, person 3 is most similar to person 4, and person 4 is most similar to person 3.
 
@@ -405,8 +418,6 @@ Varying the `snf_scheme` parameter gives us access to a wider range of possible 
 1. Individual: Input dataframes are combined into a final network by SNF.
 2. Two-step: Input dataframes are combined within user-specified data domains by one round of SNF and then combined across domains by a second round of SNF.
 3. Domain: Input dataframes are combined within domains by concatenation and then combined into a single fused network by SNF.
-
-If a set of features are all measurements of the same 
 
 These options are not comprehensive.
 If there are other schemes you would like to be added into the package, feel free to make a request on GitHub.
