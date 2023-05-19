@@ -165,7 +165,7 @@ Calling the `generate_design_matrix` function with a specified number of rows wi
 
 ```{r}
 #design_matrix <- generate_design_matrix(data_list, nrow = 30)
-design_matrix <- generate_design_matrix(data_list, nrow = 5)
+design_matrix <- generate_design_matrix(data_list, nrow = 5, seed = 42)
 
 design_matrix
 ```
@@ -179,12 +179,17 @@ The columns are:
 - `alpha` - Referred to as $\eta$ in the original SNF manuscript, alpha in the SNFtool code examples, and sigma in the SNFtool source code*, this is a hyperparameter for affinity matrix generation
 
 `generate_design_matrix` randomly populates these columns and ensures that no generated rows are identical.
+Setting the optional `seed` parameter (which will affect the seed of your entire R session) ensures that the same design matrix is generated each time we run the code.
+
+While we end up with a random set of settings here, there is nothing wrong with manually altering the design matrix to suit your needs.
+For example, if you wanted to know how much of a difference one input dataframe made, you could ensure that half of the rows included this input dataframe and the other half didn't.
+You can also add random rows to an already existing dataframe using the `add_design_matrix_rows` function.
+
 
 ## Executing the design matrix
 
 ```{r}
 output_matrix <- execute_design_matrix(data_list, design_matrix)
-
 ```
 
 ```{r}
@@ -197,14 +202,16 @@ colnames(output_matrix)[105:length(colnames(output_matrix))]
 colnames(output_matrix)
 ```
 
-
 The `execute_design_matrix` function integrates the data in the `data_list` using each of the sets of settings contained in the `design_matrix`.
 The resulting structure is an `output_matrix` which is an extension of the `design_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `design_matrix` row.
 Just like that, the clustering is done!
 
-## Characterizing the clustering results: examining meta clusters
+## Picking a solution #1: examining meta clusters
 
-We have a group of cluster solutions 
+We now have a group of cluster solutions stored in an `output_matrix`.
+Proposing tens or hundreds (or thousands) of clustering solutions in a research paper doesn't seem to be in-style right now, so we will need to pick a solution to move forward with.
+In this section, we'll take a look at the cluster-of-clusters approach to picking our favourite solution to move forward with.
+I believe this approach is best for truly exploratory clustering (read: when you have some sort of vague vibes about when one solution is better than another) and it is difficult to specify exactly what you are looking for.
 
 ```{r}
 subs(output_matrix)
@@ -213,9 +220,97 @@ colnames(output_matrix)
 
 output_matrix_aris <- calc_om_aris(output_matrix)
 
+output_matrix_aris
+
 ari_heatmap(output_matrix_aris)
 
+# You can optionally save the heatmap with the line below
+# ari_heatmap(output_matrix_aris, save = "./ari_heatmap.png")
 ```
+
+```{r echo = FALSE, fig.align = 'center'}
+ari_heatmap(output_matrix_aris, save = "./ari_heatmap.png")
+```
+
+![.](./ari_heatmap.png){width=400px}
+
+The [adjusted Rand index](https://en.wikipedia.org/wiki/Rand_index) (ARI) is a tool for helping us calculate similarities between clustering solutions.
+The clustering solutions are along the rows and columns of the above figure, and the cells at the intersection between two solutions show how similar (big ARI) those solutions are to each other.
+The diagonals should always be red, representing the maximum value of 1, as they show the similarity between any clustering solution and itself.
+Agglomerative hierarchical clustering is being applied to these solutions by default (thank you, `pheatmap` package) so the orders of the clustering solutions here do not exactly line up with the order of the clustering solutions present in the design matrix.
+
+You can examine the un-clustered heatmap like this:
+
+```{r}
+ari_heatmap(
+    output_matrix_aris,
+    cluster_rows = FALSE,
+    cluster_cols = FALSE)
+```
+
+```{r echo = FALSE, fig.align = 'center'}
+ari_heatmap(output_matrix_aris, save = "./ari_heatmap_unclustered.png")
+```
+
+![.](./ari_heatmap_unclustered.png){width=400px}
+
+And there's an option to hide the corresponding design matrix rows:
+
+```{r}
+ari_heatmap(output_matrix_aris, hide_ids = TRUE)
+```
+
+If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your design matrix.
+
+I recommend visualizing the design matrix with yet another heatmap:
+
+```{r}
+dm_heatmap(design_matrix)
+```
+
+You can use the solution order in the clustered ARI heatmap to reorder the design matrix heatmap:
+
+```{r}
+om_ari_order <- get_pheatmap_order(output_matrix_aris)
+
+om_ari_order
+
+dm_heatmap(design_matrix, order = om_ari_order)
+```
+
+Maybe you'll see something interesting!
+
+With more design matrix rows and perhaps a less random dataset, you may end up seeing some proper clusters-of-clusters appearing.
+
+If there's a row that interest you (say, row 5), this format may be more useful for your subsequent analyses:
+
+```{r}
+cluster_df <- get_cluster_df(output_matrix[5, ])
+
+head(cluster_df)
+```
+
+From there, you're on your own (until the next vignette, maybe?)
+
+## Picking a solution #2: specifying an objective function
+
+If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
+
+There are many ways to go about doing this, but this package offers one way through the `outcome_list` structure.
+The `outcome_list` contains dataframes what we can examine our clustering results over through linear or ordinal regression.
+Categorical data hasn't been added yet.
+
+```{r}
+outcome_list <- generate_outcome_list(
+    list(abcd_anxiety, "anxiety", "ordinal"),
+    list(abcd_depress, "depressed", "ordinal")
+)
+
+summarize_ol(outcome_list)
+```
+
+The `outcome_list` is like the `data_list`, but without the domain attribute.
+
 
 
 
