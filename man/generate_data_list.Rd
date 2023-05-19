@@ -4,12 +4,27 @@
 \alias{generate_data_list}
 \title{Generate data_list object - but softcoded}
 \usage{
-generate_data_list(..., old_uid = NULL)
+generate_data_list(
+  ...,
+  old_uid = NULL,
+  test_subjects = NULL,
+  train_subjects = NULL,
+  assigned_splits = NULL
+)
 }
 \arguments{
 \item{...}{Lists formatted as (df, "df_name", "df_domain", "df_type")}
 
 \item{old_uid}{(string) the name of the uid column currently used data}
+
+\item{test_subjects}{character vector of test subjects (useful if building
+a full data list for label propagation)}
+
+\item{train_subjects}{character vector of train subjects (useful if building
+a full data list for label propagation)}
+
+\item{assigned_splits}{ouptut from assign_splits function - can be given
+as an alternative to specifying the train/test subjects separately.}
 }
 \description{
 This is the major data object that will be processed when iterating through

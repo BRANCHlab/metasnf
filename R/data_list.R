@@ -10,6 +10,12 @@
 #'
 #' @param ... Lists formatted as (df, "df_name", "df_domain", "df_type")
 #' @param old_uid (string) the name of the uid column currently used data
+#' @param train_subjects character vector of train subjects (useful if building
+#'  a full data list for label propagation)
+#' @param test_subjects character vector of test subjects (useful if building
+#'  a full data list for label propagation)
+#' @param assigned_splits ouptut from assign_splits function - can be given
+#'  as an alternative to specifying the train/test subjects separately.
 #'
 #' @export
 #' @examples
@@ -30,7 +36,9 @@
 #'     list(personality_test_df, "data2", "domain2", "numeric"),
 #'     old_uid = "patient_id"
 #' )
-generate_data_list <- function(..., old_uid = NULL) {
+generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
+                               train_subjects = NULL, assigned_splits = NULL) {
+    subjectkey = "" # trickery to avoid build errors - fix this later
     # The object that will contain all the data
     data_list <- list(...)
     # Assign names to the nested list elements
@@ -40,8 +48,43 @@ generate_data_list <- function(..., old_uid = NULL) {
     data_list <- data_list |>
         remove_dl_na() |>
         reduce_dl_to_common() |>
-        arrange_dl() |>
         prefix_dl_sk()
+    # Correctly order train and test subjects for label prop
+    if (!is.null(test_subjects) & !is.null(train_subjects)) {
+        tts <- paste0("subject_", c(train_subjects, test_subjects))
+        data_list <- data_list |>
+            lapply(
+                function(x) {
+                    x$"data" <- x$"data" |> dplyr::arrange(
+                        sapply(
+                            subjectkey,
+                            function(x) which (x == tts)
+                        )
+                    )
+                    return(x)
+                }
+            )
+    } else if (!is.null(assigned_splits)) {
+        train_subjects <- assigned_splits |>
+            dplyr::filter(split == "train")
+        train_subjects <- train_subjects$"subjectkey"
+        test_subjects <- assigned_splits |>
+            dplyr::filter(split == "test")
+        test_subjects <- test_subjects$"subjectkey"
+        tts <- paste0("subject_", c(train_subjects, test_subjects))
+        data_list <- data_list |>
+            lapply(
+                function(x) {
+                    x$"data" <- x$"data" |> dplyr::arrange(
+                        sapply(
+                            subjectkey,
+                            function(x) which (x == tts)
+                        )
+                    )
+                    return(x)
+                }
+            )
+    }
     return(data_list)
 }
 
