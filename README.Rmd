@@ -25,16 +25,16 @@ knitr::opts_chunk$set(
 
 To-do list (in order of priority):
 
-- Make a vignette/minimal example of walking through the main steps of the pipeline
-- Allow multi-feature dataframes to be used when generating an outcome list
+- More customization of design matrix - specifically, allowing 
 - Write tests for non-trivial functions
 - Add check to make sure no columns end in "_p" prior to extending the OM
 - Share repo!
 - Create a github pages
 - Allow categorical comparisons in outcome list
-- More customization of design matrix
 - More snf digestion schemes
 - Zipf-distribution scaling as described in meta-clustering paper (this may not make sense for SNF?)
+- ~~Allow multi-feature dataframes to be used when generating an outcome list~~
+- ~~Make a vignette/minimal example of walking through the main steps of the pipeline~~
 - ~~Build design matrix off of data list~~
 - ~~Make outcome list optional~~
 - ~~Consider moving reduce_dl_to_common / arrange_dl to start of execute_dm~~

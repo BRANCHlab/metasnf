@@ -249,7 +249,10 @@ ari_heatmap(
 ```
 
 ```{r echo = FALSE, fig.align = 'center'}
-ari_heatmap(output_matrix_aris, save = "./ari_heatmap_unclustered.png")
+ari_heatmap(output_matrix_aris,
+            cluster_rows = FALSE,
+            cluster_cols = FALSE,
+            save = "./ari_heatmap_unclustered.png")
 ```
 
 <center>
@@ -262,7 +265,9 @@ And there's an option to hide the corresponding design matrix rows:
 ari_heatmap(output_matrix_aris, hide_ids = TRUE)
 ```
 
-With more design matrix rows and perhaps a less random dataset, you may end up seeing some proper clusters-of-clusters appearing.
+The pattern here appears to be a bit of a common theme with the randomly generated design matrix, owing to the solutions between SNF schemes having significantly more variability than the solutions within SNF schemes (and thus producing 3 rough meta clusters).
+If you'd like to try and expand the space of clustering solutions produced even further, consider manually constructing a different design matrix.
+Later updates of this package will focus on customizing the design matrix a little easier (e.g., choosing which design matrix parameters stay fixed or what possible values other parameters can take on).
 
 If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your design matrix.
 
@@ -279,6 +284,10 @@ dm_heatmap(design_matrix, save = "./dm_heatmap.png")
 <center>
 ![](./dm_heatmap.png){width=400px}
 </center>
+
+The variables beginning with "inc" show when variables were (blue) or were not (red) randomly dropped out.
+With only 30 solutions examined and 5 input dataframes, the dropout may seem a little conservative.
+As stated above, a future goal is to have the design matrix yield diverse clustering solutions a little more efficiently, which will likely rely on more aggressive input dataframe dropout (or variable scaling).
 
 You can use the solution order in the clustered ARI heatmap to reorder the design matrix heatmap:
 
