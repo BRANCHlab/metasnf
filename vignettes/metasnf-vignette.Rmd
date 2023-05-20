@@ -252,11 +252,11 @@ ari_heatmap(
 ari_heatmap(output_matrix_aris,
             cluster_rows = FALSE,
             cluster_cols = FALSE,
-            save = "./ari_heatmap_unclustered.png")
+            save = "./ari_heatmap_unclustered2.png")
 ```
 
 <center>
-![](./ari_heatmap_unclustered.png){width=400px}
+![](./ari_heatmap_unclustered2.png){width=400px}
 </center>
 
 And there's an option to hide the corresponding design matrix rows:
