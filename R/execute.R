@@ -148,7 +148,6 @@ execute_design_matrix <- function(data_list, design_matrix) {
                     "The eigen_or_rot value ", dm_row$"eigen_or_rot", " is not",
                     "a valid input type."), class = "invalid_input")
         }
-        print(nclust)
         output_matrix[i, "nclust"] <- nclust
         cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
         # Assign subtype membership

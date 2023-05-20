@@ -4,10 +4,12 @@
 \alias{pvals_pheatmap}
 \title{Pheatmap a matrix of p-values}
 \usage{
-pvals_pheatmap(pvals, save = NULL, reverse_colours = FALSE)
+pvals_pheatmap(pvals, order = NULL, save = NULL, reverse_colours = FALSE)
 }
 \arguments{
 \item{pvals}{a matrix of p-values}
+
+\item{order}{numeric vector indicating row ordering of design matrix}
 
 \item{save}{optional path to save figure to}
 

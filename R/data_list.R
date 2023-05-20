@@ -51,6 +51,8 @@ generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
         prefix_dl_sk()
     # Correctly order train and test subjects for label prop
     if (!is.null(test_subjects) & !is.null(train_subjects)) {
+        # If test subjects and train subjects are provided, arrange dl subs
+        #  to follow the order of train subjects followed by test subjects
         tts <- paste0("subject_", c(train_subjects, test_subjects))
         data_list <- data_list |>
             lapply(
@@ -65,6 +67,7 @@ generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
                 }
             )
     } else if (!is.null(assigned_splits)) {
+        # An alternative input to providing test and train subjects
         train_subjects <- assigned_splits |>
             dplyr::filter(split == "train")
         train_subjects <- train_subjects$"subjectkey"
@@ -84,6 +87,9 @@ generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
                     return(x)
                 }
             )
+    } else {
+        # If no order is specified, just sort the subjects alphabetically
+        data_list <- data_list |> arrange_dl()
     }
     return(data_list)
 }

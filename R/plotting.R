@@ -204,15 +204,25 @@ dm_heatmap <- function(design_matrix,
         fontsize = 12)
 }
 
-
 #' Pheatmap a matrix of p-values
 #'
 #' @param pvals a matrix of p-values
+#' @param order numeric vector indicating row ordering of design matrix
 #' @param save optional path to save figure to
 #' @param reverse_colours boolean to invert colours
 #'
 #' @export
-pvals_pheatmap <- function(pvals, save = NULL, reverse_colours = FALSE) {
+pvals_pheatmap <- function(pvals,
+                           order = NULL,
+                           save = NULL, reverse_colours = FALSE) {
+    if ("row_id" %in% colnames(pvals)) {
+        rownames(pvals) <- pvals$"row_id"
+        pvals <- pvals |>
+            dplyr::select(-"row_id")
+    }
+    if (!is.null(order)) {
+        pvals <- pvals[order, ]
+    }
     if (reverse_colours) {
         colours <- grDevices::colorRampPalette(
             RColorBrewer::brewer.pal(n = 7, name = "RdYlBu"))(100)

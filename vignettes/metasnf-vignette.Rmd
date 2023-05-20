@@ -152,11 +152,11 @@ The `mice` package in R is nice for this.
 
 We can get a summary of our constructed `data_list` with the `summarize_dl` function:
 
-! Change sdl and all its calls to summarize_dl
-
 ```{r}
 summarize_dl(data_list)
 ```
+
+Each input dataframe now has the same 100 subjects with complete data.
 
 ## Generating the design matrix
 
@@ -164,8 +164,7 @@ The `design_matrix` stores all the information about the settings we'd like to u
 Calling the `generate_design_matrix` function with a specified number of rows will automatically build a randomly populated `design_matrix`.
 
 ```{r}
-#design_matrix <- generate_design_matrix(data_list, nrow = 30)
-design_matrix <- generate_design_matrix(data_list, nrow = 5, seed = 42)
+design_matrix <- generate_design_matrix(data_list, nrow = 30, seed = 42)
 
 design_matrix
 ```
@@ -176,7 +175,7 @@ The columns are:
 - `snf_scheme` - the specific way in which input data gets collapsed into a final fused network (discussed further in the [appendix][snf_scheme])
 - `eigen_or_rot` binary variable indicating if the eigengap (1) or rotation cost (2) heuristic was used to select the number of clusters specified for applying spectral clustering to the final fused network
 - `K` - the nearest neighbors hyperparameter used for SNF (an input to the function SNFtool::SNF)
-- `alpha` - Referred to as $\eta$ in the original SNF manuscript, alpha in the SNFtool code examples, and sigma in the SNFtool source code*, this is a hyperparameter for affinity matrix generation
+- `alpha` - Referred to as $\eta$ in the original SNF manuscript, alpha in the SNFtool code examples, and sigma in the SNFtool source code, this is a hyperparameter for affinity matrix generation
 
 `generate_design_matrix` randomly populates these columns and ensures that no generated rows are identical.
 Setting the optional `seed` parameter (which will affect the seed of your entire R session) ensures that the same design matrix is generated each time we run the code.
@@ -194,8 +193,12 @@ The resulting structure is an `output_matrix` which is an extension of the `desi
 ```{r}
 output_matrix <- execute_design_matrix(data_list, design_matrix)
 
-colnames(output_matrix)
+colnames(output_matrix)[1:20]
+```
 
+It goes on like this for some time.
+
+```{r}
 output_matrix[1:5, 1:20]
 ```
 
@@ -204,25 +207,27 @@ Just like that, the clustering is done!
 ## Picking a solution #1: examining meta clusters
 
 We now have a group of cluster solutions stored in an `output_matrix`.
-Proposing tens or hundreds (or thousands) of clustering solutions in a research paper doesn't seem to be in-style right now, so we will need to pick a solution to move forward with.
+Proposing tens or hundreds (or thousands) of clustering solutions in a research paper doesn't seem to be fashionable right now, so we will need to pick a solution to move forward with.
 In this section, we'll take a look at the cluster-of-clusters approach to picking our favourite solution to move forward with.
-I believe this approach is best for truly exploratory clustering (read: when you have some sort of vague vibes about when one solution is better than another) and it is difficult to specify exactly what you are looking for.
+I believe this approach is best for truly exploratory clustering (read: when the way in which you prefer to choose between two clustering solutions is through ambiguous vibes).
+
+The first step is to calculate the [adjusted Rand index](https://en.wikipedia.org/wiki/Rand_index) (ARI) between each pair of cluster solutions.
+This metric is tells us how similar the solutions are to each other, thereby allowing us to find clusters of cluster solutions.
 
 ```{r}
-# Only row_id and the subject columns
-subs(output_matrix)[1:5, 1:10]
-
-colnames(output_matrix)
-
 output_matrix_aris <- calc_om_aris(output_matrix)
 
-output_matrix_aris
+dim(output_matrix_aris)
 
-ari_heatmap(output_matrix_aris)
-
-# You can optionally save the heatmap with the line below
-# ari_heatmap(output_matrix_aris, save = "./ari_heatmap.png")
 ```
+
+We can visualize the resulting inter-cluster similarities with a heatmap:
+
+```{r}
+ari_heatmap(output_matrix_aris)
+```
+
+You can optionally save your heatmap by specifying a path with the `save` parameter (e.g., `ari_heatmap(output_matrix_aris, save = "./ari_heatmap.png")`).
 
 ```{r echo = FALSE, fig.align = 'center'}
 ari_heatmap(output_matrix_aris, save = "./ari_heatmap.png")
@@ -230,7 +235,6 @@ ari_heatmap(output_matrix_aris, save = "./ari_heatmap.png")
 
 ![.](./ari_heatmap.png){width=400px}
 
-The [adjusted Rand index](https://en.wikipedia.org/wiki/Rand_index) (ARI) is a tool for helping us calculate similarities between clustering solutions.
 The clustering solutions are along the rows and columns of the above figure, and the cells at the intersection between two solutions show how similar (big ARI) those solutions are to each other.
 The diagonals should always be red, representing the maximum value of 1, as they show the similarity between any clustering solution and itself.
 Agglomerative hierarchical clustering is being applied to these solutions by default (thank you, `pheatmap` package) so the orders of the clustering solutions here do not exactly line up with the order of the clustering solutions present in the design matrix.
@@ -248,7 +252,9 @@ ari_heatmap(
 ari_heatmap(output_matrix_aris, save = "./ari_heatmap_unclustered.png")
 ```
 
-![.](./ari_heatmap_unclustered.png){width=400px}
+<center>
+![](./ari_heatmap_unclustered.png){width=400px}
+</center>
 
 And there's an option to hide the corresponding design matrix rows:
 
@@ -256,27 +262,57 @@ And there's an option to hide the corresponding design matrix rows:
 ari_heatmap(output_matrix_aris, hide_ids = TRUE)
 ```
 
+With more design matrix rows and perhaps a less random dataset, you may end up seeing some proper clusters-of-clusters appearing.
+
 If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your design matrix.
 
 I recommend visualizing the design matrix with yet another heatmap:
 
-```{r}
+```{r eval = FALSE}
 dm_heatmap(design_matrix)
 ```
 
+```{r echo = FALSE}
+dm_heatmap(design_matrix, save = "./dm_heatmap.png")
+```
+
+<center>
+![](./dm_heatmap.png){width=400px}
+</center>
+
 You can use the solution order in the clustered ARI heatmap to reorder the design matrix heatmap:
 
-```{r}
+
+```{r include = FALSE}
 om_ari_order <- get_pheatmap_order(output_matrix_aris)
+```
 
+```{r eval = FALSE}
+om_ari_order <- get_pheatmap_order(output_matrix_aris)
+```
+
+The order is just a vector of numbers...
+
+```{r}
 om_ari_order
+```
 
+... which can be passed into the `dm_heatmap` function:
+
+```{r include = FALSE}
+dm_heatmap(design_matrix, order = om_ari_order,
+           save = "./dm_heatmap_ordered.png")
+```
+
+```{r eval = FALSE}
 dm_heatmap(design_matrix, order = om_ari_order)
 ```
 
-Maybe you'll see something interesting!
+<center>
+![](./dm_heatmap_ordered.png){width=400px}
+</center>
 
-With more design matrix rows and perhaps a less random dataset, you may end up seeing some proper clusters-of-clusters appearing.
+Maybe you'll see something interesting!
 
 If there's a row that interest you (say, row 5), this format may be more useful for your subsequent analyses:
 
@@ -290,7 +326,7 @@ From there, you're on your own (until the next vignette, maybe?)
 
 ## Picking a solution #2: specifying an objective function
 
-**Warning: This approach can very easily result in [overfitting](https://en.wikipedia.org/wiki/Overfitting) your data and producing clustering results that generalize poorly to subjects outside of your dataset. Set aside some subjects to validate your results to avoid this issue.** 
+**Warning: This approach can very easily result in [overfitting](https://en.wikipedia.org/wiki/Overfitting) your data and producing clustering results that generalize poorly to subjects outside of your dataset. Consider setting aside some data to validate your results to avoid this issue.** 
 
 If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
 
@@ -304,8 +340,6 @@ outcome_list <- generate_outcome_list(
     list(abcd_depress, "depressed", "ordinal")
 )
 
-outcome_list
-
 summarize_ol(outcome_list)
 ```
 
@@ -316,7 +350,10 @@ We can use it to extend our `output_matrix` with p-values from regressing the `o
 ```{r}
 extended_output_matrix <- extend_om(output_matrix, outcome_list)
 
-extended_output_matrix
+colnames(extended_output_matrix)
+
+# Looking at the newly added columns
+head(no_subs(extended_output_matrix))
 ```
 
 If you just want the p-values:
@@ -325,10 +362,33 @@ If you just want the p-values:
 p_val_select(extended_output_matrix)
 ```
 
-Please do not interpret these p-values in the typical hypothesis-testing way.
-In this context, they are just a tool to find clustering solutions that are well-separated according to the outcome measures you've specified.
-Finding a cluster solution like this is a bit of a supervised learning problem, but where the optimization method is just random sampling.
-The risk for overfitting your data with this approach is large, so make sure you have some rigorous external validation before reporting your findings.
+And of course, there is a heatmap for visualizing this too:
+
+```{r include = FALSE}
+om_pvals <- p_val_select(extended_output_matrix)
+
+str(om_pvals)
+
+pvals_pheatmap(om_pvals, order = om_ari_order,
+           save = "./pvals_pheatmap_ordered.png")
+
+str(om_pvals)
+```
+
+```{r eval = FALSE}
+om_pvals <- p_val_select(extended_output_matrix)
+
+pvals_pheatmap(om_pvals, order = om_ari_order)
+```
+
+<center>
+![](./pvals_pheatmap_ordered.png){width=400px}
+</center>
+
+These p-values hold no real meaning for the traditional hypothesis-testing context.
+Here, they are just a tool to find clustering solutions that are well-separated according to the outcome measures you've specified.
+Finding a cluster solution like this is similar to a supervised learning approach, but where the optimization method is just random sampling.
+The risk for overfitting your data with this approach is considerable, so make sure you have some rigorous external validation before reporting your findings.
 
 I've relied on label propagation (provided by the SNFtool package in the `groupPredict` function) to take my top clustering solution in some training data, assign predicted clusters to some held out test subjects, and then characterized those test subjects to see how well the clustering solution seemed to have worked.
 
@@ -386,10 +446,13 @@ test_data_list <- generate_data_list(
     list(test_abcd_pubertal, "pubertal_status", "demographics", "numeric"),
     old_uid = "subjectkey"
 )
+```
 
-## Note, the training_subjects and testing_subjects parameters are necessary
-## to construct the full_data_list in the right subject order for
-## label propagation.
+
+Note, in a label propagation workflow, maintaining a consistent ordering of train and test subjects across all dataframes is particularly important.
+To ensure the full data list is constructed with an order that is compatible with the training and testing splits made above, you can either specify both the `train_subjects` and `test_subjects` parameters yourself, or provide the `assigned_splits` output from the `train_test_assign` function.
+
+```{r}
 full_data_list <- generate_data_list(
     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
     list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
@@ -424,13 +487,18 @@ top_om_row <- extended_output_matrix[4, ]
 #  to the test subjects
 propagated_labels <- lp_om(top_om_row, full_data_list)
 head(propagated_labels)
+```
 
-# You could, in theory, see how all of your clustering solutions propagated,
-#  but that would mean reusing your validation set and removing the protection
-#  against overfitting conferred by this procedure.
+You could, if you wanted, see how *all* of your clustering solutions propagate to the test set, but that would mean reusing your test set and removing the protection against overfitting conferred by this procedure.
+
+```{r}
 propagated_labels_all <- lp_om(extended_output_matrix, full_data_list)
 head(propagated_labels_all)
 ```
+
+That's all for now!
+
+If you have any questions, comments, suggestions, bugs, etc. feel free to post an issue at https://github.com/BRANCHlab/metasnf.
 
 ## Appendix
 

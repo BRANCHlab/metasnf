@@ -117,7 +117,8 @@ p_val_select <- function(output_matrix) {
             "row_id",
             dplyr::ends_with("_p"),
             -c("min_p_val", "mean_p_val")) |>
-        data.frame()
+        data.frame() |>
+        col_to_num_all_possible()
     return(p_val_matrix)
 }
 

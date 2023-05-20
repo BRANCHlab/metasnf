@@ -102,7 +102,6 @@ ari_heatmap <- function(output_matrix_aris,
                         cluster_cols = TRUE,
                         cluster_rows = TRUE,
                         hide_ids = FALSE) {
-    print(output_matrix_aris)
     if (hide_ids) {
         colnames(output_matrix_aris) <- NULL
         rownames(output_matrix_aris) <- NULL

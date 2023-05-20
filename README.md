@@ -4,7 +4,6 @@
 # Meta clustering with Similarity Network Fusion (metasnf)
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 **NOTE:** Repo is currently undergoing major changes in the branch to
@@ -12,30 +11,33 @@ become ABCD-independent and generally more accessible.
 
 To-do list (in order of priority):
 
-  - ~~Build design matrix off of data list~~
-  - ~~Make outcome list optional~~
-  - Make a vignette/minimal example of walking through the main steps of
+-   Make a vignette/minimal example of walking through the main steps of
     the pipeline
-  - Consider moving reduce\_dl\_to\_common / arrange\_dl to start of
-    execute\_dm
-  - Add check to make sure no columns end in "\_p" prior to extending
+-   Allow multi-feature dataframes to be used when generating an outcome
+    list
+-   Write tests for non-trivial functions
+-   Add check to make sure no columns end in “\_p” prior to extending
     the OM
-  - Cleaner organization of functions across .R files
-  - ~~Account for different identifier than ABCD’s “subjectkey”~~
-  - Share repo\!
-  - Create a github pages
-  - Allow categorical comparisons in outcome list
-  - More customization of design matrix
-  - More snf digestion schemes
-  - Zipf-distribution scaling as described in meta-clustering paper
+-   Share repo!
+-   Create a github pages
+-   Allow categorical comparisons in outcome list
+-   More customization of design matrix
+-   More snf digestion schemes
+-   Zipf-distribution scaling as described in meta-clustering paper
     (this may not make sense for SNF?)
+-   ~~Build design matrix off of data list~~
+-   ~~Make outcome list optional~~
+-   ~~Consider moving reduce_dl_to_common / arrange_dl to start of
+    execute_dm~~
+-   ~~Cleaner organization of functions across .R files~~
+-   ~~Account for different identifier than ABCD’s “subjectkey”~~
 
 ## Overview
 
 *metasnf* is a package that facilitates usage of the meta clustering
-paradigm described in (Caruana et al. [2006](#ref-caruanaMeta2006)) with
+paradigm described in ([Caruana et al. 2006](#ref-caruanaMeta2006)) with
 the similarity network fusion (SNF) data integration procedure developed
-in (Wang et al. [2014](#ref-wangSimilarity2014)).
+in ([Wang et al. 2014](#ref-wangSimilarity2014)).
 
 This package enables repeated iterations of SNF with distinct clustering
 hyperparameters and combinations of input variables by making use of a
@@ -110,9 +112,9 @@ devtools::install_github("BRANCHlab/metasnf")
 
 ## References
 
-<div id="refs" class="references">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-caruanaMeta2006">
+<div id="ref-caruanaMeta2006" class="csl-entry">
 
 Caruana, Rich, Mohamed Elhawary, Nam Nguyen, and Casey Smith. 2006.
 “Meta Clustering.” In *Sixth International Conference on Data Mining
@@ -120,7 +122,7 @@ Caruana, Rich, Mohamed Elhawary, Nam Nguyen, and Casey Smith. 2006.
 
 </div>
 
-<div id="ref-wangSimilarity2014">
+<div id="ref-wangSimilarity2014" class="csl-entry">
 
 Wang, Bo, Aziz M. Mezlini, Feyyaz Demir, Marc Fiume, Zhuowen Tu, Michael
 Brudno, Benjamin Haibe-Kains, and Anna Goldenberg. 2014. “Similarity
