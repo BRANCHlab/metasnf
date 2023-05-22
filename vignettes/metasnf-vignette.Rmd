@@ -24,25 +24,18 @@ knitr::opts_chunk$set(
 
 *metasnf* is a package that facilitates usage of the meta clustering paradigm described in [Caruana et al., 2006](https://doi.org/10.1109/ICDM.2006.103) with the similarity network fusion (SNF) data integration procedure developed in [Wang et al., 2014](https://doi.org/10.1038/nmeth.2810).
 
-This package enables repeated iterations of SNF with distinct clustering hyperparameters and combinations of input variables by making use of a few key data structures.
+This package enables repeated iterations of SNF with distinct clustering settings and combinations of input variables.
 
 <br>
 
 **Why use meta clustering?**
 
-Clustering algorithms strive to give you a solution that is optimal in terms of some metric of clustering compactness.
-Perhaps in some cases with huge amounts of data and a simple set of features to consider, like examining the preferred genres of Netflix customers, the most compact solution will immediately produce something useful (distinct tastes that can quickly be used to inform advertising).
-
-When clustering noisy biological data over a wide range of data domains, however, you're probably not going to get a crisp and "correct" answer that shines above all other clustering solutions.
-Depending on how things are preprocessed, how things are weighted, what features are included, what hyperparameters are used, you may end up with all sorts of qualitatively different solutions that tell you different interesting things about the starting dataset.
-
-What are the chances that the best clustering solution for your use case is also the one with the best [silhouette score](https://en.wikipedia.org/wiki/Silhouette_(clustering)) or other [evaluation metric](https://en.wikipedia.org/wiki/Cluster_analysis#Evaluation_and_assessment)?
+Clustering algorithms seek solutions that optimize context-agnostic metrics of quality.
+In sufficiently noisy datasets where many qualitatively distinct solutions with similar scores of clustering quality exist, it is not necessarily the case that the top solution selected by a clustering algorithm will also be the most useful one for the user's context.
 
 To address this issue, the meta clustering procedure [Caruana et al., 2006](https://doi.org/10.1109/ICDM.2006.103) generates a large number of reasonable clustering solutions, clusters those solutions into qualitatively similar ones, and lets the user examine those "meta clusters" to find something that seems like it'll be the most useful.
 
-In this vignette, we work through a slightly different approach also mentioned in the original meta clustering paper, which involved using our own clustering usefulness rule to enable automatic solution from the pool of large cluster solutions (without needing to cluster the cluster solutions themselves or do any manual inspections).
-We also go through some functions that will help you go through the authentic clustering-of-clusters based approach if that is what you prefer.
-
+In this vignette, we use the metasnf package to work through the process of generating diverse clustering solutions, clustering those solutions to examine meta clusters, picking a solution through our own pre-defined context-specific metric of quality, and applying label propagation to held out subjects to set ourselves up for validating our findings.
 
 ## Examining the (fake) data
 
@@ -496,6 +489,7 @@ top_om_row <- extended_output_matrix[4, ]
 #  to the test subjects
 propagated_labels <- lp_om(top_om_row, full_data_list)
 head(propagated_labels)
+tail(propagated_labels)
 ```
 
 You could, if you wanted, see how *all* of your clustering solutions propagate to the test set, but that would mean reusing your test set and removing the protection against overfitting conferred by this procedure.
@@ -503,6 +497,7 @@ You could, if you wanted, see how *all* of your clustering solutions propagate t
 ```{r}
 propagated_labels_all <- lp_om(extended_output_matrix, full_data_list)
 head(propagated_labels_all)
+tail(propagated_labels_all)
 ```
 
 That's all for now!
