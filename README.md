@@ -27,11 +27,6 @@ This package enables repeated iterations of SNF with distinct clustering
 hyperparameters and combinations of input variables by making use of a
 few key data structures.
 
-Because I didn’t know what object-oriented programming was and nobody
-talks about [object-oriented programming in
-R](https://adv-r.hadley.nz/oo.html), these structures are all just lots
-of nested lists : ).
-
 The major structures are:
 
 ### The `design_matrix`
