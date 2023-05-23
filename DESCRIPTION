@@ -2,8 +2,85 @@ Package: metasnf
 Title: Useful tools for working with the ABCD dataset
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    c(
+        person(
+            "Prashanth",
+            "Velayudhan",
+            email = "prashanth.velayudhan@sickkids.ca",
+            role = c("aut", "cre"),
+        ),
+        person(
+            "Eman",
+            "Nishat",
+            email = "eman.nishat@sickkids.ca",
+            role = c("aut"),
+        ),
+        person(
+            "Sonja",
+            "Stojanovski",
+            role = c("aut"),
+        ),
+        person(
+            given = "Anne L",
+            family = "Wheeler",
+            email = "anne.wheeler@sickkids.ca",
+            role = c("aut", "ths"),
+        ),
+        person(
+            "Bo",
+            "Wang",
+            role = c("aut"),
+            comment = "Author of included SNFtool fragments"
+        ),
+        person(
+            "Aziz",
+            "Mezlini",
+            role = c("aut"),
+            comment = "Author of included SNFtool fragments"
+        ),
+        person(
+            "Feyyaz",
+            "Demir",
+            role = c("aut"),
+            comment = "Author of included SNFtool fragments"
+        ),
+        person(
+            "Marc",
+            "Fiume",
+            role = c("aut"),
+            comment = "Author of included SNFtool fragments"
+        ),
+        person(
+            "Zhuowen",
+            "Tu",
+            role = c("aut"),
+            comment = "Author of included SNFtool fragments"
+        ),
+        person(
+            "Michael",
+            "Brudno",
+            role = c("aut"),
+            comment = "Author of included SNFtool fragments"
+        ),
+        person(
+            "Benjamin",
+            "Haibe-Kains",
+            role = c("aut"),
+            comment = "Author of included SNFtool fragments"
+        ),
+        person(
+            "Anna",
+            "Goldenberg",
+            role = c("aut"),
+            comment = "Author of included SNFtool fragments"
+        ),
+        person(
+            "Benjamin",
+            "Brew",
+            role = c("aut"),
+            comment = "Author of included SNFtool fragments"
+        )
+    )
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
