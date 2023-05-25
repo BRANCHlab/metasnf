@@ -27,7 +27,11 @@ You can install the development version of metasnf with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("BRANCHlab/metasnf")
+devtools::install_github("BRANCHlab/metasnf") # the latest development version
+
+# OR
+
+devtools::install_github("BRANCHlab/metasnf@stable") # the latest stable version
 ```
 
 ## Overview
