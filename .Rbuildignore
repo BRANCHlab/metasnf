@@ -3,3 +3,6 @@
 build.R
 bibliography.bib
 ^data-raw$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

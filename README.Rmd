@@ -21,33 +21,24 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-**NOTE:** Repo is currently undergoing major changes in the branch to become ABCD-independent and generally more accessible.
+## Installation
 
-To-do list (in order of priority):
+You can install the development version of metasnf with:
 
-- More customization of design matrix - specifically, allowing 
-- Write tests for non-trivial functions
-- Add check to make sure no columns end in "_p" prior to extending the OM
-- Share repo!
-- Create a github pages
-- Allow categorical comparisons in outcome list
-- More snf digestion schemes
-- Zipf-distribution scaling as described in meta-clustering paper (this may not make sense for SNF?)
-- ~~Allow multi-feature dataframes to be used when generating an outcome list~~
-- ~~Make a vignette/minimal example of walking through the main steps of the pipeline~~
-- ~~Build design matrix off of data list~~
-- ~~Make outcome list optional~~
-- ~~Consider moving reduce_dl_to_common / arrange_dl to start of execute_dm~~
-- ~~Cleaner organization of functions across .R files~~
-- ~~Account for different identifier than ABCD's "subjectkey"~~
+``` r
+# install.packages("devtools")
+devtools::install_github("BRANCHlab/metasnf") # the latest development version
+
+# OR
+
+devtools::install_github("BRANCHlab/metasnf@stable") # the latest stable version
+```
 
 ## Overview
 
 *metasnf* is a package that facilitates usage of the meta clustering paradigm described in [@caruanaMeta2006] with the similarity network fusion (SNF) data integration procedure developed in [@wangSimilarity2014].
 
 This package enables repeated iterations of SNF with distinct clustering hyperparameters and combinations of input variables by making use of a few key data structures.
-
-Because I didn't know what object-oriented programming was and nobody talks about [object-oriented programming in R](https://adv-r.hadley.nz/oo.html), these structures are all just lots of nested lists : ).
 
 The major structures are:
 
@@ -80,14 +71,15 @@ The `extended_output_matrix` is useful in pipelines where separation across one 
 
 Alternatively, a top clustering solution can be selected from a regular `output_matrix` using the traditional meta clustering approach of clustering cluster solutions and manually examining a few solutions from the qualitatively distinct "meta clusters" that emerge.
 
+## To-do
 
-## Installation
+- More customization of design matrix
+- Write tests for non-trivial functions
+- Add check to make sure no columns end in "_p" prior to extending the OM
+- Create a github pages
+- Allow categorical comparisons in outcome list
+- More snf digestion schemes
+- Zipf-distribution scaling as described in meta-clustering paper (this may not make sense for SNF?)
 
-You can install the development version of metasnf with:
-
-``` r
-# install.packages("devtools")
-devtools::install_github("BRANCHlab/metasnf")
-```
 
 ## References
