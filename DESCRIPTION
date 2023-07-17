@@ -29,55 +29,55 @@ Authors@R:
         person(
             "Bo",
             "Wang",
-            role = c("aut"),
+            role = c("ctb"),
             comment = "Author of included SNFtool fragments"
         ),
         person(
             "Aziz",
             "Mezlini",
-            role = c("aut"),
+            role = c("ctb"),
             comment = "Author of included SNFtool fragments"
         ),
         person(
             "Feyyaz",
             "Demir",
-            role = c("aut"),
+            role = c("ctb"),
             comment = "Author of included SNFtool fragments"
         ),
         person(
             "Marc",
             "Fiume",
-            role = c("aut"),
+            role = c("ctb"),
             comment = "Author of included SNFtool fragments"
         ),
         person(
             "Zhuowen",
             "Tu",
-            role = c("aut"),
+            role = c("ctb"),
             comment = "Author of included SNFtool fragments"
         ),
         person(
             "Michael",
             "Brudno",
-            role = c("aut"),
+            role = c("ctb"),
             comment = "Author of included SNFtool fragments"
         ),
         person(
             "Benjamin",
             "Haibe-Kains",
-            role = c("aut"),
+            role = c("ctb"),
             comment = "Author of included SNFtool fragments"
         ),
         person(
             "Anna",
             "Goldenberg",
-            role = c("aut"),
+            role = c("ctb"),
             comment = "Author of included SNFtool fragments"
         ),
         person(
             "Benjamin",
             "Brew",
-            role = c("aut"),
+            role = c("ctb"),
             comment = "Author of included SNFtool fragments"
         )
     )
