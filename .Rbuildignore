@@ -1,6 +1,7 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 build.R
+build_no_dep.R
 bibliography.bib
 ^data-raw$
 ^_pkgdown\.yml$
