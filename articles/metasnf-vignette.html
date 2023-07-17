@@ -441,29 +441,29 @@ cluster each subject was assigned for the corresponding
 <code>design_matrix</code> row.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/execute_design_matrix.html">execute_design_matrix</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">design_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/30 | Time remaining: 5 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/30 | Time remaining: 5 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/30 | Time remaining: 5 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/30 | Time remaining: 5 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/30 | Time remaining: 5 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 1/30 | Time remaining: 6 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/30 | Time remaining: 6 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/30 | Time remaining: 6 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 4/30 | Time remaining: 6 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 5/30 | Time remaining: 6 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/30 | Time remaining: 5 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/30 | Time remaining: 5 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 9/30 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 8/30 | Time remaining: 5 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 9/30 | Time remaining: 5 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 10/30 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 11/30 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 12/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 13/30 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 14/30 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 13/30 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 14/30 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 15/30 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 16/30 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 17/30 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 18/30 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 18/30 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 19/30 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 20/30 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 21/30 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 22/30 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 23/30 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 23/30 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 24/30 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 25/30 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 26/30 | Time remaining: 1 seconds"</span></span>
@@ -471,7 +471,7 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [1] "Row: 28/30 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 29/30 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 30/30 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; Time difference of 6.119213 secs</span></span>
+<span><span class="co">#&gt; Time difference of 6.767511 secs</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">output_matrix</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span></span>
 <span><span class="co">#&gt;  [1] "row_id"                    "inc_cortical_thickness"   </span></span>
@@ -909,7 +909,7 @@ above, you can either specify both the <code>train_subjects</code> and
 <span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; Time difference of 0.7407389 secs</span></span>
+<span><span class="co">#&gt; Time difference of 0.826189 secs</span></span>
 <span></span>
 <span><span class="va">extended_output_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_om.html">extend_om</a></span><span class="op">(</span><span class="va">train_output_matrix</span>, <span class="va">train_outcome_list</span><span class="op">)</span></span>
 <span></span>
@@ -1004,7 +1004,7 @@ helper function:</p>
 <span><span class="co">#&gt;     shuffled_removals &lt;- sample(unshuffled_removals)</span></span>
 <span><span class="co">#&gt;     return(shuffled_removals)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55c5c960f370&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x5636cdb1a1b0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
 <p>This <code>random_removal</code> function randomly picks a number of
 columns to remove according to an exponential function. The most likely
@@ -1301,7 +1301,7 @@ Scale.” Nature Methods 11 (3): 333–37. <a href="https://doi.org/10.1038/nmet
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Prashanth Velayudhan, Eman Nishat, Sonja Stojanovski, Anne L Wheeler, Bo Wang, Aziz Mezlini, Feyyaz Demir, Marc Fiume, Zhuowen Tu, Michael Brudno, Benjamin Haibe-Kains, Anna Goldenberg, Benjamin Brew.</p>
+<p>Developed by Prashanth Velayudhan, Eman Nishat, Sonja Stojanovski, Anne L Wheeler.</p>
 </div>
 
 <div class="pkgdown-footer-right">
