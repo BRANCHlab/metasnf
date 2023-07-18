@@ -2,7 +2,7 @@
 % Please edit documentation in R/execute.R
 \name{dm_row_fn}
 \alias{dm_row_fn}
-\title{apply based function for execute design matrix}
+\title{Apply-based function for execute design matrix}
 \usage{
 dm_row_fn(dm_row, dl)
 }
@@ -15,5 +15,5 @@ dm_row_fn(dm_row, dl)
 the corresponding OM row
 }
 \description{
-apply based function for execute design matrix
+Apply-based function for execute design matrix
 }

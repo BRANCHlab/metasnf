@@ -2,7 +2,7 @@
 % Please edit documentation in R/execute.R
 \name{edm_high}
 \alias{edm_high}
-\title{Execute variations of SNF as described by a design matrix - but softcoded}
+\title{Execute design matrix function based on apply rather than for loop}
 \usage{
 edm_high(data_list, design_matrix)
 }
@@ -17,5 +17,5 @@ populated_design_matrix design matrix with filled columns related to
 subtype membership
 }
 \description{
-Execute variations of SNF as described by a design matrix - but softcoded
+Execute design matrix function based on apply rather than for loop
 }
