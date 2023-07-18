@@ -90,6 +90,7 @@ Imports:
     cluster,
     digest,
     dplyr,
+    future.apply,
     ggplot2,
     graphics,
     grDevices,

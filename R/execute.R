@@ -97,82 +97,63 @@ execute_design_matrix <- function(data_list, design_matrix) {
 edm_high <- function(data_list, design_matrix) {
     start <- Sys.time()
     design_matrix <- data.frame(design_matrix)
-    subjects <- c("nclust", data_list[[1]]$"data"$"subjectkey")
-    output_matrix <- add_char_vec_as_cols(design_matrix, subjects, 0)
     # Iterate through the rows of the design matrix
-    remaining_seconds_vector <- vector()
-    for (i in seq_len(nrow(design_matrix))) {
-        start_time <- Sys.time()
-        dm_row <- design_matrix[i, ]
-        current_data_list <- execute_inclusion(dm_row, data_list)
-        # Execute the current row's SNF scheme
-        current_snf_scheme <- dplyr::case_when(
-            dm_row$"snf_scheme" == 1 ~ "individual",
-            dm_row$"snf_scheme" == 2 ~ "domain",
-            dm_row$"snf_scheme" == 3 ~ "twostep",
-        )
-        K <- design_matrix[i, "K"]
-        alpha <- design_matrix[i, "alpha"]
-        fused_network <- snf_step(
-            current_data_list,
-            current_snf_scheme,
-            K = K,
-            alpha = alpha)
-        all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
-        # Execute the current row's clustering
-        if (dm_row$"eigen_or_rot" == 1) {
-            eigen_best <- all_clust$`Eigen-gap best`
-            nclust <- eigen_best
-        } else if (dm_row$"eigen_or_rot" == 2) {
-            rot_best <- all_clust$`Rotation cost best`
-            nclust <- rot_best
-        } else {
-            # To-do: move this into design matrix generation or earlier in
-            #  this function
-            rlang::abort(
-                paste0(
-                    "The eigen_or_rot value ", dm_row$"eigen_or_rot", " is not",
-                    "a valid input type."), class = "invalid_input")
-        }
-        output_matrix[i, "nclust"] <- nclust
-        cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
-        # Assign subtype membership
-        output_matrix[i, rownames(fused_network)] <- cluster_results
-        end_time <- Sys.time()
-        seconds_per_row <- as.numeric(end_time - start_time)
-        rows_remaining <- nrow(design_matrix) - i
-        remaining_seconds_vector <- c(remaining_seconds_vector, seconds_per_row)
-        if (length(remaining_seconds_vector) > 10) {
-            remaining_seconds_vector <-
-                remaining_seconds_vector[2:length(remaining_seconds_vector)]
-        }
-        remaining_seconds <-
-            round(mean(remaining_seconds_vector) * rows_remaining, 0)
-        print(
-            paste0(
-                "Row: ", i, "/", nrow(design_matrix),
-                " | ",
-                "Time remaining: ",
-                remaining_seconds,
-                " seconds"))
-    }
     # Add number of clusters to output matrix
+    output_matrix <- future.apply::future_apply(design_matrix, 1, dm_row_fn, dl = data_list)
+    output_matrix <- do.call("rbind", output_matrix)
     output_matrix <- output_matrix |>
         unique()
-        #dplyr::mutate(nclust = dplyr::case_when(
-        #    eigen_or_rot == 1 ~ eigen_best,
-        #    eigen_or_rot == 2 ~ rot_best)) |>
-#            eigen_or_rot == 2 ~ rot_best),
-#            .keep = "unused") |>
     end <- Sys.time()
     print(end - start)
     output_matrix <- col_to_num_all_possible(output_matrix)
     return(output_matrix)
 }
 
+#' apply based function for execute design matrix
+#'
+#' @param dm_row a row of a design matrix
+#' @param dl a data list
+#'
+#' @return the corresponding OM row
+#'
+#' @export
 dm_row_fn <- function(dm_row, dl) {
+    dm_row <- data.frame(t(dm_row))
     current_data_list <- execute_inclusion(dm_row, dl)
-    return(length(current_data_list))
+    current_snf_scheme <- dplyr::case_when(
+        dm_row$"snf_scheme" == 1 ~ "individual",
+        dm_row$"snf_scheme" == 2 ~ "domain",
+        dm_row$"snf_scheme" == 3 ~ "twostep",
+    )
+    K <- dm_row$"K"
+    alpha <- dm_row$"alpha"
+    print(".")
+    fused_network <- snf_step(
+        current_data_list,
+        current_snf_scheme,
+        K = K,
+        alpha = alpha)
+    all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
+    # Execute the current row's clustering
+    if (dm_row$"eigen_or_rot" == 1) {
+        eigen_best <- all_clust$`Eigen-gap best`
+        nclust <- eigen_best
+    } else if (dm_row$"eigen_or_rot" == 2) {
+        rot_best <- all_clust$`Rotation cost best`
+        nclust <- rot_best
+    } else {
+        # To-do: move this into design matrix generation or earlier in
+        #  this function
+        rlang::abort(
+            paste0(
+                "The eigen_or_rot value ", dm_row$"eigen_or_rot", " is not",
+                "a valid input type."), class = "invalid_input")
+    }
+    dm_row$"nclust" <- nclust
+    cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
+    # Assign subtype membership
+    dm_row[1, rownames(fused_network)] <- cluster_results
+    return(dm_row)
 }
 
 
@@ -189,7 +170,7 @@ dm_row_fn <- function(dm_row, dl) {
 #'
 #' @export
 execute_inclusion <- function(design_matrix, data_list) {
-# Dataframe just of the inclusion variables
+    # Dataframe just of the inclusion variables
     inc_df <- design_matrix |>
         dplyr::select(dplyr::starts_with("inc"))
     # The subset of columns that are in 'keep' (1) mode
