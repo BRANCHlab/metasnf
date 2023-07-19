@@ -1,5 +1,5 @@
 Package: metasnf
-Title: Useful tools for working with the ABCD dataset
+Title: Meta Clustering with Similarity Network Fusion
 Version: 0.0.0.9000
 Authors@R: 
     c(
