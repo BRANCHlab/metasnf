@@ -197,6 +197,8 @@ output_matrix[1:5, 1:20]
 
 Just like that, the clustering is done!
 
+*Note: You can also enable parallel processing to run the `execute_design_matrix` function faster on machines with multiple CPU cores. See the "processes" parameter in `?execute_design_matrix`.*
+
 ## Picking a solution #1: examining meta clusters
 
 We now have a group of cluster solutions stored in an `output_matrix`.
