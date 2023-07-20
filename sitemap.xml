@@ -115,6 +115,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/dm_heatmap.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/dm_row_fn.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/domain_merge.html</loc>
   </url>
   <url>
@@ -124,7 +127,7 @@
     <loc>https://branchlab.github.io/metasnf/reference/execute_design_matrix.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/execute_design_matrix_hard.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/execute_design_matrix_p.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/execute_inclusion.html</loc>
