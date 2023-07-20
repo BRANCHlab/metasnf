@@ -2,7 +2,7 @@
 % Please edit documentation in R/execute.R
 \name{execute_design_matrix}
 \alias{execute_design_matrix}
-\title{Execute variations of SNF as described by a design matrix - but softcoded}
+\title{Execute variations of SNF as described by a design matrix}
 \usage{
 execute_design_matrix(data_list, design_matrix)
 }
@@ -17,5 +17,5 @@ populated_design_matrix design matrix with filled columns related to
 subtype membership
 }
 \description{
-Execute variations of SNF as described by a design matrix - but softcoded
+Execute variations of SNF as described by a design matrix
 }

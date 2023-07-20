@@ -106,6 +106,8 @@ Imports:
     stringr,
     utils
 Suggests: 
+    future,
+    future.apply,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
