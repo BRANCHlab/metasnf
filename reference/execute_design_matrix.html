@@ -48,7 +48,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">execute_design_matrix</span><span class="op">(</span><span class="va">data_list</span>, <span class="va">design_matrix</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">execute_design_matrix</span><span class="op">(</span><span class="va">data_list</span>, <span class="va">design_matrix</span>, processes <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -60,6 +60,19 @@
 
 <dt>design_matrix</dt>
 <dd><p>matrix indicating parameters to iterate SNF through</p></dd>
+
+
+<dt>processes</dt>
+<dd><p>Specify number of processes used to complete SNF iterations
+* <code>1</code> (default) Sequential processing: function will iterate through the
+<code>design_matrix</code> one row at a time with a for loop. This option will
+not make use of multiple CPU cores, but will show a progress bar.
+* <code>2</code> or higher: Parallel processing will use the
+<code><a href="https://future.apply.futureverse.org/reference/future_apply.html" class="external-link">future.apply::future_apply</a></code> to distribute the SNF iterations across
+the specified number of CPU cores. If higher than the number of
+available cores, a warning will be printed and the maximum number of
+cores will be used.
+* <code>max</code>: All available cores will be used.</p></dd>
 
 </dl></div>
     <div class="section level2">
