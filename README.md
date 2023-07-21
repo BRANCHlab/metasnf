@@ -88,13 +88,10 @@ the qualitatively distinct “meta clusters” that emerge.
 
   - More customization of design matrix
   - Write tests for non-trivial functions
-  - Add check to make sure no columns end in "\_p" prior to extending
-    the OM
-  - Create a github pages
   - Allow categorical comparisons in outcome list
   - More snf digestion schemes
+  - Parallelize `extend_om`
   - Zipf-distribution scaling as described in meta-clustering paper
-    (this may not make sense for SNF?)
 
 ## References
 

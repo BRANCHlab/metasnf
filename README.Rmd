@@ -75,11 +75,10 @@ Alternatively, a top clustering solution can be selected from a regular `output_
 
 - More customization of design matrix
 - Write tests for non-trivial functions
-- Add check to make sure no columns end in "_p" prior to extending the OM
-- Create a github pages
 - Allow categorical comparisons in outcome list
 - More snf digestion schemes
-- Zipf-distribution scaling as described in meta-clustering paper (this may not make sense for SNF?)
+- Parallelize `extend_om`
+- Zipf-distribution scaling as described in meta-clustering paper
 
 
 ## References
