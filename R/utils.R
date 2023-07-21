@@ -160,3 +160,32 @@ keep_split <- function(df, assigned_df, split) {
         dplyr::select(-split)
     return(split_df)
 }
+
+#' Remove items from a data_list or outcome_list
+#'
+#' Removes specified elements from a provided data_list or outcome_list object
+#'
+#' @param list_object The data_list or outcome_list containing components to be
+#'  removed
+#' @param ... Any number of components to remove from the list object, passed as
+#'  strings
+#'
+#' @return pruned_list The pruned list object
+#'
+#' @export
+list_remove <- function(list_object, ...) {
+    to_remove <- list(...)
+    # Check to make sure all items to remove are components in list_object
+    list_names <- summarize_ol(list_object)$"name"
+    invalid_names <- to_remove[!to_remove %in% list_names]
+    if (length(invalid_names) > 0) {
+        warning(
+            paste0(
+                "Did you make a typo? The following names are not present in",
+                " your data list: ", invalid_names
+            )
+        )
+    }
+    pruned_list <- list_object[!list_names %in% to_remove]
+    return(pruned_list)
+}
