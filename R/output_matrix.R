@@ -63,6 +63,8 @@ extend_om <- function(output_matrix, outcome_list) {
         }
     ) |> unlist()
     # Add columns tracking p-values of all features
+    # Specifying the dataframe structure avoids tibble-related errors
+    output_matrix <- data.frame(output_matrix)
     output_matrix <- add_char_vec_as_cols(
         output_matrix,
         paste0(ol_features, "_p"),
@@ -253,9 +255,16 @@ lin_reg_p <- function(clust_membership, outcome_df, outcome_var) {
 #'
 #' @export
 get_clustered_subs <- function(output_matrix_row) {
+    output_matrix_row <- data.frame(output_matrix_row)
     clustered_subs <-
-        data.frame(t(output_matrix_row[1,
-                     which(startsWith(colnames(output_matrix_row), "subject_"))]))
+        data.frame(
+            t(
+                output_matrix_row[
+                    1,
+                    which(startsWith(colnames(output_matrix_row), "subject_"))
+                ]
+            )
+        )
     clustered_subs$"subjectkey" <- rownames(clustered_subs)
     rownames(clustered_subs) <- NULL
     clustered_subs <- clustered_subs |>
