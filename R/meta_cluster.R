@@ -110,7 +110,8 @@ ari_heatmap <- function(output_matrix_aris,
         grDevices::dev.off()
     }
     if (!(is.null(save))) {
-        pheatmap::pheatmap(output_matrix_aris,
+        pheatmap::pheatmap(
+            output_matrix_aris,
             legend_breaks = c(0, 0.5, 1, max(output_matrix_aris)),
             main = "",
             legend_labels = c("0", "0.5", "1", "ARI\n\n"),
@@ -118,7 +119,8 @@ ari_heatmap <- function(output_matrix_aris,
             border_color = FALSE,
             cluster_cols = cluster_cols,
             cluster_rows = cluster_rows,
-            filename = save)
+            filename = save
+        )
     }
     pheatmap::pheatmap(output_matrix_aris,
         legend_breaks = c(0, 0.5, 1, max(output_matrix_aris)),
