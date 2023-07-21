@@ -481,7 +481,7 @@ cbcl_bar_chart <- function(characterization_df, outcome, nclust = NULL) {
 #' @param save_prefix prefix to add to each file saved
 #' @param save_suffix suffix to add to each file saved
 #' @param include a string or list of strings specifying which CBCL measures
-#'  should be included. All other CBCL measures will be excluded.    
+#'  should be included. All other CBCL measures will be excluded.
 #' @param exclude a string or list of strings specifying which CBCL measures
 #'  should be excluded. All other CBCL measures will be excluded.
 #' @param w the width of the final saved plots
@@ -509,7 +509,7 @@ plot_all_cbcl <- function(om, cbcl_list, fig_path_fn, save_prefix = NULL,
         print(exclude)
         print(include)
         print(is.null(include))
-        print(is.null(exclude)) 
+        print(is.null(exclude))
         stop("Only one of `include` or `exclude` params should be given.")
     }
     # Iterate through the output matrix one row at a time
