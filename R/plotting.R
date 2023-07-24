@@ -214,7 +214,9 @@ dm_heatmap <- function(design_matrix,
 #' @export
 pvals_pheatmap <- function(pvals,
                            order = NULL,
-                           save = NULL, reverse_colours = FALSE) {
+                           cluster_cols = TRUE,
+                           save = NULL,
+                           reverse_colours = FALSE) {
     if ("row_id" %in% colnames(pvals)) {
         rownames(pvals) <- pvals$"row_id"
         pvals <- pvals |>
@@ -240,6 +242,7 @@ pvals_pheatmap <- function(pvals,
             color = colours,
             legend_labels = c("0", "0.2", "0.4", "0.6", "0.8", "p-value\n\n"),
             cluster_rows = FALSE,
+            cluster_cols = cluster_cols,
             legend = TRUE,
             filename = save)
     }
@@ -249,6 +252,7 @@ pvals_pheatmap <- function(pvals,
         color = colours,
         legend_labels = c("0", "0.2", "0.4", "0.6", "0.8", "p-value\n\n"),
         cluster_rows = FALSE,
+        cluster_cols = cluster_cols,
         legend = TRUE)
 }
 
