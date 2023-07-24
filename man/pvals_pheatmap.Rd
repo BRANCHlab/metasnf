@@ -4,12 +4,20 @@
 \alias{pvals_pheatmap}
 \title{Pheatmap a matrix of p-values}
 \usage{
-pvals_pheatmap(pvals, order = NULL, save = NULL, reverse_colours = FALSE)
+pvals_pheatmap(
+  pvals,
+  order = NULL,
+  cluster_cols = TRUE,
+  save = NULL,
+  reverse_colours = FALSE
+)
 }
 \arguments{
 \item{pvals}{a matrix of p-values}
 
 \item{order}{numeric vector indicating row ordering of design matrix}
+
+\item{cluster_cols}{if TRUE, pheatmap will cluster (and rearrange) columns}
 
 \item{save}{optional path to save figure to}
 

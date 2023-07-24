@@ -208,6 +208,7 @@ dm_heatmap <- function(design_matrix,
 #'
 #' @param pvals a matrix of p-values
 #' @param order numeric vector indicating row ordering of design matrix
+#' @param cluster_cols if TRUE, pheatmap will cluster (and rearrange) columns
 #' @param save optional path to save figure to
 #' @param reverse_colours boolean to invert colours
 #'
