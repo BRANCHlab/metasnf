@@ -279,7 +279,7 @@ om_scatter <- function(om, save = NULL) {
         ggplot2::geom_point() +
         ggplot2::scale_x_continuous(trans = "log10") +
         ggplot2::scale_y_continuous(trans = "log10") +
-        ggplot2::geom_text(hjust = 0, vjust = 0) +
+        ggplot2::geom_text(hjust = 0, vjust = 0, show.legend = FALSE) +
         ggplot2::xlab("Minimum CBCL log(p-value)") +
         ggplot2::ylab("Mean CBCL log(p-value)") +
         ggplot2::theme_bw() +
