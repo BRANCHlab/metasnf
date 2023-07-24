@@ -24,7 +24,13 @@ generate_design_matrix <- function(data_list,
         "eigen_or_rot",
         "K",
         "alpha")
-    design_matrix_base <- as.data.frame(matrix(0, ncol = length(dm_cols), nrow = 0))
+    design_matrix_base <- as.data.frame(
+        matrix(
+            0,
+            ncol = length(dm_cols),
+            nrow = 0
+        )
+    )
     colnames(design_matrix_base) <- dm_cols
     design_matrix <- add_design_matrix_rows(design_matrix_base, nrows)
     return(design_matrix)
@@ -80,7 +86,7 @@ add_design_matrix_rows <- function(design_matrix, nrows, retry_limit = 10) {
         eigen_or_rot <- sample(1:2, 1)
         # K and alpha range based on prior hyperparameter scans
         K <- sample(10:30, 1)
-        alpha <- (sample(6:10, 1))/10
+        alpha <- (sample(6:10, 1)) / 10
         # Putting it all together
         new_row <- cbind(
             row_id,
