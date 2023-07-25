@@ -1,8 +1,11 @@
 #' Build a design matrix - but softcoded
 #'
-#' @param data_list a data list object to determine variables for inclusion/exclusion
+#' @param data_list a data list object to determine variables for inclusion and
+#'  exclusion
 #' @param nrows number of design matrix rows
 #' @param seed set a seed for the random matrix generation. Note that this
+#' @param min_removed The smallest number of elements that may be removed
+#' @param max_removed The largest number of elements that may be removed
 #' @param retry_limit The maximum number of attempts to generate a novel row
 #'  affects the global seed.
 #'
@@ -12,6 +15,8 @@
 generate_design_matrix <- function(data_list,
                                    nrows = 0,
                                    seed = NULL,
+                                   min_removed = NULL,
+                                   max_removed = NULL,
                                    retry_limit = 10) {
     if (!is.null(seed)) {
         set.seed(seed)
@@ -51,10 +56,16 @@ generate_design_matrix <- function(data_list,
 #'
 #' @export
 random_removal <- function(num_cols,
-                           min_removed = 0,
-                           max_removed = num_cols - 1) {
+                           min_removed,
+                           max_removed) {
     # Generate 10,000 random numbers according to exponential distribution
-    if (max_removed >= num_cols | min_removed < 0) {
+    if (is.null(min_removed)) {
+        min_removed <- 0
+    }
+    if (is.null(max_removed)) {
+        max_removed <- num_cols - 1
+    }
+    if (max_removed >= num_cols || min_removed < 0) {
         stop(
             paste0(
                 "The number of removed elements must be between 0 and the",
@@ -88,12 +99,16 @@ random_removal <- function(num_cols,
 #' @param design_matrix The existing design matrix
 #' @param nrows The number of rows to be added to the design matrix
 #' @param retry_limit The maximum number of attempts to generate a novel row
+#' @param min_removed The smallest number of elements that may be removed
+#' @param max_removed The largest number of elements that may be removed
 #'
 #' @return design_matrix New design matrix containing additional rows
 #'
 #' @export
 add_design_matrix_rows <- function(design_matrix,
                                    nrows,
+                                   min_removed = NULL,
+                                   max_removed = NULL,
                                    retry_limit = 10) {
     i <- 0
     num_retries <- 0
@@ -102,7 +117,15 @@ add_design_matrix_rows <- function(design_matrix,
         new_row <- vector()
         # Inclusion columns
         num_inclusion_cols <- sum(startsWith(colnames(design_matrix), "inc"))
-        inclusions <- t(data.frame(random_removal(num_inclusion_cols)))
+        inclusions <- t(
+            data.frame(
+                random_removal(
+                    num_cols = num_inclusion_cols,
+                    min_removed = min_removed,
+                    max_removed = max_removed
+                )
+            )
+        )
         inclusion_names <-
             colnames(design_matrix)[startsWith(colnames(design_matrix), "inc")]
         colnames(inclusions) <- inclusion_names

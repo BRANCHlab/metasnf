@@ -4,7 +4,7 @@
 \alias{random_removal}
 \title{Generate random removal sequence}
 \usage{
-random_removal(num_cols, min_removed = 0, max_removed = num_cols - 1)
+random_removal(num_cols, min_removed, max_removed)
 }
 \arguments{
 \item{num_cols}{Number of feature elements in consideration for exclusion}

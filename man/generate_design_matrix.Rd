@@ -4,14 +4,26 @@
 \alias{generate_design_matrix}
 \title{Build a design matrix - but softcoded}
 \usage{
-generate_design_matrix(data_list, nrows = 0, seed = NULL, retry_limit = 10)
+generate_design_matrix(
+  data_list,
+  nrows = 0,
+  seed = NULL,
+  min_removed = NULL,
+  max_removed = NULL,
+  retry_limit = 10
+)
 }
 \arguments{
-\item{data_list}{a data list object to determine variables for inclusion/exclusion}
+\item{data_list}{a data list object to determine variables for inclusion and
+exclusion}
 
 \item{nrows}{number of design matrix rows}
 
 \item{seed}{set a seed for the random matrix generation. Note that this}
+
+\item{min_removed}{The smallest number of elements that may be removed}
+
+\item{max_removed}{The largest number of elements that may be removed}
 
 \item{retry_limit}{The maximum number of attempts to generate a novel row
 affects the global seed.}
