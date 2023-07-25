@@ -37,7 +37,13 @@ generate_design_matrix <- function(data_list,
         )
     )
     colnames(design_matrix_base) <- dm_cols
-    design_matrix <- add_design_matrix_rows(design_matrix_base, nrows)
+    design_matrix <- add_design_matrix_rows(
+        design_matrix = design_matrix_base,
+        nrows = nrows,
+        min_removed = min_removed,
+        max_removed = max_removed,
+        retry_limit = retry_limit
+    )
     return(design_matrix)
 }
 
