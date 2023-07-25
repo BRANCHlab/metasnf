@@ -42,19 +42,42 @@ generate_design_matrix <- function(data_list,
 #' Number of columns removed follows the exponential probability distribution
 #' to typically keep all or most columns.
 #'
-#' @param num_cols Number of feature columns in consideration for exclusion
+#' @param num_cols Number of feature elements in consideration for exclusion
+#' @param min_removed The smallest number of elements that may be removed
+#' @param max_removed The largest number of elements that may be removed
 #'
 #' @return shuffled_removals Binary vector sequence indicating if a column
 #' should be included (1) or excluded (0)
 #'
 #' @export
-random_removal <- function(num_cols) {
+random_removal <- function(num_cols,
+                           min_removed = 0,
+                           max_removed = num_cols - 1) {
+    # Generate 10,000 random numbers according to exponential distribution
+    if (max_removed >= num_cols | min_removed < 0) {
+        stop(
+            paste0(
+                "The number of removed elements must be between 0 and the",
+                " total number of elements in the data_list (", num_cols, ")."
+            )
+        )
+    }
     rand_vals <- stats::rexp(10000)
-    rand_vals <- rand_vals / max(rand_vals) * num_cols
-    rand_vals <- floor(rand_vals)
+    # Scale them to range from 0 to num_cols - 1
+    # multiply by the difference
+    # add the lowest value
+    difference <- max_removed - min_removed
+    # Scale the values to range from 0 to 1
+    rand_vals <- rand_vals / max(rand_vals)
+    # Multiply by the difference
+    rand_vals <- rand_vals * difference
+    rand_vals <- rand_vals + min_removed
+    rand_vals <- round(rand_vals)
     num_removed <- sample(rand_vals, 1)
+    # vector of 1s or 0s to represent number of columns kept
     remove_placeholders <- rep(0, num_removed)
     keep_placeholders <- rep(1, num_cols - num_removed)
+    # merge and shuffle those vectors to produce final dropout sequence
     unshuffled_removals <- c(remove_placeholders, keep_placeholders)
     shuffled_removals <- sample(unshuffled_removals)
     return(shuffled_removals)
@@ -69,7 +92,9 @@ random_removal <- function(num_cols) {
 #' @return design_matrix New design matrix containing additional rows
 #'
 #' @export
-add_design_matrix_rows <- function(design_matrix, nrows, retry_limit = 10) {
+add_design_matrix_rows <- function(design_matrix,
+                                   nrows,
+                                   retry_limit = 10) {
     i <- 0
     num_retries <- 0
     while (i < nrows) {

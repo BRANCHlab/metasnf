@@ -4,10 +4,14 @@
 \alias{random_removal}
 \title{Generate random removal sequence}
 \usage{
-random_removal(num_cols)
+random_removal(num_cols, min_removed = 0, max_removed = num_cols - 1)
 }
 \arguments{
-\item{num_cols}{Number of feature columns in consideration for exclusion}
+\item{num_cols}{Number of feature elements in consideration for exclusion}
+
+\item{min_removed}{The smallest number of elements that may be removed}
+
+\item{max_removed}{The largest number of elements that may be removed}
 }
 \value{
 shuffled_removals Binary vector sequence indicating if a column
