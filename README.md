@@ -4,28 +4,32 @@
 # Meta clustering with Similarity Network Fusion (metasnf)
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 ## Installation
 
-You can install the development version of metasnf with:
+This package is currently under active development. If you plan on using
+it for important work, the safest and most stable option is to install a
+tagged release. The *v0.1.0* tag is the latest tag matching the R
+vignette.
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("BRANCHlab/metasnf") # the latest development version
+devtools::install_github("BRANCHlab/metasnf@v0.1.0")
+```
 
-# OR
+If you are interested in using the newest (but quickly changing) version
+of the package, you can simply install the main branch:
 
-devtools::install_github("BRANCHlab/metasnf@stable") # the latest stable version
+``` r
+devtools::install_github("BRANCHlab/metasnf")
 ```
 
 ## Overview
 
 *metasnf* is a package that facilitates usage of the meta clustering
-paradigm described in (Caruana et al. [2006](#ref-caruanaMeta2006)) with
+paradigm described in ([Caruana et al. 2006](#ref-caruanaMeta2006)) with
 the similarity network fusion (SNF) data integration procedure developed
-in (Wang et al. [2014](#ref-wangSimilarity2014)).
+in ([Wang et al. 2014](#ref-wangSimilarity2014)).
 
 This package enables repeated iterations of SNF with distinct clustering
 hyperparameters and combinations of input variables by making use of a
@@ -86,18 +90,18 @@ the qualitatively distinct “meta clusters” that emerge.
 
 ## To-do
 
-  - More customization of design matrix
-  - Write tests for non-trivial functions
-  - Allow categorical comparisons in outcome list
-  - More snf digestion schemes
-  - Parallelize `extend_om`
-  - Zipf-distribution scaling as described in meta-clustering paper
+-   More customization of design matrix
+-   Write tests for non-trivial functions
+-   Allow categorical comparisons in outcome list
+-   More snf digestion schemes
+-   Parallelize `extend_om`
+-   Zipf-distribution scaling as described in meta-clustering paper
 
 ## References
 
-<div id="refs" class="references">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-caruanaMeta2006">
+<div id="ref-caruanaMeta2006" class="csl-entry">
 
 Caruana, Rich, Mohamed Elhawary, Nam Nguyen, and Casey Smith. 2006.
 “Meta Clustering.” In *Sixth International Conference on Data Mining
@@ -105,7 +109,7 @@ Caruana, Rich, Mohamed Elhawary, Nam Nguyen, and Casey Smith. 2006.
 
 </div>
 
-<div id="ref-wangSimilarity2014">
+<div id="ref-wangSimilarity2014" class="csl-entry">
 
 Wang, Bo, Aziz M. Mezlini, Feyyaz Demir, Marc Fiume, Zhuowen Tu, Michael
 Brudno, Benjamin Haibe-Kains, and Anna Goldenberg. 2014. “Similarity

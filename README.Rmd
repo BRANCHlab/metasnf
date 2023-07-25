@@ -25,16 +25,16 @@ knitr::opts_chunk$set(
 
 This package is currently under active development.
 If you plan on using it for important work, the safest and most stable option is to install a tagged release.
+The *v0.1.0* tag is the latest tag matching the R vignette.
 
-You can install the development version of metasnf with:
+```{r eval = FALSE}
+devtools::install_github("BRANCHlab/metasnf@v0.1.0")
+```
 
-``` r
-# install.packages("devtools")
-devtools::install_github("BRANCHlab/metasnf") # the latest development version
+If you are interested in using the newest (but quickly changing) version of the package, you can simply install the main branch:
 
-# OR
-
-devtools::install_github("BRANCHlab/metasnf@stable") # the latest stable version
+```{r eval = FALSE}
+devtools::install_github("BRANCHlab/metasnf")
 ```
 
 ## Overview
