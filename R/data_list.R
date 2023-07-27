@@ -38,7 +38,7 @@
 #' )
 generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
                                train_subjects = NULL, assigned_splits = NULL) {
-    subjectkey = "" # trickery to avoid build errors - fix this later
+    subjectkey <- "" # trickery to avoid build errors - fix this later
     # The object that will contain all the data
     data_list <- list(...)
     # Assign names to the nested list elements
