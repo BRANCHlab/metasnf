@@ -261,6 +261,8 @@ pvals_pheatmap <- function(pvals,
 #' Scatter plot alpha and k hyperparameter results by minimum and mean p-values
 #'
 #' @param om output matrix
+#' @param title plot title
+#' @param fontsize plot fontsize
 #' @param save optional path to save figure to
 #'
 #' @export
