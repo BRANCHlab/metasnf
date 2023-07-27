@@ -264,7 +264,7 @@ pvals_pheatmap <- function(pvals,
 #' @param save optional path to save figure to
 #'
 #' @export
-om_scatter <- function(om, save = NULL) {
+om_scatter <- function(om, title = NULL, fontsize = 20, save = NULL) {
     om$"nclust" <- as.factor(om$"nclust")
     min_p_val <- ""
     mean_p_val <- ""
@@ -280,10 +280,11 @@ om_scatter <- function(om, save = NULL) {
         ggplot2::scale_x_continuous(trans = "log10") +
         ggplot2::scale_y_continuous(trans = "log10") +
         ggplot2::geom_text(hjust = 0, vjust = 0, show.legend = FALSE) +
+        ggplot2::ggtitle(title) +
         ggplot2::xlab("Minimum CBCL log(p-value)") +
         ggplot2::ylab("Mean CBCL log(p-value)") +
         ggplot2::theme_bw() +
-        ggplot2::theme(text = ggplot2::element_text(size = 20))
+        ggplot2::theme(text = ggplot2::element_text(size = fontsize))
     if (!(is.null(save))) {
         ggplot2::ggsave(filename = save, plot = plot)
     }
@@ -544,7 +545,13 @@ plot_all_cbcl <- function(om, cbcl_list, fig_path_fn, save_prefix = NULL,
             cbcl_plot <- clean_plot(cbcl_plot, c("y", "x"))
             plot_list <- append(plot_list, list(cbcl_plot))
         }
-        a <- lapply(plot_list, class)
+        plot_list <- lapply(
+            plot_list,
+            "+",
+            ggplot2::theme(
+                plot.margin = grid::unit(c(1, 1, 1, 1), "cm")
+            )
+        )
         grid <- gridExtra::grid.arrange(grobs = plot_list)
         if (!is.null(fig_path_fn)) {
             ggplot2::ggsave(file = save, grid, width = w, height = h)
