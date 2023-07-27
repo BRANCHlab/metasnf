@@ -49,12 +49,8 @@ calc_om_aris <- function(om) {
     # Calculating pairwise ARIs across rows
     for (col in seq_len(ncol(pairwise_indices))) {
         if (col %% 100 == 0) {
-            print(
-                paste0(
-                    100 * col / ncol(pairwise_indices),
-                    "% completed..."
-                )
-            )
+            progress <- 100 * col / ncol(pairwise_indices)
+            cat("\r", progress, "% completed...", sep = "")
         }
         v1 <- pairwise_indices[1, col]
         v2 <- pairwise_indices[2, col]
@@ -106,6 +102,7 @@ mc_heatmap <- function(mc_results, save = NULL) {
 #'
 #' @export
 ari_heatmap <- function(output_matrix_aris,
+                        title = "",
                         save = NULL,
                         cluster_cols = TRUE,
                         cluster_rows = TRUE,
@@ -121,7 +118,7 @@ ari_heatmap <- function(output_matrix_aris,
         pheatmap::pheatmap(
             output_matrix_aris,
             legend_breaks = c(0, 0.5, 1, max(output_matrix_aris)),
-            main = "",
+            main = title,
             legend_labels = c("0", "0.5", "1", "ARI\n\n"),
             legend = TRUE,
             border_color = FALSE,
@@ -130,9 +127,10 @@ ari_heatmap <- function(output_matrix_aris,
             filename = save
         )
     }
-    pheatmap::pheatmap(output_matrix_aris,
+    pheatmap::pheatmap(
+        output_matrix_aris,
         legend_breaks = c(0, 0.5, 1, max(output_matrix_aris)),
-        main = "",
+        main = title,
         legend_labels = c("0", "0.5", "1", "ARI\n\n"),
         legend = TRUE,
         border_color = FALSE,
