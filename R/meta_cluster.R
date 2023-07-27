@@ -95,6 +95,7 @@ mc_heatmap <- function(mc_results, save = NULL) {
 #' Heatmap meta-clustering results
 #'
 #' @param output_matrix_aris results from meta_cluster function
+#' @param title plot title
 #' @param save optional path to save figure to
 #' @param cluster_cols boolean indicating if columns shold be clustered
 #' @param cluster_rows boolean indicating if rows shold be clustered

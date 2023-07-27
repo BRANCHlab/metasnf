@@ -6,6 +6,7 @@
 \usage{
 ari_heatmap(
   output_matrix_aris,
+  title = "",
   save = NULL,
   cluster_cols = TRUE,
   cluster_rows = TRUE,
@@ -14,6 +15,8 @@ ari_heatmap(
 }
 \arguments{
 \item{output_matrix_aris}{results from meta_cluster function}
+
+\item{title}{plot title}
 
 \item{save}{optional path to save figure to}
 
