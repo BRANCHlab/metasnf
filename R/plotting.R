@@ -164,6 +164,7 @@ ak_heatmap <- function(ak_scan_om, min_or_mean = "min", save = NULL) {
 #' @export
 dm_heatmap <- function(design_matrix,
                        order = NULL,
+                       show_rownames = TRUE,
                        save = NULL,
                        hide_ids = FALSE) {
     if (!is.null(order)) {
@@ -191,6 +192,7 @@ dm_heatmap <- function(design_matrix,
             cluster_rows = FALSE,
             cluster_cols = FALSE,
             labels_row = row_labels,
+            show_rownames = show_rownames,
             legend = FALSE,
             fontsize = 12,
             filename = save)
@@ -200,6 +202,7 @@ dm_heatmap <- function(design_matrix,
         cluster_rows = FALSE,
         cluster_cols = FALSE,
         labels_row = row_labels,
+        show_rownames = show_rownames,
         legend = FALSE,
         fontsize = 12)
 }
@@ -216,6 +219,7 @@ dm_heatmap <- function(design_matrix,
 pvals_pheatmap <- function(pvals,
                            order = NULL,
                            cluster_cols = TRUE,
+                           show_rownames = FALSE,
                            save = NULL,
                            reverse_colours = FALSE) {
     if ("row_id" %in% colnames(pvals)) {
@@ -244,6 +248,7 @@ pvals_pheatmap <- function(pvals,
             legend_labels = c("0", "0.2", "0.4", "0.6", "0.8", "p-value\n\n"),
             cluster_rows = FALSE,
             cluster_cols = cluster_cols,
+            show_rownames = show_rownames,
             legend = TRUE,
             filename = save)
     }
@@ -254,6 +259,7 @@ pvals_pheatmap <- function(pvals,
         legend_labels = c("0", "0.2", "0.4", "0.6", "0.8", "p-value\n\n"),
         cluster_rows = FALSE,
         cluster_cols = cluster_cols,
+        show_rownames = show_rownames,
         legend = TRUE)
 }
 
