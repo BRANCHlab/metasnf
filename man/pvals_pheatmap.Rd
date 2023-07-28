@@ -8,6 +8,7 @@ pvals_pheatmap(
   pvals,
   order = NULL,
   cluster_cols = TRUE,
+  show_rownames = FALSE,
   save = NULL,
   reverse_colours = FALSE
 )
@@ -18,6 +19,8 @@ pvals_pheatmap(
 \item{order}{numeric vector indicating row ordering of design matrix}
 
 \item{cluster_cols}{if TRUE, pheatmap will cluster (and rearrange) columns}
+
+\item{show_rownames}{If TRUE (default), rownames are shown on heatmap}
 
 \item{save}{optional path to save figure to}
 

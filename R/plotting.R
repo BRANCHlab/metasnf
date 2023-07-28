@@ -158,6 +158,7 @@ ak_heatmap <- function(ak_scan_om, min_or_mean = "min", save = NULL) {
 #'
 #' @param design_matrix matrix indicating parameters to iterate SNF through
 #' @param order numeric vector indicating row ordering of design matrix
+#' @param show_rownames If TRUE (default), rownames are shown on heatmap
 #' @param save optional path to save figure to
 #' @param hide_ids boolean indicating if row_id numbers should be hidden
 #'
@@ -212,6 +213,7 @@ dm_heatmap <- function(design_matrix,
 #' @param pvals a matrix of p-values
 #' @param order numeric vector indicating row ordering of design matrix
 #' @param cluster_cols if TRUE, pheatmap will cluster (and rearrange) columns
+#' @param show_rownames If TRUE (default), rownames are shown on heatmap
 #' @param save optional path to save figure to
 #' @param reverse_colours boolean to invert colours
 #'
