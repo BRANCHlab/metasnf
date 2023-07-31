@@ -99,7 +99,9 @@ mc_heatmap <- function(mc_results, save = NULL) {
 #' @param save optional path to save figure to
 #' @param cluster_cols boolean indicating if columns shold be clustered
 #' @param cluster_rows boolean indicating if rows shold be clustered
-#' @param hide_ids boolean indicating if row_id numbers should be hidden
+#' @param hide_columns boolean indicating if column names should be hidden
+#' @param hide_rows boolean indicating if row names should be hidden
+#' @param ... additional parameters to pass into pheatmap
 #'
 #' @export
 ari_heatmap <- function(output_matrix_aris,
@@ -107,9 +109,13 @@ ari_heatmap <- function(output_matrix_aris,
                         save = NULL,
                         cluster_cols = TRUE,
                         cluster_rows = TRUE,
-                        hide_ids = FALSE) {
-    if (hide_ids) {
+                        hide_columns = FALSE,
+                        hide_rows = FALSE,
+                        ...) {
+    if (hide_columns) {
         colnames(output_matrix_aris) <- NULL
+    }
+    if (hide_rows) {
         rownames(output_matrix_aris) <- NULL
     }
     if (!(is.null(grDevices::dev.list()))) {
@@ -125,7 +131,8 @@ ari_heatmap <- function(output_matrix_aris,
             border_color = FALSE,
             cluster_cols = cluster_cols,
             cluster_rows = cluster_rows,
-            filename = save
+            filename = save,
+            ...
         )
     }
     pheatmap::pheatmap(
@@ -136,6 +143,7 @@ ari_heatmap <- function(output_matrix_aris,
         legend = TRUE,
         border_color = FALSE,
         cluster_cols = cluster_cols,
-        cluster_rows = cluster_rows
+        cluster_rows = cluster_rows,
+        ...
     )
 }

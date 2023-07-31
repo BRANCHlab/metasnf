@@ -101,6 +101,7 @@ Imports:
     purrr,
     RColorBrewer,
     rlang,
+    scales,
     SNFtool,
     stats,
     stringr,

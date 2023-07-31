@@ -10,7 +10,9 @@ ari_heatmap(
   save = NULL,
   cluster_cols = TRUE,
   cluster_rows = TRUE,
-  hide_ids = FALSE
+  hide_columns = FALSE,
+  hide_rows = FALSE,
+  ...
 )
 }
 \arguments{
@@ -24,7 +26,11 @@ ari_heatmap(
 
 \item{cluster_rows}{boolean indicating if rows shold be clustered}
 
-\item{hide_ids}{boolean indicating if row_id numbers should be hidden}
+\item{hide_columns}{boolean indicating if column names should be hidden}
+
+\item{hide_rows}{boolean indicating if row names should be hidden}
+
+\item{...}{additional parameters to pass into pheatmap}
 }
 \description{
 Heatmap meta-clustering results

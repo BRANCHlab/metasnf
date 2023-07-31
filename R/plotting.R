@@ -266,16 +266,34 @@ pvals_pheatmap <- function(pvals,
 }
 
 
-#' Scatter plot alpha and k hyperparameter results by minimum and mean p-values
+#' Scatter plot output matrix results by minimum and mean p-values
 #'
 #' @param om output matrix
 #' @param title plot title
+#' @param pointsize size of scatter plot point
+#' @param labelsize size of label text
 #' @param fontsize plot fontsize
+#' @param cluster_colours use a colour palette built for the specified number
+#'  of clusters. If generating multiple graphs with varying numbers of clusters,
+#'  specifying this parameter will ensure the cluster count and colour pairs
+#'  stay constant.
+#' @param xlim x-axis limits for log scale
+#' @param ylim y-axis limits for log scale
 #' @param save optional path to save figure to
 #'
 #' @export
-om_scatter <- function(om, title = NULL, fontsize = 20, save = NULL) {
-    om$"nclust" <- as.factor(om$"nclust")
+om_scatter <- function(om,
+                       title = NULL,
+                       pointsize = 5,
+                       labelsize = 5,
+                       fontsize = 20,
+                       cluster_colours = 6,
+                       xlim = NULL,
+                       ylim = NULL,
+                       save = NULL) {
+    om$"nclust" <- factor(om$"nclust", levels = c(1, 2, 3, 4, 5))
+    hex_codes <- scales::hue_pal()(cluster_colours)
+    names(hex_codes) <- 2:(cluster_colours)
     min_p_val <- ""
     mean_p_val <- ""
     row_id <- ""
@@ -284,17 +302,43 @@ om_scatter <- function(om, title = NULL, fontsize = 20, save = NULL) {
         ggplot2::aes(
             x = min_p_val,
             y = mean_p_val,
-            label = row_id,
-            color = nclust)) +
-        ggplot2::geom_point() +
-        ggplot2::scale_x_continuous(trans = "log10") +
-        ggplot2::scale_y_continuous(trans = "log10") +
-        ggplot2::geom_text(hjust = 0, vjust = 0, show.legend = FALSE) +
+            label = paste0("    ", row_id),
+            shape = nclust,
+            color = nclust)
+        ) +
+        ggplot2::geom_point(
+            size = pointsize
+        ) +
+        ggplot2::geom_text(
+            hjust = 0,
+            vjust = 0,
+            show.legend = FALSE,
+            size = labelsize
+        ) +
         ggplot2::ggtitle(title) +
         ggplot2::xlab("Minimum CBCL log(p-value)") +
         ggplot2::ylab("Mean CBCL log(p-value)") +
+        ggplot2::scale_color_manual(
+            values = hex_codes
+        ) +
         ggplot2::theme_bw() +
         ggplot2::theme(text = ggplot2::element_text(size = fontsize))
+    if (!is.null(xlim)) {
+        plot <- plot + ggplot2::scale_x_continuous(
+            limits = xlim,
+            trans = "log10"
+        )
+    } else {
+        plot <- plot + ggplot2::scale_x_continuous(trans = "log10")
+    }
+    if (!is.null(ylim)) {
+        plot <- plot + ggplot2::scale_y_continuous(
+            limits = ylim,
+            trans = "log10"
+        )
+    } else {
+        plot <- plot + ggplot2::scale_y_continuous(trans = "log10")
+    }
     if (!(is.null(save))) {
         ggplot2::ggsave(filename = save, plot = plot)
     }

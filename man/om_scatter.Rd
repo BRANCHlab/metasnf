@@ -2,19 +2,42 @@
 % Please edit documentation in R/plotting.R
 \name{om_scatter}
 \alias{om_scatter}
-\title{Scatter plot alpha and k hyperparameter results by minimum and mean p-values}
+\title{Scatter plot output matrix results by minimum and mean p-values}
 \usage{
-om_scatter(om, title = NULL, fontsize = 20, save = NULL)
+om_scatter(
+  om,
+  title = NULL,
+  pointsize = 5,
+  labelsize = 5,
+  fontsize = 20,
+  cluster_colours = 6,
+  xlim = NULL,
+  ylim = NULL,
+  save = NULL
+)
 }
 \arguments{
 \item{om}{output matrix}
 
 \item{title}{plot title}
 
+\item{pointsize}{size of scatter plot point}
+
+\item{labelsize}{size of label text}
+
 \item{fontsize}{plot fontsize}
+
+\item{cluster_colours}{use a colour palette built for the specified number
+of clusters. If generating multiple graphs with varying numbers of clusters,
+specifying this parameter will ensure the cluster count and colour pairs
+stay constant.}
+
+\item{xlim}{x-axis limits for log scale}
+
+\item{ylim}{y-axis limits for log scale}
 
 \item{save}{optional path to save figure to}
 }
 \description{
-Scatter plot alpha and k hyperparameter results by minimum and mean p-values
+Scatter plot output matrix results by minimum and mean p-values
 }
