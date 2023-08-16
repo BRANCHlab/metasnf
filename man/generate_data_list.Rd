@@ -13,7 +13,9 @@ generate_data_list(
 )
 }
 \arguments{
-\item{...}{Lists formatted as (df, "df_name", "df_domain", "df_type")}
+\item{...}{Any number of list formatted as (df, "df_name", "df_domain",
+"df_type") OR any number of lists of lists formatted as (df, "df_name",
+"df_domain", "df_type")}
 
 \item{old_uid}{(string) the name of the uid column currently used data}
 
@@ -52,6 +54,18 @@ personality_test_df <- data.frame(
 dl <- generate_data_list(
     list(heart_rate_df, "data1", "domain1", "numeric"),
     list(personality_test_df, "data2", "domain2", "numeric"),
+    old_uid = "patient_id"
+)
+
+# Alternative loading: providing a single list of lists
+
+list_of_lists <- list(
+    list(heart_rate_df, "data1", "domain1", "numeric"),
+    list(personality_test_df, "data2", "domain2", "numeric")
+)
+
+dl <- generate_data_list(
+    list_of_lists,
     old_uid = "patient_id"
 )
 }

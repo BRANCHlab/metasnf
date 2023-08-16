@@ -8,7 +8,9 @@
 #'
 #' To-do: include checks to make sure format of data list is correct
 #'
-#' @param ... Lists formatted as (df, "df_name", "df_domain", "df_type")
+#' @param ... Any number of list formatted as (df, "df_name", "df_domain",
+#'  "df_type") OR any number of lists of lists formatted as (df, "df_name",
+#'  "df_domain", "df_type")
 #' @param old_uid (string) the name of the uid column currently used data
 #' @param train_subjects character vector of train subjects (useful if building
 #'  a full data list for label propagation)
@@ -36,11 +38,35 @@
 #'     list(personality_test_df, "data2", "domain2", "numeric"),
 #'     old_uid = "patient_id"
 #' )
+#'
+#' # Alternative loading: providing a single list of lists
+#'
+#' list_of_lists <- list(
+#'     list(heart_rate_df, "data1", "domain1", "numeric"),
+#'     list(personality_test_df, "data2", "domain2", "numeric")
+#' )
+#'
+#' dl <- generate_data_list(
+#'     list_of_lists,
+#'     old_uid = "patient_id"
+#' )
 generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
                                train_subjects = NULL, assigned_splits = NULL) {
     subjectkey <- "" # trickery to avoid build errors - fix this later
     # The object that will contain all the data
-    data_list <- list(...)
+    data_list <- list()
+    # The loaded data
+    loaded_data <- list(...)
+    for (item in loaded_data) {
+        if (methods::is(item[[1]], "data.frame")) {
+            # A standard loaded data item (a 4-component list)
+            data_list <- append(data_list, list(item))
+        } else if (methods::is(item[[1]], "list")) {
+            # A bulk loaded data item (list of 4-component lists)
+            data_list <- append(data_list, item)
+        }
+    }
+    # To-do: add tests to catch invalid inputs in this function.
     # Assign names to the nested list elements
     data_list_names <- c("data", "name", "domain", "type")
     data_list <- lapply(data_list, stats::setNames, data_list_names)
@@ -60,7 +86,7 @@ generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
                     x$"data" <- x$"data" |> dplyr::arrange(
                         sapply(
                             subjectkey,
-                            function(x) which (x == tts)
+                            function(x) which(x == tts)
                         )
                     )
                     return(x)
@@ -81,7 +107,7 @@ generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
                     x$"data" <- x$"data" |> dplyr::arrange(
                         sapply(
                             subjectkey,
-                            function(x) which (x == tts)
+                            function(x) which(x == tts)
                         )
                     )
                     return(x)

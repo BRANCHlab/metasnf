@@ -97,6 +97,7 @@ Imports:
     here,
     MASS,
     mclust,
+    methods,
     pheatmap,
     purrr,
     RColorBrewer,
