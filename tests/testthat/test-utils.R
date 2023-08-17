@@ -197,3 +197,108 @@ test_that(
     }
 )
 ################################################################################
+
+# merge_df_list ################################################################
+test_that(
+    "ensure that two dataframes can be inner joined properly",
+    {
+        df1 <- data.frame(
+            subjectkey = c("a", "b", "c"),
+            var1 = c(1, 2, 3)
+        )
+        df2 <- data.frame(
+            subjectkey = c("a", "b"),
+            var2 = c(4, 5)
+        )
+        df3 <- data.frame(
+            subjectkey = c("a", "b"),
+            var1 = c(1, 2),
+            var2 = c(4, 5)
+        )
+        expect_equal(
+            merge_df_list(list(df1, df2), join = "inner"),
+            df3
+        )
+    }
+)
+
+test_that(
+    "ensure that two dataframes can be full joined properly",
+    {
+        df1 <- data.frame(
+            subjectkey = c("a", "b", "c"),
+            var1 = c(1, 2, 3)
+        )
+        df2 <- data.frame(
+            subjectkey = c("a", "b"),
+            var2 = c(4, 5)
+        )
+        df3 <- data.frame(
+            subjectkey = c("a", "b", "c"),
+            var1 = c(1, 2, 3),
+            var2 = c(4, 5, NA)
+        )
+        expect_equal(
+            merge_df_list(list(df1, df2), join = "full"),
+            df3
+        )
+    }
+)
+################################################################################
+
+# train_test_assign ############################################################
+test_that(
+    "ensure constant output from train_test_assign",
+    {
+        df1 <- train_test_assign(
+            0.5,
+            c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
+            seed = 42
+        )
+        df2 <- data.frame(
+            subjectkey = c(
+                "b",
+                "c",
+                "d",
+                "e",
+                "h",
+                "i",
+                "a",
+                "f",
+                "g",
+                "j"
+            ),
+            split = c(
+                "train",
+                "train",
+                "train",
+                "train",
+                "train",
+                "train",
+                "test",
+                "test",
+                "test",
+                "test"
+            )
+        )
+        expect_equal(
+            df1,
+            df2
+        )
+    }
+)
+
+test_that(
+    "ensure constant output from train_test_assign",
+    {
+        expect_error(
+            train_test_assign(
+                0.9,
+                c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
+                seed = 42
+            ),
+            regexp = "Empty train or test set"
+        )
+    }
+)
+################################################################################

@@ -4,12 +4,14 @@
 \alias{train_test_assign}
 \title{Training and testing split}
 \usage{
-train_test_assign(train_frac, subjects)
+train_test_assign(train_frac, subjects, seed = 42)
 }
 \arguments{
 \item{train_frac}{The fraction (0 to 1) of subjects for training}
 
 \item{subjects}{The available subjects for distribution}
+
+\item{seed}{Seed used for Jenkins's one_at_a_time hash function}
 }
 \value{
 split a named list containing the training and testing subject_ids
@@ -19,5 +21,5 @@ Given a vector of subject_id and a threshold, returns a list of which members
 should be in the training set and which should be in the testing set. The
 function relies on whether or not the absolute value of the Jenkins's
 one_at_a_time hash function exceeds the maximum possible value
-(2147483647) multiplied by the threshold
+(2147483647) multiplied by the threshold.
 }

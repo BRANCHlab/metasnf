@@ -163,20 +163,24 @@ merge_df_list <- function(df_list, join = "inner") {
 #'  should be in the training set and which should be in the testing set. The
 #'  function relies on whether or not the absolute value of the Jenkins's
 #'  one_at_a_time hash function exceeds the maximum possible value
-#'  (2147483647) multiplied by the threshold
+#'  (2147483647) multiplied by the threshold.
 #'
 #' @param train_frac The fraction (0 to 1) of subjects for training
 #' @param subjects The available subjects for distribution
+#' @param seed Seed used for Jenkins's one_at_a_time hash function
 #'
 #' @return split a named list containing the training and testing subject_ids
 #'
 #' @export
-train_test_assign <- function(train_frac, subjects) {
+train_test_assign <- function(train_frac, subjects, seed = 42) {
     train_thresh <- 2147483647 * train_frac
     train <-
-        subjects[abs(digest::digest2int(subjects, seed = 42)) < train_thresh]
+        subjects[abs(digest::digest2int(subjects, seed = seed)) < train_thresh]
     test <-
-        subjects[abs(digest::digest2int(subjects, seed = 42)) >= train_thresh]
+        subjects[abs(digest::digest2int(subjects, seed = seed)) >= train_thresh]
+    if (length(train) == 0 || length(test) == 0) {
+        stop("Empty train or test set. Please pick a train_frac closer to 0.5.")
+    }
     train_df <- data.frame(subjectkey = train, split = "train")
     test_df <- data.frame(subjectkey = test, split = "test")
     assigned_df <- rbind(train_df, test_df)
