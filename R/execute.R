@@ -59,7 +59,7 @@ execute_design_matrix <- function(data_list,
     start <- proc.time()
     design_matrix <- data.frame(design_matrix)
     subjects <- c("nclust", data_list[[1]]$"data"$"subjectkey")
-    output_matrix <- add_char_vec_as_cols(design_matrix, subjects, 0)
+    output_matrix <- add_columns(design_matrix, subjects, 0)
     # Iterate through the rows of the design matrix
     remaining_seconds_vector <- vector()
     for (i in seq_len(nrow(design_matrix))) {

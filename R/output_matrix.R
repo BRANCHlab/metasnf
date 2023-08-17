@@ -16,7 +16,7 @@ generate_output_matrix <- function(data_list, design_matrix) {
         subjects <- append(subjects, (data_list[[i]][[1]]$"subjectkey"))
     }
     subjects <- unique(unlist(subjects))
-    output_matrix <- add_char_vec_as_cols(design_matrix, subjects, 0)
+    output_matrix <- add_columns(design_matrix, subjects, 0)
     other_cols <- c(
         "eigen_best",
         "rot_best",
@@ -32,7 +32,7 @@ generate_output_matrix <- function(data_list, design_matrix) {
         "cbcl_aggressive_p",
         "min_p_val",
         "mean_p_val")
-    output_matrix <- add_char_vec_as_cols(output_matrix, other_cols, 0)
+    output_matrix <- add_columns(output_matrix, other_cols, 0)
     return(output_matrix)
 }
 
@@ -65,10 +65,10 @@ extend_om <- function(output_matrix, outcome_list) {
     # Add columns tracking p-values of all features
     # Specifying the dataframe structure avoids tibble-related errors
     output_matrix <- data.frame(output_matrix)
-    output_matrix <- add_char_vec_as_cols(
+    output_matrix <- add_columns(
         output_matrix,
         paste0(ol_features, "_p"),
-        filler = NA
+        fill = NA
     )
     # Single DF to contain all outcome features
     merged_df <- lapply(
