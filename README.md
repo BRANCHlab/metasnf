@@ -8,21 +8,29 @@
 
 ## Installation
 
-This package is currently under active development. If you plan on using
-it for important work, the safest and most stable option is to install a
-tagged release. The *v0.1.0* tag is the latest tag matching the R
-vignette.
+This package is currently under active development.
 
-``` r
-devtools::install_github("BRANCHlab/metasnf@v0.1.0")
-```
-
-If you are interested in using the newest (but quickly changing) version
-of the package, you can simply install the main branch:
+We recommend always installing the latest development version of the
+package:
 
 ``` r
 devtools::install_github("BRANCHlab/metasnf")
 ```
+
+If you are finalizing an analysis using the metasnf package, we
+recommend noting which version of the package was used. Installation of
+specific versions can be done using either of the following commands:
+
+``` r
+# Install by tag
+devtools::install_github("BRANCHlab/metasnf@v0.1.0")
+
+# Or install by commit
+devtools::install_github("BRANCHlab/metasnf@8badfd4d7acaaf3b3c7af62d52b5c9324b82cc6c")
+```
+
+If you are interested in using the newest (but quickly changing) version
+of the package, you can simply install the main branch:
 
 ## Overview
 
@@ -90,12 +98,12 @@ the qualitatively distinct “meta clusters” that emerge.
 
 ## To-do
 
--   More customization of design matrix
--   Write tests for non-trivial functions
--   Allow categorical comparisons in outcome list
--   More snf digestion schemes
--   Parallelize `extend_om`
--   Zipf-distribution scaling as described in meta-clustering paper
+- More customization of design matrix
+- Write tests for non-trivial functions
+- Allow categorical comparisons in outcome list
+- More snf digestion schemes
+- Parallelize `extend_om`
+- Zipf-distribution scaling as described in meta-clustering paper
 
 ## References
 
