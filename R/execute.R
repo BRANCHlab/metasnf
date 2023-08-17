@@ -120,7 +120,7 @@ execute_design_matrix <- function(data_list,
     # Add number of clusters to output matrix
     output_matrix <- output_matrix |>
         unique()
-    output_matrix <- col_to_num_all_possible(output_matrix)
+    output_matrix <- numcol_to_numeric(output_matrix)
     total_time <- (proc.time() - start)[["elapsed"]]
     print(
         paste0(
@@ -158,7 +158,7 @@ execute_design_matrix_p <- function(data_list,
     output_matrix <- do.call("rbind", output_matrix)
     output_matrix <- output_matrix |>
         unique()
-    output_matrix <- col_to_num_all_possible(output_matrix)
+    output_matrix <- numcol_to_numeric(output_matrix)
     future::plan(future::sequential)
     total_time <- (proc.time() - start)[["elapsed"]]
     print(

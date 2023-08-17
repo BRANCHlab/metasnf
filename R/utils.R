@@ -38,14 +38,18 @@ add_columns <- function(df, newcols, fill = NA) {
     return(extended_df)
 }
 
-#' Convert all possible columns to numeric
+#' Convert dataframe columns to numeric type
 #'
-#' @param df A dataframe or tibble
+#' @description
+#' Converts all columns in a dataframe that can be converted to numeric type to
+#'  numeric type.
 #'
-#' @return df The same dataframe with all possible columns made numeric
+#' @param df A dataframe
+#'
+#' @return df The dataframe with all possible columns converted to type numeric
 #'
 #' @export
-col_to_num_all_possible <- function(df) {
+numcol_to_numeric <- function(df) {
     df[] <- lapply(df,
         function(x) {
             tryCatch({
