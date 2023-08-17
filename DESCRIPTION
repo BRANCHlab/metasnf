@@ -1,7 +1,7 @@
 Package: metasnf
 Title: Meta Clustering with Similarity Network Fusion
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R:
     c(
         person(
             "Prashanth",
@@ -94,7 +94,6 @@ Imports:
     graphics,
     grDevices,
     gridExtra,
-    here,
     MASS,
     mclust,
     methods,
@@ -107,14 +106,14 @@ Imports:
     stats,
     stringr,
     utils
-Suggests: 
+Suggests:
     future,
     future.apply,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-Depends: 
+Depends:
     R (>= 2.10)
 LazyData: true
 VignetteBuilder: knitr
