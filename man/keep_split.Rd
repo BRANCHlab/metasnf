@@ -9,14 +9,15 @@ keep_split(df, assigned_df, split)
 \arguments{
 \item{df}{Dataframe to be subsetted into training or testing split}
 
-\item{assigned_df}{Dataframe containing "subjectkey" and "split" cols}
+\item{assigned_df}{Dataframe containing "subjectkey" and "split" cols from
+\code{train_test_assign()}}
 
-\item{split}{Split to keep ("train" or "test")}
+\item{split}{String indicating which split to keep ("train" or "test")}
 }
 \value{
-split_df
+split_df Dataframe subsetted to specified split
 }
 \description{
-Given a dataframe, assigned_df object (from train_test_split()), and split,
-return just the data for subjects that were assigned the specified split
+Given a dataframe and the results of \code{train_test_split()}, return just the
+data for subjects that were assigned the specified split
 }
