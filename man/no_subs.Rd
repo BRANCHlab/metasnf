@@ -2,17 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{no_subs}
 \alias{no_subs}
-\title{Select all columns of a dataframe not starting with a given string prefix.}
+\title{Select all columns of a dataframe not starting with the 'subject_' prefix.}
 \usage{
 no_subs(df)
 }
 \arguments{
-\item{df}{Datframe}
+\item{df}{A dataframe}
 }
 \value{
 df_no_subs Dataframe without subjects
 }
 \description{
-Originally constructed to return a dataframe without any subject columns.
-Returns a dataframe excluding all columns with a specified string prefix.
+Removes the 'subject_' prefixed columns from a dataframe. Useful for printing
+output_matrix structures to the console
 }

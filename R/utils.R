@@ -63,50 +63,74 @@ numcol_to_numeric <- function(df) {
     return(df)
 }
 
-#' Convert char columns to factors
+#' Convert character-type columns of a dataframe to factor-type
 #'
-#' @param df The dataframe containing char columns to be converted
+#' @param df A dataframe
 #'
-#' @return df The dataframe with factor columns
+#' @return df_converted The dataframe with factor-type columns instead of
+#'  char-type columns
 #'
 #' @export
 char_to_fac <- function(df) {
-    df[sapply(df, is.character)] <-
-        lapply(df[sapply(df, is.character)], as.factor)
+    # Select all the columns that are character type
+    char_cols <- df |>
+        dplyr::select_if(is.character) |>
+        colnames()
+    # Convert all those columns to factor type
+    for (col in char_cols) {
+        df[, col] <- as.factor(df[, col])
+    }
     return(df)
 }
 
-#' Select all columns of a dataframe not starting with a given string prefix.
+#' Select all columns of a dataframe not starting with the 'subject_' prefix.
 #'
 #' @description
-#' Originally constructed to return a dataframe without any subject columns.
-#'  Returns a dataframe excluding all columns with a specified string prefix.
+#' Removes the 'subject_' prefixed columns from a dataframe. Useful for printing
+#'  output_matrix structures to the console
 #'
-#' @param df Datframe
+#' @param df A dataframe
 #'
 #' @return df_no_subs Dataframe without subjects
 #'
 #' @export
 no_subs <- function(df) {
-    df_no_subs <- df |> dplyr::select(!(dplyr::starts_with("subject_")))
+    if (!"row_id" %in% colnames(df)) {
+        stop("Dataframe requires 'row_id' column.")
+    }
+    df_no_subs <- df |>
+        dplyr::select(
+            "row_id",
+            !(dplyr::starts_with("subject_"))
+        )
+    if (identical(df, df_no_subs)) {
+        warning("Provided dataframe had no 'subject_' columns to remove.")
+    }
     return(df_no_subs)
 }
 
 #' Select all columns of a dataframe starting with a given string prefix.
 #'
 #' @description
-#' Originally constructed to return a dataframe with only subject columns.
-#'  Returns a dataframe including only columns with a specified string prefix.
+#' Removes the columns that are not prefixed with 'subject_' prefixed columns
+#'  from a dataframe. Useful intermediate step for extracting subject UIDs from
+#'  an output_matrix structure.
 #'
 #' @param df Dataframe
 #'
-#' @return df_subs Dataframe without subjects
+#' @return df_subs Dataframe with only 'subject_' prefixed columns
 #'
 #' @export
 subs <- function(df) {
+    if (!"row_id" %in% colnames(df)) {
+        stop("Dataframe requires 'row_id' column.")
+    }
     df_subs <- df |> dplyr::select(
         "row_id",
         dplyr::starts_with("subject_"))
+    if (identical(df, df_subs)) {
+        warning("Provided dataframe had no non-'subject_' columns to remove.")
+    }
     return(df_subs)
 }
 

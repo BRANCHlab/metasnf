@@ -10,9 +10,10 @@ subs(df)
 \item{df}{Dataframe}
 }
 \value{
-df_subs Dataframe without subjects
+df_subs Dataframe with only 'subject_' prefixed columns
 }
 \description{
-Originally constructed to return a dataframe with only subject columns.
-Returns a dataframe including only columns with a specified string prefix.
+Removes the columns that are not prefixed with 'subject_' prefixed columns
+from a dataframe. Useful intermediate step for extracting subject UIDs from
+an output_matrix structure.
 }
