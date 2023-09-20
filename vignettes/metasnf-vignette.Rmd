@@ -330,7 +330,7 @@ From there, you're on your own (until the next vignette, maybe?)
 
 ## Picking a solution #2: specifying an objective function
 
-**Warning: This approach can very easily result in [overfitting](https://en.wikipedia.org/wiki/Overfitting) your data and producing clustering results that generalize poorly to subjects outside of your dataset. Consider setting aside some data to validate your results to avoid this issue.** 
+**Warning: This approach can very easily result in [overfitting](https://en.wikipedia.org/wiki/Overfitting) your data and producing clustering results that generalize poorly to subjects outside of your dataset. Consider setting aside some data to validate your results to avoid this issue.**
 
 If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
 

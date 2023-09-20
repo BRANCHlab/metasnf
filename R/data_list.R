@@ -195,7 +195,7 @@ remove_dl_na <- function(data_list) {
     return(dl_no_nas)
 }
 
-#' Remove NAs from a data_list object
+#' Add "subject_" prefix to all UID values in subjectkey column
 #'
 #' @param data_list A data_list
 #'
