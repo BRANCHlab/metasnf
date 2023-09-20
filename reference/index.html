@@ -88,24 +88,14 @@
         <dd>Mock ABCD subcortical volumes data</dd>
       </dl><dl><dt>
           
-          <code><a href="add_char_vec_as_cols.html">add_char_vec_as_cols()</a></code> 
+          <code><a href="add_columns.html">add_columns()</a></code> 
         </dt>
-        <dd>Add character vector as columns</dd>
+        <dd>Add columns to a dataframe</dd>
       </dl><dl><dt>
           
           <code><a href="add_design_matrix_rows.html">add_design_matrix_rows()</a></code> 
         </dt>
         <dd>Add design matrix rows</dd>
-      </dl><dl><dt>
-          
-          <code><a href="ak_heatmap.html">ak_heatmap()</a></code> 
-        </dt>
-        <dd>Heatmap alpha and k hyperparameter results by minimum and mean p-values</dd>
-      </dl><dl><dt>
-          
-          <code><a href="ak_scan_plot.html">ak_scan_plot()</a></code> 
-        </dt>
-        <dd>Scatter plot alpha and k hyperparameter results by minimum and mean p-values</dd>
       </dl><dl><dt>
           
           <code><a href="ari_heatmap.html">ari_heatmap()</a></code> 
@@ -138,11 +128,6 @@
         <dd>Calculate adjusted rand index between two rows of output matrix</dd>
       </dl><dl><dt>
           
-          <code><a href="calc_nmi.html">calc_nmi()</a></code> 
-        </dt>
-        <dd>Calculate NMI scores for SNF inputs</dd>
-      </dl><dl><dt>
-          
           <code><a href="calc_om_aris.html">calc_om_aris()</a></code> 
         </dt>
         <dd>Meta-cluster calculations</dd>
@@ -170,7 +155,7 @@
           
           <code><a href="char_to_fac.html">char_to_fac()</a></code> 
         </dt>
-        <dd>Convert char columns to factors</dd>
+        <dd>Convert character-type columns of a dataframe to factor-type</dd>
       </dl><dl><dt>
           
           <code><a href="check_subj_orders_for_lp.html">check_subj_orders_for_lp()</a></code> 
@@ -181,11 +166,6 @@
           <code><a href="clean_plot.html">clean_plot()</a></code> 
         </dt>
         <dd>Clean a plot</dd>
-      </dl><dl><dt>
-          
-          <code><a href="col_to_num_all_possible.html">col_to_num_all_possible()</a></code> 
-        </dt>
-        <dd>Convert all possible columns to numeric</dd>
       </dl><dl><dt>
           
           <code><a href="convert_uids.html">convert_uids()</a></code> 
@@ -308,11 +288,6 @@
         <dd>Return the row ordering of a meta-clustering solution</dd>
       </dl><dl><dt>
           
-          <code><a href="heatmap_pvals.html">heatmap_pvals()</a></code> 
-        </dt>
-        <dd>Heatmap p-value matrix</dd>
-      </dl><dl><dt>
-          
           <code><a href="keep_split.html">keep_split()</a></code> 
         </dt>
         <dd>Filter data to training or testing subjects only</dd>
@@ -326,6 +301,11 @@
           <code><a href="lin_reg_p.html">lin_reg_p()</a></code> 
         </dt>
         <dd>Linear regression p-value</dd>
+      </dl><dl><dt>
+          
+          <code><a href="list_remove.html">list_remove()</a></code> 
+        </dt>
+        <dd>Remove items from a data_list or outcome_list</dd>
       </dl><dl><dt>
           
           <code><a href="lp_om.html">lp_om()</a></code> 
@@ -350,17 +330,17 @@
           
           <code><a href="no_subs.html">no_subs()</a></code> 
         </dt>
-        <dd>Select all columns of a dataframe not starting with a given string prefix.</dd>
+        <dd>Select all columns of a dataframe not starting with the 'subject_' prefix.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="numcol_to_numeric.html">numcol_to_numeric()</a></code> 
+        </dt>
+        <dd>Convert dataframe columns to numeric type</dd>
       </dl><dl><dt>
           
           <code><a href="om_scatter.html">om_scatter()</a></code> 
         </dt>
-        <dd>Scatter plot alpha and k hyperparameter results by minimum and mean p-values</dd>
-      </dl><dl><dt>
-          
-          <code><a href="om_to_nmi_df.html">om_to_nmi_df()</a></code> 
-        </dt>
-        <dd>Calculate NMI scores for an output matrix</dd>
+        <dd>Scatter plot output matrix results by minimum and mean p-values</dd>
       </dl><dl><dt>
           
           <code><a href="ord_reg_p.html">ord_reg_p()</a></code> 
@@ -385,7 +365,7 @@
           
           <code><a href="prefix_dl_sk.html">prefix_dl_sk()</a></code> 
         </dt>
-        <dd>Remove NAs from a data_list object</dd>
+        <dd>Add "subject_" prefix to all UID values in subjectkey column</dd>
       </dl><dl><dt>
           
           <code><a href="pvals_pheatmap.html">pvals_pheatmap()</a></code> 
@@ -406,16 +386,6 @@
           <code><a href="remove_dl_na.html">remove_dl_na()</a></code> 
         </dt>
         <dd>Remove NAs from a data_list object</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scabcd_ggsave.html">scabcd_ggsave()</a></code> 
-        </dt>
-        <dd>Wrapper for ggsave</dd>
-      </dl><dl><dt>
-          
-          <code><a href="scabcd_hist.html">scabcd_hist()</a></code> 
-        </dt>
-        <dd>Wrapper for geom_hist</dd>
       </dl><dl><dt>
           
           <code><a href="select_om.html">select_om()</a></code> 

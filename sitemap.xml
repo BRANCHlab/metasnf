@@ -43,16 +43,10 @@
     <loc>https://branchlab.github.io/metasnf/reference/abcd_subc_v.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/add_char_vec_as_cols.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/add_columns.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/add_design_matrix_rows.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/ak_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/ak_scan_plot.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/ari_heatmap.html</loc>
@@ -71,9 +65,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/calc_ari.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/calc_nmi.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/calc_om_aris.html</loc>
@@ -98,9 +89,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/clean_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/col_to_num_all_possible.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/convert_uids.html</loc>
@@ -175,9 +163,6 @@
     <loc>https://branchlab.github.io/metasnf/reference/get_pheatmap_order.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/heatmap_pvals.html</loc>
-  </url>
-  <url>
     <loc>https://branchlab.github.io/metasnf/reference/index.html</loc>
   </url>
   <url>
@@ -188,6 +173,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/lin_reg_p.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/list_remove.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/lp_om.html</loc>
@@ -205,10 +193,10 @@
     <loc>https://branchlab.github.io/metasnf/reference/no_subs.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/om_scatter.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/numcol_to_numeric.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/om_to_nmi_df.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/om_scatter.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/ord_reg_p.html</loc>
@@ -236,12 +224,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/remove_dl_na.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/scabcd_ggsave.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/scabcd_hist.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/select_om.html</loc>

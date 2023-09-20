@@ -54,13 +54,21 @@ to typically keep all or most columns.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">random_removal</span><span class="op">(</span><span class="va">num_cols</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">random_removal</span><span class="op">(</span><span class="va">num_cols</span>, <span class="va">min_removed</span>, <span class="va">max_removed</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>num_cols</dt>
-<dd><p>Number of feature columns in consideration for exclusion</p></dd>
+<dd><p>Number of feature elements in consideration for exclusion</p></dd>
+
+
+<dt>min_removed</dt>
+<dd><p>The smallest number of elements that may be removed</p></dd>
+
+
+<dt>max_removed</dt>
+<dd><p>The largest number of elements that may be removed</p></dd>
 
 </dl></div>
     <div class="section level2">

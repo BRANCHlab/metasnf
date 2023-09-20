@@ -48,7 +48,14 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pvals_pheatmap</span><span class="op">(</span><span class="va">pvals</span>, order <span class="op">=</span> <span class="cn">NULL</span>, save <span class="op">=</span> <span class="cn">NULL</span>, reverse_colours <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pvals_pheatmap</span><span class="op">(</span></span>
+<span>  <span class="va">pvals</span>,</span>
+<span>  order <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cluster_cols <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  show_rownames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  save <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  reverse_colours <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -59,6 +66,14 @@
 
 <dt>order</dt>
 <dd><p>numeric vector indicating row ordering of design matrix</p></dd>
+
+
+<dt>cluster_cols</dt>
+<dd><p>if TRUE, pheatmap will cluster (and rearrange) columns</p></dd>
+
+
+<dt>show_rownames</dt>
+<dd><p>If TRUE (default), rownames are shown on heatmap</p></dd>
 
 
 <dt>save</dt>

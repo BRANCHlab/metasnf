@@ -48,13 +48,21 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">generate_design_matrix</span><span class="op">(</span><span class="va">data_list</span>, nrows <span class="op">=</span> <span class="fl">0</span>, seed <span class="op">=</span> <span class="cn">NULL</span>, retry_limit <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">generate_design_matrix</span><span class="op">(</span></span>
+<span>  <span class="va">data_list</span>,</span>
+<span>  nrows <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  min_removed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_removed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  retry_limit <span class="op">=</span> <span class="fl">10</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data_list</dt>
-<dd><p>a data list object to determine variables for inclusion/exclusion</p></dd>
+<dd><p>a data list object to determine variables for inclusion and
+exclusion</p></dd>
 
 
 <dt>nrows</dt>
@@ -63,6 +71,14 @@
 
 <dt>seed</dt>
 <dd><p>set a seed for the random matrix generation. Note that this</p></dd>
+
+
+<dt>min_removed</dt>
+<dd><p>The smallest number of elements that may be removed</p></dd>
+
+
+<dt>max_removed</dt>
+<dd><p>The largest number of elements that may be removed</p></dd>
 
 
 <dt>retry_limit</dt>
