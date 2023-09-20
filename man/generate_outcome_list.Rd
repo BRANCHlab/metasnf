@@ -4,10 +4,12 @@
 \alias{generate_outcome_list}
 \title{Generate outcome_list object - but softcoded}
 \usage{
-generate_outcome_list(...)
+generate_outcome_list(..., old_uid = NULL)
 }
 \arguments{
 \item{...}{Lists of outcomes formatted as (dataframe, "name", "type")}
+
+\item{old_uid}{(string) the name of the uid column currently used data}
 }
 \value{
 outcome_list structure containing all outcome measure data

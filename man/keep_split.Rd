@@ -4,7 +4,7 @@
 \alias{keep_split}
 \title{Filter data to training or testing subjects only}
 \usage{
-keep_split(df, assigned_df, split)
+keep_split(df, assigned_df, split, old_uid = NULL)
 }
 \arguments{
 \item{df}{Dataframe to be subsetted into training or testing split}
@@ -13,6 +13,8 @@ keep_split(df, assigned_df, split)
 \code{train_test_assign()}}
 
 \item{split}{String indicating which split to keep ("train" or "test")}
+
+\item{old_uid}{(string) the name of the uid column currently used data}
 }
 \value{
 split_df Dataframe subsetted to specified split

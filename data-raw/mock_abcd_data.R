@@ -82,6 +82,15 @@ abcd_anxiety <- abcd_anxiety[1:275, ]
 
 (abcd_anxiety$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_anxiety)])
 
+# Mimicking data that does not have "subjectkey" as the initial UID
+abcd_subc_v <- abcd_subc_v |> dplyr::rename("patient" = "subjectkey")
+abcd_cort_t <- abcd_cort_t |> dplyr::rename("patient" = "subjectkey")
+abcd_cort_sa <- abcd_cort_sa |> dplyr::rename("patient" = "subjectkey")
+abcd_income <- abcd_income |> dplyr::rename("patient" = "subjectkey")
+abcd_pubertal <- abcd_pubertal |> dplyr::rename("patient" = "subjectkey")
+abcd_depress <- abcd_depress |> dplyr::rename("patient" = "subjectkey")
+abcd_anxiety <- abcd_anxiety |> dplyr::rename("patient" = "subjectkey")
+
 usethis::use_data(abcd_subc_v, overwrite = TRUE)
 usethis::use_data(abcd_cort_t, overwrite = TRUE)
 usethis::use_data(abcd_cort_sa, overwrite = TRUE)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_list.R
 \name{prefix_dl_sk}
 \alias{prefix_dl_sk}
-\title{Remove NAs from a data_list object}
+\title{Add "subject_" prefix to all UID values in subjectkey column}
 \usage{
 prefix_dl_sk(data_list)
 }
@@ -13,5 +13,5 @@ prefix_dl_sk(data_list)
 data_list A data_list without NAs
 }
 \description{
-Remove NAs from a data_list object
+Add "subject_" prefix to all UID values in subjectkey column
 }
