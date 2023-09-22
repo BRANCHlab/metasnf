@@ -91,6 +91,17 @@ abcd_pubertal <- abcd_pubertal |> dplyr::rename("patient" = "subjectkey")
 abcd_depress <- abcd_depress |> dplyr::rename("patient" = "subjectkey")
 abcd_anxiety <- abcd_anxiety |> dplyr::rename("patient" = "subjectkey")
 
+# Creating an example of categorical data
+abcd_colour <- abcd_depress |>
+    dplyr::mutate(
+        colour = dplyr::case_when(
+            cbcl_depress_r > 1 ~ "red",
+            cbcl_depress_r == 1 ~ "yellow",
+            cbcl_depress_r == 0 ~ "green"
+        )
+    ) |>
+    dplyr::select(patient, colour)
+
 usethis::use_data(abcd_subc_v, overwrite = TRUE)
 usethis::use_data(abcd_cort_t, overwrite = TRUE)
 usethis::use_data(abcd_cort_sa, overwrite = TRUE)
@@ -98,3 +109,4 @@ usethis::use_data(abcd_income, overwrite = TRUE)
 usethis::use_data(abcd_pubertal, overwrite = TRUE)
 usethis::use_data(abcd_depress, overwrite = TRUE)
 usethis::use_data(abcd_anxiety, overwrite = TRUE)
+usethis::use_data(abcd_colour, overwrite = TRUE)

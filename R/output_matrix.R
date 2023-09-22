@@ -89,11 +89,46 @@ extend_om <- function(output_matrix, outcome_list) {
             current_outcome_component <- merged_df[, c(1, j + 1)]
             current_outcome_type <- ol_feature_types[j]
             current_outcome_name <- colnames(current_outcome_component)[2]
-            p_value <- get_p(
-                assigned_subs,
-                current_outcome_component,
-                ol_feature_types[j],
-                ol_features[j]
+            p_value <- tryCatch(
+                expr = {
+                    p_value <- get_p(
+                        assigned_subs,
+                        current_outcome_component,
+                        ol_feature_types[j],
+                        ol_features[j]
+                    )
+                    p_value
+                },
+                warning = function(w, row = i) {
+                    if(grep("Chi-squared", w$"message")) {
+                        print(
+                            paste0(
+                                "In row ", row, ", the Chi-squared test",
+                                " was applied on a table that had at least one",
+                                " cell containing fewer than 5 elements.",
+                                " Please note that when the expected number of",
+                                " elements per cell is less than 5, an",
+                                " assumption in the test is violated."
+                            )
+                        )
+                        suppressWarnings(
+                            p_value <- get_p(
+                                assigned_subs,
+                                current_outcome_component,
+                                ol_feature_types[j],
+                                ol_features[j]
+                            )
+                        )
+                    } else {
+                        p_value <- get_p(
+                            assigned_subs,
+                            current_outcome_component,
+                            ol_feature_types[j],
+                            ol_features[j]
+                        )
+                    }
+                    p_value
+                }
             )
             target_col <- grep(current_outcome_name, colnames(output_matrix))
             output_matrix[i, target_col] <- p_value
@@ -181,6 +216,8 @@ get_p <- function(assigned_subs, outcome_df, outcome_type, outcome_name) {
         p_val <- ord_reg_p(assigned_subs, outcome_df, outcome_name)
     } else if (outcome_type == "numeric") {
         p_val <- lin_reg_p(assigned_subs, outcome_df, outcome_name)
+    } else if (outcome_type == "categorical") {
+        p_val <- chi_sq_p(assigned_subs, outcome_df, outcome_name)
     } else {
         stop(paste0(
             "Unsupported outcome type: ",
@@ -241,6 +278,36 @@ lin_reg_p <- function(clust_membership, outcome_df, outcome_var) {
     fstat <- summary(model)$"fstatistic"
     p <- stats::pf(fstat[1], fstat[2], fstat[3], lower.tail = FALSE)
     attributes(p) <- NULL
+    return(p)
+}
+
+
+#' Chi-squared test p-value
+#'
+#' @description
+#' Returns the p-value following a chi-squared test (without Yates' continuity
+#'  correction) on the distribution of a categorical variable by cluster.
+#'
+#' @param clust_membership Dataframe of cluster membership (get_clustered_subs)
+#' @param outcome_df Dataframe containing outcome feature
+#' @param outcome_var Outcome feature as a string
+#'
+#' @return p_val The chi-squared test p-value
+#'
+#' @export
+chi_sq_p <- function(clust_membership, outcome_df, outcome_var) {
+    # This dataframe merges clust_membership, which has the cluster of each
+    #  column, with outcome_df, which has the data of each subject on the
+    #  outcome feature being evaluated.
+    merged_df <-
+        dplyr::inner_join(clust_membership, outcome_df, by = "subjectkey")
+    merged_df$"cluster" <- as.factor(merged_df$"cluster")
+    model <- stats::chisq.test(
+            merged_df[, "cluster"],
+        merged_df[, outcome_var],
+        correct = FALSE
+    )
+    p <- model$"p.value"
     return(p)
 }
 

@@ -335,13 +335,13 @@ From there, you're on your own (until the next vignette, maybe?)
 If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
 
 There are many ways to go about doing this, but this package offers one way through the `outcome_list` structure.
-The `outcome_list` contains dataframes what we can examine our clustering results over through linear or ordinal regression.
-Categorical data hasn't been added yet.
+The `outcome_list` contains dataframes what we can examine our clustering results over through linear regression (numeric data), ordinal regression (ordinal data), or the Chi-squared test (categorical data).
 
 ```{r}
 outcome_list <- generate_outcome_list(
     list(abcd_anxiety, "anxiety", "ordinal"),
     list(abcd_depress, "depressed", "ordinal"),
+    list(abcd_colour, "colour", "categorical"),
     old_uid = "patient"
 )
 
