@@ -9,3 +9,5 @@ bibliography.bib
 ^docs$
 ^pkgdown$
 ^\.github$
+^doc$
+^Meta$
