@@ -1,0 +1,58 @@
+---
+title: "Setup and Preprocessing"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Setup and Preprocessing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+div.aside { background-color:#fff2e6; }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The very first step is to load your data into the R environment in the format of one or several *data.frame* objects.
+
+Using the `prop_missing_weights` function, you can quickly check what percentage of missingness is present in your data.
+
+```{r}
+
+library(metasnf)
+
+abcd_anxiety
+
+abcd_depress
+
+abcd_cort_t
+
+abcd_cort_sa
+
+abcd_subc_v
+
+abcd_income
+
+abcd_pubertal
+
+abcd_colour
+
+```
+
+
+
+
+
+
+
+
+
+
+
