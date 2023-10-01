@@ -29,9 +29,6 @@ devtools::install_github("BRANCHlab/metasnf@v0.1.0")
 devtools::install_github("BRANCHlab/metasnf@8badfd4d7acaaf3b3c7af62d52b5c9324b82cc6c")
 ```
 
-If you are interested in using the newest (but quickly changing) version
-of the package, you can simply install the main branch:
-
 ## Overview
 
 *metasnf* is a package that facilitates usage of the meta clustering
