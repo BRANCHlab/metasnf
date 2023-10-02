@@ -33,17 +33,48 @@ This package enables repeated iterations of SNF with distinct clustering setting
 Clustering algorithms seek solutions that optimize context-agnostic metrics of quality.
 In sufficiently noisy datasets where many qualitatively distinct solutions with similar scores of clustering quality exist, it is not necessarily the case that the top solution selected by a clustering algorithm will also be the most useful one for the user's context.
 
-To address this issue, the meta clustering procedure [Caruana et al., 2006](https://doi.org/10.1109/ICDM.2006.103) generates a large number of reasonable clustering solutions, clusters those solutions into qualitatively similar ones, and lets the user examine those "meta clusters" to find something that seems like it'll be the most useful.
+To address this issue, the original meta clustering procedure [Caruana et al., 2006](https://doi.org/10.1109/ICDM.2006.103) involved generating a large number of reasonable clustering solutions, clusterign those solutions into qualitatively similar ones, and having the user examine those "meta clusters" to find something that seems like it'll be the most useful.
 
-In this vignette, we use the metasnf package to work through the process of generating diverse clustering solutions, clustering those solutions to examine meta clusters, picking a solution through our own pre-defined context-specific metric of quality, and applying label propagation to held out subjects to set ourselves up for validating our findings.
+This package offers a wide range of functions that help a user transform their initial, raw data into subtyping solutions that are guided by the context the user is in, characterized across features of interest to the user, and well-validated for generalizability outside of the user's dataset.
+The package also offers wrapper functions around the `ggplot2` and `pheatmap` packages to provide sensible default visualizations at various stages of the subtyping process.
 
-## Examining the (fake) data
+This vignette walks through how this package can be used over a complete SNF-subtyping pipeline.
 
-```{r setup}
+## Data set-up and pre-processing
+
+### 1. Install and load metasnf
+
+The package is currently hosted on GitHub (not CRAN).
+The easiest way to install metasnf is with the devtools package.
+
+```{r eval = FALSE}
+
+install.packages("devtools") # if you don't have it already
+
+# By default, this will install the latest version of the package
+devtools::install_github("BRANCHlab/metasnf")
+
+# To ensure you are always installing a specific version of the package,
+#  you can manually specify the latest commit:
+devtools::install_github(
+    "BRANCHlab/metasnf@2b30771ca78c6bc0dcbdd61bba30d32a17cc3fd6"
+)
+
 library(metasnf)
+
 ```
 
-The metansf package comes with a few mock dataframes based on real data from the Adolescent Brain Cognitive Development study:
+### 2. Load data into the R environment
+
+Your data should be loaded into the R environment in the following format:
+
+- The data is in one or multiple *data.frame* objects
+- The data is in wide form (one row per patient)
+- Any dataframe should one column that uniquely identifies which patient the row has data for
+
+It is fine to have missing data at this stage.
+
+The package comes with a few mock dataframes based on real data from the Adolescent Brain Cognitive Development study:
 
 - `abcd_anxiety` (anxiety scores from the CBCL)
 - `abcd_depress` (depression scores from the CBCL)
@@ -52,16 +83,23 @@ The metansf package comes with a few mock dataframes based on real data from the
 - `abcd_subc_v` (subcortical volumes in mm^3)
 - `abcd_income` (household income on a 1-3 scale)
 - `abcd_pubertal` (pubertal status on a 1-5 scale)
+- `abcd_colour` (favourite colour among red, green, and blue)
 
 Here's what the cortical thickness data looks like:
 
 ```{r}
+
+class(abcd_cort_t)
+
 dim(abcd_cort_t)
 
 str(abcd_cort_t[1:5, 1:5])
 
 abcd_cort_t[1:5, 1:5]
+
 ```
+
+Notice
 
 The first column `subjectkey` is the unique identifier (UID) for all subjects in the ABCD study.
 This will also be the required UID for your data, but don't worry about that just yet.

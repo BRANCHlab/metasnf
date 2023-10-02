@@ -20,31 +20,63 @@ knitr::opts_chunk$set(
 )
 ```
 
-The very first step is to load your data into the R environment in the format of one or several *data.frame* objects.
-
-Using the `prop_missing_weights` function, you can quickly check what percentage of missingness is present in your data.
+1. **Load the metasnf library**
 
 ```{r}
 
 library(metasnf)
 
-abcd_anxiety
+```
 
-abcd_depress
+2. **Import data**
 
-abcd_cort_t
+Imported data should be in the form of one or several wide-form (one row per patient) dataframe objects.
 
-abcd_cort_sa
+The `metasnf` library loads mock data into the R environment with the correct format:
 
-abcd_subc_v
+- abcd_anxiety
+- abcd_depress
+- abcd_cort_t
+- abcd_cort_sa
+- abcd_subc_v
+- abcd_income
+- abcd_pubertal
+- abcd_colour
 
-abcd_income
+Here is what a couple of these objects look like:
 
-abcd_pubertal
+```{r}
 
-abcd_colour
+# Patient anxiety data
+colnames(abcd_anxiety)
+
+head(abcd_anxiety)
+
+dim(abcd_anxiety)
+
+class(abcd_anxiety)
+
+
+# Patient favourite-colour data
+colnames(abcd_colour)
+
+head(abcd_colour)
+
+dim(abcd_colour)
 
 ```
+
+3. **Train/test split (optional)**
+
+We recommend splitting the data into a
+
+
+
+The very first step is to load your data into the R environment in the format of one or several *data.frame* objects.
+
+
+Using the `prop_missing_weights` function, you can quickly check what percentage of missingness is present in your data.
+
 
 
 
