@@ -16,34 +16,26 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Meta clustering with Similarity Network Fusion (metasnf)
+# Meta clustering with Similarity Network Fusion
 
 <!-- badges: start -->
 <!-- badges: end -->
 
 ## Installation
 
-This package is currently under active development.
+**This package is currently under active development.**
 
-We recommend always installing the latest development version of the package:
+We recommend installing the latest development version of the package (it has the best stuff!):
 
 ```{r eval = FALSE}
 devtools::install_github("BRANCHlab/metasnf")
 ```
 
-If you are finalizing an analysis using the metasnf package, we recommend noting which version of the package was used.
-Installation of specific versions can be done using either of the following commands:
+If you require a stable version of the package, please keep track of which commit you want when installing.
 
 ```{r eval = FALSE}
-# Install by tag
-devtools::install_github("BRANCHlab/metasnf@v0.1.0")
-
-# Or install by commit
 devtools::install_github("BRANCHlab/metasnf@8badfd4d7acaaf3b3c7af62d52b5c9324b82cc6c")
 ```
-
-If you are interested in using the newest (but quickly changing) version of the package, you can simply install the main branch:
-
 
 ## Overview
 
@@ -61,11 +53,10 @@ Each row represents a distinct set of clustering settings that will be used to p
 ### The `data_list`
 
 The `data_list` is a nested list that contains all preprocessed input data that is ready to be used for clustering.
-Each list within a `data_list` contains (1) a dataframe that will be used for clustering, (2) the name of that dataframe, (3) the **domain** of that dataframe, (4) the **subdomain** of that dataframe, and (5) the type of data (numerical, categorical, or mixed) of the features within that dataframe.
+Each list within a `data_list` contains (1) a dataframe that will be used for clustering, (2) the name of that dataframe, (3) the **domain** of that dataframe, and (4) the type of data (continuous, ordinal, discrete, nominal (categorical), or mixed) of the features within that dataframe.
 
-Domains are user-specified labels that indicate which dataframes describe similar sources of data. For example, structural MRI data and diffusion MRI data may be grouped within a neuroimaging domain.
-
-Subdomains are user-specified labels for further granularity. For example, a cortical thickness dataframe and a subcortical volume dataframe may be grouped within a structural MRI subdomain.
+Domains are user-specified labels that indicate which dataframes describe similar sources of data.
+For example, structural MRI data and diffusion MRI data may be grouped within a neuroimaging domain.
 
 ### The `outcome_list`
 
@@ -81,18 +72,5 @@ An `output_matrix` can be convereted to an `extended_output_matrix` which contai
 The `extended_output_matrix` is useful in pipelines where separation across one or several variables stored in the `outcome_list` serve as the primary metric for automating the selection of a top clustering solution.
 
 Alternatively, a top clustering solution can be selected from a regular `output_matrix` using the traditional meta clustering approach of clustering cluster solutions and manually examining a few solutions from the qualitatively distinct "meta clusters" that emerge.
-
-## To-do (prior to protocol paper)
-
-### Data set-up and preprocessing
-
-1. Add function to calculate proportion of missingness
-
-- More customization of design matrix
-- More snf digestion schemes
-
-- Write tests for non-trivial functions
-- Zipf-distribution scaling as described in meta-clustering paper
-
 
 ## References

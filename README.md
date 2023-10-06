@@ -1,31 +1,26 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Meta clustering with Similarity Network Fusion (metasnf)
+# Meta clustering with Similarity Network Fusion
 
 <!-- badges: start -->
 <!-- badges: end -->
 
 ## Installation
 
-This package is currently under active development.
+**This package is currently under active development.**
 
-We recommend always installing the latest development version of the
-package:
+We recommend installing the latest development version of the package
+(it has the best stuff!):
 
 ``` r
 devtools::install_github("BRANCHlab/metasnf")
 ```
 
-If you are finalizing an analysis using the metasnf package, we
-recommend noting which version of the package was used. Installation of
-specific versions can be done using either of the following commands:
+If you require a stable version of the package, please keep track of
+which commit you want when installing.
 
 ``` r
-# Install by tag
-devtools::install_github("BRANCHlab/metasnf@v0.1.0")
-
-# Or install by commit
 devtools::install_github("BRANCHlab/metasnf@8badfd4d7acaaf3b3c7af62d52b5c9324b82cc6c")
 ```
 
@@ -55,17 +50,12 @@ The `data_list` is a nested list that contains all preprocessed input
 data that is ready to be used for clustering. Each list within a
 `data_list` contains (1) a dataframe that will be used for clustering,
 (2) the name of that dataframe, (3) the **domain** of that dataframe,
-(4) the **subdomain** of that dataframe, and (5) the type of data
-(numerical, categorical, or mixed) of the features within that
-dataframe.
+and (4) the type of data (continuous, ordinal, discrete, nominal
+(categorical), or mixed) of the features within that dataframe.
 
 Domains are user-specified labels that indicate which dataframes
 describe similar sources of data. For example, structural MRI data and
 diffusion MRI data may be grouped within a neuroimaging domain.
-
-Subdomains are user-specified labels for further granularity. For
-example, a cortical thickness dataframe and a subcortical volume
-dataframe may be grouped within a structural MRI subdomain.
 
 ### The `outcome_list`
 
@@ -92,15 +82,6 @@ Alternatively, a top clustering solution can be selected from a regular
 `output_matrix` using the traditional meta clustering approach of
 clustering cluster solutions and manually examining a few solutions from
 the qualitatively distinct “meta clusters” that emerge.
-
-## To-do
-
-- More customization of design matrix
-- Write tests for non-trivial functions
-- Allow categorical comparisons in outcome list
-- More snf digestion schemes
-- Parallelize `extend_om`
-- Zipf-distribution scaling as described in meta-clustering paper
 
 ## References
 
