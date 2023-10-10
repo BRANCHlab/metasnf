@@ -78,11 +78,13 @@ batch_snf <- function(data_list,
         )
         K <- settings_matrix[i, "K"]
         alpha <- settings_matrix[i, "alpha"]
+        # 4. Run SNF ##########################################################
         fused_network <- snf_step(
             current_data_list,
             current_snf_scheme,
             K = K,
             alpha = alpha)
+        #######################################################################
         all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
         # Use the current row's number of clusters heuristic
         if (dm_row$"eigen_or_rot" == 1) {

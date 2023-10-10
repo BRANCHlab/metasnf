@@ -12,10 +12,18 @@ batch_snf_time_remaining(
 )
 }
 \arguments{
-\item{PARAM1}{}
+\item{seconds_per_row}{Integer in seconds of time taken for most recent SNF
+'run}
+
+\item{rows_remaining}{Number of rows left to complete in the settings matrix}
+
+\item{row}{Current row in the settings matrix}
+
+\item{remaining_seconds_vector}{Vector storing up to the 10 most recent
+row completion times}
 }
 \value{
-RETURN
+remaining_seconds_vector Updated remaining_seconds_vector
 }
 \description{
 Time remaining until batch_snf completion
