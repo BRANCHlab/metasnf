@@ -42,7 +42,7 @@ This vignette walks through how this package can be used over a complete SNF-sub
 
 ## Data set-up and pre-processing
 
-### 1. Install and load metasnf
+### 1. Install metasnf
 
 The package is currently hosted on GitHub (not CRAN).
 The easiest way to install metasnf is with the devtools package.
@@ -60,11 +60,9 @@ devtools::install_github(
     "BRANCHlab/metasnf@2b30771ca78c6bc0dcbdd61bba30d32a17cc3fd6"
 )
 
-library(metasnf)
-
 ```
 
-### 2. Load data into the R environment
+### 2. Load the library and data into the R environment
 
 Your data should be loaded into the R environment in the following format:
 
@@ -88,6 +86,8 @@ The package comes with a few mock dataframes based on real data from the Adolesc
 Here's what the cortical thickness data looks like:
 
 ```{r}
+
+library(metasnf)
 
 class(abcd_cort_t)
 
