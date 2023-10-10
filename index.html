@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,24 +57,20 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="meta-clustering-with-similarity-network-fusion-metasnf">Meta clustering with Similarity Network Fusion (metasnf)<a class="anchor" aria-label="anchor" href="#meta-clustering-with-similarity-network-fusion-metasnf"></a>
+<div class="page-header"><h1 id="meta-clustering-with-similarity-network-fusion">Meta clustering with Similarity Network Fusion<a class="anchor" aria-label="anchor" href="#meta-clustering-with-similarity-network-fusion"></a>
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>This package is currently under active development.</p>
-<p>We recommend always installing the latest development version of the package:</p>
+<p><strong>This package is currently under active development.</strong></p>
+<p>We recommend installing the latest development version of the package (it has the best stuff!):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf"</span><span class="op">)</span></span></code></pre></div>
-<p>If you are finalizing an analysis using the metasnf package, we recommend noting which version of the package was used. Installation of specific versions can be done using either of the following commands:</p>
+<p>If you require a stable version of the package, please keep track of which commit you want when installing.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install by tag</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf@v0.1.0"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Or install by commit</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf@8badfd4d7acaaf3b3c7af62d52b5c9324b82cc6c"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf@8badfd4d7acaaf3b3c7af62d52b5c9324b82cc6c"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
@@ -92,9 +88,8 @@
 <h3 id="the-data_list">The <code>data_list</code>
 <a class="anchor" aria-label="anchor" href="#the-data_list"></a>
 </h3>
-<p>The <code>data_list</code> is a nested list that contains all preprocessed input data that is ready to be used for clustering. Each list within a <code>data_list</code> contains (1) a dataframe that will be used for clustering, (2) the name of that dataframe, (3) the <strong>domain</strong> of that dataframe, (4) the <strong>subdomain</strong> of that dataframe, and (5) the type of data (numerical, categorical, or mixed) of the features within that dataframe.</p>
+<p>The <code>data_list</code> is a nested list that contains all preprocessed input data that is ready to be used for clustering. Each list within a <code>data_list</code> contains (1) a dataframe that will be used for clustering, (2) the name of that dataframe, (3) the <strong>domain</strong> of that dataframe, and (4) the type of data (continuous, ordinal, discrete, nominal (categorical), or mixed) of the features within that dataframe.</p>
 <p>Domains are user-specified labels that indicate which dataframes describe similar sources of data. For example, structural MRI data and diffusion MRI data may be grouped within a neuroimaging domain.</p>
-<p>Subdomains are user-specified labels for further granularity. For example, a cortical thickness dataframe and a subcortical volume dataframe may be grouped within a structural MRI subdomain.</p>
 </div>
 <div class="section level3">
 <h3 id="the-outcome_list">The <code>outcome_list</code>
@@ -110,19 +105,6 @@
 <p>An <code>output_matrix</code> can be convereted to an <code>extended_output_matrix</code> which contains overall regression p-values for any measures stored in an <code>outcome_list</code>. The <code>extended_output_matrix</code> is useful in pipelines where separation across one or several variables stored in the <code>outcome_list</code> serve as the primary metric for automating the selection of a top clustering solution.</p>
 <p>Alternatively, a top clustering solution can be selected from a regular <code>output_matrix</code> using the traditional meta clustering approach of clustering cluster solutions and manually examining a few solutions from the qualitatively distinct “meta clusters” that emerge.</p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="to-do">To-do<a class="anchor" aria-label="anchor" href="#to-do"></a>
-</h2>
-<ul>
-<li>More customization of design matrix</li>
-<li>Write tests for non-trivial functions</li>
-<li>Allow categorical comparisons in outcome list</li>
-<li>More snf digestion schemes</li>
-<li>Parallelize <code>extend_om</code>
-</li>
-<li>Zipf-distribution scaling as described in meta-clustering paper</li>
-</ul>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

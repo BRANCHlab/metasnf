@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,24 +89,56 @@ qualitatively distinct solutions with similar scores of clustering
 quality exist, it is not necessarily the case that the top solution
 selected by a clustering algorithm will also be the most useful one for
 the user’s context.</p>
-<p>To address this issue, the meta clustering procedure <a href="https://doi.org/10.1109/ICDM.2006.103" class="external-link">Caruana et al., 2006</a>
-generates a large number of reasonable clustering solutions, clusters
-those solutions into qualitatively similar ones, and lets the user
-examine those “meta clusters” to find something that seems like it’ll be
-the most useful.</p>
-<p>In this vignette, we use the metasnf package to work through the
-process of generating diverse clustering solutions, clustering those
-solutions to examine meta clusters, picking a solution through our own
-pre-defined context-specific metric of quality, and applying label
-propagation to held out subjects to set ourselves up for validating our
-findings.</p>
+<p>To address this issue, the original meta clustering procedure <a href="https://doi.org/10.1109/ICDM.2006.103" class="external-link">Caruana et al., 2006</a>
+involved generating a large number of reasonable clustering solutions,
+clusterign those solutions into qualitatively similar ones, and having
+the user examine those “meta clusters” to find something that seems like
+it’ll be the most useful.</p>
+<p>This package offers a wide range of functions that help a user
+transform their initial, raw data into subtyping solutions that are
+guided by the context the user is in, characterized across features of
+interest to the user, and well-validated for generalizability outside of
+the user’s dataset. The package also offers wrapper functions around the
+<code>ggplot2</code> and <code>pheatmap</code> packages to provide
+sensible default visualizations at various stages of the subtyping
+process.</p>
+<p>This vignette walks through how this package can be used over a
+complete SNF-subtyping pipeline.</p>
 <div class="section level2">
-<h2 id="examining-the-fake-data">Examining the (fake) data<a class="anchor" aria-label="anchor" href="#examining-the-fake-data"></a>
+<h2 id="data-set-up-and-pre-processing">Data set-up and pre-processing<a class="anchor" aria-label="anchor" href="#data-set-up-and-pre-processing"></a>
 </h2>
+<div class="section level3">
+<h3 id="install-metasnf">1. Install metasnf<a class="anchor" aria-label="anchor" href="#install-metasnf"></a>
+</h3>
+<p>The package is currently hosted on GitHub (not CRAN). The easiest way
+to install metasnf is with the devtools package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span></code></pre></div>
-<p>The metansf package comes with a few mock dataframes based on real
-data from the Adolescent Brain Cognitive Development study:</p>
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span> <span class="co"># if you don't have it already</span></span>
+<span></span>
+<span><span class="co"># By default, this will install the latest version of the package</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># To ensure you are always installing a specific version of the package,</span></span>
+<span><span class="co">#  you can manually specify the latest commit:</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span></span>
+<span>    <span class="st">"BRANCHlab/metasnf@2b30771ca78c6bc0dcbdd61bba30d32a17cc3fd6"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="load-the-library-and-data-into-the-r-environment">2. Load the library and data into the R environment<a class="anchor" aria-label="anchor" href="#load-the-library-and-data-into-the-r-environment"></a>
+</h3>
+<p>Your data should be loaded into the R environment in the following
+format:</p>
+<ul>
+<li>The data is in one or multiple <em>data.frame</em> objects</li>
+<li>The data is in wide form (one row per patient)</li>
+<li>Any dataframe should one column that uniquely identifies which
+patient the row has data for</li>
+</ul>
+<p>It is fine to have missing data at this stage.</p>
+<p>The package comes with a few mock dataframes based on real data from
+the Adolescent Brain Cognitive Development study:</p>
 <ul>
 <li>
 <code>abcd_anxiety</code> (anxiety scores from the CBCL)</li>
@@ -122,10 +154,19 @@ data from the Adolescent Brain Cognitive Development study:</p>
 <code>abcd_income</code> (household income on a 1-3 scale)</li>
 <li>
 <code>abcd_pubertal</code> (pubertal status on a 1-5 scale)</li>
+<li>
+<code>abcd_colour</code> (favourite colour among red, green, and
+blue)</li>
 </ul>
 <p>Here’s what the cortical thickness data looks like:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">abcd_cort_t</span><span class="op">)</span></span>
+<code class="sourceCode R"><span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">abcd_cort_t</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "tbl_df"     "tbl"        "data.frame"</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">abcd_cort_t</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 188 152</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">abcd_cort_t</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span></span>
@@ -143,6 +184,7 @@ data from the Adolescent Brain Cognitive Development study:</p>
 <span><span class="co">#&gt; 3 NDAR_INV0IZ157F8    2.621    2.295    2.530    2.961</span></span>
 <span><span class="co">#&gt; 4 NDAR_INV0J4PYA5F    2.599    2.670    2.676    2.938</span></span>
 <span><span class="co">#&gt; 5 NDAR_INV0OYE291Q    2.526    2.761    2.829    2.986</span></span></code></pre></div>
+<p>Notice</p>
 <p>The first column <code>subjectkey</code> is the unique identifier
 (UID) for all subjects in the ABCD study. This will also be the required
 UID for your data, but don’t worry about that just yet.</p>
@@ -227,6 +269,7 @@ all the data.</p>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>Some of our data has missing values and not all of our dataframes
 have the same number of participants.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="generating-the-data-list">Generating the data list<a class="anchor" aria-label="anchor" href="#generating-the-data-list"></a>
@@ -442,12 +485,12 @@ cluster each subject was assigned for the corresponding
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/execute_design_matrix.html">execute_design_matrix</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">design_matrix</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/30 | Time remaining: 8 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/30 | Time remaining: 9 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/30 | Time remaining: 9 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/30 | Time remaining: 9 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/30 | Time remaining: 9 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/30 | Time remaining: 8 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/30 | Time remaining: 8 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 4/30 | Time remaining: 8 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 5/30 | Time remaining: 8 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/30 | Time remaining: 8 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 7/30 | Time remaining: 8 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 7/30 | Time remaining: 7 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 8/30 | Time remaining: 7 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/30 | Time remaining: 7 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 10/30 | Time remaining: 7 seconds"</span></span>
@@ -456,10 +499,10 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [1] "Row: 13/30 | Time remaining: 6 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 14/30 | Time remaining: 5 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 15/30 | Time remaining: 5 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 16/30 | Time remaining: 5 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 16/30 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 17/30 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 18/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 19/30 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 19/30 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 20/30 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 21/30 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 22/30 | Time remaining: 3 seconds"</span></span>
@@ -471,7 +514,7 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [1] "Row: 28/30 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 29/30 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 30/30 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 10.048 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 9.949 seconds."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">output_matrix</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span></span>
 <span><span class="co">#&gt;  [1] "row_id"                    "inc_cortical_thickness"   </span></span>
@@ -934,10 +977,10 @@ above, you can either specify both the <code>train_subjects</code> and
 <span><span class="va">train_output_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/execute_design_matrix.html">execute_design_matrix</a></span><span class="op">(</span><span class="va">train_data_list</span>, <span class="va">design_matrix</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 1.417 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 1.379 seconds."</span></span>
 <span></span>
 <span><span class="va">extended_output_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_om.html">extend_om</a></span><span class="op">(</span><span class="va">train_output_matrix</span>, <span class="va">train_outcome_list</span><span class="op">)</span></span>
 <span></span>
@@ -1046,7 +1089,7 @@ helper function:</p>
 <span><span class="co">#&gt;     shuffled_removals &lt;- sample(unshuffled_removals)</span></span>
 <span><span class="co">#&gt;     return(shuffled_removals)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55c921261048&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55ec4c3915a8&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
 <p>This <code>random_removal</code> function randomly picks a number of
 columns to remove according to an exponential function. The most likely
