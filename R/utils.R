@@ -286,3 +286,25 @@ batch_snf_time_remaining <- function(seconds_per_row,
     )
     return(remaining_seconds_vector)
 }
+
+#' Generate a complete path and filename to store an affinity matrix
+#'
+#' @param affinity_matrix_dir Directory to store affinity matrices
+#' @param i Corresponding settings matrix row
+#'
+#' @return path Complete path and filename to store an affinity matrix
+#'
+#' @export
+affinity_matrix_path <- function(affinity_matrix_dir, i) {
+    path <- paste0(
+        affinity_matrix_dir,
+        "/",
+        gsub("-", "_", Sys.Date()), # Today's datej
+        "_",
+        "affinity_matrix_",
+        i,
+        ".csv"
+    )
+    path <- gsub("//", "/", path)
+    return(path)
+}

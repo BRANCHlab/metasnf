@@ -76,20 +76,19 @@ Alternatively, a top clustering solution can be selected from a regular `output_
 
 ## Work in progress:
 
-1. Change in package name
-2. Changes in function names
-3. Capability of defining custom distance metrics
-4. Capability of defining custom feature weights
-5. Capability of defining custom SNF-level weights
-6. Capability of defining custom clustering algorithms
-7. Added flexibility during generation of the settings_matrix
-8. New visualization functions and improvements to existing visualization functions
-9. Capability of calculating solution stability across patient resamplings for all cluster solutions
-10. Capability of calculating a wide range of quality metrics for all cluster solutions
-11. Capability of writing affinity matrices to disk
-12. Capability of not running the clustering on every run of SNF (only makes sense when paired with the previous change)
-13. Updated vignette(s) to fully document basic and advance usage of the package
-14. Maybe some other things!
+- [ ] Change in package name
+- [ ] Changes in function names
+- [ ] Capability of defining custom distance metrics
+- [ ] Capability of defining custom feature weights
+- [ ] Capability of defining custom SNF-level weights
+- [ ] Capability of defining custom clustering algorithms
+- [ ] Added flexibility during generation of the settings_matrix
+- [ ] New visualization functions and improvements to existing visualization functions
+- [ ] Capability of calculating solution stability across patient resamplings for all cluster solutions
+- [ ] Capability of calculating a wide range of quality metrics for all cluster solutions
+- [x] Capability of writing affinity matrices to disk
+- [ ] Capability of not running the clustering on every run of SNF (only makes sense when paired with the previous change)
+- [ ] Updated vignette(s) to fully document basic and advance usage of the package
 
 
 ## Contributions

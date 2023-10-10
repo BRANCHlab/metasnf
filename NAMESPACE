@@ -3,6 +3,7 @@
 export(add_columns)
 export(add_design_matrix_rows)
 export(add_settings_matrix_rows)
+export(affinity_matrix_path)
 export(ari_heatmap)
 export(arrange_dl)
 export(assigned_clust_hist)

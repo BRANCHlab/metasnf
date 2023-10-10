@@ -13,6 +13,8 @@
 #'       available cores, a warning will be printed and the maximum number of
 #'       cores will be used.
 #'     * `max`: All available cores will be used.
+#' @param affinity_matrix_dir If specified, this directory will be used to save
+#'  all generated affinity matrices
 #'
 #' @return populated_settings_matrix settings matrix with filled columns related to
 #'  subtype membership
@@ -20,7 +22,8 @@
 #' @export
 batch_snf <- function(data_list,
                       settings_matrix,
-                      processes = 1) {
+                      processes = 1,
+                      affinity_matrix_dir = NULL) {
     # 1. Parallel processing checks should be used ############################
     if (processes != 1) {
         available_cores <- future::availableCores()[["cgroups.cpuset"]]
@@ -78,12 +81,20 @@ batch_snf <- function(data_list,
         )
         K <- settings_matrix[i, "K"]
         alpha <- settings_matrix[i, "alpha"]
-        # 4. Run SNF ##########################################################
+        # 4. Run SNF
         fused_network <- snf_step(
             current_data_list,
             current_snf_scheme,
             K = K,
             alpha = alpha)
+        # 5. If user provided a path to save the affinity matrices, save them
+        if (!is.null(affinity_matrix_dir)) {
+            utils::write.csv(
+                x = fused_network,
+                file = affinity_matrix_path(affinity_matrix_dir, i),
+                row.names = TRUE
+            )
+        }
         #######################################################################
         all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
         # Use the current row's number of clusters heuristic
