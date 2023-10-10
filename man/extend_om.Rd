@@ -2,19 +2,19 @@
 % Please edit documentation in R/output_matrix.R
 \name{extend_om}
 \alias{extend_om}
-\title{Extend an output matrix to include outcome evaluations}
+\title{Extend an solutions matrix to include outcome evaluations}
 \usage{
-extend_om(output_matrix, outcome_list)
+extend_om(solutions_matrix, outcome_list)
 }
 \arguments{
-\item{output_matrix}{an output_matrix}
+\item{solutions_matrix}{an solutions_matrix}
 
 \item{outcome_list}{an outcome_list}
 }
 \value{
-extended_output_matrix an extended output matrix that contains
+extended_solutions_matrix an extended solutions matrix that contains
 p-value columns for each outcome in the provided outcome_list
 }
 \description{
-Extend an output matrix to include outcome evaluations
+Extend an solutions matrix to include outcome evaluations
 }

@@ -1,4 +1,4 @@
-#' Calculate adjusted rand index between two rows of output matrix
+#' Calculate adjusted rand index between two rows of solutions matrix
 #'
 #' Output matrix must have no row_id or non-sub columns
 #'
@@ -18,7 +18,7 @@ calc_ari <- function(r1, r2, df) {
 
 #' Outdated calc_om_aris
 #'
-#' @param mc_om output matrix
+#' @param mc_om solutions matrix
 #'
 #' @export
 meta_cluster <- function(mc_om) {
@@ -32,9 +32,9 @@ meta_cluster <- function(mc_om) {
 #' Generate matrix of pairwise cluster-solution similarities by Adjusted Rand
 #'  index calculations
 #'
-#' @param om output_matrix
+#' @param om solutions_matrix
 #'
-#' @return om_aris ARIs between clustering solutions of an output matrix
+#' @return om_aris ARIs between clustering solutions of an solutions matrix
 #'
 #' @export
 calc_om_aris <- function(om) {
@@ -94,7 +94,7 @@ mc_heatmap <- function(mc_results, save = NULL) {
 
 #' Heatmap meta-clustering results
 #'
-#' @param output_matrix_aris results from meta_cluster function
+#' @param solutions_matrix_aris results from meta_cluster function
 #' @param title plot title
 #' @param save optional path to save figure to
 #' @param cluster_cols boolean indicating if columns shold be clustered
@@ -104,7 +104,7 @@ mc_heatmap <- function(mc_results, save = NULL) {
 #' @param ... additional parameters to pass into pheatmap
 #'
 #' @export
-ari_heatmap <- function(output_matrix_aris,
+ari_heatmap <- function(solutions_matrix_aris,
                         title = "",
                         save = NULL,
                         cluster_cols = TRUE,
@@ -113,18 +113,18 @@ ari_heatmap <- function(output_matrix_aris,
                         hide_rows = FALSE,
                         ...) {
     if (hide_columns) {
-        colnames(output_matrix_aris) <- NULL
+        colnames(solutions_matrix_aris) <- NULL
     }
     if (hide_rows) {
-        rownames(output_matrix_aris) <- NULL
+        rownames(solutions_matrix_aris) <- NULL
     }
     if (!(is.null(grDevices::dev.list()))) {
         grDevices::dev.off()
     }
     if (!(is.null(save))) {
         pheatmap::pheatmap(
-            output_matrix_aris,
-            legend_breaks = c(0, 0.5, 1, max(output_matrix_aris)),
+            solutions_matrix_aris,
+            legend_breaks = c(0, 0.5, 1, max(solutions_matrix_aris)),
             main = title,
             legend_labels = c("0", "0.5", "1", "ARI\n\n"),
             legend = TRUE,
@@ -136,8 +136,8 @@ ari_heatmap <- function(output_matrix_aris,
         )
     }
     pheatmap::pheatmap(
-        output_matrix_aris,
-        legend_breaks = c(0, 0.5, 1, max(output_matrix_aris)),
+        solutions_matrix_aris,
+        legend_breaks = c(0, 0.5, 1, max(solutions_matrix_aris)),
         main = title,
         legend_labels = c("0", "0.5", "1", "ARI\n\n"),
         legend = TRUE,

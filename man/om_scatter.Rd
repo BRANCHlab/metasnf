@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotting.R
 \name{om_scatter}
 \alias{om_scatter}
-\title{Scatter plot output matrix results by minimum and mean p-values}
+\title{Scatter plot solutions matrix results by minimum and mean p-values}
 \usage{
 om_scatter(
   om,
@@ -17,7 +17,7 @@ om_scatter(
 )
 }
 \arguments{
-\item{om}{output matrix}
+\item{om}{solutions matrix}
 
 \item{title}{plot title}
 
@@ -39,5 +39,5 @@ stay constant.}
 \item{save}{optional path to save figure to}
 }
 \description{
-Scatter plot output matrix results by minimum and mean p-values
+Scatter plot solutions matrix results by minimum and mean p-values
 }

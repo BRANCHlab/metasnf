@@ -1,6 +1,6 @@
-#' Select specific row_ids from an output matrix
+#' Select specific row_ids from an solutions matrix
 #'
-#' @param om output matrix
+#' @param om solutions matrix
 #' @param row_ids vector of row_id values to be selected
 #'
 #' @return selected_om
@@ -11,7 +11,7 @@ select_om <- function(om, row_ids) {
     return(selected_om)
 }
 
-#' Extract dataframe of cluster and subject key from output matrix row
+#' Extract dataframe of cluster and subject key from solutions matrix row
 #'
 #' @param om_row Output matrix row
 #'
@@ -80,7 +80,7 @@ cbcl_ord_reg <- function(characterization_df, bonferroni = FALSE) {
 
 #' Calculate overall p-values for an om
 #'
-#' @param om an output matrix
+#' @param om an solutions matrix
 #' @param cbcl_list a list of CBCL measures
 #' @param bonferroni boolean for reporting bonferroni corrected p-values
 #'
@@ -141,12 +141,12 @@ cbcl_anova <- function(characterization_df, bonferroni = FALSE) {
     }
 }
 
-#' Select the top output matrix rows for each cluster
+#' Select the top solutions matrix rows for each cluster
 #'
-#' Given an output matrix, returns a dataframe containing the row with the
+#' Given an solutions matrix, returns a dataframe containing the row with the
 #' lowest mean p-value and lowest min p-value for cluster sizes 2-5
 #'
-#' @param om an output matrix
+#' @param om an solutions matrix
 #'
 #' @return top_clusts_df dataframe with top om rows
 #'
@@ -219,7 +219,7 @@ top_om_per_cluster <- function(om) {
 #'  full fused network and the supplied clustering information are consistent.
 #'
 #' @param data_list A data list
-#' @param om_row An output matrix row
+#' @param om_row An solutions matrix row
 #' @param n_train number of training subjects
 #' @param n_test number of testing subjects
 #'
@@ -249,7 +249,7 @@ check_subj_orders_for_lp <- function(data_list, om_row, n_train, n_test) {
             return(NULL)
         }
     }
-    # Comparing training subjects between data list and output matrix...
+    # Comparing training subjects between data list and solutions matrix...
     current_row_names <- subs(om_row) |>
         dplyr::select(dplyr::starts_with("subject_")) |>
         colnames()

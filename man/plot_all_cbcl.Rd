@@ -17,7 +17,7 @@ plot_all_cbcl(
 )
 }
 \arguments{
-\item{om}{An output matrix-like structure}
+\item{om}{An solutions matrix-like structure}
 
 \item{cbcl_list}{List containing all CBCL dataframes}
 

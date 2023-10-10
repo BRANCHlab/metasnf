@@ -4,14 +4,14 @@
 \alias{get_min_p}
 \title{Get minimum p-value}
 \usage{
-get_min_p(output_matrix_row)
+get_min_p(solutions_matrix_row)
 }
 \arguments{
-\item{output_matrix_row}{row of output_matrix object}
+\item{solutions_matrix_row}{row of solutions_matrix object}
 }
 \value{
 min_p minimum p-value
 }
 \description{
-Given an output matrix row containing evaluated p-values, returns minimum
+Given an solutions matrix row containing evaluated p-values, returns minimum
 }

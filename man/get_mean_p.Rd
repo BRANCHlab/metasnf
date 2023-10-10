@@ -4,14 +4,14 @@
 \alias{get_mean_p}
 \title{Get mean p-value}
 \usage{
-get_mean_p(output_matrix_row)
+get_mean_p(solutions_matrix_row)
 }
 \arguments{
-\item{output_matrix_row}{row of output_matrix object}
+\item{solutions_matrix_row}{row of solutions_matrix object}
 }
 \value{
 mean_p mean p-value
 }
 \description{
-Given an output matrix row containing evaluated p-values, returns mean
+Given an solutions matrix row containing evaluated p-values, returns mean
 }

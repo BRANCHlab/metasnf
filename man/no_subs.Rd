@@ -14,5 +14,5 @@ df_no_subs Dataframe without subjects
 }
 \description{
 Removes the 'subject_' prefixed columns from a dataframe. Useful for printing
-output_matrix structures to the console
+solutions_matrix structures to the console
 }

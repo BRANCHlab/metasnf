@@ -25,3 +25,10 @@ generate_design_matrix <- function() {
 add_design_matrix_rows <- function() {
     print("This function has been renamed to `add_settings_matrix_rows`.")
 }
+
+#' deprecated function
+#'
+#' @export
+generate_output_matrix <- function() {
+    print("This function has been renamed to `generate_solutions_matrix`.")
+}

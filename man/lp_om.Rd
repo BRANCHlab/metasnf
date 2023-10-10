@@ -2,12 +2,12 @@
 % Please edit documentation in R/label_propagation.R
 \name{lp_om}
 \alias{lp_om}
-\title{Label propagation over an output matrix}
+\title{Label propagation over an solutions matrix}
 \usage{
 lp_om(om, full_data_list)
 }
 \arguments{
-\item{om}{An output matrix}
+\item{om}{An solutions matrix}
 
 \item{full_data_list}{A data_list object made by rbinding(train, test) data}
 }
@@ -15,6 +15,6 @@ lp_om(om, full_data_list)
 labeled_df A dataframe of the label propagated results of all om rows
 }
 \description{
-Given an output matrix and a data_list object containing all subjects, return
+Given an solutions matrix and a data_list object containing all subjects, return
 a dataframe of the label propagated results of all om rows
 }

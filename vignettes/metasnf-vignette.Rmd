@@ -217,18 +217,18 @@ You can also add random rows to an already existing dataframe using the `add_set
 ## Executing the settings matrix
 
 The `batch_snf` function integrates the data in the `data_list` using each of the sets of settings contained in the `settings_matrix`.
-The resulting structure is an `output_matrix` which is an extension of the `settings_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `settings_matrix` row.
+The resulting structure is an `solutions_matrix` which is an extension of the `settings_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `settings_matrix` row.
 
 ```{r}
-output_matrix <- batch_snf(data_list, settings_matrix)
+solutions_matrix <- batch_snf(data_list, settings_matrix)
 
-colnames(output_matrix)[1:20]
+colnames(solutions_matrix)[1:20]
 ```
 
 It goes on like this for some time.
 
 ```{r}
-output_matrix[1:5, 1:20]
+solutions_matrix[1:5, 1:20]
 ```
 
 Just like that, the clustering is done!
@@ -237,7 +237,7 @@ Just like that, the clustering is done!
 
 ## Picking a solution #1: examining meta clusters
 
-We now have a group of cluster solutions stored in an `output_matrix`.
+We now have a group of cluster solutions stored in an `solutions_matrix`.
 Proposing tens or hundreds (or thousands) of clustering solutions in a research paper doesn't seem to be fashionable right now, so we will need to pick a solution to move forward with.
 In this section, we'll take a look at the cluster-of-clusters approach to picking our favourite solution to move forward with.
 I believe this approach is best for truly exploratory clustering (read: when the way in which you prefer to choose between two clustering solutions is through ambiguous vibes).
@@ -246,22 +246,22 @@ The first step is to calculate the [adjusted Rand index](https://en.wikipedia.or
 This metric is tells us how similar the solutions are to each other, thereby allowing us to find clusters of cluster solutions.
 
 ```{r}
-output_matrix_aris <- calc_om_aris(output_matrix)
+solutions_matrix_aris <- calc_om_aris(solutions_matrix)
 
-dim(output_matrix_aris)
+dim(solutions_matrix_aris)
 
 ```
 
 We can visualize the resulting inter-cluster similarities with a heatmap:
 
 ```{r}
-ari_heatmap(output_matrix_aris)
+ari_heatmap(solutions_matrix_aris)
 ```
 
-You can optionally save your heatmap by specifying a path with the `save` parameter (e.g., `ari_heatmap(output_matrix_aris, save = "./ari_heatmap.png")`).
+You can optionally save your heatmap by specifying a path with the `save` parameter (e.g., `ari_heatmap(solutions_matrix_aris, save = "./ari_heatmap.png")`).
 
 ```{r echo = FALSE, fig.align = 'center'}
-ari_heatmap(output_matrix_aris, save = "./ari_heatmap.png")
+ari_heatmap(solutions_matrix_aris, save = "./ari_heatmap.png")
 ```
 
 ![.](./ari_heatmap.png){width=400px}
@@ -274,13 +274,13 @@ You can examine the un-clustered heatmap like this:
 
 ```{r}
 ari_heatmap(
-    output_matrix_aris,
+    solutions_matrix_aris,
     cluster_rows = FALSE,
     cluster_cols = FALSE)
 ```
 
 ```{r echo = FALSE, fig.align = 'center'}
-ari_heatmap(output_matrix_aris,
+ari_heatmap(solutions_matrix_aris,
             cluster_rows = FALSE,
             cluster_cols = FALSE,
             save = "./ari_heatmap_unclustered2.png")
@@ -293,7 +293,7 @@ ari_heatmap(output_matrix_aris,
 And there's an option to hide the corresponding settings matrix rows:
 
 ```{r}
-ari_heatmap(output_matrix_aris, hide_ids = TRUE)
+ari_heatmap(solutions_matrix_aris, hide_ids = TRUE)
 ```
 
 The pattern here appears to be a bit of a common theme with the randomly generated settings matrix, owing to the solutions between SNF schemes having significantly more variability than the solutions within SNF schemes (and thus producing 3 rough meta clusters).
@@ -324,11 +324,11 @@ You can use the solution order in the clustered ARI heatmap to reorder the setti
 
 
 ```{r include = FALSE}
-om_ari_order <- get_pheatmap_order(output_matrix_aris)
+om_ari_order <- get_pheatmap_order(solutions_matrix_aris)
 ```
 
 ```{r eval = FALSE}
-om_ari_order <- get_pheatmap_order(output_matrix_aris)
+om_ari_order <- get_pheatmap_order(solutions_matrix_aris)
 ```
 
 The order is just a vector of numbers...
@@ -357,7 +357,7 @@ Maybe you'll see something interesting!
 If there's a row that interest you (say, row 5), this format may be more useful for your subsequent analyses:
 
 ```{r}
-cluster_df <- get_cluster_df(output_matrix[5, ])
+cluster_df <- get_cluster_df(solutions_matrix[5, ])
 
 head(cluster_df)
 ```
@@ -389,27 +389,27 @@ At this time, each dataframe used to build an outcome_list must be a single-feat
 
 Just like when generating the initial `data_list`, we need to specify the name of the column in the provided dataframes that is originally being used to uniquely identify the different observations from each other with the `old_uid` parameter.
 
-We will next extend our `output_matrix` with p-values from regressing the `outcome_list` features onto our generated clusters.
+We will next extend our `solutions_matrix` with p-values from regressing the `outcome_list` features onto our generated clusters.
 
 ```{r}
-extended_output_matrix <- extend_om(output_matrix, outcome_list)
+extended_solutions_matrix <- extend_om(solutions_matrix, outcome_list)
 
-colnames(extended_output_matrix)
+colnames(extended_solutions_matrix)
 
 # Looking at the newly added columns
-head(no_subs(extended_output_matrix))
+head(no_subs(extended_solutions_matrix))
 ```
 
 If you just want the p-values:
 
 ```{r}
-p_val_select(extended_output_matrix)
+p_val_select(extended_solutions_matrix)
 ```
 
 And of course, there is a heatmap for visualizing this too:
 
 ```{r include = FALSE}
-om_pvals <- p_val_select(extended_output_matrix)
+om_pvals <- p_val_select(extended_solutions_matrix)
 
 str(om_pvals)
 
@@ -420,7 +420,7 @@ str(om_pvals)
 ```
 
 ```{r eval = FALSE}
-om_pvals <- p_val_select(extended_output_matrix)
+om_pvals <- p_val_select(extended_solutions_matrix)
 
 pvals_pheatmap(om_pvals, order = om_ari_order)
 ```
@@ -436,7 +436,7 @@ The risk for overfitting your data with this approach is considerable, so make s
 
 I've relied on label propagation (provided by the SNFtool package in the `groupPredict` function) to take my top clustering solution in some training data, assign predicted clusters to some held out test subjects, and then characterized those test subjects to see how well the clustering solution seemed to have worked.
 
-This package provides a wrapper for `SNFtool::groupPredict` to make the label propagation process a little easier to apply to the `output_matrix` structure.
+This package provides a wrapper for `SNFtool::groupPredict` to make the label propagation process a little easier to apply to the `solutions_matrix` structure.
 
 ## Validating results with label propagation
 
@@ -517,18 +517,18 @@ train_outcome_list <- generate_outcome_list(
 # Find a clustering solution in your training data
 settings_matrix <- generate_settings_matrix(train_data_list, nrow = 5, seed = 42)
 
-train_output_matrix <- batch_snf(train_data_list, settings_matrix)
+train_solutions_matrix <- batch_snf(train_data_list, settings_matrix)
 
-extended_output_matrix <- extend_om(train_output_matrix, train_outcome_list)
+extended_solutions_matrix <- extend_om(train_solutions_matrix, train_outcome_list)
 
 # The fourth row had the lowest minimum p-value across our outcomes
-which(extended_output_matrix$"min_p_val" ==
-      min(extended_output_matrix$"min_p_val"))
+which(extended_solutions_matrix$"min_p_val" ==
+      min(extended_solutions_matrix$"min_p_val"))
 
 # Keep track of your top solution
-top_om_row <- extended_output_matrix[4, ]
+top_om_row <- extended_solutions_matrix[4, ]
 
-# Hand over the output matrix as well as the full data list to propagate labels
+# Hand over the solutions matrix as well as the full data list to propagate labels
 #  to the test subjects
 propagated_labels <- lp_om(top_om_row, full_data_list)
 head(propagated_labels)
@@ -538,7 +538,7 @@ tail(propagated_labels)
 You could, if you wanted, see how *all* of your clustering solutions propagate to the test set, but that would mean reusing your test set and removing the protection against overfitting conferred by this procedure.
 
 ```{r}
-propagated_labels_all <- lp_om(extended_output_matrix, full_data_list)
+propagated_labels_all <- lp_om(extended_solutions_matrix, full_data_list)
 head(propagated_labels_all)
 tail(propagated_labels_all)
 ```

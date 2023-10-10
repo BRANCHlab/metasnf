@@ -15,5 +15,5 @@ df_subs Dataframe with only 'subject_' prefixed columns
 \description{
 Removes the columns that are not prefixed with 'subject_' prefixed columns
 from a dataframe. Useful intermediate step for extracting subject UIDs from
-an output_matrix structure.
+an solutions_matrix structure.
 }

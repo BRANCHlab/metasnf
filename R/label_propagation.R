@@ -40,12 +40,12 @@ label_prop <- function(full_fused_network, clusters) {
     return(new_clusters)
 }
 
-#' Label propagation over an output matrix
+#' Label propagation over an solutions matrix
 #'
-#' Given an output matrix and a data_list object containing all subjects, return
+#' Given an solutions matrix and a data_list object containing all subjects, return
 #'  a dataframe of the label propagated results of all om rows
 #'
-#' @param om An output matrix
+#' @param om An solutions matrix
 #' @param full_data_list A data_list object made by rbinding(train, test) data
 #'
 #' @return labeled_df A dataframe of the label propagated results of all om rows
@@ -54,7 +54,7 @@ label_prop <- function(full_fused_network, clusters) {
 lp_om <- function(om, full_data_list) {
     if (!"significance" %in% colnames(om)) {
         print(paste0(
-            "If you add a 'significance' column to your output matrix",
+            "If you add a 'significance' column to your solutions matrix",
             " those values will be used to name each solution (instead of",
             " row IDs)"
         ))

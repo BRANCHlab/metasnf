@@ -24,7 +24,9 @@ batch_snf <- function(data_list,
                       settings_matrix,
                       processes = 1,
                       affinity_matrix_dir = NULL) {
-    # 1. Parallel processing checks should be used ############################
+    ###########################################################################
+    # 1. Parallel processing
+    ###########################################################################
     if (processes != 1) {
         available_cores <- future::availableCores()[["cgroups.cpuset"]]
         # Use all available cores
@@ -59,14 +61,17 @@ batch_snf <- function(data_list,
             stop("Invalid number of processes specified.")
         }
     }
-    # 2. Start timer to keep track of entire function duration ################
+    ###########################################################################
+    # 2. Start timer to keep track of entire function duration
+    ###########################################################################
     start <- proc.time()
-    # 3. Applying parameters in settings_matrix ###############################
-    ## 3a. Ensure settings_matrix is not a tibble or matrix
+    ###########################################################################
+    # 3. Ensure settings_matrix is a data.frame (not a tibble or matrix)
+    ###########################################################################
     settings_matrix <- data.frame(settings_matrix)
     subjects <- data_list[[1]]$"data"$"subjectkey"
-    output_matrix <- add_columns(settings_matrix, "nclust", 0)
-    output_matrix <- add_columns(settings_matrix, subjects, 0)
+    solutions_matrix <- add_columns(settings_matrix, "nclust", 0)
+    solutions_matrix <- add_columns(settings_matrix, subjects, 0)
     # Iterate through the rows of the settings matrix
     remaining_seconds_vector <- vector()
     for (i in seq_len(nrow(settings_matrix))) {
@@ -112,10 +117,10 @@ batch_snf <- function(data_list,
                     "The eigen_or_rot value ", dm_row$"eigen_or_rot", " is not",
                     "a valid input type."), class = "invalid_input")
         }
-        output_matrix[i, "nclust"] <- nclust
+        solutions_matrix[i, "nclust"] <- nclust
         cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
         # Assign subtype membership
-        output_matrix[i, rownames(fused_network)] <- cluster_results
+        solutions_matrix[i, rownames(fused_network)] <- cluster_results
         # Print estimated time taken until function completion ################
         remaining_seconds_vector <- batch_snf_time_remaining(
             seconds_per_row = as.numeric(Sys.time() - start_time),
@@ -124,15 +129,15 @@ batch_snf <- function(data_list,
             remaining_seconds_vector
         )
     }
-    # Add number of clusters to output matrix #################################
-    output_matrix <- output_matrix |>
+    # Add number of clusters to solutions matrix #################################
+    solutions_matrix <- solutions_matrix |>
         unique()
-    output_matrix <- numcol_to_numeric(output_matrix)
+    solutions_matrix <- numcol_to_numeric(solutions_matrix)
     # Print total time taken for function completion ##########################
     total_time <- (proc.time() - start)[["elapsed"]]
     print(paste0("Total time taken: ", round(total_time, 0), " seconds."))
     # Return solutions matrix #################################################
-    return(output_matrix)
+    return(solutions_matrix)
 }
 
 #' Parallel processing form of batch_snf
@@ -158,12 +163,12 @@ parallel_batch_snf <- function(data_list,
     start <- proc.time()
     future::plan(future::multisession, workers = processes)
     settings_matrix <- data.frame(settings_matrix)
-    output_matrix <-
+    solutions_matrix <-
         future.apply::future_apply(settings_matrix, 1, dm_row_fn, dl = data_list)
-    output_matrix <- do.call("rbind", output_matrix)
-    output_matrix <- output_matrix |>
+    solutions_matrix <- do.call("rbind", solutions_matrix)
+    solutions_matrix <- solutions_matrix |>
         unique()
-    output_matrix <- numcol_to_numeric(output_matrix)
+    solutions_matrix <- numcol_to_numeric(solutions_matrix)
     future::plan(future::sequential)
     total_time <- (proc.time() - start)[["elapsed"]]
     print(
@@ -171,7 +176,7 @@ parallel_batch_snf <- function(data_list,
             "Total time taken: ", total_time, " seconds."
         )
     )
-    return(output_matrix)
+    return(solutions_matrix)
 }
 
 #' Apply-based function for batch_snf

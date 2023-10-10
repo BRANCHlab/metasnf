@@ -2,12 +2,12 @@
 % Please edit documentation in R/characterization.R
 \name{select_om}
 \alias{select_om}
-\title{Select specific row_ids from an output matrix}
+\title{Select specific row_ids from an solutions matrix}
 \usage{
 select_om(om, row_ids)
 }
 \arguments{
-\item{om}{output matrix}
+\item{om}{solutions matrix}
 
 \item{row_ids}{vector of row_id values to be selected}
 }
@@ -15,5 +15,5 @@ select_om(om, row_ids)
 selected_om
 }
 \description{
-Select specific row_ids from an output matrix
+Select specific row_ids from an solutions matrix
 }

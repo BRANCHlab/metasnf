@@ -2,15 +2,15 @@
 % Please edit documentation in R/plotting.R
 \name{assigned_clust_hist}
 \alias{assigned_clust_hist}
-\title{Histogram of cluster membership across an output matrix}
+\title{Histogram of cluster membership across an solutions matrix}
 \usage{
 assigned_clust_hist(om, save = NULL)
 }
 \arguments{
-\item{om}{output matrix}
+\item{om}{solutions matrix}
 
 \item{save}{optional path to save figure to}
 }
 \description{
-Histogram of cluster membership across an output matrix
+Histogram of cluster membership across an solutions matrix
 }

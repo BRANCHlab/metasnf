@@ -7,7 +7,7 @@
 cbcl_ord_reg_from_om(om, cbcl_list, bonferroni = FALSE)
 }
 \arguments{
-\item{om}{an output matrix}
+\item{om}{an solutions matrix}
 
 \item{cbcl_list}{a list of CBCL measures}
 

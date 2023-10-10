@@ -2,7 +2,7 @@
 % Please edit documentation in R/characterization.R
 \name{get_cluster_df}
 \alias{get_cluster_df}
-\title{Extract dataframe of cluster and subject key from output matrix row}
+\title{Extract dataframe of cluster and subject key from solutions matrix row}
 \usage{
 get_cluster_df(om_row)
 }
@@ -13,5 +13,5 @@ get_cluster_df(om_row)
 cluster_df dataframe of cluster and subjectkey
 }
 \description{
-Extract dataframe of cluster and subject key from output matrix row
+Extract dataframe of cluster and subject key from solutions matrix row
 }

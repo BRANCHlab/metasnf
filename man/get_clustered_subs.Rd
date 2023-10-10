@@ -4,14 +4,14 @@
 \alias{get_clustered_subs}
 \title{Get clustered subjects}
 \usage{
-get_clustered_subs(output_matrix_row)
+get_clustered_subs(solutions_matrix_row)
 }
 \arguments{
-\item{output_matrix_row}{Output matrix row containing subtype membership}
+\item{solutions_matrix_row}{Output matrix row containing subtype membership}
 }
 \value{
 clustered_subs Dataframe
 }
 \description{
-Pull a dataframe of clustered subjects from an output matrix structure
+Pull a dataframe of clustered subjects from an solutions matrix structure
 }

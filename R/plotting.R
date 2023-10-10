@@ -113,9 +113,9 @@ pvals_pheatmap <- function(pvals,
         legend = TRUE)
 }
 
-#' Scatter plot output matrix results by minimum and mean p-values
+#' Scatter plot solutions matrix results by minimum and mean p-values
 #'
-#' @param om output matrix
+#' @param om solutions matrix
 #' @param title plot title
 #' @param pointsize size of scatter plot point
 #' @param labelsize size of label text
@@ -192,9 +192,9 @@ om_scatter <- function(om,
     return(plot)
 }
 
-#' Pheatmap of cluster membership across an output matrix
+#' Pheatmap of cluster membership across an solutions matrix
 #'
-#' @param om output matrix
+#' @param om solutions matrix
 #' @param save optional path to save figure to
 #'
 #' @export
@@ -222,9 +222,9 @@ assigned_clust_pheatmap <- function(om, save = NULL) {
         cellwidth = 2.2)
 }
 
-#' Scatter plot of cluster membership across an output matrix
+#' Scatter plot of cluster membership across an solutions matrix
 #'
-#' @param om output matrix
+#' @param om solutions matrix
 #' @param save optional path to save figure to
 #'
 #' @export
@@ -255,9 +255,9 @@ assigned_clust_scatter <- function(om, save = NULL) {
         ylab = "Mean assigned cluster")
 }
 
-#' Histogram of cluster membership across an output matrix
+#' Histogram of cluster membership across an solutions matrix
 #'
-#' @param om output matrix
+#' @param om solutions matrix
 #' @param save optional path to save figure to
 #'
 #' @export
@@ -382,7 +382,7 @@ cbcl_bar_chart <- function(characterization_df, outcome, nclust = NULL) {
 #' Arrange and optionally save a grid of bar charts with cluster on the x-axis
 #'  and each CBCL measure on the y-axis.
 #'
-#' @param om An output matrix-like structure
+#' @param om An solutions matrix-like structure
 #' @param cbcl_list List containing all CBCL dataframes
 #' @param fig_path_fn Closure specifying the location to save the final figure
 #' @param save_prefix prefix to add to each file saved
@@ -419,7 +419,7 @@ plot_all_cbcl <- function(om, cbcl_list, fig_path_fn, save_prefix = NULL,
         print(is.null(exclude))
         stop("Only one of `include` or `exclude` params should be given.")
     }
-    # Iterate through the output matrix one row at a time
+    # Iterate through the solutions matrix one row at a time
     for (row in seq_len(nrow(om))) {
         # Dataframe with subjectkey and assigned cluster as columns
         cluster_df <- get_cluster_df(om[row, ])

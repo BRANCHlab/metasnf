@@ -2,16 +2,16 @@
 % Please edit documentation in R/output_matrix.R
 \name{p_val_select}
 \alias{p_val_select}
-\title{Select p-values from output matrix}
+\title{Select p-values from solutions matrix}
 \usage{
-p_val_select(output_matrix)
+p_val_select(solutions_matrix)
 }
 \arguments{
-\item{output_matrix}{The output of batch_snf}
+\item{solutions_matrix}{The output of batch_snf}
 }
 \value{
 p_val_matrix P-values ready for heatmap plotting
 }
 \description{
-Select p-values from output matrix
+Select p-values from solutions matrix
 }

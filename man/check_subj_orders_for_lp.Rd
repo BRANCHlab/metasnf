@@ -9,7 +9,7 @@ check_subj_orders_for_lp(data_list, om_row, n_train, n_test)
 \arguments{
 \item{data_list}{A data list}
 
-\item{om_row}{An output matrix row}
+\item{om_row}{An solutions matrix row}
 
 \item{n_train}{number of training subjects}
 

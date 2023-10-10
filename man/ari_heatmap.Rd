@@ -5,7 +5,7 @@
 \title{Heatmap meta-clustering results}
 \usage{
 ari_heatmap(
-  output_matrix_aris,
+  solutions_matrix_aris,
   title = "",
   save = NULL,
   cluster_cols = TRUE,
@@ -16,7 +16,7 @@ ari_heatmap(
 )
 }
 \arguments{
-\item{output_matrix_aris}{results from meta_cluster function}
+\item{solutions_matrix_aris}{results from meta_cluster function}
 
 \item{title}{plot title}
 

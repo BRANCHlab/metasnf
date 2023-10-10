@@ -87,7 +87,7 @@ char_to_fac <- function(df) {
 #'
 #' @description
 #' Removes the 'subject_' prefixed columns from a dataframe. Useful for printing
-#'  output_matrix structures to the console
+#'  solutions_matrix structures to the console
 #'
 #' @param df A dataframe
 #'
@@ -114,7 +114,7 @@ no_subs <- function(df) {
 #' @description
 #' Removes the columns that are not prefixed with 'subject_' prefixed columns
 #'  from a dataframe. Useful intermediate step for extracting subject UIDs from
-#'  an output_matrix structure.
+#'  an solutions_matrix structure.
 #'
 #' @param df Dataframe
 #'
