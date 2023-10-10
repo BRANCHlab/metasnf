@@ -253,3 +253,30 @@ list_remove <- function(list_object, ...) {
     pruned_list <- list_object[!list_names %in% to_remove]
     return(pruned_list)
 }
+
+
+
+#' Time remaining until batch_snf completion
+#'
+#' @param PARAM1
+#'
+#' @return RETURN
+#'
+#' @export
+batch_snf_time_remaining <- function(seconds_per_row, rows_remaining, row, remaining_seconds_vector) {
+    remaining_seconds_vector <- c(remaining_seconds_vector, seconds_per_row)
+    if (length(remaining_seconds_vector) > 10) {
+        remaining_seconds_vector <-
+            remaining_seconds_vector[2:length(remaining_seconds_vector)]
+    }
+    remaining_seconds <- round(
+        mean(remaining_seconds_vector) * rows_remaining, 0
+    )
+    print(
+        paste0(
+            "Row: ", row, "/", (row + rows_remaining), " | ",
+            "Time remaining: ", remaining_seconds, " seconds"
+        )
+    )
+    return(remaining_seconds_vector)
+}

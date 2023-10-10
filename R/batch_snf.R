@@ -21,7 +21,7 @@
 batch_snf <- function(data_list,
                       settings_matrix,
                       processes = 1) {
-    # Check if parallel processing should be used
+    # 1. Parallel processing checks should be used ############################
     if (processes != 1) {
         available_cores <- future::availableCores()[["cgroups.cpuset"]]
         # Use all available cores
@@ -56,9 +56,13 @@ batch_snf <- function(data_list,
             stop("Invalid number of processes specified.")
         }
     }
+    # 2. Start timer to keep track of entire function duration ################
     start <- proc.time()
+    # 3. Applying parameters in settings_matrix ###############################
+    ## 3a. Ensure settings_matrix is not a tibble or matrix
     settings_matrix <- data.frame(settings_matrix)
-    subjects <- c("nclust", data_list[[1]]$"data"$"subjectkey")
+    subjects <- data_list[[1]]$"data"$"subjectkey"
+    output_matrix <- add_columns(settings_matrix, "nclust", 0)
     output_matrix <- add_columns(settings_matrix, subjects, 0)
     # Iterate through the rows of the settings matrix
     remaining_seconds_vector <- vector()
@@ -99,34 +103,22 @@ batch_snf <- function(data_list,
         cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
         # Assign subtype membership
         output_matrix[i, rownames(fused_network)] <- cluster_results
-        end_time <- Sys.time()
-        seconds_per_row <- as.numeric(end_time - start_time)
-        rows_remaining <- nrow(settings_matrix) - i
-        remaining_seconds_vector <- c(remaining_seconds_vector, seconds_per_row)
-        if (length(remaining_seconds_vector) > 10) {
-            remaining_seconds_vector <-
-                remaining_seconds_vector[2:length(remaining_seconds_vector)]
-        }
-        remaining_seconds <-
-            round(mean(remaining_seconds_vector) * rows_remaining, 0)
-        print(
-            paste0(
-                "Row: ", i, "/", nrow(settings_matrix),
-                " | ",
-                "Time remaining: ",
-                remaining_seconds,
-                " seconds"))
+        # Print estimated time taken until function completion ################
+        remaining_seconds_vector <- batch_snf_time_remaining(
+            seconds_per_row = as.numeric(Sys.time() - start_time),
+            rows_remaining = nrow(settings_matrix) - i,
+            row = i,
+            remaining_seconds_vector
+        )
     }
-    # Add number of clusters to output matrix
+    # Add number of clusters to output matrix #################################
     output_matrix <- output_matrix |>
         unique()
     output_matrix <- numcol_to_numeric(output_matrix)
+    # Print total time taken for function completion ##########################
     total_time <- (proc.time() - start)[["elapsed"]]
-    print(
-        paste0(
-            "Total time taken: ", total_time, " seconds."
-        )
-    )
+    print(paste0("Total time taken: ", round(total_time, 0), " seconds."))
+    # Return solutions matrix #################################################
     return(output_matrix)
 }
 
