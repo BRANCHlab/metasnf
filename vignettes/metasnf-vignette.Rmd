@@ -99,8 +99,6 @@ abcd_cort_t[1:5, 1:5]
 
 ```
 
-Notice
-
 The first column `subjectkey` is the unique identifier (UID) for all subjects in the ABCD study.
 This will also be the required UID for your data, but don't worry about that just yet.
 
