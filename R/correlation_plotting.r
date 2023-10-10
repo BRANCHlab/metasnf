@@ -1,4 +1,4 @@
-
+################### Visualize SNF and spectral clustering results using ComplexHeatmap and Manhattan plot ###################
 
 #' @description
 #' Normalize SNF matrix and plot heatmap. 
@@ -6,7 +6,7 @@
 #' @param W similarity matrix from SNF 
 #' @param group_cluster cluster assignment
 #' @param top_annotation annotation to be displayed above the heatmap output
-#' @paramm left_annotation annotation to be displayed on the left of the heatmap output
+#' @param left_annotation annotation to be displayed on the left of the heatmap output
 
 suppressPackageStartupMessages(library(ComplexHeatmap))
 displayClustersHeatmap <- function(W, 
