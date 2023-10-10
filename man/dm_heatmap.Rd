@@ -2,10 +2,10 @@
 % Please edit documentation in R/plotting.R
 \name{dm_heatmap}
 \alias{dm_heatmap}
-\title{Heatmap design matrix based on meta-clustering results}
+\title{Heatmap settings matrix based on meta-clustering results}
 \usage{
 dm_heatmap(
-  design_matrix,
+  settings_matrix,
   order = NULL,
   show_rownames = TRUE,
   save = NULL,
@@ -13,9 +13,9 @@ dm_heatmap(
 )
 }
 \arguments{
-\item{design_matrix}{matrix indicating parameters to iterate SNF through}
+\item{settings_matrix}{matrix indicating parameters to iterate SNF through}
 
-\item{order}{numeric vector indicating row ordering of design matrix}
+\item{order}{numeric vector indicating row ordering of settings matrix}
 
 \item{show_rownames}{If TRUE (default), rownames are shown on heatmap}
 
@@ -24,6 +24,6 @@ dm_heatmap(
 \item{hide_ids}{boolean indicating if row_id numbers should be hidden}
 }
 \description{
-Normalizes the design matrix and plots as a heatmap. Rows are reordered to
+Normalizes the settings matrix and plots as a heatmap. Rows are reordered to
 match the row-clustering present within a provided meta-clustering result.
 }

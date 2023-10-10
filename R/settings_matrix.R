@@ -1,18 +1,18 @@
-#' Build a design matrix - but softcoded
+#' Build a settings matrix
 #'
 #' @param data_list a data list object to determine variables for inclusion and
 #'  exclusion
-#' @param nrows number of design matrix rows
+#' @param nrows number of settings matrix rows
 #' @param seed set a seed for the random matrix generation. Note that this
 #' @param min_removed The smallest number of elements that may be removed
 #' @param max_removed The largest number of elements that may be removed
 #' @param retry_limit The maximum number of attempts to generate a novel row
 #'  affects the global seed.
 #'
-#' @return design_matrix A design matrix
+#' @return settings_matrix A settings matrix
 #'
 #' @export
-generate_design_matrix <- function(data_list,
+generate_settings_matrix <- function(data_list,
                                    nrows = 0,
                                    seed = NULL,
                                    min_removed = NULL,
@@ -29,27 +29,27 @@ generate_design_matrix <- function(data_list,
         "eigen_or_rot",
         "K",
         "alpha")
-    design_matrix_base <- as.data.frame(
+    settings_matrix_base <- as.data.frame(
         matrix(
             0,
             ncol = length(dm_cols),
             nrow = 0
         )
     )
-    colnames(design_matrix_base) <- dm_cols
-    design_matrix <- add_design_matrix_rows(
-        design_matrix = design_matrix_base,
+    colnames(settings_matrix_base) <- dm_cols
+    settings_matrix <- add_settings_matrix_rows(
+        settings_matrix = settings_matrix_base,
         nrows = nrows,
         min_removed = min_removed,
         max_removed = max_removed,
         retry_limit = retry_limit
     )
-    return(design_matrix)
+    return(settings_matrix)
 }
 
 #' Generate random removal sequence
 #'
-#' Helper function to contribute to rows within the design matrix.
+#' Helper function to contribute to rows within the settings matrix.
 #' Number of columns removed follows the exponential probability distribution
 #' to typically keep all or most columns.
 #'
@@ -100,18 +100,18 @@ random_removal <- function(num_cols,
     return(shuffled_removals)
 }
 
-#' Add design matrix rows
+#' Add settings matrix rows
 #'
-#' @param design_matrix The existing design matrix
-#' @param nrows The number of rows to be added to the design matrix
+#' @param settings_matrix The existing settings matrix
+#' @param nrows The number of rows to be added to the settings matrix
 #' @param retry_limit The maximum number of attempts to generate a novel row
 #' @param min_removed The smallest number of elements that may be removed
 #' @param max_removed The largest number of elements that may be removed
 #'
-#' @return design_matrix New design matrix containing additional rows
+#' @return settings_matrix New settings matrix containing additional rows
 #'
 #' @export
-add_design_matrix_rows <- function(design_matrix,
+add_settings_matrix_rows <- function(settings_matrix,
                                    nrows,
                                    min_removed = NULL,
                                    max_removed = NULL,
@@ -119,10 +119,10 @@ add_design_matrix_rows <- function(design_matrix,
     i <- 0
     num_retries <- 0
     while (i < nrows) {
-        row_id <- nrow(design_matrix) + 1
+        row_id <- nrow(settings_matrix) + 1
         new_row <- vector()
         # Inclusion columns
-        num_inclusion_cols <- sum(startsWith(colnames(design_matrix), "inc"))
+        num_inclusion_cols <- sum(startsWith(colnames(settings_matrix), "inc"))
         inclusions <- t(
             data.frame(
                 random_removal(
@@ -133,7 +133,7 @@ add_design_matrix_rows <- function(design_matrix,
             )
         )
         inclusion_names <-
-            colnames(design_matrix)[startsWith(colnames(design_matrix), "inc")]
+            colnames(settings_matrix)[startsWith(colnames(settings_matrix), "inc")]
         colnames(inclusions) <- inclusion_names
         # Other free parameters
         snf_scheme <- sample(1:3, 1)
@@ -149,19 +149,19 @@ add_design_matrix_rows <- function(design_matrix,
             eigen_or_rot,
             K,
             alpha)
-        # Appending to design matrix
-        colnames(new_row) <- colnames(design_matrix)
+        # Appending to settings matrix
+        colnames(new_row) <- colnames(settings_matrix)
         new_row <- data.frame(new_row)
-        design_matrix <- rbind(design_matrix, new_row)
+        settings_matrix <- rbind(settings_matrix, new_row)
         i <- i + 1
         # Check if newly added row already exists
-        dm_no_id <- design_matrix[, 2:length(design_matrix)]
+        dm_no_id <- settings_matrix[, 2:length(settings_matrix)]
         num_duplicates <- length(which(
             duplicated(dm_no_id) |
             duplicated(dm_no_id, fromLast = TRUE)))
         if (num_duplicates > 0) {
             i <- i - 1
-            design_matrix <- design_matrix[seq_len(nrow(design_matrix)) - 1, ]
+            settings_matrix <- settings_matrix[seq_len(nrow(settings_matrix)) - 1, ]
             num_retries <- num_retries + 1
         } else {
             num_retries <- 0
@@ -175,21 +175,6 @@ add_design_matrix_rows <- function(design_matrix,
        print("Matrix row building aborted.")
        print("To keep adding rows, try raising the retry_limit parameter.")
     }
-    row.names(design_matrix) <- NULL
-    return(design_matrix)
-}
-
-#' Build design matrix for scanning alpha and K
-#'
-#' @return design_matrix Adds the standard grid expansion for SNF hyperparams
-#'
-#' @export
-generate_design_matrix_ak <- function() {
-    design_matrix <- generate_design_matrix()
-    design_matrix[1:80, ] <- 1
-    hyperparam_grid <- expand.grid(1:10, 3:10)
-    colnames(hyperparam_grid) <- c("K", "alpha")
-    design_matrix$K <- hyperparam_grid$K * 10
-    design_matrix$alpha <- hyperparam_grid$alpha / 10
-    return(design_matrix)
+    row.names(settings_matrix) <- NULL
+    return(settings_matrix)
 }

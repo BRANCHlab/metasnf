@@ -7,7 +7,7 @@
 dm_row_fn(dm_row, dl)
 }
 \arguments{
-\item{dm_row}{a row of a design matrix}
+\item{dm_row}{a row of a settings matrix}
 
 \item{dl}{a data list}
 }

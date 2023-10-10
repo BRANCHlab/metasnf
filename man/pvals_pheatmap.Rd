@@ -16,7 +16,7 @@ pvals_pheatmap(
 \arguments{
 \item{pvals}{a matrix of p-values}
 
-\item{order}{numeric vector indicating row ordering of design matrix}
+\item{order}{numeric vector indicating row ordering of settings matrix}
 
 \item{cluster_cols}{if TRUE, pheatmap will cluster (and rearrange) columns}
 

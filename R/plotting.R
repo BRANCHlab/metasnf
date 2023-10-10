@@ -1,25 +1,25 @@
-#' Heatmap design matrix based on meta-clustering results
+#' Heatmap settings matrix based on meta-clustering results
 #'
 #' @description
-#' Normalizes the design matrix and plots as a heatmap. Rows are reordered to
+#' Normalizes the settings matrix and plots as a heatmap. Rows are reordered to
 #'  match the row-clustering present within a provided meta-clustering result.
 #'
-#' @param design_matrix matrix indicating parameters to iterate SNF through
-#' @param order numeric vector indicating row ordering of design matrix
+#' @param settings_matrix matrix indicating parameters to iterate SNF through
+#' @param order numeric vector indicating row ordering of settings matrix
 #' @param show_rownames If TRUE (default), rownames are shown on heatmap
 #' @param save optional path to save figure to
 #' @param hide_ids boolean indicating if row_id numbers should be hidden
 #'
 #' @export
-dm_heatmap <- function(design_matrix,
+dm_heatmap <- function(settings_matrix,
                        order = NULL,
                        show_rownames = TRUE,
                        save = NULL,
                        hide_ids = FALSE) {
     if (!is.null(order)) {
-        design_matrix <- design_matrix[order, ]
+        settings_matrix <- settings_matrix[order, ]
     }
-    dm_scaled <- design_matrix
+    dm_scaled <- settings_matrix
     dm_scaled$"row_id" <- dm_scaled$"row_id" / max(dm_scaled$"row_id")
     dm_scaled$"K" <- dm_scaled$"K" / max(dm_scaled$"K")
     dm_scaled$"alpha" <- dm_scaled$"alpha" / max(dm_scaled$"alpha")
@@ -59,7 +59,7 @@ dm_heatmap <- function(design_matrix,
 #' Pheatmap a matrix of p-values
 #'
 #' @param pvals a matrix of p-values
-#' @param order numeric vector indicating row ordering of design matrix
+#' @param order numeric vector indicating row ordering of settings matrix
 #' @param cluster_cols if TRUE, pheatmap will cluster (and rearrange) columns
 #' @param show_rownames If TRUE (default), rownames are shown on heatmap
 #' @param save optional path to save figure to

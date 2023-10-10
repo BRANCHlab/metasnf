@@ -1,7 +1,7 @@
 #' Generate data_list object - but softcoded
 #'
 #' This is the major data object that will be processed when iterating through
-#'  the design matrix. The full list contains one list per measurement type.
+#'  the settings matrix. The full list contains one list per measurement type.
 #'  Within each measurement type's list, elements include the actual data
 #'  structure, the name, the domain, and the data 'type' (i.e, numeric or
 #'  categorical).

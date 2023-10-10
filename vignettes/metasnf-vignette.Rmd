@@ -189,15 +189,15 @@ summarize_dl(data_list)
 
 Each input dataframe now has the same 100 subjects with complete data.
 
-## Generating the design matrix
+## Generating the settings matrix
 
-The `design_matrix` stores all the information about the settings we'd like to use for each of our SNF runs.
-Calling the `generate_design_matrix` function with a specified number of rows will automatically build a randomly populated `design_matrix`.
+The `settings_matrix` stores all the information about the settings we'd like to use for each of our SNF runs.
+Calling the `generate_settings_matrix` function with a specified number of rows will automatically build a randomly populated `settings_matrix`.
 
 ```{r}
-design_matrix <- generate_design_matrix(data_list, nrow = 30, seed = 42)
+settings_matrix <- generate_settings_matrix(data_list, nrow = 30, seed = 42)
 
-design_matrix
+settings_matrix
 ```
 
 The columns are:
@@ -208,21 +208,21 @@ The columns are:
 - `K` - the nearest neighbors hyperparameter used for SNF (an input to the function SNFtool::SNF)
 - `alpha` - Referred to as $\eta$ in the original SNF manuscript, alpha in the SNFtool code examples, and sigma in the SNFtool source code, this is a hyperparameter for affinity matrix generation
 
-`generate_design_matrix` randomly populates these columns and ensures that no generated rows are identical.
-Setting the optional `seed` parameter (which will affect the seed of your entire R session) ensures that the same design matrix is generated each time we run the code.
+`generate_settings_matrix` randomly populates these columns and ensures that no generated rows are identical.
+Setting the optional `seed` parameter (which will affect the seed of your entire R session) ensures that the same settings matrix is generated each time we run the code.
 
-While we end up with a random set of settings here, there is nothing wrong with manually altering the design matrix to suit your needs.
+While we end up with a random set of settings here, there is nothing wrong with manually altering the settings matrix to suit your needs.
 For example, if you wanted to know how much of a difference one input dataframe made, you could ensure that half of the rows included this input dataframe and the other half didn't.
-You can also add random rows to an already existing dataframe using the `add_design_matrix_rows` function.
+You can also add random rows to an already existing dataframe using the `add_settings_matrix_rows` function.
 
 
-## Executing the design matrix
+## Executing the settings matrix
 
-The `batch_snf` function integrates the data in the `data_list` using each of the sets of settings contained in the `design_matrix`.
-The resulting structure is an `output_matrix` which is an extension of the `design_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `design_matrix` row.
+The `batch_snf` function integrates the data in the `data_list` using each of the sets of settings contained in the `settings_matrix`.
+The resulting structure is an `output_matrix` which is an extension of the `settings_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `settings_matrix` row.
 
 ```{r}
-output_matrix <- batch_snf(data_list, design_matrix)
+output_matrix <- batch_snf(data_list, settings_matrix)
 
 colnames(output_matrix)[1:20]
 ```
@@ -270,7 +270,7 @@ ari_heatmap(output_matrix_aris, save = "./ari_heatmap.png")
 
 The clustering solutions are along the rows and columns of the above figure, and the cells at the intersection between two solutions show how similar (big ARI) those solutions are to each other.
 The diagonals should always be red, representing the maximum value of 1, as they show the similarity between any clustering solution and itself.
-Agglomerative hierarchical clustering is being applied to these solutions by default (thank you, `pheatmap` package) so the orders of the clustering solutions here do not exactly line up with the order of the clustering solutions present in the design matrix.
+Agglomerative hierarchical clustering is being applied to these solutions by default (thank you, `pheatmap` package) so the orders of the clustering solutions here do not exactly line up with the order of the clustering solutions present in the settings matrix.
 
 You can examine the un-clustered heatmap like this:
 
@@ -292,26 +292,26 @@ ari_heatmap(output_matrix_aris,
 ![](./ari_heatmap_unclustered2.png){width=400px}
 </center>
 
-And there's an option to hide the corresponding design matrix rows:
+And there's an option to hide the corresponding settings matrix rows:
 
 ```{r}
 ari_heatmap(output_matrix_aris, hide_ids = TRUE)
 ```
 
-The pattern here appears to be a bit of a common theme with the randomly generated design matrix, owing to the solutions between SNF schemes having significantly more variability than the solutions within SNF schemes (and thus producing 3 rough meta clusters).
-If you'd like to try and expand the space of clustering solutions produced even further, consider manually constructing a different design matrix.
-Later updates of this package will focus on customizing the design matrix a little easier (e.g., choosing which design matrix parameters stay fixed or what possible values other parameters can take on).
+The pattern here appears to be a bit of a common theme with the randomly generated settings matrix, owing to the solutions between SNF schemes having significantly more variability than the solutions within SNF schemes (and thus producing 3 rough meta clusters).
+If you'd like to try and expand the space of clustering solutions produced even further, consider manually constructing a different settings matrix.
+Later updates of this package will focus on customizing the settings matrix a little easier (e.g., choosing which settings matrix parameters stay fixed or what possible values other parameters can take on).
 
-If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your design matrix.
+If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your settings matrix.
 
-I recommend visualizing the design matrix with yet another heatmap:
+I recommend visualizing the settings matrix with yet another heatmap:
 
 ```{r eval = FALSE}
-dm_heatmap(design_matrix)
+dm_heatmap(settings_matrix)
 ```
 
 ```{r echo = FALSE}
-dm_heatmap(design_matrix, save = "./dm_heatmap.png")
+dm_heatmap(settings_matrix, save = "./dm_heatmap.png")
 ```
 
 <center>
@@ -320,9 +320,9 @@ dm_heatmap(design_matrix, save = "./dm_heatmap.png")
 
 The variables beginning with "inc" show when variables were (blue) or were not (red) randomly dropped out.
 With only 30 solutions examined and 5 input dataframes, the dropout may seem a little conservative.
-As stated above, a future goal is to have the design matrix yield diverse clustering solutions a little more efficiently, which will likely rely on more aggressive input dataframe dropout (or variable scaling).
+As stated above, a future goal is to have the settings matrix yield diverse clustering solutions a little more efficiently, which will likely rely on more aggressive input dataframe dropout (or variable scaling).
 
-You can use the solution order in the clustered ARI heatmap to reorder the design matrix heatmap:
+You can use the solution order in the clustered ARI heatmap to reorder the settings matrix heatmap:
 
 
 ```{r include = FALSE}
@@ -342,12 +342,12 @@ om_ari_order
 ... which can be passed into the `dm_heatmap` function:
 
 ```{r include = FALSE}
-dm_heatmap(design_matrix, order = om_ari_order,
+dm_heatmap(settings_matrix, order = om_ari_order,
            save = "./dm_heatmap_ordered.png")
 ```
 
 ```{r eval = FALSE}
-dm_heatmap(design_matrix, order = om_ari_order)
+dm_heatmap(settings_matrix, order = om_ari_order)
 ```
 
 <center>
@@ -517,9 +517,9 @@ train_outcome_list <- generate_outcome_list(
 )
 
 # Find a clustering solution in your training data
-design_matrix <- generate_design_matrix(train_data_list, nrow = 5, seed = 42)
+settings_matrix <- generate_settings_matrix(train_data_list, nrow = 5, seed = 42)
 
-train_output_matrix <- batch_snf(train_data_list, design_matrix)
+train_output_matrix <- batch_snf(train_data_list, settings_matrix)
 
 extended_output_matrix <- extend_om(train_output_matrix, train_outcome_list)
 
@@ -553,10 +553,10 @@ If you have any questions, comments, suggestions, bugs, etc. feel free to post a
 
 ### inc*
 
-This section describes how the `generate_design_matrix` function randomly assigns input dataframess to be dropped from different SNF runs to access a wider space of possible solutions.
+This section describes how the `generate_settings_matrix` function randomly assigns input dataframess to be dropped from different SNF runs to access a wider space of possible solutions.
 
-By default, `generate_design_matrix` will build an empty dataframe containing the columns outlined in the [design matrix][Generating the design matrix] section.
-If a non-zero number of rows are specified when calling `generate_design_matrix`, the function calls on `add_design_matrix_rows` to add rows with randomly valid values.
+By default, `generate_settings_matrix` will build an empty dataframe containing the columns outlined in the [settings matrix][Generating the settings matrix] section.
+If a non-zero number of rows are specified when calling `generate_settings_matrix`, the function calls on `add_settings_matrix_rows` to add rows with randomly valid values.
 The input dataframe inclusion variables rely on yet another helper function:
 
 ```{r}
