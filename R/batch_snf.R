@@ -20,7 +20,8 @@
 #' @export
 batch_snf <- function(data_list,
                       settings_matrix,
-                      processes = 1) {
+                      processes = 1,
+                      affinity_matrix_path = NULL) {
     # 1. Parallel processing checks should be used ############################
     if (processes != 1) {
         available_cores <- future::availableCores()[["cgroups.cpuset"]]
@@ -84,6 +85,10 @@ batch_snf <- function(data_list,
             current_snf_scheme,
             K = K,
             alpha = alpha)
+        #######################################################################
+        # 5. If user provided an affinity_matrix_path, write the matrices to
+        #  that path
+        print(fused_network)
         #######################################################################
         all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
         # Use the current row's number of clusters heuristic
