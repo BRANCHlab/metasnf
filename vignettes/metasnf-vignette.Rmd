@@ -218,11 +218,11 @@ You can also add random rows to an already existing dataframe using the `add_des
 
 ## Executing the design matrix
 
-The `execute_design_matrix` function integrates the data in the `data_list` using each of the sets of settings contained in the `design_matrix`.
+The `batch_snf` function integrates the data in the `data_list` using each of the sets of settings contained in the `design_matrix`.
 The resulting structure is an `output_matrix` which is an extension of the `design_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `design_matrix` row.
 
 ```{r}
-output_matrix <- execute_design_matrix(data_list, design_matrix)
+output_matrix <- batch_snf(data_list, design_matrix)
 
 colnames(output_matrix)[1:20]
 ```
@@ -235,7 +235,7 @@ output_matrix[1:5, 1:20]
 
 Just like that, the clustering is done!
 
-*Note: You can also enable parallel processing to run the `execute_design_matrix` function faster on machines with multiple CPU cores. See the "processes" parameter in `?execute_design_matrix`.*
+*Note: You can also enable parallel processing to run the `batch_snf` function faster on machines with multiple CPU cores. See the "processes" parameter in `?batch_snf`.*
 
 ## Picking a solution #1: examining meta clusters
 
@@ -519,7 +519,7 @@ train_outcome_list <- generate_outcome_list(
 # Find a clustering solution in your training data
 design_matrix <- generate_design_matrix(train_data_list, nrow = 5, seed = 42)
 
-train_output_matrix <- execute_design_matrix(train_data_list, design_matrix)
+train_output_matrix <- batch_snf(train_data_list, design_matrix)
 
 extended_output_matrix <- extend_om(train_output_matrix, train_outcome_list)
 

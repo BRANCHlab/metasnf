@@ -7,7 +7,7 @@
 p_val_select(output_matrix)
 }
 \arguments{
-\item{output_matrix}{The output of execute_design_matrix()}
+\item{output_matrix}{The output of batch_snf}
 }
 \value{
 p_val_matrix P-values ready for heatmap plotting

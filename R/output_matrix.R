@@ -143,7 +143,7 @@ extend_om <- function(output_matrix, outcome_list) {
 
 #' Select p-values from output matrix
 #'
-#' @param output_matrix The output of execute_design_matrix()
+#' @param output_matrix The output of batch_snf
 #'
 #' @return p_val_matrix P-values ready for heatmap plotting
 #'
