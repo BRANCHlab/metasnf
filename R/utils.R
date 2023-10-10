@@ -264,6 +264,8 @@ list_remove <- function(list_object, ...) {
 #'  row completion times
 #'
 #' @return remaining_seconds_vector Updated remaining_seconds_vector
+#'
+#' @export
 batch_snf_time_remaining <- function(seconds_per_row,
                                      rows_remaining,
                                      row,
