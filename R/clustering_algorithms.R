@@ -48,13 +48,15 @@
 generate_clust_algs_list <- function(..., disable_base = FALSE) {
     user_algs_list <- list(...)
     # Ensure that user has provided a name for the algorithm
-    if (min(nchar(names(user_algs_list))) == 0) {
-        stop(
-            paste0(
-                "Please specify a name for every supplied algorithm. See",
-                " ?generate_clust_algs_list for examples."
+    if (length(user_algs_list) > 0) {
+        if (min(nchar(names(user_algs_list))) == 0) {
+            stop(
+                paste0(
+                    "Please specify a name for every supplied algorithm. See",
+                    " ?generate_clust_algs_list for examples."
+                )
             )
-        )
+        }
     }
     base_algs_list <- list(
         "spectral_eigen" = spectral_eigen,

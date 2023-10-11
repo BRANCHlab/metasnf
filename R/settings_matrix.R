@@ -13,11 +13,11 @@
 #'
 #' @export
 generate_settings_matrix <- function(data_list,
-                                   nrows = 0,
-                                   seed = NULL,
-                                   min_removed = NULL,
-                                   max_removed = NULL,
-                                   retry_limit = 10) {
+                                     nrows = 0,
+                                     seed = NULL,
+                                     min_removed = NULL,
+                                     max_removed = NULL,
+                                     retry_limit = 10) {
     if (!is.null(seed)) {
         set.seed(seed)
         print("The global seed has been changed!")
@@ -28,7 +28,8 @@ generate_settings_matrix <- function(data_list,
         "snf_scheme",
         "eigen_or_rot",
         "K",
-        "alpha")
+        "alpha"
+    )
     settings_matrix_base <- as.data.frame(
         matrix(
             0,

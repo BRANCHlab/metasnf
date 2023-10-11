@@ -11,6 +11,8 @@ data_list <- generate_data_list(
 
 settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 
+settings_matrix
+
 # Should save many affinity matrices to disk
 # output_matrix <- batch_snf(data_list, settings_matrix, affinity_matrix_dir = ".")
 
@@ -23,6 +25,7 @@ settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 # Normal
 output_matrix <- batch_snf(data_list, settings_matrix)
 
+generate_clust_algs_list()
 
 clust_algs_list <- generate_clust_algs_list(
     "banana_alg" = spectral_rot,
