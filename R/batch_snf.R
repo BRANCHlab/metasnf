@@ -134,13 +134,13 @@ batch_snf <- function(data_list,
     ###########################################################################
     for (i in seq_len(nrow(settings_matrix))) {
         start_time <- Sys.time() # used to estimate time to completion
-        dm_row <- settings_matrix[i, ]
-        current_data_list <- execute_inclusion(dm_row, data_list)
+        settings_matrix_row <- settings_matrix[i, ]
+        current_data_list <- execute_inclusion(settings_matrix_row, data_list)
         # Apply the current row's SNF scheme
         current_snf_scheme <- dplyr::case_when(
-            dm_row$"snf_scheme" == 1 ~ "individual",
-            dm_row$"snf_scheme" == 2 ~ "domain",
-            dm_row$"snf_scheme" == 3 ~ "twostep",
+            settings_matrix_row$"snf_scheme" == 1 ~ "individual",
+            settings_matrix_row$"snf_scheme" == 2 ~ "domain",
+            settings_matrix_row$"snf_scheme" == 3 ~ "twostep",
         )
         K <- settings_matrix[i, "K"]
         alpha <- settings_matrix[i, "alpha"]
@@ -161,26 +161,27 @@ batch_snf <- function(data_list,
         #######################################################################
         # 7. Clustering of the final fused network
         #######################################################################
-        clust_algs_list <- generate_clust_algs_list()
-        #all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
-        ## Use the current row's number of clusters heuristic
-        #if (dm_row$"eigen_or_rot" == 1) {
-        #    eigen_best <- all_clust$`Eigen-gap best`
-        #    nclust <- eigen_best
-        #} else if (dm_row$"eigen_or_rot" == 2) {
-        #    rot_best <- all_clust$`Rotation cost best`
-        #    nclust <- rot_best
-        #}
-        #solutions_matrix[i, "nclust"] <- nclust
-        #cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
-        clust_alg <- clust_algs_list[[dm_row$"clust_alg"]]
+        # If the user has not provided their own list of clustering algorithms,
+        #  use the default ones (spectral clustering with eigen-gap or
+        #  rotation cost heuristics).
+        if (is.null(clust_algs_list)) {
+            clust_algs_list <- generate_clust_algs_list()
+        }
+        # clust_alg stores the function to be used for this run of SNF
+        clust_alg <- clust_algs_list[[settings_matrix_row$"clust_alg"]]
+        # cluster_results is a named list containing the cluster solution
+        #  (vector of which cluster each patient was assigned to) and the
+        #  number of clusters for that solution
         cluster_results <- clust_alg(fused_network)
         solution <- cluster_results$"solution"
         nclust <- cluster_results$"nclust"
-        # Assign subtype membership
+        # Update the solutions_matrix with the cluster solution and the number
+        #  of clusters for that solution
         solutions_matrix[i, rownames(fused_network)] <- solution
         solutions_matrix[i, "nclust"] <- nclust
-        # Print estimated time taken until function completion ################
+        #######################################################################
+        # 8. Print estimated time taken until function completion
+        #######################################################################
         remaining_seconds_vector <- batch_snf_time_remaining(
             seconds_per_row = as.numeric(Sys.time() - start_time),
             rows_remaining = nrow(settings_matrix) - i,
@@ -188,14 +189,18 @@ batch_snf <- function(data_list,
             remaining_seconds_vector
         )
     }
-    # Add number of clusters to solutions matrix #################################
-    solutions_matrix <- solutions_matrix |>
-        unique()
+    ###########################################################################
+    # 9. Format the final solutions_matrix to be numeric where possible
+    ###########################################################################
     solutions_matrix <- numcol_to_numeric(solutions_matrix)
-    # Print total time taken for function completion ##########################
+    ###########################################################################
+    # 10. Print total time taken for function completion
+    ###########################################################################
     total_time <- (proc.time() - start)[["elapsed"]]
     print(paste0("Total time taken: ", round(total_time, 0), " seconds."))
-    # Return solutions matrix #################################################
+    ###########################################################################
+    # 11. Return final solutions_matrix
+    ###########################################################################
     return(solutions_matrix)
 }
 
@@ -225,7 +230,7 @@ parallel_batch_snf <- function(data_list,
     solutions_matrix <- future.apply::future_apply(
         settings_matrix,
         1,
-        dm_row_fn,
+        settings_matrix_row_fn,
         dl = data_list
     )
     solutions_matrix <- do.call("rbind", solutions_matrix)
@@ -244,22 +249,22 @@ parallel_batch_snf <- function(data_list,
 
 #' Apply-based function for batch_snf
 #'
-#' @param dm_row a row of a settings matrix
+#' @param settings_matrix_row a row of a settings matrix
 #' @param dl a data list
 #'
 #' @return the corresponding OM row
 #'
 #' @export
-dm_row_fn <- function(dm_row, dl) {
-    dm_row <- data.frame(t(dm_row))
-    current_data_list <- execute_inclusion(dm_row, dl)
+settings_matrix_row_fn <- function(settings_matrix_row, dl) {
+    settings_matrix_row <- data.frame(t(settings_matrix_row))
+    current_data_list <- execute_inclusion(settings_matrix_row, dl)
     current_snf_scheme <- dplyr::case_when(
-        dm_row$"snf_scheme" == 1 ~ "individual",
-        dm_row$"snf_scheme" == 2 ~ "domain",
-        dm_row$"snf_scheme" == 3 ~ "twostep",
+        settings_matrix_row$"snf_scheme" == 1 ~ "individual",
+        settings_matrix_row$"snf_scheme" == 2 ~ "domain",
+        settings_matrix_row$"snf_scheme" == 3 ~ "twostep",
     )
-    K <- dm_row$"K"
-    alpha <- dm_row$"alpha"
+    K <- settings_matrix_row$"K"
+    alpha <- settings_matrix_row$"alpha"
     fused_network <- snf_step(
         current_data_list,
         current_snf_scheme,
@@ -267,10 +272,10 @@ dm_row_fn <- function(dm_row, dl) {
         alpha = alpha)
     all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
     # Apply the current row's number of clusters heuristic
-    if (dm_row$"eigen_or_rot" == 1) {
+    if (settings_matrix_row$"eigen_or_rot" == 1) {
         eigen_best <- all_clust$`Eigen-gap best`
         nclust <- eigen_best
-    } else if (dm_row$"eigen_or_rot" == 2) {
+    } else if (settings_matrix_row$"eigen_or_rot" == 2) {
         rot_best <- all_clust$`Rotation cost best`
         nclust <- rot_best
     } else {
@@ -278,14 +283,18 @@ dm_row_fn <- function(dm_row, dl) {
         #  this function
         rlang::abort(
             paste0(
-                "The eigen_or_rot value ", dm_row$"eigen_or_rot", " is not",
-                "a valid input type."), class = "invalid_input")
+                "The eigen_or_rot value ",
+                settings_matrix_row$"eigen_or_rot is not",
+                "a valid input type."
+            ),
+            class = "invalid_input"
+        )
     }
-    dm_row$"nclust" <- nclust
+    settings_matrix_row$"nclust" <- nclust
     cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
     # Assign subtype membership
-    dm_row[1, rownames(fused_network)] <- cluster_results
-    return(dm_row)
+    settings_matrix_row[1, rownames(fused_network)] <- cluster_results
+    return(settings_matrix_row)
 }
 
 #' Execute inclusion
