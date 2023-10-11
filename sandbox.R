@@ -20,42 +20,35 @@ settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 # Should eventually complete
 # output_matrix <- batch_snf(data_list, settings_matrix, processes = "max")
 
-available_cores <- future::availableCores()[["cgroups.cpuset"]]
-
-future::availableCores()[["system"]]
-
-
-colnames(output_matrix)
-
-colnames(no_subs(output_matrix))
-
-write.csv(output_matrix, "mymatrix.csv", row.names = TRUE)
-om_read <- read.csv("mymatrix.csv", row.names = 1)
-
-i <- 10
-affinity_matrix_dir <- "this/is/the-path"
+# Normal
+output_matrix <- batch_snf(data_list, settings_matrix)
 
 
-# Clustering functions should take in:
-#   1. an affinity matrix
-# and return a list of the following:
-#   2. the cluster solution
-spectral_eigen <- function(affinity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(affinity_matrix)
-    number_of_clusters <- estimated_n$`Eigen-gap best`
-    solution <- SNFtool::spectralClustering(fused_network, number_of_clusters)
-    return(solution)
-}
-
-spectral_rot <- function(affinity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(affinity_matrix)
-    number_of_clusters <- estimated_n$`Rotation cost best`
-    solution <- SNFtool::spectralClustering(fused_network, number_of_clusters)
-    return(solution)
-}
-
-clustering_algs <- list(
+clust_algs_list <- generate_clust_algs_list(
+    "banana_alg" = spectral_rot,
+    "spectral_banana" = spectral_rot
 )
+
+clust_algs_list <- generate_clust_algs_list()
+
+names(clust_algs_list)
+
+summarize_clust_algs_list(clust_algs_list)
 
 
 colnames(settings_matrix)
+
+
+
+a <- list(
+    "cheese" = 1,
+    "cheeser" = 2
+)
+
+b <- list(
+    3,
+    4
+)
+
+q <- c(a, b)
+
