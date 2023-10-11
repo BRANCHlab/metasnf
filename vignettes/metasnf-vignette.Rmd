@@ -370,29 +370,29 @@ From there, you're on your own (until the next vignette, maybe?)
 
 If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
 
-There are many ways to go about doing this, but this package offers one way through the `outcome_list` structure.
-The `outcome_list` contains dataframes what we can examine our clustering results over through linear regression (numeric data), ordinal regression (ordinal data), or the Chi-squared test (categorical data).
+There are many ways to go about doing this, but this package offers one way through the `target_list` structure.
+The `target_list` contains dataframes what we can examine our clustering results over through linear regression (numeric data), ordinal regression (ordinal data), or the Chi-squared test (categorical data).
 
 ```{r}
-outcome_list <- generate_outcome_list(
+target_list <- generate_target_list(
     list(abcd_anxiety, "anxiety", "ordinal"),
     list(abcd_depress, "depressed", "ordinal"),
     list(abcd_colour, "colour", "categorical"),
     old_uid = "patient"
 )
 
-summarize_ol(outcome_list)
+summarize_target_list(target_list)
 ```
 
-The `outcome_list` is like the `data_list`, but without the domain attribute.
-At this time, each dataframe used to build an outcome_list must be a single-feature.
+The `target_list` is like the `data_list`, but without the domain attribute.
+At this time, each dataframe used to build an target_list must be a single-feature.
 
 Just like when generating the initial `data_list`, we need to specify the name of the column in the provided dataframes that is originally being used to uniquely identify the different observations from each other with the `old_uid` parameter.
 
-We will next extend our `solutions_matrix` with p-values from regressing the `outcome_list` features onto our generated clusters.
+We will next extend our `solutions_matrix` with p-values from regressing the `target_list` features onto our generated clusters.
 
 ```{r}
-extended_solutions_matrix <- extend_om(solutions_matrix, outcome_list)
+extended_solutions_matrix <- extend_om(solutions_matrix, target_list)
 
 colnames(extended_solutions_matrix)
 
@@ -507,8 +507,8 @@ full_data_list <- generate_data_list(
     assigned_splits = assigned_splits
 )
 
-# Construct the outcome lists
-train_outcome_list <- generate_outcome_list(
+# Construct the target lists
+train_target_list <- generate_target_list(
     list(train_abcd_anxiety, "anxiety", "ordinal"),
     list(train_abcd_depress, "depressed", "ordinal"),
     old_uid = "patient"
@@ -519,7 +519,7 @@ settings_matrix <- generate_settings_matrix(train_data_list, nrow = 5, seed = 42
 
 train_solutions_matrix <- batch_snf(train_data_list, settings_matrix)
 
-extended_solutions_matrix <- extend_om(train_solutions_matrix, train_outcome_list)
+extended_solutions_matrix <- extend_om(train_solutions_matrix, train_target_list)
 
 # The fourth row had the lowest minimum p-value across our outcomes
 which(extended_solutions_matrix$"min_p_val" ==

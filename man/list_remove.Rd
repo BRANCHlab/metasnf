@@ -2,12 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{list_remove}
 \alias{list_remove}
-\title{Remove items from a data_list or outcome_list}
+\title{Remove items from a data_list or target_list}
 \usage{
 list_remove(list_object, ...)
 }
 \arguments{
-\item{list_object}{The data_list or outcome_list containing components to be
+\item{list_object}{The data_list or target_list containing components to be
 removed}
 
 \item{...}{Any number of components to remove from the list object, passed as
@@ -17,5 +17,5 @@ strings}
 pruned_list The pruned list object
 }
 \description{
-Removes specified elements from a provided data_list or outcome_list object
+Removes specified elements from a provided data_list or target_list object
 }

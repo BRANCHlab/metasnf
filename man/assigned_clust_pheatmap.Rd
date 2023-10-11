@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotting.R
 \name{assigned_clust_pheatmap}
 \alias{assigned_clust_pheatmap}
-\title{Pheatmap of cluster membership across an solutions matrix}
+\title{Heatmap of cluster membership across an solutions matrix}
 \usage{
 assigned_clust_pheatmap(om, save = NULL)
 }
@@ -12,5 +12,5 @@ assigned_clust_pheatmap(om, save = NULL)
 \item{save}{optional path to save figure to}
 }
 \description{
-Pheatmap of cluster membership across an solutions matrix
+Heatmap of cluster membership across an solutions matrix
 }

@@ -39,24 +39,24 @@ generate_solutions_matrix <- function(data_list, settings_matrix) {
 #' Extend an solutions matrix to include outcome evaluations
 #'
 #' @param solutions_matrix an solutions_matrix
-#' @param outcome_list an outcome_list
+#' @param target_list an target_list
 #'
 #' @return extended_solutions_matrix an extended solutions matrix that contains
-#'  p-value columns for each outcome in the provided outcome_list
+#'  p-value columns for each outcome in the provided target_list
 #'
 #' @export
-extend_om <- function(solutions_matrix, outcome_list) {
+extend_om <- function(solutions_matrix, target_list) {
     # Single vector of all feature names
     ol_features <- lapply(
-        outcome_list,
+        target_list,
         function(x) {
-            # All the features from each outcome list dataframe
+            # All the features from each target list dataframe
             colnames(x[[1]])[-1]
         }
     ) |> unlist()
     # Single vector of all feature types
     ol_feature_types <- lapply(
-        outcome_list,
+        target_list,
         function(x) {
             n_features <- ncol(x$"data") - 1
             outcome_type <- rep(x$"type", n_features)
@@ -72,7 +72,7 @@ extend_om <- function(solutions_matrix, outcome_list) {
     )
     # Single DF to contain all outcome features
     merged_df <- lapply(
-        outcome_list,
+        target_list,
         function(x) {
             x[[1]]
         }) |> merge_df_list()
@@ -85,7 +85,7 @@ extend_om <- function(solutions_matrix, outcome_list) {
         # Iterate across each outcome measure included
         # Assign p-values
         for (j in 1:length(ol_features)) {
-            #current_outcome_component <- outcome_list[[j]]
+            #current_outcome_component <- target_list[[j]]
             current_outcome_component <- merged_df[, c(1, j + 1)]
             current_outcome_type <- ol_feature_types[j]
             current_outcome_name <- colnames(current_outcome_component)[2]
@@ -339,4 +339,3 @@ get_clustered_subs <- function(solutions_matrix_row) {
         dplyr::rename("cluster" = dplyr::starts_with("X"))
     return(clustered_subs)
 }
-

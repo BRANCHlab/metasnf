@@ -57,11 +57,11 @@ Domains are user-specified labels that indicate which dataframes
 describe similar sources of data. For example, structural MRI data and
 diffusion MRI data may be grouped within a neuroimaging domain.
 
-### The `outcome_list`
+### The `target_list`
 
 An optional data structure that closely resembles the `data_list`, but
 contains data sources which are not meant to be included as direct
-inputs for clustering. Data within the `outcome_list` is reserved for
+inputs for clustering. Data within the `target_list` is reserved for
 out-of-model measures for comparing completed clustering solutions.
 
 ### The `solutions_matrix`
@@ -73,10 +73,10 @@ included in the `settings_matrix`.
 
 An `solutions_matrix` can be convereted to an
 `extended_solutions_matrix` which contains overall regression p-values
-for any measures stored in an `outcome_list`. The
+for any measures stored in an `target_list`. The
 `extended_solutions_matrix` is useful in pipelines where separation
-across one or several variables stored in the `outcome_list` serve as
-the primary metric for automating the selection of a top clustering
+across one or several variables stored in the `target_list` serve as the
+primary metric for automating the selection of a top clustering
 solution.
 
 Alternatively, a top clustering solution can be selected from a regular
