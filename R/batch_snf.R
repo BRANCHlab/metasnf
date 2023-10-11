@@ -109,13 +109,6 @@ batch_snf <- function(data_list,
         } else if (dm_row$"eigen_or_rot" == 2) {
             rot_best <- all_clust$`Rotation cost best`
             nclust <- rot_best
-        } else {
-            # To-do: move this into settings matrix generation or earlier in
-            #  this function
-            rlang::abort(
-                paste0(
-                    "The eigen_or_rot value ", dm_row$"eigen_or_rot", " is not",
-                    "a valid input type."), class = "invalid_input")
         }
         solutions_matrix[i, "nclust"] <- nclust
         cluster_results <- SNFtool::spectralClustering(fused_network, nclust)

@@ -20,4 +20,26 @@ i <- 10
 affinity_matrix_dir <- "this/is/the-path"
 
 
+# Clustering functions should take in:
+#   1. an affinity matrix
+# and return a list of the following:
+#   2. the cluster solution
+spectral_eigen <- function(affinity_matrix) {
+    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(affinity_matrix)
+    number_of_clusters <- estimated_n$`Eigen-gap best`
+    solution <- SNFtool::spectralClustering(fused_network, number_of_clusters)
+    return(solution)
+}
 
+spectral_rot <- function(affinity_matrix) {
+    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(affinity_matrix)
+    number_of_clusters <- estimated_n$`Rotation cost best`
+    solution <- SNFtool::spectralClustering(fused_network, number_of_clusters)
+    return(solution)
+}
+
+clustering_algs <- list(
+)
+
+
+colnames(settings_matrix)
