@@ -161,19 +161,25 @@ batch_snf <- function(data_list,
         #######################################################################
         # 7. Clustering of the final fused network
         #######################################################################
-        all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
-        # Use the current row's number of clusters heuristic
-        if (dm_row$"eigen_or_rot" == 1) {
-            eigen_best <- all_clust$`Eigen-gap best`
-            nclust <- eigen_best
-        } else if (dm_row$"eigen_or_rot" == 2) {
-            rot_best <- all_clust$`Rotation cost best`
-            nclust <- rot_best
-        }
-        solutions_matrix[i, "nclust"] <- nclust
-        cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
+        clust_algs_list <- generate_clust_algs_list()
+        #all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
+        ## Use the current row's number of clusters heuristic
+        #if (dm_row$"eigen_or_rot" == 1) {
+        #    eigen_best <- all_clust$`Eigen-gap best`
+        #    nclust <- eigen_best
+        #} else if (dm_row$"eigen_or_rot" == 2) {
+        #    rot_best <- all_clust$`Rotation cost best`
+        #    nclust <- rot_best
+        #}
+        #solutions_matrix[i, "nclust"] <- nclust
+        #cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
+        clust_alg <- clust_algs_list[[dm_row$"clust_alg"]]
+        cluster_results <- clust_alg(fused_network)
+        solution <- cluster_results$"solution"
+        nclust <- cluster_results$"nclust"
         # Assign subtype membership
-        solutions_matrix[i, rownames(fused_network)] <- cluster_results
+        solutions_matrix[i, rownames(fused_network)] <- solution
+        solutions_matrix[i, "nclust"] <- nclust
         # Print estimated time taken until function completion ################
         remaining_seconds_vector <- batch_snf_time_remaining(
             seconds_per_row = as.numeric(Sys.time() - start_time),

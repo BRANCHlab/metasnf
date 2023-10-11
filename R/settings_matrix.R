@@ -18,6 +18,7 @@ generate_settings_matrix <- function(data_list,
                                      min_removed = NULL,
                                      max_removed = NULL,
                                      retry_limit = 10) {
+    # Set the seed if specified
     if (!is.null(seed)) {
         set.seed(seed)
         print("The global seed has been changed!")
@@ -26,7 +27,7 @@ generate_settings_matrix <- function(data_list,
         "row_id",
         paste0("inc_", summarize_dl(data_list)$"name"),
         "snf_scheme",
-        "eigen_or_rot",
+        "clust_alg",
         "K",
         "alpha"
     )
@@ -138,7 +139,7 @@ add_settings_matrix_rows <- function(settings_matrix,
         colnames(inclusions) <- inclusion_names
         # Other free parameters
         snf_scheme <- sample(1:3, 1)
-        eigen_or_rot <- sample(1:2, 1)
+        clust_alg <- sample(1:2, 1)
         # K and alpha range based on prior hyperparameter scans
         K <- sample(10:30, 1)
         alpha <- (sample(6:10, 1)) / 10
@@ -147,7 +148,7 @@ add_settings_matrix_rows <- function(settings_matrix,
             row_id,
             inclusions,
             snf_scheme,
-            eigen_or_rot,
+            clust_alg,
             K,
             alpha)
         # Appending to settings matrix

@@ -25,8 +25,8 @@ dm_heatmap <- function(settings_matrix,
     dm_scaled$"alpha" <- dm_scaled$"alpha" / max(dm_scaled$"alpha")
     dm_scaled$"snf_scheme" <-
         dm_scaled$"snf_scheme" / max(dm_scaled$"snf_scheme")
-    dm_scaled$"eigen_or_rot" <-
-        dm_scaled$"eigen_or_rot" / max(dm_scaled$"eigen_or_rot")
+    dm_scaled$"clust_alg" <-
+        dm_scaled$"clust_alg" / max(dm_scaled$"clust_alg")
     if (hide_ids == TRUE) {
         row_labels <- ""
     } else {
