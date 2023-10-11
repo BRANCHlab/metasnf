@@ -135,7 +135,7 @@ batch_snf <- function(data_list,
     for (i in seq_len(nrow(settings_matrix))) {
         start_time <- Sys.time() # used to estimate time to completion
         settings_matrix_row <- settings_matrix[i, ]
-        current_data_list <- execute_inclusion(settings_matrix_row, data_list)
+        current_data_list <- drop_inputs(settings_matrix_row, data_list)
         # Apply the current row's SNF scheme
         current_snf_scheme <- dplyr::case_when(
             settings_matrix_row$"snf_scheme" == 1 ~ "individual",
@@ -252,12 +252,12 @@ parallel_batch_snf <- function(data_list,
 #' @param settings_matrix_row a row of a settings matrix
 #' @param dl a data list
 #'
-#' @return the corresponding OM row
+#' @return solutions_matrix_row the corresponding solutions_matrix row
 #'
 #' @export
 settings_matrix_row_fn <- function(settings_matrix_row, dl) {
     settings_matrix_row <- data.frame(t(settings_matrix_row))
-    current_data_list <- execute_inclusion(settings_matrix_row, dl)
+    current_data_list <- drop_inputs(settings_matrix_row, dl)
     current_snf_scheme <- dplyr::case_when(
         settings_matrix_row$"snf_scheme" == 1 ~ "individual",
         settings_matrix_row$"snf_scheme" == 2 ~ "domain",
@@ -278,17 +278,6 @@ settings_matrix_row_fn <- function(settings_matrix_row, dl) {
     } else if (settings_matrix_row$"eigen_or_rot" == 2) {
         rot_best <- all_clust$`Rotation cost best`
         nclust <- rot_best
-    } else {
-        # To-do: move this into settings matrix generation or earlier in
-        #  this function
-        rlang::abort(
-            paste0(
-                "The eigen_or_rot value ",
-                settings_matrix_row$"eigen_or_rot is not",
-                "a valid input type."
-            ),
-            class = "invalid_input"
-        )
     }
     settings_matrix_row$"nclust" <- nclust
     cluster_results <- SNFtool::spectralClustering(fused_network, nclust)
@@ -309,7 +298,7 @@ settings_matrix_row_fn <- function(settings_matrix_row, dl) {
 #' @return selected_data_list
 #'
 #' @export
-execute_inclusion <- function(settings_matrix, data_list) {
+drop_inputs <- function(settings_matrix, data_list) {
     # Dataframe just of the inclusion variables
     inc_df <- settings_matrix |>
         dplyr::select(dplyr::starts_with("inc"))

@@ -12,7 +12,7 @@ settings_matrix_row_fn(settings_matrix_row, dl)
 \item{dl}{a data list}
 }
 \value{
-the corresponding OM row
+solutions_matrix_row the corresponding solutions_matrix row
 }
 \description{
 Apply-based function for batch_snf

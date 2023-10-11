@@ -75,7 +75,7 @@ lp_om <- function(om, full_data_list) {
         print(paste0("Processing row ", i, " of ", nrow(om), "..."))
         current_row <- om[i, ]
         sig <- paste0(current_row$"significance")
-        reduced_dl <- execute_inclusion(current_row, full_data_list)
+        reduced_dl <- drop_inputs(current_row, full_data_list)
         check_subj_orders_for_lp(reduced_dl,
                                  current_row,
                                  n_train = n_train,

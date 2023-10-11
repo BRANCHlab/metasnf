@@ -91,7 +91,7 @@ the qualitatively distinct “meta clusters” that emerge.
 -   [ ] Capability of defining custom distance metrics
 -   [ ] Capability of defining custom feature weights
 -   [ ] Capability of defining custom SNF-level weights
--   [ ] Capability of defining custom clustering algorithms
+-   [x] Capability of defining custom clustering algorithms
 -   [ ] Added flexibility during generation of the settings_matrix
 -   [ ] New visualization functions and improvements to existing
     visualization functions
@@ -102,6 +102,8 @@ the qualitatively distinct “meta clusters” that emerge.
 -   [x] Capability of writing affinity matrices to disk
 -   [ ] Capability of not running the clustering on every run of SNF
     (only makes sense when paired with the previous change)
+-   [ ] Adapt parallel processing variant of batch_snf to reflect the
+    above changes
 -   [ ] Updated vignette(s) to fully document basic and advance usage of
     the package
 
