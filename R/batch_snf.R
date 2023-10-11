@@ -69,6 +69,23 @@ batch_snf <- function(data_list,
     # 3. Ensure settings_matrix is a data.frame (not a tibble or matrix)
     ###########################################################################
     settings_matrix <- data.frame(settings_matrix)
+    ###########################################################################
+    # 4. Creation of solutions_matrix (where clustering results are stored)
+    # solutions_matrix is a dataframe with the following columns:
+    #  - row_id (1 column): number matching the row of the settings_matrix used
+    #    to generate this solution
+    #  - inc_* (1 column per input df): Binary indicating if the input df was
+    #    incuded (1) or excluded (0) for this row of SNF
+    #  - snf_scheme (1 column): number indicating which of the preprogrammed
+    #    'schemes' was used to for this run of SNF
+    #  - alpha (AKA sigma or eta): value of affinity matrix hyperparameter
+    #  - K: value of affinity matrix hyperparameter
+    #  - T: Number of iterations of SNF
+    #  - subject_* (1 column per patient): cluster membership of that patient
+    #    for that row. Only included when run_clustering = TRUE.
+    #  - nclust (1 column): number of clusters in the cluster solution in that
+    #    row. Only included when run_clustering = TRUE.
+    ###########################################################################
     subjects <- data_list[[1]]$"data"$"subjectkey"
     solutions_matrix <- add_columns(settings_matrix, "nclust", 0)
     solutions_matrix <- add_columns(settings_matrix, subjects, 0)
@@ -290,11 +307,12 @@ get_dist_matrix <- function(df, input_type, scale = FALSE) {
 #' @param scheme Which SNF system to use to achieve the final fused network
 #' @param K K hyperparameter
 #' @param alpha alpha/eta/sigma hyperparameter
+#' @param t SNF number of iterations hyperparameter
 #'
 #' @return fused_network The final fused network for clustering
 #'
 #' @export
-snf_step <- function(data_list, scheme, K = 20, alpha = 0.5) {
+snf_step <- function(data_list, scheme, K = 20, alpha = 0.5, t = 20) {
     # Subset just to those patients who are common in all inputs
     data_list <- data_list |>
         reduce_dl_to_common() |>
@@ -311,7 +329,7 @@ snf_step <- function(data_list, scheme, K = 20, alpha = 0.5) {
             function(x) {
                 SNFtool::affinityMatrix(x, K = K, sigma = alpha)
             })
-        fused_network <- SNFtool::SNF(sim_list, K = K)
+        fused_network <- SNFtool::SNF(Wall = sim_list, K = K, t = t)
     # The domain scheme first runs domain merge on the data list (concatenates
     #  any data of the same domain) and then pools the concatenated data into a
     #  single SNF run
@@ -326,7 +344,7 @@ snf_step <- function(data_list, scheme, K = 20, alpha = 0.5) {
             function(x) {
                 SNFtool::affinityMatrix(x, K = K, sigma = alpha)
             })
-        fused_network <- SNFtool::SNF(sim_list, K = K)
+        fused_network <- SNFtool::SNF(Wall = sim_list, K = K, t = t)
     # The twostep scheme
     } else if (scheme %in% c("twostep", 3)) {
         fused_network <- two_step_merge(data_list)
@@ -391,11 +409,12 @@ domain_merge <- function(data_list) {
 #'  `get_data_list()`
 #' @param K K hyperparameter
 #' @param alpha alpha/eta/sigma hyperparameter
+#' @param t SNF number of iterations hyperparameter
 #'
 #' @return fused_network The final fused network for clustering
 #'
 #' @export
-two_step_merge <- function(data_list, K = 20, alpha = 0.5) {
+two_step_merge <- function(data_list, K = 20, alpha = 0.5, t = 20) {
     dist_list <- lapply(data_list,
         function(x) {
             get_dist_matrix(df = x$"data", input_type = x$"type")
@@ -428,12 +447,12 @@ two_step_merge <- function(data_list, K = 20, alpha = 0.5) {
            if (length(x) == 1) {
                x[[1]]
            } else {
-               SNFtool::SNF(x, K = K)
+               SNFtool::SNF(Wall = x, K = K, t = t)
            }
        })
     # Fusing domain affinity matrices into final fused network
     if (length(step_one) > 1) {
-        fused_network <- SNFtool::SNF(step_one, K = K)
+        fused_network <- SNFtool::SNF(Wall = step_one, K = K, t = t)
     } else {
         fused_network <- step_one[[1]]
     }

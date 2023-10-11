@@ -11,7 +11,13 @@ data_list <- generate_data_list(
 
 settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 
-output_matrix <- batch_snf(data_list, settings_matrix, affinity_matrix_dir = ".")
+#output_matrix <- batch_snf(data_list, settings_matrix, affinity_matrix_dir = ".")
+
+output_matrix <- batch_snf(data_list, settings_matrix)
+
+colnames(output_matrix)
+
+colnames(no_subs(output_matrix))
 
 write.csv(output_matrix, "mymatrix.csv", row.names = TRUE)
 om_read <- read.csv("mymatrix.csv", row.names = 1)
