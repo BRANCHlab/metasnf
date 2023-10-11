@@ -8,7 +8,8 @@ batch_snf(
   data_list,
   settings_matrix,
   processes = 1,
-  affinity_matrix_dir = NULL
+  affinity_matrix_dir = NULL,
+  run_clustering = TRUE
 )
 }
 \arguments{
@@ -30,6 +31,10 @@ cores will be used.
 
 \item{affinity_matrix_dir}{If specified, this directory will be used to save
 all generated affinity matrices}
+
+\item{run_clustering}{If TRUE (default), will apply default or custom
+clustering algorithms to provide cluster solutions on every iteration of
+SNF. If FALSE, parameter \code{affinity_matrix_dir} must be specified to proceed.}
 }
 \value{
 populated_settings_matrix settings matrix with filled columns related to

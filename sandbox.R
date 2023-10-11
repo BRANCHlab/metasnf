@@ -11,9 +11,19 @@ data_list <- generate_data_list(
 
 settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 
-#output_matrix <- batch_snf(data_list, settings_matrix, affinity_matrix_dir = ".")
+# Should save many affinity matrices to disk
+# output_matrix <- batch_snf(data_list, settings_matrix, affinity_matrix_dir = ".")
 
-output_matrix <- batch_snf(data_list, settings_matrix)
+# Should error
+# output_matrix <- batch_snf(data_list, settings_matrix, run_clustering = FALSE)
+
+# Should eventually complete
+# output_matrix <- batch_snf(data_list, settings_matrix, processes = "max")
+
+available_cores <- future::availableCores()[["cgroups.cpuset"]]
+
+future::availableCores()[["system"]]
+
 
 colnames(output_matrix)
 

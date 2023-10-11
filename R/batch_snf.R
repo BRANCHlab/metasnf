@@ -15,6 +15,10 @@
 #'     * `max`: All available cores will be used.
 #' @param affinity_matrix_dir If specified, this directory will be used to save
 #'  all generated affinity matrices
+#' @param run_clustering If TRUE (default), will apply default or custom
+#'  clustering algorithms to provide cluster solutions on every iteration of
+#'  SNF. If FALSE, parameter `affinity_matrix_dir` must be specified to proceed.
+#'
 #'
 #' @return populated_settings_matrix settings matrix with filled columns related to
 #'  subtype membership
@@ -23,12 +27,30 @@
 batch_snf <- function(data_list,
                       settings_matrix,
                       processes = 1,
-                      affinity_matrix_dir = NULL) {
+                      affinity_matrix_dir = NULL,
+                      run_clustering = TRUE) {
     ###########################################################################
-    # 1. Parallel processing
+    # 1. Checking compatibility of settings
+    ###########################################################################
+    # The user may have chosen to simultaneously not save affinity matrices and
+    #  to not apply any clustering algorithms. In that case, this function is
+    #  not really doing anything. Stop the function with an error.
+    if (is.null(affinity_matrix_dir) & !run_clustering) {
+        stop(
+            paste0(
+               "batch_snf has been called with the run_clustering parameter",
+               " set to FALSE (no clustering will occur) and no path provided",
+               " in the affinity_matrix_dir parameter for storing matrices.",
+               " With this combination of settings, the batch_snf function",
+               " yields no meaningful output."
+            )
+        )
+    }
+    ###########################################################################
+    # 2. Call separate function for parallel processing
     ###########################################################################
     if (processes != 1) {
-        available_cores <- future::availableCores()[["cgroups.cpuset"]]
+        available_cores <- future::availableCores()[["system"]]
         # Use all available cores
         if (processes == "max") {
             om <- parallel_batch_snf(
@@ -62,15 +84,16 @@ batch_snf <- function(data_list,
         }
     }
     ###########################################################################
-    # 2. Start timer to keep track of entire function duration
+    # 3. Start timer to keep track of entire function duration
     ###########################################################################
-    start <- proc.time()
+    start <- proc.time() # used to track time taken for entire function
+    remaining_seconds_vector <- vector() # used to estimate time to completion
     ###########################################################################
-    # 3. Ensure settings_matrix is a data.frame (not a tibble or matrix)
+    # 4. Ensure settings_matrix is a data.frame (not a tibble or matrix)
     ###########################################################################
     settings_matrix <- data.frame(settings_matrix)
     ###########################################################################
-    # 4. Creation of solutions_matrix (where clustering results are stored)
+    # 5. Creation of solutions_matrix (where clustering results are stored)
     # solutions_matrix is a dataframe with the following columns:
     #  - row_id (1 column): number matching the row of the settings_matrix used
     #    to generate this solution
@@ -86,13 +109,29 @@ batch_snf <- function(data_list,
     #  - nclust (1 column): number of clusters in the cluster solution in that
     #    row. Only included when run_clustering = TRUE.
     ###########################################################################
-    subjects <- data_list[[1]]$"data"$"subjectkey"
-    solutions_matrix <- add_columns(settings_matrix, "nclust", 0)
-    solutions_matrix <- add_columns(settings_matrix, subjects, 0)
-    # Iterate through the rows of the settings matrix
-    remaining_seconds_vector <- vector()
+    # `add_columns` extends a dataframe `df` with a column or vector of columns
+    #  whose names are provided in the `newcols` parameter. The values in the
+    #  newly added columns are specified in the `fill` parameter.
+    ###########################################################################
+    # 5a. solutions_matrix begins as the settings_matrix extended with one new
+    #  column for every subjects.
+    solutions_matrix <- add_columns(
+        df = settings_matrix,
+        newcols = data_list[[1]]$"data"$"subjectkey", # one column per patient
+        fill = 0 # populate the new column with 0s by default
+    )
+    # 5b. solutions_matrix gets one new column to store the cluster that each
+    #  subject was assigned to.
+    solutions_matrix <- add_columns(
+        df = settings_matrix,
+        newcols = "nclust",
+        fill = 0
+    )
+    ###########################################################################
+    # 6. Iterate through the rows of the settings matrix
+    ###########################################################################
     for (i in seq_len(nrow(settings_matrix))) {
-        start_time <- Sys.time()
+        start_time <- Sys.time() # used to estimate time to completion
         dm_row <- settings_matrix[i, ]
         current_data_list <- execute_inclusion(dm_row, data_list)
         # Apply the current row's SNF scheme
@@ -162,8 +201,8 @@ batch_snf <- function(data_list,
 #'
 #' @export
 parallel_batch_snf <- function(data_list,
-                        settings_matrix,
-                        processes) {
+                               settings_matrix,
+                               processes) {
     print(
         paste0(
             "Utilizing ", processes, " processes. Real time progress is not",
@@ -173,8 +212,12 @@ parallel_batch_snf <- function(data_list,
     start <- proc.time()
     future::plan(future::multisession, workers = processes)
     settings_matrix <- data.frame(settings_matrix)
-    solutions_matrix <-
-        future.apply::future_apply(settings_matrix, 1, dm_row_fn, dl = data_list)
+    solutions_matrix <- future.apply::future_apply(
+        settings_matrix,
+        1,
+        dm_row_fn,
+        dl = data_list
+    )
     solutions_matrix <- do.call("rbind", solutions_matrix)
     solutions_matrix <- solutions_matrix |>
         unique()
