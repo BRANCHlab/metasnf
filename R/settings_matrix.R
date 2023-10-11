@@ -6,6 +6,9 @@
 #' @param seed set a seed for the random matrix generation. Note that this
 #' @param min_removed The smallest number of elements that may be removed
 #' @param max_removed The largest number of elements that may be removed
+#' @param possible_snf_schemes A vector containing the possible snf_schemes to
+#'  uniformly randomly select from. By default, the vector contains all
+#'  possible schemes: c(1, 2, 3)
 #' @param retry_limit The maximum number of attempts to generate a novel row
 #'  affects the global seed.
 #'
@@ -17,7 +20,11 @@ generate_settings_matrix <- function(data_list,
                                      seed = NULL,
                                      min_removed = NULL,
                                      max_removed = NULL,
+                                     possible_snf_schemes = c(1, 2, 3),
                                      retry_limit = 10) {
+    # The user should have the following control:
+    # - SNF scheme (Choose between preset options 1 - 3) (DONE)
+    # -
     # Set the seed if specified
     if (!is.null(seed)) {
         set.seed(seed)
@@ -42,6 +49,7 @@ generate_settings_matrix <- function(data_list,
     settings_matrix <- add_settings_matrix_rows(
         settings_matrix = settings_matrix_base,
         nrows = nrows,
+        possible_snf_schemes = possible_snf_schemes,
         min_removed = min_removed,
         max_removed = max_removed,
         retry_limit = retry_limit
@@ -109,6 +117,9 @@ random_removal <- function(num_cols,
 #' @param retry_limit The maximum number of attempts to generate a novel row
 #' @param min_removed The smallest number of elements that may be removed
 #' @param max_removed The largest number of elements that may be removed
+#' @param possible_snf_schemes A vector containing the possible snf_schemes to
+#'  uniformly randomly select from. By default, the vector contains all
+#'  possible schemes: c(1, 2, 3)
 #'
 #' @return settings_matrix New settings matrix containing additional rows
 #'
@@ -117,6 +128,7 @@ add_settings_matrix_rows <- function(settings_matrix,
                                    nrows,
                                    min_removed = NULL,
                                    max_removed = NULL,
+                                   possible_snf_schemes = c(1, 2, 3),
                                    retry_limit = 10) {
     i <- 0
     num_retries <- 0
@@ -138,7 +150,7 @@ add_settings_matrix_rows <- function(settings_matrix,
             colnames(settings_matrix)[startsWith(colnames(settings_matrix), "inc")]
         colnames(inclusions) <- inclusion_names
         # Other free parameters
-        snf_scheme <- sample(1:3, 1)
+        snf_scheme <- sample(possible_snf_schemes, 1)
         clust_alg <- sample(1:2, 1)
         # K and alpha range based on prior hyperparameter scans
         K <- sample(10:30, 1)

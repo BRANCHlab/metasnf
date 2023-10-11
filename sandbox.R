@@ -11,7 +11,12 @@ data_list <- generate_data_list(
 
 settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 
-generate_settings_matrix(data_list, nrow = 15, seed = 42)
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 15,
+    seed = 42,
+    possible_snf_schemes = c(1, 2)
+)
 
 settings_matrix
 
@@ -28,34 +33,3 @@ settings_matrix
 output_matrix <- batch_snf(data_list, settings_matrix)
 
 output_matrix
-
-generate_clust_algs_list()
-
-clust_algs_list <- generate_clust_algs_list(
-    "banana_alg" = spectral_rot,
-    "spectral_banana" = spectral_rot
-)
-
-clust_algs_list <- generate_clust_algs_list()
-
-names(clust_algs_list)
-
-summarize_clust_algs_list(clust_algs_list)
-
-
-colnames(settings_matrix)
-
-
-
-a <- list(
-    "cheese" = 1,
-    "cheeser" = 2
-)
-
-b <- list(
-    3,
-    4
-)
-
-q <- c(a, b)
-
