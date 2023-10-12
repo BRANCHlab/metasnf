@@ -10,6 +10,7 @@ generate_settings_matrix(
   seed = NULL,
   min_removed = NULL,
   max_removed = NULL,
+  possible_snf_schemes = c(1, 2, 3),
   retry_limit = 10
 )
 }
@@ -24,6 +25,10 @@ exclusion}
 \item{min_removed}{The smallest number of elements that may be removed}
 
 \item{max_removed}{The largest number of elements that may be removed}
+
+\item{possible_snf_schemes}{A vector containing the possible snf_schemes to
+uniformly randomly select from. By default, the vector contains all
+possible schemes: c(1, 2, 3)}
 
 \item{retry_limit}{The maximum number of attempts to generate a novel row
 affects the global seed.}
