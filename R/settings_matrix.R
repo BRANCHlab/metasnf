@@ -178,63 +178,6 @@ generate_settings_matrix <- function(data_list,
     return(settings_matrix)
 }
 
-#' Generate random removal sequence
-#'
-#' Helper function to contribute to rows within the settings matrix. Number of
-#'  columns removed follows the exponential probability distribution to
-#'  typically keep all or most columns.
-#'
-#' @param num_cols Number of feature elements in consideration for exclusion
-#'
-#' @param min_removed_inputs The smallest number of input dataframes that may
-#'  be randomly removed.
-#'
-#' @param max_removed_inputs The largest number of input dataframes that may be
-#'  randomly removed.
-#'
-#' @return shuffled_removals Binary vector sequence indicating if a column
-#'  should be included (1) or excluded (0)
-#'
-#' @export
-random_removal <- function(num_cols,
-                           min_removed_inputs,
-                           max_removed_inputs) {
-    # Generate 10,000 random numbers according to exponential distribution
-    if (is.null(min_removed_inputs)) {
-        min_removed_inputs <- 0
-    }
-    if (is.null(max_removed_inputs)) {
-        max_removed_inputs <- num_cols - 1
-    }
-    if (max_removed_inputs >= num_cols || min_removed_inputs < 0) {
-        stop(
-            paste0(
-                "The number of removed elements must be between 0 and the",
-                " total number of elements in the data_list (", num_cols, ")."
-            )
-        )
-    }
-    rand_vals <- stats::rexp(10000)
-    # Scale them to range from 0 to num_cols - 1
-    # multiply by the difference
-    # add the lowest value
-    difference <- max_removed_inputs - min_removed_inputs
-    # Scale the values to range from 0 to 1
-    rand_vals <- rand_vals / max(rand_vals)
-    # Multiply by the difference
-    rand_vals <- rand_vals * difference
-    rand_vals <- rand_vals + min_removed_inputs
-    rand_vals <- round(rand_vals)
-    num_removed <- sample(rand_vals, 1)
-    # vector of 1s or 0s to represent number of columns kept
-    remove_placeholders <- rep(0, num_removed)
-    keep_placeholders <- rep(1, num_cols - num_removed)
-    # merge and shuffle those vectors to produce final dropout sequence
-    unshuffled_removals <- c(remove_placeholders, keep_placeholders)
-    shuffled_removals <- sample(unshuffled_removals)
-    return(shuffled_removals)
-}
-
 #' Add settings matrix rows
 #'
 #' @param settings_matrix The existing settings matrix
@@ -391,7 +334,7 @@ add_settings_matrix_rows <- function(settings_matrix,
         }
     }
     if (!is.null(max_alpha)) {
-        if (min_alpha > 0.8) {
+        if (max_alpha > 0.8) {
             warning(
                 "Requested minimum / maximum alpha hyperparameter range is",
                 " outside range empirically considere reasonable (0.3 to 0.8)."
@@ -419,7 +362,7 @@ add_settings_matrix_rows <- function(settings_matrix,
     ###########################################################################
     # 2. Handling k hyperparameter
     ###########################################################################
-    # 1a. Ensure range is specified by only one approach
+    # 2a. Ensure range is specified by only one approach
     null_min_max_k <- is.null(min_k) & is.null(max_k)
     null_possible_k <- is.null(possible_k)
     if (!null_possible_k & !null_min_max_k) {
@@ -432,38 +375,50 @@ add_settings_matrix_rows <- function(settings_matrix,
     }
     # 1b. Ensure specified upper and lower bounds are sensible
     if (!is.null(min_k)) {
-        if (min_k < 0.3) {
+        if (min_k < 10) {
             warning(
-                "Requested minimum / maximum k hyperparameter range is",
-                " outside range empirically considere reasonable (0.3 to 0.8)."
+                "The original SNF paper recommends setting k to either the",
+                " number of patients divided by the expected number of",
+                " clusters or the number of patients divided by 10 when the",
+                " expected number of clusters was unknown. This warning is",
+                " raised anytime a user tries to set a k value smaller than",
+                " 10 or larger than 100."
             )
         }
     }
     if (!is.null(max_k)) {
-        if (min_k > 0.8) {
+        if (max_k > 100) {
             warning(
-                "Requested minimum / maximum k hyperparameter range is",
-                " outside range empirically considere reasonable (0.3 to 0.8)."
+                "The original SNF paper recommends setting k to either the",
+                " number of patients divided by the expected number of",
+                " clusters or the number of patients divided by 10 when the",
+                " expected number of clusters was unknown. This warning is",
+                " raised anytime a user tries to set a k value smaller than",
+                " 10 or larger than 100."
             )
         }
     }
     if (!is.null(possible_k)) {
-        if (min(possible_k) < 0.3 | max(possible_k) > 0.8) {
+        if (min(possible_k) < 10 | max(possible_k) > 100) {
             warning(
-                "Requested minimum / maximum k hyperparameter range is",
-                " outside range empirically considere reasonable (0.3 to 0.8)."
+                "The original SNF paper recommends setting k to either the",
+                " number of patients divided by the expected number of",
+                " clusters or the number of patients divided by 10 when the",
+                " expected number of clusters was unknown. This warning is",
+                " raised anytime a user tries to set a k value smaller than",
+                " 10 or larger than 100."
             )
         }
     }
     # 1c. Setup possible_k to contain values to sample from
     if (is.null(possible_k)) {
         if (is.null(min_k)) {
-            min_k <- 0.3
+            min_k <- 10
         }
         if (is.null(max_k)) {
-            max_k <- 0.8
+            max_k <- 100
         }
-        possible_k <- seq(min_k, max_k, by = 0.1)
+        possible_k <- seq(min_k, max_k, by = 1)
     }
     ###########################################################################
     if (!is.null(seed)) {
@@ -494,7 +449,7 @@ add_settings_matrix_rows <- function(settings_matrix,
         clust_alg <- sample(1:2, 1)
         # k and alpha range based on prior hyperparameter scans
         alpha <- sample(possible_alpha, 1)
-        k <- sample(10:30, 1)
+        k <- sample(possible_k, 1)
         t <- 20
         cont_dist <- 1
         disc_dist <- 1
@@ -545,3 +500,61 @@ add_settings_matrix_rows <- function(settings_matrix,
     row.names(settings_matrix) <- NULL
     return(settings_matrix)
 }
+
+#' Generate random removal sequence
+#'
+#' Helper function to contribute to rows within the settings matrix. Number of
+#'  columns removed follows the exponential probability distribution to
+#'  typically keep all or most columns.
+#'
+#' @param num_cols Number of feature elements in consideration for exclusion
+#'
+#' @param min_removed_inputs The smallest number of input dataframes that may
+#'  be randomly removed.
+#'
+#' @param max_removed_inputs The largest number of input dataframes that may be
+#'  randomly removed.
+#'
+#' @return shuffled_removals Binary vector sequence indicating if a column
+#'  should be included (1) or excluded (0)
+#'
+#' @export
+random_removal <- function(num_cols,
+                           min_removed_inputs,
+                           max_removed_inputs) {
+    # Generate 10,000 random numbers according to exponential distribution
+    if (is.null(min_removed_inputs)) {
+        min_removed_inputs <- 0
+    }
+    if (is.null(max_removed_inputs)) {
+        max_removed_inputs <- num_cols - 1
+    }
+    if (max_removed_inputs >= num_cols || min_removed_inputs < 0) {
+        stop(
+            paste0(
+                "The number of removed elements must be between 0 and the",
+                " total number of elements in the data_list (", num_cols, ")."
+            )
+        )
+    }
+    rand_vals <- stats::rexp(10000)
+    # Scale them to range from 0 to num_cols - 1
+    # multiply by the difference
+    # add the lowest value
+    difference <- max_removed_inputs - min_removed_inputs
+    # Scale the values to range from 0 to 1
+    rand_vals <- rand_vals / max(rand_vals)
+    # Multiply by the difference
+    rand_vals <- rand_vals * difference
+    rand_vals <- rand_vals + min_removed_inputs
+    rand_vals <- round(rand_vals)
+    num_removed <- sample(rand_vals, 1)
+    # vector of 1s or 0s to represent number of columns kept
+    remove_placeholders <- rep(0, num_removed)
+    keep_placeholders <- rep(1, num_cols - num_removed)
+    # merge and shuffle those vectors to produce final dropout sequence
+    unshuffled_removals <- c(remove_placeholders, keep_placeholders)
+    shuffled_removals <- sample(unshuffled_removals)
+    return(shuffled_removals)
+}
+
