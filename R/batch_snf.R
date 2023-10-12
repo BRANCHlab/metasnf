@@ -32,11 +32,11 @@ batch_snf <- function(data_list,
                       clust_algs_list = NULL,
                       run_clustering = TRUE) {
     ###########################################################################
-    # 1. Checking compatibility of settings
+    # 1. Checking validity of settings
     ###########################################################################
-    # The user may have chosen to simultaneously not save affinity matrices and
-    #  to not apply any clustering algorithms. In that case, this function is
-    #  not really doing anything. Stop the function with an error.
+    # 1a. The user may have chosen to simultaneously not save affinity matrices
+    #  and to not apply any clustering algorithms. In that case, this function
+    #  is not really doing anything. Stop the function with an error.
     if (is.null(affinity_matrix_dir) & !run_clustering) {
         stop(
             paste0(
@@ -45,6 +45,27 @@ batch_snf <- function(data_list,
                " in the affinity_matrix_dir parameter for storing matrices.",
                " With this combination of settings, the batch_snf function",
                " yields no meaningful output."
+            )
+        )
+    }
+    # 1b. If there is a value of the k hyperparameter that exceeds the number
+    #  of patients in the data_list, SNFtool::affinityMatrix cannot run. This
+    #  check can't go in the generate_settings_matrix function in case the user
+    #  creater their base settings_matrix with a valid k, then extended their
+    #  settings matrix using the add_settings_matrix_rows function with an
+    #  invalid k (a function that doesn't require users to supply the data).
+    max_k <- max(settings_matrix$"k")
+    n_patients <- unique(summarize_dl(data_list)$"length") # using unique like
+    # this does seem risky, but `generate_data_list` should ensure that there
+    # that the patients for all data_list elements are identical.
+    if (max_k >= n_patients) {
+        stop(
+            paste0(
+                "The highest value of k in your settings_matrix exceeds the",
+                " number of patients in your data. The k-nearest neighbours",
+                " of any patient doesn't exist! Please regenerate your",
+                " settings_matrix while ensuring the maximum k value is less",
+                " than the number of patients in the data: ", n_patients, "."
             )
         )
     }

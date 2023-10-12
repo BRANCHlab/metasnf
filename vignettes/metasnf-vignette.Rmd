@@ -515,11 +515,25 @@ train_target_list <- generate_target_list(
 )
 
 # Find a clustering solution in your training data
-settings_matrix <- generate_settings_matrix(train_data_list, nrow = 5, seed = 42)
+settings_matrix <- generate_settings_matrix(
+    train_data_list,
+    nrow = 5,
+    seed = 42,
+    min_k = 10,
+    max_k = 30
+)
 
-train_solutions_matrix <- batch_snf(train_data_list, settings_matrix)
+min(summarize_dl(train_data_list)$"length")
 
-extended_solutions_matrix <- extend_om(train_solutions_matrix, train_target_list)
+train_solutions_matrix <- batch_snf(
+    train_data_list,
+    settings_matrix
+)
+
+extended_solutions_matrix <- extend_om(
+    train_solutions_matrix,
+    train_target_list
+)
 
 # The fourth row had the lowest minimum p-value across our outcomes
 which(extended_solutions_matrix$"min_p_val" ==

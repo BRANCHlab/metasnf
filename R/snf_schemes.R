@@ -143,7 +143,9 @@ snf_step <- function(data_list, scheme, k = 20, alpha = 0.5, t = 20) {
             })
         sim_list <- lapply(dist_list,
             function(x) {
-                SNFtool::affinityMatrix(x, K = k, sigma = alpha)
+                print(dim(x))
+                affinity_matrix <- SNFtool::affinityMatrix(x, K = k, sigma = alpha)
+                return(affinity_matrix)
             })
         fused_network <- SNFtool::SNF(Wall = sim_list, K = k, t = t)
     # The twostep scheme

@@ -373,7 +373,7 @@ add_settings_matrix_rows <- function(settings_matrix,
             )
         )
     }
-    # 1b. Ensure specified upper and lower bounds are sensible
+    # 2b. Ensure specified upper and lower bounds are sensible
     if (!is.null(min_k)) {
         if (min_k < 10) {
             warning(
@@ -410,7 +410,7 @@ add_settings_matrix_rows <- function(settings_matrix,
             )
         }
     }
-    # 1c. Setup possible_k to contain values to sample from
+    # 2c. Setup possible_k to contain values to sample from
     if (is.null(possible_k)) {
         if (is.null(min_k)) {
             min_k <- 10
@@ -421,10 +421,70 @@ add_settings_matrix_rows <- function(settings_matrix,
         possible_k <- seq(min_k, max_k, by = 1)
     }
     ###########################################################################
+    # 3. Handling t hyperparameter
+    ###########################################################################
+    # 3a. Ensure range is specified by only one approach
+    null_min_max_t <- is.null(min_t) & is.null(max_t)
+    null_possible_t <- is.null(possible_t)
+    if (!null_possible_t & !null_min_max_t) {
+        stop(
+            paste0(
+                "t parameter can be controlled using either the min/max",
+                " parameters or using the possible parameter - not both."
+            )
+        )
+    }
+    # 3b. Ensure specified upper and lower bounds are sensible
+    if (!is.null(min_t)) {
+        if (min_t < 10) {
+            warning(
+                "The original SNF paper recommends a t between 10 and 20.",
+                " Empirically, setting t above 20 is always sufficient for",
+                " SNF to converge. This warning is raised anytime a user",
+                " tries to set a t value smaller than 10 or larger than 20."
+            )
+        }
+    }
+    if (!is.null(max_t)) {
+        if (max_t > 20) {
+            warning(
+                "The original SNF paper recommends a t between 10 to 20.",
+                " Empirically, setting t above 20 is always sufficient for",
+                " SNF to converge. This warning is raised anytime a user",
+                " tries to set a t value smaller than 10 or larger than 20."
+            )
+        }
+    }
+    if (!is.null(possible_t)) {
+        if (min(possible_t) < 10 | max(possible_t) > 20) {
+            warning(
+                "The original SNF paper recommends a t between 10 to 20.",
+                " Empirically, setting t above 20 is always sufficient for",
+                " SNF to converge. This warning is raised anytime a user",
+                " tries to set a t value smaller than 10 or larger than 20."
+            )
+        }
+    }
+    # 3c. Setup possible_t to contain values to sample from
+    if (is.null(possible_t)) {
+        if (is.null(min_t)) {
+            min_t <- 20
+        }
+        if (is.null(max_t)) {
+            max_t <- 20
+        }
+        possible_t <- seq(min_t, max_t, by = 1)
+    }
+    ###########################################################################
+    # X. Set the random seed (if provided)
+    ###########################################################################
     if (!is.null(seed)) {
         set.seed(seed)
         print("The global seed has been changed!")
     }
+    ###########################################################################
+    # X. Begin the loop that will generate new random settings_matrix rows
+    ###########################################################################
     i <- 0
     num_retries <- 0
     while (i < nrows) {
@@ -447,10 +507,17 @@ add_settings_matrix_rows <- function(settings_matrix,
         # Other free parameters
         snf_scheme <- sample(possible_snf_schemes, 1)
         clust_alg <- sample(1:2, 1)
-        # k and alpha range based on prior hyperparameter scans
-        alpha <- sample(possible_alpha, 1)
-        k <- sample(possible_k, 1)
-        t <- 20
+        #######################################################################
+        # X. Pick random values uniformly
+        #######################################################################
+        # The behaviour of sample is different when it receives 1 number vs.
+        #  a vector of numbers. Rather than just picking that 1 number, it will
+        #  pick a random number from 1 to that number. If the user's range
+        #  is only a single value, this syntax will avoid sampling from 1 to
+        #  that value.
+        alpha <- possible_alpha[sample.int(length(possible_alpha), 1)]
+        k <- possible_k[sample.int(length(possible_k), 1)]
+        t <- possible_t[sample.int(length(possible_t), 1)]
         cont_dist <- 1
         disc_dist <- 1
         ord_dist <- 1

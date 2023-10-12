@@ -24,9 +24,17 @@ settings_matrix <- generate_settings_matrix(
     possible_snf_schemes = c(1, 2)
 )
 
+sample(20:30, 1)
+
+settings_matrix$"t"
+
 settings_matrix$alpha
 
 settings_matrix$k
+
+colnames(settings_matrix)
+
+settings_matrix$"t"
 
 # Should save many affinity matrices to disk
 # output_matrix <- batch_snf(data_list, settings_matrix, affinity_matrix_dir = ".")
@@ -41,3 +49,18 @@ settings_matrix$k
 output_matrix <- batch_snf(data_list, settings_matrix)
 
 output_matrix
+
+sample.int(1:3, 3, 1)
+
+resample <- function(x, ...) {
+    print(length(x))
+    x[sample.int(length(x), ...)]
+}
+
+resample(1:3, 1)
+
+resample(3, 1)
+
+[sample.int(10, 1)]
+
+
