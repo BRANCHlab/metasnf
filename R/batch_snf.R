@@ -55,12 +55,12 @@ batch_snf <- function(data_list,
         available_cores <- future::availableCores()[["system"]]
         # Use all available cores
         if (processes == "max") {
-            om <- parallel_batch_snf(
+            solutions_matrix <- parallel_batch_snf(
                 data_list = data_list,
                 settings_matrix = settings_matrix,
                 processes = available_cores
             )
-            return(om)
+            return(solutions_matrix)
         # Use the user-specified number of cores
         } else if (is.numeric(processes)) {
             if (processes > available_cores) {
@@ -74,12 +74,12 @@ batch_snf <- function(data_list,
                 )
                 processes <- available_cores
             }
-            om <- parallel_batch_snf(
+            solutions_matrix <- parallel_batch_snf(
                 data_list = data_list,
                 settings_matrix = settings_matrix,
                 processes = processes
             )
-            return(om)
+            return(solutions_matrix)
         # Invalid input check
         } else {
             stop("Invalid number of processes specified.")
@@ -104,7 +104,7 @@ batch_snf <- function(data_list,
     #  - snf_scheme (1 column): number indicating which of the preprogrammed
     #    'schemes' was used to for this run of SNF
     #  - alpha (AKA sigma or eta): value of affinity matrix hyperparameter
-    #  - K: value of affinity matrix hyperparameter
+    #  - k: value of affinity matrix hyperparameter
     #  - T: Number of iterations of SNF
     #  - subject_* (1 column per patient): cluster membership of that patient
     #    for that row. Only included when run_clustering = TRUE.
@@ -142,13 +142,13 @@ batch_snf <- function(data_list,
             settings_matrix_row$"snf_scheme" == 2 ~ "domain",
             settings_matrix_row$"snf_scheme" == 3 ~ "twostep",
         )
-        K <- settings_matrix[i, "K"]
+        k <- settings_matrix[i, "k"]
         alpha <- settings_matrix[i, "alpha"]
         # 4. Run SNF
         fused_network <- snf_step(
             current_data_list,
             current_snf_scheme,
-            K = K,
+            k = k,
             alpha = alpha)
         # 5. If user provided a path to save the affinity matrices, save them
         if (!is.null(affinity_matrix_dir)) {
@@ -263,12 +263,12 @@ settings_matrix_row_fn <- function(settings_matrix_row, dl) {
         settings_matrix_row$"snf_scheme" == 2 ~ "domain",
         settings_matrix_row$"snf_scheme" == 3 ~ "twostep",
     )
-    K <- settings_matrix_row$"K"
+    k <- settings_matrix_row$"k"
     alpha <- settings_matrix_row$"alpha"
     fused_network <- snf_step(
         current_data_list,
         current_snf_scheme,
-        K = K,
+        k = k,
         alpha = alpha)
     all_clust <- SNFtool::estimateNumberOfClustersGivenGraph(fused_network)
     # Apply the current row's number of clusters heuristic

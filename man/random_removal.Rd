@@ -4,21 +4,23 @@
 \alias{random_removal}
 \title{Generate random removal sequence}
 \usage{
-random_removal(num_cols, min_removed, max_removed)
+random_removal(num_cols, min_removed_inputs, max_removed_inputs)
 }
 \arguments{
 \item{num_cols}{Number of feature elements in consideration for exclusion}
 
-\item{min_removed}{The smallest number of elements that may be removed}
+\item{min_removed_inputs}{The smallest number of input dataframes that may
+be randomly removed.}
 
-\item{max_removed}{The largest number of elements that may be removed}
+\item{max_removed_inputs}{The largest number of input dataframes that may be
+randomly removed.}
 }
 \value{
 shuffled_removals Binary vector sequence indicating if a column
 should be included (1) or excluded (0)
 }
 \description{
-Helper function to contribute to rows within the settings matrix.
-Number of columns removed follows the exponential probability distribution
-to typically keep all or most columns.
+Helper function to contribute to rows within the settings matrix. Number of
+columns removed follows the exponential probability distribution to
+typically keep all or most columns.
 }

@@ -1,57 +1,178 @@
 #' Build a settings matrix
 #'
-#' @param data_list a data list object to determine variables for inclusion and
-#'  exclusion
-#' @param nrows number of settings matrix rows
-#' @param seed set a seed for the random matrix generation. Note that this
-#' @param min_removed The smallest number of elements that may be removed
-#' @param max_removed The largest number of elements that may be removed
+#' @param data_list A data list object to determine variables for inclusion and
+#'  exclusion.
+#'
+#' @param nrows Number of rows to generate for the settings matrix.
+#'
+#' @param seed set a seed for the random matrix generation. Setting this value
+#'  will change the seed of the global environment.
+#'
+#' @param min_removed_inputs The smallest number of input dataframes that may be
+#'  randomly removed. By default, 0.
+#'
+#' @param max_removed_inputs The largest number of input dataframes that may be
+#'  randomly removed. By default, this is 1 less than all the provided input
+#'  dataframes in the data_list.
+#'
+#' @param dropout_dist Parameter controlling how the random removal of input
+#'  dataframes should occur. Can be "none" (no input dataframes are randomly
+#'  removed), "uniform" (uniformly sample between min_removed_inputs and max_removed_inputs
+#'  to determine number of input dataframes to remove), or "exponential" (pick
+#'  number of input dataframes to remove by sampling from min_removed_inputs to
+#'  max_removed_inputs with an exponential distribution; default).
+#'
+#' @param min_alpha The minimum value that the alpha hyperparameter can have.
+#'  Random assigned value of alpha for each row will be obtained by uniformly
+#'  sampling numbers between `min_alpha` and `max_alpha` at intervals of 0.1.
+#'  Cannot be used in conjunction with the `possible_alpha` parameter.
+#'
+#' @param max_alpha The maximum value that the alpha hyperparameter can have.
+#'  See `min_alpha` parameter. Cannot be used in conjunction with the
+#'  `possible_alpha` parameter.
+#'
+#' @param min_k The minimum value that the k hyperparameter can have.
+#'  Random assigned value of k for each row will be obtained by uniformly
+#'  sampling numbers between `min_k` and `max_k` at intervals of 1.
+#'  Cannot be used in conjunction with the `possible_k` parameter.
+#'
+#' @param max_k The maximum value that the k hyperparameter can have.
+#'  See `min_k` parameter. Cannot be used in conjunction with the
+#'  `possible_k` parameter.
+#'
+#' @param min_t The minimum value that the t hyperparameter can have.
+#'  Random assigned value of t for each row will be obtained by uniformly
+#'  sampling numbers between `min_t` and `max_t` at intervals of 1.
+#'  Cannot be used in conjunction with the `possible_t` parameter.
+#'
+#' @param max_t The maximum value that the t hyperparameter can have.
+#'  See `min_t` parameter. Cannot be used in conjunction with the
+#'  `possible_t` parameter.
+#'
+#' @param possible_alpha A number or numeric vector of a set of possible values
+#'  that alpha can take on. Value will be obtained by uniformly sampling the
+#'  vector. Cannot be used in conjunction with the `min_alpha` or `max_alpha`
+#'  parameters.
+#'
+#' @param possible_k A number or numeric vector of a set of possible values
+#'  that k can take on. Value will be obtained by uniformly sampling the
+#'  vector. Cannot be used in conjunction with the `min_k` or `max_k`
+#'  parameters.
+#'
+#' @param possible_t A number or numeric vector of a set of possible values
+#'  that t can take on. Value will be obtained by uniformly sampling the
+#'  vector. Cannot be used in conjunction with the `min_t` or `max_t`
+#'  parameters.
+#'
 #' @param possible_snf_schemes A vector containing the possible snf_schemes to
 #'  uniformly randomly select from. By default, the vector contains all
-#'  possible schemes: c(1, 2, 3)
-#' @param retry_limit The maximum number of attempts to generate a novel row
-#'  affects the global seed.
+#'  3 possible schemes: c(1, 2, 3). 1 corresponds to the "individual" scheme,
+#'  2 corresponds to the "domain" scheme, and 3 corresponds to the "twostep"
+#'  scheme.
+#'
+#' @param clustering_algorithms A list of clustering algorithms to uniformly
+#'  randomly pick from when clustering. When not specified, randomly select
+#'  between spectral clustering using the eigen-gap heuristic and spectral
+#'  clustering using the rotation cost heuristic. See ?generate_clust_algs_list
+#'  for more details on running custom clustering algorithms.
+#'
+#' @param continuous_distances A list of distance metrics to use
+#'  anytime raw data is converted to a distance matrix as an intermediate step.
+#'  By default, this will standardized normalized Euclidean. See
+#'  ?generate_distance_list for more details on using custom distance metrics.
+#'
+#' @param discrete_distances Like `continuous_distances`, but
+#'  for discrete data. By default, uses standardized normalized Euclidean.
+#'
+#' @param ordinal_distances Like `continuous_distances`, but
+#'  for ordinal data. By default, uses standardized normalized Euclidean.
+#'
+#' @param categorical_distances Like `continuous_distances`, but
+#'  for categorical data. By default, uses Gower's distance.
+#'
+#' @param mixed_distances Like `continuous_distances`, but
+#'  for mixed data. By default, uses gower distance.
+#'
+#' @param retry_limit The maximum number of attempts to generate a novel row.
+#'  This function does not return matrices with identical rows. As the range of
+#'  requested possible settings tightens and the number of requested rows
+#'  increases, the risk of randomly generating a row that already exists
+#'  increases. If a new random row has matched an existing row `retry_limit`
+#'  number of times, the function will terminate.
 #'
 #' @return settings_matrix A settings matrix
 #'
 #' @export
 generate_settings_matrix <- function(data_list,
-                                     nrows = 0,
                                      seed = NULL,
-                                     min_removed = NULL,
-                                     max_removed = NULL,
+                                     nrows = 0,
+                                     min_removed_inputs = 0,
+                                     max_removed_inputs = length(
+                                         data_list
+                                     ) - 1,
+                                     dropout_dist = "exponential",
+                                     min_alpha = NULL,
+                                     max_alpha = NULL,
+                                     min_k = NULL,
+                                     max_k = NULL,
+                                     min_t = NULL,
+                                     max_t = NULL,
+                                     possible_alpha = NULL,
+                                     possible_k = NULL,
+                                     possible_t = NULL,
                                      possible_snf_schemes = c(1, 2, 3),
+                                     clustering_algorithms = NULL,
+                                     continuous_distances = NULL,
+                                     discrete_distances = NULL,
+                                     ordinal_distances = NULL,
+                                     categorical_distances = NULL,
+                                     mixed_distances = NULL,
                                      retry_limit = 10) {
-    # The user should have the following control:
-    # - SNF scheme (Choose between preset options 1 - 3) (DONE)
-    # -
-    # Set the seed if specified
-    if (!is.null(seed)) {
-        set.seed(seed)
-        print("The global seed has been changed!")
-    }
-    dm_cols <- c(
+    settings_matrix_columns <- c(
         "row_id",
-        paste0("inc_", summarize_dl(data_list)$"name"),
+        "alpha",
+        "k",
+        "t",
         "snf_scheme",
         "clust_alg",
-        "K",
-        "alpha"
+        "cont_dist",
+        "disc_dist",
+        "ord_dist",
+        "cat_dist",
+        "mix_dist",
+        paste0("inc_", summarize_dl(data_list)$"name")
     )
     settings_matrix_base <- as.data.frame(
         matrix(
             0,
-            ncol = length(dm_cols),
+            ncol = length(settings_matrix_columns),
             nrow = 0
         )
     )
-    colnames(settings_matrix_base) <- dm_cols
+    colnames(settings_matrix_base) <- settings_matrix_columns
     settings_matrix <- add_settings_matrix_rows(
         settings_matrix = settings_matrix_base,
+        seed = seed,
         nrows = nrows,
+        min_removed_inputs = min_removed_inputs,
+        max_removed_inputs = max_removed_inputs,
+        dropout_dist = dropout_dist,
+        min_alpha = min_alpha,
+        max_alpha = max_alpha,
+        min_k = min_k,
+        max_k = max_k,
+        min_t = min_t,
+        max_t = max_t,
+        possible_alpha = possible_alpha,
+        possible_k = possible_k,
+        possible_t = possible_t,
         possible_snf_schemes = possible_snf_schemes,
-        min_removed = min_removed,
-        max_removed = max_removed,
+        clustering_algorithms = clustering_algorithms,
+        continuous_distances = continuous_distances,
+        discrete_distances = discrete_distances,
+        ordinal_distances = ordinal_distances,
+        categorical_distances = categorical_distances,
+        mixed_distances = mixed_distances,
         retry_limit = retry_limit
     )
     return(settings_matrix)
@@ -59,29 +180,33 @@ generate_settings_matrix <- function(data_list,
 
 #' Generate random removal sequence
 #'
-#' Helper function to contribute to rows within the settings matrix.
-#' Number of columns removed follows the exponential probability distribution
-#' to typically keep all or most columns.
+#' Helper function to contribute to rows within the settings matrix. Number of
+#'  columns removed follows the exponential probability distribution to
+#'  typically keep all or most columns.
 #'
 #' @param num_cols Number of feature elements in consideration for exclusion
-#' @param min_removed The smallest number of elements that may be removed
-#' @param max_removed The largest number of elements that may be removed
+#'
+#' @param min_removed_inputs The smallest number of input dataframes that may
+#'  be randomly removed.
+#'
+#' @param max_removed_inputs The largest number of input dataframes that may be
+#'  randomly removed.
 #'
 #' @return shuffled_removals Binary vector sequence indicating if a column
-#' should be included (1) or excluded (0)
+#'  should be included (1) or excluded (0)
 #'
 #' @export
 random_removal <- function(num_cols,
-                           min_removed,
-                           max_removed) {
+                           min_removed_inputs,
+                           max_removed_inputs) {
     # Generate 10,000 random numbers according to exponential distribution
-    if (is.null(min_removed)) {
-        min_removed <- 0
+    if (is.null(min_removed_inputs)) {
+        min_removed_inputs <- 0
     }
-    if (is.null(max_removed)) {
-        max_removed <- num_cols - 1
+    if (is.null(max_removed_inputs)) {
+        max_removed_inputs <- num_cols - 1
     }
-    if (max_removed >= num_cols || min_removed < 0) {
+    if (max_removed_inputs >= num_cols || min_removed_inputs < 0) {
         stop(
             paste0(
                 "The number of removed elements must be between 0 and the",
@@ -93,12 +218,12 @@ random_removal <- function(num_cols,
     # Scale them to range from 0 to num_cols - 1
     # multiply by the difference
     # add the lowest value
-    difference <- max_removed - min_removed
+    difference <- max_removed_inputs - min_removed_inputs
     # Scale the values to range from 0 to 1
     rand_vals <- rand_vals / max(rand_vals)
     # Multiply by the difference
     rand_vals <- rand_vals * difference
-    rand_vals <- rand_vals + min_removed
+    rand_vals <- rand_vals + min_removed_inputs
     rand_vals <- round(rand_vals)
     num_removed <- sample(rand_vals, 1)
     # vector of 1s or 0s to represent number of columns kept
@@ -113,23 +238,238 @@ random_removal <- function(num_cols,
 #' Add settings matrix rows
 #'
 #' @param settings_matrix The existing settings matrix
-#' @param nrows The number of rows to be added to the settings matrix
-#' @param retry_limit The maximum number of attempts to generate a novel row
-#' @param min_removed The smallest number of elements that may be removed
-#' @param max_removed The largest number of elements that may be removed
+#'
+#' @param nrows Number of rows to generate for the settings matrix.
+#'
+#' @param seed set a seed for the random matrix generation. Setting this value
+#'  will change the seed of the global environment.
+#'
+#' @param min_removed_inputs The smallest number of input dataframes that may be
+#'  randomly removed. By default, 0.
+#'
+#' @param max_removed_inputs The largest number of input dataframes that may be
+#'  randomly removed. By default, this is 1 less than all the provided input
+#'  dataframes in the data_list.
+#'
+#' @param dropout_dist Parameter controlling how the random removal of input
+#'  dataframes should occur. Can be "none" (no input dataframes are randomly
+#'  removed), "uniform" (uniformly sample between min_removed_inputs and max_removed_inputs
+#'  to determine number of input dataframes to remove), or "exponential" (pick
+#'  number of input dataframes to remove by sampling from min_removed_inputs to
+#'  max_removed_inputs with an exponential distribution; default).
+#'
+#' @param min_alpha The minimum value that the alpha hyperparameter can have.
+#'  Random assigned value of alpha for each row will be obtained by uniformly
+#'  sampling numbers between `min_alpha` and `max_alpha` at intervals of 0.1.
+#'  Cannot be used in conjunction with the `possible_alpha` parameter.
+#'
+#' @param max_alpha The maximum value that the alpha hyperparameter can have.
+#'  See `min_alpha` parameter. Cannot be used in conjunction with the
+#'  `possible_alpha` parameter.
+#'
+#' @param min_k The minimum value that the k hyperparameter can have.
+#'  Random assigned value of k for each row will be obtained by uniformly
+#'  sampling numbers between `min_k` and `max_k` at intervals of 1.
+#'  Cannot be used in conjunction with the `possible_k` parameter.
+#'
+#' @param max_k The maximum value that the k hyperparameter can have.
+#'  See `min_k` parameter. Cannot be used in conjunction with the
+#'  `possible_k` parameter.
+#'
+#' @param min_t The minimum value that the t hyperparameter can have.
+#'  Random assigned value of t for each row will be obtained by uniformly
+#'  sampling numbers between `min_t` and `max_t` at intervals of 1.
+#'  Cannot be used in conjunction with the `possible_t` parameter.
+#'
+#' @param max_t The maximum value that the t hyperparameter can have.
+#'  See `min_t` parameter. Cannot be used in conjunction with the
+#'  `possible_t` parameter.
+#'
+#' @param possible_alpha A number or numeric vector of a set of possible values
+#'  that alpha can take on. Value will be obtained by uniformly sampling the
+#'  vector. Cannot be used in conjunction with the `min_alpha` or `max_alpha`
+#'  parameters.
+#'
+#' @param possible_k A number or numeric vector of a set of possible values
+#'  that k can take on. Value will be obtained by uniformly sampling the
+#'  vector. Cannot be used in conjunction with the `min_k` or `max_k`
+#'  parameters.
+#'
+#' @param possible_t A number or numeric vector of a set of possible values
+#'  that t can take on. Value will be obtained by uniformly sampling the
+#'  vector. Cannot be used in conjunction with the `min_t` or `max_t`
+#'  parameters.
+#'
 #' @param possible_snf_schemes A vector containing the possible snf_schemes to
 #'  uniformly randomly select from. By default, the vector contains all
-#'  possible schemes: c(1, 2, 3)
+#'  3 possible schemes: c(1, 2, 3). 1 corresponds to the "individual" scheme,
+#'  2 corresponds to the "domain" scheme, and 3 corresponds to the "twostep"
+#'  scheme.
 #'
-#' @return settings_matrix New settings matrix containing additional rows
+#' @param clustering_algorithms A list of clustering algorithms to uniformly
+#'  randomly pick from when clustering. When not specified, randomly select
+#'  between spectral clustering using the eigen-gap heuristic and spectral
+#'  clustering using the rotation cost heuristic. See ?generate_clust_algs_list
+#'  for more details on running custom clustering algorithms.
+#'
+#' @param continuous_distances A list of distance metrics to use
+#'  anytime raw data is converted to a distance matrix as an intermediate step.
+#'  By default, this will standardized normalized Euclidean. See
+#'  ?generate_distance_list for more details on using custom distance metrics.
+#'
+#' @param discrete_distances Like `continuous_distances`, but
+#'  for discrete data. By default, uses standardized normalized Euclidean.
+#'
+#' @param ordinal_distances Like `continuous_distances`, but
+#'  for ordinal data. By default, uses standardized normalized Euclidean.
+#'
+#' @param categorical_distances Like `continuous_distances`, but
+#'  for categorical data. By default, uses Gower's distance.
+#'
+#' @param mixed_distances Like `continuous_distances`, but
+#'  for mixed data. By default, uses gower distance.
+#'
+#' @param retry_limit The maximum number of attempts to generate a novel row.
+#'  This function does not return matrices with identical rows. As the range of
+#'  requested possible settings tightens and the number of requested rows
+#'  increases, the risk of randomly generating a row that already exists
+#'  increases. If a new random row has matched an existing row `retry_limit`
+#'  number of times, the function will terminate.
+#'
+#' @return settings_matrix A settings matrix
 #'
 #' @export
 add_settings_matrix_rows <- function(settings_matrix,
-                                   nrows,
-                                   min_removed = NULL,
-                                   max_removed = NULL,
-                                   possible_snf_schemes = c(1, 2, 3),
-                                   retry_limit = 10) {
+                                     seed = NULL,
+                                     nrows = 0,
+                                     min_removed_inputs = 0,
+                                     max_removed_inputs = sum(
+                                         startsWith(
+                                             colnames(settings_matrix),
+                                             "inc_"
+                                         )
+                                     ) - 1,
+                                     dropout_dist = "exponential",
+                                     min_alpha = NULL,
+                                     max_alpha = NULL,
+                                     min_k = NULL,
+                                     max_k = NULL,
+                                     min_t = NULL,
+                                     max_t = NULL,
+                                     possible_alpha = NULL,
+                                     possible_k = NULL,
+                                     possible_t = NULL,
+                                     possible_snf_schemes = c(1, 2, 3),
+                                     clustering_algorithms = NULL,
+                                     continuous_distances = NULL,
+                                     discrete_distances = NULL,
+                                     ordinal_distances = NULL,
+                                     categorical_distances = NULL,
+                                     mixed_distances = NULL,
+                                     retry_limit = 10) {
+    ###########################################################################
+    # 1. Handling alpha hyperparameter
+    ###########################################################################
+    # 1a. Ensure range is specified by only one approach
+    null_min_max_alpha <- is.null(min_alpha) & is.null(max_alpha)
+    null_possible_alpha <- is.null(possible_alpha)
+    if (!null_possible_alpha & !null_min_max_alpha) {
+        stop(
+            paste0(
+                "alpha parameter can be controlled using either the min/max",
+                " parameters or using the possible parameter - not both."
+            )
+        )
+    }
+    # 1b. Ensure specified upper and lower bounds are sensible
+    if (!is.null(min_alpha)) {
+        if (min_alpha < 0.3) {
+            warning(
+                "Requested minimum / maximum alpha hyperparameter range is",
+                " outside range empirically considere reasonable (0.3 to 0.8)."
+            )
+        }
+    }
+    if (!is.null(max_alpha)) {
+        if (min_alpha > 0.8) {
+            warning(
+                "Requested minimum / maximum alpha hyperparameter range is",
+                " outside range empirically considere reasonable (0.3 to 0.8)."
+            )
+        }
+    }
+    if (!is.null(possible_alpha)) {
+        if (min(possible_alpha) < 0.3 | max(possible_alpha) > 0.8) {
+            warning(
+                "Requested minimum / maximum alpha hyperparameter range is",
+                " outside range empirically considere reasonable (0.3 to 0.8)."
+            )
+        }
+    }
+    # 1c. Setup possible_alpha to contain values to sample from
+    if (is.null(possible_alpha)) {
+        if (is.null(min_alpha)) {
+            min_alpha <- 0.3
+        }
+        if (is.null(max_alpha)) {
+            max_alpha <- 0.8
+        }
+        possible_alpha <- seq(min_alpha, max_alpha, by = 0.1)
+    }
+    ###########################################################################
+    # 2. Handling k hyperparameter
+    ###########################################################################
+    # 1a. Ensure range is specified by only one approach
+    null_min_max_k <- is.null(min_k) & is.null(max_k)
+    null_possible_k <- is.null(possible_k)
+    if (!null_possible_k & !null_min_max_k) {
+        stop(
+            paste0(
+                "k parameter can be controlled using either the min/max",
+                " parameters or using the possible parameter - not both."
+            )
+        )
+    }
+    # 1b. Ensure specified upper and lower bounds are sensible
+    if (!is.null(min_k)) {
+        if (min_k < 0.3) {
+            warning(
+                "Requested minimum / maximum k hyperparameter range is",
+                " outside range empirically considere reasonable (0.3 to 0.8)."
+            )
+        }
+    }
+    if (!is.null(max_k)) {
+        if (min_k > 0.8) {
+            warning(
+                "Requested minimum / maximum k hyperparameter range is",
+                " outside range empirically considere reasonable (0.3 to 0.8)."
+            )
+        }
+    }
+    if (!is.null(possible_k)) {
+        if (min(possible_k) < 0.3 | max(possible_k) > 0.8) {
+            warning(
+                "Requested minimum / maximum k hyperparameter range is",
+                " outside range empirically considere reasonable (0.3 to 0.8)."
+            )
+        }
+    }
+    # 1c. Setup possible_k to contain values to sample from
+    if (is.null(possible_k)) {
+        if (is.null(min_k)) {
+            min_k <- 0.3
+        }
+        if (is.null(max_k)) {
+            max_k <- 0.8
+        }
+        possible_k <- seq(min_k, max_k, by = 0.1)
+    }
+    ###########################################################################
+    if (!is.null(seed)) {
+        set.seed(seed)
+        print("The global seed has been changed!")
+    }
     i <- 0
     num_retries <- 0
     while (i < nrows) {
@@ -141,8 +481,8 @@ add_settings_matrix_rows <- function(settings_matrix,
             data.frame(
                 random_removal(
                     num_cols = num_inclusion_cols,
-                    min_removed = min_removed,
-                    max_removed = max_removed
+                    min_removed_inputs = min_removed_inputs,
+                    max_removed_inputs = max_removed_inputs
                 )
             )
         )
@@ -152,17 +492,30 @@ add_settings_matrix_rows <- function(settings_matrix,
         # Other free parameters
         snf_scheme <- sample(possible_snf_schemes, 1)
         clust_alg <- sample(1:2, 1)
-        # K and alpha range based on prior hyperparameter scans
-        K <- sample(10:30, 1)
-        alpha <- (sample(6:10, 1)) / 10
+        # k and alpha range based on prior hyperparameter scans
+        alpha <- sample(possible_alpha, 1)
+        k <- sample(10:30, 1)
+        t <- 20
+        cont_dist <- 1
+        disc_dist <- 1
+        ord_dist <- 1
+        cat_dist <- 1
+        mix_dist <- 1
         # Putting it all together
         new_row <- cbind(
             row_id,
-            inclusions,
+            alpha,
+            k,
+            t,
             snf_scheme,
             clust_alg,
-            K,
-            alpha)
+            cont_dist,
+            disc_dist,
+            ord_dist,
+            cat_dist,
+            mix_dist,
+            inclusions
+        )
         # Appending to settings matrix
         colnames(new_row) <- colnames(settings_matrix)
         new_row <- data.frame(new_row)

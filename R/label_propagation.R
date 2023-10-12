@@ -82,7 +82,7 @@ lp_om <- function(om, full_data_list) {
                                  n_test = n_test)
         full_fused_network <- snf_step(reduced_dl,
                  scheme = current_row$"snf_scheme",
-                 K = current_row$"K",
+                 k = current_row$"k",
                  alpha = current_row$"alpha"
         )
         full_fused_network <- full_fused_network[ordered_subs, ordered_subs]

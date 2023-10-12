@@ -21,7 +21,7 @@ dm_heatmap <- function(settings_matrix,
     }
     dm_scaled <- settings_matrix
     dm_scaled$"row_id" <- dm_scaled$"row_id" / max(dm_scaled$"row_id")
-    dm_scaled$"K" <- dm_scaled$"K" / max(dm_scaled$"K")
+    dm_scaled$"k" <- dm_scaled$"k" / max(dm_scaled$"k")
     dm_scaled$"alpha" <- dm_scaled$"alpha" / max(dm_scaled$"alpha")
     dm_scaled$"snf_scheme" <-
         dm_scaled$"snf_scheme" / max(dm_scaled$"snf_scheme")

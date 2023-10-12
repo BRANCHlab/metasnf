@@ -65,13 +65,13 @@ discretisationeigenvectordata <- function(eigenvector) {
 #' Adaptation of SNFtool's spectral clustering function
 #'
 #' @param affinity A similarity matrix
-#' @param K hyperparameter
+#' @param k hyperparameter
 #' @param type type of spectral clustering
 #'
 #' @return RETURN
 #'
 #' @export
-spectral_clustering <- function(affinity, K, type = 3) {
+spectral_clustering <- function(affinity, k, type = 3) {
     d <- rowSums(affinity)
     d[d == 0] <- .Machine$double.eps
     diag_d <- diag(d)
@@ -87,7 +87,7 @@ spectral_clustering <- function(affinity, K, type = 3) {
     }
     eig <- eigen(nl_matrix)
     res <- sort(abs(eig$values), index.return = TRUE) # the smallest eigenvals
-    u_matrix <- eig$vectors[, res$ix[1:K]]
+    u_matrix <- eig$vectors[, res$ix[1:k]]
     normalize <- function(x) {
         x / sqrt(sum(x^2))
     }

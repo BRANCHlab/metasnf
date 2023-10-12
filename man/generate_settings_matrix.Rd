@@ -6,32 +6,130 @@
 \usage{
 generate_settings_matrix(
   data_list,
-  nrows = 0,
   seed = NULL,
-  min_removed = NULL,
-  max_removed = NULL,
+  nrows = 0,
+  min_removed_inputs = 0,
+  max_removed_inputs = length(data_list) - 1,
+  dropout_dist = "exponential",
+  min_alpha = NULL,
+  max_alpha = NULL,
+  min_k = NULL,
+  max_k = NULL,
+  min_t = NULL,
+  max_t = NULL,
+  possible_alpha = NULL,
+  possible_k = NULL,
+  possible_t = NULL,
   possible_snf_schemes = c(1, 2, 3),
+  clustering_algorithms = NULL,
+  continuous_distances = NULL,
+  discrete_distances = NULL,
+  ordinal_distances = NULL,
+  categorical_distances = NULL,
+  mixed_distances = NULL,
   retry_limit = 10
 )
 }
 \arguments{
-\item{data_list}{a data list object to determine variables for inclusion and
-exclusion}
+\item{data_list}{A data list object to determine variables for inclusion and
+exclusion.}
 
-\item{nrows}{number of settings matrix rows}
+\item{seed}{set a seed for the random matrix generation. Setting this value
+will change the seed of the global environment.}
 
-\item{seed}{set a seed for the random matrix generation. Note that this}
+\item{nrows}{Number of rows to generate for the settings matrix.}
 
-\item{min_removed}{The smallest number of elements that may be removed}
+\item{min_removed_inputs}{The smallest number of input dataframes that may be
+randomly removed. By default, 0.}
 
-\item{max_removed}{The largest number of elements that may be removed}
+\item{max_removed_inputs}{The largest number of input dataframes that may be
+randomly removed. By default, this is 1 less than all the provided input
+dataframes in the data_list.}
+
+\item{dropout_dist}{Parameter controlling how the random removal of input
+dataframes should occur. Can be "none" (no input dataframes are randomly
+removed), "uniform" (uniformly sample between min_removed_inputs and max_removed_inputs
+to determine number of input dataframes to remove), or "exponential" (pick
+number of input dataframes to remove by sampling from min_removed_inputs to
+max_removed_inputs with an exponential distribution; default).}
+
+\item{min_alpha}{The minimum value that the alpha hyperparameter can have.
+Random assigned value of alpha for each row will be obtained by uniformly
+sampling numbers between \code{min_alpha} and \code{max_alpha} at intervals of 0.1.
+Cannot be used in conjunction with the \code{possible_alpha} parameter.}
+
+\item{max_alpha}{The maximum value that the alpha hyperparameter can have.
+See \code{min_alpha} parameter. Cannot be used in conjunction with the
+\code{possible_alpha} parameter.}
+
+\item{min_k}{The minimum value that the k hyperparameter can have.
+Random assigned value of k for each row will be obtained by uniformly
+sampling numbers between \code{min_k} and \code{max_k} at intervals of 1.
+Cannot be used in conjunction with the \code{possible_k} parameter.}
+
+\item{max_k}{The maximum value that the k hyperparameter can have.
+See \code{min_k} parameter. Cannot be used in conjunction with the
+\code{possible_k} parameter.}
+
+\item{min_t}{The minimum value that the t hyperparameter can have.
+Random assigned value of t for each row will be obtained by uniformly
+sampling numbers between \code{min_t} and \code{max_t} at intervals of 1.
+Cannot be used in conjunction with the \code{possible_t} parameter.}
+
+\item{max_t}{The maximum value that the t hyperparameter can have.
+See \code{min_t} parameter. Cannot be used in conjunction with the
+\code{possible_t} parameter.}
+
+\item{possible_alpha}{A number or numeric vector of a set of possible values
+that alpha can take on. Value will be obtained by uniformly sampling the
+vector. Cannot be used in conjunction with the \code{min_alpha} or \code{max_alpha}
+parameters.}
+
+\item{possible_k}{A number or numeric vector of a set of possible values
+that k can take on. Value will be obtained by uniformly sampling the
+vector. Cannot be used in conjunction with the \code{min_k} or \code{max_k}
+parameters.}
+
+\item{possible_t}{A number or numeric vector of a set of possible values
+that t can take on. Value will be obtained by uniformly sampling the
+vector. Cannot be used in conjunction with the \code{min_t} or \code{max_t}
+parameters.}
 
 \item{possible_snf_schemes}{A vector containing the possible snf_schemes to
 uniformly randomly select from. By default, the vector contains all
-possible schemes: c(1, 2, 3)}
+3 possible schemes: c(1, 2, 3). 1 corresponds to the "individual" scheme,
+2 corresponds to the "domain" scheme, and 3 corresponds to the "twostep"
+scheme.}
 
-\item{retry_limit}{The maximum number of attempts to generate a novel row
-affects the global seed.}
+\item{clustering_algorithms}{A list of clustering algorithms to uniformly
+randomly pick from when clustering. When not specified, randomly select
+between spectral clustering using the eigen-gap heuristic and spectral
+clustering using the rotation cost heuristic. See ?generate_clust_algs_list
+for more details on running custom clustering algorithms.}
+
+\item{continuous_distances}{A list of distance metrics to use
+anytime raw data is converted to a distance matrix as an intermediate step.
+By default, this will standardized normalized Euclidean. See
+?generate_distance_list for more details on using custom distance metrics.}
+
+\item{discrete_distances}{Like \code{continuous_distances}, but
+for discrete data. By default, uses standardized normalized Euclidean.}
+
+\item{ordinal_distances}{Like \code{continuous_distances}, but
+for ordinal data. By default, uses standardized normalized Euclidean.}
+
+\item{categorical_distances}{Like \code{continuous_distances}, but
+for categorical data. By default, uses Gower's distance.}
+
+\item{mixed_distances}{Like \code{continuous_distances}, but
+for mixed data. By default, uses gower distance.}
+
+\item{retry_limit}{The maximum number of attempts to generate a novel row.
+This function does not return matrices with identical rows. As the range of
+requested possible settings tightens and the number of requested rows
+increases, the risk of randomly generating a row that already exists
+increases. If a new random row has matched an existing row \code{retry_limit}
+number of times, the function will terminate.}
 }
 \value{
 settings_matrix A settings matrix
