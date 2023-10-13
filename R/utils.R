@@ -308,3 +308,16 @@ affinity_matrix_path <- function(affinity_matrix_dir, i) {
     path <- gsub("//", "/", path)
     return(path)
 }
+
+#' Helper resample function found in ?sample
+#'
+#' Like sample, but when given a single value x, returns back that single
+#'  value instead of a random value from 1 to x.
+#'
+#' @param x Vector or single value to sample from
+#' @param ... Remaining arguments for base::sample function
+#'
+#' @export
+resample <- function(x, ...) {
+    return(x[sample.int(length(x), ...)])
+}

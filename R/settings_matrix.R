@@ -491,22 +491,12 @@ add_settings_matrix_rows <- function(settings_matrix,
         row_id <- nrow(settings_matrix) + 1
         new_row <- vector()
         # Inclusion columns
-        num_inclusion_cols <- sum(startsWith(colnames(settings_matrix), "inc"))
-        inclusions <- t(
-            data.frame(
-                random_removal(
-                    num_cols = num_inclusion_cols,
-                    min_removed_inputs = min_removed_inputs,
-                    max_removed_inputs = max_removed_inputs
-                )
-            )
+        inclusions <- random_removal(
+            columns = colnames(settings_matrix),
+            min_removed_inputs = min_removed_inputs,
+            max_removed_inputs = max_removed_inputs,
+            dropout_dist = dropout_dist
         )
-        inclusion_names <-
-            colnames(settings_matrix)[startsWith(colnames(settings_matrix), "inc")]
-        colnames(inclusions) <- inclusion_names
-        # Other free parameters
-        snf_scheme <- sample(possible_snf_schemes, 1)
-        clust_alg <- sample(1:2, 1)
         #######################################################################
         # X. Pick random values uniformly
         #######################################################################
@@ -515,6 +505,8 @@ add_settings_matrix_rows <- function(settings_matrix,
         #  pick a random number from 1 to that number. If the user's range
         #  is only a single value, this syntax will avoid sampling from 1 to
         #  that value.
+        snf_scheme <- sample(possible_snf_schemes, 1)
+        clust_alg <- sample(1:2, 1)
         alpha <- possible_alpha[sample.int(length(possible_alpha), 1)]
         k <- possible_k[sample.int(length(possible_k), 1)]
         t <- possible_t[sample.int(length(possible_t), 1)]
@@ -523,7 +515,9 @@ add_settings_matrix_rows <- function(settings_matrix,
         ord_dist <- 1
         cat_dist <- 1
         mix_dist <- 1
-        # Putting it all together
+        #######################################################################
+        # X. Combine selected values to a single dataframe row
+        #######################################################################
         new_row <- cbind(
             row_id,
             alpha,
@@ -538,12 +532,16 @@ add_settings_matrix_rows <- function(settings_matrix,
             mix_dist,
             inclusions
         )
-        # Appending to settings matrix
+        #######################################################################
+        # X. Append the new row to the full settings_matrix
+        #######################################################################
         colnames(new_row) <- colnames(settings_matrix)
         new_row <- data.frame(new_row)
         settings_matrix <- rbind(settings_matrix, new_row)
         i <- i + 1
-        # Check if newly added row already exists
+        #######################################################################
+        # X. Check if newly added row already exists in settings_matrix
+        #######################################################################
         dm_no_id <- settings_matrix[, 2:length(settings_matrix)]
         num_duplicates <- length(which(
             duplicated(dm_no_id) |
@@ -574,8 +572,6 @@ add_settings_matrix_rows <- function(settings_matrix,
 #'  columns removed follows the exponential probability distribution to
 #'  typically keep all or most columns.
 #'
-#' @param num_cols Number of feature elements in consideration for exclusion
-#'
 #' @param min_removed_inputs The smallest number of input dataframes that may
 #'  be randomly removed.
 #'
@@ -586,10 +582,33 @@ add_settings_matrix_rows <- function(settings_matrix,
 #'  should be included (1) or excluded (0)
 #'
 #' @export
-random_removal <- function(num_cols,
+random_removal <- function(columns,
                            min_removed_inputs,
-                           max_removed_inputs) {
-    # Generate 10,000 random numbers according to exponential distribution
+                           max_removed_inputs,
+                           dropout_dist = "exponential") {
+    ###########################################################################
+    # 1. Define variables used by all dropout_dist values
+    ###########################################################################
+    # vector containing names of the input dataframes that may be dropped
+    inclusion_columns <- columns[startsWith(columns, "inc")]
+    # number of droppable input dataframes
+    num_cols <- length(inclusion_columns)
+    ###########################################################################
+    # 2. "none" (no) random input dataframe dropout
+    ###########################################################################
+    # If the user requests no random dropout, just return a dataframe row that
+    #  has 1 (include) for every input dataframe
+    if (dropout_dist == "none") {
+        inclusions_df <- rep(1, num_cols) |>
+            t() |>
+            data.frame()
+        colnames(inclusions_df) <- inclusion_columns
+        rownames(inclusions_df) <- NULL
+        return(inclusions_df)
+    }
+    ###########################################################################
+    # 3. Otherwise, determine min and max number of inputs to remove
+    ###########################################################################
     if (is.null(min_removed_inputs)) {
         min_removed_inputs <- 0
     }
@@ -604,24 +623,60 @@ random_removal <- function(num_cols,
             )
         )
     }
-    rand_vals <- stats::rexp(10000)
-    # Scale them to range from 0 to num_cols - 1
-    # multiply by the difference
-    # add the lowest value
-    difference <- max_removed_inputs - min_removed_inputs
-    # Scale the values to range from 0 to 1
-    rand_vals <- rand_vals / max(rand_vals)
-    # Multiply by the difference
-    rand_vals <- rand_vals * difference
-    rand_vals <- rand_vals + min_removed_inputs
-    rand_vals <- round(rand_vals)
-    num_removed <- sample(rand_vals, 1)
-    # vector of 1s or 0s to represent number of columns kept
+    ###########################################################################
+    # 4. "uniform" - pick a uniformly random number of inputs to remove
+    ###########################################################################
+    if (dropout_dist == "uniform") {
+        possible_number_removed <- seq(
+            min_removed_inputs,
+            max_removed_inputs,
+            by = 1
+        )
+        num_removed <- resample(possible_number_removed, 1)
+    }
+    ###########################################################################
+    # 5. "exponential" - pick an exponentially distributed number of inputs
+    #     to remove
+    ###########################################################################
+    if (dropout_dist == "exponential") {
+        # 10000 randomly distributed values
+        rand_vals <- stats::rexp(10000)
+        # Scale the values to have a maximum of 1. Because there are so many
+        #  exponentially distributed numbers, the min value will be quite
+        #  close to 0.
+        rand_vals <- rand_vals / max(rand_vals)
+        # Difference indicates how many possible inputs may be dropped
+        difference <- max_removed_inputs - min_removed_inputs
+        #  E.g. if we are dropping between 5 and 20 input dataframes, this will
+        #  ensure the largest value is 15. Because of the large amount of
+        #  numbers, the smallest value will still be quite close to 0.
+        rand_vals <- rand_vals * difference
+        # After this addition, we can expect the smallest value to be close to
+        #  the minimum number of removed inputs (e.g, 5) and the biggest value
+        #  to be quite close to the maximum number of removed inputs (e.g., 20)
+        rand_vals <- rand_vals + min_removed_inputs
+        # From here, simply round the pool of numbers to make them all ints and
+        #  select one uniformly at random.
+        rand_vals <- round(rand_vals)
+        num_removed <- sample(rand_vals, 1)
+        # There very likely could be a much simpler way to achieve this goal.
+    }
+    ###########################################################################
+    # 6. Randomly remove the calculated number of input dataframes to remove
+    ###########################################################################
+    # Vector of 0s the size of the number of inputs to remove
     remove_placeholders <- rep(0, num_removed)
+    # Vector of 1s the size of the number of inputs to keep
     keep_placeholders <- rep(1, num_cols - num_removed)
-    # merge and shuffle those vectors to produce final dropout sequence
+    # Concatenate the two and shuffle them
     unshuffled_removals <- c(remove_placeholders, keep_placeholders)
     shuffled_removals <- sample(unshuffled_removals)
-    return(shuffled_removals)
+    # Turn that shuffled vector into a dataframe row and return that row to be
+    #  merged into the rest of the settings_matrix
+    inclusions_df <- shuffled_removals |>
+        data.frame() |>
+        t()
+    colnames(inclusions_df) <- inclusion_columns
+    rownames(inclusions_df) <- NULL
+    return(inclusions_df)
 }
-

@@ -13,6 +13,26 @@ length(data_list)
 
 settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 
+new_settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
+
+new_settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42, dropout_dist = "exponential")
+
+identical(settings_matrix, new_settings_matrix)
+
+new_settings_matrix
+
+z1 <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
+
+generate_settings_matrix(data_list, nrow = 15, dropout_dist = "uniform")
+
+generate_settings_matrix(data_list, nrow = 15, dropout_dist = "exponential")
+
+generate_settings_matrix(data_list, nrow = 15, dropout_dist = "none")
+
+
+z1
+
+z2 <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 
 settings_matrix <- generate_settings_matrix(
     data_list,
@@ -26,41 +46,17 @@ settings_matrix <- generate_settings_matrix(
 
 sample(20:30, 1)
 
-settings_matrix$"t"
 
-settings_matrix$alpha
+rownames(new_settings_matrix) <- NULL
 
-settings_matrix$k
+colnames(new_settings_matrix)
 
-colnames(settings_matrix)
+q <- t(data.frame(colnames(new_settings_matrix)))
 
-settings_matrix$"t"
+colnames(q) <- colnames(new_settings_matrix)
 
-# Should save many affinity matrices to disk
-# output_matrix <- batch_snf(data_list, settings_matrix, affinity_matrix_dir = ".")
+rownames(q) <- NULL
 
-# Should error
-# output_matrix <- batch_snf(data_list, settings_matrix, run_clustering = FALSE)
+str(q)
 
-# Should eventually complete
-# output_matrix <- batch_snf(data_list, settings_matrix, processes = "max")
-
-# Normal
-output_matrix <- batch_snf(data_list, settings_matrix)
-
-output_matrix
-
-sample.int(1:3, 3, 1)
-
-resample <- function(x, ...) {
-    print(length(x))
-    x[sample.int(length(x), ...)]
-}
-
-resample(1:3, 1)
-
-resample(3, 1)
-
-[sample.int(10, 1)]
-
-
+data.frame(t(rep(1, 5)))
