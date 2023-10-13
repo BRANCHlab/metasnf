@@ -33,16 +33,18 @@ am1 <- affinity_matrices[[1]]
 diag(am1) <- mean(am1)
 
 am1 <- max(am1) - am1
+
+
 cluster_codes <- get_cluster_df(solutions_matrix[1, ])$"cluster"
+
 z <- silhouette(
     x = cluster_codes,
     dmatrix = am1
 )
+
 plot(z)
 
 am1 <- affinity_matrices[[1]]
-
-diag(am1) <- 0
 
 print(max(am1))
 am1 <- max(am1) - am1
@@ -57,4 +59,28 @@ plot(z)
 data.frame(z)
 
 
-class(am1)
+cluster_solutions <- get_cluster_solutions(solutions_matrix)
+
+silhouette(
+    x = cluster_solutions[, 2],
+    dmatrix = am1
+) |> plot()
+
+
+z <- list(1, 2, 3, 4)
+
+q <- list(3, 10, 100, 1000)
+
+Map(
+    function(x, y) {
+        return(x + y)
+    },
+    z,
+    q
+)
+
+cluster_solutions
+
+for (i in seq_len(ncol(cluster_solutions[, -1]))) {
+    print(i)
+}

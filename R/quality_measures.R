@@ -25,5 +25,16 @@ calculate_silhouettes <- function(solutions_matrix, affinity_matrices) {
                 return(dissimilarity_matrix)
             }
         )
+    cluster_solutions_df <- get_cluster_solutions(solutions_matrix)
+    #silhouette_scores <- Map(
+    #    function(cluster_solution, dissimilarity_matrix) {
+    #        cluster::silhouette(
+    #            x = cluster_solution,
+    #            dmatrix = dissimilarity_matrix
+    #        )
+    #    },
+    #    cluster_solutions,
+    #    dissimilarity_matrices
+    #)
     return(dissimilarity_matrices)
 }
