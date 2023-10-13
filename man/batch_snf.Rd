@@ -8,15 +8,16 @@ batch_snf(
   data_list,
   settings_matrix,
   processes = 1,
+  return_affinity_matrices = FALSE,
   affinity_matrix_dir = NULL,
   clust_algs_list = NULL,
-  run_clustering = TRUE
+  suppress_clustering = FALSE
 )
 }
 \arguments{
-\item{data_list}{nested list of input data. See ?get_data_list}
+\item{data_list}{Nested list of input data. See ?get_data_list.}
 
-\item{settings_matrix}{matrix indicating parameters to iterate SNF through}
+\item{settings_matrix}{matrix indicating parameters to iterate SNF through.}
 
 \item{processes}{Specify number of processes used to complete SNF iterations
 * \code{1} (default) Sequential processing: function will iterate through the
@@ -29,15 +30,19 @@ available cores, a warning will be printed and the maximum number of
 cores will be used.
 * \code{max}: All available cores will be used.}
 
+\item{return_affinity_matrices}{If TRUE, function will return a list where
+the first element is the solutions matrix and the second element is a list
+of affinity matrices for each row in the solutions_matrix. Default FALSE.}
+
 \item{affinity_matrix_dir}{If specified, this directory will be used to save
 all generated affinity matrices}
 
 \item{clust_algs_list}{List of custom clustering algorithms to apply
 to the final fused network. See ?generate_clust_algs_list}
 
-\item{run_clustering}{If TRUE (default), will apply default or custom
+\item{suppress_clustering}{If FALSE (default), will apply default or custom
 clustering algorithms to provide cluster solutions on every iteration of
-SNF. If FALSE, parameter \code{affinity_matrix_dir} must be specified.}
+SNF. If TRUE, parameter \code{affinity_matrix_dir} must be specified.}
 }
 \value{
 populated_settings_matrix settings matrix with filled columns

@@ -1,7 +1,9 @@
 #' Run variations of SNF as described by a settings matrix
 #'
-#' @param data_list nested list of input data. See ?get_data_list
-#' @param settings_matrix matrix indicating parameters to iterate SNF through
+#' @param data_list Nested list of input data. See ?get_data_list.
+#'
+#' @param settings_matrix matrix indicating parameters to iterate SNF through.
+#'
 #' @param processes Specify number of processes used to complete SNF iterations
 #'     * `1` (default) Sequential processing: function will iterate through the
 #'       `settings_matrix` one row at a time with a for loop. This option will
@@ -12,32 +14,39 @@
 #'       available cores, a warning will be printed and the maximum number of
 #'       cores will be used.
 #'     * `max`: All available cores will be used.
+#'
+#' @param return_affinity_matrices If TRUE, function will return a list where
+#'  the first element is the solutions matrix and the second element is a list
+#'  of affinity matrices for each row in the solutions_matrix. Default FALSE.
+#'
 #' @param affinity_matrix_dir If specified, this directory will be used to save
 #'  all generated affinity matrices
+#'
 #' @param clust_algs_list List of custom clustering algorithms to apply
 #'  to the final fused network. See ?generate_clust_algs_list
-#' @param run_clustering If TRUE (default), will apply default or custom
-#'  clustering algorithms to provide cluster solutions on every iteration of
-#'  SNF. If FALSE, parameter `affinity_matrix_dir` must be specified.
 #'
+#' @param suppress_clustering If FALSE (default), will apply default or custom
+#'  clustering algorithms to provide cluster solutions on every iteration of
+#'  SNF. If TRUE, parameter `affinity_matrix_dir` must be specified.
 #'
 #' @return populated_settings_matrix settings matrix with filled columns
-#' related to subtype membership
+#'  related to subtype membership
 #'
 #' @export
 batch_snf <- function(data_list,
                       settings_matrix,
                       processes = 1,
+                      return_affinity_matrices = FALSE,
                       affinity_matrix_dir = NULL,
                       clust_algs_list = NULL,
-                      run_clustering = TRUE) {
+                      suppress_clustering = FALSE) {
     ###########################################################################
     # 1. Checking validity of settings
     ###########################################################################
     # 1a. The user may have chosen to simultaneously not save affinity matrices
     #  and to not apply any clustering algorithms. In that case, this function
     #  is not really doing anything. Stop the function with an error.
-    if (is.null(affinity_matrix_dir) & !run_clustering) {
+    if (is.null(affinity_matrix_dir) & suppress_clustering) {
         stop(
             paste0(
                "batch_snf has been called with the run_clustering parameter",
@@ -151,7 +160,13 @@ batch_snf <- function(data_list,
         fill = 0
     )
     ###########################################################################
-    # 6. Iterate through the rows of the settings matrix
+    # 6. Creation of list to store affinity matrices (if requested)
+    ###########################################################################
+    if (isTRUE(return_affinity_matrices)) {
+        affinity_matrices <- list()
+    }
+    ###########################################################################
+    # 7. Iterate through the rows of the settings matrix
     ###########################################################################
     for (i in seq_len(nrow(settings_matrix))) {
         start_time <- Sys.time() # used to estimate time to completion
@@ -165,19 +180,23 @@ batch_snf <- function(data_list,
         )
         k <- settings_matrix[i, "k"]
         alpha <- settings_matrix[i, "alpha"]
-        # 4. Run SNF
+        # Run SNF
         fused_network <- snf_step(
             current_data_list,
             current_snf_scheme,
             k = k,
             alpha = alpha)
-        # 5. If user provided a path to save the affinity matrices, save them
+        # If user provided a path to save the affinity matrices, save them
         if (!is.null(affinity_matrix_dir)) {
             utils::write.csv(
                 x = fused_network,
                 file = affinity_matrix_path(affinity_matrix_dir, i),
                 row.names = TRUE
             )
+        }
+        # If the user requested all affinity matrices are returned, add to list
+        if (isTRUE(return_affinity_matrices)) {
+            affinity_matrices[[length(affinity_matrices) + 1]] <- fused_network
         }
         #######################################################################
         # 7. Clustering of the final fused network
@@ -220,9 +239,24 @@ batch_snf <- function(data_list,
     total_time <- (proc.time() - start)[["elapsed"]]
     print(paste0("Total time taken: ", round(total_time, 0), " seconds."))
     ###########################################################################
-    # 11. Return final solutions_matrix
+    # 11. Return final output
     ###########################################################################
-    return(solutions_matrix)
+    # The user requested that affinity matrices are returned. Create a list
+    #  containing the solutions matrix as well as the affinity matrices and
+    #  return that.
+    if (isTRUE(return_affinity_matrices)) {
+        check_affinity_matrices(affinity_matrices)
+        batch_snf_results <- list(
+            solutions_matrix,
+            affinity_matrices
+        )
+        names(batch_snf_results) <- c("solutions_matrix", "affinity_matrices")
+        return(batch_snf_results)
+    } else {
+        # The user did not request that affinity matrices are returned. Just
+        #  return the solutions matrix.
+        return(solutions_matrix)
+    }
 }
 
 #' Parallel processing form of batch_snf

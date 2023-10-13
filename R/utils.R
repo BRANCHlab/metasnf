@@ -321,3 +321,34 @@ affinity_matrix_path <- function(affinity_matrix_dir, i) {
 resample <- function(x, ...) {
     return(x[sample.int(length(x), ...)])
 }
+
+#' Check validity of affinity matrices
+#'
+#' Check to see if affinity matrices in a list have the following properties:
+#'  1. The maximum value in the entire matrix is 0.5
+#'  2. Every value in the diagonal is 0.5
+#'
+#' @param affinity_matrices A list of affinity matrices
+#'
+#' @return valid_matrices Boolean indicating if properties are met by all
+#'  affinity matrices
+#'
+#' @export
+check_affinity_matrices <- function(affinity_matrices) {
+    valid_matrices <- affinity_matrices |>
+        lapply(
+            function(x) {
+                max_along_diags <- diag(x) == max(x)
+                max_diag_pt_5 <- diag(x) == 0.5
+                return(max_along_diags & max_diag_pt_5)
+            }
+        ) |>
+        unlist() |>
+        all()
+    if (!valid_matrices) {
+        warning(
+            "Generated affinity matrices did not meet validity parameters."
+        )
+    }
+    return(valid_matrices)
+}

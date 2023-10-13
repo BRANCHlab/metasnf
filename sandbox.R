@@ -9,54 +9,29 @@ data_list <- generate_data_list(
     old_uid = "patient"
 )
 
-length(data_list)
-
 settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 
-new_settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 
-new_settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42, dropout_dist = "exponential")
+solutions_matrix <- batch_snf(data_list, settings_matrix)
 
-identical(settings_matrix, new_settings_matrix)
-
-new_settings_matrix
-
-z1 <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
-
-generate_settings_matrix(data_list, nrow = 15, dropout_dist = "uniform")
-
-generate_settings_matrix(data_list, nrow = 15, dropout_dist = "exponential")
-
-generate_settings_matrix(data_list, nrow = 15, dropout_dist = "none")
-
-
-z1
-
-z2 <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
-
-settings_matrix <- generate_settings_matrix(
+solutions_matrix <- batch_snf(
     data_list,
-    nrow = 15,
-    seed = 42,
-    min_alpha = 0.3,
-    max_alpha = 0.8,
-    possible_k = seq(10, 100, by = 10),
-    possible_snf_schemes = c(1, 2)
+    settings_matrix,
+    return_affinity_matrices = TRUE
 )
 
-sample(20:30, 1)
+batch_snf_results <- batch_snf(
+    data_list,
+    settings_matrix,
+    return_affinity_matrices = TRUE
+)
 
+solutions_matrix <- batch_snf_results$"solutions_matrix"
 
-rownames(new_settings_matrix) <- NULL
+affinity_matrices <- batch_snf_results$"affinity_matrices"
 
-colnames(new_settings_matrix)
+silhouette <- function(solutions_matrix, affinity_matrices) {
+    print(5)
+}
 
-q <- t(data.frame(colnames(new_settings_matrix)))
-
-colnames(q) <- colnames(new_settings_matrix)
-
-rownames(q) <- NULL
-
-str(q)
-
-data.frame(t(rep(1, 5)))
+# Check to make sure the affinity matrices are reasonable
