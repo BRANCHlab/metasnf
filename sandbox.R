@@ -21,17 +21,11 @@ batch_snf_results <- batch_snf(
 )
 
 solutions_matrix <- batch_snf_results$"solutions_matrix"
-
 affinity_matrices <- batch_snf_results$"affinity_matrices"
 
-silhouette <- function(solutions_matrix, affinity_matrices) {
-    print(5)
-}
 
 library(cluster)
 library(pheatmap)
-
-pheatmap(am1)
 
 calculate_silhouettes(solutions_matrix, affinity_matrices)
 
@@ -64,39 +58,3 @@ data.frame(z)
 
 
 class(am1)
-
-
-get_clusters(solutions_matrix)
-
-qq <- solutions_matrix |>
-    subs() |>
-    t() |>
-    data.frame()
-
-colnames(qq) <- rownames(solutions_matrix)
-
-qq <- qq[-1, ]
-
-head(qq)
-
-subby <- data.frame(rownames(qq))
-
-colnames(subby) <- "subjectkey"
-
-dim(subby)
-
-dim(qq)
-
-qq2 <- cbind(subby, qq)
-
-rownames(qq2) <- NULL
-
-qq2
-
-rownames(solutions_matrix)
-
-ncol(solutions_matrix)
-
-subs(solutions_matrix)
-
-get_cluster_solutions(solutions_matrix)

@@ -19,10 +19,10 @@ calculate_silhouettes <- function(solutions_matrix, affinity_matrices) {
     #  of dissimilarity = max(similarity) - similarity.
     dissimilarity_matrices <- affinity_matrices |>
         lapply(
-            function(x) {
-                diag(x) <- mean(x)
-                dissimilarity <- max(x) - x
-                return(dissimilarity)
+            function(affinity_matrix) {
+                diag(affinity_matrix) <- mean(affinity_matrix)
+                dissimilarity_matrix <- max(affinity_matrix) - affinity_matrix
+                return(dissimilarity_matrix)
             }
         )
     return(dissimilarity_matrices)
