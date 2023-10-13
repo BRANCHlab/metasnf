@@ -87,12 +87,12 @@ the qualitatively distinct “meta clusters” that emerge.
 ## Work in progress:
 
 -   [ ] Change in package name
--   [ ] Changes in function names
--   [ ] Capability of defining custom distance metrics
--   [ ] Capability of defining custom feature weights
+-   [x] Changes in function names
+-   [ ] Capability of defining custom distance metrics (including
+    feature weights)
 -   [ ] Capability of defining custom SNF-level weights
 -   [x] Capability of defining custom clustering algorithms
--   [ ] Added flexibility during generation of the settings_matrix
+-   [x] Added flexibility during generation of the settings_matrix
 -   [ ] New visualization functions and improvements to existing
     visualization functions
 -   [ ] Capability of calculating solution stability across patient
@@ -106,6 +106,7 @@ the qualitatively distinct “meta clusters” that emerge.
     above changes
 -   [ ] Updated vignette(s) to fully document basic and advance usage of
     the package
+-   [ ] Add tests
 
 ## Contributions
 

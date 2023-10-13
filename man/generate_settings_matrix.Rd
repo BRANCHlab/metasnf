@@ -27,6 +27,8 @@ generate_settings_matrix(
   ordinal_distances = NULL,
   categorical_distances = NULL,
   mixed_distances = NULL,
+  snf_input_weights = NULL,
+  snf_domain_weights = NULL,
   retry_limit = 10
 )
 }
@@ -123,6 +125,12 @@ for categorical data. By default, uses Gower's distance.}
 
 \item{mixed_distances}{Like \code{continuous_distances}, but
 for mixed data. By default, uses gower distance.}
+
+\item{snf_input_weights}{Nested list containing weights for when SNF is
+used to merge individual input measures (see ?generate_snf_weights)}
+
+\item{snf_domain_weights}{Nested list containing weights for when SNF is
+used to merge domains (see ?generate_snf_weights)}
 
 \item{retry_limit}{The maximum number of attempts to generate a novel row.
 This function does not return matrices with identical rows. As the range of

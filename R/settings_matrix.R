@@ -93,6 +93,12 @@
 #' @param mixed_distances Like `continuous_distances`, but
 #'  for mixed data. By default, uses gower distance.
 #'
+#' @param snf_input_weights Nested list containing weights for when SNF is
+#'  used to merge individual input measures (see ?generate_snf_weights)
+#'
+#' @param snf_domain_weights Nested list containing weights for when SNF is
+#'  used to merge domains (see ?generate_snf_weights)
+#'
 #' @param retry_limit The maximum number of attempts to generate a novel row.
 #'  This function does not return matrices with identical rows. As the range of
 #'  requested possible settings tightens and the number of requested rows
@@ -127,6 +133,8 @@ generate_settings_matrix <- function(data_list,
                                      ordinal_distances = NULL,
                                      categorical_distances = NULL,
                                      mixed_distances = NULL,
+                                     snf_input_weights = NULL,
+                                     snf_domain_weights = NULL,
                                      retry_limit = 10) {
     settings_matrix_columns <- c(
         "row_id",
@@ -140,6 +148,8 @@ generate_settings_matrix <- function(data_list,
         "ord_dist",
         "cat_dist",
         "mix_dist",
+        "input_wt",
+        "domain_wt",
         paste0("inc_", summarize_dl(data_list)$"name")
     )
     settings_matrix_base <- as.data.frame(
@@ -173,6 +183,8 @@ generate_settings_matrix <- function(data_list,
         ordinal_distances = ordinal_distances,
         categorical_distances = categorical_distances,
         mixed_distances = mixed_distances,
+        snf_input_weights = snf_input_weights,
+        snf_domain_weights = snf_domain_weights,
         retry_limit = retry_limit
     )
     return(settings_matrix)
@@ -272,6 +284,12 @@ generate_settings_matrix <- function(data_list,
 #' @param mixed_distances Like `continuous_distances`, but
 #'  for mixed data. By default, uses gower distance.
 #'
+#' @param snf_input_weights Nested list containing weights for when SNF is
+#'  used to merge individual input measures (see ?generate_snf_weights)
+#'
+#' @param snf_domain_weights Nested list containing weights for when SNF is
+#'  used to merge domains (see ?generate_snf_weights)
+#'
 #' @param retry_limit The maximum number of attempts to generate a novel row.
 #'  This function does not return matrices with identical rows. As the range of
 #'  requested possible settings tightens and the number of requested rows
@@ -309,6 +327,8 @@ add_settings_matrix_rows <- function(settings_matrix,
                                      ordinal_distances = NULL,
                                      categorical_distances = NULL,
                                      mixed_distances = NULL,
+                                     snf_input_weights = NULL,
+                                     snf_domain_weights = NULL,
                                      retry_limit = 10) {
     ###########################################################################
     # 1. Handling alpha hyperparameter
@@ -476,14 +496,14 @@ add_settings_matrix_rows <- function(settings_matrix,
         possible_t <- seq(min_t, max_t, by = 1)
     }
     ###########################################################################
-    # X. Set the random seed (if provided)
+    # 4. Set the random seed (if provided)
     ###########################################################################
     if (!is.null(seed)) {
         set.seed(seed)
         print("The global seed has been changed!")
     }
     ###########################################################################
-    # X. Begin the loop that will generate new random settings_matrix rows
+    # 5. Begin the loop that will generate new random settings_matrix rows
     ###########################################################################
     i <- 0
     num_retries <- 0
@@ -498,7 +518,7 @@ add_settings_matrix_rows <- function(settings_matrix,
             dropout_dist = dropout_dist
         )
         #######################################################################
-        # X. Pick random values uniformly
+        # 6. Pick random values uniformly
         #######################################################################
         # The behaviour of sample is different when it receives 1 number vs.
         #  a vector of numbers. Rather than just picking that 1 number, it will
@@ -510,13 +530,49 @@ add_settings_matrix_rows <- function(settings_matrix,
         alpha <- possible_alpha[sample.int(length(possible_alpha), 1)]
         k <- possible_k[sample.int(length(possible_k), 1)]
         t <- possible_t[sample.int(length(possible_t), 1)]
-        cont_dist <- 1
-        disc_dist <- 1
-        ord_dist <- 1
-        cat_dist <- 1
-        mix_dist <- 1
+        if (is.null(clustering_algorithms)) {
+            # there are currently 2 defaults (spectral_eig/rot) to choose from
+            clust_alg <- sample(1:2, 1)
+        } else {
+            clust_alg <- sample(1:length(clustering_algorithms), 1)
+        }
+        if (is.null(continuous_distances)) {
+            cont_dist <- 1
+        } else {
+            cont_dist <- sample(1:length(continuous_distances), 1)
+        }
+        if (is.null(discrete_distances)) {
+            disc_dist <- 1
+        } else {
+            disc_dist <- sample(1:length(discrete_distances), 1)
+        }
+        if (is.null(ordinal_distances)) {
+            ord_dist <- 1
+        } else {
+            ord_dist <- sample(1:length(ordinal_distances), 1)
+        }
+        if (is.null(categorical_distances)) {
+            cat_dist <- 1
+        } else {
+            cat_dist <- sample(1:length(categorical_distances), 1)
+        }
+        if (is.null(mixed_distances)) {
+            mix_dist <- 1
+        } else {
+            mix_dist <- sample(1:length(mixed_distances), 1)
+        }
+        if (is.null(snf_input_weights)) {
+            input_wt <- 1
+        } else {
+            input_wt <- sample(1:length(snf_input_weights), 1)
+        }
+        if (is.null(snf_domain_weights)) {
+            domain_wt <- 1
+        } else {
+            domain_wt <- sample(1:length(snf_domain_weights), 1)
+        }
         #######################################################################
-        # X. Combine selected values to a single dataframe row
+        # 7. Combine selected values to a single dataframe row
         #######################################################################
         new_row <- cbind(
             row_id,
@@ -530,17 +586,19 @@ add_settings_matrix_rows <- function(settings_matrix,
             ord_dist,
             cat_dist,
             mix_dist,
+            input_wt,
+            domain_wt,
             inclusions
         )
         #######################################################################
-        # X. Append the new row to the full settings_matrix
+        # 8. Append the new row to the full settings_matrix
         #######################################################################
         colnames(new_row) <- colnames(settings_matrix)
         new_row <- data.frame(new_row)
         settings_matrix <- rbind(settings_matrix, new_row)
         i <- i + 1
         #######################################################################
-        # X. Check if newly added row already exists in settings_matrix
+        # 9. Check if newly added row already exists in settings_matrix
         #######################################################################
         dm_no_id <- settings_matrix[, 2:length(settings_matrix)]
         num_duplicates <- length(which(
@@ -569,8 +627,9 @@ add_settings_matrix_rows <- function(settings_matrix,
 #' Generate random removal sequence
 #'
 #' Helper function to contribute to rows within the settings matrix. Number of
-#'  columns removed follows the exponential probability distribution to
-#'  typically keep all or most columns.
+#'  columns removed follows a uniform or exponential probability distribution.
+#'
+#' @param columns Columns of the settings_matrix that are passed in
 #'
 #' @param min_removed_inputs The smallest number of input dataframes that may
 #'  be randomly removed.
@@ -578,8 +637,12 @@ add_settings_matrix_rows <- function(settings_matrix,
 #' @param max_removed_inputs The largest number of input dataframes that may be
 #'  randomly removed.
 #'
-#' @return shuffled_removals Binary vector sequence indicating if a column
-#'  should be included (1) or excluded (0)
+#' @param dropout_dist Indication of how input dataframes should be dropped.
+#'  can be "none" (no dropout), "uniform" (uniformly draw number between min
+#'  and max removed inputs), or "exponential" (like uniform, but using an
+#'  exponential distribution; default).
+#'
+#' @return inclusions_df Dataframe that can be rbind'ed to the settings_matrix
 #'
 #' @export
 random_removal <- function(columns,

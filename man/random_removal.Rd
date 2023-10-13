@@ -4,23 +4,31 @@
 \alias{random_removal}
 \title{Generate random removal sequence}
 \usage{
-random_removal(num_cols, min_removed_inputs, max_removed_inputs)
+random_removal(
+  columns,
+  min_removed_inputs,
+  max_removed_inputs,
+  dropout_dist = "exponential"
+)
 }
 \arguments{
-\item{num_cols}{Number of feature elements in consideration for exclusion}
+\item{columns}{Columns of the settings_matrix that are passed in}
 
 \item{min_removed_inputs}{The smallest number of input dataframes that may
 be randomly removed.}
 
 \item{max_removed_inputs}{The largest number of input dataframes that may be
 randomly removed.}
+
+\item{dropout_dist}{Indication of how input dataframes should be dropped.
+can be "none" (no dropout), "uniform" (uniformly draw number between min
+and max removed inputs), or "exponential" (like uniform, but using an
+exponential distribution; default).}
 }
 \value{
-shuffled_removals Binary vector sequence indicating if a column
-should be included (1) or excluded (0)
+inclusions_df Dataframe that can be rbind'ed to the settings_matrix
 }
 \description{
 Helper function to contribute to rows within the settings matrix. Number of
-columns removed follows the exponential probability distribution to
-typically keep all or most columns.
+columns removed follows a uniform or exponential probability distribution.
 }
