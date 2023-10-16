@@ -19,7 +19,7 @@ get_cluster_solutions <- function(solutions_matrix) {
     colnames(cluster_solutions) <- rownames(solutions_matrix)
     # Remove the first row, which just contains the row_id. That info is now
     #  in the column names.
-    cluster_solutions <- cluster_solutions[-1, ]
+    cluster_solutions <- cluster_solutions[-1, , drop = FALSE]
     # Store the subjectkeys of the observations in a separate dataframe
     subjects_df <- data.frame(rownames(cluster_solutions))
     colnames(subjects_df) <- "subjectkey"
