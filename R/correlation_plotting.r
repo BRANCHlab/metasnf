@@ -8,11 +8,10 @@
 #' @param top_annotation annotation to be displayed above the heatmap output
 #' @param left_annotation annotation to be displayed on the left of the heatmap output
 
-suppressPackageStartupMessages(library(ComplexHeatmap))
 displayClustersHeatmap <- function(W, 
                                    group_cluster, 
                                    top_annotation=NULL, 
-                                   left_annotation = NULL){
+                                   left_annotation = NULL, ...){
     
     # clean matrix
     normalize <- function(X) X/rowSums(X)
@@ -24,13 +23,13 @@ displayClustersHeatmap <- function(W,
     W = W + t(W)
     
     if(is.null(top_annotation) & is.null(left_annotation)){
-        Heatmap(W[ind,ind], cluster_rows=FALSE, cluster_columns=FALSE, 
+        ComplexHeatmap::Heatmap(W[ind,ind], cluster_rows=FALSE, cluster_columns=FALSE, 
                 show_row_names = FALSE, show_column_names = FALSE, 
                 heatmap_legend_param = list(color_bar = 'continuous',
-                                     title = "Similarity"), ...)
+                                     title = "Similarity"))
         }
     else{
-        Heatmap(W[ind, ind], 
+        ComplexHeatmap::Heatmap(W[ind, ind], 
                 top_annotation=top_annotation, left_annotation = left_annotation,
                 cluster_rows=FALSE, 
                 cluster_columns=FALSE, 
@@ -100,19 +99,25 @@ clusterToOutcomeManhattan <- function(outcomes,
         levels=levels
         }
 
-    plot <- ggplot(cco, 
-           aes(x = factor({{outcomes}}, level = levels),
-               y = {{log_pvalue}}, color = factor(datatype))) +
-        geom_point(alpha = 1, aes(size=size)) +
-        geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "red") +
-        geom_hline(yintercept = -log10(0.05/nlevels(factor(cco$outcomes))), linetype = "dashed", color = "black") +
-        labs(x = "Outcome", y = "-log10(p-value)", 
-             color = "Data type", 
-             title = "Correlation p-value of SNF clusters versus Outcomes") +
-        ylim(c(0,5)) +
-        theme_bw() +
-        theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
-            plot.title = element_text(hjust = 0.5))
+    plot <- ggplot2::ggplot(cco, 
+           ggplot2::aes(x = factor({{outcomes}}, 
+                                   level = levels),
+                        y = {{log_pvalue}}, color = factor(datatype))) +
+        ggplot2::geom_point(alpha = 1, 
+                            ggplot2::aes(size=size)) +
+        ggplot2::geom_hline(yintercept = -log10(0.05), 
+                            linetype = "dashed", 
+                            color = "red") +
+        ggplot2::geom_hline(yintercept = -log10(0.05/nlevels(factor(cco$outcomes))), 
+                            linetype = "dashed", 
+                            color = "black") +
+        ggplot2::labs(x = "Outcome", y = "-log10(p-value)", 
+                      color = "Data type", 
+                      title = "Correlation p-value of SNF clusters versus Outcomes") +
+        ggplot2::ylim(c(0,5)) +
+        ggplot2::theme_bw() +
+        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1),
+            plot.title = ggplot2::element_text(hjust = 0.5))
             
     return(plot)
     
@@ -123,22 +128,20 @@ clusterToOutcomeManhattan <- function(outcomes,
 
 ############ Display correlation between predictors-outcome, outcomes-outcomes ###############
 
-suppressPackageStartupMessages(library(ComplexHeatmap))
-suppressPackageStartupMessages(library(circlize))
+#suppressPackageStartupMessages(library(circlize))
 
 #' @description
 #' Generate correlation heatmap (need more generalization. Only tested outcomes-outcomes correlation)
 
 #' @param a matrix of outcomes-outcomes correlation p_values
 #' @param outcome_label_color optional argument to specify outcome color labels
-
 corrHeatmap <- function(corr, outcome_label_color=NULL){
     
     # Calculate the log-10 p-value of the correlation coefficient significance
     corr_log <- log10(corr + 1)
      
     # Color bars
-    outcome_heatmap_color <- colorRamp2(c(0, 0.0005, 0.005, 0.05, 1), c("navy", "blue", "royalblue", "steelblue2", "white"))
+    outcome_heatmap_color <- circlize::colorRamp2(c(0, 0.0005, 0.005, 0.05, 1), c("navy", "blue", "royalblue", "steelblue2", "white"))
 
     
     # Add color for row and column labels
@@ -150,37 +153,38 @@ corrHeatmap <- function(corr, outcome_label_color=NULL){
         outcome_label_color = outcome_label_color
         }
     
-    hm <- Heatmap(as.matrix(corr_log),
+    hm <- ComplexHeatmap::Heatmap(as.matrix(corr_log),
                                  name = "Outcomes and Descriptors", 
-                                 cluster_rows = TRUE, cluster_columns = TRUE,
+                                 cluster_rows = TRUE, 
+                                 cluster_columns = TRUE,
                                  cell_fun = function(j, i, x, y, width, height, fill) {
                                    flag <- 0
                                    if(corr[i, j] < 0.0001) {
-                                     grid.text("***", x, y, hjust = 0.5, vjust = 0.5, 
-                                               gp = gpar(fontsize = 12, col = "white"))
+                                     grid::grid.text("***", x, y, hjust = 0.5, vjust = 0.5, 
+                                               gp = grid::gpar(fontsize = 12, col = "white"))
                                      flag <- 1
                                    } 
                                    if(flag == 0 & corr[i, j] < 0.001) {
-                                     grid.text("**", x, y, hjust = 0.5, vjust = 0.5, 
-                                               gp = gpar(fontsize = 12, col = "white") )
+                                     grid::grid.text("**", x, y, hjust = 0.5, vjust = 0.5, 
+                                               gp = grid::gpar(fontsize = 12, col = "white") )
                                      flag <- 1
                                    } 
                                    if (flag == 0 & corr[i, j] < 0.01) {
-                                     grid.text("*", x, y, hjust = 0.5, vjust = 0.5, 
-                                               gp = gpar(fontsize = 12, col = "white") )
+                                     grid::grid.text("*", x, y, hjust = 0.5, vjust = 0.5, 
+                                               gp = grid::gpar(fontsize = 12, col = "white") )
                                      flag <- 1
                                    }
                                  },
                                  column_names_gp = grid::gpar(fontsize = 9, col = outcome_label_color),
                                  row_names_gp = grid::gpar(fontsize = 9, col = outcome_label_color),
                                  row_km = 5, column_km = 5,
-                                 column_dend_height = unit(2, "cm"),
-                                 row_dend_width = unit(2, "cm"),
+                                 column_dend_height = grid::unit(2, "cm"),
+                                 row_dend_width = grid::unit(2, "cm"),
                                  heatmap_legend_param = list(title = expression(paste(log[10], "(p-value)")),
-                                                             title_gp = gpar(fontsize = 15, fontface = "bold"),
-                                                             labels_gp = gpar(fontsize = 10, fontface = "bold"),
-                                                             legend_height = unit(6, "cm"),
-                                                             legend_width = unit(2, "cm") ),
+                                                             title_gp = grid::gpar(fontsize = 15, fontface = "bold"),
+                                                             labels_gp = grid::gpar(fontsize = 10, fontface = "bold"),
+                                                             legend_height = grid::unit(6, "cm"),
+                                                             legend_width = grid::unit(2, "cm") ),
                                  col = outcome_heatmap_color,
                                  show_heatmap_legend = FALSE)
                                      
@@ -194,22 +198,31 @@ corrHeatmap <- function(corr, outcome_label_color=NULL){
 #' @param legend graph path to be saved to 
 #' @param legend_outcome_labels optional argument to specify outcome label names
 #' @param legend_outcome_labels_color optional argument to specify outcome label name colors
-
-
 corrHeatmap_legend <- function(legend_name,
-                          legend_outcome_labels=NULL,
-                          legend_outcome_labels_color=NULL){
+                          legend_outcome_labels,
+                          legend_outcome_labels_color){
         
         # Legend for the significant p-values
-        lgd_sig_01 = Legend(pch = "*", type = "points", labels = "< 0.01", labels_gp = gpar(fontsize = 10))
-        lgd_sig_001 = Legend(pch = "**", type = "points", labels = "< 0.001", labels_gp = gpar(fontsize = 10))
-        lgd_sig_0001 = Legend(pch = "***", type = "points", labels = "< 0.0001", labels_gp = gpar(fontsize = 10))
+        lgd_sig_01 = ComplexHeatmap::Legend(pch = "*", 
+                                            type = "points", 
+                                            labels = "< 0.01", 
+                                            labels_gp = grid::gpar(fontsize = 10))
+        lgd_sig_001 = ComplexHeatmap::Legend(pch = "**", 
+                                             type = "points", 
+                                             labels = "< 0.001", 
+                                             labels_gp = grid::gpar(fontsize = 10))
+        lgd_sig_0001 = ComplexHeatmap::Legend(pch = "***", 
+                                              type = "points", 
+                                              labels = "< 0.0001", 
+                                              labels_gp = grid::gpar(fontsize = 10))
         
         # Color bars
-        outcome_heatmap_color <- colorRamp2(c(0, 0.0005, 0.005, 0.05, 1), c("navy", "blue", "royalblue", "steelblue2", "white"))
-
+        outcome_heatmap_color <- circlize::colorRamp2(c(0, 0.0005, 0.005, 0.05, 1), c("navy", "blue", "royalblue", "steelblue2", "white"))
+        
+        
         legend_outcome_labels = legend_outcome_labels
         legend_outcome_labels_color = legend_outcome_labels_color
+        
         
         outcome_label_color_scheme <- data.frame(matrix(nrow = length(outcome_labels), ncol = 2))
         colnames(outcome_label_color_scheme) <- c("Outcomes", "Color")
@@ -217,33 +230,34 @@ corrHeatmap_legend <- function(legend_name,
         outcome_label_color_scheme$Color <- outcome_labels_color
         
         # Create a legend
-        outcome_name_legend <- Legend(labels = outcome_labels,
+        outcome_name_legend <- ComplexHeatmap::Legend(labels = outcome_labels,
                                 legend_gp = grid::gpar(fill = outcome_labels_color),
                                 title = "Outcomes and Descriptors",
-                                labels_gp = gpar(fontsize = 12,
+                                labels_gp = grid::gpar(fontsize = 12,
                                                  col = outcome_labels_color),
-                                title_gp = gpar(fontsize = 15, fontface = "bold"))
+                                title_gp = grid::gpar(fontsize = 15, fontface = "bold"))
         
-        outcome_heatmap_lgd = Legend(title = expression(paste(log[10], "(p-value)")), 
+        outcome_heatmap_lgd = ComplexHeatmap::Legend(title = expression(paste(log[10], "(p-value)")), 
                              col_fun = outcome_heatmap_color, 
                              at = c(0, 0.0005, 0.005, 0.05, 1), 
                              labels = c("0", "0.0005", "0.005", "0.05", "1"),
                              break_dist = c(1, 1, 1, 3),
-                             legend_height = unit(6, "cm"),
-                             legend_width = unit(2, "cm"),
-                             title_gp = gpar(fontsize = 15, fontface = "bold"))
-        pd = packLegend(list = list(outcome_heatmap_lgd, 
+                             legend_height = grid::unit(6, "cm"),
+                             legend_width = grid::unit(2, "cm"),
+                             title_gp = grid::gpar(fontsize = 15, fontface = "bold"))
+        pd = ComplexHeatmap::packLegend(list = list(outcome_heatmap_lgd, 
                             lgd_sig_01, lgd_sig_001, lgd_sig_0001,
                             outcome_name_legend))
     
         png(legend_name, width = 5, height = 10, units = "in", res = 500, bg = "white")
 
-        draw(pd)
+        ComplexHeatmap::draw(pd)
         dev.off()
         
         return(pd)
         }
-    
+   
+
 
 
 
@@ -283,7 +297,7 @@ CorrManhattan <- function(df_export, outcome){
             summarize(center = ( max(BPcum) + min(BPcum) ) / 2 ) 
 
     # Prepare the plot
-    plot <- ggplot(df_manhattan, aes(x = BPcum, y = -log10(`p.value`))) +
+    plot <- ggplot2::ggplot(df_manhattan, aes(x = BPcum, y = -log10(`p.value`))) +
 
               # Show all points
               geom_point( aes(color = as.factor(Group_Index)), alpha = 0.5, size = 3) +
