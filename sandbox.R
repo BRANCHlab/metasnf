@@ -11,7 +11,12 @@ data_list <- generate_data_list(
     old_uid = "patient"
 )
 
-settings_matrix <- generate_settings_matrix(data_list, nrow = 5, seed = 42)
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 5,
+    max_k = 40,
+    seed = 42
+)
 
 batch_snf_results <- batch_snf(
     data_list,
@@ -102,3 +107,20 @@ z <- sample_data_list(
 
 z$"subsample_1"
 
+
+zz <- lapply(
+    z,
+    function(x) {
+        batch_snf(
+            data_list = x,
+            settings_matrix,
+            return_affinity_matrices = TRUE
+        )
+    }
+)
+
+zz[[1]]$"affinity_matrices"
+
+zz[[1]]$"solutions_matrix"
+
+settings_matrix$"k"
