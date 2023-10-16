@@ -27,22 +27,11 @@ affinity_matrices <- batch_snf_results$"affinity_matrices"
 library(cluster)
 library(pheatmap)
 
-calculate_silhouettes(solutions_matrix, affinity_matrices)
+silhouette_scores <- calculate_silhouettes(solutions_matrix, affinity_matrices)
 
-am1 <- affinity_matrices[[1]]
-diag(am1) <- mean(am1)
+z
 
-am1 <- max(am1) - am1
-
-
-cluster_codes <- get_cluster_df(solutions_matrix[1, ])$"cluster"
-
-z <- silhouette(
-    x = cluster_codes,
-    dmatrix = am1
-)
-
-plot(z)
+plot(z[[8]])
 
 am1 <- affinity_matrices[[1]]
 
