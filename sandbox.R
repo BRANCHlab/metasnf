@@ -1,3 +1,5 @@
+# Note: when testing optional packages, see https://r-pkgs.org/dependencies-in-practice.html#sec-dependencies-in-suggests-in-tests
+
 library(metasnf)
 
 data_list <- generate_data_list(
@@ -9,7 +11,7 @@ data_list <- generate_data_list(
     old_uid = "patient"
 )
 
-settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
+settings_matrix <- generate_settings_matrix(data_list, nrow = 5, seed = 42)
 
 batch_snf_results <- batch_snf(
     data_list,
@@ -20,124 +22,83 @@ batch_snf_results <- batch_snf(
 solutions_matrix <- batch_snf_results$"solutions_matrix"
 affinity_matrices <- batch_snf_results$"affinity_matrices"
 
+solutions_matrix |> no_subs()
 
-library(cluster)
-library(pheatmap)
+data_list
 
-silhouette_scores <- calculate_silhouettes(solutions_matrix, affinity_matrices)
+summarize_dl(data_list)
 
-dunn_indices <- calculate_dunn_indices(solutions_matrix, affinity_matrices)
-
-plot(silhouette_scores[[8]])
-
-affinity_matrices
-
-library(clv)
-
-# load and prepare data
-library(clv)
-data(iris)
-iris.data <- iris[,1:4]
-
-# cluster data
-agnes.mod <- agnes(iris.data) # create cluster tree
-v.pred <- as.integer(cutree(agnes.mod,5)) # "cut" the tree
-
-
-davies1 <- clv.Davies.Bouldin(cls.scatt, intraclust, interclust)
-
-# 2. functional solution:
-
-# define new Dunn and Davies.Bouldin functions
-Dunn <- function(data,clust)
-    clv.Dunn( cls.scatt.data(data,clust),
-        intracls = c("complete","average","centroid"),
-        intercls = c("single", "complete", "average","centroid", "aveToCent", "hausdorff")
+sample_data_list <- function(data_list,
+                             n_samples,
+                             sample_fraction = NULL,
+                             n_subjects = NULL) {
+    # Make sure that only one parameter was used to specify how many subjects
+    #  to keep in each subsample
+    both_null <- is.null(sample_fraction) & is.null(n_subjects)
+    neither_null <- !is.null(sample_fraction) & !is.null(n_subjects)
+    if (both_null | neither_null) {
+        stop(
+            paste0(
+                "Either the sample_fraction parameter (fraction of subjects)",
+                " or n_subjects (number of subjects) must be provided. Not",
+                " both (or neither)."
+            )
+        )
+    }
+    # Calculate number of subjects to keep if fraction parameter was used
+    all_subjects <- data_list[[1]]$"data"$"subjectkey"
+    # Ensure n_subjects is within 0 and the total number of subjects
+    if (!is.null(n_subjects)) {
+        if (n_subjects < 0 | n_subjects > length(all_subjects)) {
+            stop(
+                paste0(
+                    "n_subjects must be between 0 and the total number of",
+                    " subjects."
+                )
+            )
+        } else if (as.integer(n_subjects) != n_subjects) {
+            stop(
+                "n_subjects must be an integer."
+            )
+        }
+    }
+    # Ensure sample fraction is a real fraction
+    if (!is.null(sample_fraction)) {
+        if (sample_fraction > 1 | sample_fraction < 0) {
+            stop(
+                "sample_fraction must be between 0 and 1."
+            )
+        } else {
+            n_subjects <- round(sample_fraction * length(all_subjects))
+        }
+    }
+    subject_subsamples <- lapply(
+        rep(n_subjects, n_samples),
+        function(x) {
+            return(sample(all_subjects, x))
+        }
     )
-Davies.Bouldin <- function(data,clust)
-    clv.Davies.Bouldin(cls.scatt.data(data,clust),
-        intracls = c("complete","average","centroid"),
-        intercls = c("single", "complete", "average","centroid", "aveToCent", "hausdorff")
+    data_list_subsamples <- subject_subsamples |> lapply(
+        function(subsample) {
+            length(subsample)
+            dl_subsample <- data_list |> lapply(
+                function(x) {
+                    x$"data" <- x$"data"[x$"data"$"subjectkey" %in% subsample, ]
+                    return(x)
+                }
+            )
+        }
     )
+    subsample_names <- paste0("subsample_", 1:n_samples)
+    names(data_list_subsamples) <- subsample_names
+    return(data_list_subsamples)
+}
 
-# compute indicies
-dunn2 <- Dunn(iris.data, v.pred)
-davies2 <- Davies.Bouldin(iris.data, v.pred)
-
-affinity_matrices
-
-
-
-# The Dunn Index is the ratio of the smallest distance between observations NOT in the same cluster to the largest intra-cluster distance
-
-# Calculate the maximum distance within each cluster
-
-
-# Calculate the
-
-library(clv)
-library(pheatmap)
-
-data(mouse)
-express <- mouse[1:25,c("M1","M2","M3","NC1","NC2","NC3")]
-rownames(express) <- mouse$ID[1:25]
-## hierarchical clustering
-Dist <- dist(express,method="euclidean")
-
-as.matrix(Dist) |> pheatmap()
-
-clusterObj <- hclust(Dist, method="average")
-nc <- 2 ## number of clusters
-cluster <- cutree(clusterObj,nc)
-dunn(Dist, cluster)
-
-
-am1 <- affinity_matrices[[1]]
-sol1 <- solutions_matrix[1, ] |> get_cluster_solutions()
-
-
-diag(am1) <- mean(am1)
-dm1 <- max(am1) - am1
-
-dm1 |> pheatmap()
-
-###
-
-dm1
-
-cluster <- sol1$`1`
-
-cluster |> length()
-
-dm1 |> dim()
-
-# 1, 2, 3
-cluster_labels <- unique(cluster) |> sort()
-
-# Intra-cluster distances
-# -
-
-
-clv.Dunn
-
-as.integer(cluster)
-
-index_list <- cls.scatt.diss.mx(dm1, as.integer(cluster))
-
-
-clv::clv.Dunn(
-    index_list,
-    intracls = c(
-        "complete",
-        "average"
-    ),
-    intercls = c(
-        "single",
-        "complete",
-        "average",
-        "hausdorff"
-    )
+z <- sample_data_list(
+    data_list,
+    n_samples = 3,
+    sample_fraction = 0.8
 )
 
-
+z$"subsample_1"
 

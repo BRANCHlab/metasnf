@@ -22,36 +22,37 @@ Davies-Bouldin indices
 }
 \examples{
 
-# load package
-library(metasnf)
+if (require("clv")) {
+    # load package
+    library(metasnf)
 
-# generate data_list
-data_list <- generate_data_list(
-    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
-    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
-    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
-    list(abcd_income, "household_income", "demographics", "numeric"),
-    list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
-    old_uid = "patient"
-)
+    # generate data_list
+    data_list <- generate_data_list(
+        list(abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
+        list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
+        list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
+        list(abcd_income, "household_income", "demographics", "numeric"),
+        list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
+        old_uid = "patient"
+    )
 
-# build settings_matrix
-settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
+    # build settings_matrix
+    settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 
-# collect affinity matrices and solutions matrix from batch_snf
-batch_snf_results <- batch_snf(
-    data_list,
-    settings_matrix,
-    return_affinity_matrices = TRUE
-)
+    # collect affinity matrices and solutions matrix from batch_snf
+    batch_snf_results <- batch_snf(
+        data_list,
+        settings_matrix,
+        return_affinity_matrices = TRUE
+    )
 
-solutions_matrix <- batch_snf_results$"solutions_matrix"
-affinity_matrices <- batch_snf_results$"affinity_matrices"
+    solutions_matrix <- batch_snf_results$"solutions_matrix"
+    affinity_matrices <- batch_snf_results$"affinity_matrices"
 
-# calculate silhouette scores
-davies_bouldin_indices <- calculate_db_indices(
-    solutions_matrix,
-    affinity_matrices
-)
-
+    # calculate Davies-Bouldin indices
+    davies_bouldin_indices <- calculate_db_indices(
+        solutions_matrix,
+        affinity_matrices
+    )
+}
 }

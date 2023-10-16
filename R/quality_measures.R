@@ -90,6 +90,9 @@ calculate_silhouettes <- function(solutions_matrix, affinity_matrices) {
     )
     silhouette_scores <- Map(
         function(cluster_solution, dissimilarity_matrix) {
+            # Note: the cluster package should not be converted to an optional
+            #  package in "Suggests". cluster::daisy is a default distance
+            #  measure required for categorical and mixed data.
             silhouette_score <- cluster::silhouette(
                 x = cluster_solution,
                 dmatrix = dissimilarity_matrix
@@ -115,40 +118,48 @@ calculate_silhouettes <- function(solutions_matrix, affinity_matrices) {
 #'
 #' @examples
 #'
-#' # load package
-#' library(metasnf)
+#' if (require("clv")) {
+#'     # load package
+#'     library(metasnf)
 #'
-#' # generate data_list
-#' data_list <- generate_data_list(
-#'     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
-#'     list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
-#'     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
-#'     list(abcd_income, "household_income", "demographics", "numeric"),
-#'     list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
-#'     old_uid = "patient"
-#' )
+#'     # generate data_list
+#'     data_list <- generate_data_list(
+#'         list(abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
+#'         list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
+#'         list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
+#'         list(abcd_income, "household_income", "demographics", "numeric"),
+#'         list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
+#'         old_uid = "patient"
+#'     )
 #'
-#' # build settings_matrix
-#' settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
+#'     # build settings_matrix
+#'     settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 #'
-#' # collect affinity matrices and solutions matrix from batch_snf
-#' batch_snf_results <- batch_snf(
-#'     data_list,
-#'     settings_matrix,
-#'     return_affinity_matrices = TRUE
-#' )
+#'     # collect affinity matrices and solutions matrix from batch_snf
+#'     batch_snf_results <- batch_snf(
+#'         data_list,
+#'         settings_matrix,
+#'         return_affinity_matrices = TRUE
+#'     )
 #'
-#' solutions_matrix <- batch_snf_results$"solutions_matrix"
-#' affinity_matrices <- batch_snf_results$"affinity_matrices"
+#'     solutions_matrix <- batch_snf_results$"solutions_matrix"
+#'     affinity_matrices <- batch_snf_results$"affinity_matrices"
 #'
-#' # calculate silhouette scores
-#' dunn_indices <- calculate_dunn_indices(
-#'     solutions_matrix,
-#'     affinity_matrices
-#' )
+#'     # calculate Dunn indices
+#'     dunn_indices <- calculate_dunn_indices(
+#'         solutions_matrix,
+#'         affinity_matrices
+#'     )
+#' }
 #'
 #' @export
 calculate_dunn_indices <- function(solutions_matrix, affinity_matrices) {
+    if (!requireNamespace("clv", quietly = TRUE)) {
+        stop(
+            "Package \"clv\" must be installed to use this function.",
+            call. = FALSE
+        )
+    }
     # The size of the solutions_matrix and the number of affinity_matrices
     #  should match up. First, handle the special case of the user providing
     #  a single affinity_matrix not bundled in a list.
@@ -238,40 +249,47 @@ calculate_dunn_indices <- function(solutions_matrix, affinity_matrices) {
 #'
 #' @examples
 #'
-#' # load package
-#' library(metasnf)
+#' if (require("clv")) {
+#'     # load package
+#'     library(metasnf)
 #'
-#' # generate data_list
-#' data_list <- generate_data_list(
-#'     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
-#'     list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
-#'     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
-#'     list(abcd_income, "household_income", "demographics", "numeric"),
-#'     list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
-#'     old_uid = "patient"
-#' )
+#'     # generate data_list
+#'     data_list <- generate_data_list(
+#'         list(abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
+#'         list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
+#'         list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
+#'         list(abcd_income, "household_income", "demographics", "numeric"),
+#'         list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
+#'         old_uid = "patient"
+#'     )
 #'
-#' # build settings_matrix
-#' settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
+#'     # build settings_matrix
+#'     settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 #'
-#' # collect affinity matrices and solutions matrix from batch_snf
-#' batch_snf_results <- batch_snf(
-#'     data_list,
-#'     settings_matrix,
-#'     return_affinity_matrices = TRUE
-#' )
+#'     # collect affinity matrices and solutions matrix from batch_snf
+#'     batch_snf_results <- batch_snf(
+#'         data_list,
+#'         settings_matrix,
+#'         return_affinity_matrices = TRUE
+#'     )
 #'
-#' solutions_matrix <- batch_snf_results$"solutions_matrix"
-#' affinity_matrices <- batch_snf_results$"affinity_matrices"
+#'     solutions_matrix <- batch_snf_results$"solutions_matrix"
+#'     affinity_matrices <- batch_snf_results$"affinity_matrices"
 #'
-#' # calculate silhouette scores
-#' davies_bouldin_indices <- calculate_db_indices(
-#'     solutions_matrix,
-#'     affinity_matrices
-#' )
-#'
+#'     # calculate Davies-Bouldin indices
+#'     davies_bouldin_indices <- calculate_db_indices(
+#'         solutions_matrix,
+#'         affinity_matrices
+#'     )
+#' }
 #' @export
 calculate_db_indices <- function(solutions_matrix, affinity_matrices) {
+    if (!requireNamespace("clv", quietly = TRUE)) {
+        stop(
+            "Package \"clv\" must be installed to use this function.",
+            call. = FALSE
+        )
+    }
     # The size of the solutions_matrix and the number of affinity_matrices
     #  should match up. First, handle the special case of the user providing
     #  a single affinity_matrix not bundled in a list.
