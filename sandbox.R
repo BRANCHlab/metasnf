@@ -1,5 +1,3 @@
-# Note: when testing optional packages, see https://r-pkgs.org/dependencies-in-practice.html#sec-dependencies-in-suggests-in-tests
-
 library(metasnf)
 
 data_list <- generate_data_list(
@@ -18,40 +16,57 @@ settings_matrix <- generate_settings_matrix(
     seed = 42
 )
 
-batch_snf_results <- batch_snf(
+solutions_matrix <- batch_snf(
     data_list,
-    settings_matrix,
-    return_affinity_matrices = TRUE
+    settings_matrix
 )
 
-solutions_matrix <- batch_snf_results$"solutions_matrix"
-affinity_matrices <- batch_snf_results$"affinity_matrices"
-
-data_list_subsamples <- subsample_data_list(
+solutions_matrix2 <- batch_snf(
     data_list,
-    n_subsamples = 3,
-    subsample_fraction = 0.8
+    settings_matrix
 )
-
-
-
-subsample_pairwise_aris(data_list_subsamples, settings_matrix)
-
-fraction_clustered_together(data_list_subsamples, settings_matrix, solutions_matrix)
-
-solution_index
-
-
 
 # library(dbscan)
 
-# Stability:
-# - adjusted rand index across all iterations X
+data <- data_list[[1]]$"data"
+
+data <- data.frame(data, row.names = 1)
+
+row.names(data) <- NULL
+
+data
+
+as.matrix(stats::dist(data, method = "euclidean"))
+
+euclidean_distance <- function(df) {
+    # Remove the first column, which is just the subjectkey
+    df <- df[, -1]
+    # Apply euclidean distance
+    distance_matrix <- df |>
+        stats::dist(method = "euclidean") |>
+        as.matrix()
+    return(distance_matrix)
+}
+
+gower_distance <- function(df) {
+    # Remove the first column, which is just the subjectkey
+    df <- df[, -1]
+    # Convert all character columns into factors
+    df <- char_to_fac(df)
+    distance_matrix <- df |>
+        cluster::daisy(metric = "gower", warnBin = FALSE) |>
+        as.matrix()
+}
 
 
-start <- proc.time()
 
+generate_distance_metrics_list(
+    continuous_distances = list(
+        "cat" = 5,
+        3
+    )
+)
 
-proc.time() - start
+library(SNFtool)
 
-solutions_matrix
+SNF

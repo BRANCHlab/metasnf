@@ -113,12 +113,11 @@ two_step_merge <- function(data_list, k = 20, alpha = 0.5, t = 20) {
 #' @return fused_network The final fused network for clustering
 #'
 #' @export
-snf_step <- function(data_list, scheme, k = 20, alpha = 0.5, t = 20) {
-    # Subset just to those patients who are common in all inputs
-    data_list <- data_list |>
-        reduce_dl_to_common() |>
-        arrange_dl()
-    # Remove NAs function can go here later
+snf_step <- function(data_list,
+                     scheme,
+                     k = 20,
+                     alpha = 0.5,
+                     t = 20) {
     # The individual scheme creates similarity matrices for each dl element
     #  and pools them all into a single SNF run
     if (scheme %in% c("individual", 1)) {
