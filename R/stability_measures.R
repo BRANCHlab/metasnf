@@ -109,7 +109,6 @@ subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
             return(cluster_solutions)
         }
     )
-    return(subsample_solutions)
     # Skeleton to store the mean and sd of ARIs for each solution
     pairwise_ari_df <- data.frame(
         "row" = integer(),
@@ -156,4 +155,139 @@ subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
     }
     cat("\n")
     return(pairwise_ari_df)
+}
+
+#' Average fraction of clustering together
+#'
+#' @description Calculate average fraction of times that patients who clusted
+#'  together in the full solution continued to cluster together in all the
+#'  subsampled solutions
+#'
+#' @param data_list_subsamples A list of subsets of a larger data_list. See
+#'  ?subsample_data_list to obtain this object.
+#' @param settings_matrix A settings_matrix.
+#' @param solutions_matrix A solutions_matrix.
+#'
+#' @return fraction_together_df Dataframe containing the average fraction
+#'  of continued clustering together for all supplied solutions
+#'
+#' @export
+fraction_clustered_together <- function(data_list_subsamples,
+                                        settings_matrix,
+                                        solutions_matrix) {
+    subsample_solutions <- lapply(
+        1:length(data_list_subsamples),
+        function(x) {
+            solutions_matrix <- batch_snf(
+                data_list = data_list_subsamples[[x]],
+                settings_matrix,
+                quiet = TRUE
+            )
+            cluster_solutions <- get_cluster_solutions(solutions_matrix)
+            return(cluster_solutions)
+        }
+    )
+    # Dataframe containing the cluster solutions from the full data_list
+    full_cluster_solutions <- get_cluster_solutions(solutions_matrix)
+    # The solution we are interested in
+    fraction_together_df <- data.frame(
+        "row" = integer(),
+        "mean_fraction_together" = double()
+    )
+    solution_indices <- seq_len(nrow(solutions_matrix))
+    for (solution_index in solution_indices) {
+        current_solution_df <-
+            full_cluster_solutions[, c(1, solution_index + 1)]
+        colnames(current_solution_df) <- c("subjectkey", "cluster")
+        # Just a vector of the assigned clusters
+        current_solution <- current_solution_df[, 2]
+        # A vector of the unique clusters that exist in this solution
+        unique_clusters <- current_solution |>
+            unique() |>
+            sort()
+        # To make use of dplyr functions
+        cluster <- ""
+        # A list of dataframes, where each dataframe stores all the patients of
+        # a specific cluster
+        subs_grouped_by_cluster <- unique_clusters |>
+            lapply(
+                function(cluster_label) {
+                    current_solution_df |>
+                        dplyr::filter(cluster %in% cluster_label)
+                }
+            )
+        # A list of dataframes, where each dataframe stores all the pairs of
+        #  patients of a specific cluster
+        clustered_pairs_df_list <- subs_grouped_by_cluster |>
+            lapply(
+                function(cluster_group) {
+                    clustered_pairs <- cluster_group$"subjectkey" |>
+                        utils::combn(2) |>
+                        t() |>
+                        data.frame()
+                    colnames(clustered_pairs) <- c("subject_1", "subject_2")
+                    rownames(clustered_pairs) <- NULL
+                    return(clustered_pairs)
+                }
+            )
+        # A single dataframe where each row contains a pair of patients who
+        #  were clustered together. The dataframe covers all such pairings.
+        clustered_pairs_df <- do.call("rbind", clustered_pairs_df_list)
+        # These columns store the information needed to calculate the average
+        #  number of times any pair of same-clustered patients belong to the
+        #  same cluster in the subsamples
+        clustered_pairs_df$"n_same_solution" <- 0
+        clustered_pairs_df$"n_same_cluster" <- 0
+        # Iteration through all the clustered pairs
+        for (row in seq_len(nrow(clustered_pairs_df))) {
+            # Iteration through all the solutions of subsampled data
+            for (sub_ind in seq_len(length(subsample_solutions))) {
+                subsample <- subsample_solutions[[sub_ind]]
+                subsample_subjects <- subsample$"subjectkey"
+                # df with subjectkey and only the current cluster solution
+                current_subsample_solution <-
+                    subsample[, c(1, solution_index + 1)]
+                colnames(current_subsample_solution) <-
+                    c("subjectkey", "cluster")
+                current_row <- clustered_pairs_df[row, ]
+                sub_1 <- current_row$"subject_1"
+                sub_2 <- current_row$"subject_2"
+                has_sub_1 <- sub_1 %in% subsample_subjects
+                has_sub_2 <- sub_2 %in% subsample_subjects
+                if (has_sub_1 & has_sub_2) {
+                    clustered_pairs_df[row, ]$"n_same_solution" <-
+                        clustered_pairs_df[row, ]$"n_same_solution" + 1
+                    sub_1_pos <-
+                        current_subsample_solution$"subjectkey" == sub_1
+                    sub_2_pos <-
+                        current_subsample_solution$"subjectkey" == sub_2
+                    sub_1_clust <-
+                        current_subsample_solution$"cluster"[sub_1_pos]
+                    sub_2_clust <-
+                        current_subsample_solution$"cluster"[sub_2_pos]
+                    if (sub_1_clust == sub_2_clust) {
+                        clustered_pairs_df[row, ]$"n_same_cluster" <-
+                            clustered_pairs_df[row, ]$"n_same_cluster" + 1
+                    }
+                }
+            }
+        }
+        # for dplyr
+        n_same_solution <- ""
+        n_same_cluster <- ""
+        clustered_pairs_df <- clustered_pairs_df |>
+            dplyr::filter(n_same_solution != 0) |>
+            dplyr::mutate(
+                frac_together = n_same_cluster / n_same_solution
+            )
+        mean_fraction_together <- clustered_pairs_df$"frac_together" |> mean()
+        fraction_together_df <- rbind(
+            fraction_together_df,
+            data.frame(
+                "row" = solution_index,
+                "mean_fraction_together" = mean_fraction_together
+            )
+        )
+    }
+    return(fraction_together_df)
 }
