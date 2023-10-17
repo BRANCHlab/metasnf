@@ -25,13 +25,6 @@ batch_snf_results <- batch_snf(
 )
 
 
-batch_snf_results <- batch_snf(
-    data_list,
-    settings_matrix,
-    suppress_clustering = TRUE,
-    return_affinity_matrices = TRUE
-)
-
 solutions_matrix <- batch_snf_results$"solutions_matrix"
 affinity_matrices <- batch_snf_results$"affinity_matrices"
 
@@ -166,4 +159,17 @@ tab
 choose(tab, 2)
 
 
+###
+z <- affinity_matrices[[1]][1:5, 1:5]
 
+zd <- as.dist(z, diag = TRUE, upper = TRUE)
+
+zd
+
+z
+
+library(dbscan)
+
+# Stability:
+# - percentage of time that a patient clustered with another patient from their own cluster
+# - adjusted rand index across all iterations
