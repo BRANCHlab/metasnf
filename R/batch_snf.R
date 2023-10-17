@@ -46,14 +46,18 @@ batch_snf <- function(data_list,
     # 1a. The user may have chosen to simultaneously not save affinity matrices
     #  and to not apply any clustering algorithms. In that case, this function
     #  is not really doing anything. Stop the function with an error.
-    if (is.null(affinity_matrix_dir) & suppress_clustering) {
+    no_affinity_matrices <-
+        is.null(affinity_matrix_dir) & !return_affinity_matrices
+    if (no_affinity_matrices & suppress_clustering) {
         stop(
             paste0(
-               "batch_snf has been called with the run_clustering parameter",
-               " set to FALSE (no clustering will occur) and no path provided",
-               " in the affinity_matrix_dir parameter for storing matrices.",
-               " With this combination of settings, the batch_snf function",
-               " yields no meaningful output."
+               "batch_snf has been called with the suppress_clustering",
+               " parameter set to TRUE (no clustering will occur), no path",
+               " provided in the affinity_matrix_dir parameter for storing",
+               " matrices, and return_affinity_matrices set to FALSE so that",
+               " affinity matrices are not being returned. With this",
+               " combination of settings, the batch_snf function yields no",
+               " meaningful output."
             )
         )
     }
@@ -147,18 +151,20 @@ batch_snf <- function(data_list,
     ###########################################################################
     # 5a. solutions_matrix begins as the settings_matrix extended with one new
     #  column for every subjects.
-    solutions_matrix <- add_columns(
-        df = settings_matrix,
-        newcols = data_list[[1]]$"data"$"subjectkey", # one column per patient
-        fill = 0 # populate the new column with 0s by default
-    )
-    # 5b. solutions_matrix gets one new column to store the cluster that each
-    #  subject was assigned to.
-    solutions_matrix <- add_columns(
-        df = settings_matrix,
-        newcols = "nclust",
-        fill = 0
-    )
+    if (!suppress_clustering) {
+        solutions_matrix <- add_columns(
+            df = settings_matrix,
+            newcols = data_list[[1]]$"data"$"subjectkey", # one col/patient
+            fill = 0 # populate the new column with 0s by default
+        )
+        # 5b. solutions_matrix gets one new column to store the cluster that
+        # each subject was assigned to.
+        solutions_matrix <- add_columns(
+            df = settings_matrix,
+            newcols = "nclust",
+            fill = 0
+        )
+    }
     ###########################################################################
     # 6. Creation of list to store affinity matrices (if requested)
     ###########################################################################
@@ -217,8 +223,10 @@ batch_snf <- function(data_list,
         nclust <- cluster_results$"nclust"
         # Update the solutions_matrix with the cluster solution and the number
         #  of clusters for that solution
-        solutions_matrix[i, rownames(fused_network)] <- solution
-        solutions_matrix[i, "nclust"] <- nclust
+        if (!suppress_clustering) {
+            solutions_matrix[i, rownames(fused_network)] <- solution
+            solutions_matrix[i, "nclust"] <- nclust
+        }
         #######################################################################
         # 8. Print estimated time taken until function completion
         #######################################################################
@@ -232,7 +240,9 @@ batch_snf <- function(data_list,
     ###########################################################################
     # 9. Format the final solutions_matrix to be numeric where possible
     ###########################################################################
-    solutions_matrix <- numcol_to_numeric(solutions_matrix)
+    if (!suppress_clustering) {
+        solutions_matrix <- numcol_to_numeric(solutions_matrix)
+    }
     ###########################################################################
     # 10. Print total time taken for function completion
     ###########################################################################
@@ -246,15 +256,25 @@ batch_snf <- function(data_list,
     #  return that.
     if (isTRUE(return_affinity_matrices)) {
         check_affinity_matrices(affinity_matrices)
-        batch_snf_results <- list(
-            solutions_matrix,
-            affinity_matrices
-        )
-        names(batch_snf_results) <- c("solutions_matrix", "affinity_matrices")
-        return(batch_snf_results)
+        if (!suppress_clustering) {
+            # the user wants affinity matrices and solutions matrix
+            batch_snf_results <- list(
+                solutions_matrix,
+                affinity_matrices
+            )
+            names(batch_snf_results) <- c(
+                "solutions_matrix",
+                "affinity_matrices"
+            )
+            return(batch_snf_results)
+        } else {
+            # the user wants affinity matrices but no solutions matrix
+            return(affinity_matrices)
+        }
     } else {
         # The user did not request that affinity matrices are returned. Just
-        #  return the solutions matrix.
+        #  return the solutions matrix. Don't need to check if solutions
+        #  matrices are requested - that was handled earlier in the funciton.
         return(solutions_matrix)
     }
 }

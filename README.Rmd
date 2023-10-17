@@ -86,7 +86,7 @@ Alternatively, a top clustering solution can be selected from a regular `solutio
 - [ ] Capability of calculating solution stability across patient resamplings for all cluster solutions
 - [x] Capability of calculating a wide range of quality metrics for all cluster solutions
 - [x] Capability of writing affinity matrices to disk
-- [ ] Capability of not running the clustering on every run of SNF (only makes sense when paired with the previous change)
+- [x] Capability of not running the clustering on every run of SNF (only makes sense when paired with the previous change)
 - [ ] Adapt parallel processing variant of batch_snf to reflect the above changes
 - [ ] Updated vignette(s) to fully document basic and advance usage of the package
 - [ ] Add tests

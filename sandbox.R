@@ -24,29 +24,31 @@ batch_snf_results <- batch_snf(
     return_affinity_matrices = TRUE
 )
 
+
+batch_snf_results <- batch_snf(
+    data_list,
+    settings_matrix,
+    suppress_clustering = TRUE,
+    return_affinity_matrices = TRUE
+)
+
 solutions_matrix <- batch_snf_results$"solutions_matrix"
 affinity_matrices <- batch_snf_results$"affinity_matrices"
 
-solutions_matrix |> no_subs()
-
-data_list
-
-summarize_dl(data_list)
-
-sample_data_list <- function(data_list,
-                             n_samples,
-                             sample_fraction = NULL,
-                             n_subjects = NULL) {
+subsample_data_list <- function(data_list,
+                                n_subsamples,
+                                subsample_fraction = NULL,
+                                n_subjects = NULL) {
     # Make sure that only one parameter was used to specify how many subjects
     #  to keep in each subsample
-    both_null <- is.null(sample_fraction) & is.null(n_subjects)
-    neither_null <- !is.null(sample_fraction) & !is.null(n_subjects)
+    both_null <- is.null(subsample_fraction) & is.null(n_subjects)
+    neither_null <- !is.null(subsample_fraction) & !is.null(n_subjects)
     if (both_null | neither_null) {
         stop(
             paste0(
-                "Either the sample_fraction parameter (fraction of subjects)",
-                " or n_subjects (number of subjects) must be provided. Not",
-                " both (or neither)."
+                "Either the subsample_fraction parameter (fraction of",
+                " subjects) or n_subjects (number of subjects) must be",
+                " provided. Not both (or neither)."
             )
         )
     }
@@ -68,17 +70,17 @@ sample_data_list <- function(data_list,
         }
     }
     # Ensure sample fraction is a real fraction
-    if (!is.null(sample_fraction)) {
-        if (sample_fraction > 1 | sample_fraction < 0) {
+    if (!is.null(subsample_fraction)) {
+        if (subsample_fraction > 1 | subsample_fraction < 0) {
             stop(
-                "sample_fraction must be between 0 and 1."
+                "subsample_fraction must be between 0 and 1."
             )
         } else {
-            n_subjects <- round(sample_fraction * length(all_subjects))
+            n_subjects <- round(subsample_fraction * length(all_subjects))
         }
     }
     subject_subsamples <- lapply(
-        rep(n_subjects, n_samples),
+        rep(n_subjects, n_subsamples),
         function(x) {
             return(sample(all_subjects, x))
         }
@@ -88,39 +90,80 @@ sample_data_list <- function(data_list,
             length(subsample)
             dl_subsample <- data_list |> lapply(
                 function(x) {
-                    x$"data" <- x$"data"[x$"data"$"subjectkey" %in% subsample, ]
+                    chosen_rows <- x$"data"$"subjectkey" %in% subsample
+                    x$"data" <- x$"data"[chosen_rows, ]
                     return(x)
                 }
             )
         }
     )
-    subsample_names <- paste0("subsample_", 1:n_samples)
+    subsample_names <- paste0("subsample_", 1:n_subsamples)
     names(data_list_subsamples) <- subsample_names
     return(data_list_subsamples)
 }
 
-z <- sample_data_list(
+data_list_subsamples <- subsample_data_list(
     data_list,
-    n_samples = 3,
-    sample_fraction = 0.8
+    n_subsamples = 3,
+    subsample_fraction = 0.8
 )
 
-z$"subsample_1"
-
-
-zz <- lapply(
-    z,
+subsample_solutions <- lapply(
+    data_list_subsamples,
     function(x) {
-        batch_snf(
+        solutions_matrix <- batch_snf(
             data_list = x,
-            settings_matrix,
-            return_affinity_matrices = TRUE
+            settings_matrix
         )
+        cluster_solutions <- get_cluster_solutions(solutions_matrix)
+        return(cluster_solutions)
     }
 )
 
-zz[[1]]$"affinity_matrices"
+subsample_solutions[[3]]
 
-zz[[1]]$"solutions_matrix"
+zz <- subsample_solutions
 
-settings_matrix$"k"
+zz[[1]]
+
+zz |>
+    lapply(
+        function(x) {
+            get_cluster_solutions(x)
+        }
+    )
+
+zz[[1]]
+
+mclust::adjustedRandIndex
+
+ari <- function (x, y) {
+    x <- as.vector(x)
+    y <- as.vector(y)
+    if (length(x) != length(y))
+        stop("arguments must be vectors of the same length")
+    tab <- table(x, y)
+    if (all(dim(tab) == c(1, 1)))
+        return(1)
+    a <- sum(choose(tab, 2))
+    b <- sum(choose(rowSums(tab), 2)) - a
+    c <- sum(choose(colSums(tab), 2)) - a
+    d <- choose(sum(tab), 2) - a - b - c
+    ARI <- (a - (a + b) * (a + c)/(a + b + c + d))/((a + b + a + c)/2 - (a + b) * (a + c)/(a + b + c + d))
+    return(ARI)
+}
+
+
+ari(c(1, 1, 1, 1, 2, 2, 2), c(4, 4, 4, 5, 6, 6, 6))
+
+x <- c(1, 1, 1, 5, 2, 2, 2)
+y <- c(4, 4, 4, 6, 6, 6, 6)
+
+tab <- table(x, y)
+
+tab
+
+choose(tab, 2)
+
+
+
