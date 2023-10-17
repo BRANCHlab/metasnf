@@ -109,6 +109,7 @@ subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
             return(cluster_solutions)
         }
     )
+    return(subsample_solutions)
     # Skeleton to store the mean and sd of ARIs for each solution
     pairwise_ari_df <- data.frame(
         "row" = integer(),
