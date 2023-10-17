@@ -195,7 +195,13 @@ fraction_clustered_together <- function(data_list_subsamples,
         "mean_fraction_together" = double()
     )
     solution_indices <- seq_len(nrow(solutions_matrix))
+    pb <- utils::txtProgressBar(
+        min = 0,
+        max = nrow(solutions_matrix),
+        style = 3
+    )
     for (solution_index in solution_indices) {
+        utils::setTxtProgressBar(pb, solution_index)
         current_solution_df <-
             full_cluster_solutions[, c(1, solution_index + 1)]
         colnames(current_solution_df) <- c("subjectkey", "cluster")

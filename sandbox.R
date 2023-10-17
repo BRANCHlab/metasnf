@@ -37,7 +37,7 @@ data_list_subsamples <- subsample_data_list(
 
 subsample_pairwise_aris(data_list_subsamples, settings_matrix)
 
-
+fraction_clustered_together(data_list_subsamples, settings_matrix, solutions_matrix)
 
 solution_index
 
@@ -51,10 +51,7 @@ solution_index
 
 start <- proc.time()
 
-fraction_clustered_together(data_list_subsamples, settings_matrix, solutions_matrix)
 
 proc.time() - start
 
 solutions_matrix
-
-
