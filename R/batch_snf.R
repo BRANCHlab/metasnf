@@ -29,6 +29,8 @@
 #'  clustering algorithms to provide cluster solutions on every iteration of
 #'  SNF. If TRUE, parameter `affinity_matrix_dir` must be specified.
 #'
+#' @param quiet If TRUE, will not print out time remaining estimates.
+#'
 #' @return populated_settings_matrix settings matrix with filled columns
 #'  related to subtype membership
 #'
@@ -39,7 +41,8 @@ batch_snf <- function(data_list,
                       return_affinity_matrices = FALSE,
                       affinity_matrix_dir = NULL,
                       clust_algs_list = NULL,
-                      suppress_clustering = FALSE) {
+                      suppress_clustering = FALSE,
+                      quiet = FALSE) {
     ###########################################################################
     # 1. Checking validity of settings
     ###########################################################################
@@ -122,8 +125,10 @@ batch_snf <- function(data_list,
     ###########################################################################
     # 3. Start timer to keep track of entire function duration
     ###########################################################################
-    start <- proc.time() # used to track time taken for entire function
-    remaining_seconds_vector <- vector() # used to estimate time to completion
+    if (!quiet) {
+        start <- proc.time() # final time taken for entire function
+        remaining_seconds_vector <- vector() # estimate time to completion
+    }
     ###########################################################################
     # 4. Ensure settings_matrix is a data.frame (not a tibble or matrix)
     ###########################################################################
@@ -230,12 +235,14 @@ batch_snf <- function(data_list,
         #######################################################################
         # 8. Print estimated time taken until function completion
         #######################################################################
-        remaining_seconds_vector <- batch_snf_time_remaining(
-            seconds_per_row = as.numeric(Sys.time() - start_time),
-            rows_remaining = nrow(settings_matrix) - i,
-            row = i,
-            remaining_seconds_vector
-        )
+        if (!quiet) {
+            remaining_seconds_vector <- batch_snf_time_remaining(
+                seconds_per_row = as.numeric(Sys.time() - start_time),
+                rows_remaining = nrow(settings_matrix) - i,
+                row = i,
+                remaining_seconds_vector
+            )
+        }
     }
     ###########################################################################
     # 9. Format the final solutions_matrix to be numeric where possible
@@ -246,8 +253,10 @@ batch_snf <- function(data_list,
     ###########################################################################
     # 10. Print total time taken for function completion
     ###########################################################################
-    total_time <- (proc.time() - start)[["elapsed"]]
-    print(paste0("Total time taken: ", round(total_time, 0), " seconds."))
+    if (!quiet) {
+        total_time <- (proc.time() - start)[["elapsed"]]
+        print(paste0("Total time taken: ", round(total_time, 0), " seconds."))
+    }
     ###########################################################################
     # 11. Return final output
     ###########################################################################
