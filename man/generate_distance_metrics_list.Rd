@@ -2,7 +2,7 @@
 % Please edit documentation in R/distance_metrics.R
 \name{generate_distance_metrics_list}
 \alias{generate_distance_metrics_list}
-\title{Generate a list of continuous distance metrics}
+\title{Generate a list of distance metrics}
 \usage{
 generate_distance_metrics_list(
   continuous_distances = NULL,
@@ -14,47 +14,49 @@ generate_distance_metrics_list(
 )
 }
 \arguments{
+\item{continuous_distances}{A named list of distance metric functions}
+
+\item{discrete_distances}{A named list of distance metric functions}
+
+\item{ordinal_distances}{A named list of distance metric functions}
+
+\item{categorical_distances}{A named list of distance metric functions}
+
+\item{mixed_distances}{A named list of distance metric functions}
+
 \item{disable_base}{If TRUE, do not prepend the base distance metrics
 (euclidean and standard normalized euclidean)}
-
-\item{...}{An arbitrary number of named distance metrics functions (see examples
-below)}
 }
 \value{
-continuous_distances_list A well-formatted list of distance metrics
+distance_metrics_list A well-formatted list of distance metrics
 }
 \description{
-This function can be used to specify custom continuous distance metrics to
-use during each run of the batch_snf
+This function can be used to specify custom distance metrics
 }
 \examples{
 # Using just the base distance metrics  ------------------------------------
-# This will just contain spectral_eigen and spectral_rot
-clust_algs_list <- generate_clust_algs_list()
+distance_metrics_list <- generate_distance_metrics_list()
 
-# Adding algorithms provided by the package --------------------------------
-# This will contain the base clustering algorithms (spectral_eigen,
-#  spectral_rot) as well as two pre-defined spectral clustering functions
-#  that force the number of clusters to be two or five
-clust_algs_list <- generate_clust_algs_list(
-    "two_cluster_spectral" = spectral_two,
-    "five_cluster_spectral" = spectral_five
-)
-
-# Adding your own algorithms -----------------------------------------------
+# Adding your own metrics --------------------------------------------------
 # This will contain the base and user-provided clustering algorithms
-my_clustering_algorithm <- function(affinity_matrix) {
-    # your code that converts affinity matrix to clusters here...
-    # solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    # return(solution_data)
+my_distance_metric <- function(df) {
+    # your code that converts a dataframe to a distance metric here...
+    # return(distance_metric)
 }
 
-# Suppress the base algorithms----------------------------------------------
+distance_metrics_list <- generate_distance_metrics_list(
+    continuous_distances = list(
+         "my_distance_metric" = my_distance_metric
+    )
+)
+
+# Suppress the base metrics-------------------------------------------------
 # This will contain only user-provided clustering algorithms
 
-clust_algs_list <- generate_clust_algs_list(
-    "two_cluster_spectral" = spectral_two,
-    "five_cluster_spectral" = spectral_five,
+distance_metrics_list <- generate_distance_metrics_list(
+    continuous_distances = list(
+         "my_distance_metric" = my_distance_metric
+    ),
     disable_base = TRUE
 )
 

@@ -9,6 +9,7 @@
 #'  gower distances)
 #' @param scale Whether or not the data should be standard normalized prior to
 #'  distance calculations
+#' @param distance_metrics_list Output of generate_distance_metrics_list().
 #'
 #' @return dist_matrix Matrix of inter-observation distances
 #'
@@ -16,7 +17,7 @@
 get_dist_matrix <- function(df,
                             input_type,
                             scale = FALSE,
-                            distance_list = NULL) {
+                            distance_metrics_list = NULL) {
     # Move subject keys into dataframe rownames
     df <- data.frame(df, row.names = 1)
     if (input_type == "numeric") {
@@ -36,47 +37,44 @@ get_dist_matrix <- function(df,
     return(dist_matrix)
 }
 
-
-#' Generate a list of continuous distance metrics
+#' Generate a list of distance metrics
 #'
-#' This function can be used to specify custom continuous distance metrics to
-#'  use during each run of the batch_snf
+#' This function can be used to specify custom distance metrics
 #'
-#' @param ... An arbitrary number of named distance metrics functions (see examples
-#'  below)
+#' @param continuous_distances A named list of distance metric functions
+#' @param discrete_distances A named list of distance metric functions
+#' @param ordinal_distances A named list of distance metric functions
+#' @param categorical_distances A named list of distance metric functions
+#' @param mixed_distances A named list of distance metric functions
 #' @param disable_base If TRUE, do not prepend the base distance metrics
 #'  (euclidean and standard normalized euclidean)
 #'
-#' @return continuous_distances_list A well-formatted list of distance metrics
+#' @return distance_metrics_list A well-formatted list of distance metrics
 #'
 #' @examples
 #' # Using just the base distance metrics  ------------------------------------
-#' # This will just contain spectral_eigen and spectral_rot
-#' clust_algs_list <- generate_clust_algs_list()
+#' distance_metrics_list <- generate_distance_metrics_list()
 #'
-#' # Adding algorithms provided by the package --------------------------------
-#' # This will contain the base clustering algorithms (spectral_eigen,
-#' #  spectral_rot) as well as two pre-defined spectral clustering functions
-#' #  that force the number of clusters to be two or five
-#' clust_algs_list <- generate_clust_algs_list(
-#'     "two_cluster_spectral" = spectral_two,
-#'     "five_cluster_spectral" = spectral_five
-#' )
-#'
-#' # Adding your own algorithms -----------------------------------------------
+#' # Adding your own metrics --------------------------------------------------
 #' # This will contain the base and user-provided clustering algorithms
-#' my_clustering_algorithm <- function(affinity_matrix) {
-#'     # your code that converts affinity matrix to clusters here...
-#'     # solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-#'     # return(solution_data)
+#' my_distance_metric <- function(df) {
+#'     # your code that converts a dataframe to a distance metric here...
+#'     # return(distance_metric)
 #' }
 #'
-#' # Suppress the base algorithms----------------------------------------------
+#' distance_metrics_list <- generate_distance_metrics_list(
+#'     continuous_distances = list(
+#'          "my_distance_metric" = my_distance_metric
+#'     )
+#' )
+#'
+#' # Suppress the base metrics-------------------------------------------------
 #' # This will contain only user-provided clustering algorithms
 #'
-#' clust_algs_list <- generate_clust_algs_list(
-#'     "two_cluster_spectral" = spectral_two,
-#'     "five_cluster_spectral" = spectral_five,
+#' distance_metrics_list <- generate_distance_metrics_list(
+#'     continuous_distances = list(
+#'          "my_distance_metric" = my_distance_metric
+#'     ),
 #'     disable_base = TRUE
 #' )
 #'
@@ -148,7 +146,20 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
                 )
             )
         }
+    } else {
+        mixed_distances <- list(
+            "gower_distance" = gower_distance
+        )
     }
+    distance_metrics_list <- list(
+        "continuous_distances" = continuous_distances,
+        "discrete_distances" = discrete_distances,
+        "ordinal_distances" = ordinal_distances,
+        "categorical_distances" = categorical_distances,
+        "mixed_distances" = mixed_distances
+    )
+    return(distance_metrics_list)
+    #distance_metrics_list M
     #base_distances_list <- list(
     #    "euclidean_distance" = euclidean_distance
     #)
@@ -156,6 +167,43 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
     #return(continuous_distances_list)
 }
 
+#' Summarize metrics contained in a distance_metrics_list
+#'
+#' @param distance_metrics_list A distance_metrics_list.
+#'
+#' @export
+summarize_distance_metrics_list <- function(distance_metrics_list) {
+    cat("\nContinuous distances:\n")
+    distance_metrics_list$"continuous_distances" |>
+        names() |>
+        cat()
+    cat("\n\nDiscrete distances:\n")
+    distance_metrics_list$"discrete_distances" |>
+        names() |>
+        cat()
+    cat("\n\nOrdinal distances:\n")
+    distance_metrics_list$"ordinal_distances" |>
+        names() |>
+        cat()
+    cat("\n\nCategorical distances:\n")
+    distance_metrics_list$"categorical_distances" |>
+        names() |>
+        cat()
+    cat("\n\nMixed distances:\n")
+    distance_metrics_list$"mixed_distances" |>
+        names() |>
+        cat()
+    cat("\n")
+}
+
+#' Distance metric: Euclidean distance
+#'
+#' @param df Dataframe containing one subjectkey column and at least 1 data
+#'  column
+#'
+#' @return distance_matrix A distance matrix.
+#'
+#' @export
 euclidean_distance <- function(df) {
     # Remove the first column, which is just the subjectkey
     df <- df[, -1]
@@ -166,6 +214,14 @@ euclidean_distance <- function(df) {
     return(distance_matrix)
 }
 
+#' Distance metric: Gower distance
+#'
+#' @param df Dataframe containing one subjectkey column and at least 1 data
+#'  column
+#'
+#' @return distance_matrix A distance matrix.
+#'
+#' @export
 gower_distance <- function(df) {
     # Remove the first column, which is just the subjectkey
     df <- df[, -1]

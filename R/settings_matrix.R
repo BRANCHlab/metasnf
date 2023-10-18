@@ -93,6 +93,9 @@
 #' @param mixed_distances Like `continuous_distances`, but
 #'  for mixed data. By default, uses gower distance.
 #'
+#' @param distance_metrics_list List containing distance metrics to vary over.
+#'  Cannot be
+#'
 #' @param snf_input_weights Nested list containing weights for when SNF is
 #'  used to merge individual input measures (see ?generate_snf_weights)
 #'
@@ -133,6 +136,7 @@ generate_settings_matrix <- function(data_list,
                                      ordinal_distances = NULL,
                                      categorical_distances = NULL,
                                      mixed_distances = NULL,
+                                     distance_metrics_list = NULL,
                                      snf_input_weights = NULL,
                                      snf_domain_weights = NULL,
                                      retry_limit = 10) {
@@ -183,6 +187,7 @@ generate_settings_matrix <- function(data_list,
         ordinal_distances = ordinal_distances,
         categorical_distances = categorical_distances,
         mixed_distances = mixed_distances,
+        distance_metrics_list = distance_metrics_list,
         snf_input_weights = snf_input_weights,
         snf_domain_weights = snf_domain_weights,
         retry_limit = retry_limit
@@ -284,6 +289,9 @@ generate_settings_matrix <- function(data_list,
 #' @param mixed_distances Like `continuous_distances`, but
 #'  for mixed data. By default, uses gower distance.
 #'
+#' @param distance_metrics_list List containing distance metrics to vary over.
+#'  Cannot be
+#'
 #' @param snf_input_weights Nested list containing weights for when SNF is
 #'  used to merge individual input measures (see ?generate_snf_weights)
 #'
@@ -327,6 +335,7 @@ add_settings_matrix_rows <- function(settings_matrix,
                                      ordinal_distances = NULL,
                                      categorical_distances = NULL,
                                      mixed_distances = NULL,
+                                     distance_metrics_list = NULL,
                                      snf_input_weights = NULL,
                                      snf_domain_weights = NULL,
                                      retry_limit = 10) {

@@ -4,7 +4,7 @@
 \alias{get_dist_matrix}
 \title{Calculate distance matrices}
 \usage{
-get_dist_matrix(df, input_type, scale = FALSE, distance_list = NULL)
+get_dist_matrix(df, input_type, scale = FALSE, distance_metrics_list = NULL)
 }
 \arguments{
 \item{df}{Raw dataframe with subject IDs in column 1}
@@ -15,6 +15,8 @@ gower distances)}
 
 \item{scale}{Whether or not the data should be standard normalized prior to
 distance calculations}
+
+\item{distance_metrics_list}{Output of generate_distance_metrics_list().}
 }
 \value{
 dist_matrix Matrix of inter-observation distances

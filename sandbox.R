@@ -30,15 +30,15 @@ solutions_matrix2 <- batch_snf(
 
 
 
+distance_metrics_list[[1]]
+
+distance_metrics_list <- generate_distance_metrics_list()
+
+distance_metrics_list
+
+summarize_distance_metrics_list(distance_metrics_list)
+
+# in the settings matrix, either accept user specified values or
+# simply base it on the number of values in generate_distance_metrics_list
 
 
-generate_distance_metrics_list(
-    continuous_distances = list(
-        "cat" = 5,
-        3
-    )
-)
-
-library(SNFtool)
-
-SNF

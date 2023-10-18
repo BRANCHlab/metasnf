@@ -27,6 +27,7 @@ add_settings_matrix_rows(
   ordinal_distances = NULL,
   categorical_distances = NULL,
   mixed_distances = NULL,
+  distance_metrics_list = NULL,
   snf_input_weights = NULL,
   snf_domain_weights = NULL,
   retry_limit = 10
@@ -124,6 +125,9 @@ for categorical data. By default, uses Gower's distance.}
 
 \item{mixed_distances}{Like \code{continuous_distances}, but
 for mixed data. By default, uses gower distance.}
+
+\item{distance_metrics_list}{List containing distance metrics to vary over.
+Cannot be}
 
 \item{snf_input_weights}{Nested list containing weights for when SNF is
 used to merge individual input measures (see ?generate_snf_weights)}
