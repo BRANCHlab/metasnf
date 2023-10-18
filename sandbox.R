@@ -28,17 +28,45 @@ solutions_matrix2 <- batch_snf(
 
 # library(dbscan)
 
-
-
 distance_metrics_list[[1]]
+
+distance_metrics_list <- generate_distance_metrics_list(
+    continuous_distances = list(
+        "my_dist" = euclidean_distance,
+        "3" = euclidean_distance
+    ),
+    discrete_distances = list(
+        "my_dist2" = euclidean_distance,
+        "my_dist3" = euclidean_distance
+    )
+)
 
 distance_metrics_list <- generate_distance_metrics_list()
 
-distance_metrics_list
-
 summarize_distance_metrics_list(distance_metrics_list)
 
-# in the settings matrix, either accept user specified values or
-# simply base it on the number of values in generate_distance_metrics_list
+# Using just the base distance metrics  ------------------------------------
+distance_metrics_list <- generate_distance_metrics_list()
 
+# Adding your own metrics --------------------------------------------------
+# This will contain the base and user-provided clustering algorithms
+my_distance_metric <- function(df) {
+    # your code that converts a dataframe to a distance metric here...
+    # return(distance_metric)
+}
 
+distance_metrics_list <- generate_distance_metrics_list(
+    continuous_distances = list(
+         "my_distance_metric" = my_distance_metric
+    )
+)
+
+# Suppress the base metrics-------------------------------------------------
+# This will contain only user-provided clustering algorithms
+
+distance_metrics_list <- generate_distance_metrics_list(
+    continuous_distances = list(
+         "my_distance_metric" = my_distance_metric
+    ),
+    keep = TRUE
+)

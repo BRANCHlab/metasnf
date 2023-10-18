@@ -10,7 +10,7 @@ generate_distance_metrics_list(
   ordinal_distances = NULL,
   categorical_distances = NULL,
   mixed_distances = NULL,
-  disable_base = FALSE
+  keep_defaults = TRUE
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ generate_distance_metrics_list(
 
 \item{mixed_distances}{A named list of distance metric functions}
 
-\item{disable_base}{If TRUE, do not prepend the base distance metrics
+\item{keep_defaults}{If TRUE (default), prepend the base distance metrics
 (euclidean and standard normalized euclidean)}
 }
 \value{
@@ -57,7 +57,7 @@ distance_metrics_list <- generate_distance_metrics_list(
     continuous_distances = list(
          "my_distance_metric" = my_distance_metric
     ),
-    disable_base = TRUE
+    keep_defaults = FALSE
 )
 
 }

@@ -46,7 +46,7 @@ get_dist_matrix <- function(df,
 #' @param ordinal_distances A named list of distance metric functions
 #' @param categorical_distances A named list of distance metric functions
 #' @param mixed_distances A named list of distance metric functions
-#' @param disable_base If TRUE, do not prepend the base distance metrics
+#' @param keep_defaults If TRUE (default), prepend the base distance metrics
 #'  (euclidean and standard normalized euclidean)
 #'
 #' @return distance_metrics_list A well-formatted list of distance metrics
@@ -75,7 +75,7 @@ get_dist_matrix <- function(df,
 #'     continuous_distances = list(
 #'          "my_distance_metric" = my_distance_metric
 #'     ),
-#'     disable_base = TRUE
+#'     keep_defaults = FALSE
 #' )
 #'
 #' @export
@@ -84,72 +84,155 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
                                            ordinal_distances = NULL,
                                            categorical_distances = NULL,
                                            mixed_distances = NULL,
-                                           disable_base = FALSE) {
-    # Ensure that user has provided a name for every distance metric
-    if (!is.null(continuous_distances)) {
-        if (min(nchar(names(continuous_distances))) == 0) {
-            stop(
-                paste0(
-                    "Please specify a name for every supplied metric."
-                )
+                                           keep_defaults = TRUE) {
+    # The code below is repetitive across the different types of distance
+    #  metrics. For each type of metric, the following logic is applied to fill
+    #  each type of distance metric in the broader distance_metrics_list:
+    #  1. User metrics + !disable_base = base metrics + user metrics
+    #  2. User metrics + disable_base = only user metrics
+    #  3. No user metrics + !disable_base = base metrics
+    #  4. No user metrics + disable_base = NULL
+    ###########################################################################
+    # 1. Start with a check to ensure any list provided by the user has named
+    #  elements.
+    user_distances <- list(
+        continuous_distances,
+        discrete_distances,
+        categorical_distances,
+        mixed_distances
+    )
+    # Remove the NULL default elements
+    user_distances <- user_distances[lengths(user_distances) != 0]
+    # Check that all the elements WITHIN the lists provided by the users have
+    #  names.
+    all_metrics_are_named <- user_distances |>
+        lapply(
+            function(x) {
+                sum(nchar(names(x)) > 0) == length(x)
+            }
+        ) |>
+        unlist() |>
+        all()
+    if (!all_metrics_are_named) {
+        stop(
+            paste0(
+                "Please specify a name for every supplied metric."
             )
-        }
-    } else {
-        continuous_distances <- list(
-            "euclidean_distance" = euclidean_distance
         )
+    }
+    ###########################################################################
+    # 2. Set up the default lists
+    base_continuous_distances <- list(
+        "euclidean_distance" = euclidean_distance
+    )
+    base_discrete_distances <- list(
+        "euclidean_distance" = euclidean_distance
+    )
+    base_ordinal_distances <- list(
+        "euclidean_distance" = euclidean_distance
+    )
+    base_categorical_distances <- list(
+        "gower_distance" = gower_distance
+    )
+    base_mixed_distances <- list(
+        "gower_distance" = gower_distance
+    )
+    ###########################################################################
+    # 3. Add any user provided lists
+    if (!is.null(continuous_distances)) {
+        # the user provided continuous_distances
+        if (keep_defaults) {
+            # the user wants default metrics included
+            continuous_distances <- c(
+                base_continuous_distances,
+                continuous_distances
+            )
+        } # no need for an else here, just leave their distances alone
+    } else {
+        # the user did not provide continuous_distances
+        if (keep_defaults) {
+            # the user wants default metrics included
+            continuous_distances <- base_continuous_distances
+        } else {
+            # the user wants nothing
+            continuous_distances <- list(NULL)
+        }
     }
     if (!is.null(discrete_distances)) {
-        if (min(nchar(names(discrete_distances))) == 0) {
-            stop(
-                paste0(
-                    "Please specify a name for every supplied metric."
-                )
+        # the user provided discrete_distances
+        if (keep_defaults) {
+            # the user wants default metrics included
+            discrete_distances <- c(
+                base_discrete_distances,
+                discrete_distances
             )
-        }
+        } # no need for an else here, just leave their distances alone
     } else {
-        discrete_distances <- list(
-            "euclidean_distance" = euclidean_distance
-        )
+        # the user did not provide discrete_distances
+        if (keep_defaults) {
+            # the user wants default metrics included
+            discrete_distances <- base_discrete_distances
+        } else {
+            # the user wants nothing
+            discrete_distances <- list(NULL)
+        }
     }
     if (!is.null(ordinal_distances)) {
-        if (min(nchar(names(ordinal_distances))) == 0) {
-            stop(
-                paste0(
-                    "Please specify a name for every supplied metric."
-                )
+        # the user provided ordinal_distances
+        if (keep_defaults) {
+            # the user wants default metrics included
+            ordinal_distances <- c(
+                base_ordinal_distances,
+                ordinal_distances
             )
-        }
+        } # no need for an else here, just leave their distances alone
     } else {
-        ordinal_distances <- list(
-            "euclidean_distance" = euclidean_distance
-        )
+        # the user did not provide ordinal_distances
+        if (keep_defaults) {
+            # the user wants default metrics included
+            ordinal_distances <- base_ordinal_distances
+        } else {
+            # the user wants nothing
+            ordinal_distances <- list(NULL)
+        }
     }
     if (!is.null(categorical_distances)) {
-        if (min(nchar(names(categorical_distances))) == 0) {
-            stop(
-                paste0(
-                    "Please specify a name for every supplied metric."
-                )
+        # the user provided categorical_distances
+        if (keep_defaults) {
+            # the user wants default metrics included
+            categorical_distances <- c(
+                base_categorical_distances,
+                categorical_distances
             )
-        }
+        } # no need for an else here, just leave their distances alone
     } else {
-        categorical_distances <- list(
-            "gower_distance" = gower_distance
-        )
+        # the user did not provide categorical_distances
+        if (keep_defaults) {
+            # the user wants default metrics included
+            categorical_distances <- base_categorical_distances
+        } else {
+            # the user wants nothing
+            categorical_distances <- list(NULL)
+        }
     }
     if (!is.null(mixed_distances)) {
-        if (min(nchar(names(mixed_distances))) == 0) {
-            stop(
-                paste0(
-                    "Please specify a name for every supplied metric."
-                )
+        # the user provided mixed_distances
+        if (keep_defaults) {
+            # the user wants default metrics included
+            mixed_distances <- c(
+                base_mixed_distances,
+                mixed_distances
             )
-        }
+        } # no need for an else here, just leave their distances alone
     } else {
-        mixed_distances <- list(
-            "gower_distance" = gower_distance
-        )
+        # the user did not provide mixed_distances
+        if (keep_defaults) {
+            # the user wants default metrics included
+            mixed_distances <- base_mixed_distances
+        } else {
+            # the user wants nothing
+            mixed_distances <- list(NULL)
+        }
     }
     distance_metrics_list <- list(
         "continuous_distances" = continuous_distances,
@@ -159,12 +242,6 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
         "mixed_distances" = mixed_distances
     )
     return(distance_metrics_list)
-    #distance_metrics_list M
-    #base_distances_list <- list(
-    #    "euclidean_distance" = euclidean_distance
-    #)
-    #continuous_distances_list <- c(base_distances_list, user_distances_list)
-    #return(continuous_distances_list)
 }
 
 #' Summarize metrics contained in a distance_metrics_list
@@ -173,26 +250,36 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
 #'
 #' @export
 summarize_distance_metrics_list <- function(distance_metrics_list) {
-    cat("\nContinuous distances:\n")
-    distance_metrics_list$"continuous_distances" |>
-        names() |>
-        cat()
-    cat("\n\nDiscrete distances:\n")
-    distance_metrics_list$"discrete_distances" |>
-        names() |>
-        cat()
-    cat("\n\nOrdinal distances:\n")
-    distance_metrics_list$"ordinal_distances" |>
-        names() |>
-        cat()
-    cat("\n\nCategorical distances:\n")
-    distance_metrics_list$"categorical_distances" |>
-        names() |>
-        cat()
-    cat("\n\nMixed distances:\n")
-    distance_metrics_list$"mixed_distances" |>
-        names() |>
-        cat()
+    # continuous
+    if (length(names(distance_metrics_list$"continuous_distances")) > 0) {
+        cat("\nContinuous distances:")
+        cont_names <- distance_metrics_list$"continuous_distances" |> names()
+        paste0("\n", 1:length(cont_names), ". ", cont_names) |> cat()
+    }
+    # discrete
+    if (length(names(distance_metrics_list$"discrete_distances")) > 0) {
+        cat("\n\nDiscrete distances:")
+        disc_names <- distance_metrics_list$"discrete_distances" |> names()
+        paste0("\n", 1:length(disc_names), ". ", disc_names) |> cat()
+    }
+    # ordinal
+    if (length(names(distance_metrics_list$"ordinal_distances")) > 0) {
+        cat("\n\nOrdinal distances:")
+        ord_names <- distance_metrics_list$"ordinal_distances" |> names()
+        paste0("\n", 1:length(ord_names), ". ", ord_names) |> cat()
+    }
+    # categorical
+    if (length(names(distance_metrics_list$"categorical_distances")) > 0) {
+        cat("\n\nCategorical distances:")
+        cat_names <- distance_metrics_list$"categorical_distances" |> names()
+        paste0("\n", 1:length(cat_names), ". ", cat_names) |> cat()
+    }
+    # mixed
+    if (length(names(distance_metrics_list$"mixed_distances")) > 0) {
+        cat("\n\nMixed distances:")
+        mixed_names <- distance_metrics_list$"mixed_distances" |> names()
+        paste0("\n", 1:length(mixed_names), ". ", mixed_names) |> cat()
+    }
     cat("\n")
 }
 
