@@ -1,13 +1,14 @@
-################### Visualize SNF and spectral clustering results using ComplexHeatmap and Manhattan plot ###################
-
+#' Diaplay SNF cluster output in Heatmap
+#'
 #' @description
 #' Normalize SNF matrix and plot heatmap. 
-
+#'
 #' @param W similarity matrix from SNF 
 #' @param group_cluster cluster assignment
 #' @param top_annotation annotation to be displayed above the heatmap output
 #' @param left_annotation annotation to be displayed on the left of the heatmap output
-
+#'
+#' @export
 displayClustersHeatmap <- function(W, 
                                    group_cluster, 
                                    top_annotation=NULL, 
@@ -45,25 +46,29 @@ displayClustersHeatmap <- function(W,
 
 
 #' Functions to calculate correlation between cluster assignment to outcome variables and visualize to find meaningful clusters with Manhattan plot
-
+#'
 #' @description
 #'  Calculate correlation of clusters to each outcome using chi-squared (categorical outcome) and/or kruskal-wallis test (continuous outcome) in each data set that were integrated using SNF, and then generates long format data input for ClustersToOutcomeManhattan 
-
+#'
 #' @param df a dataframe of samples with cluster_column and outcomes columns.
-#' @param cluster_column the column with cluster assignment from df
 #' @param outcomes one or more outcomes of interest from df
 #' @param method correlation test method ("chi-squared" or "kruskal")
 #' @param datatype name of the SNF integration datatype
-
-clusterToOutcomeCorr <- function(df, cluster_column, outcomes, method, datatype){
-
+#'
+#' @export
+clusterToOutcomeCorr <- function(df, 
+                                 #cluster, 
+                                 outcomes, 
+                                 method, 
+                                 datatype){
+    
     out = data.frame()
     for (outcome in outcomes){
         print(outcome)
 
-        table = df[, c(cluster_column, outcome)] %>% table %>% as.data.frame.matrix
+        table = table(as.data.frame.matrix(df[, c('cluster', outcome)]))
         if (method=="chi-squared"){
-            result = table %>% chisq.test(simulate.p.value=TRUE)
+            result = chisq.test(table, simulate.p.value=TRUE)
             }
         else if (method == "kruskal"){
             result = kruskal.test(df[,outcome] ~ cluster, data=df)
@@ -75,23 +80,28 @@ clusterToOutcomeCorr <- function(df, cluster_column, outcomes, method, datatype)
     }
 
 
+#' Display cluster assignment to outcome correlation as Manhattan plot
+#'
 #' @description
+#'
 #' Manhattan plot outputs the Correlation of Clusters from spectral clustering with the Outcomes (cco), colored by data types, dot size represents sample size.
-#' @param outcomes column list of outcomes
-#' @param pvalue column list of correlation p-values
-#' @param datatype dataset the outcome comes from
-#' @param size sample size
 #' @param levels optional argument to re-arrange outcome display on x-axis
-
-clusterToOutcomeManhattan <- function(outcomes, 
-                                       pvalue, 
-                                       datatype, 
-                                       size, 
+#'
+#' @export
+clusterToOutcomeManhattan <- function(data,
+                                      #outcomes, 
+                                       #p_value, 
+                                       #datatype, 
+                                       #size, 
                                        levels=NULL){
     # use levels to rearrange sequence of the outcomes
+    cco = data
+    p_value=as.numeric(cco$'p_value')
+    cco$'log_pvalue' = -log10(cco$'p_value')
+    log_pvalue = cco$'log_pvalue'
+    outcomes = cco$'outcomes'
     
-    log_pvalue = -log10(pvalue)
-    cco = data.frame(outcomes=outcomes, log_pvalue=log_pvalue, datatype=datatype, size=size)
+    
     if (is.null(levels)){
         levels=unique(cco$outcomes)
         }
@@ -100,9 +110,9 @@ clusterToOutcomeManhattan <- function(outcomes,
         }
 
     plot <- ggplot2::ggplot(cco, 
-           ggplot2::aes(x = factor({{outcomes}}, 
+           ggplot2::aes(x = factor(outcomes, 
                                    level = levels),
-                        y = {{log_pvalue}}, color = factor(datatype))) +
+                        y = log_pvalue, color = factor(datatype))) +
         ggplot2::geom_point(alpha = 1, 
                             ggplot2::aes(size=size)) +
         ggplot2::geom_hline(yintercept = -log10(0.05), 
@@ -124,17 +134,15 @@ clusterToOutcomeManhattan <- function(outcomes,
     }
 
 
-
-
-############ Display correlation between predictors-outcome, outcomes-outcomes ###############
-
-#suppressPackageStartupMessages(library(circlize))
-
+#' Generate correlation heatmap
+#'
 #' @description
 #' Generate correlation heatmap (need more generalization. Only tested outcomes-outcomes correlation)
-
+#'
 #' @param a matrix of outcomes-outcomes correlation p_values
 #' @param outcome_label_color optional argument to specify outcome color labels
+#'
+#' @export
 corrHeatmap <- function(corr, outcome_label_color=NULL){
     
     # Calculate the log-10 p-value of the correlation coefficient significance
@@ -192,12 +200,16 @@ corrHeatmap <- function(corr, outcome_label_color=NULL){
     }
 
 
+#' Generate correlation heatmap legend
+#'
 #' @description
 #' Generate legend for correlation heatmap. 
-
+#'
 #' @param legend graph path to be saved to 
 #' @param legend_outcome_labels optional argument to specify outcome label names
 #' @param legend_outcome_labels_color optional argument to specify outcome label name colors
+#'
+#' @export
 corrHeatmap_legend <- function(legend_name,
                           legend_outcome_labels,
                           legend_outcome_labels_color){
@@ -259,72 +271,77 @@ corrHeatmap_legend <- function(legend_name,
    
 
 
-
-
+#' Generate predictor-outcome correlations in Manhattan plot
+#'
 #' @description
 #' Manhattan plot showing predictor correlations to an outcome
-
+#'
 #' @param df_export is a dataframe with features in rownames, and columns:
 #'  "p.value": from correlation test, 
 #'  "n": number of samples,
 #'  "Group": datatype name,
 #'  "Group_index": sequence of datatypes to be displayed
 #' @param outcome name the correlations were computed against. To be displayed in plot title
-
+#'
+#' @export
 CorrManhattan <- function(df_export, outcome){
     # Prepare data for manhattan plot
-    df_manhattan <- df_export %>% 
+    df_manhattan <- #df_export %>% 
 
       # Compute chromosome size
-      group_by(Group_Index) %>% 
-      summarise(chr_len = 1) %>% 
+      dplyr::group_by(df_export, Group_Index) %>% 
+      dplyr::summarise(chr_len = 1) %>% 
 
 
       # Calculate cumulative position of each chromosome
-      mutate(tot = cumsum(chr_len) - chr_len) %>%
-      select(-chr_len) %>%
+      dplyr::mutate(tot = cumsum(chr_len) - chr_len) %>%
+      dplyr::select(-chr_len) %>%
 
       # Add this info to the initial dataset
-      left_join(df_export, ., by=c("Group_Index" = "Group_Index")) %>%
+      dplyr::left_join(df_export, ., by=c("Group_Index" = "Group_Index")) %>%
 
       # Add a cumulative position of each SNP
-      arrange(Group_Index, `p.value`) %>%
-      mutate( BPcum = `p.value` + tot)
+      dplyr::arrange(Group_Index, `p.value`) %>%
+      dplyr::mutate( BPcum = `p.value` + tot)
 
     # Define the x-axis
     df_axis = df_manhattan %>% 
-            group_by(Group_Index) %>% 
-            summarize(center = ( max(BPcum) + min(BPcum) ) / 2 ) 
+            dplyr::group_by(Group_Index) %>% 
+            dplyr::summarize(center = ( max(BPcum) + min(BPcum) ) / 2 ) 
 
     # Prepare the plot
-    plot <- ggplot2::ggplot(df_manhattan, aes(x = BPcum, y = -log10(`p.value`))) +
+    plot <- ggplot2::ggplot(df_manhattan, 
+                            ggplot2::aes(x = BPcum, 
+                                         y = -log10(`p.value`))) +
 
               # Show all points
-              geom_point( aes(color = as.factor(Group_Index)), alpha = 0.5, size = 3) +
-              scale_color_manual(values = rep(c("black", "orange"), 22 )) +
+              ggplot2::geom_point(ggplot2::aes(color = as.factor(Group_Index)), 
+                                  alpha = 0.5, 
+                                  size = 3) +
+              ggplot2::scale_color_manual(values = rep(c("black", "orange"), 22 )) +
 
               # custom X axis:
               #scale_x_continuous( label = x_axis_ticks, breaks = df_axis$center ) +
               #scale_y_continuous(expand = c(0, 0), limits = c(0, 14) ) +     # remove space between plot area and x axis
 
               # Add a line at p = 0.05
-              geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "red") +
+              ggplot2::geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "red") +
 
               # Add the plot title
-              ggtitle(label = paste("Correlation p-value of Predictors versus ", outcome)) +
-              ylab(label = expression(paste(-log[10], "(p.value)"))) +
+              ggplot2::ggtitle(label = paste("Correlation p-value of Predictors versus ", outcome)) +
+              ggplot2::ylab(label = expression(paste(-log[10], "(p.value)"))) +
 
               # Custom the theme:
-              theme_bw() +
-              theme( 
+              ggplot2::theme_bw() +
+              ggplot2::theme( 
                 legend.position = "none",
-                panel.border = element_blank(),
-                axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 12),
-                axis.text.y = element_text(size = 12),
-                axis.title.x = element_blank(),
-                axis.title.y = element_text(size = 15),
+                panel.border = ggplot2::element_blank(),
+                axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1, size = 12),
+                axis.text.y = ggplot2::element_text(size = 12),
+                axis.title.x = ggplot2::element_blank(),
+                axis.title.y = ggplot2::element_text(size = 15),
                 #axis.line = element_line(linewidth = 1, colour = "black"),
-                plot.title = element_text(hjust = 0.5, size = 20)
+                plot.title = ggplot2::element_text(hjust = 0.5, size = 20)
       ) 
     return(plot)
     }
