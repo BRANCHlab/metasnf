@@ -28,35 +28,7 @@ solutions_matrix2 <- batch_snf(
 
 # library(dbscan)
 
-data <- data_list[[1]]$"data"
 
-data <- data.frame(data, row.names = 1)
-
-row.names(data) <- NULL
-
-data
-
-as.matrix(stats::dist(data, method = "euclidean"))
-
-euclidean_distance <- function(df) {
-    # Remove the first column, which is just the subjectkey
-    df <- df[, -1]
-    # Apply euclidean distance
-    distance_matrix <- df |>
-        stats::dist(method = "euclidean") |>
-        as.matrix()
-    return(distance_matrix)
-}
-
-gower_distance <- function(df) {
-    # Remove the first column, which is just the subjectkey
-    df <- df[, -1]
-    # Convert all character columns into factors
-    df <- char_to_fac(df)
-    distance_matrix <- df |>
-        cluster::daisy(metric = "gower", warnBin = FALSE) |>
-        as.matrix()
-}
 
 
 

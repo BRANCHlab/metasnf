@@ -155,3 +155,23 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
     #continuous_distances_list <- c(base_distances_list, user_distances_list)
     #return(continuous_distances_list)
 }
+
+euclidean_distance <- function(df) {
+    # Remove the first column, which is just the subjectkey
+    df <- df[, -1]
+    # Apply euclidean distance
+    distance_matrix <- df |>
+        stats::dist(method = "euclidean") |>
+        as.matrix()
+    return(distance_matrix)
+}
+
+gower_distance <- function(df) {
+    # Remove the first column, which is just the subjectkey
+    df <- df[, -1]
+    # Convert all character columns into factors
+    df <- char_to_fac(df)
+    distance_matrix <- df |>
+        cluster::daisy(metric = "gower", warnBin = FALSE) |>
+        as.matrix()
+}
