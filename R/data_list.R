@@ -50,7 +50,7 @@
 #'     list_of_lists,
 #'     old_uid = "patient_id"
 #' )
-generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
+generate_data_list <- function(..., uid = NULL, test_subjects = NULL,
                                train_subjects = NULL, assigned_splits = NULL) {
     subjectkey <- "" # trickery to avoid build errors - fix this later
     # The object that will contain all the data
@@ -70,7 +70,7 @@ generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
     # Assign names to the nested list elements
     data_list_names <- c("data", "name", "domain", "type")
     data_list <- lapply(data_list, stats::setNames, data_list_names)
-    data_list <- convert_uids(data_list, old_uid)
+    data_list <- convert_uids(data_list, uid)
     data_list <- data_list |>
         remove_dl_na() |>
         reduce_dl_to_common() |>

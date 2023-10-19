@@ -25,41 +25,41 @@
 #' @param min_alpha The minimum value that the alpha hyperparameter can have.
 #'  Random assigned value of alpha for each row will be obtained by uniformly
 #'  sampling numbers between `min_alpha` and `max_alpha` at intervals of 0.1.
-#'  Cannot be used in conjunction with the `possible_alpha` parameter.
+#'  Cannot be used in conjunction with the `alpha_values` parameter.
 #'
 #' @param max_alpha The maximum value that the alpha hyperparameter can have.
 #'  See `min_alpha` parameter. Cannot be used in conjunction with the
-#'  `possible_alpha` parameter.
+#'  `alpha_values` parameter.
 #'
 #' @param min_k The minimum value that the k hyperparameter can have.
 #'  Random assigned value of k for each row will be obtained by uniformly
 #'  sampling numbers between `min_k` and `max_k` at intervals of 1.
-#'  Cannot be used in conjunction with the `possible_k` parameter.
+#'  Cannot be used in conjunction with the `k_values` parameter.
 #'
 #' @param max_k The maximum value that the k hyperparameter can have.
 #'  See `min_k` parameter. Cannot be used in conjunction with the
-#'  `possible_k` parameter.
+#'  `k_values` parameter.
 #'
 #' @param min_t The minimum value that the t hyperparameter can have.
 #'  Random assigned value of t for each row will be obtained by uniformly
 #'  sampling numbers between `min_t` and `max_t` at intervals of 1.
-#'  Cannot be used in conjunction with the `possible_t` parameter.
+#'  Cannot be used in conjunction with the `t_values` parameter.
 #'
 #' @param max_t The maximum value that the t hyperparameter can have.
 #'  See `min_t` parameter. Cannot be used in conjunction with the
-#'  `possible_t` parameter.
+#'  `t_values` parameter.
 #'
-#' @param possible_alpha A number or numeric vector of a set of possible values
+#' @param alpha_values A number or numeric vector of a set of possible values
 #'  that alpha can take on. Value will be obtained by uniformly sampling the
 #'  vector. Cannot be used in conjunction with the `min_alpha` or `max_alpha`
 #'  parameters.
 #'
-#' @param possible_k A number or numeric vector of a set of possible values
+#' @param k_values A number or numeric vector of a set of possible values
 #'  that k can take on. Value will be obtained by uniformly sampling the
 #'  vector. Cannot be used in conjunction with the `min_k` or `max_k`
 #'  parameters.
 #'
-#' @param possible_t A number or numeric vector of a set of possible values
+#' @param t_values A number or numeric vector of a set of possible values
 #'  that t can take on. Value will be obtained by uniformly sampling the
 #'  vector. Cannot be used in conjunction with the `min_t` or `max_t`
 #'  parameters.
@@ -126,9 +126,9 @@ generate_settings_matrix <- function(data_list,
                                      max_k = NULL,
                                      min_t = NULL,
                                      max_t = NULL,
-                                     possible_alpha = NULL,
-                                     possible_k = NULL,
-                                     possible_t = NULL,
+                                     alpha_values = NULL,
+                                     k_values = NULL,
+                                     t_values = NULL,
                                      possible_snf_schemes = c(1, 2, 3),
                                      clustering_algorithms = NULL,
                                      continuous_distances = NULL,
@@ -177,9 +177,9 @@ generate_settings_matrix <- function(data_list,
         max_k = max_k,
         min_t = min_t,
         max_t = max_t,
-        possible_alpha = possible_alpha,
-        possible_k = possible_k,
-        possible_t = possible_t,
+        alpha_values = alpha_values,
+        k_values = k_values,
+        t_values = t_values,
         possible_snf_schemes = possible_snf_schemes,
         clustering_algorithms = clustering_algorithms,
         continuous_distances = continuous_distances,
@@ -221,41 +221,41 @@ generate_settings_matrix <- function(data_list,
 #' @param min_alpha The minimum value that the alpha hyperparameter can have.
 #'  Random assigned value of alpha for each row will be obtained by uniformly
 #'  sampling numbers between `min_alpha` and `max_alpha` at intervals of 0.1.
-#'  Cannot be used in conjunction with the `possible_alpha` parameter.
+#'  Cannot be used in conjunction with the `alpha_values` parameter.
 #'
 #' @param max_alpha The maximum value that the alpha hyperparameter can have.
 #'  See `min_alpha` parameter. Cannot be used in conjunction with the
-#'  `possible_alpha` parameter.
+#'  `alpha_values` parameter.
 #'
 #' @param min_k The minimum value that the k hyperparameter can have.
 #'  Random assigned value of k for each row will be obtained by uniformly
 #'  sampling numbers between `min_k` and `max_k` at intervals of 1.
-#'  Cannot be used in conjunction with the `possible_k` parameter.
+#'  Cannot be used in conjunction with the `k_values` parameter.
 #'
 #' @param max_k The maximum value that the k hyperparameter can have.
 #'  See `min_k` parameter. Cannot be used in conjunction with the
-#'  `possible_k` parameter.
+#'  `k_values` parameter.
 #'
 #' @param min_t The minimum value that the t hyperparameter can have.
 #'  Random assigned value of t for each row will be obtained by uniformly
 #'  sampling numbers between `min_t` and `max_t` at intervals of 1.
-#'  Cannot be used in conjunction with the `possible_t` parameter.
+#'  Cannot be used in conjunction with the `t_values` parameter.
 #'
 #' @param max_t The maximum value that the t hyperparameter can have.
 #'  See `min_t` parameter. Cannot be used in conjunction with the
-#'  `possible_t` parameter.
+#'  `t_values` parameter.
 #'
-#' @param possible_alpha A number or numeric vector of a set of possible values
+#' @param alpha_values A number or numeric vector of a set of possible values
 #'  that alpha can take on. Value will be obtained by uniformly sampling the
 #'  vector. Cannot be used in conjunction with the `min_alpha` or `max_alpha`
 #'  parameters.
 #'
-#' @param possible_k A number or numeric vector of a set of possible values
+#' @param k_values A number or numeric vector of a set of possible values
 #'  that k can take on. Value will be obtained by uniformly sampling the
 #'  vector. Cannot be used in conjunction with the `min_k` or `max_k`
 #'  parameters.
 #'
-#' @param possible_t A number or numeric vector of a set of possible values
+#' @param t_values A number or numeric vector of a set of possible values
 #'  that t can take on. Value will be obtained by uniformly sampling the
 #'  vector. Cannot be used in conjunction with the `min_t` or `max_t`
 #'  parameters.
@@ -325,9 +325,9 @@ add_settings_matrix_rows <- function(settings_matrix,
                                      max_k = NULL,
                                      min_t = NULL,
                                      max_t = NULL,
-                                     possible_alpha = NULL,
-                                     possible_k = NULL,
-                                     possible_t = NULL,
+                                     alpha_values = NULL,
+                                     k_values = NULL,
+                                     t_values = NULL,
                                      possible_snf_schemes = c(1, 2, 3),
                                      clustering_algorithms = NULL,
                                      continuous_distances = NULL,
@@ -344,8 +344,8 @@ add_settings_matrix_rows <- function(settings_matrix,
     ###########################################################################
     # 1a. Ensure range is specified by only one approach
     null_min_max_alpha <- is.null(min_alpha) & is.null(max_alpha)
-    null_possible_alpha <- is.null(possible_alpha)
-    if (!null_possible_alpha & !null_min_max_alpha) {
+    null_alpha_values <- is.null(alpha_values)
+    if (!null_alpha_values & !null_min_max_alpha) {
         stop(
             paste0(
                 "alpha parameter can be controlled using either the min/max",
@@ -370,31 +370,31 @@ add_settings_matrix_rows <- function(settings_matrix,
             )
         }
     }
-    if (!is.null(possible_alpha)) {
-        if (min(possible_alpha) < 0.3 | max(possible_alpha) > 0.8) {
+    if (!is.null(alpha_values)) {
+        if (min(alpha_values) < 0.3 | max(alpha_values) > 0.8) {
             warning(
                 "Requested minimum / maximum alpha hyperparameter range is",
                 " outside range empirically considere reasonable (0.3 to 0.8)."
             )
         }
     }
-    # 1c. Setup possible_alpha to contain values to sample from
-    if (is.null(possible_alpha)) {
+    # 1c. Setup alpha_values to contain values to sample from
+    if (is.null(alpha_values)) {
         if (is.null(min_alpha)) {
             min_alpha <- 0.3
         }
         if (is.null(max_alpha)) {
             max_alpha <- 0.8
         }
-        possible_alpha <- seq(min_alpha, max_alpha, by = 0.1)
+        alpha_values <- seq(min_alpha, max_alpha, by = 0.1)
     }
     ###########################################################################
     # 2. Handling k hyperparameter
     ###########################################################################
     # 2a. Ensure range is specified by only one approach
     null_min_max_k <- is.null(min_k) & is.null(max_k)
-    null_possible_k <- is.null(possible_k)
-    if (!null_possible_k & !null_min_max_k) {
+    null_k_values <- is.null(k_values)
+    if (!null_k_values & !null_min_max_k) {
         stop(
             paste0(
                 "k parameter can be controlled using either the min/max",
@@ -427,8 +427,8 @@ add_settings_matrix_rows <- function(settings_matrix,
             )
         }
     }
-    if (!is.null(possible_k)) {
-        if (min(possible_k) < 10 | max(possible_k) > 100) {
+    if (!is.null(k_values)) {
+        if (min(k_values) < 10 | max(k_values) > 100) {
             warning(
                 "The original SNF paper recommends setting k to either the",
                 " number of patients divided by the expected number of",
@@ -439,23 +439,23 @@ add_settings_matrix_rows <- function(settings_matrix,
             )
         }
     }
-    # 2c. Setup possible_k to contain values to sample from
-    if (is.null(possible_k)) {
+    # 2c. Setup k_values to contain values to sample from
+    if (is.null(k_values)) {
         if (is.null(min_k)) {
             min_k <- 10
         }
         if (is.null(max_k)) {
             max_k <- 100
         }
-        possible_k <- seq(min_k, max_k, by = 1)
+        k_values <- seq(min_k, max_k, by = 1)
     }
     ###########################################################################
     # 3. Handling t hyperparameter
     ###########################################################################
     # 3a. Ensure range is specified by only one approach
     null_min_max_t <- is.null(min_t) & is.null(max_t)
-    null_possible_t <- is.null(possible_t)
-    if (!null_possible_t & !null_min_max_t) {
+    null_t_values <- is.null(t_values)
+    if (!null_t_values & !null_min_max_t) {
         stop(
             paste0(
                 "t parameter can be controlled using either the min/max",
@@ -484,8 +484,8 @@ add_settings_matrix_rows <- function(settings_matrix,
             )
         }
     }
-    if (!is.null(possible_t)) {
-        if (min(possible_t) < 10 | max(possible_t) > 20) {
+    if (!is.null(t_values)) {
+        if (min(t_values) < 10 | max(t_values) > 20) {
             warning(
                 "The original SNF paper recommends a t between 10 to 20.",
                 " Empirically, setting t above 20 is always sufficient for",
@@ -494,15 +494,15 @@ add_settings_matrix_rows <- function(settings_matrix,
             )
         }
     }
-    # 3c. Setup possible_t to contain values to sample from
-    if (is.null(possible_t)) {
+    # 3c. Setup t_values to contain values to sample from
+    if (is.null(t_values)) {
         if (is.null(min_t)) {
             min_t <- 20
         }
         if (is.null(max_t)) {
             max_t <- 20
         }
-        possible_t <- seq(min_t, max_t, by = 1)
+        t_values <- seq(min_t, max_t, by = 1)
     }
     ###########################################################################
     # 4. Set the random seed (if provided)
@@ -536,9 +536,9 @@ add_settings_matrix_rows <- function(settings_matrix,
         #  that value.
         snf_scheme <- sample(possible_snf_schemes, 1)
         clust_alg <- sample(1:2, 1)
-        alpha <- possible_alpha[sample.int(length(possible_alpha), 1)]
-        k <- possible_k[sample.int(length(possible_k), 1)]
-        t <- possible_t[sample.int(length(possible_t), 1)]
+        alpha <- alpha_values[sample.int(length(alpha_values), 1)]
+        k <- k_values[sample.int(length(k_values), 1)]
+        t <- t_values[sample.int(length(t_values), 1)]
         if (is.null(clustering_algorithms)) {
             # there are currently 2 defaults (spectral_eig/rot) to choose from
             clust_alg <- sample(1:2, 1)

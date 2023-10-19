@@ -17,9 +17,9 @@ generate_settings_matrix(
   max_k = NULL,
   min_t = NULL,
   max_t = NULL,
-  possible_alpha = NULL,
-  possible_k = NULL,
-  possible_t = NULL,
+  alpha_values = NULL,
+  k_values = NULL,
+  t_values = NULL,
   possible_snf_schemes = c(1, 2, 3),
   clustering_algorithms = NULL,
   continuous_distances = NULL,
@@ -59,41 +59,41 @@ max_removed_inputs with an exponential distribution; default).}
 \item{min_alpha}{The minimum value that the alpha hyperparameter can have.
 Random assigned value of alpha for each row will be obtained by uniformly
 sampling numbers between \code{min_alpha} and \code{max_alpha} at intervals of 0.1.
-Cannot be used in conjunction with the \code{possible_alpha} parameter.}
+Cannot be used in conjunction with the \code{alpha_values} parameter.}
 
 \item{max_alpha}{The maximum value that the alpha hyperparameter can have.
 See \code{min_alpha} parameter. Cannot be used in conjunction with the
-\code{possible_alpha} parameter.}
+\code{alpha_values} parameter.}
 
 \item{min_k}{The minimum value that the k hyperparameter can have.
 Random assigned value of k for each row will be obtained by uniformly
 sampling numbers between \code{min_k} and \code{max_k} at intervals of 1.
-Cannot be used in conjunction with the \code{possible_k} parameter.}
+Cannot be used in conjunction with the \code{k_values} parameter.}
 
 \item{max_k}{The maximum value that the k hyperparameter can have.
 See \code{min_k} parameter. Cannot be used in conjunction with the
-\code{possible_k} parameter.}
+\code{k_values} parameter.}
 
 \item{min_t}{The minimum value that the t hyperparameter can have.
 Random assigned value of t for each row will be obtained by uniformly
 sampling numbers between \code{min_t} and \code{max_t} at intervals of 1.
-Cannot be used in conjunction with the \code{possible_t} parameter.}
+Cannot be used in conjunction with the \code{t_values} parameter.}
 
 \item{max_t}{The maximum value that the t hyperparameter can have.
 See \code{min_t} parameter. Cannot be used in conjunction with the
-\code{possible_t} parameter.}
+\code{t_values} parameter.}
 
-\item{possible_alpha}{A number or numeric vector of a set of possible values
+\item{alpha_values}{A number or numeric vector of a set of possible values
 that alpha can take on. Value will be obtained by uniformly sampling the
 vector. Cannot be used in conjunction with the \code{min_alpha} or \code{max_alpha}
 parameters.}
 
-\item{possible_k}{A number or numeric vector of a set of possible values
+\item{k_values}{A number or numeric vector of a set of possible values
 that k can take on. Value will be obtained by uniformly sampling the
 vector. Cannot be used in conjunction with the \code{min_k} or \code{max_k}
 parameters.}
 
-\item{possible_t}{A number or numeric vector of a set of possible values
+\item{t_values}{A number or numeric vector of a set of possible values
 that t can take on. Value will be obtained by uniformly sampling the
 vector. Cannot be used in conjunction with the \code{min_t} or \code{max_t}
 parameters.}
