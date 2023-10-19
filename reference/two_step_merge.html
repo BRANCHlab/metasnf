@@ -26,6 +26,7 @@ network per domain into one final fused network."><!-- mathjax --><script src="h
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
     <a class="dropdown-item" href="../articles/metasnf-vignette.html">An example metasnf pipeline</a>
   </div>
 </li>
@@ -51,7 +52,17 @@ network per domain into one final fused network.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">two_step_merge</span><span class="op">(</span><span class="va">data_list</span>, K <span class="op">=</span> <span class="fl">20</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">two_step_merge</span><span class="op">(</span></span>
+<span>  <span class="va">data_list</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  t <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  <span class="va">cont_dist_fn</span>,</span>
+<span>  <span class="va">disc_dist_fn</span>,</span>
+<span>  <span class="va">ord_dist_fn</span>,</span>
+<span>  <span class="va">cat_dist_fn</span>,</span>
+<span>  <span class="va">mix_dist_fn</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -61,12 +72,36 @@ network per domain into one final fused network.</p>
 <code>get_data_list()</code></p></dd>
 
 
-<dt>K</dt>
-<dd><p>K hyperparameter</p></dd>
+<dt>k</dt>
+<dd><p>k hyperparameter</p></dd>
 
 
 <dt>alpha</dt>
 <dd><p>alpha/eta/sigma hyperparameter</p></dd>
+
+
+<dt>t</dt>
+<dd><p>SNF number of iterations hyperparameter</p></dd>
+
+
+<dt>cont_dist_fn</dt>
+<dd><p>distance metric function for continuous data</p></dd>
+
+
+<dt>disc_dist_fn</dt>
+<dd><p>distance metric function for discrete data</p></dd>
+
+
+<dt>ord_dist_fn</dt>
+<dd><p>distance metric function for ordinal data</p></dd>
+
+
+<dt>cat_dist_fn</dt>
+<dd><p>distance metric function for categorical data</p></dd>
+
+
+<dt>mix_dist_fn</dt>
+<dd><p>distance metric function for mixed data</p></dd>
 
 </dl></div>
     <div class="section level2">

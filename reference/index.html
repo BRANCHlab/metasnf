@@ -24,6 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
     <a class="dropdown-item" href="../articles/metasnf-vignette.html">An example metasnf pipeline</a>
   </div>
 </li>
@@ -100,7 +101,17 @@
           
           <code><a href="add_design_matrix_rows.html">add_design_matrix_rows()</a></code> 
         </dt>
-        <dd>Add design matrix rows</dd>
+        <dd>deprecated function</dd>
+      </dl><dl><dt>
+          
+          <code><a href="add_settings_matrix_rows.html">add_settings_matrix_rows()</a></code> 
+        </dt>
+        <dd>Add settings matrix rows</dd>
+      </dl><dl><dt>
+          
+          <code><a href="affinity_matrix_path.html">affinity_matrix_path()</a></code> 
+        </dt>
+        <dd>Generate a complete path and filename to store an affinity matrix</dd>
       </dl><dl><dt>
           
           <code><a href="ari_heatmap.html">ari_heatmap()</a></code> 
@@ -115,27 +126,52 @@
           
           <code><a href="assigned_clust_hist.html">assigned_clust_hist()</a></code> 
         </dt>
-        <dd>Histogram of cluster membership across an output matrix</dd>
+        <dd>Histogram of cluster membership across an solutions matrix</dd>
       </dl><dl><dt>
           
           <code><a href="assigned_clust_pheatmap.html">assigned_clust_pheatmap()</a></code> 
         </dt>
-        <dd>Pheatmap of cluster membership across an output matrix</dd>
+        <dd>Heatmap of cluster membership across an solutions matrix</dd>
       </dl><dl><dt>
           
           <code><a href="assigned_clust_scatter.html">assigned_clust_scatter()</a></code> 
         </dt>
-        <dd>Scatter plot of cluster membership across an output matrix</dd>
+        <dd>Scatter plot of cluster membership across an solutions matrix</dd>
+      </dl><dl><dt>
+          
+          <code><a href="batch_snf.html">batch_snf()</a></code> 
+        </dt>
+        <dd>Run variations of SNF as described by a settings matrix</dd>
+      </dl><dl><dt>
+          
+          <code><a href="batch_snf_time_remaining.html">batch_snf_time_remaining()</a></code> 
+        </dt>
+        <dd>Time remaining until batch_snf completion</dd>
       </dl><dl><dt>
           
           <code><a href="calc_ari.html">calc_ari()</a></code> 
         </dt>
-        <dd>Calculate adjusted rand index between two rows of output matrix</dd>
+        <dd>Calculate adjusted rand index between two rows of solutions matrix</dd>
       </dl><dl><dt>
           
           <code><a href="calc_om_aris.html">calc_om_aris()</a></code> 
         </dt>
         <dd>Meta-cluster calculations</dd>
+      </dl><dl><dt>
+          
+          <code><a href="calculate_db_indices.html">calculate_db_indices()</a></code> 
+        </dt>
+        <dd>Calculate Davies-Bouldin indices</dd>
+      </dl><dl><dt>
+          
+          <code><a href="calculate_dunn_indices.html">calculate_dunn_indices()</a></code> 
+        </dt>
+        <dd>Calculate Dunn indices</dd>
+      </dl><dl><dt>
+          
+          <code><a href="calculate_silhouettes.html">calculate_silhouettes()</a></code> 
+        </dt>
+        <dd>Calculate silhouette scores</dd>
       </dl><dl><dt>
           
           <code><a href="cbcl_anova.html">cbcl_anova()</a></code> 
@@ -161,6 +197,11 @@
           <code><a href="char_to_fac.html">char_to_fac()</a></code> 
         </dt>
         <dd>Convert character-type columns of a dataframe to factor-type</dd>
+      </dl><dl><dt>
+          
+          <code><a href="check_affinity_matrices.html">check_affinity_matrices()</a></code> 
+        </dt>
+        <dd>Check validity of affinity matrices</dd>
       </dl><dl><dt>
           
           <code><a href="check_subj_orders_for_lp.html">check_subj_orders_for_lp()</a></code> 
@@ -195,12 +236,7 @@
           
           <code><a href="dm_heatmap.html">dm_heatmap()</a></code> 
         </dt>
-        <dd>Heatmap design matrix based on meta-clustering results</dd>
-      </dl><dl><dt>
-          
-          <code><a href="dm_row_fn.html">dm_row_fn()</a></code> 
-        </dt>
-        <dd>Apply-based function for execute design matrix</dd>
+        <dd>Heatmap settings matrix based on meta-clustering results</dd>
       </dl><dl><dt>
           
           <code><a href="domain_merge.html">domain_merge()</a></code> 
@@ -213,54 +249,89 @@
         <dd>Domains</dd>
       </dl><dl><dt>
           
-          <code><a href="execute_design_matrix.html">execute_design_matrix()</a></code> 
-        </dt>
-        <dd>Execute variations of SNF as described by a design matrix</dd>
-      </dl><dl><dt>
-          
-          <code><a href="execute_design_matrix_p.html">execute_design_matrix_p()</a></code> 
-        </dt>
-        <dd>Parallel processing form of execute design matrix</dd>
-      </dl><dl><dt>
-          
-          <code><a href="execute_inclusion.html">execute_inclusion()</a></code> 
+          <code><a href="drop_inputs.html">drop_inputs()</a></code> 
         </dt>
         <dd>Execute inclusion</dd>
       </dl><dl><dt>
           
+          <code><a href="euclidean_distance.html">euclidean_distance()</a></code> 
+        </dt>
+        <dd>Distance metric: Euclidean distance</dd>
+      </dl><dl><dt>
+          
+          <code><a href="execute_design_matrix.html">execute_design_matrix()</a></code> 
+        </dt>
+        <dd>deprecated function</dd>
+      </dl><dl><dt>
+          
+          <code><a href="execute_design_matrix_p.html">execute_design_matrix_p()</a></code> 
+        </dt>
+        <dd>deprecated function</dd>
+      </dl><dl><dt>
+          
+          <code><a href="execute_inclusion.html">execute_inclusion()</a></code> 
+        </dt>
+        <dd>deprecated function</dd>
+      </dl><dl><dt>
+          
           <code><a href="extend_om.html">extend_om()</a></code> 
         </dt>
-        <dd>Extend an output matrix to include outcome evaluations</dd>
+        <dd>Extend an solutions matrix to include outcome evaluations</dd>
+      </dl><dl><dt>
+          
+          <code><a href="fraction_clustered_together.html">fraction_clustered_together()</a></code> 
+        </dt>
+        <dd>Average fraction of clustering together</dd>
+      </dl><dl><dt>
+          
+          <code><a href="generate_clust_algs_list.html">generate_clust_algs_list()</a></code> 
+        </dt>
+        <dd>Generate a list of custom clustering algorithms</dd>
       </dl><dl><dt>
           
           <code><a href="generate_data_list.html">generate_data_list()</a></code> 
         </dt>
-        <dd>Generate data_list object - but softcoded</dd>
+        <dd>Generate data_list object</dd>
       </dl><dl><dt>
           
           <code><a href="generate_design_matrix.html">generate_design_matrix()</a></code> 
         </dt>
-        <dd>Build a design matrix - but softcoded</dd>
+        <dd>deprecated function</dd>
       </dl><dl><dt>
           
-          <code><a href="generate_design_matrix_ak.html">generate_design_matrix_ak()</a></code> 
+          <code><a href="generate_distance_metrics_list.html">generate_distance_metrics_list()</a></code> 
         </dt>
-        <dd>Build design matrix for scanning alpha and K</dd>
-      </dl><dl><dt>
-          
-          <code><a href="generate_outcome_list.html">generate_outcome_list()</a></code> 
-        </dt>
-        <dd>Generate outcome_list object - but softcoded</dd>
+        <dd>Generate a list of distance metrics</dd>
       </dl><dl><dt>
           
           <code><a href="generate_output_matrix.html">generate_output_matrix()</a></code> 
         </dt>
-        <dd>Build output matrix</dd>
+        <dd>deprecated function</dd>
+      </dl><dl><dt>
+          
+          <code><a href="generate_settings_matrix.html">generate_settings_matrix()</a></code> 
+        </dt>
+        <dd>Build a settings matrix</dd>
+      </dl><dl><dt>
+          
+          <code><a href="generate_solutions_matrix.html">generate_solutions_matrix()</a></code> 
+        </dt>
+        <dd>Build solutions matrix</dd>
+      </dl><dl><dt>
+          
+          <code><a href="generate_target_list.html">generate_target_list()</a></code> 
+        </dt>
+        <dd>Generate target_list object</dd>
       </dl><dl><dt>
           
           <code><a href="get_cluster_df.html">get_cluster_df()</a></code> 
         </dt>
-        <dd>Extract dataframe of cluster and subject key from output matrix row</dd>
+        <dd>Extract dataframe of cluster and subject key from solutions matrix row</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_cluster_solutions.html">get_cluster_solutions()</a></code> 
+        </dt>
+        <dd>Extract all cluster solutions from a solutions_matrix</dd>
       </dl><dl><dt>
           
           <code><a href="get_clustered_subs.html">get_clustered_subs()</a></code> 
@@ -298,6 +369,11 @@
         <dd>Return the row ordering of a meta-clustering solution</dd>
       </dl><dl><dt>
           
+          <code><a href="gower_distance.html">gower_distance()</a></code> 
+        </dt>
+        <dd>Distance metric: Gower distance</dd>
+      </dl><dl><dt>
+          
           <code><a href="keep_split.html">keep_split()</a></code> 
         </dt>
         <dd>Filter data to training or testing subjects only</dd>
@@ -315,12 +391,12 @@
           
           <code><a href="list_remove.html">list_remove()</a></code> 
         </dt>
-        <dd>Remove items from a data_list or outcome_list</dd>
+        <dd>Remove items from a data_list or target_list</dd>
       </dl><dl><dt>
           
           <code><a href="lp_om.html">lp_om()</a></code> 
         </dt>
-        <dd>Label propagation over an output matrix</dd>
+        <dd>Label propagation over an solutions matrix</dd>
       </dl><dl><dt>
           
           <code><a href="mc_heatmap.html">mc_heatmap()</a></code> 
@@ -350,7 +426,7 @@
           
           <code><a href="om_scatter.html">om_scatter()</a></code> 
         </dt>
-        <dd>Scatter plot output matrix results by minimum and mean p-values</dd>
+        <dd>Scatter plot solutions matrix results by minimum and mean p-values</dd>
       </dl><dl><dt>
           
           <code><a href="ord_reg_p.html">ord_reg_p()</a></code> 
@@ -360,7 +436,12 @@
           
           <code><a href="p_val_select.html">p_val_select()</a></code> 
         </dt>
-        <dd>Select p-values from output matrix</dd>
+        <dd>Select p-values from solutions matrix</dd>
+      </dl><dl><dt>
+          
+          <code><a href="parallel_batch_snf.html">parallel_batch_snf()</a></code> 
+        </dt>
+        <dd>Parallel processing form of batch_snf</dd>
       </dl><dl><dt>
           
           <code><a href="plot_all_cbcl.html">plot_all_cbcl()</a></code> 
@@ -398,9 +479,19 @@
         <dd>Remove NAs from a data_list object</dd>
       </dl><dl><dt>
           
+          <code><a href="resample.html">resample()</a></code> 
+        </dt>
+        <dd>Helper resample function found in ?sample</dd>
+      </dl><dl><dt>
+          
           <code><a href="select_om.html">select_om()</a></code> 
         </dt>
-        <dd>Select specific row_ids from an output matrix</dd>
+        <dd>deprecated function</dd>
+      </dl><dl><dt>
+          
+          <code><a href="settings_matrix_row_fn.html">settings_matrix_row_fn()</a></code> 
+        </dt>
+        <dd>Apply-based function for batch_snf</dd>
       </dl><dl><dt>
           
           <code><a href="snf_step.html">snf_step()</a></code> 
@@ -410,7 +501,7 @@
           
           <code><a href="sol.html">sol()</a></code> 
         </dt>
-        <dd>Summarize an outcome list</dd>
+        <dd>deprecated function</dd>
       </dl><dl><dt>
           
           <code><a href="spectral_clustering.html">spectral_clustering()</a></code> 
@@ -418,9 +509,74 @@
         <dd>Adaptation of SNFtool's spectral clustering function</dd>
       </dl><dl><dt>
           
+          <code><a href="spectral_eigen.html">spectral_eigen()</a></code> 
+        </dt>
+        <dd>Clustering algorithm: Spectral clustering with eigen-gap heuristic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="spectral_eight.html">spectral_eight()</a></code> 
+        </dt>
+        <dd>Clustering algorithm: Spectral clustering for a eight cluster solution</dd>
+      </dl><dl><dt>
+          
+          <code><a href="spectral_five.html">spectral_five()</a></code> 
+        </dt>
+        <dd>Clustering algorithm: Spectral clustering for a five cluster solution</dd>
+      </dl><dl><dt>
+          
+          <code><a href="spectral_four.html">spectral_four()</a></code> 
+        </dt>
+        <dd>Clustering algorithm: Spectral clustering for a four cluster solution</dd>
+      </dl><dl><dt>
+          
+          <code><a href="spectral_rot.html">spectral_rot()</a></code> 
+        </dt>
+        <dd>Clustering algorithm: Spectral clustering with rotation cost heuristic</dd>
+      </dl><dl><dt>
+          
+          <code><a href="spectral_seven.html">spectral_seven()</a></code> 
+        </dt>
+        <dd>Clustering algorithm: Spectral clustering for a seven cluster solution</dd>
+      </dl><dl><dt>
+          
+          <code><a href="spectral_six.html">spectral_six()</a></code> 
+        </dt>
+        <dd>Clustering algorithm: Spectral clustering for a six cluster solution</dd>
+      </dl><dl><dt>
+          
+          <code><a href="spectral_three.html">spectral_three()</a></code> 
+        </dt>
+        <dd>Clustering algorithm: Spectral clustering for a three cluster solution</dd>
+      </dl><dl><dt>
+          
+          <code><a href="spectral_two.html">spectral_two()</a></code> 
+        </dt>
+        <dd>Clustering algorithm: Spectral clustering for a two cluster solution</dd>
+      </dl><dl><dt>
+          
           <code><a href="subs.html">subs()</a></code> 
         </dt>
         <dd>Select all columns of a dataframe starting with a given string prefix.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="subsample_data_list.html">subsample_data_list()</a></code> 
+        </dt>
+        <dd>Create subsamples of a data_list</dd>
+      </dl><dl><dt>
+          
+          <code><a href="subsample_pairwise_aris.html">subsample_pairwise_aris()</a></code> 
+        </dt>
+        <dd>Calculate pairwise adjusted Rand indices across subsamples of data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="summarize_clust_algs_list.html">summarize_clust_algs_list()</a></code> 
+        </dt>
+        <dd>Summarize a clust_algs_list object</dd>
+      </dl><dl><dt>
+          
+          <code><a href="summarize_distance_metrics_list.html">summarize_distance_metrics_list()</a></code> 
+        </dt>
+        <dd>Summarize metrics contained in a distance_metrics_list</dd>
       </dl><dl><dt>
           
           <code><a href="summarize_dl.html">summarize_dl()</a></code> 
@@ -428,14 +584,14 @@
         <dd>Summarize data list</dd>
       </dl><dl><dt>
           
-          <code><a href="summarize_ol.html">summarize_ol()</a></code> 
+          <code><a href="summarize_target_list.html">summarize_target_list()</a></code> 
         </dt>
-        <dd>Summarize outcome list</dd>
+        <dd>Summarize target list</dd>
       </dl><dl><dt>
           
           <code><a href="top_om_per_cluster.html">top_om_per_cluster()</a></code> 
         </dt>
-        <dd>Select the top output matrix rows for each cluster</dd>
+        <dd>Select the top solutions matrix rows for each cluster</dd>
       </dl><dl><dt>
           
           <code><a href="train_test_assign.html">train_test_assign()</a></code> 

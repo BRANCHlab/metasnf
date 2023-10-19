@@ -41,6 +41,7 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
     <a class="dropdown-item" href="../articles/metasnf-vignette.html">An example metasnf pipeline</a>
   </div>
 </li>
@@ -184,7 +185,6 @@ blue)</li>
 <span><span class="co">#&gt; 3 NDAR_INV0IZ157F8    2.621    2.295    2.530    2.961</span></span>
 <span><span class="co">#&gt; 4 NDAR_INV0J4PYA5F    2.599    2.670    2.676    2.938</span></span>
 <span><span class="co">#&gt; 5 NDAR_INV0OYE291Q    2.526    2.761    2.829    2.986</span></span></code></pre></div>
-<p>Notice</p>
 <p>The first column <code>subjectkey</code> is the unique identifier
 (UID) for all subjects in the ABCD study. This will also be the required
 UID for your data, but don’t worry about that just yet.</p>
@@ -282,12 +282,12 @@ I’ll set aside the anxiety and depression dataframes for now and just
 use the other dataframes as clustering inputs.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    old_uid <span class="op">=</span> <span class="st">"patient"</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span></code></pre></div>
 <p>Building the <code>data_list</code> may be the most laborious part of
@@ -297,10 +297,10 @@ following elements:</p>
 <li>The actual dataframe</li>
 <li>A name for the dataframe (string)</li>
 <li>A name for the <em>domain</em> of the dataframe (string)</li>
-<li>The type of variable stored in the dataframe (options are numeric,
-categorical, and mixed)</li>
+<li>The type of variable stored in the dataframe (options are
+continuous, categorical, and mixed)</li>
 </ol>
-<p>Finally, there’s an argument for the <code>old_uid</code> (the column
+<p>Finally, there’s an argument for the <code>uid</code> (the column
 name that currently uniquely identifies all the subjects in your
 data).</p>
 <p>Behind the scenes, this function is building a nested list that keeps
@@ -322,121 +322,152 @@ The <code>mice</code> package in R is nice for this.</p>
 the <code>summarize_dl</code> function:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                    name    type       domain length width</span></span>
-<span><span class="co">#&gt; 1    cortical_thickness numeric neuroimaging    100   152</span></span>
-<span><span class="co">#&gt; 2 cortical_surface_area numeric neuroimaging    100   152</span></span>
-<span><span class="co">#&gt; 3    subcortical_volume numeric neuroimaging    100    31</span></span>
-<span><span class="co">#&gt; 4      household_income numeric demographics    100     2</span></span>
-<span><span class="co">#&gt; 5       pubertal_status numeric demographics    100     2</span></span></code></pre></div>
+<span><span class="co">#&gt;                    name       type       domain length width</span></span>
+<span><span class="co">#&gt; 1    cortical_thickness continuous neuroimaging    100   152</span></span>
+<span><span class="co">#&gt; 2 cortical_surface_area continuous neuroimaging    100   152</span></span>
+<span><span class="co">#&gt; 3    subcortical_volume continuous neuroimaging    100    31</span></span>
+<span><span class="co">#&gt; 4      household_income continuous demographics    100     2</span></span>
+<span><span class="co">#&gt; 5       pubertal_status continuous demographics    100     2</span></span></code></pre></div>
 <p>Each input dataframe now has the same 100 subjects with complete
 data.</p>
 </div>
 <div class="section level2">
-<h2 id="generating-the-design-matrix">Generating the design matrix<a class="anchor" aria-label="anchor" href="#generating-the-design-matrix"></a>
+<h2 id="generating-the-settings-matrix">Generating the settings matrix<a class="anchor" aria-label="anchor" href="#generating-the-settings-matrix"></a>
 </h2>
-<p>The <code>design_matrix</code> stores all the information about the
+<p>The <code>settings_matrix</code> stores all the information about the
 settings we’d like to use for each of our SNF runs. Calling the
-<code>generate_design_matrix</code> function with a specified number of
-rows will automatically build a randomly populated
-<code>design_matrix</code>.</p>
+<code>generate_settings_matrix</code> function with a specified number
+of rows will automatically build a randomly populated
+<code>settings_matrix</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">design_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_design_matrix.html">generate_design_matrix</a></span><span class="op">(</span><span class="va">data_list</span>, nrow <span class="op">=</span> <span class="fl">30</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span><span class="va">data_list</span>, nrow <span class="op">=</span> <span class="fl">30</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span>
 <span></span>
-<span><span class="va">design_matrix</span></span>
-<span><span class="co">#&gt;    row_id inc_cortical_thickness inc_cortical_surface_area</span></span>
-<span><span class="co">#&gt; 1       1                      1                         0</span></span>
-<span><span class="co">#&gt; 2       2                      1                         1</span></span>
-<span><span class="co">#&gt; 3       3                      1                         1</span></span>
-<span><span class="co">#&gt; 4       4                      1                         1</span></span>
-<span><span class="co">#&gt; 5       5                      1                         1</span></span>
-<span><span class="co">#&gt; 6       6                      1                         1</span></span>
-<span><span class="co">#&gt; 7       7                      1                         1</span></span>
-<span><span class="co">#&gt; 8       8                      1                         1</span></span>
-<span><span class="co">#&gt; 9       9                      1                         1</span></span>
-<span><span class="co">#&gt; 10     10                      1                         1</span></span>
-<span><span class="co">#&gt; 11     11                      1                         1</span></span>
-<span><span class="co">#&gt; 12     12                      1                         1</span></span>
-<span><span class="co">#&gt; 13     13                      1                         1</span></span>
-<span><span class="co">#&gt; 14     14                      1                         1</span></span>
-<span><span class="co">#&gt; 15     15                      1                         1</span></span>
-<span><span class="co">#&gt; 16     16                      0                         1</span></span>
-<span><span class="co">#&gt; 17     17                      1                         1</span></span>
-<span><span class="co">#&gt; 18     18                      1                         1</span></span>
-<span><span class="co">#&gt; 19     19                      1                         1</span></span>
-<span><span class="co">#&gt; 20     20                      1                         1</span></span>
-<span><span class="co">#&gt; 21     21                      1                         1</span></span>
-<span><span class="co">#&gt; 22     22                      1                         1</span></span>
-<span><span class="co">#&gt; 23     23                      1                         1</span></span>
-<span><span class="co">#&gt; 24     24                      1                         1</span></span>
-<span><span class="co">#&gt; 25     25                      1                         1</span></span>
-<span><span class="co">#&gt; 26     26                      1                         1</span></span>
-<span><span class="co">#&gt; 27     27                      1                         1</span></span>
-<span><span class="co">#&gt; 28     28                      1                         1</span></span>
-<span><span class="co">#&gt; 29     29                      1                         1</span></span>
-<span><span class="co">#&gt; 30     30                      1                         1</span></span>
-<span><span class="co">#&gt;    inc_subcortical_volume inc_household_income inc_pubertal_status snf_scheme</span></span>
-<span><span class="co">#&gt; 1                       1                    0                   1          2</span></span>
-<span><span class="co">#&gt; 2                       1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 3                       1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 4                       1                    1                   1          2</span></span>
-<span><span class="co">#&gt; 5                       1                    1                   1          2</span></span>
-<span><span class="co">#&gt; 6                       1                    1                   0          1</span></span>
-<span><span class="co">#&gt; 7                       1                    1                   0          3</span></span>
-<span><span class="co">#&gt; 8                       1                    1                   1          2</span></span>
-<span><span class="co">#&gt; 9                       1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 10                      1                    1                   1          2</span></span>
-<span><span class="co">#&gt; 11                      1                    1                   1          3</span></span>
-<span><span class="co">#&gt; 12                      1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 13                      1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 14                      1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 15                      1                    1                   1          2</span></span>
-<span><span class="co">#&gt; 16                      1                    0                   1          1</span></span>
-<span><span class="co">#&gt; 17                      1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 18                      1                    1                   1          3</span></span>
-<span><span class="co">#&gt; 19                      1                    1                   1          2</span></span>
-<span><span class="co">#&gt; 20                      1                    1                   1          3</span></span>
-<span><span class="co">#&gt; 21                      1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 22                      1                    1                   1          2</span></span>
-<span><span class="co">#&gt; 23                      1                    1                   1          2</span></span>
-<span><span class="co">#&gt; 24                      1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 25                      1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 26                      1                    1                   1          2</span></span>
-<span><span class="co">#&gt; 27                      1                    0                   1          2</span></span>
-<span><span class="co">#&gt; 28                      1                    0                   1          3</span></span>
-<span><span class="co">#&gt; 29                      1                    1                   0          2</span></span>
-<span><span class="co">#&gt; 30                      1                    1                   1          1</span></span>
-<span><span class="co">#&gt;    eigen_or_rot  K alpha</span></span>
-<span><span class="co">#&gt; 1             2 25   0.8</span></span>
-<span><span class="co">#&gt; 2             1 12   0.6</span></span>
-<span><span class="co">#&gt; 3             2 15   0.9</span></span>
-<span><span class="co">#&gt; 4             1 23   0.9</span></span>
-<span><span class="co">#&gt; 5             2 10   0.9</span></span>
-<span><span class="co">#&gt; 6             2 19   0.9</span></span>
-<span><span class="co">#&gt; 7             1 23   0.6</span></span>
-<span><span class="co">#&gt; 8             2 12   0.9</span></span>
-<span><span class="co">#&gt; 9             2 20   0.7</span></span>
-<span><span class="co">#&gt; 10            2 20   0.7</span></span>
-<span><span class="co">#&gt; 11            2 24   1.0</span></span>
-<span><span class="co">#&gt; 12            2 10   0.8</span></span>
-<span><span class="co">#&gt; 13            1 29   0.6</span></span>
-<span><span class="co">#&gt; 14            2 30   0.8</span></span>
-<span><span class="co">#&gt; 15            1 29   0.9</span></span>
-<span><span class="co">#&gt; 16            1 25   0.9</span></span>
-<span><span class="co">#&gt; 17            2 14   0.6</span></span>
-<span><span class="co">#&gt; 18            2 30   1.0</span></span>
-<span><span class="co">#&gt; 19            2 11   0.7</span></span>
-<span><span class="co">#&gt; 20            1 16   0.9</span></span>
-<span><span class="co">#&gt; 21            1 16   0.6</span></span>
-<span><span class="co">#&gt; 22            2 23   1.0</span></span>
-<span><span class="co">#&gt; 23            2 29   0.7</span></span>
-<span><span class="co">#&gt; 24            2 19   0.7</span></span>
-<span><span class="co">#&gt; 25            1 27   0.7</span></span>
-<span><span class="co">#&gt; 26            1 28   1.0</span></span>
-<span><span class="co">#&gt; 27            1 30   0.6</span></span>
-<span><span class="co">#&gt; 28            2 29   0.9</span></span>
-<span><span class="co">#&gt; 29            1 23   0.9</span></span>
-<span><span class="co">#&gt; 30            2 13   0.9</span></span></code></pre></div>
+<span><span class="va">settings_matrix</span></span>
+<span><span class="co">#&gt;    row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist</span></span>
+<span><span class="co">#&gt; 1       1   0.5 75 20          2         1         1         1        1</span></span>
+<span><span class="co">#&gt; 2       2   0.5 88 20          2         2         1         1        1</span></span>
+<span><span class="co">#&gt; 3       3   0.7 31 20          3         1         1         1        1</span></span>
+<span><span class="co">#&gt; 4       4   0.6 32 20          1         1         1         1        1</span></span>
+<span><span class="co">#&gt; 5       5   0.8 98 20          1         2         1         1        1</span></span>
+<span><span class="co">#&gt; 6       6   0.6 34 20          3         2         1         1        1</span></span>
+<span><span class="co">#&gt; 7       7   0.3 81 20          2         2         1         1        1</span></span>
+<span><span class="co">#&gt; 8       8   0.6 64 20          1         1         1         1        1</span></span>
+<span><span class="co">#&gt; 9       9   0.8 17 20          3         1         1         1        1</span></span>
+<span><span class="co">#&gt; 10     10   0.6 71 20          1         1         1         1        1</span></span>
+<span><span class="co">#&gt; 11     11   0.8 82 20          2         1         1         1        1</span></span>
+<span><span class="co">#&gt; 12     12   0.6 90 20          3         2         1         1        1</span></span>
+<span><span class="co">#&gt; 13     13   0.3 11 20          3         1         1         1        1</span></span>
+<span><span class="co">#&gt; 14     14   0.8 51 20          1         1         1         1        1</span></span>
+<span><span class="co">#&gt; 15     15   0.4 91 20          1         1         1         1        1</span></span>
+<span><span class="co">#&gt; 16     16   0.4 30 20          1         1         1         1        1</span></span>
+<span><span class="co">#&gt; 17     17   0.7 71 20          1         1         1         1        1</span></span>
+<span><span class="co">#&gt; 18     18   0.6 99 20          2         2         1         1        1</span></span>
+<span><span class="co">#&gt; 19     19   0.4 52 20          1         1         1         1        1</span></span>
+<span><span class="co">#&gt; 20     20   0.8 20 20          2         2         1         1        1</span></span>
+<span><span class="co">#&gt; 21     21   0.4 17 20          3         1         1         1        1</span></span>
+<span><span class="co">#&gt; 22     22   0.3 53 20          2         2         1         1        1</span></span>
+<span><span class="co">#&gt; 23     23   0.3 27 20          2         1         1         1        1</span></span>
+<span><span class="co">#&gt; 24     24   0.6 74 20          3         2         1         1        1</span></span>
+<span><span class="co">#&gt; 25     25   0.4 40 20          2         2         1         1        1</span></span>
+<span><span class="co">#&gt; 26     26   0.4 71 20          1         1         1         1        1</span></span>
+<span><span class="co">#&gt; 27     27   0.7 99 20          1         2         1         1        1</span></span>
+<span><span class="co">#&gt; 28     28   0.8 50 20          1         2         1         1        1</span></span>
+<span><span class="co">#&gt; 29     29   0.3 69 20          3         1         1         1        1</span></span>
+<span><span class="co">#&gt; 30     30   0.4 48 20          1         2         1         1        1</span></span>
+<span><span class="co">#&gt;    cat_dist mix_dist input_wt domain_wt inc_cortical_thickness</span></span>
+<span><span class="co">#&gt; 1         1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 2         1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 3         1        1        1         1                      0</span></span>
+<span><span class="co">#&gt; 4         1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 5         1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 6         1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 7         1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 8         1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 9         1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 10        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 11        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 12        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 13        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 14        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 15        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 16        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 17        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 18        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 19        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 20        1        1        1         1                      0</span></span>
+<span><span class="co">#&gt; 21        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 22        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 23        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 24        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 25        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 26        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 27        1        1        1         1                      0</span></span>
+<span><span class="co">#&gt; 28        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt; 29        1        1        1         1                      0</span></span>
+<span><span class="co">#&gt; 30        1        1        1         1                      1</span></span>
+<span><span class="co">#&gt;    inc_cortical_surface_area inc_subcortical_volume inc_household_income</span></span>
+<span><span class="co">#&gt; 1                          0                      1                    0</span></span>
+<span><span class="co">#&gt; 2                          1                      1                    1</span></span>
+<span><span class="co">#&gt; 3                          1                      1                    1</span></span>
+<span><span class="co">#&gt; 4                          1                      1                    1</span></span>
+<span><span class="co">#&gt; 5                          1                      0                    1</span></span>
+<span><span class="co">#&gt; 6                          1                      1                    1</span></span>
+<span><span class="co">#&gt; 7                          1                      1                    1</span></span>
+<span><span class="co">#&gt; 8                          1                      1                    1</span></span>
+<span><span class="co">#&gt; 9                          1                      1                    1</span></span>
+<span><span class="co">#&gt; 10                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 11                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 12                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 13                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 14                         1                      0                    1</span></span>
+<span><span class="co">#&gt; 15                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 16                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 17                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 18                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 19                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 20                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 21                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 22                         1                      0                    0</span></span>
+<span><span class="co">#&gt; 23                         0                      1                    1</span></span>
+<span><span class="co">#&gt; 24                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 25                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 26                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 27                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 28                         1                      1                    0</span></span>
+<span><span class="co">#&gt; 29                         1                      1                    1</span></span>
+<span><span class="co">#&gt; 30                         1                      1                    1</span></span>
+<span><span class="co">#&gt;    inc_pubertal_status</span></span>
+<span><span class="co">#&gt; 1                    1</span></span>
+<span><span class="co">#&gt; 2                    1</span></span>
+<span><span class="co">#&gt; 3                    1</span></span>
+<span><span class="co">#&gt; 4                    1</span></span>
+<span><span class="co">#&gt; 5                    1</span></span>
+<span><span class="co">#&gt; 6                    1</span></span>
+<span><span class="co">#&gt; 7                    1</span></span>
+<span><span class="co">#&gt; 8                    1</span></span>
+<span><span class="co">#&gt; 9                    1</span></span>
+<span><span class="co">#&gt; 10                   1</span></span>
+<span><span class="co">#&gt; 11                   1</span></span>
+<span><span class="co">#&gt; 12                   1</span></span>
+<span><span class="co">#&gt; 13                   1</span></span>
+<span><span class="co">#&gt; 14                   1</span></span>
+<span><span class="co">#&gt; 15                   1</span></span>
+<span><span class="co">#&gt; 16                   1</span></span>
+<span><span class="co">#&gt; 17                   1</span></span>
+<span><span class="co">#&gt; 18                   1</span></span>
+<span><span class="co">#&gt; 19                   1</span></span>
+<span><span class="co">#&gt; 20                   1</span></span>
+<span><span class="co">#&gt; 21                   1</span></span>
+<span><span class="co">#&gt; 22                   1</span></span>
+<span><span class="co">#&gt; 23                   1</span></span>
+<span><span class="co">#&gt; 24                   1</span></span>
+<span><span class="co">#&gt; 25                   1</span></span>
+<span><span class="co">#&gt; 26                   1</span></span>
+<span><span class="co">#&gt; 27                   1</span></span>
+<span><span class="co">#&gt; 28                   1</span></span>
+<span><span class="co">#&gt; 29                   1</span></span>
+<span><span class="co">#&gt; 30                   1</span></span></code></pre></div>
 <p>The columns are:</p>
 <ul>
 <li>
@@ -459,152 +490,120 @@ network</li>
 alpha in the SNFtool code examples, and sigma in the SNFtool source
 code, this is a hyperparameter for affinity matrix generation</li>
 </ul>
-<p><code>generate_design_matrix</code> randomly populates these columns
-and ensures that no generated rows are identical. Setting the optional
-<code>seed</code> parameter (which will affect the seed of your entire R
-session) ensures that the same design matrix is generated each time we
-run the code.</p>
+<p><code>generate_settings_matrix</code> randomly populates these
+columns and ensures that no generated rows are identical. Setting the
+optional <code>seed</code> parameter (which will affect the seed of your
+entire R session) ensures that the same settings matrix is generated
+each time we run the code.</p>
 <p>While we end up with a random set of settings here, there is nothing
-wrong with manually altering the design matrix to suit your needs. For
+wrong with manually altering the settings matrix to suit your needs. For
 example, if you wanted to know how much of a difference one input
 dataframe made, you could ensure that half of the rows included this
 input dataframe and the other half didn’t. You can also add random rows
 to an already existing dataframe using the
-<code>add_design_matrix_rows</code> function.</p>
+<code>add_settings_matrix_rows</code> function.</p>
 </div>
 <div class="section level2">
-<h2 id="executing-the-design-matrix">Executing the design matrix<a class="anchor" aria-label="anchor" href="#executing-the-design-matrix"></a>
+<h2 id="executing-the-settings-matrix">Executing the settings matrix<a class="anchor" aria-label="anchor" href="#executing-the-settings-matrix"></a>
 </h2>
-<p>The <code>execute_design_matrix</code> function integrates the data
-in the <code>data_list</code> using each of the sets of settings
-contained in the <code>design_matrix</code>. The resulting structure is
-an <code>output_matrix</code> which is an extension of the
-<code>design_matrix</code> that contains columns specifying which
+<p>The <code>batch_snf</code> function integrates the data in the
+<code>data_list</code> using each of the sets of settings contained in
+the <code>settings_matrix</code>. The resulting structure is an
+<code>solutions_matrix</code> which is an extension of the
+<code>settings_matrix</code> that contains columns specifying which
 cluster each subject was assigned for the corresponding
-<code>design_matrix</code> row.</p>
+<code>settings_matrix</code> row.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">output_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/execute_design_matrix.html">execute_design_matrix</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">design_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/30 | Time remaining: 8 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/30 | Time remaining: 8 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/30 | Time remaining: 8 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/30 | Time remaining: 8 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/30 | Time remaining: 8 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 6/30 | Time remaining: 8 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 7/30 | Time remaining: 7 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/30 | Time remaining: 7 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 9/30 | Time remaining: 7 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 10/30 | Time remaining: 7 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 11/30 | Time remaining: 6 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 12/30 | Time remaining: 6 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 13/30 | Time remaining: 6 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 14/30 | Time remaining: 5 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 15/30 | Time remaining: 5 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 16/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 17/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 18/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 19/30 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 20/30 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 21/30 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 22/30 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 23/30 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 24/30 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 25/30 | Time remaining: 2 seconds"</span></span>
+<code class="sourceCode R"><span></span>
+<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Row: 1/30 | Time remaining: 5 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/30 | Time remaining: 5 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/30 | Time remaining: 5 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 4/30 | Time remaining: 5 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 5/30 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 6/30 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 7/30 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 8/30 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 9/30 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 10/30 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 11/30 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 12/30 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 13/30 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 14/30 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 15/30 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 16/30 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 17/30 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 18/30 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 19/30 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 20/30 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 21/30 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 22/30 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 23/30 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 24/30 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 25/30 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 26/30 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 27/30 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 28/30 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 28/30 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 29/30 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 30/30 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 9.949 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 5 seconds."</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">output_matrix</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span></span>
-<span><span class="co">#&gt;  [1] "row_id"                    "inc_cortical_thickness"   </span></span>
-<span><span class="co">#&gt;  [3] "inc_cortical_surface_area" "inc_subcortical_volume"   </span></span>
-<span><span class="co">#&gt;  [5] "inc_household_income"      "inc_pubertal_status"      </span></span>
-<span><span class="co">#&gt;  [7] "snf_scheme"                "eigen_or_rot"             </span></span>
-<span><span class="co">#&gt;  [9] "K"                         "alpha"                    </span></span>
-<span><span class="co">#&gt; [11] "nclust"                    "subject_NDAR_INV0567T2Y9" </span></span>
-<span><span class="co">#&gt; [13] "subject_NDAR_INV0IZ157F8"  "subject_NDAR_INV0J4PYA5F" </span></span>
-<span><span class="co">#&gt; [15] "subject_NDAR_INV10OMKVLE"  "subject_NDAR_INV15FPCW4O" </span></span>
-<span><span class="co">#&gt; [17] "subject_NDAR_INV19NB4RJK"  "subject_NDAR_INV1HLGR738" </span></span>
-<span><span class="co">#&gt; [19] "subject_NDAR_INV1KR0EZFU"  "subject_NDAR_INV1L3Y9EOP"</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span></span>
+<span><span class="co">#&gt;  [1] "row_id"                    "alpha"                    </span></span>
+<span><span class="co">#&gt;  [3] "k"                         "t"                        </span></span>
+<span><span class="co">#&gt;  [5] "snf_scheme"                "clust_alg"                </span></span>
+<span><span class="co">#&gt;  [7] "cont_dist"                 "disc_dist"                </span></span>
+<span><span class="co">#&gt;  [9] "ord_dist"                  "cat_dist"                 </span></span>
+<span><span class="co">#&gt; [11] "mix_dist"                  "input_wt"                 </span></span>
+<span><span class="co">#&gt; [13] "domain_wt"                 "inc_cortical_thickness"   </span></span>
+<span><span class="co">#&gt; [15] "inc_cortical_surface_area" "inc_subcortical_volume"   </span></span>
+<span><span class="co">#&gt; [17] "inc_household_income"      "inc_pubertal_status"      </span></span>
+<span><span class="co">#&gt; [19] "nclust"                    "subject_NDAR_INV0567T2Y9" </span></span>
+<span><span class="co">#&gt; [21] "subject_NDAR_INV0IZ157F8"  "subject_NDAR_INV0J4PYA5F" </span></span>
+<span><span class="co">#&gt; [23] "subject_NDAR_INV10OMKVLE"  "subject_NDAR_INV15FPCW4O" </span></span>
+<span><span class="co">#&gt; [25] "subject_NDAR_INV19NB4RJK"  "subject_NDAR_INV1HLGR738" </span></span>
+<span><span class="co">#&gt; [27] "subject_NDAR_INV1KR0EZFU"  "subject_NDAR_INV1L3Y9EOP" </span></span>
+<span><span class="co">#&gt; [29] "subject_NDAR_INV1TCP5GNM"  "subject_NDAR_INV1ZHRDJ6B"</span></span></code></pre></div>
 <p>It goes on like this for some time.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">output_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span></span>
-<span><span class="co">#&gt;   row_id inc_cortical_thickness inc_cortical_surface_area</span></span>
-<span><span class="co">#&gt; 1      1                      1                         0</span></span>
-<span><span class="co">#&gt; 2      2                      1                         1</span></span>
-<span><span class="co">#&gt; 3      3                      1                         1</span></span>
-<span><span class="co">#&gt; 4      4                      1                         1</span></span>
-<span><span class="co">#&gt; 5      5                      1                         1</span></span>
-<span><span class="co">#&gt;   inc_subcortical_volume inc_household_income inc_pubertal_status snf_scheme</span></span>
-<span><span class="co">#&gt; 1                      1                    0                   1          2</span></span>
-<span><span class="co">#&gt; 2                      1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 3                      1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 4                      1                    1                   1          2</span></span>
-<span><span class="co">#&gt; 5                      1                    1                   1          2</span></span>
-<span><span class="co">#&gt;   eigen_or_rot  K alpha nclust subject_NDAR_INV0567T2Y9</span></span>
-<span><span class="co">#&gt; 1            2 25   0.8      5                        2</span></span>
-<span><span class="co">#&gt; 2            1 12   0.6      2                        2</span></span>
-<span><span class="co">#&gt; 3            2 15   0.9      2                        1</span></span>
-<span><span class="co">#&gt; 4            1 23   0.9      2                        1</span></span>
-<span><span class="co">#&gt; 5            2 10   0.9      2                        1</span></span>
-<span><span class="co">#&gt;   subject_NDAR_INV0IZ157F8 subject_NDAR_INV0J4PYA5F subject_NDAR_INV10OMKVLE</span></span>
-<span><span class="co">#&gt; 1                        5                        4                        1</span></span>
-<span><span class="co">#&gt; 2                        1                        2                        1</span></span>
-<span><span class="co">#&gt; 3                        1                        2                        1</span></span>
-<span><span class="co">#&gt; 4                        1                        2                        1</span></span>
-<span><span class="co">#&gt; 5                        1                        2                        1</span></span>
-<span><span class="co">#&gt;   subject_NDAR_INV15FPCW4O subject_NDAR_INV19NB4RJK subject_NDAR_INV1HLGR738</span></span>
-<span><span class="co">#&gt; 1                        1                        3                        3</span></span>
-<span><span class="co">#&gt; 2                        2                        2                        2</span></span>
-<span><span class="co">#&gt; 3                        2                        2                        2</span></span>
-<span><span class="co">#&gt; 4                        2                        1                        1</span></span>
-<span><span class="co">#&gt; 5                        2                        2                        1</span></span>
-<span><span class="co">#&gt;   subject_NDAR_INV1KR0EZFU subject_NDAR_INV1L3Y9EOP</span></span>
-<span><span class="co">#&gt; 1                        3                        1</span></span>
-<span><span class="co">#&gt; 2                        1                        2</span></span>
-<span><span class="co">#&gt; 3                        1                        2</span></span>
-<span><span class="co">#&gt; 4                        1                        2</span></span>
-<span><span class="co">#&gt; 5                        1                        2</span></span></code></pre></div>
 <p>Just like that, the clustering is done!</p>
 <p><em>Note: You can also enable parallel processing to run the
-<code>execute_design_matrix</code> function faster on machines with
-multiple CPU cores. See the “processes” parameter in
-<code><a href="../reference/execute_design_matrix.html">?execute_design_matrix</a></code>.</em></p>
+<code>batch_snf</code> function faster on machines with multiple CPU
+cores. See the “processes” parameter in
+<code><a href="../reference/batch_snf.html">?batch_snf</a></code>.</em></p>
 </div>
 <div class="section level2">
 <h2 id="picking-a-solution-1-examining-meta-clusters">Picking a solution #1: examining meta clusters<a class="anchor" aria-label="anchor" href="#picking-a-solution-1-examining-meta-clusters"></a>
 </h2>
 <p>We now have a group of cluster solutions stored in an
-<code>output_matrix</code>. Proposing tens or hundreds (or thousands) of
-clustering solutions in a research paper doesn’t seem to be fashionable
-right now, so we will need to pick a solution to move forward with. In
-this section, we’ll take a look at the cluster-of-clusters approach to
-picking our favourite solution to move forward with. I believe this
-approach is best for truly exploratory clustering (read: when the way in
-which you prefer to choose between two clustering solutions is through
-ambiguous vibes).</p>
+<code>solutions_matrix</code>. Proposing tens or hundreds (or thousands)
+of clustering solutions in a research paper doesn’t seem to be
+fashionable right now, so we will need to pick a solution to move
+forward with. In this section, we’ll take a look at the
+cluster-of-clusters approach to picking our favourite solution to move
+forward with. I believe this approach is best for truly exploratory
+clustering (read: when the way in which you prefer to choose between two
+clustering solutions is through ambiguous vibes).</p>
 <p>The first step is to calculate the <a href="https://en.wikipedia.org/wiki/Rand_index" class="external-link">adjusted Rand index</a>
 (ARI) between each pair of cluster solutions. This metric is tells us
 how similar the solutions are to each other, thereby allowing us to find
 clusters of cluster solutions.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>output_matrix_aris <span class="ot">&lt;-</span> <span class="fu">calc_om_aris</span>(output_matrix)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Please wait - this may take a minute."</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fl">22.98851</span>% completed...</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fl">45.97701</span>% completed...</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fl">68.96552</span>% completed...</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fl">91.95402</span>% completed...</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(output_matrix_aris)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 30 30</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>solutions_matrix_aris <span class="ot">&lt;-</span> <span class="fu">calc_om_aris</span>(solutions_matrix)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Please wait - this may take a minute."</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fl">22.98851</span>% completed...</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fl">45.97701</span>% completed...</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fl">68.96552</span>% completed...</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fl">91.95402</span>% completed...</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(solutions_matrix_aris)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 30 30</span></span></code></pre></div>
 <p>We can visualize the resulting inter-cluster similarities with a
 heatmap:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ari_heatmap.html">ari_heatmap</a></span><span class="op">(</span><span class="va">output_matrix_aris</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ari_heatmap.html">ari_heatmap</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span><span class="op">)</span></span></code></pre></div>
 <p>You can optionally save your heatmap by specifying a path with the
 <code>save</code> parameter (e.g.,
-<code>ari_heatmap(output_matrix_aris, save = "./ari_heatmap.png")</code>).</p>
+<code>ari_heatmap(solutions_matrix_aris, save = "./ari_heatmap.png")</code>).</p>
 <div class="figure">
 <img src="ari_heatmap.png" width="400" alt=""><p class="caption">.</p>
 </div>
@@ -616,74 +615,74 @@ the similarity between any clustering solution and itself. Agglomerative
 hierarchical clustering is being applied to these solutions by default
 (thank you, <code>pheatmap</code> package) so the orders of the
 clustering solutions here do not exactly line up with the order of the
-clustering solutions present in the design matrix.</p>
+clustering solutions present in the settings matrix.</p>
 <p>You can examine the un-clustered heatmap like this:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ari_heatmap.html">ari_heatmap</a></span><span class="op">(</span></span>
-<span>    <span class="va">output_matrix_aris</span>,</span>
+<span>    <span class="va">solutions_matrix_aris</span>,</span>
 <span>    cluster_rows <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    cluster_cols <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <center>
 <img src="ari_heatmap_unclustered2.png" width="400">
 </center>
-<p>And there’s an option to hide the corresponding design matrix
+<p>And there’s an option to hide the corresponding settings matrix
 rows:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ari_heatmap.html">ari_heatmap</a></span><span class="op">(</span><span class="va">output_matrix_aris</span>, hide_ids <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ari_heatmap.html">ari_heatmap</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span>, hide_ids <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>The pattern here appears to be a bit of a common theme with the
-randomly generated design matrix, owing to the solutions between SNF
+randomly generated settings matrix, owing to the solutions between SNF
 schemes having significantly more variability than the solutions within
 SNF schemes (and thus producing 3 rough meta clusters). If you’d like to
 try and expand the space of clustering solutions produced even further,
-consider manually constructing a different design matrix. Later updates
-of this package will focus on customizing the design matrix a little
-easier (e.g., choosing which design matrix parameters stay fixed or what
-possible values other parameters can take on).</p>
+consider manually constructing a different settings matrix. Later
+updates of this package will focus on customizing the settings matrix a
+little easier (e.g., choosing which settings matrix parameters stay
+fixed or what possible values other parameters can take on).</p>
 <p>If you see something interesting in your heatmap, you may be curious
-to know how that corresponds to the settings that were in your design
+to know how that corresponds to the settings that were in your settings
 matrix.</p>
-<p>I recommend visualizing the design matrix with yet another
+<p>I recommend visualizing the settings matrix with yet another
 heatmap:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/dm_heatmap.html">dm_heatmap</a></span><span class="op">(</span><span class="va">design_matrix</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/dm_heatmap.html">dm_heatmap</a></span><span class="op">(</span><span class="va">settings_matrix</span><span class="op">)</span></span></code></pre></div>
 <center>
 <img src="dm_heatmap.png" width="400">
 </center>
 <p>The variables beginning with “inc” show when variables were (blue) or
 were not (red) randomly dropped out. With only 30 solutions examined and
 5 input dataframes, the dropout may seem a little conservative. As
-stated above, a future goal is to have the design matrix yield diverse
+stated above, a future goal is to have the settings matrix yield diverse
 clustering solutions a little more efficiently, which will likely rely
 on more aggressive input dataframe dropout (or variable scaling).</p>
 <p>You can use the solution order in the clustered ARI heatmap to
-reorder the design matrix heatmap:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">om_ari_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pheatmap_order.html">get_pheatmap_order</a></span><span class="op">(</span><span class="va">output_matrix_aris</span><span class="op">)</span></span></code></pre></div>
+reorder the settings matrix heatmap:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">om_ari_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pheatmap_order.html">get_pheatmap_order</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span><span class="op">)</span></span></code></pre></div>
 <p>The order is just a vector of numbers…</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">om_ari_order</span></span>
-<span><span class="co">#&gt;  [1] 22 27  1 16 20 11 18  8  5 19 23  4 10 12  2 17 21  3 30 13 25 14  9 24 28</span></span>
-<span><span class="co">#&gt; [26]  6  7 29 15 26</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] 17 12 24 27  5 18 14  2  8 10 15 20 16 25  4  7 19 30 26 29 22 23 11  3  6</span></span>
+<span><span class="co">#&gt; [26] 13  9 21  1 28</span></span></code></pre></div>
 <p>… which can be passed into the <code>dm_heatmap</code> function:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/dm_heatmap.html">dm_heatmap</a></span><span class="op">(</span><span class="va">design_matrix</span>, order <span class="op">=</span> <span class="va">om_ari_order</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/dm_heatmap.html">dm_heatmap</a></span><span class="op">(</span><span class="va">settings_matrix</span>, order <span class="op">=</span> <span class="va">om_ari_order</span><span class="op">)</span></span></code></pre></div>
 <center>
 <img src="dm_heatmap_ordered.png" width="400">
 </center>
 <p>Maybe you’ll see something interesting!</p>
 <p>If there’s a row that interest you (say, row 5), this format may be
 more useful for your subsequent analyses:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cluster_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_cluster_df.html">get_cluster_df</a></span><span class="op">(</span><span class="va">output_matrix</span><span class="op">[</span><span class="fl">5</span>, <span class="op">]</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cluster_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_cluster_df.html">get_cluster_df</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">[</span><span class="fl">5</span>, <span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cluster_df</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   cluster               subjectkey</span></span>
 <span><span class="co">#&gt; 2       1 subject_NDAR_INV0567T2Y9</span></span>
-<span><span class="co">#&gt; 3       1 subject_NDAR_INV0IZ157F8</span></span>
+<span><span class="co">#&gt; 3       3 subject_NDAR_INV0IZ157F8</span></span>
 <span><span class="co">#&gt; 4       2 subject_NDAR_INV0J4PYA5F</span></span>
-<span><span class="co">#&gt; 5       1 subject_NDAR_INV10OMKVLE</span></span>
+<span><span class="co">#&gt; 5       3 subject_NDAR_INV10OMKVLE</span></span>
 <span><span class="co">#&gt; 6       2 subject_NDAR_INV15FPCW4O</span></span>
-<span><span class="co">#&gt; 7       2 subject_NDAR_INV19NB4RJK</span></span></code></pre></div>
+<span><span class="co">#&gt; 7       3 subject_NDAR_INV19NB4RJK</span></span></code></pre></div>
 <p>From there, you’re on your own (until the next vignette, maybe?)</p>
 </div>
 <div class="section level2">
@@ -697,173 +696,178 @@ your results to avoid this issue.</strong></p>
 how useful a clustering solution will be for your purposes in advance,
 that makes the cluster selection process much less arbitrary.</p>
 <p>There are many ways to go about doing this, but this package offers
-one way through the <code>outcome_list</code> structure. The
-<code>outcome_list</code> contains dataframes what we can examine our
-clustering results over through linear regression (numeric data),
+one way through the <code>target_list</code> structure. The
+<code>target_list</code> contains dataframes what we can examine our
+clustering results over through linear regression (continuous data),
 ordinal regression (ordinal data), or the Chi-squared test (categorical
 data).</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">outcome_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_outcome_list.html">generate_outcome_list</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">target_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_target_list.html">generate_target_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_colour</span>, <span class="st">"colour"</span>, <span class="st">"categorical"</span><span class="op">)</span>,</span>
-<span>    old_uid <span class="op">=</span> <span class="st">"patient"</span></span>
+<span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/summarize_ol.html">summarize_ol</a></span><span class="op">(</span><span class="va">outcome_list</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/summarize_target_list.html">summarize_target_list</a></span><span class="op">(</span><span class="va">target_list</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        name        type length width</span></span>
 <span><span class="co">#&gt; 1   anxiety     ordinal    275     2</span></span>
 <span><span class="co">#&gt; 2 depressed     ordinal    275     2</span></span>
 <span><span class="co">#&gt; 3    colour categorical    275     2</span></span></code></pre></div>
-<p>The <code>outcome_list</code> is like the <code>data_list</code>, but
+<p>The <code>target_list</code> is like the <code>data_list</code>, but
 without the domain attribute. At this time, each dataframe used to build
-an outcome_list must be a single-feature.</p>
+an target_list must be a single-feature.</p>
 <p>Just like when generating the initial <code>data_list</code>, we need
 to specify the name of the column in the provided dataframes that is
 originally being used to uniquely identify the different observations
-from each other with the <code>old_uid</code> parameter.</p>
-<p>We will next extend our <code>output_matrix</code> with p-values from
-regressing the <code>outcome_list</code> features onto our generated
+from each other with the <code>uid</code> parameter.</p>
+<p>We will next extend our <code>solutions_matrix</code> with p-values
+from regressing the <code>target_list</code> features onto our generated
 clusters.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">extended_output_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_om.html">extend_om</a></span><span class="op">(</span><span class="va">output_matrix</span>, <span class="va">outcome_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "In row 1, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_om.html">extend_om</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">target_list</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "In row 5, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
+<span><span class="co">#&gt; [1] "In row 9, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
 <span><span class="co">#&gt; [1] "In row 11, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
-<span><span class="co">#&gt; [1] "In row 16, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
+<span><span class="co">#&gt; [1] "In row 13, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
 <span><span class="co">#&gt; [1] "In row 18, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
-<span><span class="co">#&gt; [1] "In row 20, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
-<span><span class="co">#&gt; [1] "In row 22, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
+<span><span class="co">#&gt; [1] "In row 21, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
+<span><span class="co">#&gt; [1] "In row 23, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
 <span><span class="co">#&gt; [1] "In row 27, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
 <span><span class="co">#&gt; [1] "In row 28, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">extended_output_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   [1] "row_id"                    "inc_cortical_thickness"   </span></span>
-<span><span class="co">#&gt;   [3] "inc_cortical_surface_area" "inc_subcortical_volume"   </span></span>
-<span><span class="co">#&gt;   [5] "inc_household_income"      "inc_pubertal_status"      </span></span>
-<span><span class="co">#&gt;   [7] "snf_scheme"                "eigen_or_rot"             </span></span>
-<span><span class="co">#&gt;   [9] "K"                         "alpha"                    </span></span>
-<span><span class="co">#&gt;  [11] "nclust"                    "subject_NDAR_INV0567T2Y9" </span></span>
-<span><span class="co">#&gt;  [13] "subject_NDAR_INV0IZ157F8"  "subject_NDAR_INV0J4PYA5F" </span></span>
-<span><span class="co">#&gt;  [15] "subject_NDAR_INV10OMKVLE"  "subject_NDAR_INV15FPCW4O" </span></span>
-<span><span class="co">#&gt;  [17] "subject_NDAR_INV19NB4RJK"  "subject_NDAR_INV1HLGR738" </span></span>
-<span><span class="co">#&gt;  [19] "subject_NDAR_INV1KR0EZFU"  "subject_NDAR_INV1L3Y9EOP" </span></span>
-<span><span class="co">#&gt;  [21] "subject_NDAR_INV1TCP5GNM"  "subject_NDAR_INV1ZHRDJ6B" </span></span>
-<span><span class="co">#&gt;  [23] "subject_NDAR_INV2EJ41YSZ"  "subject_NDAR_INV2PK6C85M" </span></span>
-<span><span class="co">#&gt;  [25] "subject_NDAR_INV2XO1PHCT"  "subject_NDAR_INV3CU5Y9BZ" </span></span>
-<span><span class="co">#&gt;  [27] "subject_NDAR_INV3MBSY16V"  "subject_NDAR_INV3N0QFDLO" </span></span>
-<span><span class="co">#&gt;  [29] "subject_NDAR_INV3N1476QE"  "subject_NDAR_INV3Y027GVK" </span></span>
-<span><span class="co">#&gt;  [31] "subject_NDAR_INV40Z7GVYJ"  "subject_NDAR_INV49UPOXHJ" </span></span>
-<span><span class="co">#&gt;  [33] "subject_NDAR_INV4AKIU1WX"  "subject_NDAR_INV4G7032E6" </span></span>
-<span><span class="co">#&gt;  [35] "subject_NDAR_INV4KQ3WEFY"  "subject_NDAR_INV4N5XGZE8" </span></span>
-<span><span class="co">#&gt;  [37] "subject_NDAR_INV4OWRB536"  "subject_NDAR_INV4X80QUZY" </span></span>
-<span><span class="co">#&gt;  [39] "subject_NDAR_INV50JL2RXP"  "subject_NDAR_INV5BRNFYQC" </span></span>
-<span><span class="co">#&gt;  [41] "subject_NDAR_INV5Q9YWRCK"  "subject_NDAR_INV64F9GH0V" </span></span>
-<span><span class="co">#&gt;  [43] "subject_NDAR_INV6RVH5KZS"  "subject_NDAR_INV6WBQCY2I" </span></span>
-<span><span class="co">#&gt;  [45] "subject_NDAR_INV752EFAQ0"  "subject_NDAR_INV7O30HFV6" </span></span>
-<span><span class="co">#&gt;  [47] "subject_NDAR_INV7QO93CJH"  "subject_NDAR_INV84G9ONXP" </span></span>
-<span><span class="co">#&gt;  [49] "subject_NDAR_INV8EHP6W1U"  "subject_NDAR_INV8MJFUKIW" </span></span>
-<span><span class="co">#&gt;  [51] "subject_NDAR_INV8WGK6ECZ"  "subject_NDAR_INV915R2Z67" </span></span>
-<span><span class="co">#&gt;  [53] "subject_NDAR_INV94AKNGMJ"  "subject_NDAR_INV9GAZYV8Q" </span></span>
-<span><span class="co">#&gt;  [55] "subject_NDAR_INV9IREH05N"  "subject_NDAR_INV9KC3GVMU" </span></span>
-<span><span class="co">#&gt;  [57] "subject_NDAR_INV9NFKZ82A"  "subject_NDAR_INV9S1BMDE5" </span></span>
-<span><span class="co">#&gt;  [59] "subject_NDAR_INVA68OU0YK"  "subject_NDAR_INVADCYZ38B" </span></span>
-<span><span class="co">#&gt;  [61] "subject_NDAR_INVAYM8WTIN"  "subject_NDAR_INVB4MU1PDA" </span></span>
-<span><span class="co">#&gt;  [63] "subject_NDAR_INVB8O4LAQV"  "subject_NDAR_INVBAP80W1R" </span></span>
-<span><span class="co">#&gt;  [65] "subject_NDAR_INVBTRW1NUK"  "subject_NDAR_INVCI0KZWMN" </span></span>
-<span><span class="co">#&gt;  [67] "subject_NDAR_INVCIXE0496"  "subject_NDAR_INVCYBSZD0N" </span></span>
-<span><span class="co">#&gt;  [69] "subject_NDAR_INVD37Z9N61"  "subject_NDAR_INVD61ZUBC7" </span></span>
-<span><span class="co">#&gt;  [71] "subject_NDAR_INVDXKG2UBF"  "subject_NDAR_INVEO3JM5CB" </span></span>
-<span><span class="co">#&gt;  [73] "subject_NDAR_INVEQ1OBNSM"  "subject_NDAR_INVEQ4D2M8P" </span></span>
-<span><span class="co">#&gt;  [75] "subject_NDAR_INVEVBDLSTM"  "subject_NDAR_INVEY0FMJDI" </span></span>
-<span><span class="co">#&gt;  [77] "subject_NDAR_INVFLU0YINE"  "subject_NDAR_INVFNZPWMSI" </span></span>
-<span><span class="co">#&gt;  [79] "subject_NDAR_INVFY76P8AJ"  "subject_NDAR_INVG3T0PXW6" </span></span>
-<span><span class="co">#&gt;  [81] "subject_NDAR_INVG5CI7XK4"  "subject_NDAR_INVG8BRLSO9" </span></span>
-<span><span class="co">#&gt;  [83] "subject_NDAR_INVGDBYXWV4"  "subject_NDAR_INVH1KV76BQ" </span></span>
-<span><span class="co">#&gt;  [85] "subject_NDAR_INVH3P4T8C2"  "subject_NDAR_INVH4FZC2XB" </span></span>
-<span><span class="co">#&gt;  [87] "subject_NDAR_INVH8QN7WLT"  "subject_NDAR_INVHERPS382" </span></span>
-<span><span class="co">#&gt;  [89] "subject_NDAR_INVHEUWA52I"  "subject_NDAR_INVHM3XS68O" </span></span>
-<span><span class="co">#&gt;  [91] "subject_NDAR_INVI1RKT9MX"  "subject_NDAR_INVIZFV08RU" </span></span>
-<span><span class="co">#&gt;  [93] "subject_NDAR_INVJ4THFRD2"  "subject_NDAR_INVJ574KX6A" </span></span>
-<span><span class="co">#&gt;  [95] "subject_NDAR_INVJEV61XIU"  "subject_NDAR_INVJR3S271G" </span></span>
-<span><span class="co">#&gt;  [97] "subject_NDAR_INVK3FL5CP2"  "subject_NDAR_INVK9ULDQA2" </span></span>
-<span><span class="co">#&gt;  [99] "subject_NDAR_INVKB0CYO1H"  "subject_NDAR_INVKHWS26UN" </span></span>
-<span><span class="co">#&gt; [101] "subject_NDAR_INVKTUMPLXY"  "subject_NDAR_INVKYH529RD" </span></span>
-<span><span class="co">#&gt; [103] "subject_NDAR_INVL045Z1TY"  "subject_NDAR_INVL4NIUZYF" </span></span>
-<span><span class="co">#&gt; [105] "subject_NDAR_INVLDQH8ATK"  "subject_NDAR_INVLF3TNDUZ" </span></span>
-<span><span class="co">#&gt; [107] "subject_NDAR_INVLI58ERQC"  "subject_NDAR_INVLIQRM8KC" </span></span>
-<span><span class="co">#&gt; [109] "subject_NDAR_INVLXDP1SWT"  "subject_NDAR_INVMBOZVEA4" </span></span>
-<span><span class="co">#&gt; [111] "subject_NDAR_INVMIWOSHJN"  "cbcl_anxiety_r_p"         </span></span>
-<span><span class="co">#&gt; [113] "cbcl_depress_r_p"          "colour_p"                 </span></span>
-<span><span class="co">#&gt; [115] "min_p_val"                 "mean_p_val"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   [1] "row_id"                    "alpha"                    </span></span>
+<span><span class="co">#&gt;   [3] "k"                         "t"                        </span></span>
+<span><span class="co">#&gt;   [5] "snf_scheme"                "clust_alg"                </span></span>
+<span><span class="co">#&gt;   [7] "cont_dist"                 "disc_dist"                </span></span>
+<span><span class="co">#&gt;   [9] "ord_dist"                  "cat_dist"                 </span></span>
+<span><span class="co">#&gt;  [11] "mix_dist"                  "input_wt"                 </span></span>
+<span><span class="co">#&gt;  [13] "domain_wt"                 "inc_cortical_thickness"   </span></span>
+<span><span class="co">#&gt;  [15] "inc_cortical_surface_area" "inc_subcortical_volume"   </span></span>
+<span><span class="co">#&gt;  [17] "inc_household_income"      "inc_pubertal_status"      </span></span>
+<span><span class="co">#&gt;  [19] "nclust"                    "subject_NDAR_INV0567T2Y9" </span></span>
+<span><span class="co">#&gt;  [21] "subject_NDAR_INV0IZ157F8"  "subject_NDAR_INV0J4PYA5F" </span></span>
+<span><span class="co">#&gt;  [23] "subject_NDAR_INV10OMKVLE"  "subject_NDAR_INV15FPCW4O" </span></span>
+<span><span class="co">#&gt;  [25] "subject_NDAR_INV19NB4RJK"  "subject_NDAR_INV1HLGR738" </span></span>
+<span><span class="co">#&gt;  [27] "subject_NDAR_INV1KR0EZFU"  "subject_NDAR_INV1L3Y9EOP" </span></span>
+<span><span class="co">#&gt;  [29] "subject_NDAR_INV1TCP5GNM"  "subject_NDAR_INV1ZHRDJ6B" </span></span>
+<span><span class="co">#&gt;  [31] "subject_NDAR_INV2EJ41YSZ"  "subject_NDAR_INV2PK6C85M" </span></span>
+<span><span class="co">#&gt;  [33] "subject_NDAR_INV2XO1PHCT"  "subject_NDAR_INV3CU5Y9BZ" </span></span>
+<span><span class="co">#&gt;  [35] "subject_NDAR_INV3MBSY16V"  "subject_NDAR_INV3N0QFDLO" </span></span>
+<span><span class="co">#&gt;  [37] "subject_NDAR_INV3N1476QE"  "subject_NDAR_INV3Y027GVK" </span></span>
+<span><span class="co">#&gt;  [39] "subject_NDAR_INV40Z7GVYJ"  "subject_NDAR_INV49UPOXHJ" </span></span>
+<span><span class="co">#&gt;  [41] "subject_NDAR_INV4AKIU1WX"  "subject_NDAR_INV4G7032E6" </span></span>
+<span><span class="co">#&gt;  [43] "subject_NDAR_INV4KQ3WEFY"  "subject_NDAR_INV4N5XGZE8" </span></span>
+<span><span class="co">#&gt;  [45] "subject_NDAR_INV4OWRB536"  "subject_NDAR_INV4X80QUZY" </span></span>
+<span><span class="co">#&gt;  [47] "subject_NDAR_INV50JL2RXP"  "subject_NDAR_INV5BRNFYQC" </span></span>
+<span><span class="co">#&gt;  [49] "subject_NDAR_INV5Q9YWRCK"  "subject_NDAR_INV64F9GH0V" </span></span>
+<span><span class="co">#&gt;  [51] "subject_NDAR_INV6RVH5KZS"  "subject_NDAR_INV6WBQCY2I" </span></span>
+<span><span class="co">#&gt;  [53] "subject_NDAR_INV752EFAQ0"  "subject_NDAR_INV7O30HFV6" </span></span>
+<span><span class="co">#&gt;  [55] "subject_NDAR_INV7QO93CJH"  "subject_NDAR_INV84G9ONXP" </span></span>
+<span><span class="co">#&gt;  [57] "subject_NDAR_INV8EHP6W1U"  "subject_NDAR_INV8MJFUKIW" </span></span>
+<span><span class="co">#&gt;  [59] "subject_NDAR_INV8WGK6ECZ"  "subject_NDAR_INV915R2Z67" </span></span>
+<span><span class="co">#&gt;  [61] "subject_NDAR_INV94AKNGMJ"  "subject_NDAR_INV9GAZYV8Q" </span></span>
+<span><span class="co">#&gt;  [63] "subject_NDAR_INV9IREH05N"  "subject_NDAR_INV9KC3GVMU" </span></span>
+<span><span class="co">#&gt;  [65] "subject_NDAR_INV9NFKZ82A"  "subject_NDAR_INV9S1BMDE5" </span></span>
+<span><span class="co">#&gt;  [67] "subject_NDAR_INVA68OU0YK"  "subject_NDAR_INVADCYZ38B" </span></span>
+<span><span class="co">#&gt;  [69] "subject_NDAR_INVAYM8WTIN"  "subject_NDAR_INVB4MU1PDA" </span></span>
+<span><span class="co">#&gt;  [71] "subject_NDAR_INVB8O4LAQV"  "subject_NDAR_INVBAP80W1R" </span></span>
+<span><span class="co">#&gt;  [73] "subject_NDAR_INVBTRW1NUK"  "subject_NDAR_INVCI0KZWMN" </span></span>
+<span><span class="co">#&gt;  [75] "subject_NDAR_INVCIXE0496"  "subject_NDAR_INVCYBSZD0N" </span></span>
+<span><span class="co">#&gt;  [77] "subject_NDAR_INVD37Z9N61"  "subject_NDAR_INVD61ZUBC7" </span></span>
+<span><span class="co">#&gt;  [79] "subject_NDAR_INVDXKG2UBF"  "subject_NDAR_INVEO3JM5CB" </span></span>
+<span><span class="co">#&gt;  [81] "subject_NDAR_INVEQ1OBNSM"  "subject_NDAR_INVEQ4D2M8P" </span></span>
+<span><span class="co">#&gt;  [83] "subject_NDAR_INVEVBDLSTM"  "subject_NDAR_INVEY0FMJDI" </span></span>
+<span><span class="co">#&gt;  [85] "subject_NDAR_INVFLU0YINE"  "subject_NDAR_INVFNZPWMSI" </span></span>
+<span><span class="co">#&gt;  [87] "subject_NDAR_INVFY76P8AJ"  "subject_NDAR_INVG3T0PXW6" </span></span>
+<span><span class="co">#&gt;  [89] "subject_NDAR_INVG5CI7XK4"  "subject_NDAR_INVG8BRLSO9" </span></span>
+<span><span class="co">#&gt;  [91] "subject_NDAR_INVGDBYXWV4"  "subject_NDAR_INVH1KV76BQ" </span></span>
+<span><span class="co">#&gt;  [93] "subject_NDAR_INVH3P4T8C2"  "subject_NDAR_INVH4FZC2XB" </span></span>
+<span><span class="co">#&gt;  [95] "subject_NDAR_INVH8QN7WLT"  "subject_NDAR_INVHERPS382" </span></span>
+<span><span class="co">#&gt;  [97] "subject_NDAR_INVHEUWA52I"  "subject_NDAR_INVHM3XS68O" </span></span>
+<span><span class="co">#&gt;  [99] "subject_NDAR_INVI1RKT9MX"  "subject_NDAR_INVIZFV08RU" </span></span>
+<span><span class="co">#&gt; [101] "subject_NDAR_INVJ4THFRD2"  "subject_NDAR_INVJ574KX6A" </span></span>
+<span><span class="co">#&gt; [103] "subject_NDAR_INVJEV61XIU"  "subject_NDAR_INVJR3S271G" </span></span>
+<span><span class="co">#&gt; [105] "subject_NDAR_INVK3FL5CP2"  "subject_NDAR_INVK9ULDQA2" </span></span>
+<span><span class="co">#&gt; [107] "subject_NDAR_INVKB0CYO1H"  "subject_NDAR_INVKHWS26UN" </span></span>
+<span><span class="co">#&gt; [109] "subject_NDAR_INVKTUMPLXY"  "subject_NDAR_INVKYH529RD" </span></span>
+<span><span class="co">#&gt; [111] "subject_NDAR_INVL045Z1TY"  "subject_NDAR_INVL4NIUZYF" </span></span>
+<span><span class="co">#&gt; [113] "subject_NDAR_INVLDQH8ATK"  "subject_NDAR_INVLF3TNDUZ" </span></span>
+<span><span class="co">#&gt; [115] "subject_NDAR_INVLI58ERQC"  "subject_NDAR_INVLIQRM8KC" </span></span>
+<span><span class="co">#&gt; [117] "subject_NDAR_INVLXDP1SWT"  "subject_NDAR_INVMBOZVEA4" </span></span>
+<span><span class="co">#&gt; [119] "subject_NDAR_INVMIWOSHJN"  "cbcl_anxiety_r_p"         </span></span>
+<span><span class="co">#&gt; [121] "cbcl_depress_r_p"          "colour_p"                 </span></span>
+<span><span class="co">#&gt; [123] "min_p_val"                 "mean_p_val"</span></span>
 <span></span>
 <span><span class="co"># Looking at the newly added columns</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/no_subs.html">no_subs</a></span><span class="op">(</span><span class="va">extended_output_matrix</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   row_id inc_cortical_thickness inc_cortical_surface_area</span></span>
-<span><span class="co">#&gt; 1      1                      1                         0</span></span>
-<span><span class="co">#&gt; 2      2                      1                         1</span></span>
-<span><span class="co">#&gt; 3      3                      1                         1</span></span>
-<span><span class="co">#&gt; 4      4                      1                         1</span></span>
-<span><span class="co">#&gt; 5      5                      1                         1</span></span>
-<span><span class="co">#&gt; 6      6                      1                         1</span></span>
-<span><span class="co">#&gt;   inc_subcortical_volume inc_household_income inc_pubertal_status snf_scheme</span></span>
-<span><span class="co">#&gt; 1                      1                    0                   1          2</span></span>
-<span><span class="co">#&gt; 2                      1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 3                      1                    1                   1          1</span></span>
-<span><span class="co">#&gt; 4                      1                    1                   1          2</span></span>
-<span><span class="co">#&gt; 5                      1                    1                   1          2</span></span>
-<span><span class="co">#&gt; 6                      1                    1                   0          1</span></span>
-<span><span class="co">#&gt;   eigen_or_rot  K alpha nclust  cbcl_anxiety_r_p  cbcl_depress_r_p</span></span>
-<span><span class="co">#&gt; 1            2 25   0.8      5 0.655340602502448 0.527336751675068</span></span>
-<span><span class="co">#&gt; 2            1 12   0.6      2 0.629818229507898 0.285216408530843</span></span>
-<span><span class="co">#&gt; 3            2 15   0.9      2 0.648151472850297 0.303888538712499</span></span>
-<span><span class="co">#&gt; 4            1 23   0.9      2 0.356246119090021 0.364287773404045</span></span>
-<span><span class="co">#&gt; 5            2 10   0.9      2 0.699411847073354 0.750751159488881</span></span>
-<span><span class="co">#&gt; 6            2 19   0.9      3  0.20899687436932 0.269200532430708</span></span>
-<span><span class="co">#&gt;            colour_p min_p_val mean_p_val</span></span>
-<span><span class="co">#&gt; 1 0.248885257094024 0.2488853  0.4771875</span></span>
-<span><span class="co">#&gt; 2 0.256478690781187 0.2564787  0.3905044</span></span>
-<span><span class="co">#&gt; 3 0.208806077650664 0.2088061  0.3869487</span></span>
-<span><span class="co">#&gt; 4 0.061952996110309 0.0619530  0.2608290</span></span>
-<span><span class="co">#&gt; 5 0.199994808454036 0.1999948  0.5500526</span></span>
-<span><span class="co">#&gt; 6 0.595592209760178 0.2089969  0.3579299</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/no_subs.html">no_subs</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
+<span><span class="co">#&gt; 1      1   0.5 75 20          2         1         1         1        1        1</span></span>
+<span><span class="co">#&gt; 2      2   0.5 88 20          2         2         1         1        1        1</span></span>
+<span><span class="co">#&gt; 3      3   0.7 31 20          3         1         1         1        1        1</span></span>
+<span><span class="co">#&gt; 4      4   0.6 32 20          1         1         1         1        1        1</span></span>
+<span><span class="co">#&gt; 5      5   0.8 98 20          1         2         1         1        1        1</span></span>
+<span><span class="co">#&gt; 6      6   0.6 34 20          3         2         1         1        1        1</span></span>
+<span><span class="co">#&gt;   mix_dist input_wt domain_wt inc_cortical_thickness inc_cortical_surface_area</span></span>
+<span><span class="co">#&gt; 1        1        1         1                      1                         0</span></span>
+<span><span class="co">#&gt; 2        1        1         1                      1                         1</span></span>
+<span><span class="co">#&gt; 3        1        1         1                      0                         1</span></span>
+<span><span class="co">#&gt; 4        1        1         1                      1                         1</span></span>
+<span><span class="co">#&gt; 5        1        1         1                      1                         1</span></span>
+<span><span class="co">#&gt; 6        1        1         1                      1                         1</span></span>
+<span><span class="co">#&gt;   inc_subcortical_volume inc_household_income inc_pubertal_status nclust</span></span>
+<span><span class="co">#&gt; 1                      1                    0                   1      3</span></span>
+<span><span class="co">#&gt; 2                      1                    1                   1      3</span></span>
+<span><span class="co">#&gt; 3                      1                    1                   1      2</span></span>
+<span><span class="co">#&gt; 4                      1                    1                   1      2</span></span>
+<span><span class="co">#&gt; 5                      0                    1                   1      4</span></span>
+<span><span class="co">#&gt; 6                      1                    1                   1      2</span></span>
+<span><span class="co">#&gt;     cbcl_anxiety_r_p  cbcl_depress_r_p          colour_p  min_p_val mean_p_val</span></span>
+<span><span class="co">#&gt; 1   0.43747184396968 0.545465877142544 0.335756969655163 0.33575697  0.4395649</span></span>
+<span><span class="co">#&gt; 2  0.227383363302326 0.464684190398365 0.876385091893166 0.22738336  0.5228175</span></span>
+<span><span class="co">#&gt; 3   0.14169841119351 0.975067300272223 0.112239128481273 0.11223913  0.4096683</span></span>
+<span><span class="co">#&gt; 4  0.772002349101073 0.182698041915117 0.239717041696141 0.18269804  0.3981391</span></span>
+<span><span class="co">#&gt; 5  0.238920060995216  0.65186461735067 0.567828099380891 0.23892006  0.4862043</span></span>
+<span><span class="co">#&gt; 6 0.0664389631206358 0.442707607522785 0.449476540781621 0.06643896  0.3195410</span></span></code></pre></div>
 <p>If you just want the p-values:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/p_val_select.html">p_val_select</a></span><span class="op">(</span><span class="va">extended_output_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    row_id cbcl_anxiety_r_p cbcl_depress_r_p    colour_p</span></span>
-<span><span class="co">#&gt; 1       1        0.6553406        0.5273368 0.248885257</span></span>
-<span><span class="co">#&gt; 2       2        0.6298182        0.2852164 0.256478691</span></span>
-<span><span class="co">#&gt; 3       3        0.6481515        0.3038885 0.208806078</span></span>
-<span><span class="co">#&gt; 4       4        0.3562461        0.3642878 0.061952996</span></span>
-<span><span class="co">#&gt; 5       5        0.6994118        0.7507512 0.199994808</span></span>
-<span><span class="co">#&gt; 6       6        0.2089969        0.2692005 0.595592210</span></span>
-<span><span class="co">#&gt; 7       7        0.1223251        0.4533414 0.836928458</span></span>
-<span><span class="co">#&gt; 8       8        0.4138061        0.4649807 0.182533103</span></span>
-<span><span class="co">#&gt; 9       9        0.5283445        0.2627846 0.431562402</span></span>
-<span><span class="co">#&gt; 10     10        0.2454652        0.3314808 0.096910147</span></span>
-<span><span class="co">#&gt; 11     11        0.6813803        0.5355564 0.226989561</span></span>
-<span><span class="co">#&gt; 12     12        0.7883525        0.5695269 0.095882802</span></span>
-<span><span class="co">#&gt; 13     13        0.1788353        0.2084599 0.105096820</span></span>
-<span><span class="co">#&gt; 14     14        0.1705398        0.4225477 0.724605822</span></span>
-<span><span class="co">#&gt; 15     15        0.1770468        0.4733003 0.266608093</span></span>
-<span><span class="co">#&gt; 16     16        0.6553406        0.5273368 0.248885257</span></span>
-<span><span class="co">#&gt; 17     17        0.6008227        0.1551543 0.087201835</span></span>
-<span><span class="co">#&gt; 18     18        0.6813803        0.5355564 0.226989561</span></span>
-<span><span class="co">#&gt; 19     19        0.6781680        0.7129344 0.093727026</span></span>
-<span><span class="co">#&gt; 20     20        0.6813803        0.5355564 0.226989561</span></span>
-<span><span class="co">#&gt; 21     21        0.6866630        0.2771175 0.201914223</span></span>
-<span><span class="co">#&gt; 22     22        0.6635075        0.2849664 0.105158205</span></span>
-<span><span class="co">#&gt; 23     23        0.1368030        0.1672179 0.005438086</span></span>
-<span><span class="co">#&gt; 24     24        0.7130265        0.3075909 0.360429812</span></span>
-<span><span class="co">#&gt; 25     25        0.1788353        0.2084599 0.105096820</span></span>
-<span><span class="co">#&gt; 26     26        0.2917708        0.4578138 0.201764518</span></span>
-<span><span class="co">#&gt; 27     27        0.6553406        0.5273368 0.248885257</span></span>
-<span><span class="co">#&gt; 28     28        0.8032757        0.8162200 0.803359122</span></span>
-<span><span class="co">#&gt; 29     29        0.1223251        0.4533414 0.836928458</span></span>
-<span><span class="co">#&gt; 30     30        0.6481515        0.5243160 0.276597362</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/p_val_select.html">p_val_select</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    row_id cbcl_anxiety_r_p cbcl_depress_r_p  colour_p</span></span>
+<span><span class="co">#&gt; 1       1       0.43747184       0.54546588 0.3357570</span></span>
+<span><span class="co">#&gt; 2       2       0.22738336       0.46468419 0.8763851</span></span>
+<span><span class="co">#&gt; 3       3       0.14169841       0.97506730 0.1122391</span></span>
+<span><span class="co">#&gt; 4       4       0.77200235       0.18269804 0.2397170</span></span>
+<span><span class="co">#&gt; 5       5       0.23892006       0.65186462 0.5678281</span></span>
+<span><span class="co">#&gt; 6       6       0.06643896       0.44270761 0.4494765</span></span>
+<span><span class="co">#&gt; 7       7       0.75029976       0.26060391 0.1938960</span></span>
+<span><span class="co">#&gt; 8       8       0.22738336       0.46468418 0.8763851</span></span>
+<span><span class="co">#&gt; 9       9       0.62617082       0.38681669 0.2767753</span></span>
+<span><span class="co">#&gt; 10     10       0.34423284       0.37623708 0.7644252</span></span>
+<span><span class="co">#&gt; 11     11       0.05654176       0.90069389 0.4491776</span></span>
+<span><span class="co">#&gt; 12     12       0.32393452       0.67826381 0.8699062</span></span>
+<span><span class="co">#&gt; 13     13       0.99657561       0.90889065 0.4030227</span></span>
+<span><span class="co">#&gt; 14     14       0.12232512       0.45334138 0.8369285</span></span>
+<span><span class="co">#&gt; 15     15       0.16409447       0.42480754 0.7592145</span></span>
+<span><span class="co">#&gt; 16     16       0.35403913       0.09953266 0.1411262</span></span>
+<span><span class="co">#&gt; 17     17       0.19117744       0.29479362 0.6684995</span></span>
+<span><span class="co">#&gt; 18     18       0.23892006       0.65186462 0.5678281</span></span>
+<span><span class="co">#&gt; 19     19       0.93560217       0.22914541 0.1938960</span></span>
+<span><span class="co">#&gt; 20     20       0.50680711       0.24857752 0.2675688</span></span>
+<span><span class="co">#&gt; 21     21       0.64671847       0.69063074 0.2686952</span></span>
+<span><span class="co">#&gt; 22     22       0.47849901       0.29990219 0.4684482</span></span>
+<span><span class="co">#&gt; 23     23       0.95698390       0.26308977 0.4173307</span></span>
+<span><span class="co">#&gt; 24     24       0.26601523       0.82966907 0.9559363</span></span>
+<span><span class="co">#&gt; 25     25       0.58761917       0.13269839 0.2429417</span></span>
+<span><span class="co">#&gt; 26     26       0.58761917       0.33802387 0.3604298</span></span>
+<span><span class="co">#&gt; 27     27       0.23892006       0.65186462 0.5678281</span></span>
+<span><span class="co">#&gt; 28     28       0.44012251       0.20021091 0.3107431</span></span>
+<span><span class="co">#&gt; 29     29       0.71765563       0.21426554 0.3307078</span></span>
+<span><span class="co">#&gt; 30     30       0.89864846       0.25088187 0.3233089</span></span></code></pre></div>
 <p>And of course, there is a heatmap for visualizing this too:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">om_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/p_val_select.html">p_val_select</a></span><span class="op">(</span><span class="va">extended_output_matrix</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">om_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/p_val_select.html">p_val_select</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/pvals_pheatmap.html">pvals_pheatmap</a></span><span class="op">(</span><span class="va">om_pvals</span>, order <span class="op">=</span> <span class="va">om_ari_order</span><span class="op">)</span></span></code></pre></div>
 <center>
@@ -884,7 +888,7 @@ out test subjects, and then characterized those test subjects to see how
 well the clustering solution seemed to have worked.</p>
 <p>This package provides a wrapper for
 <code><a href="https://rdrr.io/pkg/SNFtool/man/groupPredict.html" class="external-link">SNFtool::groupPredict</a></code> to make the label propagation process
-a little easier to apply to the <code>output_matrix</code>
+a little easier to apply to the <code>solutions_matrix</code>
 structure.</p>
 </div>
 <div class="section level2">
@@ -894,7 +898,7 @@ structure.</p>
 beginning, with label propagation to validate our findings.</p>
 <p>The <code>metasnf</code> package comes equipped with a function to do
 the training/testing split for you :)</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># All the subjects present in all dataframes with no NAs</span></span>
 <span><span class="va">all_subjects</span> <span class="op">&lt;-</span> <span class="va">data_list</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="st">"data"</span><span class="op">$</span><span class="st">"subjectkey"</span></span>
 <span></span>
@@ -905,41 +909,41 @@ the training/testing split for you :)</p>
 <span><span class="va">assigned_splits</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/train_test_assign.html">train_test_assign</a></span><span class="op">(</span>train_frac <span class="op">=</span> <span class="fl">0.8</span>, subjects <span class="op">=</span> <span class="va">all_subjects</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Partition a training set</span></span>
-<span><span class="va">train_abcd_cort_t</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
-<span><span class="va">train_abcd_cort_sa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
-<span><span class="va">train_abcd_subc_v</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
-<span><span class="va">train_abcd_income</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_income</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
-<span><span class="va">train_abcd_pubertal</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
-<span><span class="va">train_abcd_anxiety</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_anxiety</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
-<span><span class="va">train_abcd_depress</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">train_abcd_cort_t</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">train_abcd_cort_sa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">train_abcd_subc_v</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">train_abcd_income</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_income</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">train_abcd_pubertal</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">train_abcd_anxiety</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_anxiety</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">train_abcd_depress</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="va">assigned_splits</span>, <span class="st">"train"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Partition a test set</span></span>
-<span><span class="va">test_abcd_cort_t</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
-<span><span class="va">test_abcd_cort_sa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
-<span><span class="va">test_abcd_subc_v</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
-<span><span class="va">test_abcd_income</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_income</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
-<span><span class="va">test_abcd_pubertal</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
-<span><span class="va">test_abcd_anxiety</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_anxiety</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
-<span><span class="va">test_abcd_depress</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, old_uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">test_abcd_cort_t</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">test_abcd_cort_sa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">test_abcd_subc_v</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">test_abcd_income</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_income</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">test_abcd_pubertal</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">test_abcd_anxiety</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_anxiety</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
+<span><span class="va">test_abcd_depress</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/keep_split.html">keep_split</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="va">assigned_splits</span>, <span class="st">"test"</span>, uid <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Construct the data lists</span></span>
 <span><span class="va">train_data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    old_uid <span class="op">=</span> <span class="st">"patient"</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span>
 <span></span>
 <span><span class="va">test_data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    old_uid <span class="op">=</span> <span class="st">"patient"</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span></code></pre></div>
 <p>Note, in a label propagation workflow, maintaining a consistent
@@ -950,76 +954,91 @@ above, you can either specify both the <code>train_subjects</code> and
 <code>test_subjects</code> parameters yourself, or provide the
 <code>assigned_splits</code> output from the
 <code>train_test_assign</code> function.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">full_data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    old_uid <span class="op">=</span> <span class="st">"patient"</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    uid <span class="op">=</span> <span class="st">"patient"</span>,</span>
 <span>    assigned_splits <span class="op">=</span> <span class="va">assigned_splits</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span>
 <span></span>
-<span><span class="co"># Construct the outcome lists</span></span>
-<span><span class="va">train_outcome_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_outcome_list.html">generate_outcome_list</a></span><span class="op">(</span></span>
+<span><span class="co"># Construct the target lists</span></span>
+<span><span class="va">train_target_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_target_list.html">generate_target_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
-<span>    old_uid <span class="op">=</span> <span class="st">"patient"</span></span>
+<span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span>
 <span></span>
 <span><span class="co"># Find a clustering solution in your training data</span></span>
-<span><span class="va">design_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_design_matrix.html">generate_design_matrix</a></span><span class="op">(</span><span class="va">train_data_list</span>, nrow <span class="op">=</span> <span class="fl">5</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
+<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
+<span>    <span class="va">train_data_list</span>,</span>
+<span>    nrow <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>    seed <span class="op">=</span> <span class="fl">42</span>,</span>
+<span>    min_k <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    max_k <span class="op">=</span> <span class="fl">30</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span>
 <span></span>
-<span><span class="va">train_output_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/execute_design_matrix.html">execute_design_matrix</a></span><span class="op">(</span><span class="va">train_data_list</span>, <span class="va">design_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 1 seconds"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">train_data_list</span><span class="op">)</span><span class="op">$</span><span class="st">"length"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 83</span></span>
+<span></span>
+<span><span class="va">train_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    <span class="va">train_data_list</span>,</span>
+<span>    <span class="va">settings_matrix</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 1.379 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 1 seconds."</span></span>
 <span></span>
-<span><span class="va">extended_output_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_om.html">extend_om</a></span><span class="op">(</span><span class="va">train_output_matrix</span>, <span class="va">train_outcome_list</span><span class="op">)</span></span>
+<span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_om.html">extend_om</a></span><span class="op">(</span></span>
+<span>    <span class="va">train_solutions_matrix</span>,</span>
+<span>    <span class="va">train_target_list</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># The fourth row had the lowest minimum p-value across our outcomes</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">extended_output_matrix</span><span class="op">$</span><span class="st">"min_p_val"</span> <span class="op">==</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">extended_output_matrix</span><span class="op">$</span><span class="st">"min_p_val"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_p_val"</span> <span class="op">==</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_p_val"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 4</span></span>
 <span></span>
 <span><span class="co"># Keep track of your top solution</span></span>
-<span><span class="va">top_om_row</span> <span class="op">&lt;-</span> <span class="va">extended_output_matrix</span><span class="op">[</span><span class="fl">4</span>, <span class="op">]</span></span>
+<span><span class="va">top_om_row</span> <span class="op">&lt;-</span> <span class="va">extended_solutions_matrix</span><span class="op">[</span><span class="fl">4</span>, <span class="op">]</span></span>
 <span></span>
-<span><span class="co"># Hand over the output matrix as well as the full data list to propagate labels</span></span>
+<span><span class="co"># Hand over the solutions matrix as well as the full data list to propagate labels</span></span>
 <span><span class="co">#  to the test subjects</span></span>
 <span><span class="va">propagated_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_om.html">lp_om</a></span><span class="op">(</span><span class="va">top_om_row</span>, <span class="va">full_data_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "If you add a 'significance' column to your output matrix those values will be used to name each solution (instead of row IDs)"</span></span>
+<span><span class="co">#&gt; [1] "If you add a 'significance' column to your solutions matrix those values will be used to name each solution (instead of row IDs)"</span></span>
 <span><span class="co">#&gt; [1] "Processing row 1 of 1..."</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 subjectkey group 4</span></span>
-<span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 train 1</span></span>
-<span><span class="co">#&gt; 2 subject_NDAR_INV0IZ157F8 train 2</span></span>
-<span><span class="co">#&gt; 3 subject_NDAR_INV0J4PYA5F train 1</span></span>
+<span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 train 2</span></span>
+<span><span class="co">#&gt; 2 subject_NDAR_INV0IZ157F8 train 1</span></span>
+<span><span class="co">#&gt; 3 subject_NDAR_INV0J4PYA5F train 2</span></span>
 <span><span class="co">#&gt; 4 subject_NDAR_INV10OMKVLE train 2</span></span>
-<span><span class="co">#&gt; 5 subject_NDAR_INV15FPCW4O train 1</span></span>
+<span><span class="co">#&gt; 5 subject_NDAR_INV15FPCW4O train 2</span></span>
 <span><span class="co">#&gt; 6 subject_NDAR_INV19NB4RJK train 2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                   subjectkey group 4</span></span>
-<span><span class="co">#&gt; 95  subject_NDAR_INVGDBYXWV4  test 1</span></span>
-<span><span class="co">#&gt; 96  subject_NDAR_INVHEUWA52I  test 1</span></span>
-<span><span class="co">#&gt; 97  subject_NDAR_INVK9ULDQA2  test 1</span></span>
-<span><span class="co">#&gt; 98  subject_NDAR_INVKYH529RD  test 1</span></span>
-<span><span class="co">#&gt; 99  subject_NDAR_INVL045Z1TY  test 1</span></span>
-<span><span class="co">#&gt; 100 subject_NDAR_INVLDQH8ATK  test 1</span></span></code></pre></div>
+<span><span class="co">#&gt; 95  subject_NDAR_INVGDBYXWV4  test 2</span></span>
+<span><span class="co">#&gt; 96  subject_NDAR_INVHEUWA52I  test 2</span></span>
+<span><span class="co">#&gt; 97  subject_NDAR_INVK9ULDQA2  test 2</span></span>
+<span><span class="co">#&gt; 98  subject_NDAR_INVKYH529RD  test 2</span></span>
+<span><span class="co">#&gt; 99  subject_NDAR_INVL045Z1TY  test 2</span></span>
+<span><span class="co">#&gt; 100 subject_NDAR_INVLDQH8ATK  test 2</span></span></code></pre></div>
 <p>You could, if you wanted, see how <em>all</em> of your clustering
 solutions propagate to the test set, but that would mean reusing your
 test set and removing the protection against overfitting conferred by
 this procedure.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">propagated_labels_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_om.html">lp_om</a></span><span class="op">(</span><span class="va">extended_output_matrix</span>, <span class="va">full_data_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "If you add a 'significance' column to your output matrix those values will be used to name each solution (instead of row IDs)"</span></span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">propagated_labels_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_om.html">lp_om</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span>, <span class="va">full_data_list</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "If you add a 'significance' column to your solutions matrix those values will be used to name each solution (instead of row IDs)"</span></span>
 <span><span class="co">#&gt; [1] "Processing row 1 of 5..."</span></span>
 <span><span class="co">#&gt; [1] "Processing row 2 of 5..."</span></span>
 <span><span class="co">#&gt; [1] "Processing row 3 of 5..."</span></span>
@@ -1027,20 +1046,20 @@ this procedure.</p>
 <span><span class="co">#&gt; [1] "Processing row 5 of 5..."</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 subjectkey group 1 2 3 4 5</span></span>
-<span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 train 2 2 2 1 1</span></span>
-<span><span class="co">#&gt; 2 subject_NDAR_INV0IZ157F8 train 5 1 1 2 1</span></span>
-<span><span class="co">#&gt; 3 subject_NDAR_INV0J4PYA5F train 4 2 2 1 2</span></span>
-<span><span class="co">#&gt; 4 subject_NDAR_INV10OMKVLE train 1 1 1 2 1</span></span>
-<span><span class="co">#&gt; 5 subject_NDAR_INV15FPCW4O train 1 2 2 1 2</span></span>
-<span><span class="co">#&gt; 6 subject_NDAR_INV19NB4RJK train 3 2 2 2 2</span></span>
+<span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 train 1 2 2 2 2</span></span>
+<span><span class="co">#&gt; 2 subject_NDAR_INV0IZ157F8 train 2 1 4 1 1</span></span>
+<span><span class="co">#&gt; 3 subject_NDAR_INV0J4PYA5F train 1 2 3 2 2</span></span>
+<span><span class="co">#&gt; 4 subject_NDAR_INV10OMKVLE train 1 1 1 2 2</span></span>
+<span><span class="co">#&gt; 5 subject_NDAR_INV15FPCW4O train 1 2 1 2 2</span></span>
+<span><span class="co">#&gt; 6 subject_NDAR_INV19NB4RJK train 1 2 4 2 2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                   subjectkey group 1 2 3 4 5</span></span>
-<span><span class="co">#&gt; 95  subject_NDAR_INVGDBYXWV4  test 1 2 2 1 2</span></span>
-<span><span class="co">#&gt; 96  subject_NDAR_INVHEUWA52I  test 5 2 2 1 1</span></span>
-<span><span class="co">#&gt; 97  subject_NDAR_INVK9ULDQA2  test 3 2 2 1 2</span></span>
-<span><span class="co">#&gt; 98  subject_NDAR_INVKYH529RD  test 4 2 2 1 2</span></span>
-<span><span class="co">#&gt; 99  subject_NDAR_INVL045Z1TY  test 1 2 2 1 1</span></span>
-<span><span class="co">#&gt; 100 subject_NDAR_INVLDQH8ATK  test 1 2 2 1 1</span></span></code></pre></div>
+<span><span class="co">#&gt; 95  subject_NDAR_INVGDBYXWV4  test 1 2 1 2 2</span></span>
+<span><span class="co">#&gt; 96  subject_NDAR_INVHEUWA52I  test 1 2 2 2 2</span></span>
+<span><span class="co">#&gt; 97  subject_NDAR_INVK9ULDQA2  test 1 2 4 2 2</span></span>
+<span><span class="co">#&gt; 98  subject_NDAR_INVKYH529RD  test 1 2 3 2 2</span></span>
+<span><span class="co">#&gt; 99  subject_NDAR_INVL045Z1TY  test 1 2 1 2 2</span></span>
+<span><span class="co">#&gt; 100 subject_NDAR_INVLDQH8ATK  test 1 2 1 2 2</span></span></code></pre></div>
 <p>That’s all for now!</p>
 <p>If you have any questions, comments, suggestions, bugs, etc. feel
 free to post an issue at <a href="https://github.com/BRANCHlab/metasnf" class="external-link uri">https://github.com/BRANCHlab/metasnf</a>.</p>
@@ -1051,45 +1070,64 @@ free to post an issue at <a href="https://github.com/BRANCHlab/metasnf" class="e
 <div class="section level3">
 <h3 id="inc">inc*<a class="anchor" aria-label="anchor" href="#inc"></a>
 </h3>
-<p>This section describes how the <code>generate_design_matrix</code>
+<p>This section describes how the <code>generate_settings_matrix</code>
 function randomly assigns input dataframess to be dropped from different
 SNF runs to access a wider space of possible solutions.</p>
-<p>By default, <code>generate_design_matrix</code> will build an empty
-dataframe containing the columns outlined in the <a href="#generating-the-design-matrix">design matrix</a> section. If a
+<p>By default, <code>generate_settings_matrix</code> will build an empty
+dataframe containing the columns outlined in the <a href="#generating-the-settings-matrix">settings matrix</a> section. If a
 non-zero number of rows are specified when calling
-<code>generate_design_matrix</code>, the function calls on
-<code>add_design_matrix_rows</code> to add rows with randomly valid
+<code>generate_settings_matrix</code>, the function calls on
+<code>add_settings_matrix_rows</code> to add rows with randomly valid
 values. The input dataframe inclusion variables rely on yet another
 helper function:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">random_removal</span></span>
-<span><span class="co">#&gt; function (num_cols, min_removed, max_removed) </span></span>
+<span><span class="co">#&gt; function (columns, min_removed_inputs, max_removed_inputs, dropout_dist = "exponential") </span></span>
 <span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     if (is.null(min_removed)) {</span></span>
-<span><span class="co">#&gt;         min_removed &lt;- 0</span></span>
+<span><span class="co">#&gt;     inclusion_columns &lt;- columns[startsWith(columns, "inc")]</span></span>
+<span><span class="co">#&gt;     num_cols &lt;- length(inclusion_columns)</span></span>
+<span><span class="co">#&gt;     if (dropout_dist == "none") {</span></span>
+<span><span class="co">#&gt;         inclusions_df &lt;- data.frame(t(rep(1, num_cols)))</span></span>
+<span><span class="co">#&gt;         colnames(inclusions_df) &lt;- inclusion_columns</span></span>
+<span><span class="co">#&gt;         rownames(inclusions_df) &lt;- NULL</span></span>
+<span><span class="co">#&gt;         return(inclusions_df)</span></span>
 <span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     if (is.null(max_removed)) {</span></span>
-<span><span class="co">#&gt;         max_removed &lt;- num_cols - 1</span></span>
+<span><span class="co">#&gt;     if (is.null(min_removed_inputs)) {</span></span>
+<span><span class="co">#&gt;         min_removed_inputs &lt;- 0</span></span>
 <span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     if (max_removed &gt;= num_cols || min_removed &lt; 0) {</span></span>
+<span><span class="co">#&gt;     if (is.null(max_removed_inputs)) {</span></span>
+<span><span class="co">#&gt;         max_removed_inputs &lt;- num_cols - 1</span></span>
+<span><span class="co">#&gt;     }</span></span>
+<span><span class="co">#&gt;     if (max_removed_inputs &gt;= num_cols || min_removed_inputs &lt; </span></span>
+<span><span class="co">#&gt;         0) {</span></span>
 <span><span class="co">#&gt;         stop(paste0("The number of removed elements must be between 0 and the", </span></span>
 <span><span class="co">#&gt;             " total number of elements in the data_list (", num_cols, </span></span>
 <span><span class="co">#&gt;             ")."))</span></span>
 <span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     rand_vals &lt;- stats::rexp(10000)</span></span>
-<span><span class="co">#&gt;     difference &lt;- max_removed - min_removed</span></span>
-<span><span class="co">#&gt;     rand_vals &lt;- rand_vals/max(rand_vals)</span></span>
-<span><span class="co">#&gt;     rand_vals &lt;- rand_vals * difference</span></span>
-<span><span class="co">#&gt;     rand_vals &lt;- rand_vals + min_removed</span></span>
-<span><span class="co">#&gt;     rand_vals &lt;- round(rand_vals)</span></span>
-<span><span class="co">#&gt;     num_removed &lt;- sample(rand_vals, 1)</span></span>
+<span><span class="co">#&gt;     if (dropout_dist == "uniform") {</span></span>
+<span><span class="co">#&gt;         possible_number_removed &lt;- seq(min_removed_inputs, max_removed_inputs, </span></span>
+<span><span class="co">#&gt;             by = 1)</span></span>
+<span><span class="co">#&gt;         num_removed &lt;- resample(possible_number_removed, 1)</span></span>
+<span><span class="co">#&gt;     }</span></span>
+<span><span class="co">#&gt;     if (dropout_dist == "exponential") {</span></span>
+<span><span class="co">#&gt;         rand_vals &lt;- stats::rexp(10000)</span></span>
+<span><span class="co">#&gt;         rand_vals &lt;- rand_vals/max(rand_vals)</span></span>
+<span><span class="co">#&gt;         difference &lt;- max_removed_inputs - min_removed_inputs</span></span>
+<span><span class="co">#&gt;         rand_vals &lt;- rand_vals * difference</span></span>
+<span><span class="co">#&gt;         rand_vals &lt;- rand_vals + min_removed_inputs</span></span>
+<span><span class="co">#&gt;         rand_vals &lt;- round(rand_vals)</span></span>
+<span><span class="co">#&gt;         num_removed &lt;- sample(rand_vals, 1)</span></span>
+<span><span class="co">#&gt;     }</span></span>
 <span><span class="co">#&gt;     remove_placeholders &lt;- rep(0, num_removed)</span></span>
 <span><span class="co">#&gt;     keep_placeholders &lt;- rep(1, num_cols - num_removed)</span></span>
 <span><span class="co">#&gt;     unshuffled_removals &lt;- c(remove_placeholders, keep_placeholders)</span></span>
 <span><span class="co">#&gt;     shuffled_removals &lt;- sample(unshuffled_removals)</span></span>
-<span><span class="co">#&gt;     return(shuffled_removals)</span></span>
+<span><span class="co">#&gt;     inclusions_df &lt;- t(data.frame(shuffled_removals))</span></span>
+<span><span class="co">#&gt;     colnames(inclusions_df) &lt;- inclusion_columns</span></span>
+<span><span class="co">#&gt;     rownames(inclusions_df) &lt;- NULL</span></span>
+<span><span class="co">#&gt;     return(inclusions_df)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55ec4c3915a8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x555abbb2f430&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
 <p>This <code>random_removal</code> function randomly picks a number of
 columns to remove according to an exponential function. The most likely
@@ -1131,7 +1169,7 @@ the end is quite large.</p>
 single-feature input dataframes:</p>
 <p><strong>Example 1: Concatenation -&gt; single similarity
 matrix</strong></p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    subjectkey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"person1"</span>, <span class="st">"person2"</span>, <span class="st">"person3"</span>, <span class="st">"person4"</span><span class="op">)</span>,</span>
 <span>    feature1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span></span>
@@ -1201,7 +1239,7 @@ Two individual dataframes, prior to concatenation
 </tr></tbody>
 </table>
 <p>We start by joining our two features by concatenation:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df3</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">df1</span>, <span class="va">df2</span>, by <span class="op">=</span> <span class="st">"subjectkey"</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>A single concatenated dataframe</caption>
@@ -1234,7 +1272,7 @@ Two individual dataframes, prior to concatenation
 </tbody>
 </table>
 <p>Giving rise to the following distance matrix:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df3_dist</span> <span class="op">&lt;-</span> <span class="va">df3</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -1246,7 +1284,7 @@ Two individual dataframes, prior to concatenation
 3.61&amp;2.83&amp;1.41&amp;0 \\
 \end{bmatrix}\]</span></p>
 <p>And subsequent similarity matrix:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df3_sim</span> <span class="op">&lt;-</span> <span class="fu">SNFtool</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/affinityMatrix.html" class="external-link">affinityMatrix</a></span><span class="op">(</span><span class="va">df3_dist</span>, K <span class="op">=</span> <span class="fl">3</span>, sigma <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><span class="math display">\[\begin{bmatrix}
@@ -1258,7 +1296,7 @@ Two individual dataframes, prior to concatenation
 <p><span class="math inline">\(~\)</span></p>
 <p><strong>Example 2: Similarity matrices -&gt; integration by
 SNF</strong></p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    subjectkey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"person1"</span>, <span class="st">"person2"</span>, <span class="st">"person3"</span>, <span class="st">"person4"</span><span class="op">)</span>,</span>
 <span>    feature1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span></span>
@@ -1270,7 +1308,7 @@ SNF</strong></p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>We first convert each of our input dataframes into distance
 matrices:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df1_dist</span> <span class="op">&lt;-</span> <span class="va">df1</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -1292,7 +1330,7 @@ matrices:</p>
 2&amp;2&amp;1&amp;0 \\
 \end{bmatrix}\]</span></p>
 <p>We then convert these distance matrices into similarity matrices:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df1_sim</span> <span class="op">&lt;-</span> <span class="fu">SNFtool</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/affinityMatrix.html" class="external-link">affinityMatrix</a></span><span class="op">(</span><span class="va">df1_dist</span>, K <span class="op">=</span> <span class="fl">3</span>, sigma <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span></span>
@@ -1310,7 +1348,7 @@ matrices:</p>
 0.02&amp;0.02&amp;0.17&amp;0.72 \\
 \end{bmatrix}\]</span></p>
 <p>And then we fuse these similarity matrices together using SNF:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df1_df2_fused</span> <span class="op">&lt;-</span> <span class="fu">SNFtool</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/SNF.html" class="external-link">SNF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">df1_sim</span>, <span class="va">df2_sim</span><span class="op">)</span>, K <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><span class="math display">\[\begin{bmatrix}
