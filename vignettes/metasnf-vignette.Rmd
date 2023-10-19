@@ -148,11 +148,11 @@ I'll set aside the anxiety and depression dataframes for now and just use the ot
 
 ```{r}
 data_list <- generate_data_list(
-    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
-    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
-    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
-    list(abcd_income, "household_income", "demographics", "numeric"),
-    list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
+    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(abcd_income, "household_income", "demographics", "continuous"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
     uid = "patient"
 )
 ```
@@ -163,7 +163,7 @@ The first entries are all lists which contains the following elements:
 1. The actual dataframe
 2. A name for the dataframe (string)
 3. A name for the *domain* of the dataframe (string)
-4. The type of variable stored in the dataframe (options are numeric, categorical, and mixed)
+4. The type of variable stored in the dataframe (options are continuous, categorical, and mixed)
 
 Finally, there's an argument for the `uid` (the column name that currently uniquely identifies all the subjects in your data).
 
@@ -221,20 +221,13 @@ The resulting structure is an `solutions_matrix` which is an extension of the `s
 
 ```{r}
 
-unique(summarize_dl(data_list)$"length")
-
-max(settings_matrix$"k")
-
 solutions_matrix <- batch_snf(data_list, settings_matrix)
 
-colnames(solutions_matrix)[1:20]
+colnames(solutions_matrix)[1:30]
+
 ```
 
 It goes on like this for some time.
-
-```{r}
-solutions_matrix[1:5, 1:20]
-```
 
 Just like that, the clustering is done!
 
@@ -376,7 +369,7 @@ From there, you're on your own (until the next vignette, maybe?)
 If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
 
 There are many ways to go about doing this, but this package offers one way through the `target_list` structure.
-The `target_list` contains dataframes what we can examine our clustering results over through linear regression (numeric data), ordinal regression (ordinal data), or the Chi-squared test (categorical data).
+The `target_list` contains dataframes what we can examine our clustering results over through linear regression (continuous data), ordinal regression (ordinal data), or the Chi-squared test (categorical data).
 
 ```{r}
 target_list <- generate_target_list(
@@ -479,20 +472,20 @@ test_abcd_depress <- keep_split(abcd_depress, assigned_splits, "test", uid = "pa
 
 # Construct the data lists
 train_data_list <- generate_data_list(
-    list(train_abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
-    list(train_abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
-    list(train_abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
-    list(train_abcd_income, "household_income", "demographics", "numeric"),
-    list(train_abcd_pubertal, "pubertal_status", "demographics", "numeric"),
+    list(train_abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(train_abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(train_abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(train_abcd_income, "household_income", "demographics", "continuous"),
+    list(train_abcd_pubertal, "pubertal_status", "demographics", "continuous"),
     uid = "patient"
 )
 
 test_data_list <- generate_data_list(
-    list(test_abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
-    list(test_abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
-    list(test_abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
-    list(test_abcd_income, "household_income", "demographics", "numeric"),
-    list(test_abcd_pubertal, "pubertal_status", "demographics", "numeric"),
+    list(test_abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(test_abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(test_abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(test_abcd_income, "household_income", "demographics", "continuous"),
+    list(test_abcd_pubertal, "pubertal_status", "demographics", "continuous"),
     uid = "patient"
 )
 ```
@@ -503,11 +496,11 @@ To ensure the full data list is constructed with an order that is compatible wit
 
 ```{r}
 full_data_list <- generate_data_list(
-    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "numeric"),
-    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "numeric"),
-    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
-    list(abcd_income, "household_income", "demographics", "numeric"),
-    list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
+    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(abcd_income, "household_income", "demographics", "continuous"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
     uid = "patient",
     assigned_splits = assigned_splits
 )

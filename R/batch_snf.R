@@ -29,6 +29,9 @@
 #'  clustering algorithms to provide cluster solutions on every iteration of
 #'  SNF. If TRUE, parameter `affinity_matrix_dir` must be specified.
 #'
+#' @param distance_metrics_list A distance_metrics_list.
+#'  See ?generate_distance_metrics_list.
+#'
 #' @param quiet If TRUE, will not print out time remaining estimates.
 #'
 #' @return populated_settings_matrix settings matrix with filled columns
@@ -42,6 +45,7 @@ batch_snf <- function(data_list,
                       affinity_matrix_dir = NULL,
                       clust_algs_list = NULL,
                       suppress_clustering = FALSE,
+                      distance_metrics_list = NULL,
                       quiet = FALSE) {
     ###########################################################################
     # 1. Checking validity of settings
@@ -177,7 +181,31 @@ batch_snf <- function(data_list,
         affinity_matrices <- list()
     }
     ###########################################################################
-    # 7. Iterate through the rows of the settings matrix
+    # 7. Creation of distance_metrics_list, if it does not already exist
+    ###########################################################################
+    if (is.null(distance_metrics_list)) {
+        # Make sure the user didn't just forget to provide their list. If the
+        #  settings matrix has distances chosen beyond a value of 1, the user
+        #  certainly meant to provide a custom list.
+        max_dist_param <- max(
+            settings_matrix$"cont_dist",
+            settings_matrix$"disc_dist",
+            settings_matrix$"ord_dist",
+            settings_matrix$"cat_dist",
+            settings_matrix$"mix_dist"
+        )
+        if (max_dist_param > 1) {
+            stop(
+                "settings_matrix refers to distance metrics values beyond one",
+                " but no distance_metrics_list was provided. Did you forget",
+                " to provide a distance_metrics_list?"
+            )
+        } else {
+            distance_metrics_list <- generate_distance_metrics_list()
+        }
+    }
+    ###########################################################################
+    # 8. Iterate through the rows of the settings matrix
     ###########################################################################
     for (i in seq_len(nrow(settings_matrix))) {
         start_time <- Sys.time() # used to estimate time to completion
@@ -189,14 +217,32 @@ batch_snf <- function(data_list,
             settings_matrix_row$"snf_scheme" == 2 ~ "domain",
             settings_matrix_row$"snf_scheme" == 3 ~ "twostep",
         )
-        k <- settings_matrix[i, "k"]
-        alpha <- settings_matrix[i, "alpha"]
+        k <- settings_matrix_row$"k"
+        alpha <- settings_matrix_row$"alpha"
+        t <- settings_matrix_row$"t"
+        cont_dist <- settings_matrix_row$"cont_dist"
+        disc_dist <- settings_matrix_row$"disc_dist"
+        ord_dist <- settings_matrix_row$"ord_dist"
+        cat_dist <- settings_matrix_row$"cat_dist"
+        mix_dist <- settings_matrix_row$"mix_dist"
+        cont_dist_fn <- distance_metrics_list$"continuous_distance"[[cont_dist]]
+        disc_dist_fn <- distance_metrics_list$"discrete_distance"[[disc_dist]]
+        ord_dist_fn <- distance_metrics_list$"ordinal_distance"[[ord_dist]]
+        cat_dist_fn <- distance_metrics_list$"categorical_distance"[[cat_dist]]
+        mix_dist_fn <- distance_metrics_list$"mixed_distance"[[mix_dist]]
         # Run SNF
         fused_network <- snf_step(
             current_data_list,
             current_snf_scheme,
             k = k,
-            alpha = alpha)
+            alpha = alpha,
+            t = t,
+            cont_dist_fn = cont_dist_fn,
+            disc_dist_fn = disc_dist_fn,
+            ord_dist_fn = ord_dist_fn,
+            cat_dist_fn = cat_dist_fn,
+            mix_dist_fn = mix_dist_fn
+        )
         # If user provided a path to save the affinity matrices, save them
         if (!is.null(affinity_matrix_dir)) {
             utils::write.csv(

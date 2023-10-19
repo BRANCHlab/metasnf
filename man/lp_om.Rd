@@ -4,12 +4,15 @@
 \alias{lp_om}
 \title{Label propagation over an solutions matrix}
 \usage{
-lp_om(om, full_data_list)
+lp_om(om, full_data_list, distance_metrics_list = NULL)
 }
 \arguments{
 \item{om}{An solutions matrix}
 
 \item{full_data_list}{A data_list object made by rbinding(train, test) data}
+
+\item{distance_metrics_list}{A distance_metrics_list.
+See ?generate_distance_metrics_list.}
 }
 \value{
 labeled_df A dataframe of the label propagated results of all om rows

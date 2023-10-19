@@ -1,4 +1,4 @@
-#' Generate data_list object - but softcoded
+#' Generate data_list object
 #'
 #' This is the major data object that will be processed when iterating through
 #'  the settings matrix. The full list contains one list per measurement type.
@@ -34,16 +34,16 @@
 #' )
 #'
 #' dl <- generate_data_list(
-#'     list(heart_rate_df, "data1", "domain1", "numeric"),
-#'     list(personality_test_df, "data2", "domain2", "numeric"),
+#'     list(heart_rate_df, "data1", "domain1", "continuous"),
+#'     list(personality_test_df, "data2", "domain2", "continuous"),
 #'     uid = "patient_id"
 #' )
 #'
 #' # Alternative loading: providing a single list of lists
 #'
 #' list_of_lists <- list(
-#'     list(heart_rate_df, "data1", "domain1", "numeric"),
-#'     list(personality_test_df, "data2", "domain2", "numeric")
+#'     list(heart_rate_df, "data1", "domain1", "continuous"),
+#'     list(personality_test_df, "data2", "domain2", "continuous")
 #' )
 #'
 #' dl <- generate_data_list(

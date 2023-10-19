@@ -12,6 +12,7 @@ batch_snf(
   affinity_matrix_dir = NULL,
   clust_algs_list = NULL,
   suppress_clustering = FALSE,
+  distance_metrics_list = NULL,
   quiet = FALSE
 )
 }
@@ -44,6 +45,9 @@ to the final fused network. See ?generate_clust_algs_list}
 \item{suppress_clustering}{If FALSE (default), will apply default or custom
 clustering algorithms to provide cluster solutions on every iteration of
 SNF. If TRUE, parameter \code{affinity_matrix_dir} must be specified.}
+
+\item{distance_metrics_list}{A distance_metrics_list.
+See ?generate_distance_metrics_list.}
 
 \item{quiet}{If TRUE, will not print out time remaining estimates.}
 }

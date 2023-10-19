@@ -47,11 +47,13 @@ label_prop <- function(full_fused_network, clusters) {
 #'
 #' @param om An solutions matrix
 #' @param full_data_list A data_list object made by rbinding(train, test) data
+#' @param distance_metrics_list A distance_metrics_list.
+#'  See ?generate_distance_metrics_list.
 #'
 #' @return labeled_df A dataframe of the label propagated results of all om rows
 #'
 #' @export
-lp_om <- function(om, full_data_list) {
+lp_om <- function(om, full_data_list, distance_metrics_list = NULL) {
     if (!"significance" %in% colnames(om)) {
         print(paste0(
             "If you add a 'significance' column to your solutions matrix",
@@ -76,14 +78,64 @@ lp_om <- function(om, full_data_list) {
         current_row <- om[i, ]
         sig <- paste0(current_row$"significance")
         reduced_dl <- drop_inputs(current_row, full_data_list)
-        check_subj_orders_for_lp(reduced_dl,
-                                 current_row,
-                                 n_train = n_train,
-                                 n_test = n_test)
-        full_fused_network <- snf_step(reduced_dl,
-                 scheme = current_row$"snf_scheme",
-                 k = current_row$"k",
-                 alpha = current_row$"alpha"
+        check_subj_orders_for_lp(
+            reduced_dl,
+            current_row,
+            n_train = n_train,
+            n_test = n_test
+        )
+        #######################################################################
+        # 7. Creation of distance_metrics_list, if it does not already exist
+        #######################################################################
+        if (is.null(distance_metrics_list)) {
+            # Make sure the user didn't just forget to provide their list. If the
+            #  settings matrix has distances chosen beyond a value of 1, the user
+            #  certainly meant to provide a custom list.
+            max_dist_param <- max(
+                current_row$"cont_dist",
+                current_row$"disc_dist",
+                current_row$"ord_dist",
+                current_row$"cat_dist",
+                current_row$"mix_dist"
+            )
+            if (max_dist_param > 1) {
+                stop(
+                    "settings_matrix refers to distance metrics values beyond one",
+                    " but no distance_metrics_list was provided. Did you forget",
+                    " to provide a distance_metrics_list?"
+                )
+            } else {
+                distance_metrics_list <- generate_distance_metrics_list()
+            }
+        }
+        #######################################################################
+        # obtaining settings values for snf_step
+        scheme <- current_row$"snf_scheme"
+        k <- current_row$"k"
+        alpha <- current_row$"alpha"
+        t <- current_row$"t"
+        cont_dist <- current_row$"cont_dist"
+        disc_dist <- current_row$"disc_dist"
+        ord_dist <- current_row$"ord_dist"
+        cat_dist <- current_row$"cat_dist"
+        mix_dist <- current_row$"mix_dist"
+        cont_dist_fn <- distance_metrics_list$"continuous_distance"[[cont_dist]]
+        disc_dist_fn <- distance_metrics_list$"discrete_distance"[[disc_dist]]
+        ord_dist_fn <- distance_metrics_list$"ordinal_distance"[[ord_dist]]
+        cat_dist_fn <- distance_metrics_list$"categorical_distance"[[cat_dist]]
+        mix_dist_fn <- distance_metrics_list$"mixed_distance"[[mix_dist]]
+        #######################################################################
+        full_fused_network <- snf_step(
+            reduced_dl,
+            scheme = scheme,
+            k = k,
+            alpha = alpha,
+            t = t,
+            cont_dist_fn = cont_dist_fn,
+            disc_dist_fn = disc_dist_fn,
+            ord_dist_fn = ord_dist_fn,
+            cat_dist_fn = cat_dist_fn,
+            mix_dist_fn = mix_dist_fn
         )
         full_fused_network <- full_fused_network[ordered_subs, ordered_subs]
         clusters <- get_clusters(current_row)
@@ -92,7 +144,8 @@ lp_om <- function(om, full_data_list) {
             labeled_df <- data.frame(
                 subjectkey = all_subs,
                 group = group_vec,
-                cluster = propagated_labels)
+                cluster = propagated_labels
+            )
             names <- colnames(labeled_df)
             names[which(names == "cluster")] <- sig
             colnames(labeled_df) <- names
@@ -100,14 +153,16 @@ lp_om <- function(om, full_data_list) {
             current_df <- data.frame(
                 subjectkey = all_subs,
                 group = group_vec,
-                cluster = propagated_labels)
+                cluster = propagated_labels
+            )
             names <- colnames(current_df)
             names[which(names == "cluster")] <- sig
             colnames(current_df) <- names
-            labeled_df <-
-                dplyr::inner_join(labeled_df,
-                                  current_df,
-                                  by = c("subjectkey", "group"))
+            labeled_df <- dplyr::inner_join(
+                labeled_df,
+                current_df,
+                by = c("subjectkey", "group")
+            )
         }
     }
     return(labeled_df)

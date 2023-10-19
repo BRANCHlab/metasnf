@@ -4,7 +4,16 @@
 \alias{get_dist_matrix}
 \title{Calculate distance matrices}
 \usage{
-get_dist_matrix(df, input_type, scale = FALSE, distance_metrics_list = NULL)
+get_dist_matrix(
+  df,
+  input_type,
+  scale = FALSE,
+  cont_dist_fn,
+  disc_dist_fn,
+  ord_dist_fn,
+  cat_dist_fn,
+  mix_dist_fn
+)
 }
 \arguments{
 \item{df}{Raw dataframe with subject IDs in column 1}
@@ -16,7 +25,15 @@ gower distances)}
 \item{scale}{Whether or not the data should be standard normalized prior to
 distance calculations}
 
-\item{distance_metrics_list}{Output of generate_distance_metrics_list().}
+\item{cont_dist_fn}{distance metric function for continuous data}
+
+\item{disc_dist_fn}{distance metric function for discrete data}
+
+\item{ord_dist_fn}{distance metric function for ordinal data}
+
+\item{cat_dist_fn}{distance metric function for categorical data}
+
+\item{mix_dist_fn}{distance metric function for mixed data}
 }
 \value{
 dist_matrix Matrix of inter-observation distances

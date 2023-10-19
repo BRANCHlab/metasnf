@@ -9,7 +9,11 @@
 #'  gower distances)
 #' @param scale Whether or not the data should be standard normalized prior to
 #'  distance calculations
-#' @param distance_metrics_list Output of generate_distance_metrics_list().
+#' @param cont_dist_fn distance metric function for continuous data
+#' @param disc_dist_fn distance metric function for discrete data
+#' @param ord_dist_fn distance metric function for ordinal data
+#' @param cat_dist_fn distance metric function for categorical data
+#' @param mix_dist_fn distance metric function for mixed data
 #'
 #' @return dist_matrix Matrix of inter-observation distances
 #'
@@ -17,18 +21,23 @@
 get_dist_matrix <- function(df,
                             input_type,
                             scale = FALSE,
-                            distance_metrics_list = NULL) {
+                            cont_dist_fn,
+                            disc_dist_fn,
+                            ord_dist_fn,
+                            cat_dist_fn,
+                            mix_dist_fn) {
     # Move subject keys into dataframe rownames
-    df <- data.frame(df, row.names = 1)
-    if (input_type == "numeric") {
-        if (scale) {
-            df <- SNFtool::standardNormalization(df)
-        }
-        dist_matrix <- as.matrix(stats::dist(df, method = "euclidean"))
-    } else if (input_type %in% c("mixed", "categorical")) {
-        df <- char_to_fac(df)
-        dist_matrix <-
-            as.matrix(cluster::daisy(df, metric = "gower", warnBin = FALSE))
+    # df <- data.frame(df, row.names = 1)
+    if (input_type == "continuous") {
+        dist_matrix <- cont_dist_fn(df)
+    } else if (input_type == "discrete") {
+        dist_matrix <- disc_dist_fn(df)
+    } else if (input_type == "ordinal") {
+        dist_matrix <- ord_dist_fn(df)
+    } else if (input_type == "categorical") {
+        dist_matrix <- cat_dist_fn(df)
+    } else if (input_type == "mixed") {
+        dist_matrix <- mix_dist_fn(df)
     } else {
         rlang::abort(
             paste0("The value ", input_type, " is not a valid input type."),
@@ -321,7 +330,7 @@ summarize_distance_metrics_list <- function(distance_metrics_list) {
 #' @export
 euclidean_distance <- function(df) {
     # Remove the first column, which is just the subjectkey
-    df <- df[, -1]
+    df <- data.frame(df, row.names = 1)
     # Apply euclidean distance
     distance_matrix <- df |>
         stats::dist(method = "euclidean") |>
@@ -339,7 +348,7 @@ euclidean_distance <- function(df) {
 #' @export
 gower_distance <- function(df) {
     # Remove the first column, which is just the subjectkey
-    df <- df[, -1]
+    df <- data.frame(df, row.names = 1)
     # Convert all character columns into factors
     df <- char_to_fac(df)
     distance_matrix <- df |>

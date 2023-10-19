@@ -52,19 +52,44 @@ domain_merge <- function(data_list) {
 #' @param k k hyperparameter
 #' @param alpha alpha/eta/sigma hyperparameter
 #' @param t SNF number of iterations hyperparameter
+#' @param cont_dist_fn distance metric function for continuous data
+#' @param disc_dist_fn distance metric function for discrete data
+#' @param ord_dist_fn distance metric function for ordinal data
+#' @param cat_dist_fn distance metric function for categorical data
+#' @param mix_dist_fn distance metric function for mixed data
 #'
 #' @return fused_network The final fused network for clustering
 #'
 #' @export
-two_step_merge <- function(data_list, k = 20, alpha = 0.5, t = 20) {
-    dist_list <- lapply(data_list,
+two_step_merge <- function(data_list,
+                           k = 20,
+                           alpha = 0.5,
+                           t = 20,
+                           cont_dist_fn,
+                           disc_dist_fn,
+                           ord_dist_fn,
+                           cat_dist_fn,
+                           mix_dist_fn) {
+    dist_list <- lapply(
+        data_list,
         function(x) {
-            get_dist_matrix(df = x$"data", input_type = x$"type")
-        })
-    sim_list <- lapply(dist_list,
+            get_dist_matrix(
+                df = x$"data",
+                input_type = x$"type",
+                cont_dist_fn = cont_dist_fn,
+                disc_dist_fn = disc_dist_fn,
+                ord_dist_fn = ord_dist_fn,
+                cat_dist_fn = cat_dist_fn,
+                mix_dist_fn = mix_dist_fn
+            )
+        }
+    )
+    sim_list <- lapply(
+        dist_list,
         function(x) {
             SNFtool::affinityMatrix(x, K = k, sigma = alpha)
-        })
+        }
+    )
     affinity_list <- data_list
     for (i in seq_along(affinity_list)) {
         affinity_list[[i]]$"data" <- sim_list[[i]]
@@ -109,6 +134,11 @@ two_step_merge <- function(data_list, k = 20, alpha = 0.5, t = 20) {
 #' @param k k hyperparameter
 #' @param alpha alpha/eta/sigma hyperparameter
 #' @param t SNF number of iterations hyperparameter
+#' @param cont_dist_fn distance metric function for continuous data
+#' @param disc_dist_fn distance metric function for discrete data
+#' @param ord_dist_fn distance metric function for ordinal data
+#' @param cat_dist_fn distance metric function for categorical data
+#' @param mix_dist_fn distance metric function for mixed data
 #'
 #' @return fused_network The final fused network for clustering
 #'
@@ -117,18 +147,35 @@ snf_step <- function(data_list,
                      scheme,
                      k = 20,
                      alpha = 0.5,
-                     t = 20) {
+                     t = 20,
+                     cont_dist_fn,
+                     disc_dist_fn,
+                     ord_dist_fn,
+                     cat_dist_fn,
+                     mix_dist_fn) {
     # The individual scheme creates similarity matrices for each dl element
     #  and pools them all into a single SNF run
     if (scheme %in% c("individual", 1)) {
-        dist_list <- lapply(data_list,
+        dist_list <- lapply(
+            data_list,
             function(x) {
-                get_dist_matrix(df = x$"data", input_type = x$"type")
-            })
-        sim_list <- lapply(dist_list,
+                get_dist_matrix(
+                    df = x$"data",
+                    input_type = x$"type",
+                    cont_dist_fn = cont_dist_fn,
+                    disc_dist_fn = disc_dist_fn,
+                    ord_dist_fn = ord_dist_fn,
+                    cat_dist_fn = cat_dist_fn,
+                    mix_dist_fn = mix_dist_fn
+                )
+            }
+        )
+        sim_list <- lapply(
+            dist_list,
             function(x) {
                 SNFtool::affinityMatrix(x, K = k, sigma = alpha)
-            })
+            }
+        )
         fused_network <- SNFtool::SNF(Wall = sim_list, K = k, t = t)
     # The domain scheme first runs domain merge on the data list (concatenates
     #  any data of the same domain) and then pools the concatenated data into a
@@ -137,9 +184,17 @@ snf_step <- function(data_list,
         data_list <- domain_merge(data_list)
         dist_list <- lapply(data_list,
             function(x) {
-                get_dist_matrix(df = x$"data", input_type = x$"type",
-                    scale = TRUE)
-            })
+                get_dist_matrix(
+                    df = x$"data",
+                    input_type = x$"type",
+                    cont_dist_fn = cont_dist_fn,
+                    disc_dist_fn = disc_dist_fn,
+                    ord_dist_fn = ord_dist_fn,
+                    cat_dist_fn = cat_dist_fn,
+                    mix_dist_fn = mix_dist_fn
+                )
+            }
+        )
         sim_list <- lapply(dist_list,
             function(x) {
                 affinity_matrix <- SNFtool::affinityMatrix(x, K = k, sigma = alpha)
@@ -148,7 +203,17 @@ snf_step <- function(data_list,
         fused_network <- SNFtool::SNF(Wall = sim_list, K = k, t = t)
     # The twostep scheme
     } else if (scheme %in% c("twostep", 3)) {
-        fused_network <- two_step_merge(data_list)
+        fused_network <- two_step_merge(
+            data_list,
+            k = k,
+            alpha = alpha,
+            t = t,
+            cont_dist_fn = cont_dist_fn,
+            disc_dist_fn = disc_dist_fn,
+            ord_dist_fn = ord_dist_fn,
+            cat_dist_fn = cat_dist_fn,
+            mix_dist_fn = mix_dist_fn
+        )
     } else {
         rlang::abort(
             paste0("The value '", scheme, "' is not a valid snf scheme."),

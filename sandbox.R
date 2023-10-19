@@ -6,7 +6,7 @@ data_list <- generate_data_list(
     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
     list(abcd_income, "household_income", "demographics", "numeric"),
     list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
-    old_uid = "patient"
+    uid = "patient"
 )
 
 settings_matrix <- generate_settings_matrix(
@@ -16,17 +16,13 @@ settings_matrix <- generate_settings_matrix(
     seed = 42
 )
 
-settings_matrix
-
 solutions_matrix <- batch_snf(
     data_list,
     settings_matrix
 )
 
-solutions_matrix2 <- batch_snf(
-    data_list,
-    settings_matrix
-)
+
+solutions_matrix
 
 # library(dbscan)
 
