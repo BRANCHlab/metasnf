@@ -76,25 +76,23 @@
 #'  clustering using the rotation cost heuristic. See ?generate_clust_algs_list
 #'  for more details on running custom clustering algorithms.
 #'
-#' @param continuous_distances A list of distance metrics to use
-#'  anytime raw data is converted to a distance matrix as an intermediate step.
-#'  By default, this will standardized normalized Euclidean. See
-#'  ?generate_distance_list for more details on using custom distance metrics.
+#' @param continuous_distances A vector of continuous distance metrics to use
+#'  when a custom distance_metrics_list is provided.
 #'
-#' @param discrete_distances Like `continuous_distances`, but
-#'  for discrete data. By default, uses standardized normalized Euclidean.
+#' @param discrete_distances A vector of categorical distance metrics to use
+#'  when a custom distance_metrics_list is provided.
 #'
-#' @param ordinal_distances Like `continuous_distances`, but
-#'  for ordinal data. By default, uses standardized normalized Euclidean.
+#' @param ordinal_distances A vector of categorical distance metrics to use
+#'  when a custom distance_metrics_list is provided.
 #'
-#' @param categorical_distances Like `continuous_distances`, but
-#'  for categorical data. By default, uses Gower's distance.
+#' @param categorical_distances A vector of categorical distance metrics to use
+#'  when a custom distance_metrics_list is provided.
 #'
-#' @param mixed_distances Like `continuous_distances`, but
-#'  for mixed data. By default, uses gower distance.
+#' @param mixed_distances A vector of mixed distance metrics to use
+#'  when a custom distance_metrics_list is provided.
 #'
 #' @param distance_metrics_list List containing distance metrics to vary over.
-#'  Cannot be
+#'  See ?generate_distance_metrics_list.
 #'
 #' @param snf_input_weights Nested list containing weights for when SNF is
 #'  used to merge individual input measures (see ?generate_snf_weights)
@@ -272,25 +270,23 @@ generate_settings_matrix <- function(data_list,
 #'  clustering using the rotation cost heuristic. See ?generate_clust_algs_list
 #'  for more details on running custom clustering algorithms.
 #'
-#' @param continuous_distances A list of distance metrics to use
-#'  anytime raw data is converted to a distance matrix as an intermediate step.
-#'  By default, this will standardized normalized Euclidean. See
-#'  ?generate_distance_list for more details on using custom distance metrics.
+#' @param continuous_distances A vector of continuous distance metrics to use
+#'  when a custom distance_metrics_list is provided.
 #'
-#' @param discrete_distances Like `continuous_distances`, but
-#'  for discrete data. By default, uses standardized normalized Euclidean.
+#' @param discrete_distances A vector of categorical distance metrics to use
+#'  when a custom distance_metrics_list is provided.
 #'
-#' @param ordinal_distances Like `continuous_distances`, but
-#'  for ordinal data. By default, uses standardized normalized Euclidean.
+#' @param ordinal_distances A vector of categorical distance metrics to use
+#'  when a custom distance_metrics_list is provided.
 #'
-#' @param categorical_distances Like `continuous_distances`, but
-#'  for categorical data. By default, uses Gower's distance.
+#' @param categorical_distances A vector of categorical distance metrics to use
+#'  when a custom distance_metrics_list is provided.
 #'
-#' @param mixed_distances Like `continuous_distances`, but
-#'  for mixed data. By default, uses gower distance.
+#' @param mixed_distances A vector of mixed distance metrics to use
+#'  when a custom distance_metrics_list is provided.
 #'
 #' @param distance_metrics_list List containing distance metrics to vary over.
-#'  Cannot be
+#'  See ?generate_distance_metrics_list.
 #'
 #' @param snf_input_weights Nested list containing weights for when SNF is
 #'  used to merge individual input measures (see ?generate_snf_weights)
@@ -445,7 +441,7 @@ add_settings_matrix_rows <- function(settings_matrix,
             min_k <- 10
         }
         if (is.null(max_k)) {
-            max_k <- 100
+            max_k <- 99
         }
         k_values <- seq(min_k, max_k, by = 1)
     }
@@ -505,14 +501,20 @@ add_settings_matrix_rows <- function(settings_matrix,
         t_values <- seq(min_t, max_t, by = 1)
     }
     ###########################################################################
-    # 4. Set the random seed (if provided)
+    # 4. Handling distance metrics
+    ###########################################################################
+    if (is.null(distance_metrics_list)) {
+        distance_metrics_list <- generate_distance_metrics_list()
+    }
+    ###########################################################################
+    # 5. Set the random seed (if provided)
     ###########################################################################
     if (!is.null(seed)) {
         set.seed(seed)
         print("The global seed has been changed!")
     }
     ###########################################################################
-    # 5. Begin the loop that will generate new random settings_matrix rows
+    # 6. Begin the loop that will generate new random settings_matrix rows
     ###########################################################################
     i <- 0
     num_retries <- 0
@@ -527,7 +529,7 @@ add_settings_matrix_rows <- function(settings_matrix,
             dropout_dist = dropout_dist
         )
         #######################################################################
-        # 6. Pick random values uniformly
+        # 7. Pick random values uniformly
         #######################################################################
         # The behaviour of sample is different when it receives 1 number vs.
         #  a vector of numbers. Rather than just picking that 1 number, it will
@@ -545,31 +547,51 @@ add_settings_matrix_rows <- function(settings_matrix,
         } else {
             clust_alg <- sample(1:length(clustering_algorithms), 1)
         }
+        #######################################################################
+        # 8. Distance metrics
+        #######################################################################
         if (is.null(continuous_distances)) {
-            cont_dist <- 1
+            cont_dist <- sample(
+                1:length(distance_metrics_list$"continuous_distances"),
+                1
+            )
         } else {
             cont_dist <- sample(1:length(continuous_distances), 1)
         }
         if (is.null(discrete_distances)) {
-            disc_dist <- 1
+            disc_dist <- sample(
+                1:length(distance_metrics_list$"discrete_distances"),
+                1
+            )
         } else {
             disc_dist <- sample(1:length(discrete_distances), 1)
         }
         if (is.null(ordinal_distances)) {
-            ord_dist <- 1
+            ord_dist <- sample(
+                1:length(distance_metrics_list$"ordinal_distances"),
+                1
+            )
         } else {
             ord_dist <- sample(1:length(ordinal_distances), 1)
         }
         if (is.null(categorical_distances)) {
-            cat_dist <- 1
+            cat_dist <- sample(
+                1:length(distance_metrics_list$"categorical_distances"),
+                1
+            )
         } else {
             cat_dist <- sample(1:length(categorical_distances), 1)
         }
         if (is.null(mixed_distances)) {
-            mix_dist <- 1
+            mix_dist <- sample(
+                1:length(distance_metrics_list$"mixed_distances"),
+                1
+            )
         } else {
             mix_dist <- sample(1:length(mixed_distances), 1)
         }
+        #######################################################################
+        # SNF weighting functionality - not yet integrated
         if (is.null(snf_input_weights)) {
             input_wt <- 1
         } else {
@@ -615,7 +637,8 @@ add_settings_matrix_rows <- function(settings_matrix,
             duplicated(dm_no_id, fromLast = TRUE)))
         if (num_duplicates > 0) {
             i <- i - 1
-            settings_matrix <- settings_matrix[seq_len(nrow(settings_matrix)) - 1, ]
+            settings_matrix <-
+                settings_matrix[seq_len(nrow(settings_matrix)) - 1, ]
             num_retries <- num_retries + 1
         } else {
             num_retries <- 0

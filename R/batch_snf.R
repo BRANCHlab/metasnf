@@ -78,10 +78,10 @@ batch_snf <- function(data_list,
         stop(
             paste0(
                 "The highest value of k in your settings_matrix exceeds the",
-                " number of patients in your data. The k-nearest neighbours",
-                " of any patient doesn't exist! Please regenerate your",
-                " settings_matrix while ensuring the maximum k value is less",
-                " than the number of patients in the data: ", n_patients, "."
+                " number of patients in your data. Please provide another",
+                " settings_matrix while ensuring the maximum k value",
+                " (currently ", max_k, ") is less than the number of patients",
+                " in the data: ", n_patients, "."
             )
         )
     }

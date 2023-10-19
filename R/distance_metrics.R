@@ -75,6 +75,18 @@ get_dist_matrix <- function(df,
 #'     continuous_distances = list(
 #'          "my_distance_metric" = my_distance_metric
 #'     ),
+#'     discrete_distances = list(
+#'          "my_distance_metric" = my_distance_metric
+#'     ),
+#'     ordinal_distances = list(
+#'          "my_distance_metric" = my_distance_metric
+#'     ),
+#'     categorical_distances = list(
+#'          "my_distance_metric" = my_distance_metric
+#'     ),
+#'     mixed_distances = list(
+#'          "my_distance_metric" = my_distance_metric
+#'     ),
 #'     keep_defaults = FALSE
 #' )
 #'
@@ -98,6 +110,7 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
     user_distances <- list(
         continuous_distances,
         discrete_distances,
+        ordinal_distances,
         categorical_distances,
         mixed_distances
     )
@@ -119,6 +132,21 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
                 "Please specify a name for every supplied metric."
             )
         )
+    }
+    ###########################################################################
+    # 2. Ensure that if the user is not using the defaults, that at least one
+    #  metric is provided for each variable type
+    if (!keep_defaults) {
+        if (length(user_distances) < 5) {
+            stop(
+                paste0(
+                    "If suppressing base distance metrics, you must specify",
+                    " at least one metric for each variable type (continuous,",
+                    " discrete, ordinal, categorical, and mixed) even if you",
+                    " are not intending on using that type."
+                )
+            )
+        }
     }
     ###########################################################################
     # 2. Set up the default lists

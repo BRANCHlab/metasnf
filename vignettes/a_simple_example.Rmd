@@ -164,6 +164,7 @@ data_list <- generate_data_list(
     list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
     uid = "patient_id"
 )
+
 ```
 
 ### 3. Store all the settings of the desired SNF runs in a *settings_matrix*

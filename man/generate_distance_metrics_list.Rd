@@ -57,6 +57,18 @@ distance_metrics_list <- generate_distance_metrics_list(
     continuous_distances = list(
          "my_distance_metric" = my_distance_metric
     ),
+    discrete_distances = list(
+         "my_distance_metric" = my_distance_metric
+    ),
+    ordinal_distances = list(
+         "my_distance_metric" = my_distance_metric
+    ),
+    categorical_distances = list(
+         "my_distance_metric" = my_distance_metric
+    ),
+    mixed_distances = list(
+         "my_distance_metric" = my_distance_metric
+    ),
     keep_defaults = FALSE
 )
 

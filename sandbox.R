@@ -16,6 +16,8 @@ settings_matrix <- generate_settings_matrix(
     seed = 42
 )
 
+settings_matrix
+
 solutions_matrix <- batch_snf(
     data_list,
     settings_matrix
@@ -40,6 +42,17 @@ distance_metrics_list <- generate_distance_metrics_list(
         "my_dist3" = euclidean_distance
     )
 )
+
+
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 5,
+    max_k = 40,
+    seed = 42,
+    distance_metrics_list = distance_metrics_list
+)
+
+settings_matrix
 
 distance_metrics_list <- generate_distance_metrics_list()
 

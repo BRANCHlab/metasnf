@@ -110,25 +110,23 @@ between spectral clustering using the eigen-gap heuristic and spectral
 clustering using the rotation cost heuristic. See ?generate_clust_algs_list
 for more details on running custom clustering algorithms.}
 
-\item{continuous_distances}{A list of distance metrics to use
-anytime raw data is converted to a distance matrix as an intermediate step.
-By default, this will standardized normalized Euclidean. See
-?generate_distance_list for more details on using custom distance metrics.}
+\item{continuous_distances}{A vector of continuous distance metrics to use
+when a custom distance_metrics_list is provided.}
 
-\item{discrete_distances}{Like \code{continuous_distances}, but
-for discrete data. By default, uses standardized normalized Euclidean.}
+\item{discrete_distances}{A vector of categorical distance metrics to use
+when a custom distance_metrics_list is provided.}
 
-\item{ordinal_distances}{Like \code{continuous_distances}, but
-for ordinal data. By default, uses standardized normalized Euclidean.}
+\item{ordinal_distances}{A vector of categorical distance metrics to use
+when a custom distance_metrics_list is provided.}
 
-\item{categorical_distances}{Like \code{continuous_distances}, but
-for categorical data. By default, uses Gower's distance.}
+\item{categorical_distances}{A vector of categorical distance metrics to use
+when a custom distance_metrics_list is provided.}
 
-\item{mixed_distances}{Like \code{continuous_distances}, but
-for mixed data. By default, uses gower distance.}
+\item{mixed_distances}{A vector of mixed distance metrics to use
+when a custom distance_metrics_list is provided.}
 
 \item{distance_metrics_list}{List containing distance metrics to vary over.
-Cannot be}
+See ?generate_distance_metrics_list.}
 
 \item{snf_input_weights}{Nested list containing weights for when SNF is
 used to merge individual input measures (see ?generate_snf_weights)}

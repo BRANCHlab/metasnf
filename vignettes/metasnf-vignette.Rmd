@@ -220,6 +220,11 @@ The `batch_snf` function integrates the data in the `data_list` using each of th
 The resulting structure is an `solutions_matrix` which is an extension of the `settings_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `settings_matrix` row.
 
 ```{r}
+
+unique(summarize_dl(data_list)$"length")
+
+max(settings_matrix$"k")
+
 solutions_matrix <- batch_snf(data_list, settings_matrix)
 
 colnames(solutions_matrix)[1:20]
