@@ -3,18 +3,18 @@
 #' The major object containing all outcome variables
 #'
 #' @param ... Lists of outcomes formatted as (dataframe, "name", "type")
-#' @param old_uid (string) the name of the uid column currently used data
+#' @param uid (string) the name of the uid column currently used data
 #'
 #' @return target_list structure containing all outcome measure data
 #'
 #' @export
-generate_target_list <- function(..., old_uid = NULL) {
+generate_target_list <- function(..., uid = NULL) {
     # The object that will contain all the data
     target_list <- list(...)
     # Assign names to the nested list elements
     target_list_names <- c("data", "name", "type")
     target_list <- lapply(target_list, stats::setNames, target_list_names)
-    target_list <- convert_uids(target_list, old_uid)
+    target_list <- convert_uids(target_list, uid)
     target_list <- prefix_dl_sk(target_list)
     return(target_list)
 }

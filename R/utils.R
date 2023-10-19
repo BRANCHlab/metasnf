@@ -197,30 +197,30 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
 #' @param assigned_df Dataframe containing "subjectkey" and "split" cols from
 #'  `train_test_assign()`
 #' @param split String indicating which split to keep ("train" or "test")
-#' @param old_uid (string) the name of the uid column currently used data
+#' @param uid (string) the name of the uid column currently used data
 #'
 #' @return split_df Dataframe subsetted to specified split
 #'
 #' @export
-keep_split <- function(df, assigned_df, split, old_uid = NULL) {
+keep_split <- function(df, assigned_df, split, uid = NULL) {
     # If the UID column of the dataframe is already subjectkey, use it.
-    # Otherwise, if the old_uid is in the dataframe, use that.
+    # Otherwise, if the uid is in the dataframe, use that.
     # Otherwise, raise error.
     if ("subjectkey" %in% colnames(df)) {
         print("Existing `subjectkey` column will be treated as UID.")
-        old_uid <- "subjectkey"
-    } else if (is.null(old_uid)) {
-        stop("Please provide name of unique ID column using `old_uid`.")
-    } else if (!old_uid %in% colnames(df)) {
-        stop("Provided `old_uid` parameter is not present in dataframe.")
+        uid <- "subjectkey"
+    } else if (is.null(uid)) {
+        stop("Please provide name of unique ID column using `uid`.")
+    } else if (!uid %in% colnames(df)) {
+        stop("Provided `uid` parameter is not present in dataframe.")
     } else {
-        colnames(assigned_df)[colnames(assigned_df) == "subjectkey"] <- old_uid
+        colnames(assigned_df)[colnames(assigned_df) == "subjectkey"] <- uid
     }
     train_or_test <- split
     split_df <- assigned_df |>
         dplyr::filter(split == train_or_test) |>
         #dplyr::inner_join(df, by = "subjectkey") |>
-        dplyr::inner_join(df, by = old_uid) |>
+        dplyr::inner_join(df, by = uid) |>
         dplyr::select(-split)
     return(split_df)
 }

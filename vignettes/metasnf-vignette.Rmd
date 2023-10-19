@@ -153,7 +153,7 @@ data_list <- generate_data_list(
     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
     list(abcd_income, "household_income", "demographics", "numeric"),
     list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
-    old_uid = "patient"
+    uid = "patient"
 )
 ```
 
@@ -165,7 +165,7 @@ The first entries are all lists which contains the following elements:
 3. A name for the *domain* of the dataframe (string)
 4. The type of variable stored in the dataframe (options are numeric, categorical, and mixed)
 
-Finally, there's an argument for the `old_uid` (the column name that currently uniquely identifies all the subjects in your data).
+Finally, there's an argument for the `uid` (the column name that currently uniquely identifies all the subjects in your data).
 
 Behind the scenes, this function is building a nested list that keeps track of all this information, but it is also:
 
@@ -378,7 +378,7 @@ target_list <- generate_target_list(
     list(abcd_anxiety, "anxiety", "ordinal"),
     list(abcd_depress, "depressed", "ordinal"),
     list(abcd_colour, "colour", "categorical"),
-    old_uid = "patient"
+    uid = "patient"
 )
 
 summarize_target_list(target_list)
@@ -387,7 +387,7 @@ summarize_target_list(target_list)
 The `target_list` is like the `data_list`, but without the domain attribute.
 At this time, each dataframe used to build an target_list must be a single-feature.
 
-Just like when generating the initial `data_list`, we need to specify the name of the column in the provided dataframes that is originally being used to uniquely identify the different observations from each other with the `old_uid` parameter.
+Just like when generating the initial `data_list`, we need to specify the name of the column in the provided dataframes that is originally being used to uniquely identify the different observations from each other with the `uid` parameter.
 
 We will next extend our `solutions_matrix` with p-values from regressing the `target_list` features onto our generated clusters.
 
@@ -455,22 +455,22 @@ all_subjects <- gsub("subject_", "", all_subjects)
 assigned_splits <- train_test_assign(train_frac = 0.8, subjects = all_subjects)
 
 # Partition a training set
-train_abcd_cort_t <- keep_split(abcd_cort_t, assigned_splits, "train", old_uid = "patient")
-train_abcd_cort_sa <- keep_split(abcd_cort_sa, assigned_splits, "train", old_uid = "patient")
-train_abcd_subc_v <- keep_split(abcd_subc_v, assigned_splits, "train", old_uid = "patient")
-train_abcd_income <- keep_split(abcd_income, assigned_splits, "train", old_uid = "patient")
-train_abcd_pubertal <- keep_split(abcd_pubertal, assigned_splits, "train", old_uid = "patient")
-train_abcd_anxiety <- keep_split(abcd_anxiety, assigned_splits, "train", old_uid = "patient")
-train_abcd_depress <- keep_split(abcd_depress, assigned_splits, "train", old_uid = "patient")
+train_abcd_cort_t <- keep_split(abcd_cort_t, assigned_splits, "train", uid = "patient")
+train_abcd_cort_sa <- keep_split(abcd_cort_sa, assigned_splits, "train", uid = "patient")
+train_abcd_subc_v <- keep_split(abcd_subc_v, assigned_splits, "train", uid = "patient")
+train_abcd_income <- keep_split(abcd_income, assigned_splits, "train", uid = "patient")
+train_abcd_pubertal <- keep_split(abcd_pubertal, assigned_splits, "train", uid = "patient")
+train_abcd_anxiety <- keep_split(abcd_anxiety, assigned_splits, "train", uid = "patient")
+train_abcd_depress <- keep_split(abcd_depress, assigned_splits, "train", uid = "patient")
 
 # Partition a test set
-test_abcd_cort_t <- keep_split(abcd_cort_t, assigned_splits, "test", old_uid = "patient")
-test_abcd_cort_sa <- keep_split(abcd_cort_sa, assigned_splits, "test", old_uid = "patient")
-test_abcd_subc_v <- keep_split(abcd_subc_v, assigned_splits, "test", old_uid = "patient")
-test_abcd_income <- keep_split(abcd_income, assigned_splits, "test", old_uid = "patient")
-test_abcd_pubertal <- keep_split(abcd_pubertal, assigned_splits, "test", old_uid = "patient")
-test_abcd_anxiety <- keep_split(abcd_anxiety, assigned_splits, "test", old_uid = "patient")
-test_abcd_depress <- keep_split(abcd_depress, assigned_splits, "test", old_uid = "patient")
+test_abcd_cort_t <- keep_split(abcd_cort_t, assigned_splits, "test", uid = "patient")
+test_abcd_cort_sa <- keep_split(abcd_cort_sa, assigned_splits, "test", uid = "patient")
+test_abcd_subc_v <- keep_split(abcd_subc_v, assigned_splits, "test", uid = "patient")
+test_abcd_income <- keep_split(abcd_income, assigned_splits, "test", uid = "patient")
+test_abcd_pubertal <- keep_split(abcd_pubertal, assigned_splits, "test", uid = "patient")
+test_abcd_anxiety <- keep_split(abcd_anxiety, assigned_splits, "test", uid = "patient")
+test_abcd_depress <- keep_split(abcd_depress, assigned_splits, "test", uid = "patient")
 
 # Construct the data lists
 train_data_list <- generate_data_list(
@@ -479,7 +479,7 @@ train_data_list <- generate_data_list(
     list(train_abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
     list(train_abcd_income, "household_income", "demographics", "numeric"),
     list(train_abcd_pubertal, "pubertal_status", "demographics", "numeric"),
-    old_uid = "patient"
+    uid = "patient"
 )
 
 test_data_list <- generate_data_list(
@@ -488,7 +488,7 @@ test_data_list <- generate_data_list(
     list(test_abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
     list(test_abcd_income, "household_income", "demographics", "numeric"),
     list(test_abcd_pubertal, "pubertal_status", "demographics", "numeric"),
-    old_uid = "patient"
+    uid = "patient"
 )
 ```
 
@@ -503,7 +503,7 @@ full_data_list <- generate_data_list(
     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
     list(abcd_income, "household_income", "demographics", "numeric"),
     list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
-    old_uid = "patient",
+    uid = "patient",
     assigned_splits = assigned_splits
 )
 
@@ -511,7 +511,7 @@ full_data_list <- generate_data_list(
 train_target_list <- generate_target_list(
     list(train_abcd_anxiety, "anxiety", "ordinal"),
     list(train_abcd_depress, "depressed", "ordinal"),
-    old_uid = "patient"
+    uid = "patient"
 )
 
 # Find a clustering solution in your training data

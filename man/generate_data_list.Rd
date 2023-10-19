@@ -17,6 +17,8 @@ generate_data_list(
 "df_type") OR any number of lists of lists formatted as (df, "df_name",
 "df_domain", "df_type")}
 
+\item{uid}{(string) the name of the uid column currently used data}
+
 \item{test_subjects}{character vector of test subjects (useful if building
 a full data list for label propagation)}
 
@@ -25,8 +27,6 @@ a full data list for label propagation)}
 
 \item{assigned_splits}{ouptut from assign_splits function - can be given
 as an alternative to specifying the train/test subjects separately.}
-
-\item{old_uid}{(string) the name of the uid column currently used data}
 }
 \description{
 This is the major data object that will be processed when iterating through
@@ -54,7 +54,7 @@ personality_test_df <- data.frame(
 dl <- generate_data_list(
     list(heart_rate_df, "data1", "domain1", "numeric"),
     list(personality_test_df, "data2", "domain2", "numeric"),
-    old_uid = "patient_id"
+    uid = "patient_id"
 )
 
 # Alternative loading: providing a single list of lists
@@ -66,6 +66,6 @@ list_of_lists <- list(
 
 dl <- generate_data_list(
     list_of_lists,
-    old_uid = "patient_id"
+    uid = "patient_id"
 )
 }

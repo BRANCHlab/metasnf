@@ -4,12 +4,12 @@
 \alias{generate_target_list}
 \title{Generate target_list object}
 \usage{
-generate_target_list(..., old_uid = NULL)
+generate_target_list(..., uid = NULL)
 }
 \arguments{
 \item{...}{Lists of outcomes formatted as (dataframe, "name", "type")}
 
-\item{old_uid}{(string) the name of the uid column currently used data}
+\item{uid}{(string) the name of the uid column currently used data}
 }
 \value{
 target_list structure containing all outcome measure data

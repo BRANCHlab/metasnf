@@ -4,12 +4,12 @@
 \alias{convert_uids}
 \title{Convert unique identifiers of data_list to 'subjectkey'}
 \usage{
-convert_uids(data_list, old_uid = NULL)
+convert_uids(data_list, uid = NULL)
 }
 \arguments{
 \item{data_list}{a data_list}
 
-\item{old_uid}{(string) the name of the uid column currently used data}
+\item{uid}{(string) the name of the uid column currently used data}
 }
 \value{
 dl_renamed_id data list with 'subjectkey' as UID

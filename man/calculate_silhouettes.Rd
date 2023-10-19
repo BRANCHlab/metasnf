@@ -32,7 +32,7 @@ data_list <- generate_data_list(
     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "numeric"),
     list(abcd_income, "household_income", "demographics", "numeric"),
     list(abcd_pubertal, "pubertal_status", "demographics", "numeric"),
-    old_uid = "patient"
+    uid = "patient"
 )
 
 # build settings_matrix
