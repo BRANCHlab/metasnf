@@ -355,3 +355,41 @@ gower_distance <- function(df) {
         cluster::daisy(metric = "gower", warnBin = FALSE) |>
         as.matrix()
 }
+
+#' Distance metric: Weighted Euclidean distance
+#'
+#' @param df Dataframe containing one subjectkey column in the first column and 
+#'  at least 1 data column
+#' @param weight Dataframe with 1 column containing weights for each feature per
+#'  row in the same order as the order of feature columns start
+#'
+#' @return weighted_distance_matrix A distance matrix.
+#'
+#' @export
+weighted_euclidean_distance <- function(df, weights) {
+  
+  ## require devtools
+  if(!require(devtools)){
+    install.packages("devtools")
+    library(devtools)
+  }
+  
+  ## require abSNF
+  if(!require(abSNF)){
+    install_github("pfruan/abSNF")
+    library(abSNF)
+  }
+  
+  # browser()
+  
+  df_feat_only = data.matrix(df[,-1])
+  
+  weights_mat = data.matrix(weights)
+  
+  weighted_dist = abSNF::dist2_w(X = df_feat_only,
+                                 C = df_feat_only,
+                                 weight = weights_mat)
+  
+  return(weighted_dist)
+  
+}
