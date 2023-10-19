@@ -7,8 +7,7 @@
 gower_distance(df)
 }
 \arguments{
-\item{df}{Dataframe containing one subjectkey column and at least 1 data
-column}
+\item{df}{Dataframe containing at least 1 data column}
 }
 \value{
 distance_matrix A distance matrix.

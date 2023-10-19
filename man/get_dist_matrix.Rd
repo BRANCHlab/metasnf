@@ -7,7 +7,6 @@
 get_dist_matrix(
   df,
   input_type,
-  scale = FALSE,
   cont_dist_fn,
   disc_dist_fn,
   ord_dist_fn,
@@ -16,14 +15,11 @@ get_dist_matrix(
 )
 }
 \arguments{
-\item{df}{Raw dataframe with subject IDs in column 1}
+\item{df}{Raw dataframe with subject IDs in column "subjectkey"}
 
 \item{input_type}{Either "numeric" (resulting in euclidean distances),
 "categorical" (resulting in binary distances), or "mixed" (resulting in
 gower distances)}
-
-\item{scale}{Whether or not the data should be standard normalized prior to
-distance calculations}
 
 \item{cont_dist_fn}{distance metric function for continuous data}
 

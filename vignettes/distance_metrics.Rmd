@@ -1,0 +1,455 @@
+---
+title: "Distance Metrics"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Distance Metrics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+div.aside { background-color:#fff2e6; }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## The distance_metrics_list
+
+r-package enables users to customize what distance metrics are used in the SNF pipeline.
+All information about distance metrics are stored in a `distance_metrics_list` object.
+
+By default, `batch_snf` will create its own `distance_metrics_list` by calling the `generate_distance_metrics_list` function with no additional arguments.
+
+```{r}
+library(metasnf)
+
+distance_metrics_list <- generate_distance_metrics_list()
+```
+
+The list is a list of functions (`euclidean_distance()` and `gower_distance()`), and printing them out directly can be messy.
+The `summarize_distance_metrics_list()` function prints the object with a nicer format.
+
+```{r}
+summarize_distance_metrics_list(distance_metrics_list)
+```
+
+These lists must always contain at least 1 distance metric for each of the 5 recognized types of variables: continuous, discrete, ordinal, categorical, and mixed (any combination of the previous four).
+
+By default, continuous, discrete, and ordinal data are converted to distance matrices using simple Euclidean distance.
+Categorical and mixed data are handled using Gower's formula as implemented by the cluster package (see `?cluster::daisy`).
+
+## How the distance_metrics_list is used
+
+To show how the distance_metrics_list is used, we'll start by extending our distance_metrics_list beyond just the default options.
+r-package provides a Euclidean distance function that applies standard normalization first, `sn_euclidean_distance()` (a wrapper around `SNFtool::standardNormalization`).
+Here's how we can create a custom distance_metrics_list that includes this metric for continuous and discrete variables.
+
+```{r}
+my_distance_metrics <- generate_distance_metrics_list(
+    continuous_distances = list(
+        "standard_norm_euclidean" = sn_euclidean_distance
+    ),
+    discrete_distances = list(
+        "standard_norm_euclidean" = sn_euclidean_distance
+    )
+)
+
+summarize_distance_metrics_list(my_distance_metrics)
+```
+
+Now, during settings_matrix generation, we can provide our distance_metrics_list to ensure our new distance metrics will be used on some of our SNF runs.
+
+Before making the settings_matrix, we'll quickly need to setup some data (as was done in [A Simple Example](https://branchlab.github.io/metasnf/articles/a_simple_example.html)).
+
+```{r}
+library(SNFtool)
+
+data(Data1)
+data(Data2)
+
+Data1$"patient_id" <- 101:(nrow(Data1) + 100)
+Data2$"patient_id" <- 101:(nrow(Data2) + 100)
+
+data_list <- generate_data_list(
+    list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
+    list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
+    uid = "patient_id"
+)
+```
+
+And then the settings_matrix can be generated:
+
+```{r}
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 10,
+    distance_metrics_list = my_distance_metrics
+)
+
+# showing just the columns that are related to distances
+settings_matrix |> dplyr::select(dplyr::ends_with("dist"))
+```
+
+The continuous and discrete distance metrics values randomly fluctuate between 1 and 2, where 1 means that the first metric (`euclidean_distance()`) will be used and 2 means that the second metric (`sn_euclidean_distance`) will be used.
+
+It's important to note that the settings_matrix itself **does not store the distance metrics**, just the pointers to which position metric in the distance_metrics_list should be used for that SNF run.
+Because of that, you'll need to supply the distance_metrics_list once again when calling `batch_snf()`.
+
+```{r eval = FALSE}
+solutions_matrix <- batch_snf(
+    data_list,
+    settings_matrix,
+    distance_metrics_list = my_distance_metrics
+)
+```
+
+## Removing the default distance_metrics
+
+There are two ways to avoid using the default distance metrics if you don't want to ever use them.
+
+The first way is to use the `keep_defaults` parameter in `generate_distance_metrics_list()`:
+
+```{r}
+
+no_default_metrics <- generate_distance_metrics_list(
+    continuous_distances = list(
+        "standard_norm_euclidean" = sn_euclidean_distance
+    ),
+    discrete_distances = list(
+        "standard_norm_euclidean" = sn_euclidean_distance
+    ),
+    ordinal_distances = list(
+        "standard_norm_euclidean" = sn_euclidean_distance
+    ),
+    categorical_distances = list(
+        "standard_norm_euclidean" = sn_euclidean_distance
+    ),
+    mixed_distances = list(
+        "standard_norm_euclidean" = sn_euclidean_distance
+    ),
+    keep_defaults = FALSE
+)
+
+summarize_distance_metrics_list(no_default_metrics)
+```
+
+For this option, it is necessary to provide at least one distance metric for every variable type.
+A distance_metrics_list cannot have any of its variable types be completely empty (even if you have no data for that variable type in the first place).
+
+The second way is to explicitly specify which indices you want to sample from during settings_matrix generation:
+
+```{r}
+my_distance_metrics <- generate_distance_metrics_list(
+    continuous_distances = list(
+        "standard_norm_euclidean" = sn_euclidean_distance,
+        "some_other_metric" = sn_euclidean_distance
+    ),
+    discrete_distances = list(
+        "standard_norm_euclidean" = sn_euclidean_distance,
+        "some_other_metric" = sn_euclidean_distance
+    )
+)
+
+summarize_distance_metrics_list(my_distance_metrics)
+
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 10,
+    distance_metrics_list = my_distance_metrics,
+    continuous_distances = 1,
+    discrete_distances = c(2, 3)
+)
+
+settings_matrix |> dplyr::select(dplyr::ends_with("dist"))
+```
+
+The second option can be quite useful when paired with `add_settings_matrix_rows()`, enabling you to build up distinct blocks of rows in the settings matrix that have different combinations of distance metrics.
+This can save you the trouble of needing to manage several distinct distance metrics lists or manage your solution space over separate runs of `batch_snf`.
+
+```{r}
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 10,
+    distance_metrics_list = my_distance_metrics,
+    continuous_distances = 1,
+    discrete_distances = c(2, 3)
+)
+
+settings_matrix <- add_settings_matrix_rows(
+    settings_matrix,
+    nrow = 10,
+    distance_metrics_list = my_distance_metrics,
+    continuous_distances = 3,
+    discrete_distances = 1
+)
+
+settings_matrix |> dplyr::select(dplyr::ends_with("dist"))
+```
+
+In rows 1 to 10, only continuous data will always be handled by the first continuous distance metric while discrete data will be handled by the second and third discrete distance metrics.
+In rows 11 to 20, continuous data will always be handled by the third continuous distance metric while discrete data will only be handled by the first distance metric.
+
+
+## Custom distance metrics
+
+The remainder of this vignette deals with supplying custom distance metrics (including custom feature weighting).
+Making use of this functionality will require a good understanding of working with functions in R.
+
+You can also supply your own custom distance metrics.
+Looking at the code from one of the package-provided distance functions shows some of the essential aspects of a well-formated distance function.
+
+```{r}
+euclidean_distance
+```
+
+First, the function should only accept one argument: `df`, and only give one output, `distance_matrix`.
+
+By the time your data reaches a distance metric function, it (referred to as `df`) will always:
+
+1. have no UID column
+2. have at least one variable column
+3. have no missing values
+4. be a data.frame (not a tibble)
+
+The variable column names won't be altered from the values they had when they were loaded into the data_list.
+
+For example, consider the `abcd_anxiety` raw data supplied by r-package:
+
+```{r}
+head(abcd_anxiety)
+```
+
+Here's how to make it look more like what the distance metric functions will expect to see:
+
+```{r}
+processed_abcd_anxiety <- abcd_anxiety |>
+    na.omit() |> # no NAs
+    dplyr::rename("subjectkey" = "patient") |> # replace the UID with 'subjectkey'
+    data.frame()
+
+head(processed_abcd_anxiety)
+```
+
+If we want to have a distance metric that calculates Euclidean distance, but also scales the resulting matrix down such that the biggest allowed distance is a 1, it would look like this:
+
+```{r}
+my_scaled_euclidean <- function(df) {
+    distance_matrix <- df |>
+        stats::dist(method = "euclidean") |>
+        as.matrix() # make sure it's formatted as a matrix
+    distance_matrix <- distance_matrix / max(distance_matrix)
+    return(distance_matrix)
+}
+```
+
+Error handling will be in your hands.
+For example, this function will fail if the pairwise distances for all patients is 0 (a division by 0 will occur).
+
+Once you're happy that you distance function is working as you'd like it to:
+
+```{r}
+my_scaled_euclidean(processed_abcd_anxiety)[1:5, 1:5]
+```
+
+You can load it into a custom distance_metrics_list:
+
+```{r}
+my_distance_metrics <- generate_distance_metrics_list(
+    continuous_distances = list(
+        "my_scaled_euclidean" = my_scaled_euclidean
+    )
+)
+```
+
+## Custom weighting
+
+Custom weighting at the variable level can get a little bit tricky.
+Importantly, information of the variable weights need to be **a part of** the distance metric functions themselves; weights aren't supplied to the distance metric functions as arguments.
+Below are a few examples of incorporating custom weights into distance matrices.
+
+### Example 1: Uniform random reweighting
+
+Here, we will set up a function that first standard normalizes all the variables, then randomly reweights all the variables according to a uniform distribution.
+
+```{r}
+# Setting up some data
+processed_cort_t <- abcd_cort_t |>
+    na.omit() |>
+    dplyr::rename("subjectkey" = "patient") |>
+    data.frame(row.names = "subjectkey")
+
+processed_cort_t[1:5, 1:5]
+
+uniform_weight_euclidean <- function(df) {
+    df <- SNFtool::standardNormalization(df)
+    # generating the random weights
+    number_of_weights <- ncol(df)
+    random_weights <- stats::runif(number_of_weights)
+    print(random_weights[1]) # not necessary - for demonstration
+    # applying the weights
+    weighted_data <- as.matrix(df) %*% diag(random_weights)
+    # distance calculation
+    distance_matrix <- weighted_data |>
+        stats::dist(method = "euclidean") |>
+        as.matrix()
+    return(distance_matrix)
+}
+
+uniform_weight_euclidean(processed_cort_t)[1:5, 1:5]
+```
+
+The approach of formatting variable weights in a diagonal matrix and then doing matrix multiplication with the original dataframe through the `%*%` operator is very handy to know for this purpose:
+
+```{r}
+df <- data.frame(
+    col1 = c(1, 3),
+    col2 = c(50, 100)
+)
+
+df
+
+weights <- c(1, 2)
+
+as.matrix(df) %*% diag(weights)
+```
+
+### Example 2: Fixed random weights
+
+The approach above is limited in that you won't easily be able to find out what the actual weights being used were.
+
+Using [closures](http://adv-r.had.co.nz/Functional-programming.html#closures), we can efficiently churn out distance metric functions that we can examine the weights of out of the gates.
+
+```{r}
+fixed_uniform_weight_euclidean <- function(max_cols) {
+    random_weights <- stats::runif(max_cols)
+    uniform_weight_euclidean <- function(df) {
+        df <- SNFtool::standardNormalization(df)
+        # generating the random weights
+        number_of_weights <- ncol(df)
+        random_weights_trimmed <- random_weights[1:number_of_weights]
+        print(random_weights_trimmed[1]) # not necessary - for demonstration
+        # applying the weights
+        weighted_data <- as.matrix(df) %*% diag(random_weights_trimmed)
+        # distance calculation
+        distance_matrix <- weighted_data |>
+            stats::dist(method = "euclidean") |>
+            as.matrix()
+        return(distance_matrix)
+    }
+    return(uniform_weight_euclidean)
+}
+```
+
+This function will spit out another function that contains within it a fixed string of random uniform numbers.
+The number of random numbers contained is based on the `max_cols` parameter, and should be chosen such that you're certain you'll never have a dataframe with more columns than `max_cols` that needs to be evaluated.
+This may be bigger than the number of columns in any individual dataframe, depending on which SNF schemes you apply.
+A safe value in this case would be something bigger than the total number of variables across all your data.
+
+```{r}
+my_metric_1 <- fixed_uniform_weight_euclidean(500)
+```
+
+Both the original uniform weight function and the closure function were given a print statement to report the first weight they apply.
+Watch what happens when we repeatedly access either of these functions.
+
+```{r}
+uniform_weight <- uniform_weight_euclidean(processed_cort_t)
+uniform_weight <- uniform_weight_euclidean(processed_cort_t)
+uniform_weight <- uniform_weight_euclidean(processed_cort_t)
+
+uniform_weight <- my_metric_1(processed_cort_t)
+uniform_weight <- my_metric_1(processed_cort_t)
+uniform_weight <- my_metric_1(processed_cort_t)
+```
+
+For the first function, a new set of random numbers is generated each time the distance metric is run.
+For the second function, a new set of random numbers is only generated once (during `fixed_uniform_weight_euclidean()`).
+This is particularly useful for resampling purposes.
+
+### Example 3: Specific variable weights
+
+You can also have specific control over how each variable is weighted.
+Like before, this information will need to be built into the distance metric function.
+You may want to have a good understanding of how the different SNF schemes work as they will ultimately define the possible combinations of vectors that any one dataframe requiring distance matrix conversion can have.
+To actually embed the custom weights in this function, you may have to get a little creative.
+Here is one approach, which involves creating a dataframe that stores all the weights we're interested in working with
+
+```{r}
+subset_of_data <- processed_cort_t[1:5, 1:3]
+other_data <- processed_cort_t[1:5, 40:42]
+
+colnames(subset_of_data)
+colnames(other_data)
+
+```
+
+Let's pretend that is the totality of the data we're working with.
+
+```{r}
+
+all_variable_names <- c(colnames(subset_of_data), colnames(other_data))
+
+number_of_variables <- length(all_variable_names)
+
+# How many sets of reweightings we want to make
+number_of_weight_combinations <- 5
+
+number_of_weights <- number_of_weight_combinations * number_of_variables
+
+weights_df <- matrix(
+    ncol = number_of_variables,
+    nrow = number_of_weight_combinations,
+    data = runif(number_of_weights) # you could use something specific instead
+) |> data.frame()
+
+colnames(weights_df) <- all_variable_names
+
+weights_df
+```
+
+Those are all the weights.
+Let's say our distance metric encounters some odd subset of the data:
+
+```{r}
+odd_subset <- cbind(subset_of_data[, c(1, 2)], other_data[, c(1, 2)])
+
+odd_subset
+```
+
+This function can take in a row from `weights_df` and spit out a function that always applies that row to weight any data it encounters:
+
+```{r}
+specific_weighted_euclidean <- function(weights_row) {
+    weighted_euclidean <- function(df) {
+        weights <- weights_row[, colnames(df)]
+        weighted_data <- as.matrix(df) %*% diag(weights)
+        distance_matrix <- weighted_data |>
+            stats::dist(method = "euclidean") |>
+            as.matrix()
+        return(distance_matrix)
+    }
+    return(weighted_euclidean)
+}
+```
+
+In action:
+
+```{r}
+first_row_metric <- specific_weighted_euclidean(weights_df[1, ])
+
+first_row_metric(odd_subset)
+```
+
+And that's all there is on distance metrics!
+If there's a metric you'd like to see added as a prewritten option included in the package, feel free to post an issue or make a pull request on the package's GitHub.
+
+## References
+
+Wang, Bo, Aziz M. Mezlini, Feyyaz Demir, Marc Fiume, Zhuowen Tu, Michael Brudno, Benjamin Haibe-Kains, and Anna Goldenberg. 2014. “Similarity Network Fusion for Aggregating Data Types on a Genomic Scale.” Nature Methods 11 (3): 333–37. https://doi.org/10.1038/nmeth.2810.

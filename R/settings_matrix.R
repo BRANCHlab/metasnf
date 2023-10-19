@@ -556,7 +556,7 @@ add_settings_matrix_rows <- function(settings_matrix,
                 1
             )
         } else {
-            cont_dist <- sample(1:length(continuous_distances), 1)
+            cont_dist <- resample(continuous_distances, 1)
         }
         if (is.null(discrete_distances)) {
             disc_dist <- sample(
@@ -564,7 +564,7 @@ add_settings_matrix_rows <- function(settings_matrix,
                 1
             )
         } else {
-            disc_dist <- sample(1:length(discrete_distances), 1)
+            disc_dist <- resample(discrete_distances, 1)
         }
         if (is.null(ordinal_distances)) {
             ord_dist <- sample(
@@ -572,7 +572,7 @@ add_settings_matrix_rows <- function(settings_matrix,
                 1
             )
         } else {
-            ord_dist <- sample(1:length(ordinal_distances), 1)
+            ord_dist <- resample(ordinal_distances, 1)
         }
         if (is.null(categorical_distances)) {
             cat_dist <- sample(
@@ -580,7 +580,7 @@ add_settings_matrix_rows <- function(settings_matrix,
                 1
             )
         } else {
-            cat_dist <- sample(1:length(categorical_distances), 1)
+            cat_dist <- resample(categorical_distances, 1)
         }
         if (is.null(mixed_distances)) {
             mix_dist <- sample(
@@ -588,7 +588,7 @@ add_settings_matrix_rows <- function(settings_matrix,
                 1
             )
         } else {
-            mix_dist <- sample(1:length(mixed_distances), 1)
+            mix_dist <- resample(mixed_distances, 1)
         }
         #######################################################################
         # SNF weighting functionality - not yet integrated

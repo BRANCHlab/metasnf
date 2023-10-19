@@ -3,12 +3,10 @@
 #' @description
 #' Given a dataframe of numerical variables, return a euclidean distance matrix
 #'
-#' @param df Raw dataframe with subject IDs in column 1
+#' @param df Raw dataframe with subject IDs in column "subjectkey"
 #' @param input_type Either "numeric" (resulting in euclidean distances),
 #'  "categorical" (resulting in binary distances), or "mixed" (resulting in
 #'  gower distances)
-#' @param scale Whether or not the data should be standard normalized prior to
-#'  distance calculations
 #' @param cont_dist_fn distance metric function for continuous data
 #' @param disc_dist_fn distance metric function for discrete data
 #' @param ord_dist_fn distance metric function for ordinal data
@@ -20,14 +18,13 @@
 #' @export
 get_dist_matrix <- function(df,
                             input_type,
-                            scale = FALSE,
                             cont_dist_fn,
                             disc_dist_fn,
                             ord_dist_fn,
                             cat_dist_fn,
                             mix_dist_fn) {
     # Move subject keys into dataframe rownames
-    # df <- data.frame(df, row.names = 1)
+    df <- data.frame(df, row.names = "subjectkey")
     if (input_type == "continuous") {
         dist_matrix <- cont_dist_fn(df)
     } else if (input_type == "discrete") {
@@ -322,16 +319,12 @@ summarize_distance_metrics_list <- function(distance_metrics_list) {
 
 #' Distance metric: Euclidean distance
 #'
-#' @param df Dataframe containing one subjectkey column and at least 1 data
-#'  column
+#' @param df Dataframe containing at least 1 data column
 #'
 #' @return distance_matrix A distance matrix.
 #'
 #' @export
 euclidean_distance <- function(df) {
-    # Remove the first column, which is just the subjectkey
-    df <- data.frame(df, row.names = "subjectkey")
-    # Apply euclidean distance
     distance_matrix <- df |>
         stats::dist(method = "euclidean") |>
         as.matrix()
@@ -340,18 +333,29 @@ euclidean_distance <- function(df) {
 
 #' Distance metric: Gower distance
 #'
-#' @param df Dataframe containing one subjectkey column and at least 1 data
-#'  column
+#' @param df Dataframe containing at least 1 data column
 #'
 #' @return distance_matrix A distance matrix.
 #'
 #' @export
 gower_distance <- function(df) {
-    # Remove the first column, which is just the subjectkey
-    df <- data.frame(df, row.names = "subjectkey")
-    # Convert all character columns into factors
     df <- char_to_fac(df)
     distance_matrix <- df |>
         cluster::daisy(metric = "gower", warnBin = FALSE) |>
         as.matrix()
+}
+
+#' Distance metric: Standard normalization then Euclidean
+#'
+#' @param df Dataframe containing at least 1 data column.
+#'
+#' @return distance_matrix A distance matrix.
+#'
+#' @export
+sn_euclidean_distance <- function(df) {
+    df <- SNFtool::standardNormalization(df)
+    distance_matrix <- df |>
+        stats::dist(method = "euclidean") |>
+        as.matrix()
+    return(distance_matrix)
 }
