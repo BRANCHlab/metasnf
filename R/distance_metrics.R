@@ -359,7 +359,7 @@ gower_distance <- function(df) {
 #' Distance metric: Weighted Euclidean distance
 #'
 #' @param df Dataframe containing one subjectkey column in the first column and 
-#'  at least 1 data column
+#'  at least 1 continuous data column. All feature data should be continuous.
 #' @param weight Dataframe with 1 column containing weights for each feature per
 #'  row in the same order as the order of feature columns start
 #'
@@ -380,8 +380,6 @@ weighted_euclidean_distance <- function(df, weights) {
     library(abSNF)
   }
   
-  # browser()
-  
   df_feat_only = data.matrix(df[,-1])
   
   weights_mat = data.matrix(weights)
@@ -392,4 +390,28 @@ weighted_euclidean_distance <- function(df, weights) {
   
   return(weighted_dist)
   
+}
+
+#' Distance metric: Weighted Hamming distance
+#'
+#' @param df Dataframe containing one subjectkey column in the first column and 
+#'  at least 1 categorical data column. All feature data should be categorical.
+#' @param weight Dataframe with 1 column containing weights for each feature per
+#'  row in the same order as the order of feature columns start
+#'
+#' @return weighted_distance_matrix A distance matrix.
+#'
+#' @export
+#' 
+weighted_hamming_distance <- function(df, weights) {
+  
+  df_feat_only = data.matrix(df[,-1])
+  
+  weighted_dist = sapply(1:nrow(df), function(i){
+    sapply(1:nrow(df), function(j) {
+      as.numeric(df_feat_only[i,] != df_feat_only[j,]) %*% weights
+    })
+  })
+  
+  return(weighted_dist)
 }
