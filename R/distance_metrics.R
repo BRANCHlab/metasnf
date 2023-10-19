@@ -330,7 +330,7 @@ summarize_distance_metrics_list <- function(distance_metrics_list) {
 #' @export
 euclidean_distance <- function(df) {
     # Remove the first column, which is just the subjectkey
-    df <- data.frame(df, row.names = 1)
+    df <- data.frame(df, row.names = "subjectkey")
     # Apply euclidean distance
     distance_matrix <- df |>
         stats::dist(method = "euclidean") |>
@@ -348,7 +348,7 @@ euclidean_distance <- function(df) {
 #' @export
 gower_distance <- function(df) {
     # Remove the first column, which is just the subjectkey
-    df <- data.frame(df, row.names = 1)
+    df <- data.frame(df, row.names = "subjectkey")
     # Convert all character columns into factors
     df <- char_to_fac(df)
     distance_matrix <- df |>

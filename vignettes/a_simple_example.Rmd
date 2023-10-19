@@ -164,7 +164,6 @@ data_list <- generate_data_list(
     list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
     uid = "patient_id"
 )
-
 ```
 
 ### 3. Store all the settings of the desired SNF runs in a *settings_matrix*
@@ -176,22 +175,20 @@ In this case, we're going to create only a single cluster solution using the sam
 
 ```{r}
 
-#settings_matrix <- generate_settings_matrix(
-#    data_list,
-#    nrow = 1,
-#    alpha_values = 0.5,
-#    k_values = 20,
-#    t_values = 20,
-#    dropout_dist = "none",
-#    possible_snf_schemes = 1
-#)
-#
-#settings_matrix
-#
-#batch_snf(
-#    data_list,
-#    settings_matrix
-#)
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 1,
+    alpha_values = 0.5,
+    k_values = 20,
+    t_values = 20,
+    dropout_dist = "none",
+    possible_snf_schemes = 1
+)
+
+batch_snf(
+    data_list,
+    settings_matrix
+)
 
 ```
 
