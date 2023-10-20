@@ -53,7 +53,7 @@ label_prop <- function(full_fused_network, clusters) {
 #' @return labeled_df A dataframe of the label propagated results of all om rows
 #'
 #' @export
-lp_om <- function(om, full_data_list, distance_metrics_list = NULL) {
+lp_row <- function(om, full_data_list, distance_metrics_list = NULL) {
     if (!"significance" %in% colnames(om)) {
         print(paste0(
             "If you add a 'significance' column to your solutions matrix",

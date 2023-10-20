@@ -399,7 +399,7 @@ We will next extend our `solutions_matrix` with p-values from regressing the `ta
 ```{r}
 extended_solutions_matrix <- extend_solutions(solutions_matrix, target_list)
 
-colnames(extended_solutions_matrix)
+colnames(extended_solutions_matrix)[1:25]
 
 # Looking at the newly added columns
 head(no_subs(extended_solutions_matrix))
@@ -434,14 +434,12 @@ pvals_heatmap(target_pvals, order = meta_cluster_order)
 ![](./pvals_heatmap_ordered.png){width=400px}
 </center>
 
-These p-values hold no real meaning for the traditional hypothesis-testing context.
+These p-values hold no real meaning for the traditional hypothesis-testing context, but they are reasonable proxies of the magnitude of the effect size / separation of the clusters across the variables in question.
 Here, they are just a tool to find clustering solutions that are well-separated according to the outcome measures you've specified.
 Finding a cluster solution like this is similar to a supervised learning approach, but where the optimization method is just random sampling.
 The risk for overfitting your data with this approach is considerable, so make sure you have some rigorous external validation before reporting your findings.
 
-I've relied on label propagation (provided by the SNFtool package in the `groupPredict` function) to take my top clustering solution in some training data, assign predicted clusters to some held out test subjects, and then characterized those test subjects to see how well the clustering solution seemed to have worked.
-
-This package provides a wrapper for `SNFtool::groupPredict` to make the label propagation process a little easier to apply to the `solutions_matrix` structure.
+We recommend using *label propagation* (provided by the SNFtool package in the `groupPredict` function) for validation: take the top clustering solutions found in some training data, assign predicted clusters to some held out test subjects, and then characterize those test subjects to see how well the clustering solution seemed to have worked.
 
 ## Validating results with label propagation
 
@@ -545,11 +543,11 @@ which(extended_solutions_matrix$"min_p_val" ==
       min(extended_solutions_matrix$"min_p_val"))
 
 # Keep track of your top solution
-top_om_row <- extended_solutions_matrix[4, ]
+top_row <- extended_solutions_matrix[4, ]
 
 # Hand over the solutions matrix as well as the full data list to propagate labels
 #  to the test subjects
-propagated_labels <- lp_om(top_om_row, full_data_list)
+propagated_labels <- lp_row(top_row, full_data_list)
 head(propagated_labels)
 tail(propagated_labels)
 ```
@@ -557,7 +555,7 @@ tail(propagated_labels)
 You could, if you wanted, see how *all* of your clustering solutions propagate to the test set, but that would mean reusing your test set and removing the protection against overfitting conferred by this procedure.
 
 ```{r}
-propagated_labels_all <- lp_om(extended_solutions_matrix, full_data_list)
+propagated_labels_all <- lp_row(extended_solutions_matrix, full_data_list)
 head(propagated_labels_all)
 tail(propagated_labels_all)
 ```
@@ -567,6 +565,8 @@ That's all for now!
 If you have any questions, comments, suggestions, bugs, etc. feel free to post an issue at https://github.com/BRANCHlab/metasnf.
 
 ## Appendix
+
+(sections below will move into separate vignettes)
 
 ### inc*
 
