@@ -387,13 +387,11 @@ other_data <- processed_cort_t[1:5, 40:42]
 
 colnames(subset_of_data)
 colnames(other_data)
-
 ```
 
 Let's pretend that is the totality of the data we're working with.
 
 ```{r}
-
 all_variable_names <- c(colnames(subset_of_data), colnames(other_data))
 
 number_of_variables <- length(all_variable_names)

@@ -21,61 +21,75 @@ solutions_matrix <- batch_snf(
     settings_matrix
 )
 
+weighted_euclidean_distance
 
-solutions_matrix
+mock_data <- data.frame(
+    col1 = c(1, 4, 7),
+    col2 = c(1, 5, 9)
+) |> as.matrix()
 
-# library(dbscan)
+mock_data
 
-distance_metrics_list[[1]]
+weighted_euclidean_distance(mock_data, weights_df)
 
-distance_metrics_list <- generate_distance_metrics_list(
-    continuous_distances = list(
-        "my_dist" = euclidean_distance,
-        "3" = euclidean_distance
-    ),
-    discrete_distances = list(
-        "my_dist2" = euclidean_distance,
-        "my_dist3" = euclidean_distance
-    )
+weighted_euclidean_distance(mock_data, data.frame(c(1, 1)))
+
+weights_df <- data.frame(
+    weights = c(1, 2)
 )
 
+weights_df
 
-settings_matrix <- generate_settings_matrix(
-    data_list,
-    nrow = 5,
-    max_k = 40,
-    seed = 42,
-    distance_metrics_list = distance_metrics_list
-)
+mock_data
 
-settings_matrix
-
-distance_metrics_list <- generate_distance_metrics_list()
-
-summarize_distance_metrics_list(distance_metrics_list)
-
-# Using just the base distance metrics  ------------------------------------
-distance_metrics_list <- generate_distance_metrics_list()
-
-# Adding your own metrics --------------------------------------------------
-# This will contain the base and user-provided clustering algorithms
-my_distance_metric <- function(df) {
-    # your code that converts a dataframe to a distance metric here...
-    # return(distance_metric)
+wt_sq_euclidean_distance <- function(df, weights) {
 }
 
-distance_metrics_list <- generate_distance_metrics_list(
-    continuous_distances = list(
-         "my_distance_metric" = my_distance_metric
+weights_matrix_base <- function(data = NULL,
+                                data_list = NULL,
+                                rows = 1,
+                                fill = "ones") {
+    if (is.null(data) + is.null(data_list) != 1) {
+        stop(
+            paste0(
+                "One (and only one) of data or data_list parameter must be",
+                "provided."
+            )
+        )
+    }
+    if (!is.null(data_list)) {
+        matrix_colnames <- data_list |>
+            lapply(
+                function(x) {
+                    colnames(x$"data")[colnames(x$"data") != "subjectkey"]
+                }
+            ) |>
+            unlist()
+    } else {
+        matrix_colnames <- colnames(data)[colnames(data) != "subjectkey"]
+    }
+    if (fill == "ones") {
+        fill <- 1
+    } else if (fill == "uniform") {
+        fill <- runif(rows * length(matrix_colnames))
+    } else if (fill == "exponential") {
+        fill <- rexp(rows * length(matrix_colnames))
+    }
+    matrix_base <- matrix(
+        nrow = rows,
+        ncol = length(matrix_colnames),
+        data = fill
     )
+    colnames(matrix_base) <- matrix_colnames
+    matrix_base
+}
+
+weights_matrix <- generate_weights_matrix(
+    data_list = data_list,
+    rows = 10,
+    fill = "uniform"
 )
 
-# Suppress the base metrics-------------------------------------------------
-# This will contain only user-provided clustering algorithms
 
-distance_metrics_list <- generate_distance_metrics_list(
-    continuous_distances = list(
-         "my_distance_metric" = my_distance_metric
-    ),
-    keep = TRUE
-)
+
+weights_matrix

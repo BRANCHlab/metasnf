@@ -1,0 +1,265 @@
+---
+title: "A Simple Example"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{A Simple Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+div.aside { background-color:#fff2e6; }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+In this vignette, we will show how *r-package* can be used for a very simple SNF workflow.
+
+This simple workflow is the example of SNF provided in the original *SNFtool* package.
+You can find the example by loading the *SNFtool* package and then viewing the documentation for the main SNF function by running `?SNF`.
+
+## The original SNF example
+
+### 1. Load the package
+
+```{r}
+library(SNFtool)
+```
+
+### 2. Set SNF hyperparameters
+
+Three hyperparameters are introduced in this example: *K*, *alpha* (also referred to as sigma or eta in different documentations), and *T*.
+You can learn more about the significance of these hyperparameters in the original SNF paper (see references).
+
+```{r}
+K <- 20
+alpha <- 0.5
+T <- 20
+```
+
+### 3. Load the data
+
+The SNFtool package provides two mock dataframes titled *Data1* and *Data2* for this example.
+*Data1* contains gene expression values of two genes for 200 patients.
+*Data2* similarly contains methylation data for two genes for those same 200 patients.
+
+```{r}
+data(Data1)
+data(Data2)
+```
+
+Here's what the mock data looks like:
+
+```{r}
+library(pheatmap)
+
+# gene expression data
+pheatmap(
+    Data1,
+    cluster_rows = FALSE,
+    cluster_cols = FALSE,
+    show_rownames = FALSE,
+    show_colnames = FALSE
+)
+
+# methylation data
+pheatmap(
+    Data2,
+    cluster_rows = FALSE,
+    cluster_cols = FALSE,
+    show_rownames = FALSE,
+    show_colnames = FALSE
+)
+```
+
+The "ground truth" of how this data was generated was that patients 1 to 100 were drawn from one distribution and patients 101 to 200 were drawn from another.
+We don't have access to that kind of knowledge in real data, but we do here.
+
+```{r}
+true_label <- c(matrix(1, 100, 1), matrix(2, 100, 1))
+```
+
+### 4. Generate similarity matrices for each data source
+
+We consider the two gene expression variables in *Data1* to contain information from one broader gene expression source and the two methylation variables in *Data2* to contain information from a broader methylation source.
+
+The next step is to determine, **for each of the sources we have**, how similar all of our patients are to each other.
+
+This is done by first determining how *dissimilar* the patients are to each other for each source, and then converting that dissimilarity information into similarity information.
+
+To calculate dissimilarity, we'll use Euclidean distance.
+
+```{r}
+distance_matrix_1 <- as.matrix(dist(Data1, method = "euclidean"))
+distance_matrix_2 <- as.matrix(dist(Data2, method = "euclidean"))
+```
+
+Then, we can use the `affinityMatrix` function provided by *SNFtool* to convert those distance matrices into similarity matrices.
+
+```{r}
+similarity_matrix_1 <- affinityMatrix(distance_matrix_1, K, alpha)
+similarity_matrix_2 <- affinityMatrix(distance_matrix_2, K, alpha)
+```
+
+Those similarity matrices can be passed into the `SNF` function to integrate them into a single similarity matrix that describes how similar the patients are to each other across both the gene expression and methylation data.
+
+### 5. Integrate similarity matrices with SNF
+
+```{r}
+fused_network <- SNF(
+    list(similarity_matrix_1, similarity_matrix_2),
+    K,
+    T
+)
+```
+
+### 6. Find clusters in the integrated matrix
+
+If we think there are 2 clusters in the data, we can use spectral clustering to find 2 clusters in the fused network.
+
+```{r}
+number_of_clusters <- 2
+assigned_clusters <- spectralClustering(fused_network, number_of_clusters)
+```
+
+Sure enough, we are able to obtain the correct cluster label for all patients.
+
+```{r}
+all(true_label == assigned_clusters)
+```
+
+## The same example using *r-package*
+
+The purpose of *r-package* is primarily to aid users explore a wide possible range of solutions.
+Recreating the example provided with the original `SNF` function will be an extremely restricted usage of the package, but will reveal, broadly, how *r-package* works.
+
+### 1. Load the package
+
+```{r}
+library(metasnf)
+```
+
+### 2. Store the data in a *data_list*
+
+All the data we're working with will get stored in a single object called the `data_list`.
+The `data_list` is made by passing in each dataframe into the `generate_data_list` function, alongside information about the name of the dataframe, the broader source (referred to in this package as a "domain") of information that dataframe comes from, and the type of variables that are stored inside that dataframe (can be continuous, discrete, ordinal, categorical, or mixed).
+
+The `data_list` generation process also requires you to specify which column contains information about the ID of the patients.
+In this case, that information isn't there, so we'll have to add it ourselves.
+The added IDs span from 101 onwards (rather than from 1 onwards) purely for convenience: automatic sorting of patient names won't result in patient 199 being placed before patient 2.
+
+```{r}
+# Add "patient_id" column to each dataframe
+Data1$"patient_id" <- 101:(nrow(Data1) + 100)
+Data2$"patient_id" <- 101:(nrow(Data2) + 100)
+
+data_list <- generate_data_list(
+    list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
+    list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
+    uid = "patient_id"
+)
+```
+
+### 3. Store all the settings of the desired SNF runs in a *settings_matrix*
+
+The `settings_matrix` is a dataframe where each row contains all the information required to convert the raw data into a final cluster solution.
+By varying the rows in this matrix, we can access a broader space of possible solutions and hopefully get closer to something that will be as useful as possible for our context.
+
+In this case, we're going to create only a single cluster solution using the same process outlined in the original SNFtool example above.
+
+An explanation for the parameters in the `settings_matrix` can be found at [the settings_matrix vignette](https://branchlab.github.io/metasnf/articles/settings_matrix.html).
+
+```{r}
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 1,
+    alpha_values = 0.5,
+    k_values = 20,
+    t_values = 20,
+    dropout_dist = "none",
+    possible_snf_schemes = 1
+)
+
+settings_matrix
+```
+
+The columns in this `settings_matrix` mean the following:
+
+* row_id: A way to keep track of the different rows
+* alpha, k, t: The hyperparameters seen above
+* snf_scheme: Which "scheme" will be used to transform the inputs into a final fused network. We'll discuss this in more detail in the next vignette.
+* clust_alg: Which clustering algorithm will be applied to the final fused network. By default, one of two possible base options are randomly chosen. A value of 2 indicates that spectral clustering will be used and that the number of clusters will be determined by the rotation cost heuristic.
+* Columns ending in "dist": Which distance metric should be used. By default, 1 refers to Euclidean distance for continuous, discrete, and ordinal data, and 1 refers to Gower's distance for categorical and mixed data.
+* Columns starting with "inc": Whether or not the corresponding dataframe will be included for this round of SNF.
+
+More detailed descriptions on all of these columns can also be found in the settings_matrix vignette.
+
+### 4. Run SNF
+
+The `batch_snf` function will apply each row of the `settings_matrix` (in this case, just one row) to the `data_list`.
+
+```{r}
+solutions_matrix <- batch_snf(
+    data_list,
+    settings_matrix
+)
+
+solutions_matrix[, 1:20] # it goes on like this for some time...
+
+```
+The `solutions_matrix` is essentially an augmented `settings_matrix`, where new columns have been added for each included patient.
+On each row, those new columns show what cluster that patient ended up in.
+
+A friendlier format of the clustering results can be obtained:
+
+```{r}
+cluster_solution <- get_cluster_df(solutions_matrix)
+
+head(cluster_solution)
+```
+
+These cluster results are exactly the same as in the original SNF example:
+
+```{r}
+identical(cluster_solution$"cluster", true_label)
+```
+
+Running `batch_snf` with the `return_affinity_matrices` parameter set to `TRUE` will let us also take a look at the final fused networks from SNF rather than just the results of applying spectral clustering to those networks:
+
+```{r}
+
+batch_snf_results <- batch_snf(
+    data_list,
+    settings_matrix,
+    return_affinity_matrices = TRUE
+)
+
+names(batch_snf_results)
+
+# The solutions_matrix
+solutions_matrix <- batch_snf_results$"solutions_matrix"
+
+# The first (and only, in this case) final fused network
+affinity_matrix <- batch_snf_results$"affinity_matrices"[[1]]
+```
+
+The fused network obtained through this approach is also the same as the one obtained in the original example:
+
+```{r}
+max(affinity_matrix - fused_network)
+```
+
+And now we've completed a basic example of using this package.
+The subsequent vignettes provide guidance on how you can leverage the `settings_matrix` to access a wide range of clustering solutions from your data, how you can use other tools in this package to pick a best solution for your purposes, and how to validate the generalizability.
+
+
+## References
+
+Wang, Bo, Aziz M. Mezlini, Feyyaz Demir, Marc Fiume, Zhuowen Tu, Michael Brudno, Benjamin Haibe-Kains, and Anna Goldenberg. 2014. “Similarity Network Fusion for Aggregating Data Types on a Genomic Scale.” Nature Methods 11 (3): 333–37. https://doi.org/10.1038/nmeth.2810.

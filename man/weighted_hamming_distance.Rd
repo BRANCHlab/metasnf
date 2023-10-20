@@ -2,7 +2,7 @@
 % Please edit documentation in R/distance_metrics.R
 \name{weighted_hamming_distance}
 \alias{weighted_hamming_distance}
-\title{Distance metric: Weighted Hamming distance}
+\title{Distance metric: Weighted Euclidean distance}
 \usage{
 weighted_hamming_distance(df, weights)
 }
@@ -15,7 +15,9 @@ row in the same order as the order of feature columns start}
 }
 \value{
 weighted_distance_matrix A distance matrix.
+
+weighted_distance_matrix A distance matrix.
 }
 \description{
-Distance metric: Weighted Hamming distance
+Distance metric: Weighted Euclidean distance
 }
