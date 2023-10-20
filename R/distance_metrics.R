@@ -361,32 +361,32 @@ sn_euclidean_distance <- function(df) {
     return(distance_matrix)
 }
 
-##' Distance metric: Weighted Euclidean distance
-##'
-##' @param df Dataframe containing one subjectkey column in the first column and
-##'  at least 1 continuous data column. All feature data should be continuous.
-##' @param weights Dataframe with 1 column containing weights for each feature per
-##'  row in the same order as the order of feature columns start
-##'
-##' @return weighted_distance_matrix A distance matrix.
-##'
-##' @export
-#weighted_euclidean_distance <- function(df, weights) {
-#    if (!requireNamespace("abSNF", quietly = TRUE)) {
-#        stop(
-#            "Package \"abSNF\" must be installed to use this function.",
-#            call. = FALSE
-#        )
-#    }
-#    df_feat_only <- data.matrix(df[,-1])
-#    weights_mat <- data.matrix(weights)
-#    weighted_dist <- abSNF::dist2_w(
-#        X = df_feat_only,
-#        C = df_feat_only,
-#        weight = weights_mat
-#    )
-#    return(weighted_dist)
-#}
+#' Distance metric: Weighted Euclidean distance
+#'
+#' @param df Dataframe containing one subjectkey column in the first column and
+#'  at least 1 continuous data column. All feature data should be continuous.
+#' @param weights Dataframe with 1 column containing weights for each feature per
+#'  row in the same order as the order of feature columns start
+#'
+#' @return weighted_distance_matrix A distance matrix.
+#'
+#' @export
+weighted_euclidean_distance <- function(df, weights) {
+    if (!requireNamespace("abSNF", quietly = TRUE)) {
+        stop(
+            "Package \"abSNF\" must be installed to use this function.",
+            call. = FALSE
+        )
+    }
+    df_feat_only <- data.matrix(df[,-1])
+    weights_mat <- data.matrix(weights)
+    weighted_dist <- abSNF::dist2_w(
+        X = df_feat_only,
+        C = df_feat_only,
+        weight = weights_mat
+    )
+    return(weighted_dist)
+}
 
 #' Distance metric: Weighted Hamming distance
 #'
