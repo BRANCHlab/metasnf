@@ -43,7 +43,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
     <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
-    <a class="dropdown-item" href="../articles/metasnf-vignette.html">An example metasnf pipeline</a>
+    <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
+    <a class="dropdown-item" href="../articles/metasnf-vignette.html">A Less Simple Example</a>
   </div>
 </li>
       </ul>
@@ -188,16 +189,16 @@ Simple Example</a>).</p>
 <span><span class="co"># showing just the columns that are related to distances</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">"dist"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    cont_dist disc_dist ord_dist cat_dist mix_dist</span></span>
-<span><span class="co">#&gt; 1          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 2          2         2        1        1        1</span></span>
-<span><span class="co">#&gt; 3          1         1        1        1        1</span></span>
+<span><span class="co">#&gt; 1          2         1        1        1        1</span></span>
+<span><span class="co">#&gt; 2          1         1        1        1        1</span></span>
+<span><span class="co">#&gt; 3          2         2        1        1        1</span></span>
 <span><span class="co">#&gt; 4          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 5          2         2        1        1        1</span></span>
+<span><span class="co">#&gt; 5          2         1        1        1        1</span></span>
 <span><span class="co">#&gt; 6          2         2        1        1        1</span></span>
 <span><span class="co">#&gt; 7          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 8          2         2        1        1        1</span></span>
-<span><span class="co">#&gt; 9          1         1        1        1        1</span></span>
-<span><span class="co">#&gt; 10         2         2        1        1        1</span></span></code></pre></div>
+<span><span class="co">#&gt; 8          2         1        1        1        1</span></span>
+<span><span class="co">#&gt; 9          1         2        1        1        1</span></span>
+<span><span class="co">#&gt; 10         1         1        1        1        1</span></span></code></pre></div>
 <p>The continuous and discrete distance metrics values randomly
 fluctuate between 1 and 2, where 1 means that the first metric
 (<code><a href="../reference/euclidean_distance.html">euclidean_distance()</a></code>) will be used and 2 means that the
@@ -309,14 +310,14 @@ sample from during settings_matrix generation:</p>
 <span><span class="co">#&gt;    cont_dist disc_dist ord_dist cat_dist mix_dist</span></span>
 <span><span class="co">#&gt; 1          1         3        1        1        1</span></span>
 <span><span class="co">#&gt; 2          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 3          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 4          1         3        1        1        1</span></span>
+<span><span class="co">#&gt; 3          1         2        1        1        1</span></span>
+<span><span class="co">#&gt; 4          1         2        1        1        1</span></span>
 <span><span class="co">#&gt; 5          1         3        1        1        1</span></span>
 <span><span class="co">#&gt; 6          1         2        1        1        1</span></span>
 <span><span class="co">#&gt; 7          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 8          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 9          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 10         1         2        1        1        1</span></span></code></pre></div>
+<span><span class="co">#&gt; 8          1         3        1        1        1</span></span>
+<span><span class="co">#&gt; 9          1         3        1        1        1</span></span>
+<span><span class="co">#&gt; 10         1         3        1        1        1</span></span></code></pre></div>
 <p>The second option can be quite useful when paired with
 <code><a href="../reference/add_settings_matrix_rows.html">add_settings_matrix_rows()</a></code>, enabling you to build up
 distinct blocks of rows in the settings matrix that have different
@@ -342,13 +343,13 @@ solution space over separate runs of <code>batch_snf</code>.</p>
 <span></span>
 <span><span class="va">settings_matrix</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">"dist"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    cont_dist disc_dist ord_dist cat_dist mix_dist</span></span>
-<span><span class="co">#&gt; 1          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 2          1         2        1        1        1</span></span>
+<span><span class="co">#&gt; 1          1         2        1        1        1</span></span>
+<span><span class="co">#&gt; 2          1         3        1        1        1</span></span>
 <span><span class="co">#&gt; 3          1         3        1        1        1</span></span>
 <span><span class="co">#&gt; 4          1         2        1        1        1</span></span>
 <span><span class="co">#&gt; 5          1         2        1        1        1</span></span>
 <span><span class="co">#&gt; 6          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 7          1         2        1        1        1</span></span>
+<span><span class="co">#&gt; 7          1         3        1        1        1</span></span>
 <span><span class="co">#&gt; 8          1         2        1        1        1</span></span>
 <span><span class="co">#&gt; 9          1         2        1        1        1</span></span>
 <span><span class="co">#&gt; 10         1         2        1        1        1</span></span>
@@ -386,7 +387,7 @@ the essential aspects of a well-formated distance function.</p>
 <span><span class="co">#&gt;     distance_matrix &lt;- as.matrix(stats::dist(df, method = "euclidean"))</span></span>
 <span><span class="co">#&gt;     return(distance_matrix)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x561482bce850&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x564702ebb0b8&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
 <p>First, the function should only accept one argument: <code>df</code>,
 and only give one output, <code>distance_matrix</code>.</p>
@@ -508,19 +509,19 @@ uniform distribution.</p>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu">uniform_weight_euclidean</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 0.7164579</span></span>
+<span><span class="co">#&gt; [1] 0.4436442</span></span>
 <span><span class="co">#&gt;                  NDAR_INV0567T2Y9 NDAR_INV0GLZNC2W NDAR_INV0IZ157F8</span></span>
-<span><span class="co">#&gt; NDAR_INV0567T2Y9         0.000000         8.927317         8.326549</span></span>
-<span><span class="co">#&gt; NDAR_INV0GLZNC2W         8.927317         0.000000         8.000050</span></span>
-<span><span class="co">#&gt; NDAR_INV0IZ157F8         8.326549         8.000050         0.000000</span></span>
-<span><span class="co">#&gt; NDAR_INV0J4PYA5F         8.680014         9.462855         8.822674</span></span>
-<span><span class="co">#&gt; NDAR_INV0OYE291Q         8.388372         7.807447         8.217962</span></span>
+<span><span class="co">#&gt; NDAR_INV0567T2Y9         0.000000         9.034020         8.574268</span></span>
+<span><span class="co">#&gt; NDAR_INV0GLZNC2W         9.034020         0.000000         9.709382</span></span>
+<span><span class="co">#&gt; NDAR_INV0IZ157F8         8.574268         9.709382         0.000000</span></span>
+<span><span class="co">#&gt; NDAR_INV0J4PYA5F        10.423623         9.933131        10.606216</span></span>
+<span><span class="co">#&gt; NDAR_INV0OYE291Q         7.811989         7.588405         9.153104</span></span>
 <span><span class="co">#&gt;                  NDAR_INV0J4PYA5F NDAR_INV0OYE291Q</span></span>
-<span><span class="co">#&gt; NDAR_INV0567T2Y9         8.680014         8.388372</span></span>
-<span><span class="co">#&gt; NDAR_INV0GLZNC2W         9.462855         7.807447</span></span>
-<span><span class="co">#&gt; NDAR_INV0IZ157F8         8.822674         8.217962</span></span>
-<span><span class="co">#&gt; NDAR_INV0J4PYA5F         0.000000         8.976554</span></span>
-<span><span class="co">#&gt; NDAR_INV0OYE291Q         8.976554         0.000000</span></span></code></pre></div>
+<span><span class="co">#&gt; NDAR_INV0567T2Y9        10.423623         7.811989</span></span>
+<span><span class="co">#&gt; NDAR_INV0GLZNC2W         9.933131         7.588405</span></span>
+<span><span class="co">#&gt; NDAR_INV0IZ157F8        10.606216         9.153104</span></span>
+<span><span class="co">#&gt; NDAR_INV0J4PYA5F         0.000000         9.700413</span></span>
+<span><span class="co">#&gt; NDAR_INV0OYE291Q         9.700413         0.000000</span></span></code></pre></div>
 <p>The approach of formatting variable weights in a diagonal matrix and
 then doing matrix multiplication with the original dataframe through the
 <code>%*%</code> operator is very handy to know for this purpose:</p>
@@ -586,18 +587,18 @@ Watch what happens when we repeatedly access either of these
 functions.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">uniform_weight</span> <span class="op">&lt;-</span> <span class="fu">uniform_weight_euclidean</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.9355165</span></span>
+<span><span class="co">#&gt; [1] 0.3701373</span></span>
 <span><span class="va">uniform_weight</span> <span class="op">&lt;-</span> <span class="fu">uniform_weight_euclidean</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3305314</span></span>
+<span><span class="co">#&gt; [1] 0.8370351</span></span>
 <span><span class="va">uniform_weight</span> <span class="op">&lt;-</span> <span class="fu">uniform_weight_euclidean</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.188021</span></span>
+<span><span class="co">#&gt; [1] 0.835494</span></span>
 <span></span>
 <span><span class="va">uniform_weight</span> <span class="op">&lt;-</span> <span class="fu">my_metric_1</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.71851</span></span>
+<span><span class="co">#&gt; [1] 0.4107665</span></span>
 <span><span class="va">uniform_weight</span> <span class="op">&lt;-</span> <span class="fu">my_metric_1</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.71851</span></span>
+<span><span class="co">#&gt; [1] 0.4107665</span></span>
 <span><span class="va">uniform_weight</span> <span class="op">&lt;-</span> <span class="fu">my_metric_1</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.71851</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.4107665</span></span></code></pre></div>
 <p>For the first function, a new set of random numbers is generated each
 time the distance metric is run. For the second function, a new set of
 random numbers is only generated once (during
@@ -647,11 +648,11 @@ with.</p>
 <span></span>
 <span><span class="va">weights_df</span></span>
 <span><span class="co">#&gt;     mrisdp_1  mrisdp_2   mrisdp_3 mrisdp_40 mrisdp_41 mrisdp_42</span></span>
-<span><span class="co">#&gt; 1 0.92419071 0.9099840 0.42381647 0.4103982 0.5640359 0.2950651</span></span>
-<span><span class="co">#&gt; 2 0.07596749 0.1410591 0.01340287 0.4855141 0.5945707 0.5821703</span></span>
-<span><span class="co">#&gt; 3 0.64034856 0.7205406 0.30765299 0.3394514 0.3902091 0.6320073</span></span>
-<span><span class="co">#&gt; 4 0.35021586 0.9815632 0.64053177 0.1426711 0.3823681 0.4766730</span></span>
-<span><span class="co">#&gt; 5 0.04099998 0.4018660 0.62192043 0.0399489 0.4221297 0.4052951</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 0.29858006 0.9902424 0.33445544 0.8142575 0.2056972 0.4157510</span></span>
+<span><span class="co">#&gt; 2 0.07344198 0.7017968 0.12910984 0.1810823 0.1455743 0.2035702</span></span>
+<span><span class="co">#&gt; 3 0.51174424 0.5402569 0.63317837 0.9328490 0.3666598 0.9689241</span></span>
+<span><span class="co">#&gt; 4 0.98355433 0.4374715 0.01142215 0.6224279 0.3943011 0.8650514</span></span>
+<span><span class="co">#&gt; 5 0.13502654 0.6117756 0.14666234 0.9166186 0.3385204 0.9008942</span></span></code></pre></div>
 <p>Those are all the weights. Let’s say our distance metric encounters
 some odd subset of the data:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
@@ -685,17 +686,65 @@ encounters:</p>
 <span></span>
 <span><span class="fu">first_row_metric</span><span class="op">(</span><span class="va">odd_subset</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  NDAR_INV0567T2Y9 NDAR_INV0GLZNC2W NDAR_INV0IZ157F8</span></span>
-<span><span class="co">#&gt; NDAR_INV0567T2Y9        0.0000000        0.3622241        0.3101797</span></span>
-<span><span class="co">#&gt; NDAR_INV0GLZNC2W        0.3622241        0.0000000        0.5638086</span></span>
-<span><span class="co">#&gt; NDAR_INV0IZ157F8        0.3101797        0.5638086        0.0000000</span></span>
-<span><span class="co">#&gt; NDAR_INV0J4PYA5F        0.2282439        0.1691798        0.4058378</span></span>
-<span><span class="co">#&gt; NDAR_INV0OYE291Q        0.2823177        0.1645890        0.4598755</span></span>
+<span><span class="co">#&gt; NDAR_INV0567T2Y9        0.0000000        0.4153215        0.3049084</span></span>
+<span><span class="co">#&gt; NDAR_INV0GLZNC2W        0.4153215        0.0000000        0.6975607</span></span>
+<span><span class="co">#&gt; NDAR_INV0IZ157F8        0.3049084        0.6975607        0.0000000</span></span>
+<span><span class="co">#&gt; NDAR_INV0J4PYA5F        0.2499560        0.1834916        0.5385710</span></span>
+<span><span class="co">#&gt; NDAR_INV0OYE291Q        0.2762515        0.2441225        0.5056649</span></span>
 <span><span class="co">#&gt;                  NDAR_INV0J4PYA5F NDAR_INV0OYE291Q</span></span>
-<span><span class="co">#&gt; NDAR_INV0567T2Y9        0.2282439        0.2823177</span></span>
-<span><span class="co">#&gt; NDAR_INV0GLZNC2W        0.1691798        0.1645890</span></span>
-<span><span class="co">#&gt; NDAR_INV0IZ157F8        0.4058378        0.4598755</span></span>
-<span><span class="co">#&gt; NDAR_INV0J4PYA5F        0.0000000        0.1441736</span></span>
-<span><span class="co">#&gt; NDAR_INV0OYE291Q        0.1441736        0.0000000</span></span></code></pre></div>
+<span><span class="co">#&gt; NDAR_INV0567T2Y9        0.2499560        0.2762515</span></span>
+<span><span class="co">#&gt; NDAR_INV0GLZNC2W        0.1834916        0.2441225</span></span>
+<span><span class="co">#&gt; NDAR_INV0IZ157F8        0.5385710        0.5056649</span></span>
+<span><span class="co">#&gt; NDAR_INV0J4PYA5F        0.0000000        0.2098243</span></span>
+<span><span class="co">#&gt; NDAR_INV0OYE291Q        0.2098243        0.0000000</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="example-4-generating-a-range-of-weighted-distance-metrics-using-a-weights-matrix">Example 4: Generating a range of weighted distance metrics using a
+weights matrix<a class="anchor" aria-label="anchor" href="#example-4-generating-a-range-of-weighted-distance-metrics-using-a-weights-matrix"></a>
+</h3>
+<p>(Example using the weighted hamming distance will go here…)</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="list-of-included-distance-metrics">List of included distance metrics<a class="anchor" aria-label="anchor" href="#list-of-included-distance-metrics"></a>
+</h2>
+<div class="section level3">
+<h3 id="unweighted">Unweighted<a class="anchor" aria-label="anchor" href="#unweighted"></a>
+</h3>
+<p>These metrics can be used as is.</p>
+<ul>
+<li>
+<code>euclidean_distance</code>
+<ul>
+<li>simple Euclidean distance</li>
+<li>applies to continuous, discrete, or ordinal data</li>
+</ul>
+</li>
+<li>
+<code>sn_euclidean_distance</code>
+<ul>
+<li>Euclidean distance following standard normalization (SNFtool package
+implementation)</li>
+<li>applies to continuous, discrete, or ordinal data</li>
+</ul>
+</li>
+<li>
+<code>gower_distance</code>
+<ul>
+<li>Gower’s distance (cluster package implementation)</li>
+<li>applies to any data</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="weighted-closure-based">Weighted (closure-based)<a class="anchor" aria-label="anchor" href="#weighted-closure-based"></a>
+</h3>
+<p>These metrics need to be embedded with weights (see Example 4).</p>
+<ul>
+<li><code>weighted_hamming_distance</code></li>
+<li><code>weighted_euclidean_distance</code></li>
+</ul>
 <p>And that’s all there is on distance metrics! If there’s a metric
 you’d like to see added as a prewritten option included in the package,
 feel free to post an issue or make a pull request on the package’s

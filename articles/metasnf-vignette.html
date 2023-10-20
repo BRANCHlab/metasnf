@@ -6,12 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="metasnf">
-<title>An example metasnf pipeline • metasnf</title>
+<title>A Less Simple Example • metasnf</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="An example metasnf pipeline">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="A Less Simple Example">
 <meta property="og:description" content="metasnf">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -43,7 +43,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
     <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
-    <a class="dropdown-item" href="../articles/metasnf-vignette.html">An example metasnf pipeline</a>
+    <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
+    <a class="dropdown-item" href="../articles/metasnf-vignette.html">A Less Simple Example</a>
   </div>
 </li>
       </ul>
@@ -63,7 +64,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>An example metasnf pipeline</h1>
+      <img src="" class="logo" alt=""><h1>A Less Simple Example</h1>
             
       
       
@@ -75,60 +76,13 @@
 <style>
 div.aside { background-color:#fff2e6; }
 </style>
-<p><strong>What is this package?</strong></p>
-<p><em>metasnf</em> is a package that facilitates usage of the meta
-clustering paradigm described in <a href="https://doi.org/10.1109/ICDM.2006.103" class="external-link">Caruana et al., 2006</a>
-with the similarity network fusion (SNF) data integration procedure
-developed in <a href="https://doi.org/10.1038/nmeth.2810" class="external-link">Wang et al.,
-2014</a>.</p>
-<p>This package enables repeated iterations of SNF with distinct
-clustering settings and combinations of input variables.</p>
-<p><br></p>
-<p><strong>Why use meta clustering?</strong></p>
-<p>Clustering algorithms seek solutions that optimize context-agnostic
-metrics of quality. In sufficiently noisy datasets where many
-qualitatively distinct solutions with similar scores of clustering
-quality exist, it is not necessarily the case that the top solution
-selected by a clustering algorithm will also be the most useful one for
-the user’s context.</p>
-<p>To address this issue, the original meta clustering procedure <a href="https://doi.org/10.1109/ICDM.2006.103" class="external-link">Caruana et al., 2006</a>
-involved generating a large number of reasonable clustering solutions,
-clusterign those solutions into qualitatively similar ones, and having
-the user examine those “meta clusters” to find something that seems like
-it’ll be the most useful.</p>
-<p>This package offers a wide range of functions that help a user
-transform their initial, raw data into subtyping solutions that are
-guided by the context the user is in, characterized across features of
-interest to the user, and well-validated for generalizability outside of
-the user’s dataset. The package also offers wrapper functions around the
-<code>ggplot2</code> and <code>pheatmap</code> packages to provide
-sensible default visualizations at various stages of the subtyping
-process.</p>
 <p>This vignette walks through how this package can be used over a
 complete SNF-subtyping pipeline.</p>
 <div class="section level2">
 <h2 id="data-set-up-and-pre-processing">Data set-up and pre-processing<a class="anchor" aria-label="anchor" href="#data-set-up-and-pre-processing"></a>
 </h2>
 <div class="section level3">
-<h3 id="install-metasnf">1. Install metasnf<a class="anchor" aria-label="anchor" href="#install-metasnf"></a>
-</h3>
-<p>The package is currently hosted on GitHub (not CRAN). The easiest way
-to install metasnf is with the devtools package.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span> <span class="co"># if you don't have it already</span></span>
-<span></span>
-<span><span class="co"># By default, this will install the latest version of the package</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># To ensure you are always installing a specific version of the package,</span></span>
-<span><span class="co">#  you can manually specify the latest commit:</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span></span>
-<span>    <span class="st">"BRANCHlab/metasnf@2b30771ca78c6bc0dcbdd61bba30d32a17cc3fd6"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="load-the-library-and-data-into-the-r-environment">2. Load the library and data into the R environment<a class="anchor" aria-label="anchor" href="#load-the-library-and-data-into-the-r-environment"></a>
+<h3 id="load-the-library-and-data-into-the-r-environment">1. Load the library and data into the R environment<a class="anchor" aria-label="anchor" href="#load-the-library-and-data-into-the-r-environment"></a>
 </h3>
 <p>Your data should be loaded into the R environment in the following
 format:</p>
@@ -156,14 +110,10 @@ the Adolescent Brain Cognitive Development study:</p>
 <code>abcd_income</code> (household income on a 1-3 scale)</li>
 <li>
 <code>abcd_pubertal</code> (pubertal status on a 1-5 scale)</li>
-<li>
-<code>abcd_colour</code> (favourite colour among red, green, and
-blue)</li>
 </ul>
 <p>Here’s what the cortical thickness data looks like:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">abcd_cort_t</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "tbl_df"     "tbl"        "data.frame"</span></span>
@@ -186,11 +136,10 @@ blue)</li>
 <span><span class="co">#&gt; 3 NDAR_INV0IZ157F8    2.621    2.295    2.530    2.961</span></span>
 <span><span class="co">#&gt; 4 NDAR_INV0J4PYA5F    2.599    2.670    2.676    2.938</span></span>
 <span><span class="co">#&gt; 5 NDAR_INV0OYE291Q    2.526    2.761    2.829    2.986</span></span></code></pre></div>
-<p>The first column <code>subjectkey</code> is the unique identifier
-(UID) for all subjects in the ABCD study. This will also be the required
-UID for your data, but don’t worry about that just yet.</p>
+<p>The first column “patient” is the unique identifier (UID) for all
+subjects in the data.</p>
 <p>Here’s the household income data:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">abcd_income</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 300   2</span></span>
 <span></span>
@@ -208,7 +157,7 @@ UID for your data, but don’t worry about that just yet.</p>
 <span><span class="co">#&gt; 5 NDAR_INV0OYE291Q                1</span></span></code></pre></div>
 <p>Putting everything in a list will help us get quicker summaries of
 all the data.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">abcd_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="va">abcd_anxiety</span>,</span>
 <span>    <span class="va">abcd_depress</span>,</span>
@@ -275,13 +224,18 @@ have the same number of participants.</p>
 <div class="section level2">
 <h2 id="generating-the-data-list">Generating the data list<a class="anchor" aria-label="anchor" href="#generating-the-data-list"></a>
 </h2>
-<p>The <code>data_list</code> structure is basically just a list of
+<p>The <code>data_list</code> structure is a structured list of
 dataframes (like the one already created), but with some additional
-features to facilitate repeated clustering. It should only contain the
-input dataframes we want to directly use as inputs for the clustering.
-I’ll set aside the anxiety and depression dataframes for now and just
-use the other dataframes as clustering inputs.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+metadata about each dataframe. It should only contain the input
+dataframes we want to directly use as inputs for the clustering. Out of
+all the data we have available to us, we may be working in a context
+where the anxiety and depression data are especially important patient
+outcomes, and we want to know if we can find subtypes using the rest of
+the data which still do a good job of separating out patients by their
+anxiety and depression scores. We’ll set aside anxiety and depression
+for now and use the rest of the data as inputs for our subtyping, which
+means loading them into the data_list.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
@@ -291,15 +245,15 @@ use the other dataframes as clustering inputs.</p>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span></code></pre></div>
-<p>Building the <code>data_list</code> may be the most laborious part of
-this process. The first entries are all lists which contains the
-following elements:</p>
+<p>The first entries are all lists which contains the following
+elements:</p>
 <ol style="list-style-type: decimal">
 <li>The actual dataframe</li>
 <li>A name for the dataframe (string)</li>
-<li>A name for the <em>domain</em> of the dataframe (string)</li>
+<li>A name for the <em>domain</em> of information the dataframe is
+representative of (string)</li>
 <li>The type of variable stored in the dataframe (options are
-continuous, categorical, and mixed)</li>
+continuous, discrete, ordinal, categorical, and mixed)</li>
 </ol>
 <p>Finally, there’s an argument for the <code>uid</code> (the column
 name that currently uniquely identifies all the subjects in your
@@ -316,12 +270,12 @@ dataframes</li>
 cluster result characterization</li>
 </ul>
 <p>Any rows containing NAs are removed. If you don’t want a bunch of
-your data to get slashed because there are a few NAs sprinkled around
+your data to get removed because there are a few NAs sprinkled around
 here and there, consider using <a href="https://en.wikipedia.org/wiki/Imputation_(statistics)" class="external-link">imputation</a>.
 The <code>mice</code> package in R is nice for this.</p>
 <p>We can get a summary of our constructed <code>data_list</code> with
 the <code>summarize_dl</code> function:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                    name       type       domain length width</span></span>
 <span><span class="co">#&gt; 1    cortical_thickness continuous neuroimaging    100   152</span></span>
@@ -340,172 +294,91 @@ settings we’d like to use for each of our SNF runs. Calling the
 <code>generate_settings_matrix</code> function with a specified number
 of rows will automatically build a randomly populated
 <code>settings_matrix</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span><span class="va">data_list</span>, nrow <span class="op">=</span> <span class="fl">30</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
+<span>    <span class="va">data_list</span>,</span>
+<span>    nrow <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    min_k <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    max_k <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>    seed <span class="op">=</span> <span class="fl">42</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span>
 <span></span>
-<span><span class="va">settings_matrix</span></span>
-<span><span class="co">#&gt;    row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist</span></span>
-<span><span class="co">#&gt; 1       1   0.5 75 20          2         1         1         1        1</span></span>
-<span><span class="co">#&gt; 2       2   0.5 88 20          2         2         1         1        1</span></span>
-<span><span class="co">#&gt; 3       3   0.7 31 20          3         1         1         1        1</span></span>
-<span><span class="co">#&gt; 4       4   0.6 32 20          1         1         1         1        1</span></span>
-<span><span class="co">#&gt; 5       5   0.8 98 20          1         2         1         1        1</span></span>
-<span><span class="co">#&gt; 6       6   0.6 34 20          3         2         1         1        1</span></span>
-<span><span class="co">#&gt; 7       7   0.3 81 20          2         2         1         1        1</span></span>
-<span><span class="co">#&gt; 8       8   0.6 64 20          1         1         1         1        1</span></span>
-<span><span class="co">#&gt; 9       9   0.8 17 20          3         1         1         1        1</span></span>
-<span><span class="co">#&gt; 10     10   0.6 71 20          1         1         1         1        1</span></span>
-<span><span class="co">#&gt; 11     11   0.8 82 20          2         1         1         1        1</span></span>
-<span><span class="co">#&gt; 12     12   0.6 90 20          3         2         1         1        1</span></span>
-<span><span class="co">#&gt; 13     13   0.3 11 20          3         1         1         1        1</span></span>
-<span><span class="co">#&gt; 14     14   0.8 51 20          1         1         1         1        1</span></span>
-<span><span class="co">#&gt; 15     15   0.4 91 20          1         1         1         1        1</span></span>
-<span><span class="co">#&gt; 16     16   0.4 30 20          1         1         1         1        1</span></span>
-<span><span class="co">#&gt; 17     17   0.7 71 20          1         1         1         1        1</span></span>
-<span><span class="co">#&gt; 18     18   0.6 99 20          2         2         1         1        1</span></span>
-<span><span class="co">#&gt; 19     19   0.4 52 20          1         1         1         1        1</span></span>
-<span><span class="co">#&gt; 20     20   0.8 20 20          2         2         1         1        1</span></span>
-<span><span class="co">#&gt; 21     21   0.4 17 20          3         1         1         1        1</span></span>
-<span><span class="co">#&gt; 22     22   0.3 53 20          2         2         1         1        1</span></span>
-<span><span class="co">#&gt; 23     23   0.3 27 20          2         1         1         1        1</span></span>
-<span><span class="co">#&gt; 24     24   0.6 74 20          3         2         1         1        1</span></span>
-<span><span class="co">#&gt; 25     25   0.4 40 20          2         2         1         1        1</span></span>
-<span><span class="co">#&gt; 26     26   0.4 71 20          1         1         1         1        1</span></span>
-<span><span class="co">#&gt; 27     27   0.7 99 20          1         2         1         1        1</span></span>
-<span><span class="co">#&gt; 28     28   0.8 50 20          1         2         1         1        1</span></span>
-<span><span class="co">#&gt; 29     29   0.3 69 20          3         1         1         1        1</span></span>
-<span><span class="co">#&gt; 30     30   0.4 48 20          1         2         1         1        1</span></span>
-<span><span class="co">#&gt;    cat_dist mix_dist input_wt domain_wt inc_cortical_thickness</span></span>
-<span><span class="co">#&gt; 1         1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 2         1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 3         1        1        1         1                      0</span></span>
-<span><span class="co">#&gt; 4         1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 5         1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 6         1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 7         1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 8         1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 9         1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 10        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 11        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 12        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 13        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 14        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 15        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 16        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 17        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 18        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 19        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 20        1        1        1         1                      0</span></span>
-<span><span class="co">#&gt; 21        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 22        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 23        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 24        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 25        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 26        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 27        1        1        1         1                      0</span></span>
-<span><span class="co">#&gt; 28        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt; 29        1        1        1         1                      0</span></span>
-<span><span class="co">#&gt; 30        1        1        1         1                      1</span></span>
-<span><span class="co">#&gt;    inc_cortical_surface_area inc_subcortical_volume inc_household_income</span></span>
-<span><span class="co">#&gt; 1                          0                      1                    0</span></span>
-<span><span class="co">#&gt; 2                          1                      1                    1</span></span>
-<span><span class="co">#&gt; 3                          1                      1                    1</span></span>
-<span><span class="co">#&gt; 4                          1                      1                    1</span></span>
-<span><span class="co">#&gt; 5                          1                      0                    1</span></span>
-<span><span class="co">#&gt; 6                          1                      1                    1</span></span>
-<span><span class="co">#&gt; 7                          1                      1                    1</span></span>
-<span><span class="co">#&gt; 8                          1                      1                    1</span></span>
-<span><span class="co">#&gt; 9                          1                      1                    1</span></span>
-<span><span class="co">#&gt; 10                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 11                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 12                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 13                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 14                         1                      0                    1</span></span>
-<span><span class="co">#&gt; 15                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 16                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 17                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 18                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 19                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 20                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 21                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 22                         1                      0                    0</span></span>
-<span><span class="co">#&gt; 23                         0                      1                    1</span></span>
-<span><span class="co">#&gt; 24                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 25                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 26                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 27                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 28                         1                      1                    0</span></span>
-<span><span class="co">#&gt; 29                         1                      1                    1</span></span>
-<span><span class="co">#&gt; 30                         1                      1                    1</span></span>
-<span><span class="co">#&gt;    inc_pubertal_status</span></span>
-<span><span class="co">#&gt; 1                    1</span></span>
-<span><span class="co">#&gt; 2                    1</span></span>
-<span><span class="co">#&gt; 3                    1</span></span>
-<span><span class="co">#&gt; 4                    1</span></span>
-<span><span class="co">#&gt; 5                    1</span></span>
-<span><span class="co">#&gt; 6                    1</span></span>
-<span><span class="co">#&gt; 7                    1</span></span>
-<span><span class="co">#&gt; 8                    1</span></span>
-<span><span class="co">#&gt; 9                    1</span></span>
-<span><span class="co">#&gt; 10                   1</span></span>
-<span><span class="co">#&gt; 11                   1</span></span>
-<span><span class="co">#&gt; 12                   1</span></span>
-<span><span class="co">#&gt; 13                   1</span></span>
-<span><span class="co">#&gt; 14                   1</span></span>
-<span><span class="co">#&gt; 15                   1</span></span>
-<span><span class="co">#&gt; 16                   1</span></span>
-<span><span class="co">#&gt; 17                   1</span></span>
-<span><span class="co">#&gt; 18                   1</span></span>
-<span><span class="co">#&gt; 19                   1</span></span>
-<span><span class="co">#&gt; 20                   1</span></span>
-<span><span class="co">#&gt; 21                   1</span></span>
-<span><span class="co">#&gt; 22                   1</span></span>
-<span><span class="co">#&gt; 23                   1</span></span>
-<span><span class="co">#&gt; 24                   1</span></span>
-<span><span class="co">#&gt; 25                   1</span></span>
-<span><span class="co">#&gt; 26                   1</span></span>
-<span><span class="co">#&gt; 27                   1</span></span>
-<span><span class="co">#&gt; 28                   1</span></span>
-<span><span class="co">#&gt; 29                   1</span></span>
-<span><span class="co">#&gt; 30                   1</span></span></code></pre></div>
+<span><span class="va">settings_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span></span>
+<span><span class="co">#&gt;   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
+<span><span class="co">#&gt; 1      1   0.5 29 20          2         1         1         1        1        1</span></span>
+<span><span class="co">#&gt; 2      2   0.4 26 20          1         1         1         1        1        1</span></span>
+<span><span class="co">#&gt; 3      3   0.3 44 20          2         2         1         1        1        1</span></span>
+<span><span class="co">#&gt; 4      4   0.3 43 20          1         1         1         1        1        1</span></span>
+<span><span class="co">#&gt; 5      5   0.5 29 20          2         2         1         1        1        1</span></span>
+<span><span class="co">#&gt;   mix_dist input_wt domain_wt inc_cortical_thickness inc_cortical_surface_area</span></span>
+<span><span class="co">#&gt; 1        1        1         1                      1                         0</span></span>
+<span><span class="co">#&gt; 2        1        1         1                      1                         1</span></span>
+<span><span class="co">#&gt; 3        1        1         1                      1                         0</span></span>
+<span><span class="co">#&gt; 4        1        1         1                      1                         1</span></span>
+<span><span class="co">#&gt; 5        1        1         1                      1                         1</span></span>
+<span><span class="co">#&gt;   inc_subcortical_volume inc_household_income inc_pubertal_status</span></span>
+<span><span class="co">#&gt; 1                      1                    0                   1</span></span>
+<span><span class="co">#&gt; 2                      1                    1                   1</span></span>
+<span><span class="co">#&gt; 3                      0                    1                   1</span></span>
+<span><span class="co">#&gt; 4                      0                    1                   1</span></span>
+<span><span class="co">#&gt; 5                      1                    1                   1</span></span></code></pre></div>
 <p>The columns are:</p>
 <ul>
 <li>
-<code>inc*</code> - binary columns indicating whether or not an
-input dataframe is included (1) or excluded (0) from the corresponding
-SNF run (discussed further in the <a href="#inc">appendix</a>)</li>
+<code>row_id</code>: Integer to keep track of which row is
+which</li>
+<li>
+<code>alpha</code> - A hyperparameter for SNF (variable that
+influences the subtyping process)</li>
+<li>
+<code>k</code> - A hyperparameter for SNF</li>
+<li>
+<code>t</code> - A hyperparameter for SNF</li>
 <li>
 <code>snf_scheme</code> - the specific way in which input data gets
-collapsed into a final fused network (discussed further in the <a href="#snf_scheme">appendix</a>)</li>
+collapsed into a final fused network (discussed further in the <a href="https://branchlab.github.io/metasnf/articles/snf_schemes.html">SNF
+schemes vignette</a>)</li>
 <li>
-<code>eigen_or_rot</code> binary variable indicating if the eigengap
-(1) or rotation cost (2) heuristic was used to select the number of
-clusters specified for applying spectral clustering to the final fused
-network</li>
+<code>clust_alg</code> - Which clustering algorithm will be applied
+to the final fused network produced by SNF</li>
 <li>
-<code>K</code> - the nearest neighbors hyperparameter used for SNF
-(an input to the function SNFtool::SNF)</li>
+<code>*_dist</code> - Which distance metric will be used for the
+different types of data (discussed further in the <a href="https://branchlab.github.io/metasnf/articles/distance_metrics.html">distance
+metrics vignette</a>)</li>
 <li>
-<code>alpha</code> - Referred to as <span class="math inline">\(\eta\)</span> in the original SNF manuscript,
-alpha in the SNFtool code examples, and sigma in the SNFtool source
-code, this is a hyperparameter for affinity matrix generation</li>
+<code>inc_*</code> - binary columns indicating whether or not an
+input dataframe is included (1) or excluded (0) from the corresponding
+SNF run (discussed further in the <a href="https://branchlab.github.io/metasnf/articles/random_dropout.html">random
+dropout vignette</a>)</li>
 </ul>
-<p><code>generate_settings_matrix</code> randomly populates these
-columns and ensures that no generated rows are identical. Setting the
-optional <code>seed</code> parameter (which will affect the seed of your
-entire R session) ensures that the same settings matrix is generated
-each time we run the code.</p>
+<p>Without specifying any additional parameters,
+<code>generate_settings_matrix</code> randomly populates these columns
+and ensures that no generated rows are identical.</p>
+<p>What’s important for now is that the matrix (technically a dataframe
+in the R environment) contains several rows which each outline a
+different but reasonable way in which the raw data could be converted
+into patient subtypes. Further customization of the
+<code>settings_matrix</code> will enable you to access the broadest
+possible space of reasonable cluster solutions that your data can
+produce using SNF and ideally get you closer to a generalizable and
+useful solution for your context. More on <code>settings_matrix</code>
+customization can be found in the <a href="https://branchlab.github.io/metasnf/articles/settings_matrix.html">settings
+matrix vignette</a></p>
+<p>Setting the optional <code>seed</code> parameter (which will affect
+the seed of your entire R session) ensures that the same settings matrix
+is generated each time we run the code.</p>
 <p>While we end up with a random set of settings here, there is nothing
 wrong with manually altering the settings matrix to suit your needs. For
 example, if you wanted to know how much of a difference one input
 dataframe made, you could ensure that half of the rows included this
 input dataframe and the other half didn’t. You can also add random rows
 to an already existing dataframe using the
-<code>add_settings_matrix_rows</code> function.</p>
+<code>add_settings_matrix_rows</code> function (further discussed in the
+vignette).</p>
 </div>
 <div class="section level2">
-<h2 id="executing-the-settings-matrix">Executing the settings matrix<a class="anchor" aria-label="anchor" href="#executing-the-settings-matrix"></a>
+<h2 id="running-snf-for-all-the-rows-in-the-settings-matrix">Running SNF for all the rows in the settings matrix<a class="anchor" aria-label="anchor" href="#running-snf-for-all-the-rows-in-the-settings-matrix"></a>
 </h2>
 <p>The <code>batch_snf</code> function integrates the data in the
 <code>data_list</code> using each of the sets of settings contained in
@@ -514,40 +387,29 @@ the <code>settings_matrix</code>. The resulting structure is an
 <code>settings_matrix</code> that contains columns specifying which
 cluster each subject was assigned for the corresponding
 <code>settings_matrix</code> row.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/30 | Time remaining: 5 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/30 | Time remaining: 5 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 6/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 7/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 9/30 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 10/30 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 11/30 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 12/30 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 13/30 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 14/30 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 15/30 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 16/30 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 17/30 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 18/30 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 19/30 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 20/30 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 21/30 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 22/30 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 23/30 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 24/30 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 25/30 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 26/30 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 27/30 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 28/30 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 29/30 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 30/30 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 5 seconds."</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 13/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 14/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 15/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 16/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 17/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span></span>
 <span><span class="co">#&gt;  [1] "row_id"                    "alpha"                    </span></span>
@@ -567,23 +429,46 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [29] "subject_NDAR_INV1TCP5GNM"  "subject_NDAR_INV1ZHRDJ6B"</span></span></code></pre></div>
 <p>It goes on like this for some time.</p>
 <p>Just like that, the clustering is done!</p>
-<p><em>Note: You can also enable parallel processing to run the
-<code>batch_snf</code> function faster on machines with multiple CPU
-cores. See the “processes” parameter in
-<code><a href="../reference/batch_snf.html">?batch_snf</a></code>.</em></p>
+<p>You can pull the clustering results out of each row using the
+<code>get_cluster_df</code> function:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cluster_solutions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_cluster_solutions.html">get_cluster_solutions</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cluster_solutions</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                 subjectkey 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20</span></span>
+<span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 1 2 1 2 2 2 1 2 2  2  5  2  2  2  1  2  1  1  2  1</span></span>
+<span><span class="co">#&gt; 2 subject_NDAR_INV0IZ157F8 2 1 1 1 1 1 1 5 1  1  4  1  1  1  1  1  1  1  1  3</span></span>
+<span><span class="co">#&gt; 3 subject_NDAR_INV0J4PYA5F 1 2 2 2 2 2 2 4 2  3  2  2  2  2  2  2  2  3  2  2</span></span>
+<span><span class="co">#&gt; 4 subject_NDAR_INV10OMKVLE 1 1 1 1 1 1 1 1 1  1  5  1  1  1  1  1  1  1  1  3</span></span>
+<span><span class="co">#&gt; 5 subject_NDAR_INV15FPCW4O 1 2 2 2 2 2 2 1 2  1  2  2  2  2  2  2  2  2  2  2</span></span>
+<span><span class="co">#&gt; 6 subject_NDAR_INV19NB4RJK 1 2 1 2 2 2 1 3 2  4  4  1  2  2  2  2  1  2  2  3</span></span></code></pre></div>
+<p><em>Note: Parallel processing is available on an older release of the
+package (v0.2.0) and will be integrated into the latest release shortly.
+See the “processes” parameter in <code><a href="../reference/batch_snf.html">?batch_snf</a></code>.</em></p>
 </div>
 <div class="section level2">
-<h2 id="picking-a-solution-1-examining-meta-clusters">Picking a solution #1: examining meta clusters<a class="anchor" aria-label="anchor" href="#picking-a-solution-1-examining-meta-clusters"></a>
+<h2 id="picking-a-solution">Picking a solution<a class="anchor" aria-label="anchor" href="#picking-a-solution"></a>
 </h2>
-<p>We now have a group of cluster solutions stored in an
-<code>solutions_matrix</code>. Proposing tens or hundreds (or thousands)
-of clustering solutions in a research paper doesn’t seem to be
-fashionable right now, so we will need to pick a solution to move
-forward with. In this section, we’ll take a look at the
-cluster-of-clusters approach to picking our favourite solution to move
-forward with. I believe this approach is best for truly exploratory
-clustering (read: when the way in which you prefer to choose between two
-clustering solutions is through ambiguous vibes).</p>
+<p>Now that we have access to 20 different clustering solutions, we’ll
+need to find some way to pick a favourite (or a few). In this case,
+plotting or running stats manually on each of the solutions might be a
+reasonable way to determine which ones we like the most. But when the
+number of solutions generated goes up into the hundreds (or thousands),
+we’re going to need some more automated approaches.</p>
+<p>Below are some different tools that you can use to try to pick a
+solution that is the best for your purposes.</p>
+<div class="section level3">
+<h3 id="examining-meta-clusters">1: Examining “meta clusters”<a class="anchor" aria-label="anchor" href="#examining-meta-clusters"></a>
+</h3>
+<p>This is the approach introduced by the original meta clustering
+paper. This is a good approach to use when you can’t quantitatively
+describe what makes one cluster solution better than another, but you
+can have an expert compare the two solutions and “intuit” which of the
+two is more desirable.</p>
+<p>The idea is to cluster the clustering solutions themselves to arrive
+at a small number of qualitatively different solutions. From there, a
+user can manually pick out some representative solutions and do the
+evaluations themselves.</p>
 <p>The first step is to calculate the <a href="https://en.wikipedia.org/wiki/Rand_index" class="external-link">adjusted Rand index</a>
 (ARI) between each pair of cluster solutions. This metric is tells us
 how similar the solutions are to each other, thereby allowing us to find
@@ -591,22 +476,16 @@ clusters of cluster solutions.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>solutions_matrix_aris <span class="ot">&lt;-</span> <span class="fu">calc_om_aris</span>(solutions_matrix)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Please wait - this may take a minute."</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fl">22.98851</span>% completed...</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fl">45.97701</span>% completed...</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fl">68.96552</span>% completed...</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fl">91.95402</span>% completed...</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(solutions_matrix_aris)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 30 30</span></span></code></pre></div>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fl">52.63158</span>% completed...</span></code></pre></div>
 <p>We can visualize the resulting inter-cluster similarities with a
 heatmap:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ari_heatmap.html">ari_heatmap</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rand_index_heatmap.html">adjusted_rand_index_heatmap</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span><span class="op">)</span></span></code></pre></div>
 <p>You can optionally save your heatmap by specifying a path with the
 <code>save</code> parameter (e.g.,
-<code>ari_heatmap(solutions_matrix_aris, save = "./ari_heatmap.png")</code>).</p>
+<code>adjusted_rand_index_heatmap(solutions_matrix_aris, save = "./adjusted_rand_index_heatmap.png")</code>).</p>
 <div class="figure">
-<img src="ari_heatmap.png" width="400" alt=""><p class="caption">.</p>
+<img src="adjusted_rand_index_heatmap.png" width="400" alt=""><p class="caption">.</p>
 </div>
 <p>The clustering solutions are along the rows and columns of the above
 figure, and the cells at the intersection between two solutions show how
@@ -617,78 +496,145 @@ hierarchical clustering is being applied to these solutions by default
 (thank you, <code>pheatmap</code> package) so the orders of the
 clustering solutions here do not exactly line up with the order of the
 clustering solutions present in the settings matrix.</p>
-<p>You can examine the un-clustered heatmap like this:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ari_heatmap.html">ari_heatmap</a></span><span class="op">(</span></span>
-<span>    <span class="va">solutions_matrix_aris</span>,</span>
-<span>    cluster_rows <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    cluster_cols <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<center>
-<img src="ari_heatmap_unclustered2.png" width="400">
-</center>
-<p>And there’s an option to hide the corresponding settings matrix
-rows:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ari_heatmap.html">ari_heatmap</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span>, hide_ids <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>The pattern here appears to be a bit of a common theme with the
-randomly generated settings matrix, owing to the solutions between SNF
-schemes having significantly more variability than the solutions within
-SNF schemes (and thus producing 3 rough meta clusters). If you’d like to
-try and expand the space of clustering solutions produced even further,
-consider manually constructing a different settings matrix. Later
-updates of this package will focus on customizing the settings matrix a
-little easier (e.g., choosing which settings matrix parameters stay
-fixed or what possible values other parameters can take on).</p>
 <p>If you see something interesting in your heatmap, you may be curious
 to know how that corresponds to the settings that were in your settings
 matrix.</p>
-<p>I recommend visualizing the settings matrix with yet another
-heatmap:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/dm_heatmap.html">dm_heatmap</a></span><span class="op">(</span><span class="va">settings_matrix</span><span class="op">)</span></span></code></pre></div>
-<center>
-<img src="dm_heatmap.png" width="400">
-</center>
-<p>The variables beginning with “inc” show when variables were (blue) or
-were not (red) randomly dropped out. With only 30 solutions examined and
-5 input dataframes, the dropout may seem a little conservative. As
-stated above, a future goal is to have the settings matrix yield diverse
-clustering solutions a little more efficiently, which will likely rely
-on more aggressive input dataframe dropout (or variable scaling).</p>
-<p>You can use the solution order in the clustered ARI heatmap to
-reorder the settings matrix heatmap:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">om_ari_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pheatmap_order.html">get_pheatmap_order</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span><span class="op">)</span></span></code></pre></div>
+<p>First, extract the ordering of the rows obtained from the clustering
+of the cluster solutions:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">meta_cluster_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_heatmap_order.html">get_heatmap_order</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span><span class="op">)</span></span></code></pre></div>
 <p>The order is just a vector of numbers…</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">om_ari_order</span></span>
-<span><span class="co">#&gt;  [1] 17 12 24 27  5 18 14  2  8 10 15 20 16 25  4  7 19 30 26 29 22 23 11  3  6</span></span>
-<span><span class="co">#&gt; [26] 13  9 21  1 28</span></span></code></pre></div>
-<p>… which can be passed into the <code>dm_heatmap</code> function:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/dm_heatmap.html">dm_heatmap</a></span><span class="op">(</span><span class="va">settings_matrix</span>, order <span class="op">=</span> <span class="va">om_ari_order</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">meta_cluster_order</span></span>
+<span><span class="co">#&gt;  [1]  1 10 11 20  8 18  2  6  9 13  4 14  5 19  7 12 17 16  3 15</span></span></code></pre></div>
+<p>… which can be passed into the <code>settings_matrix_heatmap</code>
+function:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/settings_matrix_heatmap.html">settings_matrix_heatmap</a></span><span class="op">(</span><span class="va">settings_matrix</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span></code></pre></div>
 <center>
-<img src="dm_heatmap_ordered.png" width="400">
+<img src="settings_matrix_heatmap_ordered.png" width="400">
 </center>
+<p>This heatmap rescales all the columns in the settings_matrix to have
+a maximum value of 1. The purpose of re-ordering the settings matrix in
+this way is to see if any associations exist between certain settings
+values and pairwise cluster solution similarities.</p>
 <p>Maybe you’ll see something interesting!</p>
-<p>If there’s a row that interest you (say, row 5), this format may be
-more useful for your subsequent analyses:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cluster_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_cluster_df.html">get_cluster_df</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">[</span><span class="fl">5</span>, <span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cluster_df</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   cluster               subjectkey</span></span>
-<span><span class="co">#&gt; 2       1 subject_NDAR_INV0567T2Y9</span></span>
-<span><span class="co">#&gt; 3       3 subject_NDAR_INV0IZ157F8</span></span>
-<span><span class="co">#&gt; 4       2 subject_NDAR_INV0J4PYA5F</span></span>
-<span><span class="co">#&gt; 5       3 subject_NDAR_INV10OMKVLE</span></span>
-<span><span class="co">#&gt; 6       2 subject_NDAR_INV15FPCW4O</span></span>
-<span><span class="co">#&gt; 7       3 subject_NDAR_INV19NB4RJK</span></span></code></pre></div>
-<p>From there, you’re on your own (until the next vignette, maybe?)</p>
 </div>
-<div class="section level2">
-<h2 id="picking-a-solution-2-specifying-an-objective-function">Picking a solution #2: specifying an objective function<a class="anchor" aria-label="anchor" href="#picking-a-solution-2-specifying-an-objective-function"></a>
-</h2>
+<div class="section level3">
+<h3 id="quality-measures">2. Quality measures<a class="anchor" aria-label="anchor" href="#quality-measures"></a>
+</h3>
+<p>Quality metrics are another useful heuristic for the goodness of a
+cluster that don’t require any contextualization of results in the
+domain they may be used in. r-package enables measures of silhouette
+scores, Dunn indices, and Davies-Bouldin indices. To calculate these
+values, we’ll need not only the cluster results but also the final fused
+network (the similarity matrices produced by SNF) that the clusters came
+from. These affinity matrices can be collected from the
+<code>batch_snf</code> using the <code>return_affinity_matrices</code>
+parameter:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    <span class="va">data_list</span>,</span>
+<span>    <span class="va">settings_matrix</span>,</span>
+<span>    return_affinity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 13/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 14/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 15/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 16/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 17/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
+<span></span>
+<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
+<span><span class="va">affinity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"affinity_matrices"</span></span></code></pre></div>
+<p>This time, the output of <code>batch_snf</code> is a list. The first
+element of the list is a single solutions_matrix, like what we usually
+get. The second element is <em>yet another list</em> containing one
+final fused network (AKA affinity matrix / similarity matrix) per SNF
+run. Using those two lists, we can calculate the above mentioned quality
+metrics:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">silhouette_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_silhouettes.html">calculate_silhouettes</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">affinity_matrices</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dunn_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_dunn_indices.html">calculate_dunn_indices</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">affinity_matrices</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">db_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_db_indices.html">calculate_db_indices</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">affinity_matrices</span><span class="op">)</span></span></code></pre></div>
+<p>The first function is a wrapper around
+<code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">cluster::silhouette</a></code> while the second and third come from
+the <em>clv</em> package. <em>clv</em> isn’t set as a mandatory part of
+the installation, so you’ll ned to install it yourself to calculate
+these two metrics.</p>
+<p>The original documentation on these functions can be helpful for
+interpreting and working with them:</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://www.rdocumentation.org/packages/cluster/versions/2.1.4/topics/silhouette" class="external-link"><code>cluster::silhouette</code>
+documentation</a></li>
+<li><a href="https://www.rdocumentation.org/packages/clv/versions/0.3-2.1/topics/clv.Dunn" class="external-link"><code>clv::clv.Dunn</code>
+documentation</a></li>
+<li><a href="https://www.rdocumentation.org/packages/clv/versions/0.3-2.1/topics/clv.Davies.Bouldin" class="external-link"><code>clv::clv.Davies.Bouldin</code>
+documentation</a></li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="stability-measures">3. Stability measures<a class="anchor" aria-label="anchor" href="#stability-measures"></a>
+</h3>
+<p>r-package offers tools to evaluate two different measures of
+stability:</p>
+<ol style="list-style-type: decimal">
+<li>Pairwise adjusted Rand indices (across resamplings of the
+clustering, on average, how similar was every pair of solutions
+according to the adjusted Rand index?)</li>
+<li>Fraction clustered together (what is the average fraction of times
+that patients who clustered together in the full results clustered
+together in resampled results?)</li>
+</ol>
+<p>To calculate either of these, you’ll need to first generate
+subsamples of the data_list.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">data_list_subsamples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsample_data_list.html">subsample_data_list</a></span><span class="op">(</span></span>
+<span>    <span class="va">data_list</span>,</span>
+<span>    n_subsamples <span class="op">=</span> <span class="fl">30</span>, <span class="co"># calculate 30 subsamples</span></span>
+<span>    subsample_fraction <span class="op">=</span> <span class="fl">0.8</span> <span class="co"># for each subsample, use random 80% of patients</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><code>data_list_subsamples</code> is a list that now contains 30
+smaller subsamples of the original data_list.</p>
+<p>Then the stability calculations:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pairwise_aris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsample_pairwise_aris.html">subsample_pairwise_aris</a></span><span class="op">(</span></span>
+<span>    <span class="va">data_list_subsamples</span>,</span>
+<span>    <span class="va">settings_matrix</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fraction_together</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fraction_clustered_together.html">fraction_clustered_together</a></span><span class="op">(</span></span>
+<span>    <span class="va">data_list_subsamples</span>,</span>
+<span>    <span class="va">settings_matrix</span>,</span>
+<span>    <span class="va">solutions_matrix</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Be warned, that second function is especially extremely slow. As the
+number of patients and number of solutions you’re evaluating grows,
+these functions can get pretty slow. Consider only using them after
+eliminating solutions that you are certainly not interested in further
+characterizing.</p>
+</div>
+<div class="section level3">
+<h3 id="evaluating-separation-across-target-variables-of-importance">4. Evaluating separation across “target variables” of
+importance<a class="anchor" aria-label="anchor" href="#evaluating-separation-across-target-variables-of-importance"></a>
+</h3>
 <p><strong>Warning: This approach can very easily result in <a href="https://en.wikipedia.org/wiki/Overfitting" class="external-link">overfitting</a> your
 data and producing clustering results that generalize poorly to subjects
 outside of your dataset. Consider setting aside some data to validate
@@ -706,16 +652,14 @@ data).</p>
 <code class="sourceCode R"><span><span class="va">target_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_target_list.html">generate_target_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_colour</span>, <span class="st">"colour"</span>, <span class="st">"categorical"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/summarize_target_list.html">summarize_target_list</a></span><span class="op">(</span><span class="va">target_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        name        type length width</span></span>
-<span><span class="co">#&gt; 1   anxiety     ordinal    275     2</span></span>
-<span><span class="co">#&gt; 2 depressed     ordinal    275     2</span></span>
-<span><span class="co">#&gt; 3    colour categorical    275     2</span></span></code></pre></div>
+<span><span class="co">#&gt;        name    type length width</span></span>
+<span><span class="co">#&gt; 1   anxiety ordinal    275     2</span></span>
+<span><span class="co">#&gt; 2 depressed ordinal    275     2</span></span></code></pre></div>
 <p>The <code>target_list</code> is like the <code>data_list</code>, but
 without the domain attribute. At this time, each dataframe used to build
 an target_list must be a single-feature.</p>
@@ -727,170 +671,102 @@ from each other with the <code>uid</code> parameter.</p>
 from regressing the <code>target_list</code> features onto our generated
 clusters.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_om.html">extend_om</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">target_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "In row 5, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
-<span><span class="co">#&gt; [1] "In row 9, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
-<span><span class="co">#&gt; [1] "In row 11, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
-<span><span class="co">#&gt; [1] "In row 13, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
-<span><span class="co">#&gt; [1] "In row 18, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
-<span><span class="co">#&gt; [1] "In row 21, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
-<span><span class="co">#&gt; [1] "In row 23, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
-<span><span class="co">#&gt; [1] "In row 27, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
-<span><span class="co">#&gt; [1] "In row 28, the Chi-squared test was applied on a table that had at least one cell containing fewer than 5 elements. Please note that when the expected number of elements per cell is less than 5, an assumption in the test is violated."</span></span>
+<code class="sourceCode R"><span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">target_list</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   [1] "row_id"                    "alpha"                    </span></span>
-<span><span class="co">#&gt;   [3] "k"                         "t"                        </span></span>
-<span><span class="co">#&gt;   [5] "snf_scheme"                "clust_alg"                </span></span>
-<span><span class="co">#&gt;   [7] "cont_dist"                 "disc_dist"                </span></span>
-<span><span class="co">#&gt;   [9] "ord_dist"                  "cat_dist"                 </span></span>
-<span><span class="co">#&gt;  [11] "mix_dist"                  "input_wt"                 </span></span>
-<span><span class="co">#&gt;  [13] "domain_wt"                 "inc_cortical_thickness"   </span></span>
-<span><span class="co">#&gt;  [15] "inc_cortical_surface_area" "inc_subcortical_volume"   </span></span>
-<span><span class="co">#&gt;  [17] "inc_household_income"      "inc_pubertal_status"      </span></span>
-<span><span class="co">#&gt;  [19] "nclust"                    "subject_NDAR_INV0567T2Y9" </span></span>
-<span><span class="co">#&gt;  [21] "subject_NDAR_INV0IZ157F8"  "subject_NDAR_INV0J4PYA5F" </span></span>
-<span><span class="co">#&gt;  [23] "subject_NDAR_INV10OMKVLE"  "subject_NDAR_INV15FPCW4O" </span></span>
-<span><span class="co">#&gt;  [25] "subject_NDAR_INV19NB4RJK"  "subject_NDAR_INV1HLGR738" </span></span>
-<span><span class="co">#&gt;  [27] "subject_NDAR_INV1KR0EZFU"  "subject_NDAR_INV1L3Y9EOP" </span></span>
-<span><span class="co">#&gt;  [29] "subject_NDAR_INV1TCP5GNM"  "subject_NDAR_INV1ZHRDJ6B" </span></span>
-<span><span class="co">#&gt;  [31] "subject_NDAR_INV2EJ41YSZ"  "subject_NDAR_INV2PK6C85M" </span></span>
-<span><span class="co">#&gt;  [33] "subject_NDAR_INV2XO1PHCT"  "subject_NDAR_INV3CU5Y9BZ" </span></span>
-<span><span class="co">#&gt;  [35] "subject_NDAR_INV3MBSY16V"  "subject_NDAR_INV3N0QFDLO" </span></span>
-<span><span class="co">#&gt;  [37] "subject_NDAR_INV3N1476QE"  "subject_NDAR_INV3Y027GVK" </span></span>
-<span><span class="co">#&gt;  [39] "subject_NDAR_INV40Z7GVYJ"  "subject_NDAR_INV49UPOXHJ" </span></span>
-<span><span class="co">#&gt;  [41] "subject_NDAR_INV4AKIU1WX"  "subject_NDAR_INV4G7032E6" </span></span>
-<span><span class="co">#&gt;  [43] "subject_NDAR_INV4KQ3WEFY"  "subject_NDAR_INV4N5XGZE8" </span></span>
-<span><span class="co">#&gt;  [45] "subject_NDAR_INV4OWRB536"  "subject_NDAR_INV4X80QUZY" </span></span>
-<span><span class="co">#&gt;  [47] "subject_NDAR_INV50JL2RXP"  "subject_NDAR_INV5BRNFYQC" </span></span>
-<span><span class="co">#&gt;  [49] "subject_NDAR_INV5Q9YWRCK"  "subject_NDAR_INV64F9GH0V" </span></span>
-<span><span class="co">#&gt;  [51] "subject_NDAR_INV6RVH5KZS"  "subject_NDAR_INV6WBQCY2I" </span></span>
-<span><span class="co">#&gt;  [53] "subject_NDAR_INV752EFAQ0"  "subject_NDAR_INV7O30HFV6" </span></span>
-<span><span class="co">#&gt;  [55] "subject_NDAR_INV7QO93CJH"  "subject_NDAR_INV84G9ONXP" </span></span>
-<span><span class="co">#&gt;  [57] "subject_NDAR_INV8EHP6W1U"  "subject_NDAR_INV8MJFUKIW" </span></span>
-<span><span class="co">#&gt;  [59] "subject_NDAR_INV8WGK6ECZ"  "subject_NDAR_INV915R2Z67" </span></span>
-<span><span class="co">#&gt;  [61] "subject_NDAR_INV94AKNGMJ"  "subject_NDAR_INV9GAZYV8Q" </span></span>
-<span><span class="co">#&gt;  [63] "subject_NDAR_INV9IREH05N"  "subject_NDAR_INV9KC3GVMU" </span></span>
-<span><span class="co">#&gt;  [65] "subject_NDAR_INV9NFKZ82A"  "subject_NDAR_INV9S1BMDE5" </span></span>
-<span><span class="co">#&gt;  [67] "subject_NDAR_INVA68OU0YK"  "subject_NDAR_INVADCYZ38B" </span></span>
-<span><span class="co">#&gt;  [69] "subject_NDAR_INVAYM8WTIN"  "subject_NDAR_INVB4MU1PDA" </span></span>
-<span><span class="co">#&gt;  [71] "subject_NDAR_INVB8O4LAQV"  "subject_NDAR_INVBAP80W1R" </span></span>
-<span><span class="co">#&gt;  [73] "subject_NDAR_INVBTRW1NUK"  "subject_NDAR_INVCI0KZWMN" </span></span>
-<span><span class="co">#&gt;  [75] "subject_NDAR_INVCIXE0496"  "subject_NDAR_INVCYBSZD0N" </span></span>
-<span><span class="co">#&gt;  [77] "subject_NDAR_INVD37Z9N61"  "subject_NDAR_INVD61ZUBC7" </span></span>
-<span><span class="co">#&gt;  [79] "subject_NDAR_INVDXKG2UBF"  "subject_NDAR_INVEO3JM5CB" </span></span>
-<span><span class="co">#&gt;  [81] "subject_NDAR_INVEQ1OBNSM"  "subject_NDAR_INVEQ4D2M8P" </span></span>
-<span><span class="co">#&gt;  [83] "subject_NDAR_INVEVBDLSTM"  "subject_NDAR_INVEY0FMJDI" </span></span>
-<span><span class="co">#&gt;  [85] "subject_NDAR_INVFLU0YINE"  "subject_NDAR_INVFNZPWMSI" </span></span>
-<span><span class="co">#&gt;  [87] "subject_NDAR_INVFY76P8AJ"  "subject_NDAR_INVG3T0PXW6" </span></span>
-<span><span class="co">#&gt;  [89] "subject_NDAR_INVG5CI7XK4"  "subject_NDAR_INVG8BRLSO9" </span></span>
-<span><span class="co">#&gt;  [91] "subject_NDAR_INVGDBYXWV4"  "subject_NDAR_INVH1KV76BQ" </span></span>
-<span><span class="co">#&gt;  [93] "subject_NDAR_INVH3P4T8C2"  "subject_NDAR_INVH4FZC2XB" </span></span>
-<span><span class="co">#&gt;  [95] "subject_NDAR_INVH8QN7WLT"  "subject_NDAR_INVHERPS382" </span></span>
-<span><span class="co">#&gt;  [97] "subject_NDAR_INVHEUWA52I"  "subject_NDAR_INVHM3XS68O" </span></span>
-<span><span class="co">#&gt;  [99] "subject_NDAR_INVI1RKT9MX"  "subject_NDAR_INVIZFV08RU" </span></span>
-<span><span class="co">#&gt; [101] "subject_NDAR_INVJ4THFRD2"  "subject_NDAR_INVJ574KX6A" </span></span>
-<span><span class="co">#&gt; [103] "subject_NDAR_INVJEV61XIU"  "subject_NDAR_INVJR3S271G" </span></span>
-<span><span class="co">#&gt; [105] "subject_NDAR_INVK3FL5CP2"  "subject_NDAR_INVK9ULDQA2" </span></span>
-<span><span class="co">#&gt; [107] "subject_NDAR_INVKB0CYO1H"  "subject_NDAR_INVKHWS26UN" </span></span>
-<span><span class="co">#&gt; [109] "subject_NDAR_INVKTUMPLXY"  "subject_NDAR_INVKYH529RD" </span></span>
-<span><span class="co">#&gt; [111] "subject_NDAR_INVL045Z1TY"  "subject_NDAR_INVL4NIUZYF" </span></span>
-<span><span class="co">#&gt; [113] "subject_NDAR_INVLDQH8ATK"  "subject_NDAR_INVLF3TNDUZ" </span></span>
-<span><span class="co">#&gt; [115] "subject_NDAR_INVLI58ERQC"  "subject_NDAR_INVLIQRM8KC" </span></span>
-<span><span class="co">#&gt; [117] "subject_NDAR_INVLXDP1SWT"  "subject_NDAR_INVMBOZVEA4" </span></span>
-<span><span class="co">#&gt; [119] "subject_NDAR_INVMIWOSHJN"  "cbcl_anxiety_r_p"         </span></span>
-<span><span class="co">#&gt; [121] "cbcl_depress_r_p"          "colour_p"                 </span></span>
-<span><span class="co">#&gt; [123] "min_p_val"                 "mean_p_val"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span></span>
+<span><span class="co">#&gt;  [1] "row_id"                    "alpha"                    </span></span>
+<span><span class="co">#&gt;  [3] "k"                         "t"                        </span></span>
+<span><span class="co">#&gt;  [5] "snf_scheme"                "clust_alg"                </span></span>
+<span><span class="co">#&gt;  [7] "cont_dist"                 "disc_dist"                </span></span>
+<span><span class="co">#&gt;  [9] "ord_dist"                  "cat_dist"                 </span></span>
+<span><span class="co">#&gt; [11] "mix_dist"                  "input_wt"                 </span></span>
+<span><span class="co">#&gt; [13] "domain_wt"                 "inc_cortical_thickness"   </span></span>
+<span><span class="co">#&gt; [15] "inc_cortical_surface_area" "inc_subcortical_volume"   </span></span>
+<span><span class="co">#&gt; [17] "inc_household_income"      "inc_pubertal_status"      </span></span>
+<span><span class="co">#&gt; [19] "nclust"                    "subject_NDAR_INV0567T2Y9" </span></span>
+<span><span class="co">#&gt; [21] "subject_NDAR_INV0IZ157F8"  "subject_NDAR_INV0J4PYA5F" </span></span>
+<span><span class="co">#&gt; [23] "subject_NDAR_INV10OMKVLE"  "subject_NDAR_INV15FPCW4O" </span></span>
+<span><span class="co">#&gt; [25] "subject_NDAR_INV19NB4RJK"</span></span>
 <span></span>
 <span><span class="co"># Looking at the newly added columns</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/no_subs.html">no_subs</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
-<span><span class="co">#&gt; 1      1   0.5 75 20          2         1         1         1        1        1</span></span>
-<span><span class="co">#&gt; 2      2   0.5 88 20          2         2         1         1        1        1</span></span>
-<span><span class="co">#&gt; 3      3   0.7 31 20          3         1         1         1        1        1</span></span>
-<span><span class="co">#&gt; 4      4   0.6 32 20          1         1         1         1        1        1</span></span>
-<span><span class="co">#&gt; 5      5   0.8 98 20          1         2         1         1        1        1</span></span>
-<span><span class="co">#&gt; 6      6   0.6 34 20          3         2         1         1        1        1</span></span>
+<span><span class="co">#&gt; 1      1   0.5 29 20          2         1         1         1        1        1</span></span>
+<span><span class="co">#&gt; 2      2   0.4 26 20          1         1         1         1        1        1</span></span>
+<span><span class="co">#&gt; 3      3   0.3 44 20          2         2         1         1        1        1</span></span>
+<span><span class="co">#&gt; 4      4   0.3 43 20          1         1         1         1        1        1</span></span>
+<span><span class="co">#&gt; 5      5   0.5 29 20          2         2         1         1        1        1</span></span>
+<span><span class="co">#&gt; 6      6   0.4 26 20          2         1         1         1        1        1</span></span>
 <span><span class="co">#&gt;   mix_dist input_wt domain_wt inc_cortical_thickness inc_cortical_surface_area</span></span>
 <span><span class="co">#&gt; 1        1        1         1                      1                         0</span></span>
 <span><span class="co">#&gt; 2        1        1         1                      1                         1</span></span>
-<span><span class="co">#&gt; 3        1        1         1                      0                         1</span></span>
+<span><span class="co">#&gt; 3        1        1         1                      1                         0</span></span>
 <span><span class="co">#&gt; 4        1        1         1                      1                         1</span></span>
 <span><span class="co">#&gt; 5        1        1         1                      1                         1</span></span>
 <span><span class="co">#&gt; 6        1        1         1                      1                         1</span></span>
 <span><span class="co">#&gt;   inc_subcortical_volume inc_household_income inc_pubertal_status nclust</span></span>
-<span><span class="co">#&gt; 1                      1                    0                   1      3</span></span>
-<span><span class="co">#&gt; 2                      1                    1                   1      3</span></span>
-<span><span class="co">#&gt; 3                      1                    1                   1      2</span></span>
-<span><span class="co">#&gt; 4                      1                    1                   1      2</span></span>
-<span><span class="co">#&gt; 5                      0                    1                   1      4</span></span>
+<span><span class="co">#&gt; 1                      1                    0                   1      2</span></span>
+<span><span class="co">#&gt; 2                      1                    1                   1      2</span></span>
+<span><span class="co">#&gt; 3                      0                    1                   1      2</span></span>
+<span><span class="co">#&gt; 4                      0                    1                   1      2</span></span>
+<span><span class="co">#&gt; 5                      1                    1                   1      2</span></span>
 <span><span class="co">#&gt; 6                      1                    1                   1      2</span></span>
-<span><span class="co">#&gt;     cbcl_anxiety_r_p  cbcl_depress_r_p          colour_p  min_p_val mean_p_val</span></span>
-<span><span class="co">#&gt; 1   0.43747184396968 0.545465877142544 0.335756969655163 0.33575697  0.4395649</span></span>
-<span><span class="co">#&gt; 2  0.227383363302326 0.464684190398365 0.876385091893166 0.22738336  0.5228175</span></span>
-<span><span class="co">#&gt; 3   0.14169841119351 0.975067300272223 0.112239128481273 0.11223913  0.4096683</span></span>
-<span><span class="co">#&gt; 4  0.772002349101073 0.182698041915117 0.239717041696141 0.18269804  0.3981391</span></span>
-<span><span class="co">#&gt; 5  0.238920060995216  0.65186461735067 0.567828099380891 0.23892006  0.4862043</span></span>
-<span><span class="co">#&gt; 6 0.0664389631206358 0.442707607522785 0.449476540781621 0.06643896  0.3195410</span></span></code></pre></div>
+<span><span class="co">#&gt;    cbcl_anxiety_r_p   cbcl_depress_r_p  min_p_val mean_p_val</span></span>
+<span><span class="co">#&gt; 1 0.758497782121108  0.151784599479758 0.15178460  0.4551412</span></span>
+<span><span class="co">#&gt; 2 0.436382083446635 0.0851033924288291 0.08510339  0.2607427</span></span>
+<span><span class="co">#&gt; 3 0.319771547840626  0.687379490468759 0.31977155  0.5035755</span></span>
+<span><span class="co">#&gt; 4 0.672455644238922  0.863299444565211 0.67245564  0.7678775</span></span>
+<span><span class="co">#&gt; 5 0.244155078226786  0.113101620093214 0.11310162  0.1786283</span></span>
+<span><span class="co">#&gt; 6 0.436382083446635 0.0851033924288291 0.08510339  0.2607427</span></span></code></pre></div>
 <p>If you just want the p-values:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/p_val_select.html">p_val_select</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    row_id cbcl_anxiety_r_p cbcl_depress_r_p  colour_p</span></span>
-<span><span class="co">#&gt; 1       1       0.43747184       0.54546588 0.3357570</span></span>
-<span><span class="co">#&gt; 2       2       0.22738336       0.46468419 0.8763851</span></span>
-<span><span class="co">#&gt; 3       3       0.14169841       0.97506730 0.1122391</span></span>
-<span><span class="co">#&gt; 4       4       0.77200235       0.18269804 0.2397170</span></span>
-<span><span class="co">#&gt; 5       5       0.23892006       0.65186462 0.5678281</span></span>
-<span><span class="co">#&gt; 6       6       0.06643896       0.44270761 0.4494765</span></span>
-<span><span class="co">#&gt; 7       7       0.75029976       0.26060391 0.1938960</span></span>
-<span><span class="co">#&gt; 8       8       0.22738336       0.46468418 0.8763851</span></span>
-<span><span class="co">#&gt; 9       9       0.62617082       0.38681669 0.2767753</span></span>
-<span><span class="co">#&gt; 10     10       0.34423284       0.37623708 0.7644252</span></span>
-<span><span class="co">#&gt; 11     11       0.05654176       0.90069389 0.4491776</span></span>
-<span><span class="co">#&gt; 12     12       0.32393452       0.67826381 0.8699062</span></span>
-<span><span class="co">#&gt; 13     13       0.99657561       0.90889065 0.4030227</span></span>
-<span><span class="co">#&gt; 14     14       0.12232512       0.45334138 0.8369285</span></span>
-<span><span class="co">#&gt; 15     15       0.16409447       0.42480754 0.7592145</span></span>
-<span><span class="co">#&gt; 16     16       0.35403913       0.09953266 0.1411262</span></span>
-<span><span class="co">#&gt; 17     17       0.19117744       0.29479362 0.6684995</span></span>
-<span><span class="co">#&gt; 18     18       0.23892006       0.65186462 0.5678281</span></span>
-<span><span class="co">#&gt; 19     19       0.93560217       0.22914541 0.1938960</span></span>
-<span><span class="co">#&gt; 20     20       0.50680711       0.24857752 0.2675688</span></span>
-<span><span class="co">#&gt; 21     21       0.64671847       0.69063074 0.2686952</span></span>
-<span><span class="co">#&gt; 22     22       0.47849901       0.29990219 0.4684482</span></span>
-<span><span class="co">#&gt; 23     23       0.95698390       0.26308977 0.4173307</span></span>
-<span><span class="co">#&gt; 24     24       0.26601523       0.82966907 0.9559363</span></span>
-<span><span class="co">#&gt; 25     25       0.58761917       0.13269839 0.2429417</span></span>
-<span><span class="co">#&gt; 26     26       0.58761917       0.33802387 0.3604298</span></span>
-<span><span class="co">#&gt; 27     27       0.23892006       0.65186462 0.5678281</span></span>
-<span><span class="co">#&gt; 28     28       0.44012251       0.20021091 0.3107431</span></span>
-<span><span class="co">#&gt; 29     29       0.71765563       0.21426554 0.3307078</span></span>
-<span><span class="co">#&gt; 30     30       0.89864846       0.25088187 0.3233089</span></span></code></pre></div>
-<p>And of course, there is a heatmap for visualizing this too:</p>
+<span><span class="co">#&gt;    row_id cbcl_anxiety_r_p cbcl_depress_r_p</span></span>
+<span><span class="co">#&gt; 1       1       0.75849778       0.15178460</span></span>
+<span><span class="co">#&gt; 2       2       0.43638208       0.08510339</span></span>
+<span><span class="co">#&gt; 3       3       0.31977155       0.68737949</span></span>
+<span><span class="co">#&gt; 4       4       0.67245564       0.86329944</span></span>
+<span><span class="co">#&gt; 5       5       0.24415508       0.11310162</span></span>
+<span><span class="co">#&gt; 6       6       0.43638208       0.08510339</span></span>
+<span><span class="co">#&gt; 7       7       0.19942831       0.67036268</span></span>
+<span><span class="co">#&gt; 8       8       0.65534060       0.52733675</span></span>
+<span><span class="co">#&gt; 9       9       0.62019372       0.06557707</span></span>
+<span><span class="co">#&gt; 10     10       0.18683694       0.02026506</span></span>
+<span><span class="co">#&gt; 11     11       0.09935434       0.18142564</span></span>
+<span><span class="co">#&gt; 12     12       0.77200235       0.18269804</span></span>
+<span><span class="co">#&gt; 13     13       0.60082272       0.10298457</span></span>
+<span><span class="co">#&gt; 14     14       0.24415508       0.21488301</span></span>
+<span><span class="co">#&gt; 15     15       0.93251462       0.51911329</span></span>
+<span><span class="co">#&gt; 16     16       0.28223304       0.91903755</span></span>
+<span><span class="co">#&gt; 17     17       0.42077342       0.39268244</span></span>
+<span><span class="co">#&gt; 18     18       0.10214094       0.82503782</span></span>
+<span><span class="co">#&gt; 19     19       0.58761917       0.13269839</span></span>
+<span><span class="co">#&gt; 20     20       0.12232512       0.45334136</span></span></code></pre></div>
+<p>There is a heatmap for visualizing this too:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">om_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/p_val_select.html">p_val_select</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">target_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/p_val_select.html">p_val_select</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/pvals_pheatmap.html">pvals_pheatmap</a></span><span class="op">(</span><span class="va">om_pvals</span>, order <span class="op">=</span> <span class="va">om_ari_order</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/pvals_heatmap.html">pvals_heatmap</a></span><span class="op">(</span><span class="va">target_pvals</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span></code></pre></div>
 <center>
-<img src="pvals_pheatmap_ordered.png" width="400">
+<img src="pvals_heatmap_ordered.png" width="400">
 </center>
 <p>These p-values hold no real meaning for the traditional
-hypothesis-testing context. Here, they are just a tool to find
-clustering solutions that are well-separated according to the outcome
-measures you’ve specified. Finding a cluster solution like this is
-similar to a supervised learning approach, but where the optimization
-method is just random sampling. The risk for overfitting your data with
-this approach is considerable, so make sure you have some rigorous
-external validation before reporting your findings.</p>
-<p>I’ve relied on label propagation (provided by the SNFtool package in
-the <code>groupPredict</code> function) to take my top clustering
-solution in some training data, assign predicted clusters to some held
-out test subjects, and then characterized those test subjects to see how
-well the clustering solution seemed to have worked.</p>
-<p>This package provides a wrapper for
-<code><a href="https://rdrr.io/pkg/SNFtool/man/groupPredict.html" class="external-link">SNFtool::groupPredict</a></code> to make the label propagation process
-a little easier to apply to the <code>solutions_matrix</code>
-structure.</p>
+hypothesis-testing context, but they are reasonable proxies of the
+magnitude of the effect size / separation of the clusters across the
+variables in question. Here, they are just a tool to find clustering
+solutions that are well-separated according to the outcome measures
+you’ve specified. Finding a cluster solution like this is similar to a
+supervised learning approach, but where the optimization method is just
+random sampling. The risk for overfitting your data with this approach
+is considerable, so make sure you have some rigorous external validation
+before reporting your findings.</p>
+<p>We recommend using <em>label propagation</em> (provided by the
+SNFtool package in the <code>groupPredict</code> function) for
+validation: take the top clustering solutions found in some training
+data, assign predicted clusters to some held out test subjects, and then
+characterize those test subjects to see how well the clustering solution
+seemed to have worked.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="validating-results-with-label-propagation">Validating results with label propagation<a class="anchor" aria-label="anchor" href="#validating-results-with-label-propagation"></a>
@@ -999,7 +875,7 @@ above, you can either specify both the <code>train_subjects</code> and
 <span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Total time taken: 1 seconds."</span></span>
 <span></span>
-<span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_om.html">extend_om</a></span><span class="op">(</span></span>
+<span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
 <span>    <span class="va">train_solutions_matrix</span>,</span>
 <span>    <span class="va">train_target_list</span></span>
 <span><span class="op">)</span></span>
@@ -1010,11 +886,11 @@ above, you can either specify both the <code>train_subjects</code> and
 <span><span class="co">#&gt; [1] 4</span></span>
 <span></span>
 <span><span class="co"># Keep track of your top solution</span></span>
-<span><span class="va">top_om_row</span> <span class="op">&lt;-</span> <span class="va">extended_solutions_matrix</span><span class="op">[</span><span class="fl">4</span>, <span class="op">]</span></span>
+<span><span class="va">top_row</span> <span class="op">&lt;-</span> <span class="va">extended_solutions_matrix</span><span class="op">[</span><span class="fl">4</span>, <span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Hand over the solutions matrix as well as the full data list to propagate labels</span></span>
 <span><span class="co">#  to the test subjects</span></span>
-<span><span class="va">propagated_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_om.html">lp_om</a></span><span class="op">(</span><span class="va">top_om_row</span>, <span class="va">full_data_list</span><span class="op">)</span></span>
+<span><span class="va">propagated_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_row.html">lp_row</a></span><span class="op">(</span><span class="va">top_row</span>, <span class="va">full_data_list</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "If you add a 'significance' column to your solutions matrix those values will be used to name each solution (instead of row IDs)"</span></span>
 <span><span class="co">#&gt; [1] "Processing row 1 of 1..."</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
@@ -1038,7 +914,7 @@ solutions propagate to the test set, but that would mean reusing your
 test set and removing the protection against overfitting conferred by
 this procedure.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">propagated_labels_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_om.html">lp_om</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span>, <span class="va">full_data_list</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">propagated_labels_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_row.html">lp_row</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span>, <span class="va">full_data_list</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "If you add a 'significance' column to your solutions matrix those values will be used to name each solution (instead of row IDs)"</span></span>
 <span><span class="co">#&gt; [1] "Processing row 1 of 5..."</span></span>
 <span><span class="co">#&gt; [1] "Processing row 2 of 5..."</span></span>
@@ -1068,6 +944,7 @@ free to post an issue at <a href="https://github.com/BRANCHlab/metasnf" class="e
 <div class="section level2">
 <h2 id="appendix">Appendix<a class="anchor" aria-label="anchor" href="#appendix"></a>
 </h2>
+<p>(sections below will move into separate vignettes)</p>
 <div class="section level3">
 <h3 id="inc">inc*<a class="anchor" aria-label="anchor" href="#inc"></a>
 </h3>
@@ -1128,7 +1005,7 @@ helper function:</p>
 <span><span class="co">#&gt;     rownames(inclusions_df) &lt;- NULL</span></span>
 <span><span class="co">#&gt;     return(inclusions_df)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x556b7811abd8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55eb6b9a3ed8&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
 <p>This <code>random_removal</code> function randomly picks a number of
 columns to remove according to an exponential function. The most likely
