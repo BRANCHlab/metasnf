@@ -45,7 +45,7 @@ generate_solutions_matrix <- function(data_list, settings_matrix) {
 #'  p-value columns for each outcome in the provided target_list
 #'
 #' @export
-extend_om <- function(solutions_matrix, target_list) {
+extend_solutions <- function(solutions_matrix, target_list) {
     # Single vector of all feature names
     ol_features <- lapply(
         target_list,

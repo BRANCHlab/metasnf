@@ -84,20 +84,6 @@ Alternatively, a top clustering solution can be selected from a regular
 clustering cluster solutions and manually examining a few solutions from
 the qualitatively distinct “meta clusters” that emerge.
 
-## Work in progress:
-
--   [ ] Change in package name
--   [ ] Capability of defining custom distance metrics (including
-    feature weights)
--   [ ] Capability of defining custom SNF-level weights
--   [ ] New visualization functions and improvements to existing
-    visualization functions
--   [ ] Adapt parallel processing variant of batch_snf to reflect the
-    above changes
--   [ ] Updated vignette(s) to fully document basic and advance usage of
-    the package
--   [ ] Add tests / make package CRAN ready
-
 ## Recent updates:
 
 -   [x] Changes in function names
@@ -110,6 +96,23 @@ the qualitatively distinct “meta clusters” that emerge.
 -   [x] Capability of writing affinity matrices to disk
 -   [x] Capability of not running the clustering on every run of SNF
     (only makes sense when paired with the previous change)
+
+## Work in progress:
+
+-   [ ] Change in package name
+-   [ ] Capability of defining custom distance metrics (including
+    feature weights)
+-   [ ] Capability of defining custom SNF-level weights
+-   [ ] New visualization functions and improvements to existing
+    visualization functions
+-   [ ] Updated vignette(s) to fully document basic and advance usage of
+    the package
+
+### Lower priority:
+
+-   [ ] Adapt parallel processing variant of batch_snf to reflect the
+    above changes
+-   [ ] Add tests / make package CRAN ready
 
 ## Contributions
 

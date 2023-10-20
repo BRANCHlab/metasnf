@@ -204,8 +204,6 @@ Just like that, the clustering is done!
 You can pull the clustering results out of each row using the `get_cluster_df` function:
 
 ```{r}
-solutions_matrix
-
 cluster_solutions <- get_cluster_solutions(solutions_matrix)
 
 head(cluster_solutions)
@@ -294,12 +292,87 @@ Maybe you'll see something interesting!
 
 ### 2. Quality measures
 
-To
+Quality metrics are another useful heuristic for the goodness of a cluster that don't require any contextualization of results in the domain they may be used in.
+r-package enables measures of silhouette scores, Dunn indices, and Davies-Bouldin indices.
+To calculate these values, we'll need not only the cluster results but also the final fused network (the similarity matrices produced by SNF) that the clusters came from.
+These affinity matrices can be collected from the `batch_snf` using the `return_affinity_matrices` parameter:
+
+```{r}
+batch_snf_results <- batch_snf(
+    data_list,
+    settings_matrix,
+    return_affinity_matrices = TRUE
+)
+
+solutions_matrix <- batch_snf_results$"solutions_matrix"
+affinity_matrices <- batch_snf_results$"affinity_matrices"
+```
+
+This time, the output of `batch_snf` is a list.
+The first element of the list is a single solutions_matrix, like what we usually get.
+The second element is *yet another list* containing one final fused network (AKA affinity matrix / similarity matrix) per SNF run.
+Using those two lists, we can calculate the above mentioned quality metrics:
+
+```{r eval = FALSE}
+silhouette_scores <- calculate_silhouettes(solutions_matrix, affinity_matrices)
+
+dunn_indices <- calculate_dunn_indices(solutions_matrix, affinity_matrices)
+
+db_indices <- calculate_db_indices(solutions_matrix, affinity_matrices)
+```
+
+The first function is a wrapper around `cluster::silhouette` while the second and third come from the *clv* package.
+*clv* isn't set as a mandatory part of the installation, so you'll ned to install it yourself to calculate these two metrics.
+
+The original documentation on these functions can be helpful for interpreting and working with them:
+
+1. [`cluster::silhouette` documentation](https://www.rdocumentation.org/packages/cluster/versions/2.1.4/topics/silhouette)
+2. [`clv::clv.Dunn` documentation](https://www.rdocumentation.org/packages/clv/versions/0.3-2.1/topics/clv.Dunn)
+3. [`clv::clv.Davies.Bouldin` documentation](https://www.rdocumentation.org/packages/clv/versions/0.3-2.1/topics/clv.Davies.Bouldin)
 
 
-## Picking a solution #2: specifying an objective function
+### 3. Stability measures
 
-**Warning: This approach can very easily result in [overfitting](https://en.wikipedia.org/wiki/Overfitting) your data and producing clustering results that generalize poorly to subjects outside of your dataset. Consider setting aside some data to validate your results to avoid this issue.**
+r-package offers tools to evaluate two different measures of stability:
+
+1. Pairwise adjusted Rand indices (across resamplings of the clustering, on average, how similar was every pair of solutions according to the adjusted Rand index?)
+2. Fraction clustered together (what is the average fraction of times that patients who clustered together in the full results clustered together in resampled results?)
+
+To calculate either of these, you'll need to first generate subsamples of the data_list.
+
+```{r eval = FALSE}
+data_list_subsamples <- subsample_data_list(
+    data_list,
+    n_subsamples = 30, # calculate 30 subsamples
+    subsample_fraction = 0.8 # for each subsample, use random 80% of patients
+)
+```
+
+`data_list_subsamples` is a list that now contains 30 smaller subsamples of the original data_list.
+
+Then the stability calculations:
+
+```{r eval = FALSE}
+pairwise_aris <- subsample_pairwise_aris(
+    data_list_subsamples,
+    settings_matrix
+)
+
+fraction_together <- fraction_clustered_together(
+    data_list_subsamples,
+    settings_matrix,
+    solutions_matrix
+)
+```
+
+Be warned, that second function is especially extremely slow.
+As the number of patients and number of solutions you're evaluating grows, these functions can get pretty slow.
+Consider only using them after eliminating solutions that you are certainly not interested in further characterizing.
+
+### 4. Evaluating separation across "target variables" of importance
+
+**Warning: This approach can very easily result in [overfitting](https://en.wikipedia.org/wiki/Overfitting) your data and producing clustering results that generalize poorly to subjects outside of your dataset.
+Consider setting aside some data to validate your results to avoid this issue.**
 
 If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
 
@@ -324,7 +397,7 @@ Just like when generating the initial `data_list`, we need to specify the name o
 We will next extend our `solutions_matrix` with p-values from regressing the `target_list` features onto our generated clusters.
 
 ```{r}
-extended_solutions_matrix <- extend_om(solutions_matrix, target_list)
+extended_solutions_matrix <- extend_solutions(solutions_matrix, target_list)
 
 colnames(extended_solutions_matrix)
 
@@ -338,27 +411,27 @@ If you just want the p-values:
 p_val_select(extended_solutions_matrix)
 ```
 
-And of course, there is a heatmap for visualizing this too:
+There is a heatmap for visualizing this too:
 
 ```{r include = FALSE}
-om_pvals <- p_val_select(extended_solutions_matrix)
+target_pvals <- p_val_select(extended_solutions_matrix)
 
-str(om_pvals)
+str(target_pvals)
 
-pvals_pheatmap(om_pvals, order = meta_cluster_order,
-           save = "./pvals_pheatmap_ordered.png")
+pvals_heatmap(target_pvals, order = meta_cluster_order,
+           save = "./pvals_heatmap_ordered.png")
 
-str(om_pvals)
+str(target_pvals)
 ```
 
 ```{r eval = FALSE}
-om_pvals <- p_val_select(extended_solutions_matrix)
+target_pvals <- p_val_select(extended_solutions_matrix)
 
-pvals_pheatmap(om_pvals, order = meta_cluster_order)
+pvals_heatmap(target_pvals, order = meta_cluster_order)
 ```
 
 <center>
-![](./pvals_pheatmap_ordered.png){width=400px}
+![](./pvals_heatmap_ordered.png){width=400px}
 </center>
 
 These p-values hold no real meaning for the traditional hypothesis-testing context.
@@ -462,7 +535,7 @@ train_solutions_matrix <- batch_snf(
     settings_matrix
 )
 
-extended_solutions_matrix <- extend_om(
+extended_solutions_matrix <- extend_solutions(
     train_solutions_matrix,
     train_target_list
 )

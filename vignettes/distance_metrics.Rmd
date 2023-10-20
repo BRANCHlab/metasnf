@@ -447,8 +447,9 @@ first_row_metric <- specific_weighted_euclidean(weights_df[1, ])
 first_row_metric(odd_subset)
 ```
 
-### Example 4: Using a distance metric
+### Example 4: Generating a range of weighted distance metrics using a weights matrix
 
+(Example using the weighted hamming distance will go here...)
 
 ## List of included distance metrics
 

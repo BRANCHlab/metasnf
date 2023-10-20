@@ -28,6 +28,6 @@ Data archive. The original file used was pdem02.txt. The file was
 pre-processed by the abcdutils package
 (https://github.com/BRANCHlab/abcdutils) function \code{get_cbcl_depress}.
 The data was transformed into categorical colour values to demonstrate
-the Chi-squared test capabilities of \code{extend_om}.
+the Chi-squared test capabilities of \code{extend_solutions}.
 }
 \keyword{datasets}

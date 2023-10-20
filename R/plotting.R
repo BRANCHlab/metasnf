@@ -77,7 +77,7 @@ settings_matrix_heatmap <- function(settings_matrix,
 #' @param reverse_colours boolean to invert colours
 #'
 #' @export
-pvals_pheatmap <- function(pvals,
+pvals_heatmap <- function(pvals,
                            order = NULL,
                            cluster_cols = TRUE,
                            show_rownames = FALSE,
