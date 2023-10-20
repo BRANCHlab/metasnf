@@ -107,7 +107,6 @@ Imports:
     stringr,
     utils
 Suggests:
-    abSNF,
     clv,
     future,
     future.apply,
