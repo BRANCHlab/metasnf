@@ -1,0 +1,60 @@
+---
+title: "Getting Started"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Getting Started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+div.aside { background-color:#fff2e6; }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+**What is this package?**
+
+*r-package* is a package that facilitates usage of the meta clustering paradigm described in [Caruana et al., 2006](https://doi.org/10.1109/ICDM.2006.103) with the similarity network fusion (SNF) data integration procedure developed in [Wang et al., 2014](https://doi.org/10.1038/nmeth.2810).
+The package offers a comprehensive suite of tools to assist users in transforming raw patient data into patient subtypes, decision making in the subtyping process, and visualization along the way with a strong emphasis on context-specific utility and principled validation of results.
+
+<br>
+
+**Why use meta clustering?**
+
+Clustering algorithms seek solutions that optimize context-agnostic metrics of quality.
+In sufficiently noisy datasets where many qualitatively distinct solutions with similar scores of clustering quality exist, it is not necessarily the case that the top solution selected by a clustering algorithm will also be the most useful one for the user's context.
+
+To address this issue, the original meta clustering procedure [Caruana et al., 2006](https://doi.org/10.1109/ICDM.2006.103) involved generating a large number of reasonable clustering solutions, clusterign those solutions into qualitatively similar ones, and having the user examine those "meta clusters" to find something that seems like it'll be the most useful.
+
+**Why use SNF?**
+
+In the clinical data setting, we often have access to patient data across a wide range of domains, such as imaging, genetics, biomarkers, demographics.
+When trying to extract subtypes out of all this information, direct concatenation of the data followed by cluster analysis can result in a substantial amount of lost (valuable) signal contained in each individual domain.
+Empirically, SNF has been demonstrated to effectively integrate highly diverse patient data for the purposes of clinical subtyping.
+
+## Installation
+
+The package is currently hosted on GitHub (not CRAN).
+The easiest way to install metasnf is with the devtools package.
+
+```{r eval = FALSE}
+install.packages("devtools") # if you don't have it already
+
+# By default, this will install the latest version of the package
+devtools::install_github("BRANCHlab/metasnf")
+
+# To ensure you are always installing a specific version of the package,
+#  you can manually specify a tagged release or a commit:
+devtools::install_github("BRANCHlab/metasnf@v0.2.0")
+```
+

@@ -2,7 +2,7 @@
 % Please edit documentation in R/meta_cluster.R
 \name{mc_heatmap}
 \alias{mc_heatmap}
-\title{Outdated ari_heatmap}
+\title{Outdated adjusted_rand_index_heatmap}
 \usage{
 mc_heatmap(mc_results, save = NULL)
 }
@@ -12,5 +12,5 @@ mc_heatmap(mc_results, save = NULL)
 \item{save}{outdated}
 }
 \description{
-Outdated ari_heatmap
+Outdated adjusted_rand_index_heatmap
 }

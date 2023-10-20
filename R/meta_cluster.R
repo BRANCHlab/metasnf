@@ -75,21 +75,21 @@ calc_om_aris <- function(om) {
 #' @return pheatmap_order Row orders of the clustered pheatmap
 #'
 #' @export
-get_pheatmap_order <- function(matrix) {
+get_heatmap_order <- function(matrix) {
     out <- pheatmap::pheatmap(matrix)
     pheatmap_order <- out$"tree_row"[["order"]]
     return(pheatmap_order)
 }
 
-#' Outdated ari_heatmap
+#' Outdated adjusted_rand_index_heatmap
 #'
 #' @param mc_results outdated
 #' @param save outdated
 #'
 #' @export
 mc_heatmap <- function(mc_results, save = NULL) {
-    print("The new function name is ari_heatmap")
-    ari_heatmap(mc_results, save)
+    print("The new function name is adjusted_rand_index_heatmap")
+    adjusted_rand_index_heatmap(mc_results, save)
 }
 
 #' Heatmap meta-clustering results
@@ -104,14 +104,14 @@ mc_heatmap <- function(mc_results, save = NULL) {
 #' @param ... additional parameters to pass into pheatmap
 #'
 #' @export
-ari_heatmap <- function(solutions_matrix_aris,
-                        title = "",
-                        save = NULL,
-                        cluster_cols = TRUE,
-                        cluster_rows = TRUE,
-                        hide_columns = FALSE,
-                        hide_rows = FALSE,
-                        ...) {
+adjusted_rand_index_heatmap <- function(solutions_matrix_aris,
+                                        title = "",
+                                        save = NULL,
+                                        cluster_cols = TRUE,
+                                        cluster_rows = TRUE,
+                                        hide_columns = FALSE,
+                                        hide_rows = FALSE,
+                                        ...) {
     if (hide_columns) {
         colnames(solutions_matrix_aris) <- NULL
     }

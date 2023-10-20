@@ -359,6 +359,7 @@ sn_euclidean_distance <- function(df) {
         stats::dist(method = "euclidean") |>
         as.matrix()
     return(distance_matrix)
+}
 
 #' Distance metric: Weighted Euclidean distance
 #'
@@ -414,4 +415,8 @@ weighted_hamming_distance <- function(df, weights) {
         }
     )
     return(weighted_dist)
+}
+
+load_weights <- function(weighted_distance_metric, weights_matrix) {
+    print("pass")
 }

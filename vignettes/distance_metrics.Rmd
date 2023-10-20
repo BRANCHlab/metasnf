@@ -447,6 +447,32 @@ first_row_metric <- specific_weighted_euclidean(weights_df[1, ])
 first_row_metric(odd_subset)
 ```
 
+### Example 4: Using a distance metric
+
+
+## List of included distance metrics
+
+### Unweighted
+
+These metrics can be used as is.
+
+* `euclidean_distance`
+    * simple Euclidean distance
+    * applies to continuous, discrete, or ordinal data
+* `sn_euclidean_distance`
+    * Euclidean distance following standard normalization (SNFtool package implementation)
+    * applies to continuous, discrete, or ordinal data
+* `gower_distance`
+    * Gower's distance (cluster package implementation)
+    * applies to any data
+
+### Weighted (closure-based)
+
+These metrics need to be embedded with weights (see Example 4).
+
+* `weighted_hamming_distance`
+* `weighted_euclidean_distance`
+
 And that's all there is on distance metrics!
 If there's a metric you'd like to see added as a prewritten option included in the package, feel free to post an issue or make a pull request on the package's GitHub.
 

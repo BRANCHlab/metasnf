@@ -11,7 +11,7 @@
 #' @param hide_ids boolean indicating if row_id numbers should be hidden
 #'
 #' @export
-dm_heatmap <- function(settings_matrix,
+settings_matrix_heatmap <- function(settings_matrix,
                        order = NULL,
                        show_rownames = TRUE,
                        save = NULL,
@@ -19,39 +19,50 @@ dm_heatmap <- function(settings_matrix,
     if (!is.null(order)) {
         settings_matrix <- settings_matrix[order, ]
     }
-    dm_scaled <- settings_matrix
-    dm_scaled$"row_id" <- dm_scaled$"row_id" / max(dm_scaled$"row_id")
-    dm_scaled$"k" <- dm_scaled$"k" / max(dm_scaled$"k")
-    dm_scaled$"alpha" <- dm_scaled$"alpha" / max(dm_scaled$"alpha")
-    dm_scaled$"snf_scheme" <-
-        dm_scaled$"snf_scheme" / max(dm_scaled$"snf_scheme")
-    dm_scaled$"clust_alg" <-
-        dm_scaled$"clust_alg" / max(dm_scaled$"clust_alg")
+    # Scaling everything to have a max of 1
+    col_maxes <- apply(settings_matrix, 2, function(x) 1/max(x))
+    scaled_matrix <- as.matrix(settings_matrix) %*% diag(col_maxes)
+    colnames(scaled_matrix) <- colnames(settings_matrix)
+    rownames(scaled_matrix) <- rownames(settings_matrix)
+    gaps <- c(
+        which(colnames(scaled_matrix) == "row_id"),
+        which(colnames(scaled_matrix) == "t"),
+        which(colnames(scaled_matrix) == "snf_scheme"),
+        which(colnames(scaled_matrix) == "clust_alg"),
+        which(colnames(scaled_matrix) == "mix_dist"),
+        which(colnames(scaled_matrix) == "input_wt"),
+        which(colnames(scaled_matrix) == "domain_wt")
+    )
+    colorscheme <- grDevices::colorRampPalette(c("green", "midnightblue"))(50)
     if (hide_ids == TRUE) {
         row_labels <- ""
     } else {
-        row_labels <- rownames(dm_scaled)
+        row_labels <- rownames(scaled_matrix)
     }
     if (!(is.null(grDevices::dev.list())) && !(is.null(save))) {
         grDevices::dev.off()
     }
     if (!(is.null(save))) {
         pheatmap::pheatmap(
-            dm_scaled,
+            scaled_matrix,
             cluster_rows = FALSE,
             cluster_cols = FALSE,
             labels_row = row_labels,
+            gaps_col = gaps,
             show_rownames = show_rownames,
+            color = colorscheme,
             legend = FALSE,
             fontsize = 12,
             filename = save)
     }
     pheatmap::pheatmap(
-        dm_scaled,
+        scaled_matrix,
         cluster_rows = FALSE,
         cluster_cols = FALSE,
         labels_row = row_labels,
+        gaps_col = gaps,
         show_rownames = show_rownames,
+        color = colorscheme,
         legend = FALSE,
         fontsize = 12)
 }
