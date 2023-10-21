@@ -383,36 +383,6 @@ sq_euclidean_distance <- function(df, weights) {
     return(distance_matrix)
 }
 
-#' Distance metric: Weighted Euclidean distance
-#'
-#' @param df Dataframe containing one subjectkey column in the first column and
-#'  at least 1 continuous data column. All feature data should be continuous.
-#' @param weights Dataframe with 1 column containing weights for each feature per
-#'  row in the same order as the order of feature columns start
-#'
-#' @return weighted_distance_matrix A distance matrix.
-#'
-#' @export
-weighted_euclidean_distance <- function(df, weights) {
-    if (!requireNamespace("abSNF", quietly = TRUE)) {
-        stop(
-            "Package \"abSNF\" must be installed to use this function.",
-            call. = FALSE
-        )
-    }
-    weights_mat <- data.matrix(weights)
-    weighted_dist <- abSNF::dist2_w(
-        X = df,
-        C = df,
-        weight = weights_mat
-    )
-    return(weighted_dist)
-}
-
-wt_sq_euclidean_distance <- function(df, weights) {
-
-}
-
 #' Distance metric: Hamming distance
 #'
 #' @param df Dataframe containing one subjectkey column in the first column and
@@ -443,6 +413,59 @@ hamming_distance <- function(df, weights) {
     return(weighted_dist)
 }
 
-load_weights <- function(weighted_distance_metric, weights_matrix) {
-    print("pass")
+#' Generate a matrix to store variable weights
+#'
+#' @param data A dataframe with column names spanning all the variables that
+#'  may ever require weights. Cannot be provided at the same time as the
+#'  data_list parameter.
+#' @param data_list A data_list with column names spanning all the variables that
+#'  may ever require weights. Cannot be provided at the same time as the
+#'  data parameter.
+#' @param rows Number of rows to generate the template weights matrix for.
+#' @param fill String indicating what to populate generate rows with. Can be
+#'  "ones" (default; fill matrix with 1), "uniform" (fill matrix with uniformly
+#'  distributed random values), or "exponential" (fill matrix with
+#'  exponentially distributed random values).
+#'
+#' @return weights_matrix A properly formatted matrix containing columns for
+#'  all the variables that require weights and rows
+#'
+#' @export
+generate_weights_matrix <- function(data = NULL,
+                                data_list = NULL,
+                                rows = 1,
+                                fill = "ones") {
+    if (is.null(data) + is.null(data_list) != 1) {
+        stop(
+            paste0(
+                "One (and only one) of data or data_list parameter must be",
+                "provided."
+            )
+        )
+    }
+    if (!is.null(data_list)) {
+        matrix_colnames <- data_list |>
+            lapply(
+                function(x) {
+                    colnames(x$"data")[colnames(x$"data") != "subjectkey"]
+                }
+            ) |>
+            unlist()
+    } else {
+        matrix_colnames <- colnames(data)[colnames(data) != "subjectkey"]
+    }
+    if (fill == "ones") {
+        fill <- 1
+    } else if (fill == "uniform") {
+        fill <- stats::runif(rows * length(matrix_colnames))
+    } else if (fill == "exponential") {
+        fill <- stats::rexp(rows * length(matrix_colnames))
+    }
+    matrix_base <- matrix(
+        nrow = rows,
+        ncol = length(matrix_colnames),
+        data = fill
+    )
+    colnames(matrix_base) <- matrix_colnames
+    matrix_base
 }

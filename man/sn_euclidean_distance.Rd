@@ -4,10 +4,13 @@
 \alias{sn_euclidean_distance}
 \title{Distance metric: Standard normalization then Euclidean}
 \usage{
-sn_euclidean_distance(df)
+sn_euclidean_distance(df, weights)
 }
 \arguments{
 \item{df}{Dataframe containing at least 1 data column.}
+
+\item{weights}{Single-row dataframe where the column names contain the
+column names in df and the row contains the corresponding weights.}
 }
 \value{
 distance_matrix A distance matrix.
