@@ -251,13 +251,13 @@ corrHeatmap <- function(corr,
 #' Generate legend for correlation heatmap.
 #'
 #' @param legend_name graph path to be saved to
-#' @param outcome_labels argument to specify outcome label names
-#' @param outcome_labels_color argument to specify outcome label name colors
+#' @param labels argument to specify outcome label names
+#' @param labels_color argument to specify outcome label name colors
 #'
 #' @export
 corrHeatmap_legend <- function(legend_name,
-                               outcome_labels,
-                               outcome_labels_color) {
+                               labels,
+                               labels_color) {
     # Legend for the significant p-values
     lgd_sig_01 <- ComplexHeatmap::Legend(
         pch = "*",
@@ -283,19 +283,19 @@ corrHeatmap_legend <- function(legend_name,
         c("navy", "blue", "royalblue", "steelblue2", "white")
     )
     outcome_label_color_scheme <- matrix(
-        nrow = length(outcome_labels),
+        nrow = length(labels),
         ncol = 2
     ) |>
         data.frame()
     colnames(outcome_label_color_scheme) <- c("Outcomes", "Color")
-    outcome_label_color_scheme$Outcomes <- outcome_labels
-    outcome_label_color_scheme$Color <- outcome_labels_color
+    outcome_label_color_scheme$Outcomes <- labels
+    outcome_label_color_scheme$Color <- labels_color
     # Create a legend
     outcome_name_legend <- ComplexHeatmap::Legend(
-        labels = outcome_labels,
-        legend_gp = grid::gpar(fill = outcome_labels_color),
+        labels = labels,
+        legend_gp = grid::gpar(fill = labels_color),
         title = "Outcomes and Descriptors",
-        labels_gp = grid::gpar(fontsize = 12, col = outcome_labels_color),
+        labels_gp = grid::gpar(fontsize = 12, col = labels_color),
         title_gp = grid::gpar(fontsize = 15, fontface = "bold")
     )
     outcome_heatmap_lgd <- ComplexHeatmap::Legend(

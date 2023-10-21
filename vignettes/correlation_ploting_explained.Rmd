@@ -191,9 +191,11 @@ corrHeatmap(corr_predictor, labels_color = color, row_km=4, column_km = 4)
 
 Next let's generate heatmap legend. This function as of now will output legend to a file
 ```{r}
+labels_color = c("#cd34b5", "goldenrod4")
+          
 corrHeatmap_legend("test_func.png", 
-                   outcome_labels = outcome_labels, 
-                   outcome_labels_color = outcome_labels_color)
+                   labels = labels, 
+                   labels_color = labels_color)
 
 ```
 
