@@ -1,0 +1,244 @@
+---
+title: "correlation and plotting"
+output: html_document
+date: "2023-10-20"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+source("../test-metasnf/metasnf/R/correlation_plotting.r")
+```
+
+
+In heterogeneous diseases such as childhood asthma, you can have many predictor datasets that feed into SNF integration and many outcome variable you wish to visualize. Not to mention outcomes are also heterogeneous. Often times a diagnosis is made based on a variety of clinical symptoms and tests. In this case, SNF integration needs to get more organized. Some terminology used in this document with respect to heterogeneous disease:
+
+- features/predictor features = a single feature such as `Asthma_mother`
+
+- dataset = comprised of multiple features. Example: a group of features `Asthma_mother`, `Wheeze_mother`, `Asthma_father`, `Wheeze_father` that make up of `parental_asthma` **dataset**
+
+- datatype = Multiple datasets get feed into a datatype-specific SNF integration, after which this whole group is called datetype. Example: `parental_indication` **datatype** that comprised of `parental_asthma` and `genetic_risk_score`
+
+
+
+## Part 1 - Using output similarity matrix and cluster assignment to plot heatmap 
+In alternative to the simple heatmap SNFtool provides, now you can plot using plotting features from the fancy ComplexHeatmp. Using the sample data from SNFtool:
+
+```{r}
+library(SNFtool)
+data(Data1) # 200 samples
+data(Data2) # 200 samples
+
+dist1 <- as.matrix(dist(Data1))
+dist2 <- as.matrix(dist(Data2))
+
+W1 <- affinityMatrix(dist1, K = 20, sigma = 0.5)
+W2 <- affinityMatrix(dist2, K = 20, sigma = 0.5)
+
+W = SNF(list(W1,W2), 20, 20)
+group_cluster = spectralClustering(W, K = 3)
+
+displayClustersHeatmap(W, group_cluster)
+```
+
+Most of the times it is ok to ignore the warning message after checking for outliers in your data.For similarity matrices it almost always has outliers since identical sample having too large a value (for example 0.5). Use `suppressMessages(displayClustersHeatmap(W, group_cluster))` to suppress the message.
+
+Of course you can add annotation. Say I want to display sex annotation on the left, outcome annotations for asthma diagnosis and atopic asthma at the top (for simplicity here let's stick to 2 outcomes):
+```{r}
+# Set the possible values
+gender <- c("female", "male")
+diagnosis <- c("definite asthma", "possible asthma", "no asthma")
+atopic_asthma <- c("Yes", "No")
+
+# Generate 200 random values
+random_genders <- sample(gender, 200, replace = TRUE)
+random_diagnosis <- sample(diagnosis, 200, replace = TRUE)
+random_allergy_asthma <- sample(atopic_asthma, 200, replace = TRUE)
+
+# set "row" annotation (with respect to heatmap) to display on the left side
+row_ha = ComplexHeatmap::rowAnnotation(Sex = random_genders,
+                                       col = list(Sex = c("female" = "pink1",
+                                                          "male" = "skyblue1")),
+                                       show_legend = c(TRUE)
+                                                  )
+# top annotation 
+top_ha = ComplexHeatmap::HeatmapAnnotation(Diagnosis = random_diagnosis,
+                                           Atopic_Asthma = random_allergy_asthma,
+                                       col = list(Diagnosis = c("definite asthma" = "red3",
+                                                          "possible asthma" = "pink1",
+                                                          "no asthma" = "bisque1"),
+                                                  Atopic_Asthma = c("Yes" = "red3",
+                                                                    "No" = "lightgreen")),
+                                       show_legend = c(TRUE)
+                                                  )
+
+suppressMessages(displayClustersHeatmap(W, group_cluster, 
+                                        left_annotation = row_ha, 
+                                        top_annotation = top_ha))
+
+```
+
+
+### Part2 - Calculate and display associations between clusters and outcomes
+
+In downstream data analysis for heterogeneous disease, it is often hard to see clear cluster separation by outcome with heatmap due to the large amount of datatypes/predictive features not capturing the entireity of disease. For example, an integration could integrate datatype `blood`:
+
+- white blood cell count at 1 year of age (10 features)
+
+- white blood cell count at 5 year of age (10 features)
+
+Another integration could integrate datatype `Gut_microbiome`
+
+- gut microbial species relative abundances at 3 month of age (300 features)
+
+- gut microbial species relative abundances at 1 year of age (350 features)
+
+
+and not provding clear indication to asthma diagnosis. However there could still be cluster assignment that associates with your outcome-of-interest.
+
+In this case, we want to find which integration cluster result (thus dataset(s) used for that integration) show significant association to outcomes-of-interest and display with Manhattan plot.
+
+As of now this function does not recognize data type (categorical or continuous) automatically, so we recommend running categorical outcomes and continuous outcomes separately. Let's assume the matrix `W` is an integration of the two datasets from `blood` datatype
+```{r}
+outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
+
+# have a column for sampleID. Make sure cluster column is also in df
+df_blood = data.frame(sampleID = seq(1:200), 
+                cluster = group_cluster,
+                Asthma_Diagnosis = random_diagnosis, 
+                Atopic_Asthma = random_allergy_asthma)
+df_blood
+
+outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
+
+# because both outcomes are categorical, we use chi-squared test. Assume the input data has 200 samples
+output = clusterToOutcomeCorr(df_blood, outcomes = outcomes, method = "chi-squared", datatype = "blood", size = 200)
+output
+```
+
+
+You can keep adding more data/row by running this function again, with appropriate test method. Let's add a continuous outcome for lung function `Pre_FEV1_zscore`
+```{r}
+set.seed(1)
+```
+
+```{r}
+# again, randomly generate some numbers
+df_blood$Pre_FEV1_zscore = runif(200)
+  
+outcomes = c("Pre_FEV1_zscore")
+output = rbind(output, clusterToOutcomeCorr(df_blood, outcomes = outcomes, method = "kruskal", datatype = "blood", size = 200))
+output
+```
+
+Let's have another matrix for `Gut_microbiome` integration datatype and add some more data for cluster-outcome association tests
+```{r}
+# lets say there are 150 samples. Generate a random number matrix for gut_microbiome integration
+W_gut1 <- matrix(runif(300 * 300), nrow = 300, ncol = 300)
+W_gut2 <- matrix(runif(300 * 300), nrow = 300, ncol = 300)
+W_gut = SNF(list(W_gut1,W_gut2), 20, 20)
+
+# let's say we go with 4 clusters for gut datatype, you can decide your optimal cluster number
+group_cluster_gut = spectralClustering(W_gut, K = 4)
+
+# generate table with outcomes in
+df_gut = data.frame(sampleID = seq(1:300), 
+                cluster = group_cluster_gut,
+                Asthma_Diagnosis = sample(diagnosis, 300, replace = TRUE), 
+                Atopic_Asthma = sample(atopic_asthma, 300, replace = TRUE))
+
+# same as before, add categorical outcomes
+outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
+output = rbind(output, clusterToOutcomeCorr(df_gut, outcomes = outcomes, method = "chi-squared", datatype = "gut_microbiome", size = 300))
+output
+
+# add continuous outcome
+df_gut$Pre_FEV1_zscore = runif(300)
+outcomes = c("Pre_FEV1_zscore")
+output = rbind(output, clusterToOutcomeCorr(df_gut, outcomes = outcomes, method = "kruskal", datatype = "gut_microbiome", size = 300))
+output
+
+```
+
+
+Next we can feed this dataframe to plot manhanttan using `clusterToOutcomeManhattan`
+```{r}
+clusterToOutcomeManhattan(output)
+```
+
+The red dotted line represent p-value of 0.05 cutoff. The black dotted line represent the 0.05 cutoff divided by the number of data types which act as a multiple comparison correction.
+
+### Part 3 - correlation heatmap
+If we are to look at predictor-predictor or outcome-outcome correlation, we can plot the correlation heatmap using, again, ComplexHeatmap. Make sure you provide the p-values from correlation tests
+
+```{r}
+# generate a mock correlation table
+corr_predictor <- matrix(runif(50 * 50), nrow = 50, ncol = 50)
+rownames(corr_predictor) = seq(1:50)
+colnames(corr_predictor) = seq(1:50)
+
+# color by data types (optional). Say first 25 outcomes are from blood datatype, the next 25 from gut_microbiome datatype
+labels <- c("Blood", 
+            "Gut_microbiome")
+color = c(rep("#cd34b5", 25), 
+          rep("goldenrod4", 25))
+
+corrHeatmap(corr_predictor, labels_color = color, row_km=4, column_km = 4)
+
+```
+
+Next let's generate heatmap legend. This function as of now will output legend to a file
+```{r}
+corrHeatmap_legend("test_func.png", 
+                   outcome_labels = outcome_labels, 
+                   outcome_labels_color = outcome_labels_color)
+
+```
+
+
+Hierarchical clustering and significance starts is applied. Now it's convenient to interpret within-feature correlations.
+
+
+### Part 4 Manhattan plot of correlation to one key outcome
+
+We can also plot correlation of features to **one** user-specified outcome in Manhattan. This is useful if you are doing abSNF where correlation of features to **one** outcome is pre-calculated and you want to see the correlation. The more correlated feature indicates more up-weighing in abSNF.
+
+*Note: abSNF = Association-signal-annotation Boosted Similarity Network Fusion
+
+Similar to running `clusterToOutcomeCorr`, here we calculate correlation p-value, and use a dataframe with specified format. For convenience let's generate some numbers
+```{r}
+#'  "p.value": from correlation test,
+#'  "n": number of samples,
+#'  "Group": datatype name,
+#'  "Group_index": sequence of datatypes to be displayed
+#'  
+predictor_df = data.frame(
+                p.value = runif(6), 
+                n = c(200, 100, 150, 70, 45, 80),
+                Group = c(rep("home environment 3m", 2), rep("parental status", 4)), 
+                Group_Index = c(rep(1, 2), rep(2,4))
+  )
+rownames(predictor_df) = c("home_DEP_3m",
+                "home_DNBP_3m",
+                "Asthma_mother",
+                "Asthma_father",
+                "Wheeze_mother", 
+                "Wheeze_father"
+  
+  )
+predictor_df
+
+# set dataset labels
+labels = c("home environment 3m", "parental status")
+source("../test-metasnf/metasnf/R/correlation_plotting.r")
+
+CorrManhattan(predictor_df, outcome = "Asthma Diagnosis", dataset_label = labels)
+
+```
+
+Red line represent p-value at 0.05. Now you can see which feature from which dataset is more associated to asthma outcome.
+
+
+

@@ -3,8 +3,8 @@
 #' @description
 #' Normalize SNF matrix and plot heatmap.
 #'
-#' @param W similarity matrix from SNF
-#' @param group_cluster cluster assignment
+#' @param W similarity matrix outputted from SNFtool's SNF function, with rownames and colnames in sample IDs
+#' @param group_cluster cluster assignment from spectral clustering
 #' @param top_annotation annotation to be displayed above the heatmap output
 #' @param left_annotation annotation to be displayed on the left of the heatmap output
 #'
@@ -59,14 +59,17 @@ displayClustersHeatmap <- function(W,
 #' @param outcomes one or more outcomes of interest from df
 #' @param method correlation test method ("chi-squared" or "kruskal")
 #' @param datatype name of the SNF integration datatype
+#' @param size sample size of the datatype integrated
 #'
 #' @export
 clusterToOutcomeCorr <- function(df,
                                  #cluster,
                                  outcomes,
                                  method,
-                                 datatype) {
-    out = data.frame()
+                                 datatype,
+                                 size) {
+  # create and populate output dataframe with correlation test statistics  
+  out = data.frame()
     for (outcome in outcomes) {
         print(outcome)
         table = table(as.data.frame.matrix(df[, c('cluster', outcome)]))
@@ -75,9 +78,10 @@ clusterToOutcomeCorr <- function(df,
         } else if (method == "kruskal") {
             result = stats::kruskal.test(df[,outcome] ~ cluster, data = df)
         }
-        row = data.frame(outcome, result$p.value, result$statistic, datatype)
+        row = data.frame(outcome, result$p.value, result$statistic, datatype, size)
         out = rbind(out, row)
     }
+    colnames(out) = c("outcomes", "p_value", "statistic", "datatype", "size")
     return(out)
 }
 
@@ -86,8 +90,12 @@ clusterToOutcomeCorr <- function(df,
 #'
 #' @description
 #'
-#' Manhattan plot outputs the Correlation of Clusters from spectral clustering with the Outcomes (cco), colored by data types, dot size represents sample size.
-#' @param cco cco #!
+#' Manhattan plot plots the correlation of SNF clustering to specified outcome, colored by data types, dot size represents sample size.
+#' @param cco short for Correlation of Clusters vs Outcomes (cco). It is a dataframe with columns: 
+#'  datatype: data type being integrated and clustered. Think of this as predictor 
+#'  outcomes: outcome variables computed against datatype. Think of this as outcome
+#'  p_value: p_value from statistical testing on datatype clusters vs outcome
+#'  size: 
 #' @param levels optional argument to re-arrange outcome display on x-axis
 #'
 #' @export
@@ -148,13 +156,18 @@ clusterToOutcomeManhattan <- function(cco, levels = NULL) {
 #' Generate correlation heatmap
 #'
 #' @description
-#' Generate correlation heatmap (need more generalization. Only tested outcomes-outcomes correlation)
+#' Generate correlation heatmap
 #'
 #' @param corr matrix of outcomes-outcomes correlation p_values
-#' @param outcome_label_color optional argument to specify outcome color labels
+#' @param labels_color optional argument to specify color labels for datatypes
+#' @param row_km kmean partitioning of features along rows for display
+#' @param column_km kmean partitioning of features along columns for display
 #'
 #' @export
-corrHeatmap <- function(corr, outcome_label_color = NULL) {
+corrHeatmap <- function(corr, 
+                        row_km,
+                        column_km,
+                        labels_color = NULL) {
     # Calculate the log-10 p-value of the correlation coefficient significance
     corr_log <- log10(corr + 1)
     # Color bars
@@ -163,16 +176,21 @@ corrHeatmap <- function(corr, outcome_label_color = NULL) {
         c("navy", "blue", "royalblue", "steelblue2", "white")
     )
     # Add color for row and column labels
-    if (is.null(outcome_label_color)) {
-        outcome_label_color <- c(rep("black", ncol(corr_log)))
-        names(outcome_label_color) <- colnames(corr_log)
+    if (is.null(labels_color)) {
+        labels_color <- c(rep("black", ncol(corr_log)))
+        names(labels_color) <- colnames(corr_log)
     }
     hm <- ComplexHeatmap::Heatmap(
         as.matrix(corr_log),
         name = "Outcomes and Descriptors",
         cluster_rows = TRUE,
         cluster_columns = TRUE,
+        
+        # add significance notations to correlation heatmap
         cell_fun = function(j, i, x, y, width, height, fill) {
+            # in grid.text, corr[i,j] specify values correlation matrix, default.units = "npc"
+            # in grid.text, by default x = unit(0.5, "npc") 
+            # in grid.text, by default y = unit(0.5, "npc")
             flag <- 0
             if (corr[i, j] < 0.0001) {
                 grid::grid.text(
@@ -208,10 +226,10 @@ corrHeatmap <- function(corr, outcome_label_color = NULL) {
                 flag <- 1
             }
         },
-        column_names_gp = grid::gpar(fontsize = 9, col = outcome_label_color),
-        row_names_gp = grid::gpar(fontsize = 9, col = outcome_label_color),
-        row_km = 5,
-        column_km = 5,
+        column_names_gp = grid::gpar(fontsize = 9, col = labels_color),
+        row_names_gp = grid::gpar(fontsize = 9, col = labels_color),
+        row_km = row_km,
+        column_km = row_km,
         column_dend_height = grid::unit(2, "cm"),
         row_dend_width = grid::unit(2, "cm"),
         heatmap_legend_param = list(
@@ -233,8 +251,8 @@ corrHeatmap <- function(corr, outcome_label_color = NULL) {
 #' Generate legend for correlation heatmap.
 #'
 #' @param legend_name graph path to be saved to
-#' @param outcome_labels optional argument to specify outcome label names
-#' @param outcome_labels_color optional argument to specify outcome label name colors
+#' @param outcome_labels argument to specify outcome label names
+#' @param outcome_labels_color argument to specify outcome label name colors
 #'
 #' @export
 corrHeatmap_legend <- function(legend_name,
@@ -290,6 +308,7 @@ corrHeatmap_legend <- function(legend_name,
         legend_width = grid::unit(2, "cm"),
         title_gp = grid::gpar(fontsize = 15, fontface = "bold")
     )
+    # collect legends in Pack legenD (pd) list
     pd <- ComplexHeatmap::packLegend(
         list = list(
             outcome_heatmap_lgd,
@@ -317,15 +336,16 @@ corrHeatmap_legend <- function(legend_name,
 #' @description
 #' Manhattan plot showing predictor correlations to an outcome
 #'
-#' @param df_export is a dataframe with features in rownames, and columns:
+#' @param df_stat is a dataframe comprised of predictive features vs a single outcome correlation test statistics. It comprises of features in rownames, and columns with the following colnames:
 #'  "p.value": from correlation test,
 #'  "n": number of samples,
 #'  "Group": datatype name,
 #'  "Group_index": sequence of datatypes to be displayed
 #' @param outcome name the correlations were computed against. To be displayed in plot title
+#' @param dataset_label labels that feed into SNF. Will be displayed along x-axis of Manhattan plot
 #'
 #' @export
-CorrManhattan <- function(df_export, outcome) {
+CorrManhattan <- function(df_stat, outcome, dataset_label) {
     # Supplying empty values to variables accessed through dlpyr functions to
     #  enable package building
     Group_Index <- ""
@@ -334,7 +354,7 @@ CorrManhattan <- function(df_export, outcome) {
     p.value <- ""
     tot <- ""
     # Prepare data for manhattan plot
-    df_manhattan <- df_export |>
+    df_manhattan <- df_stat |>
         # Compute chromosome size
         dplyr::group_by(Group_Index) |>
         dplyr::summarise(chr_len = 1) |>
@@ -343,7 +363,7 @@ CorrManhattan <- function(df_export, outcome) {
         dplyr::select(-chr_len)
         # Add this info to the initial dataset
     df_manhattan <- dplyr::left_join(
-        df_export,
+        df_stat,
         df_manhattan,
         by = "Group_Index"
     ) |>
@@ -367,7 +387,7 @@ CorrManhattan <- function(df_export, outcome) {
         ) +
         ggplot2::scale_color_manual(values = rep(c("black", "orange"), 22 )) +
         # custom X axis:
-        #scale_x_continuous( label = x_axis_ticks, breaks = df_axis$center ) +
+        ggplot2::scale_x_continuous( label = dataset_label, breaks = df_axis$center ) +
         #scale_y_continuous(expand = c(0, 0), limits = c(0, 14) ) +     # remove space between plot area and x axis
         # Add a line at p = 0.05
         ggplot2::geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "red") +
@@ -376,6 +396,7 @@ CorrManhattan <- function(df_export, outcome) {
             label = paste("Correlation p-value of Predictors versus ", outcome)
         ) +
         ggplot2::ylab(label = expression(paste(-log[10], "(p.value)"))) +
+        #ggplot2::xlab(label = "Features") +
         # Custom the theme:
         ggplot2::theme_bw() +
         ggplot2::theme(
