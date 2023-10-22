@@ -81,6 +81,53 @@ suppressMessages(displayClustersHeatmap(W, group_cluster,
 ```
 
 
+
+Curious to see how cluster assignment of samples segregate in different number of clusters? Now you can plot **Alluvial Plot** from a minimum of 2 clusters to a user-defined max number of clusters easily
+```{r}
+cluster_file = output_cluster_file(W, numc=6)
+head(cluster_file)
+
+```
+
+If you are familiar with alluvial plots and would like to create your own alluvial illustration. `prepare_for_alluvial_wOutcome` function generates a "category frequency" dataframe in wide format that you can use to create your own customized plot. Otherwise, we have ` plotClustersAlluvial_wDiagnosis` to conveniently plot alluvial colored by desired outcome variable. 
+
+```{r}
+# Let's generate some example outcome variables added to cluster_file
+cluster_file$Wheeze_status = c(rep("Yes", 20), rep("Sometimes", 60), rep("No", 120))
+
+alluvial_df <- prepare_for_alluvial_wDiagnosis(cluster_file, 
+                                fill_alluvium_by = "Wheeze_status", 
+                                numc=6)
+alluvial_df
+```
+
+
+```{r}
+# this function assumes outcome variables to be in a separate dataframe, with sampleIDs in "Subject_Number" column
+# Let's generate some outcome variables
+df_outcomes = data.frame(Subject_Number = as.character(rownames(cluster_file)),
+                         Wheeze_status = c(rep("Yes", 20), rep("Sometimes", 60), rep("No", 120)))
+
+plotClustersAlluvial_wDiagnosis(W=W,
+                                df_env = df_outcomes,
+                                numc=6,
+                                outcome = "Wheeze_status" )
+```
+
+`Wheeze status` may be just one of the many outcomes that is part of asthma diagnosis. In heterogeneous diseases, "Asthma_Diagnosis" is the ultimate outcome. To display it along side `Wheeze status`:
+```{r}
+df_outcomes$Asthma_Diagnosis = c(rep("Definite Asthma", 10), 
+                                 rep("Possible Asthma", 50), 
+                                 rep("No Asthma", 140))
+
+plotClustersAlluvial_wDiagnosis(W=W,
+                                df_env = df_outcomes,
+                                numc=6,
+                                outcome = "Wheeze_status",
+                                key_outcome = "Asthma_Diagnosis")
+```
+
+
 ### Part2 - Calculate and display associations between clusters and outcomes
 
 In downstream data analysis for heterogeneous disease, it is often hard to see clear cluster separation by outcome with heatmap due to the large amount of datatypes/predictive features not capturing the entireity of disease. For example, an integration could integrate datatype `blood`:
