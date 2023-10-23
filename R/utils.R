@@ -346,3 +346,23 @@ check_similarity_matrices <- function(similarity_matrices) {
     }
     return(valid_matrices)
 }
+
+#' Adjust the diagonals of a matrix
+#'
+#' Adjust the diagonals of a matrix to reduce contrast with off-diagonals
+#'  during plotting.
+#'
+#' @param matrix Matrix to rescale.
+#' @param method Method of rescaling. Can be "mean" (replace diagonals with
+#'  average value of off-diagonals) or "zero" (replace diagonals with 0).
+#'
+#' @export
+scale_diagonals <- function(matrix, method = "mean") {
+    if (method == "mean") {
+        off_diagonals <- matrix[col(matrix) != row(matrix)]
+        diag(matrix) <- mean(off_diagonals)
+    } else if (method == "zero") {
+        diag(matrix) <- 0
+    }
+    return(matrix)
+}

@@ -29,7 +29,7 @@ displayClustersHeatmap <- function(W,
             heatmap_legend_param = list(
                 color_bar = 'continuous',
                 title = "Similarity")
-            )
+        )
     } else {
         ComplexHeatmap::Heatmap(
             W[ind, ind],
