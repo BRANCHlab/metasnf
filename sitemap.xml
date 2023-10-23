@@ -163,6 +163,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/extend_solutions.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/format_weights_row.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/fraction_clustered_together.html</loc>
   </url>
   <url>
@@ -307,6 +310,12 @@
     <loc>https://branchlab.github.io/metasnf/reference/settings_matrix_row_fn.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/sew_euclidean_distance.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/siw_euclidean_distance.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/sn_euclidean_distance.html</loc>
   </url>
   <url>
@@ -344,9 +353,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/spectral_two.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/sq_euclidean_distance.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/subs.html</loc>

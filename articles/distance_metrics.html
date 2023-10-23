@@ -191,14 +191,14 @@ Simple Example</a>).</p>
 <span><span class="va">settings_matrix</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">"dist"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    cont_dist disc_dist ord_dist cat_dist mix_dist</span></span>
 <span><span class="co">#&gt; 1          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 2          2         2        1        1        1</span></span>
-<span><span class="co">#&gt; 3          2         1        1        1        1</span></span>
-<span><span class="co">#&gt; 4          2         2        1        1        1</span></span>
-<span><span class="co">#&gt; 5          2         2        1        1        1</span></span>
+<span><span class="co">#&gt; 2          2         1        1        1        1</span></span>
+<span><span class="co">#&gt; 3          2         2        1        1        1</span></span>
+<span><span class="co">#&gt; 4          1         2        1        1        1</span></span>
+<span><span class="co">#&gt; 5          1         1        1        1        1</span></span>
 <span><span class="co">#&gt; 6          2         1        1        1        1</span></span>
-<span><span class="co">#&gt; 7          1         1        1        1        1</span></span>
-<span><span class="co">#&gt; 8          1         1        1        1        1</span></span>
-<span><span class="co">#&gt; 9          2         2        1        1        1</span></span>
+<span><span class="co">#&gt; 7          1         2        1        1        1</span></span>
+<span><span class="co">#&gt; 8          2         2        1        1        1</span></span>
+<span><span class="co">#&gt; 9          1         1        1        1        1</span></span>
 <span><span class="co">#&gt; 10         1         1        1        1        1</span></span></code></pre></div>
 <p>The continuous and discrete distance metrics values randomly
 fluctuate between 1 and 2, where 1 means that the first metric
@@ -224,8 +224,7 @@ don’t want to ever use them.</p>
 <p>The first way is to use the <code>keep_defaults</code> parameter in
 <code><a href="../reference/generate_distance_metrics_list.html">generate_distance_metrics_list()</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">no_default_metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_distance_metrics_list.html">generate_distance_metrics_list</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">no_default_metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_distance_metrics_list.html">generate_distance_metrics_list</a></span><span class="op">(</span></span>
 <span>    continuous_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span></span>
 <span>    <span class="op">)</span>,</span>
@@ -309,13 +308,13 @@ sample from during settings_matrix generation:</p>
 <span></span>
 <span><span class="va">settings_matrix</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">"dist"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    cont_dist disc_dist ord_dist cat_dist mix_dist</span></span>
-<span><span class="co">#&gt; 1          1         3        1        1        1</span></span>
+<span><span class="co">#&gt; 1          1         2        1        1        1</span></span>
 <span><span class="co">#&gt; 2          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 3          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 4          1         2        1        1        1</span></span>
+<span><span class="co">#&gt; 3          1         2        1        1        1</span></span>
+<span><span class="co">#&gt; 4          1         3        1        1        1</span></span>
 <span><span class="co">#&gt; 5          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 6          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 7          1         2        1        1        1</span></span>
+<span><span class="co">#&gt; 6          1         3        1        1        1</span></span>
+<span><span class="co">#&gt; 7          1         3        1        1        1</span></span>
 <span><span class="co">#&gt; 8          1         3        1        1        1</span></span>
 <span><span class="co">#&gt; 9          1         3        1        1        1</span></span>
 <span><span class="co">#&gt; 10         1         3        1        1        1</span></span></code></pre></div>
@@ -348,7 +347,7 @@ solution space over separate runs of <code>batch_snf</code>.</p>
 <span><span class="co">#&gt; 2          1         3        1        1        1</span></span>
 <span><span class="co">#&gt; 3          1         2        1        1        1</span></span>
 <span><span class="co">#&gt; 4          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 5          1         2        1        1        1</span></span>
+<span><span class="co">#&gt; 5          1         3        1        1        1</span></span>
 <span><span class="co">#&gt; 6          1         3        1        1        1</span></span>
 <span><span class="co">#&gt; 7          1         2        1        1        1</span></span>
 <span><span class="co">#&gt; 8          1         2        1        1        1</span></span>
@@ -409,18 +408,38 @@ the weights that will be used for a single run of SNF.</p>
 the number of rows in the weights matrix is the same as the number of
 rows in your settings matrix.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">weights_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
+<span>    <span class="va">data_list</span>,</span>
+<span>    nrow <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span>,</span>
+<span>    continuous_distances <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    discrete_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">weights_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">settings_matrix</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">weights_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span></span>
-<span><span class="co">#&gt;      V1 V2 V3 V4</span></span>
-<span><span class="co">#&gt; [1,]  1  1  1  1</span></span>
-<span><span class="co">#&gt; [2,]  1  1  1  1</span></span>
-<span><span class="co">#&gt; [3,]  1  1  1  1</span></span>
-<span><span class="co">#&gt; [4,]  1  1  1  1</span></span>
-<span><span class="co">#&gt; [5,]  1  1  1  1</span></span></code></pre></div>
+<span></span>
+<span><span class="va">solutions_matrix_with_ones_for_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    <span class="va">data_list</span>,</span>
+<span>    <span class="va">settings_matrix</span>,</span>
+<span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span>,</span>
+<span>    weights_matrix <span class="op">=</span> <span class="va">weights_matrix</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">solutions_matrix_with_no_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    <span class="va">data_list</span>,</span>
+<span>    <span class="va">settings_matrix</span>,</span>
+<span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span></span>
+<span>    <span class="va">solutions_matrix_with_no_weights</span>,</span>
+<span>    <span class="va">solutions_matrix_with_ones_for_weights</span></span>
+<span><span class="op">)</span> <span class="co"># Try this on your machine - It'll evaluate to TRUE</span></span></code></pre></div>
 <p>A <code>weights_matrix</code> of all 1s (the default
 <code>weights_matrix</code> used when you don’t supply one yourself)
 ’won’t actually do anything to the data. You can either replace the 1s
@@ -435,12 +454,18 @@ distribution.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">weights_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span></span>
-<span><span class="co">#&gt;             V1         V2        V3         V4</span></span>
-<span><span class="co">#&gt; [1,] 0.3522102 0.47123363 0.3777784 0.95368434</span></span>
-<span><span class="co">#&gt; [2,] 0.9293385 0.26694849 0.9254615 0.17296203</span></span>
-<span><span class="co">#&gt; [3,] 0.1777800 0.03429626 0.4416261 0.02182523</span></span>
-<span><span class="co">#&gt; [4,] 0.2103812 0.90904542 0.3697329 0.81979775</span></span>
-<span><span class="co">#&gt; [5,] 0.2532053 0.63872177 0.9967445 0.25087734</span></span></code></pre></div>
+<span></span>
+<span><span class="va">solutions_matrix_with_uniform_random_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    <span class="va">data_list</span>,</span>
+<span>    <span class="va">settings_matrix</span>,</span>
+<span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span>,</span>
+<span>    weights_matrix <span class="op">=</span> <span class="va">weights_matrix</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span></span>
+<span>    <span class="va">solutions_matrix_with_no_weights</span>,</span>
+<span>    <span class="va">solutions_matrix_with_uniform_random_weights</span></span>
+<span><span class="op">)</span> <span class="co"># Try this on your machine - It'll evaluate to TRUE</span></span></code></pre></div>
 <p>The default metrics (simple Euclidean for continuous, discrete, and
 ordinal data and Gower’s distance for categorical and mixed data) are
 both capable of applying weights to data before distance matrix
@@ -460,14 +485,15 @@ the essential aspects of a well-formated distance function.</p>
 <code class="sourceCode R"><span><span class="va">euclidean_distance</span></span>
 <span><span class="co">#&gt; function (df, weights_row) </span></span>
 <span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     weighted_df &lt;- as.matrix(df) %*% diag(weights_row)</span></span>
+<span><span class="co">#&gt;     weights &lt;- format_weights_row(weights_row)</span></span>
+<span><span class="co">#&gt;     weighted_df &lt;- as.matrix(df) %*% weights</span></span>
 <span><span class="co">#&gt;     distance_matrix &lt;- as.matrix(stats::dist(weighted_df, method = "euclidean"))</span></span>
 <span><span class="co">#&gt;     return(distance_matrix)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55e30c92fde0&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55863cf8ba48&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
-<p>First, the function should accept two arguments: <code>df</code> and
-<code>weights</code>, and only give one output,
+<p>The function should accept two arguments: <code>df</code> and
+<code>weights_row</code>, and only give one output,
 <code>distance_matrix</code>. The function doesn’t actually need to make
 use of those weights if you don’t want it to.</p>
 <p>By the time your data reaches a distance metric function, it
@@ -499,41 +525,49 @@ functions will expect to see:</p>
 <code class="sourceCode R"><span><span class="va">processed_abcd_anxiety</span> <span class="op">&lt;-</span> <span class="va">abcd_anxiety</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># no NAs</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="st">"subjectkey"</span> <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># replace the UID with 'subjectkey'</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>row.names <span class="op">=</span> <span class="st">"subjectkey"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_abcd_anxiety</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         subjectkey cbcl_anxiety_r</span></span>
-<span><span class="co">#&gt; 1 NDAR_INV0567T2Y9              3</span></span>
-<span><span class="co">#&gt; 2 NDAR_INV0GLZNC2W              1</span></span>
-<span><span class="co">#&gt; 3 NDAR_INV0J4PYA5F              0</span></span>
-<span><span class="co">#&gt; 4 NDAR_INV0OYE291Q              2</span></span>
-<span><span class="co">#&gt; 5 NDAR_INV0SM1JLXQ              2</span></span>
-<span><span class="co">#&gt; 6 NDAR_INV0Z87UJDR              0</span></span></code></pre></div>
+<span><span class="co">#&gt;                  cbcl_anxiety_r</span></span>
+<span><span class="co">#&gt; NDAR_INV0567T2Y9              3</span></span>
+<span><span class="co">#&gt; NDAR_INV0GLZNC2W              1</span></span>
+<span><span class="co">#&gt; NDAR_INV0J4PYA5F              0</span></span>
+<span><span class="co">#&gt; NDAR_INV0OYE291Q              2</span></span>
+<span><span class="co">#&gt; NDAR_INV0SM1JLXQ              2</span></span>
+<span><span class="co">#&gt; NDAR_INV0Z87UJDR              0</span></span></code></pre></div>
 <p>If we want to have a distance metric that calculates Euclidean
 distance, but also scales the resulting matrix down such that the
 biggest allowed distance is a 1, it would look like this:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_scaled_euclidean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">my_scaled_euclidean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">weights_row</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="co"># this function won't apply the weights it is given</span></span>
 <span>    <span class="va">distance_matrix</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>        <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"euclidean"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># make sure it's formatted as a matrix</span></span>
 <span>    <span class="va">distance_matrix</span> <span class="op">&lt;-</span> <span class="va">distance_matrix</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">distance_matrix</span><span class="op">)</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">distance_matrix</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Error handling will be in your hands. For example, this function will
-fail if the pairwise distances for all patients is 0 (a division by 0
-will occur).</p>
+<p>You’ll need to be mindful of any edge cases that your function will
+run into. For example, this function will fail if the pairwise distances
+for all patients is 0 (a division by 0 will occur). If that specific
+situation ever happens, there’s probably something quite wrong with the
+data.</p>
 <p>Once you’re happy that you distance function is working as you’d like
 it to:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">my_scaled_euclidean</span><span class="op">(</span><span class="va">processed_abcd_anxiety</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
-<span><span class="co">#&gt; Warning in stats::dist(df, method = "euclidean"): NAs introduced by coercion</span></span>
-<span><span class="co">#&gt;     1   2   3   4   5</span></span>
-<span><span class="co">#&gt; 1 0.0 0.2 0.3 0.1 0.1</span></span>
-<span><span class="co">#&gt; 2 0.2 0.0 0.1 0.1 0.1</span></span>
-<span><span class="co">#&gt; 3 0.3 0.1 0.0 0.2 0.2</span></span>
-<span><span class="co">#&gt; 4 0.1 0.1 0.2 0.0 0.0</span></span>
-<span><span class="co">#&gt; 5 0.1 0.1 0.2 0.0 0.0</span></span></code></pre></div>
+<span><span class="co">#&gt;                  NDAR_INV0567T2Y9 NDAR_INV0GLZNC2W NDAR_INV0J4PYA5F</span></span>
+<span><span class="co">#&gt; NDAR_INV0567T2Y9              0.0              0.2              0.3</span></span>
+<span><span class="co">#&gt; NDAR_INV0GLZNC2W              0.2              0.0              0.1</span></span>
+<span><span class="co">#&gt; NDAR_INV0J4PYA5F              0.3              0.1              0.0</span></span>
+<span><span class="co">#&gt; NDAR_INV0OYE291Q              0.1              0.1              0.2</span></span>
+<span><span class="co">#&gt; NDAR_INV0SM1JLXQ              0.1              0.1              0.2</span></span>
+<span><span class="co">#&gt;                  NDAR_INV0OYE291Q NDAR_INV0SM1JLXQ</span></span>
+<span><span class="co">#&gt; NDAR_INV0567T2Y9              0.1              0.1</span></span>
+<span><span class="co">#&gt; NDAR_INV0GLZNC2W              0.1              0.1</span></span>
+<span><span class="co">#&gt; NDAR_INV0J4PYA5F              0.2              0.2</span></span>
+<span><span class="co">#&gt; NDAR_INV0OYE291Q              0.0              0.0</span></span>
+<span><span class="co">#&gt; NDAR_INV0SM1JLXQ              0.0              0.0</span></span></code></pre></div>
 <p>You can load it into a custom distance_metrics_list:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_distance_metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_distance_metrics_list.html">generate_distance_metrics_list</a></span><span class="op">(</span></span>
@@ -543,291 +577,63 @@ it to:</p>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="custom-weighting">Custom weighting<a class="anchor" aria-label="anchor" href="#custom-weighting"></a>
+<h2 id="requesting-metrics">Requesting metrics<a class="anchor" aria-label="anchor" href="#requesting-metrics"></a>
 </h2>
-<p>Custom weighting at the variable level can get a little bit tricky.
-Importantly, information of the variable weights need to be <strong>a
-part of</strong> the distance metric functions themselves; weights
-aren’t supplied to the distance metric functions as arguments. Below are
-a few examples of incorporating custom weights into distance
-matrices.</p>
-<div class="section level3">
-<h3 id="example-1-uniform-random-reweighting">Example 1: Uniform random reweighting<a class="anchor" aria-label="anchor" href="#example-1-uniform-random-reweighting"></a>
-</h3>
-<p>Here, we will set up a function that first standard normalizes all
-the variables, then randomly reweights all the variables according to a
-uniform distribution.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Setting up some data</span></span>
-<span><span class="va">processed_cort_t</span> <span class="op">&lt;-</span> <span class="va">abcd_cort_t</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="st">"subjectkey"</span> <span class="op">=</span> <span class="st">"patient"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>row.names <span class="op">=</span> <span class="st">"subjectkey"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">processed_cort_t</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
-<span><span class="co">#&gt;                  mrisdp_1 mrisdp_2 mrisdp_3 mrisdp_4 mrisdp_5</span></span>
-<span><span class="co">#&gt; NDAR_INV0567T2Y9    2.601    2.487    2.801    2.954    2.864</span></span>
-<span><span class="co">#&gt; NDAR_INV0GLZNC2W    2.619    2.851    2.784    2.846    3.012</span></span>
-<span><span class="co">#&gt; NDAR_INV0IZ157F8    2.621    2.295    2.530    2.961    3.446</span></span>
-<span><span class="co">#&gt; NDAR_INV0J4PYA5F    2.599    2.670    2.676    2.938    2.809</span></span>
-<span><span class="co">#&gt; NDAR_INV0OYE291Q    2.526    2.761    2.829    2.986    2.785</span></span>
-<span></span>
-<span><span class="va">uniform_weight_euclidean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">SNFtool</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/standardNormalization.html" class="external-link">standardNormalization</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
-<span>    <span class="co"># generating the random weights</span></span>
-<span>    <span class="va">number_of_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
-<span>    <span class="va">random_weights</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">number_of_weights</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">random_weights</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="co"># not necessary - for demonstration</span></span>
-<span>    <span class="co"># applying the weights</span></span>
-<span>    <span class="va">weighted_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">random_weights</span><span class="op">)</span></span>
-<span>    <span class="co"># distance calculation</span></span>
-<span>    <span class="va">distance_matrix</span> <span class="op">&lt;-</span> <span class="va">weighted_data</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"euclidean"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">distance_matrix</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="fu">uniform_weight_euclidean</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 0.5975985</span></span>
-<span><span class="co">#&gt;                  NDAR_INV0567T2Y9 NDAR_INV0GLZNC2W NDAR_INV0IZ157F8</span></span>
-<span><span class="co">#&gt; NDAR_INV0567T2Y9         0.000000         8.768533         7.619641</span></span>
-<span><span class="co">#&gt; NDAR_INV0GLZNC2W         8.768533         0.000000         8.471811</span></span>
-<span><span class="co">#&gt; NDAR_INV0IZ157F8         7.619641         8.471811         0.000000</span></span>
-<span><span class="co">#&gt; NDAR_INV0J4PYA5F         9.150050        10.245335        10.358044</span></span>
-<span><span class="co">#&gt; NDAR_INV0OYE291Q         8.235290         8.837599         9.915228</span></span>
-<span><span class="co">#&gt;                  NDAR_INV0J4PYA5F NDAR_INV0OYE291Q</span></span>
-<span><span class="co">#&gt; NDAR_INV0567T2Y9          9.15005         8.235290</span></span>
-<span><span class="co">#&gt; NDAR_INV0GLZNC2W         10.24534         8.837599</span></span>
-<span><span class="co">#&gt; NDAR_INV0IZ157F8         10.35804         9.915228</span></span>
-<span><span class="co">#&gt; NDAR_INV0J4PYA5F          0.00000        10.033130</span></span>
-<span><span class="co">#&gt; NDAR_INV0OYE291Q         10.03313         0.000000</span></span></code></pre></div>
-<p>The approach of formatting variable weights in a diagonal matrix and
-then doing matrix multiplication with the original dataframe through the
-<code>%*%</code> operator is very handy to know for this purpose:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    col1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>,</span>
-<span>    col2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">100</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">df</span></span>
-<span><span class="co">#&gt;   col1 col2</span></span>
-<span><span class="co">#&gt; 1    1   50</span></span>
-<span><span class="co">#&gt; 2    3  100</span></span>
-<span></span>
-<span><span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">weights</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      [,1] [,2]</span></span>
-<span><span class="co">#&gt; [1,]    1  100</span></span>
-<span><span class="co">#&gt; [2,]    3  200</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="example-2-fixed-random-weights">Example 2: Fixed random weights<a class="anchor" aria-label="anchor" href="#example-2-fixed-random-weights"></a>
-</h3>
-<p>The approach above is limited in that you won’t easily be able to
-find out what the actual weights being used were.</p>
-<p>Using <a href="http://adv-r.had.co.nz/Functional-programming.html#closures" class="external-link">closures</a>,
-we can efficiently churn out distance metric functions that we can
-examine the weights of out of the gates.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fixed_uniform_weight_euclidean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">max_cols</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">random_weights</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">max_cols</span><span class="op">)</span></span>
-<span>    <span class="va">uniform_weight_euclidean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">SNFtool</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/standardNormalization.html" class="external-link">standardNormalization</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
-<span>        <span class="co"># generating the random weights</span></span>
-<span>        <span class="va">number_of_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
-<span>        <span class="va">random_weights_trimmed</span> <span class="op">&lt;-</span> <span class="va">random_weights</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">number_of_weights</span><span class="op">]</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">random_weights_trimmed</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="co"># not necessary - for demonstration</span></span>
-<span>        <span class="co"># applying the weights</span></span>
-<span>        <span class="va">weighted_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">random_weights_trimmed</span><span class="op">)</span></span>
-<span>        <span class="co"># distance calculation</span></span>
-<span>        <span class="va">distance_matrix</span> <span class="op">&lt;-</span> <span class="va">weighted_data</span> <span class="op">|&gt;</span></span>
-<span>            <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"euclidean"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>            <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">distance_matrix</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">uniform_weight_euclidean</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-<p>This function will spit out another function that contains within it
-a fixed string of random uniform numbers. The number of random numbers
-contained is based on the <code>max_cols</code> parameter, and should be
-chosen such that you’re certain you’ll never have a dataframe with more
-columns than <code>max_cols</code> that needs to be evaluated. This may
-be bigger than the number of columns in any individual dataframe,
-depending on which SNF schemes you apply. A safe value in this case
-would be something bigger than the total number of variables across all
-your data.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_metric_1</span> <span class="op">&lt;-</span> <span class="fu">fixed_uniform_weight_euclidean</span><span class="op">(</span><span class="fl">500</span><span class="op">)</span></span></code></pre></div>
-<p>Both the original uniform weight function and the closure function
-were given a print statement to report the first weight they apply.
-Watch what happens when we repeatedly access either of these
-functions.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">uniform_weight</span> <span class="op">&lt;-</span> <span class="fu">uniform_weight_euclidean</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.1434058</span></span>
-<span><span class="va">uniform_weight</span> <span class="op">&lt;-</span> <span class="fu">uniform_weight_euclidean</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3441692</span></span>
-<span><span class="va">uniform_weight</span> <span class="op">&lt;-</span> <span class="fu">uniform_weight_euclidean</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.4491712</span></span>
-<span></span>
-<span><span class="va">uniform_weight</span> <span class="op">&lt;-</span> <span class="fu">my_metric_1</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3626181</span></span>
-<span><span class="va">uniform_weight</span> <span class="op">&lt;-</span> <span class="fu">my_metric_1</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3626181</span></span>
-<span><span class="va">uniform_weight</span> <span class="op">&lt;-</span> <span class="fu">my_metric_1</span><span class="op">(</span><span class="va">processed_cort_t</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3626181</span></span></code></pre></div>
-<p>For the first function, a new set of random numbers is generated each
-time the distance metric is run. For the second function, a new set of
-random numbers is only generated once (during
-<code>fixed_uniform_weight_euclidean()</code>). This is particularly
-useful for resampling purposes.</p>
-</div>
-<div class="section level3">
-<h3 id="example-3-specific-variable-weights">Example 3: Specific variable weights<a class="anchor" aria-label="anchor" href="#example-3-specific-variable-weights"></a>
-</h3>
-<p>You can also have specific control over how each variable is
-weighted. Like before, this information will need to be built into the
-distance metric function. You may want to have a good understanding of
-how the different SNF schemes work as they will ultimately define the
-possible combinations of vectors that any one dataframe requiring
-distance matrix conversion can have. To actually embed the custom
-weights in this function, you may have to get a little creative. Here is
-one approach, which involves creating a dataframe that stores all the
-weights we’re interested in working with</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">subset_of_data</span> <span class="op">&lt;-</span> <span class="va">processed_cort_t</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
-<span><span class="va">other_data</span> <span class="op">&lt;-</span> <span class="va">processed_cort_t</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">40</span><span class="op">:</span><span class="fl">42</span><span class="op">]</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">subset_of_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "mrisdp_1" "mrisdp_2" "mrisdp_3"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">other_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "mrisdp_40" "mrisdp_41" "mrisdp_42"</span></span></code></pre></div>
-<p>Let’s pretend that is the totality of the data we’re working
-with.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">all_variable_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">subset_of_data</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">other_data</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">number_of_variables</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">all_variable_names</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># How many sets of reweightings we want to make</span></span>
-<span><span class="va">number_of_weight_combinations</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
-<span></span>
-<span><span class="va">number_of_weights</span> <span class="op">&lt;-</span> <span class="va">number_of_weight_combinations</span> <span class="op">*</span> <span class="va">number_of_variables</span></span>
-<span></span>
-<span><span class="va">weights_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span></span>
-<span>    ncol <span class="op">=</span> <span class="va">number_of_variables</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="va">number_of_weight_combinations</span>,</span>
-<span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">number_of_weights</span><span class="op">)</span> <span class="co"># you could use something specific instead</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">weights_df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">all_variable_names</span></span>
-<span></span>
-<span><span class="va">weights_df</span></span>
-<span><span class="co">#&gt;    mrisdp_1   mrisdp_2  mrisdp_3  mrisdp_40 mrisdp_41 mrisdp_42</span></span>
-<span><span class="co">#&gt; 1 0.6568278 0.45751026 0.5423299 0.26900846 0.8734504 0.4381649</span></span>
-<span><span class="co">#&gt; 2 0.2830820 0.62852843 0.6484151 0.01867106 0.7404925 0.1574380</span></span>
-<span><span class="co">#&gt; 3 0.3216435 0.28259280 0.6339099 0.49665945 0.8108223 0.5917357</span></span>
-<span><span class="co">#&gt; 4 0.3537059 0.01693217 0.5217799 0.99829807 0.2871678 0.6984472</span></span>
-<span><span class="co">#&gt; 5 0.8262946 0.45285791 0.3428058 0.75055495 0.6926916 0.8834437</span></span></code></pre></div>
-<p>Those are all the weights. Let’s say our distance metric encounters
-some odd subset of the data:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">odd_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">subset_of_data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span>, <span class="va">other_data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">odd_subset</span></span>
-<span><span class="co">#&gt;                  mrisdp_1 mrisdp_2 mrisdp_40 mrisdp_41</span></span>
-<span><span class="co">#&gt; NDAR_INV0567T2Y9    2.601    2.487     2.600     2.784</span></span>
-<span><span class="co">#&gt; NDAR_INV0GLZNC2W    2.619    2.851     2.849     2.600</span></span>
-<span><span class="co">#&gt; NDAR_INV0IZ157F8    2.621    2.295     2.326     2.377</span></span>
-<span><span class="co">#&gt; NDAR_INV0J4PYA5F    2.599    2.670     2.803     2.550</span></span>
-<span><span class="co">#&gt; NDAR_INV0OYE291Q    2.526    2.761     2.572     2.585</span></span></code></pre></div>
-<p>This function can take in a row from <code>weights_df</code> and spit
-out a function that always applies that row to weight any data it
-encounters:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">specific_weighted_euclidean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">weights_row</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">weighted_euclidean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">weights</span> <span class="op">&lt;-</span> <span class="va">weights_row</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">]</span></span>
-<span>        <span class="va">weighted_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">weights</span><span class="op">)</span></span>
-<span>        <span class="va">distance_matrix</span> <span class="op">&lt;-</span> <span class="va">weighted_data</span> <span class="op">|&gt;</span></span>
-<span>            <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"euclidean"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>            <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">distance_matrix</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">weighted_euclidean</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-<p>In action:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">first_row_metric</span> <span class="op">&lt;-</span> <span class="fu">specific_weighted_euclidean</span><span class="op">(</span><span class="va">weights_df</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">first_row_metric</span><span class="op">(</span><span class="va">odd_subset</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                  NDAR_INV0567T2Y9 NDAR_INV0GLZNC2W NDAR_INV0IZ157F8</span></span>
-<span><span class="co">#&gt; NDAR_INV0567T2Y9        0.0000000       0.24122453        0.3737618</span></span>
-<span><span class="co">#&gt; NDAR_INV0GLZNC2W        0.2412245       0.00000000        0.3499169</span></span>
-<span><span class="co">#&gt; NDAR_INV0IZ157F8        0.3737618       0.34991689        0.0000000</span></span>
-<span><span class="co">#&gt; NDAR_INV0J4PYA5F        0.2275254       0.09534345        0.2625688</span></span>
-<span><span class="co">#&gt; NDAR_INV0OYE291Q        0.2200234       0.10559841        0.2945060</span></span>
-<span><span class="co">#&gt;                  NDAR_INV0J4PYA5F NDAR_INV0OYE291Q</span></span>
-<span><span class="co">#&gt; NDAR_INV0567T2Y9       0.22752542       0.22002338</span></span>
-<span><span class="co">#&gt; NDAR_INV0GLZNC2W       0.09534345       0.10559841</span></span>
-<span><span class="co">#&gt; NDAR_INV0IZ157F8       0.26256882       0.29450601</span></span>
-<span><span class="co">#&gt; NDAR_INV0J4PYA5F       0.00000000       0.09395991</span></span>
-<span><span class="co">#&gt; NDAR_INV0OYE291Q       0.09395991       0.00000000</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="example-4-generating-a-range-of-weighted-distance-metrics-using-a-weights-matrix">Example 4: Generating a range of weighted distance metrics using a
-weights matrix<a class="anchor" aria-label="anchor" href="#example-4-generating-a-range-of-weighted-distance-metrics-using-a-weights-matrix"></a>
-</h3>
-<p>(Example using the weighted hamming distance will go here…)</p>
-</div>
+<p>If there’s a metric you’d like to see added as a prewritten option
+included in the package, feel free to post an issue or make a pull
+request on the package’s GitHub.</p>
 </div>
 <div class="section level2">
-<h2 id="list-of-included-distance-metrics">List of included distance metrics<a class="anchor" aria-label="anchor" href="#list-of-included-distance-metrics"></a>
+<h2 id="list-of-prewritten-distance-metrics-functions">List of prewritten distance metrics functions<a class="anchor" aria-label="anchor" href="#list-of-prewritten-distance-metrics-functions"></a>
 </h2>
-<div class="section level3">
-<h3 id="unweighted">Unweighted<a class="anchor" aria-label="anchor" href="#unweighted"></a>
-</h3>
-<p>These metrics can be used as is.</p>
+<p>These metrics can be used as is. They are all capable of accepting
+and applying custom weights provided by a
+<code>weights_matrix</code>.</p>
 <ul>
 <li>
-<code>euclidean_distance</code>
+<code>euclidean_distance</code> (Euclidean distance)
 <ul>
-<li>simple Euclidean distance</li>
 <li>applies to continuous, discrete, or ordinal data</li>
 </ul>
 </li>
 <li>
-<code>sn_euclidean_distance</code>
+<code>sn_euclidean_distance</code> (Standard normalized Euclidean
+distance)
 <ul>
-<li>Euclidean distance following standard normalization (SNFtool package
-implementation)</li>
+<li>Standard normalize data, then use Euclidean distance</li>
 <li>applies to continuous, discrete, or ordinal data</li>
 </ul>
 </li>
 <li>
-<code>gower_distance</code>
+<code>gower_distance</code> (Gower’s distance)
 <ul>
-<li>Gower’s distance (cluster package implementation)</li>
 <li>applies to any data</li>
 </ul>
 </li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="weighted-closure-based">Weighted (closure-based)<a class="anchor" aria-label="anchor" href="#weighted-closure-based"></a>
-</h3>
-<p>These metrics need to be embedded with weights (see Example 4).</p>
+<li>
+<code>siw_euclidean_distance</code> (Squared (including weights)
+Euclidean distance)
 <ul>
-<li><code>weighted_hamming_distance</code></li>
-<li><code>weighted_euclidean_distance</code></li>
+<li>Apply weights to dataframe, then calculate Euclidean distance, then
+square the results</li>
 </ul>
-<p>And that’s all there is on distance metrics! If there’s a metric
-you’d like to see added as a prewritten option included in the package,
-feel free to post an issue or make a pull request on the package’s
-GitHub.</p>
-</div>
+</li>
+<li>
+<code>sew_euclidean_distance</code> (Squared (excluding weights)
+Euclidean distance)
+<ul>
+<li>Apply <em>square root</em> of weights to dataframe, then calculate
+Euclidean distance, then square the results</li>
+</ul>
+</li>
+<li>
+<code>hamming_distance</code> (Hamming distance)
+<ul>
+<li>Distance between patients is (1 * variable weight) summed over all
+variables</li>
+</ul>
+</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
