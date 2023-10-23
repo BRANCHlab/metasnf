@@ -4,20 +4,20 @@
 \alias{calculate_silhouettes}
 \title{Calculate silhouette scores}
 \usage{
-calculate_silhouettes(solutions_matrix, affinity_matrices)
+calculate_silhouettes(solutions_matrix, similarity_matrices)
 }
 \arguments{
 \item{solutions_matrix}{A solutions_matrix (see ?batch_snf)}
 
-\item{affinity_matrices}{A list of affinity matrices (see ?batch_snf)}
+\item{similarity_matrices}{A list of similarity matrices (see ?batch_snf)}
 }
 \value{
 silhouette_scores A list of "silhouette" objects from the cluster
 package.
 }
 \description{
-Given a solutions_matrix and a list of affinity_matrices (or a single
-affinity_matrix if the solutions_matrix has only 1 row), return a list
+Given a solutions_matrix and a list of similarity_matrices (or a single
+similarity_matrix if the solutions_matrix has only 1 row), return a list
 of 'silhouette' objects from the cluster package
 }
 \examples{
@@ -38,20 +38,20 @@ data_list <- generate_data_list(
 # build settings_matrix
 settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 
-# collect affinity matrices and solutions matrix from batch_snf
+# collect similarity matrices and solutions matrix from batch_snf
 batch_snf_results <- batch_snf(
     data_list,
     settings_matrix,
-    return_affinity_matrices = TRUE
+    return_similarity_matrices = TRUE
 )
 
 solutions_matrix <- batch_snf_results$"solutions_matrix"
-affinity_matrices <- batch_snf_results$"affinity_matrices"
+similarity_matrices <- batch_snf_results$"similarity_matrices"
 
 # calculate silhouette scores
 silhouette_scores <- calculate_silhouettes(
     solutions_matrix,
-    affinity_matrices
+    similarity_matrices
 )
 
 # plot the silhouette scores of the first solutions

@@ -4,20 +4,20 @@
 \alias{calculate_db_indices}
 \title{Calculate Davies-Bouldin indices}
 \usage{
-calculate_db_indices(solutions_matrix, affinity_matrices)
+calculate_db_indices(solutions_matrix, similarity_matrices)
 }
 \arguments{
 \item{solutions_matrix}{A solutions_matrix (see ?batch_snf)}
 
-\item{affinity_matrices}{A list of affinity matrices (see ?batch_snf)}
+\item{similarity_matrices}{A list of similarity matrices (see ?batch_snf)}
 }
 \value{
 davies_bouldin_indices A vector of Davies-Bouldin indices for each
 cluster solution
 }
 \description{
-Given a solutions_matrix and a list of affinity_matrices (or a single
-affinity_matrix if the solutions_matrix has only 1 row), return a vector of
+Given a solutions_matrix and a list of similarity_matrices (or a single
+similarity_matrix if the solutions_matrix has only 1 row), return a vector of
 Davies-Bouldin indices
 }
 \examples{
@@ -39,20 +39,20 @@ if (require("clv")) {
     # build settings_matrix
     settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 
-    # collect affinity matrices and solutions matrix from batch_snf
+    # collect similarity matrices and solutions matrix from batch_snf
     batch_snf_results <- batch_snf(
         data_list,
         settings_matrix,
-        return_affinity_matrices = TRUE
+        return_similarity_matrices = TRUE
     )
 
     solutions_matrix <- batch_snf_results$"solutions_matrix"
-    affinity_matrices <- batch_snf_results$"affinity_matrices"
+    similarity_matrices <- batch_snf_results$"similarity_matrices"
 
     # calculate Davies-Bouldin indices
     davies_bouldin_indices <- calculate_db_indices(
         solutions_matrix,
-        affinity_matrices
+        similarity_matrices
     )
 }
 }

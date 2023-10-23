@@ -295,30 +295,30 @@ Maybe you'll see something interesting!
 Quality metrics are another useful heuristic for the goodness of a cluster that don't require any contextualization of results in the domain they may be used in.
 r-package enables measures of silhouette scores, Dunn indices, and Davies-Bouldin indices.
 To calculate these values, we'll need not only the cluster results but also the final fused network (the similarity matrices produced by SNF) that the clusters came from.
-These affinity matrices can be collected from the `batch_snf` using the `return_affinity_matrices` parameter:
+These similarity matrices can be collected from the `batch_snf` using the `return_similarity_matrices` parameter:
 
 ```{r}
 batch_snf_results <- batch_snf(
     data_list,
     settings_matrix,
-    return_affinity_matrices = TRUE
+    return_similarity_matrices = TRUE
 )
 
 solutions_matrix <- batch_snf_results$"solutions_matrix"
-affinity_matrices <- batch_snf_results$"affinity_matrices"
+similarity_matrices <- batch_snf_results$"similarity_matrices"
 ```
 
 This time, the output of `batch_snf` is a list.
 The first element of the list is a single solutions_matrix, like what we usually get.
-The second element is *yet another list* containing one final fused network (AKA affinity matrix / similarity matrix) per SNF run.
+The second element is *yet another list* containing one final fused network (AKA similarity matrix / similarity matrix) per SNF run.
 Using those two lists, we can calculate the above mentioned quality metrics:
 
 ```{r eval = FALSE}
-silhouette_scores <- calculate_silhouettes(solutions_matrix, affinity_matrices)
+silhouette_scores <- calculate_silhouettes(solutions_matrix, similarity_matrices)
 
-dunn_indices <- calculate_dunn_indices(solutions_matrix, affinity_matrices)
+dunn_indices <- calculate_dunn_indices(solutions_matrix, similarity_matrices)
 
-db_indices <- calculate_db_indices(solutions_matrix, affinity_matrices)
+db_indices <- calculate_db_indices(solutions_matrix, similarity_matrices)
 ```
 
 The first function is a wrapper around `cluster::silhouette` while the second and third come from the *clv* package.

@@ -4,15 +4,15 @@
 \alias{spectral_seven}
 \title{Clustering algorithm: Spectral clustering for a seven cluster solution}
 \usage{
-spectral_seven(affinity_matrix)
+spectral_seven(similarity_matrix)
 }
 \arguments{
-\item{affinity_matrix}{An affinity matrix}
+\item{similarity_matrix}{An similarity matrix}
 }
 \value{
 solution A vector indicating which cluster each patient was assigned
 to
 }
 \description{
-Applies spectral clustering to affinity matrix. Seeks seven clusters.
+Applies spectral clustering to similarity matrix. Seeks seven clusters.
 }

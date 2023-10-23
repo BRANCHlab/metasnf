@@ -4,15 +4,15 @@
 \alias{spectral_four}
 \title{Clustering algorithm: Spectral clustering for a four cluster solution}
 \usage{
-spectral_four(affinity_matrix)
+spectral_four(similarity_matrix)
 }
 \arguments{
-\item{affinity_matrix}{An affinity matrix}
+\item{similarity_matrix}{An similarity matrix}
 }
 \value{
 solution A vector indicating which cluster each patient was assigned
 to
 }
 \description{
-Applies spectral clustering to affinity matrix. Seeks four clusters.
+Applies spectral clustering to similarity matrix. Seeks four clusters.
 }

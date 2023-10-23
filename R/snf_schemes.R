@@ -131,26 +131,26 @@ two_step_merge <- function(data_list,
             SNFtool::affinityMatrix(x, K = k, sigma = alpha)
         }
     )
-    affinity_list <- data_list
-    for (i in seq_along(affinity_list)) {
-        affinity_list[[i]]$"data" <- sim_list[[i]]
+    similarity_list <- data_list
+    for (i in seq_along(similarity_list)) {
+        similarity_list[[i]]$"data" <- sim_list[[i]]
     }
-    affinity_unique_dl <- list()
-    unique_domains <- unique(unlist(domains(affinity_list)))
+    similarity_unique_dl <- list()
+    unique_domains <- unique(unlist(domains(similarity_list)))
     for (i in seq_along(unique_domains)) {
-        affinity_unique_dl <- append(affinity_unique_dl, list(list()))
+        similarity_unique_dl <- append(similarity_unique_dl, list(list()))
     }
-    names(affinity_unique_dl) <- unique_domains
-    for (i in seq_along(affinity_list)) {
-        al_current_domain <- affinity_list[[i]]$"domain"
-        al_current_amatrix <- affinity_list[[i]]$"data"
-        audl_domain_pos <- which(names(affinity_unique_dl) == al_current_domain)
-        affinity_unique_dl[[audl_domain_pos]] <-
-            append(affinity_unique_dl[[audl_domain_pos]],
+    names(similarity_unique_dl) <- unique_domains
+    for (i in seq_along(similarity_list)) {
+        al_current_domain <- similarity_list[[i]]$"domain"
+        al_current_amatrix <- similarity_list[[i]]$"data"
+        audl_domain_pos <- which(names(similarity_unique_dl) == al_current_domain)
+        similarity_unique_dl[[audl_domain_pos]] <-
+            append(similarity_unique_dl[[audl_domain_pos]],
             list(al_current_amatrix))
     }
-    # Fusing individual matrices into domain affinity matrices
-    step_one <- lapply(affinity_unique_dl,
+    # Fusing individual matrices into domain similarity matrices
+    step_one <- lapply(similarity_unique_dl,
        function(x) {
            if (length(x) == 1) {
                x[[1]]
@@ -158,7 +158,7 @@ two_step_merge <- function(data_list,
                SNFtool::SNF(Wall = x, K = k, t = t)
            }
        })
-    # Fusing domain affinity matrices into final fused network
+    # Fusing domain similarity matrices into final fused network
     if (length(step_one) > 1) {
         fused_network <- SNFtool::SNF(Wall = step_one, K = k, t = t)
     } else {
@@ -238,7 +238,7 @@ domain_merge <- function(data_list,
             }
         )
     # now that we have the merged data_list, complete the conversion to
-    #  distance and affinity matrices
+    #  distance and similarity matrices
     dist_list <- lapply(merged_dl,
         function(x) {
             get_dist_matrix(
@@ -256,8 +256,8 @@ domain_merge <- function(data_list,
     sim_list <- lapply(
         dist_list,
         function(x) {
-            affinity_matrix <- SNFtool::affinityMatrix(x, K = k, sigma = alpha)
-            return(affinity_matrix)
+            similarity_matrix <- SNFtool::affinityMatrix(x, K = k, sigma = alpha)
+            return(similarity_matrix)
         }
     )
     fused_network <- SNFtool::SNF(Wall = sim_list, K = k, t = t)

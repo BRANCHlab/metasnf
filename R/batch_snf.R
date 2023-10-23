@@ -15,19 +15,19 @@
 #'       cores will be used.
 #'     * `max`: All available cores will be used.
 #'
-#' @param return_affinity_matrices If TRUE, function will return a list where
+#' @param return_similarity_matrices If TRUE, function will return a list where
 #'  the first element is the solutions matrix and the second element is a list
-#'  of affinity matrices for each row in the solutions_matrix. Default FALSE.
+#'  of similarity matrices for each row in the solutions_matrix. Default FALSE.
 #'
-#' @param affinity_matrix_dir If specified, this directory will be used to save
-#'  all generated affinity matrices
+#' @param similarity_matrix_dir If specified, this directory will be used to save
+#'  all generated similarity matrices
 #'
 #' @param clust_algs_list List of custom clustering algorithms to apply
 #'  to the final fused network. See ?generate_clust_algs_list
 #'
 #' @param suppress_clustering If FALSE (default), will apply default or custom
 #'  clustering algorithms to provide cluster solutions on every iteration of
-#'  SNF. If TRUE, parameter `affinity_matrix_dir` must be specified.
+#'  SNF. If TRUE, parameter `similarity_matrix_dir` must be specified.
 #'
 #' @param distance_metrics_list A distance_metrics_list.
 #'  See ?generate_distance_metrics_list.
@@ -44,8 +44,8 @@
 batch_snf <- function(data_list,
                       settings_matrix,
                       processes = 1,
-                      return_affinity_matrices = FALSE,
-                      affinity_matrix_dir = NULL,
+                      return_similarity_matrices = FALSE,
+                      similarity_matrix_dir = NULL,
                       clust_algs_list = NULL,
                       suppress_clustering = FALSE,
                       distance_metrics_list = NULL,
@@ -54,19 +54,19 @@ batch_snf <- function(data_list,
     ###########################################################################
     # 1. Checking validity of settings
     ###########################################################################
-    # 1a. The user may have chosen to simultaneously not save affinity matrices
+    # 1a. The user may have chosen to simultaneously not save similarity matrices
     #  and to not apply any clustering algorithms. In that case, this function
     #  is not really doing anything. Stop the function with an error.
-    no_affinity_matrices <-
-        is.null(affinity_matrix_dir) & !return_affinity_matrices
-    if (no_affinity_matrices & suppress_clustering) {
+    no_similarity_matrices <-
+        is.null(similarity_matrix_dir) & !return_similarity_matrices
+    if (no_similarity_matrices & suppress_clustering) {
         stop(
             paste0(
                "batch_snf has been called with the suppress_clustering",
                " parameter set to TRUE (no clustering will occur), no path",
-               " provided in the affinity_matrix_dir parameter for storing",
-               " matrices, and return_affinity_matrices set to FALSE so that",
-               " affinity matrices are not being returned. With this",
+               " provided in the similarity_matrix_dir parameter for storing",
+               " matrices, and return_similarity_matrices set to FALSE so that",
+               " similarity matrices are not being returned. With this",
                " combination of settings, the batch_snf function yields no",
                " meaningful output."
             )
@@ -150,8 +150,8 @@ batch_snf <- function(data_list,
     #    incuded (1) or excluded (0) for this row of SNF
     #  - snf_scheme (1 column): number indicating which of the preprogrammed
     #    'schemes' was used to for this run of SNF
-    #  - alpha (AKA sigma or eta): value of affinity matrix hyperparameter
-    #  - k: value of affinity matrix hyperparameter
+    #  - alpha (AKA sigma or eta): value of similarity matrix hyperparameter
+    #  - k: value of similarity matrix hyperparameter
     #  - T: Number of iterations of SNF
     #  - subject_* (1 column per patient): cluster membership of that patient
     #    for that row. Only included when run_clustering = TRUE.
@@ -179,10 +179,10 @@ batch_snf <- function(data_list,
         )
     }
     ###########################################################################
-    # 6. Creation of list to store affinity matrices (if requested)
+    # 6. Creation of list to store similarity matrices (if requested)
     ###########################################################################
-    if (isTRUE(return_affinity_matrices)) {
-        affinity_matrices <- list()
+    if (isTRUE(return_similarity_matrices)) {
+        similarity_matrices <- list()
     }
     ###########################################################################
     # 7. Creation of distance_metrics_list, if it does not already exist
@@ -267,17 +267,17 @@ batch_snf <- function(data_list,
             mix_dist_fn = mix_dist_fn,
             weights_row = weights_row
         )
-        # If user provided a path to save the affinity matrices, save them
-        if (!is.null(affinity_matrix_dir)) {
+        # If user provided a path to save the similarity matrices, save them
+        if (!is.null(similarity_matrix_dir)) {
             utils::write.csv(
                 x = fused_network,
-                file = affinity_matrix_path(affinity_matrix_dir, i),
+                file = similarity_matrix_path(similarity_matrix_dir, i),
                 row.names = TRUE
             )
         }
-        # If the user requested all affinity matrices are returned, add to list
-        if (isTRUE(return_affinity_matrices)) {
-            affinity_matrices[[length(affinity_matrices) + 1]] <- fused_network
+        # If the user requested all similarity matrices are returned, add to list
+        if (isTRUE(return_similarity_matrices)) {
+            similarity_matrices[[length(similarity_matrices) + 1]] <- fused_network
         }
         #######################################################################
         # 7. Clustering of the final fused network
@@ -330,28 +330,28 @@ batch_snf <- function(data_list,
     ###########################################################################
     # 11. Return final output
     ###########################################################################
-    # The user requested that affinity matrices are returned. Create a list
-    #  containing the solutions matrix as well as the affinity matrices and
+    # The user requested that similarity matrices are returned. Create a list
+    #  containing the solutions matrix as well as the similarity matrices and
     #  return that.
-    if (isTRUE(return_affinity_matrices)) {
-        check_affinity_matrices(affinity_matrices)
+    if (isTRUE(return_similarity_matrices)) {
+        check_similarity_matrices(similarity_matrices)
         if (!suppress_clustering) {
-            # the user wants affinity matrices and solutions matrix
+            # the user wants similarity matrices and solutions matrix
             batch_snf_results <- list(
                 solutions_matrix,
-                affinity_matrices
+                similarity_matrices
             )
             names(batch_snf_results) <- c(
                 "solutions_matrix",
-                "affinity_matrices"
+                "similarity_matrices"
             )
             return(batch_snf_results)
         } else {
-            # the user wants affinity matrices but no solutions matrix
-            return(affinity_matrices)
+            # the user wants similarity matrices but no solutions matrix
+            return(similarity_matrices)
         }
     } else {
-        # The user did not request that affinity matrices are returned. Just
+        # The user did not request that similarity matrices are returned. Just
         #  return the solutions matrix. Don't need to check if solutions
         #  matrices are requested - that was handled earlier in the funciton.
         return(solutions_matrix)

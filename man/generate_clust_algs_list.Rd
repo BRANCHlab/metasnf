@@ -21,7 +21,7 @@ can be passed into the batch_snf and generate_settings_list functions.
 }
 \description{
 This function can be used to specify custom clustering algorithms to apply
-to the final affinity matrices produced by each run of the batch_snf
+to the final similarity matrices produced by each run of the batch_snf
 function.
 }
 \examples{
@@ -40,8 +40,8 @@ clust_algs_list <- generate_clust_algs_list(
 
 # Adding your own algorithms -----------------------------------------------
 # This will contain the base and user-provided clustering algorithms
-my_clustering_algorithm <- function(affinity_matrix) {
-    # your code that converts affinity matrix to clusters here...
+my_clustering_algorithm <- function(similarity_matrix) {
+    # your code that converts similarity matrix to clusters here...
     # solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     # return(solution_data)
 }

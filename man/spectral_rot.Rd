@@ -4,16 +4,16 @@
 \alias{spectral_rot}
 \title{Clustering algorithm: Spectral clustering with rotation cost heuristic}
 \usage{
-spectral_rot(affinity_matrix)
+spectral_rot(similarity_matrix)
 }
 \arguments{
-\item{affinity_matrix}{An affinity matrix}
+\item{similarity_matrix}{An similarity matrix}
 }
 \value{
 solution A vector indicating which cluster each patient was assigned
 to
 }
 \description{
-Applies spectral clustering to affinity matrix. Number of clusters is based
+Applies spectral clustering to similarity matrix. Number of clusters is based
 on the rotation cost heuristic.
 }

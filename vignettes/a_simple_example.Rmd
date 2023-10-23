@@ -231,14 +231,14 @@ These cluster results are exactly the same as in the original SNF example:
 identical(cluster_solution$"cluster", true_label)
 ```
 
-Running `batch_snf` with the `return_affinity_matrices` parameter set to `TRUE` will let us also take a look at the final fused networks from SNF rather than just the results of applying spectral clustering to those networks:
+Running `batch_snf` with the `return_similarity_matrices` parameter set to `TRUE` will let us also take a look at the final fused networks from SNF rather than just the results of applying spectral clustering to those networks:
 
 ```{r}
 
 batch_snf_results <- batch_snf(
     data_list,
     settings_matrix,
-    return_affinity_matrices = TRUE
+    return_similarity_matrices = TRUE
 )
 
 names(batch_snf_results)
@@ -247,13 +247,13 @@ names(batch_snf_results)
 solutions_matrix <- batch_snf_results$"solutions_matrix"
 
 # The first (and only, in this case) final fused network
-affinity_matrix <- batch_snf_results$"affinity_matrices"[[1]]
+similarity_matrix <- batch_snf_results$"similarity_matrices"[[1]]
 ```
 
 The fused network obtained through this approach is also the same as the one obtained in the original example:
 
 ```{r}
-max(affinity_matrix - fused_network)
+max(similarity_matrix - fused_network)
 ```
 
 And now we've completed a basic example of using this package.

@@ -281,21 +281,21 @@ batch_snf_time_remaining <- function(seconds_per_row,
     return(remaining_seconds_vector)
 }
 
-#' Generate a complete path and filename to store an affinity matrix
+#' Generate a complete path and filename to store an similarity matrix
 #'
-#' @param affinity_matrix_dir Directory to store affinity matrices
+#' @param similarity_matrix_dir Directory to store similarity matrices
 #' @param i Corresponding settings matrix row
 #'
-#' @return path Complete path and filename to store an affinity matrix
+#' @return path Complete path and filename to store an similarity matrix
 #'
 #' @export
-affinity_matrix_path <- function(affinity_matrix_dir, i) {
+similarity_matrix_path <- function(similarity_matrix_dir, i) {
     path <- paste0(
-        affinity_matrix_dir,
+        similarity_matrix_dir,
         "/",
         gsub("-", "_", Sys.Date()), # Today's datej
         "_",
-        "affinity_matrix_",
+        "similarity_matrix_",
         i,
         ".csv"
     )
@@ -316,20 +316,20 @@ resample <- function(x, ...) {
     return(x[sample.int(length(x), ...)])
 }
 
-#' Check validity of affinity matrices
+#' Check validity of similarity matrices
 #'
-#' Check to see if affinity matrices in a list have the following properties:
+#' Check to see if similarity matrices in a list have the following properties:
 #'  1. The maximum value in the entire matrix is 0.5
 #'  2. Every value in the diagonal is 0.5
 #'
-#' @param affinity_matrices A list of affinity matrices
+#' @param similarity_matrices A list of similarity matrices
 #'
 #' @return valid_matrices Boolean indicating if properties are met by all
-#'  affinity matrices
+#'  similarity matrices
 #'
 #' @export
-check_affinity_matrices <- function(affinity_matrices) {
-    valid_matrices <- affinity_matrices |>
+check_similarity_matrices <- function(similarity_matrices) {
+    valid_matrices <- similarity_matrices |>
         lapply(
             function(x) {
                 max_along_diags <- diag(x) == max(x)
@@ -341,7 +341,7 @@ check_affinity_matrices <- function(affinity_matrices) {
         all()
     if (!valid_matrices) {
         warning(
-            "Generated affinity matrices did not meet validity parameters."
+            "Generated similarity matrices did not meet validity parameters."
         )
     }
     return(valid_matrices)

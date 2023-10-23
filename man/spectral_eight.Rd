@@ -4,15 +4,15 @@
 \alias{spectral_eight}
 \title{Clustering algorithm: Spectral clustering for a eight cluster solution}
 \usage{
-spectral_eight(affinity_matrix)
+spectral_eight(similarity_matrix)
 }
 \arguments{
-\item{affinity_matrix}{An affinity matrix}
+\item{similarity_matrix}{An similarity matrix}
 }
 \value{
 solution A vector indicating which cluster each patient was assigned
 to
 }
 \description{
-Applies spectral clustering to affinity matrix. Seeks eight clusters.
+Applies spectral clustering to similarity matrix. Seeks eight clusters.
 }

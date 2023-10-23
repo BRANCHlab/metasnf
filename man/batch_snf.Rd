@@ -8,8 +8,8 @@ batch_snf(
   data_list,
   settings_matrix,
   processes = 1,
-  return_affinity_matrices = FALSE,
-  affinity_matrix_dir = NULL,
+  return_similarity_matrices = FALSE,
+  similarity_matrix_dir = NULL,
   clust_algs_list = NULL,
   suppress_clustering = FALSE,
   distance_metrics_list = NULL,
@@ -33,19 +33,19 @@ available cores, a warning will be printed and the maximum number of
 cores will be used.
 * \code{max}: All available cores will be used.}
 
-\item{return_affinity_matrices}{If TRUE, function will return a list where
+\item{return_similarity_matrices}{If TRUE, function will return a list where
 the first element is the solutions matrix and the second element is a list
-of affinity matrices for each row in the solutions_matrix. Default FALSE.}
+of similarity matrices for each row in the solutions_matrix. Default FALSE.}
 
-\item{affinity_matrix_dir}{If specified, this directory will be used to save
-all generated affinity matrices}
+\item{similarity_matrix_dir}{If specified, this directory will be used to save
+all generated similarity matrices}
 
 \item{clust_algs_list}{List of custom clustering algorithms to apply
 to the final fused network. See ?generate_clust_algs_list}
 
 \item{suppress_clustering}{If FALSE (default), will apply default or custom
 clustering algorithms to provide cluster solutions on every iteration of
-SNF. If TRUE, parameter \code{affinity_matrix_dir} must be specified.}
+SNF. If TRUE, parameter \code{similarity_matrix_dir} must be specified.}
 
 \item{distance_metrics_list}{A distance_metrics_list.
 See ?generate_distance_metrics_list.}

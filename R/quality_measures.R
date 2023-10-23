@@ -1,11 +1,11 @@
 #' Calculate silhouette scores
 #'
-#' Given a solutions_matrix and a list of affinity_matrices (or a single
-#'  affinity_matrix if the solutions_matrix has only 1 row), return a list
+#' Given a solutions_matrix and a list of similarity_matrices (or a single
+#'  similarity_matrix if the solutions_matrix has only 1 row), return a list
 #'  of 'silhouette' objects from the cluster package
 #'
 #' @param solutions_matrix A solutions_matrix (see ?batch_snf)
-#' @param affinity_matrices A list of affinity matrices (see ?batch_snf)
+#' @param similarity_matrices A list of similarity matrices (see ?batch_snf)
 #'
 #' @return silhouette_scores A list of "silhouette" objects from the cluster
 #'  package.
@@ -28,50 +28,50 @@
 #' # build settings_matrix
 #' settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 #'
-#' # collect affinity matrices and solutions matrix from batch_snf
+#' # collect similarity matrices and solutions matrix from batch_snf
 #' batch_snf_results <- batch_snf(
 #'     data_list,
 #'     settings_matrix,
-#'     return_affinity_matrices = TRUE
+#'     return_similarity_matrices = TRUE
 #' )
 #'
 #' solutions_matrix <- batch_snf_results$"solutions_matrix"
-#' affinity_matrices <- batch_snf_results$"affinity_matrices"
+#' similarity_matrices <- batch_snf_results$"similarity_matrices"
 #'
 #' # calculate silhouette scores
 #' silhouette_scores <- calculate_silhouettes(
 #'     solutions_matrix,
-#'     affinity_matrices
+#'     similarity_matrices
 #' )
 #'
 #' # plot the silhouette scores of the first solutions
 #' plot(silhouette_scores[[1]])
 #'
 #' @export
-calculate_silhouettes <- function(solutions_matrix, affinity_matrices) {
-    # The size of the solutions_matrix and the number of affinity_matrices
+calculate_silhouettes <- function(solutions_matrix, similarity_matrices) {
+    # The size of the solutions_matrix and the number of similarity_matrices
     #  should match up. First, handle the special case of the user providing
-    #  a single affinity_matrix not bundled in a list.
-    if (inherits(affinity_matrices, "matrix")) {
-        affinity_matrices <- list(affinity_matrices)
+    #  a single similarity_matrix not bundled in a list.
+    if (inherits(similarity_matrices, "matrix")) {
+        similarity_matrices <- list(similarity_matrices)
     }
     # Then ensure the size of the two arguments align.
-    if (nrow(solutions_matrix) != length(affinity_matrices)) {
+    if (nrow(solutions_matrix) != length(similarity_matrices)) {
         stop(
             paste0(
                 "Size of solutions_matrix does not match length of",
-                " affinity_matrices."
+                " similarity_matrices."
             )
         )
     }
-    # Average out the intense signal present in the diagonals of the affinity
+    # Average out the intense signal present in the diagonals of the similarity
     #  matrices. Also, convert them into dissimilarity matrices by the logic
     #  of dissimilarity = max(similarity) - similarity.
-    dissimilarity_matrices <- affinity_matrices |>
+    dissimilarity_matrices <- similarity_matrices |>
         lapply(
-            function(affinity_matrix) {
-                diag(affinity_matrix) <- mean(affinity_matrix)
-                dissimilarity_matrix <- max(affinity_matrix) - affinity_matrix
+            function(similarity_matrix) {
+                diag(similarity_matrix) <- mean(similarity_matrix)
+                dissimilarity_matrix <- max(similarity_matrix) - similarity_matrix
                 return(dissimilarity_matrix)
             }
         )
@@ -107,12 +107,12 @@ calculate_silhouettes <- function(solutions_matrix, affinity_matrices) {
 
 #' Calculate Dunn indices
 #'
-#' Given a solutions_matrix and a list of affinity_matrices (or a single
-#'  affinity_matrix if the solutions_matrix has only 1 row), return a vector of
+#' Given a solutions_matrix and a list of similarity_matrices (or a single
+#'  similarity_matrix if the solutions_matrix has only 1 row), return a vector of
 #'  Dunn indices
 #'
 #' @param solutions_matrix A solutions_matrix (see ?batch_snf)
-#' @param affinity_matrices A list of affinity matrices (see ?batch_snf)
+#' @param similarity_matrices A list of similarity matrices (see ?batch_snf)
 #'
 #' @return dunn_indices A vector of Dunn indices for each cluster solution
 #'
@@ -135,54 +135,54 @@ calculate_silhouettes <- function(solutions_matrix, affinity_matrices) {
 #'     # build settings_matrix
 #'     settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 #'
-#'     # collect affinity matrices and solutions matrix from batch_snf
+#'     # collect similarity matrices and solutions matrix from batch_snf
 #'     batch_snf_results <- batch_snf(
 #'         data_list,
 #'         settings_matrix,
-#'         return_affinity_matrices = TRUE
+#'         return_similarity_matrices = TRUE
 #'     )
 #'
 #'     solutions_matrix <- batch_snf_results$"solutions_matrix"
-#'     affinity_matrices <- batch_snf_results$"affinity_matrices"
+#'     similarity_matrices <- batch_snf_results$"similarity_matrices"
 #'
 #'     # calculate Dunn indices
 #'     dunn_indices <- calculate_dunn_indices(
 #'         solutions_matrix,
-#'         affinity_matrices
+#'         similarity_matrices
 #'     )
 #' }
 #'
 #' @export
-calculate_dunn_indices <- function(solutions_matrix, affinity_matrices) {
+calculate_dunn_indices <- function(solutions_matrix, similarity_matrices) {
     if (!requireNamespace("clv", quietly = TRUE)) {
         stop(
             "Package \"clv\" must be installed to use this function.",
             call. = FALSE
         )
     }
-    # The size of the solutions_matrix and the number of affinity_matrices
+    # The size of the solutions_matrix and the number of similarity_matrices
     #  should match up. First, handle the special case of the user providing
-    #  a single affinity_matrix not bundled in a list.
-    if (inherits(affinity_matrices, "matrix")) {
-        affinity_matrices <- list(affinity_matrices)
+    #  a single similarity_matrix not bundled in a list.
+    if (inherits(similarity_matrices, "matrix")) {
+        similarity_matrices <- list(similarity_matrices)
     }
     # Then ensure the size of the two arguments align.
-    if (nrow(solutions_matrix) != length(affinity_matrices)) {
+    if (nrow(solutions_matrix) != length(similarity_matrices)) {
         stop(
             paste0(
                 "Size of solutions_matrix does not match length of",
-                " affinity_matrices."
+                " similarity_matrices."
             )
         )
     }
-    # Average out the intense signal present in the diagonals of the affinity
+    # Average out the intense signal present in the diagonals of the similarity
     #  matrices. Also, convert them into dissimilarity matrices by the logic
     #  of dissimilarity = max(similarity) - similarity.
-    dissimilarity_matrices <- affinity_matrices |>
+    dissimilarity_matrices <- similarity_matrices |>
         lapply(
-            function(affinity_matrix) {
-                diag(affinity_matrix) <- mean(affinity_matrix)
-                dissimilarity_matrix <- max(affinity_matrix) - affinity_matrix
+            function(similarity_matrix) {
+                diag(similarity_matrix) <- mean(similarity_matrix)
+                dissimilarity_matrix <- max(similarity_matrix) - similarity_matrix
                 return(dissimilarity_matrix)
             }
         )
@@ -237,12 +237,12 @@ calculate_dunn_indices <- function(solutions_matrix, affinity_matrices) {
 
 #' Calculate Davies-Bouldin indices
 #'
-#' Given a solutions_matrix and a list of affinity_matrices (or a single
-#'  affinity_matrix if the solutions_matrix has only 1 row), return a vector of
+#' Given a solutions_matrix and a list of similarity_matrices (or a single
+#'  similarity_matrix if the solutions_matrix has only 1 row), return a vector of
 #'  Davies-Bouldin indices
 #'
 #' @param solutions_matrix A solutions_matrix (see ?batch_snf)
-#' @param affinity_matrices A list of affinity matrices (see ?batch_snf)
+#' @param similarity_matrices A list of similarity matrices (see ?batch_snf)
 #'
 #' @return davies_bouldin_indices A vector of Davies-Bouldin indices for each
 #'  cluster solution
@@ -266,53 +266,53 @@ calculate_dunn_indices <- function(solutions_matrix, affinity_matrices) {
 #'     # build settings_matrix
 #'     settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
 #'
-#'     # collect affinity matrices and solutions matrix from batch_snf
+#'     # collect similarity matrices and solutions matrix from batch_snf
 #'     batch_snf_results <- batch_snf(
 #'         data_list,
 #'         settings_matrix,
-#'         return_affinity_matrices = TRUE
+#'         return_similarity_matrices = TRUE
 #'     )
 #'
 #'     solutions_matrix <- batch_snf_results$"solutions_matrix"
-#'     affinity_matrices <- batch_snf_results$"affinity_matrices"
+#'     similarity_matrices <- batch_snf_results$"similarity_matrices"
 #'
 #'     # calculate Davies-Bouldin indices
 #'     davies_bouldin_indices <- calculate_db_indices(
 #'         solutions_matrix,
-#'         affinity_matrices
+#'         similarity_matrices
 #'     )
 #' }
 #' @export
-calculate_db_indices <- function(solutions_matrix, affinity_matrices) {
+calculate_db_indices <- function(solutions_matrix, similarity_matrices) {
     if (!requireNamespace("clv", quietly = TRUE)) {
         stop(
             "Package \"clv\" must be installed to use this function.",
             call. = FALSE
         )
     }
-    # The size of the solutions_matrix and the number of affinity_matrices
+    # The size of the solutions_matrix and the number of similarity_matrices
     #  should match up. First, handle the special case of the user providing
-    #  a single affinity_matrix not bundled in a list.
-    if (inherits(affinity_matrices, "matrix")) {
-        affinity_matrices <- list(affinity_matrices)
+    #  a single similarity_matrix not bundled in a list.
+    if (inherits(similarity_matrices, "matrix")) {
+        similarity_matrices <- list(similarity_matrices)
     }
     # Then ensure the size of the two arguments align.
-    if (nrow(solutions_matrix) != length(affinity_matrices)) {
+    if (nrow(solutions_matrix) != length(similarity_matrices)) {
         stop(
             paste0(
                 "Size of solutions_matrix does not match length of",
-                " affinity_matrices."
+                " similarity_matrices."
             )
         )
     }
-    # Average out the intense signal present in the diagonals of the affinity
+    # Average out the intense signal present in the diagonals of the similarity
     #  matrices. Also, convert them into dissimilarity matrices by the logic
     #  of dissimilarity = max(similarity) - similarity.
-    dissimilarity_matrices <- affinity_matrices |>
+    dissimilarity_matrices <- similarity_matrices |>
         lapply(
-            function(affinity_matrix) {
-                diag(affinity_matrix) <- mean(affinity_matrix)
-                dissimilarity_matrix <- max(affinity_matrix) - affinity_matrix
+            function(similarity_matrix) {
+                diag(similarity_matrix) <- mean(similarity_matrix)
+                dissimilarity_matrix <- max(similarity_matrix) - similarity_matrix
                 return(dissimilarity_matrix)
             }
         )

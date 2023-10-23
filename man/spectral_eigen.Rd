@@ -4,16 +4,16 @@
 \alias{spectral_eigen}
 \title{Clustering algorithm: Spectral clustering with eigen-gap heuristic}
 \usage{
-spectral_eigen(affinity_matrix)
+spectral_eigen(similarity_matrix)
 }
 \arguments{
-\item{affinity_matrix}{An affinity matrix}
+\item{similarity_matrix}{An similarity matrix}
 }
 \value{
 solution A vector indicating which cluster each patient was assigned
 to
 }
 \description{
-Applies spectral clustering to affinity matrix. Number of clusters is based
+Applies spectral clustering to similarity matrix. Number of clusters is based
 on the eigen-gap heuristic.
 }

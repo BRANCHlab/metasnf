@@ -1,7 +1,7 @@
 #' Generate a list of custom clustering algorithms
 #'
 #' This function can be used to specify custom clustering algorithms to apply
-#'  to the final affinity matrices produced by each run of the batch_snf
+#'  to the final similarity matrices produced by each run of the batch_snf
 #'  function.
 #'
 #' @param ... An arbitrary number of named clustering functions (see examples
@@ -30,8 +30,8 @@
 #'
 #' # Adding your own algorithms -----------------------------------------------
 #' # This will contain the base and user-provided clustering algorithms
-#' my_clustering_algorithm <- function(affinity_matrix) {
-#'     # your code that converts affinity matrix to clusters here...
+#' my_clustering_algorithm <- function(similarity_matrix) {
+#'     # your code that converts similarity matrix to clusters here...
 #'     # solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
 #'     # return(solution_data)
 #' }
@@ -86,156 +86,156 @@ summarize_clust_algs_list <- function(clust_algs_list) {
 
 #' Clustering algorithm: Spectral clustering with eigen-gap heuristic
 #'
-#' Applies spectral clustering to affinity matrix. Number of clusters is based
+#' Applies spectral clustering to similarity matrix. Number of clusters is based
 #'  on the eigen-gap heuristic.
 #'
-#' @param affinity_matrix An affinity matrix
+#' @param similarity_matrix An similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
 #'
 #' @export
-spectral_eigen <- function(affinity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(affinity_matrix)
+spectral_eigen <- function(similarity_matrix) {
+    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(similarity_matrix)
     number_of_clusters <- estimated_n$`Eigen-gap best`
-    solution <- SNFtool::spectralClustering(affinity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
     return(list("solution" = solution, "nclust" = number_of_clusters))
 }
 
 #' Clustering algorithm: Spectral clustering with rotation cost heuristic
 #'
-#' Applies spectral clustering to affinity matrix. Number of clusters is based
+#' Applies spectral clustering to similarity matrix. Number of clusters is based
 #'  on the rotation cost heuristic.
 #'
-#' @param affinity_matrix An affinity matrix
+#' @param similarity_matrix An similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
 #'
 #' @export
-spectral_rot <- function(affinity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(affinity_matrix)
+spectral_rot <- function(similarity_matrix) {
+    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(similarity_matrix)
     number_of_clusters <- estimated_n$`Rotation cost best`
-    solution <- SNFtool::spectralClustering(affinity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
 
 #' Clustering algorithm: Spectral clustering for a two cluster solution
 #'
-#' Applies spectral clustering to affinity matrix. Seeks two clusters.
+#' Applies spectral clustering to similarity matrix. Seeks two clusters.
 #'
-#' @param affinity_matrix An affinity matrix
+#' @param similarity_matrix An similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
 #'
 #' @export
-spectral_two <- function(affinity_matrix) {
+spectral_two <- function(similarity_matrix) {
     number_of_clusters <- 2
-    solution <- SNFtool::spectralClustering(affinity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
 
 #' Clustering algorithm: Spectral clustering for a three cluster solution
 #'
-#' Applies spectral clustering to affinity matrix. Seeks three clusters.
+#' Applies spectral clustering to similarity matrix. Seeks three clusters.
 #'
-#' @param affinity_matrix An affinity matrix
+#' @param similarity_matrix An similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
 #'
 #' @export
-spectral_three <- function(affinity_matrix) {
+spectral_three <- function(similarity_matrix) {
     number_of_clusters <- 3
-    solution <- SNFtool::spectralClustering(affinity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
 
 #' Clustering algorithm: Spectral clustering for a four cluster solution
 #'
-#' Applies spectral clustering to affinity matrix. Seeks four clusters.
+#' Applies spectral clustering to similarity matrix. Seeks four clusters.
 #'
-#' @param affinity_matrix An affinity matrix
+#' @param similarity_matrix An similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
 #'
 #' @export
-spectral_four <- function(affinity_matrix) {
+spectral_four <- function(similarity_matrix) {
     number_of_clusters <- 4
-    solution <- SNFtool::spectralClustering(affinity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
 
 #' Clustering algorithm: Spectral clustering for a five cluster solution
 #'
-#' Applies spectral clustering to affinity matrix. Seeks five clusters.
+#' Applies spectral clustering to similarity matrix. Seeks five clusters.
 #'
-#' @param affinity_matrix An affinity matrix
+#' @param similarity_matrix An similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
 #'
 #' @export
-spectral_five <- function(affinity_matrix) {
+spectral_five <- function(similarity_matrix) {
     number_of_clusters <- 5
-    solution <- SNFtool::spectralClustering(affinity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
 
 #' Clustering algorithm: Spectral clustering for a six cluster solution
 #'
-#' Applies spectral clustering to affinity matrix. Seeks six clusters.
+#' Applies spectral clustering to similarity matrix. Seeks six clusters.
 #'
-#' @param affinity_matrix An affinity matrix
+#' @param similarity_matrix An similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
 #'
 #' @export
-spectral_six <- function(affinity_matrix) {
+spectral_six <- function(similarity_matrix) {
     number_of_clusters <- 6
-    solution <- SNFtool::spectralClustering(affinity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
 
 #' Clustering algorithm: Spectral clustering for a seven cluster solution
 #'
-#' Applies spectral clustering to affinity matrix. Seeks seven clusters.
+#' Applies spectral clustering to similarity matrix. Seeks seven clusters.
 #'
-#' @param affinity_matrix An affinity matrix
+#' @param similarity_matrix An similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
 #'
 #' @export
-spectral_seven <- function(affinity_matrix) {
+spectral_seven <- function(similarity_matrix) {
     number_of_clusters <- 7
-    solution <- SNFtool::spectralClustering(affinity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
 
 #' Clustering algorithm: Spectral clustering for a eight cluster solution
 #'
-#' Applies spectral clustering to affinity matrix. Seeks eight clusters.
+#' Applies spectral clustering to similarity matrix. Seeks eight clusters.
 #'
-#' @param affinity_matrix An affinity matrix
+#' @param similarity_matrix An similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
 #'
 #' @export
-spectral_eight <- function(affinity_matrix) {
+spectral_eight <- function(similarity_matrix) {
     number_of_clusters <- 8
-    solution <- SNFtool::spectralClustering(affinity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
