@@ -10,6 +10,9 @@
     <loc>https://branchlab.github.io/metasnf/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/articles/a_less_simple_example.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/articles/a_simple_example.html</loc>
   </url>
   <url>
@@ -20,9 +23,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/metasnf-vignette.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/authors.html</loc>
@@ -190,6 +190,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/generate_target_list.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/generate_weights_matrix.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/get_cluster_df.html</loc>
   </url>
   <url>
@@ -220,7 +223,13 @@
     <loc>https://branchlab.github.io/metasnf/reference/gower_distance.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/hamming_distance.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/individual.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/keep_split.html</loc>
@@ -337,6 +346,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/spectral_two.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/sq_euclidean_distance.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/subs.html</loc>
   </url>
   <url>
@@ -365,11 +377,5 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/two_step_merge.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/weighted_euclidean_distance.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/weighted_hamming_distance.html</loc>
   </url>
 </urlset>

@@ -24,10 +24,10 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/a_less_simple_example.html">A Less Simple Example</a>
     <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
     <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
     <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
-    <a class="dropdown-item" href="../articles/metasnf-vignette.html">A Less Simple Example</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -58,7 +58,8 @@
 <span>  <span class="va">disc_dist_fn</span>,</span>
 <span>  <span class="va">ord_dist_fn</span>,</span>
 <span>  <span class="va">cat_dist_fn</span>,</span>
-<span>  <span class="va">mix_dist_fn</span></span>
+<span>  <span class="va">mix_dist_fn</span>,</span>
+<span>  <span class="va">weights_row</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -92,6 +93,11 @@ gower distances)</p></dd>
 
 <dt>mix_dist_fn</dt>
 <dd><p>distance metric function for mixed data</p></dd>
+
+
+<dt>weights_row</dt>
+<dd><p>Single-row dataframe where the column names contain the
+column names in df and the row contains the corresponding weights_row.</p></dd>
 
 </dl></div>
     <div class="section level2">

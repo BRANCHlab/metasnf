@@ -24,10 +24,10 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/a_less_simple_example.html">A Less Simple Example</a>
     <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
     <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
     <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
-    <a class="dropdown-item" href="../articles/metasnf-vignette.html">A Less Simple Example</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -60,6 +60,7 @@
 <span>  clust_algs_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  suppress_clustering <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  distance_metrics_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  weights_matrix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -112,6 +113,11 @@ SNF. If TRUE, parameter <code>affinity_matrix_dir</code> must be specified.</p><
 <dt>distance_metrics_list</dt>
 <dd><p>A distance_metrics_list.
 See ?generate_distance_metrics_list.</p></dd>
+
+
+<dt>weights_matrix</dt>
+<dd><p>A matrix containing variable weights to use during
+distance matrix calculation. See ?generate_weights_matrix.</p></dd>
 
 
 <dt>quiet</dt>

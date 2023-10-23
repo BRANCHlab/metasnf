@@ -26,10 +26,10 @@ a dataframe of the label propagated results of all om rows"><!-- mathjax --><scr
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/a_less_simple_example.html">A Less Simple Example</a>
     <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
     <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
     <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
-    <a class="dropdown-item" href="../articles/metasnf-vignette.html">A Less Simple Example</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -54,22 +54,38 @@ a dataframe of the label propagated results of all om rows</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">lp_row</span><span class="op">(</span><span class="va">om</span>, <span class="va">full_data_list</span>, distance_metrics_list <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">lp_row</span><span class="op">(</span></span>
+<span>  <span class="va">solutions_matrix</span>,</span>
+<span>  <span class="va">full_data_list</span>,</span>
+<span>  clust_algs_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  distance_metrics_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  weights_matrix <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>om</dt>
-<dd><p>An solutions matrix</p></dd>
+    <dl><dt>solutions_matrix</dt>
+<dd><p>A solutions matrix</p></dd>
 
 
 <dt>full_data_list</dt>
 <dd><p>A data_list object made by rbinding(train, test) data</p></dd>
 
 
+<dt>clust_algs_list</dt>
+<dd><p>List of custom clustering algorithms to apply
+to the final fused network. See ?generate_clust_algs_list</p></dd>
+
+
 <dt>distance_metrics_list</dt>
 <dd><p>A distance_metrics_list.
 See ?generate_distance_metrics_list.</p></dd>
+
+
+<dt>weights_matrix</dt>
+<dd><p>A matrix containing variable weights to use during
+distance matrix calculation. See ?generate_weights_matrix.</p></dd>
 
 </dl></div>
     <div class="section level2">
