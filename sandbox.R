@@ -15,10 +15,55 @@ settings_matrix <- generate_settings_matrix(
     seed = 42
 )
 
-batch_snf(
+wm <- generate_weights_matrix(data_list, nrow = 5, fill = "uniform")
+
+wm <- generate_weights_matrix(data_list, nrow = 5, fill = "ones")
+
+a <- batch_snf(
     data_list,
     settings_matrix
 )
+
+
+b <- batch_snf(
+    data_list,
+    settings_matrix,
+    weights_matrix = wm
+)
+
+identical(b, a)
+
+summarize_dl(b)
+
+data <- b[[1]][[1]]$"data"
+weights_row <- b[[2]]
+input_type <- b[[1]][[1]]$"type"
+cont_dist_fn <- b[[3]]
+
+
+get_dist_matrix(
+    df = data,
+    weights_row = weights_row,
+    input_type = input_type,
+    cont_dist_fn = cont_dist_fn
+) |> dim()
+
+diag(c(4))
+
+a <- data.frame(
+    z1 = c(3, 4, 5),
+    z2 = c(3, 4, 5)
+)
+
+as.matrix(a) %*% 2
+
+
+
+
+b[[1]]
+
+b[[2]]
+
 
 summarize_dl(data_list)
 

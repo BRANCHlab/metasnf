@@ -340,7 +340,8 @@ summarize_distance_metrics_list <- function(distance_metrics_list) {
 #'
 #' @export
 euclidean_distance <- function(df, weights_row) {
-    weighted_df <- as.matrix(df) %*% diag(weights_row)
+    weights <- format_weights_row(weights_row)
+    weighted_df <- as.matrix(df) %*% weights
     distance_matrix <- weighted_df |>
         stats::dist(method = "euclidean") |>
         as.matrix()
@@ -373,7 +374,8 @@ gower_distance <- function(df, weights_row) {
 #' @export
 sn_euclidean_distance <- function(df, weights_row) {
     df <- SNFtool::standardNormalization(df)
-    weighted_df <- as.matrix(df) %*% diag(weights_row)
+    weights <- format_weights_row(weights_row)
+    weighted_df <- as.matrix(df) %*% weights
     distance_matrix <- weighted_df |>
         stats::dist(method = "euclidean") |>
         as.matrix()
@@ -390,7 +392,8 @@ sn_euclidean_distance <- function(df, weights_row) {
 #'
 #' @export
 sq_euclidean_distance <- function(df, weights_row) {
-    weighted_df <- as.matrix(df) %*% diag(weights_row)
+    weights <- format_weights_row(weights_row)
+    weighted_df <- as.matrix(df) %*% weights
     # fix this
     distance_matrix <- weighted_df |>
         stats::dist(method = "euclidean") |>
@@ -467,4 +470,21 @@ generate_weights_matrix <- function(data_list = NULL,
     )
     colnames(matrix_base) <- matrix_colnames
     matrix_base
+}
+
+#' Prep weights_row for matrix multiplication
+#'
+#' Wrapper around the diag() function. This function was created because diag()
+#'  applied to a scalar doesn't spit that scalar back out, but instead returns
+#'  identity matrix of dimension (scalar * scalar).
+#'
+#' @param weights_row Vector (possibly size 1) of weights.
+#'
+#' @export
+format_weights_row <- function(weights_row) {
+    if (length(weights_row) == 1) {
+        return(weights_row)
+    } else {
+        return(diag(weights_row))
+    }
 }
