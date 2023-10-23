@@ -33,6 +33,7 @@ In alternative to the simple heatmap SNFtool provides, now you can plot using pl
 original chunk:
 
 ```{r}
+library(metasnf)
 library(SNFtool)
 data(Data1) # 200 samples
 data(Data2) # 200 samples
@@ -48,6 +49,8 @@ group_cluster = spectralClustering(W, K = 3)
 
 displayClustersHeatmap(W, group_cluster)
 
+
+
 min(W)
 max(W)
 ```
@@ -55,8 +58,6 @@ max(W)
 replacement chunk:
 
 ```{r}
-library(metasnf)
-library(SNFtool)
 
 # Load in data from SNFtool
 data(Data1)

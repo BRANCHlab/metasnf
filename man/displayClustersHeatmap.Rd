@@ -8,7 +8,8 @@ displayClustersHeatmap(
   W,
   group_cluster,
   top_annotation = NULL,
-  left_annotation = NULL
+  left_annotation = NULL,
+  scale_method = "none"
 )
 }
 \arguments{
@@ -19,6 +20,10 @@ displayClustersHeatmap(
 \item{top_annotation}{annotation to be displayed above the heatmap output}
 
 \item{left_annotation}{annotation to be displayed on the left of the heatmap output}
+
+\item{scale_method}{Method of rescaling matrix diagonals. Can be "none"
+(default - don't change diagonals), "mean" (replace diagonals with average
+value of off-diagonals), or "zero" (replace diagonals with 0).}
 }
 \description{
 Normalize SNF matrix and plot heatmap.

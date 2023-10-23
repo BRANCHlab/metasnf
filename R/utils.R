@@ -363,6 +363,8 @@ scale_diagonals <- function(matrix, method = "mean") {
         diag(matrix) <- mean(off_diagonals)
     } else if (method == "zero") {
         diag(matrix) <- 0
+    } else if (method != "none") {
+        stop("Invalid scaling method specified.")
     }
     return(matrix)
 }

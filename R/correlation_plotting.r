@@ -6,19 +6,21 @@
 #' @param group_cluster cluster assignment from spectral clustering
 #' @param top_annotation annotation to be displayed above the heatmap output
 #' @param left_annotation annotation to be displayed on the left of the heatmap output
+#' @param scale_method Method of rescaling matrix diagonals. Can be "none"
+#'  (default - don't change diagonals), "mean" (replace diagonals with average
+#'  value of off-diagonals), or "zero" (replace diagonals with 0).
 #'
 #' @export
 displayClustersHeatmap <- function(W,
                                    group_cluster,
                                    top_annotation = NULL,
-                                   left_annotation = NULL) {
-    # clean matrix
-    normalize <- function(X) X / rowSums(X)
+                                   left_annotation = NULL,
+                                   scale_method = "none") {
+    # Sort matrix
     ind = sort(as.vector(group_cluster), index.return = TRUE)
     ind = ind$ix # index after arranged by cluster
-    diag(W) = stats::median(as.vector(W))
-    W = normalize(W)
-    W = W + t(W)
+    # Re-scale diagonals
+    W <- scale_diagonals(W, method = scale_method)
     if (is.null(top_annotation) & is.null(left_annotation)) {
         ComplexHeatmap::Heatmap(
             W[ind,ind],
@@ -28,7 +30,8 @@ displayClustersHeatmap <- function(W,
             show_column_names = FALSE,
             heatmap_legend_param = list(
                 color_bar = 'continuous',
-                title = "Similarity")
+                title = "Similarity"
+            )
         )
     } else {
         ComplexHeatmap::Heatmap(
