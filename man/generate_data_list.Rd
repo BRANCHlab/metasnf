@@ -2,11 +2,11 @@
 % Please edit documentation in R/data_list.R
 \name{generate_data_list}
 \alias{generate_data_list}
-\title{Generate data_list object - but softcoded}
+\title{Generate data_list object}
 \usage{
 generate_data_list(
   ...,
-  old_uid = NULL,
+  uid = NULL,
   test_subjects = NULL,
   train_subjects = NULL,
   assigned_splits = NULL
@@ -17,7 +17,7 @@ generate_data_list(
 "df_type") OR any number of lists of lists formatted as (df, "df_name",
 "df_domain", "df_type")}
 
-\item{old_uid}{(string) the name of the uid column currently used data}
+\item{uid}{(string) the name of the uid column currently used data}
 
 \item{test_subjects}{character vector of test subjects (useful if building
 a full data list for label propagation)}
@@ -30,7 +30,7 @@ as an alternative to specifying the train/test subjects separately.}
 }
 \description{
 This is the major data object that will be processed when iterating through
-the design matrix. The full list contains one list per measurement type.
+the settings matrix. The full list contains one list per measurement type.
 Within each measurement type's list, elements include the actual data
 structure, the name, the domain, and the data 'type' (i.e, numeric or
 categorical).
@@ -52,20 +52,20 @@ personality_test_df <- data.frame(
 )
 
 dl <- generate_data_list(
-    list(heart_rate_df, "data1", "domain1", "numeric"),
-    list(personality_test_df, "data2", "domain2", "numeric"),
-    old_uid = "patient_id"
+    list(heart_rate_df, "data1", "domain1", "continuous"),
+    list(personality_test_df, "data2", "domain2", "continuous"),
+    uid = "patient_id"
 )
 
 # Alternative loading: providing a single list of lists
 
 list_of_lists <- list(
-    list(heart_rate_df, "data1", "domain1", "numeric"),
-    list(personality_test_df, "data2", "domain2", "numeric")
+    list(heart_rate_df, "data1", "domain1", "continuous"),
+    list(personality_test_df, "data2", "domain2", "continuous")
 )
 
 dl <- generate_data_list(
     list_of_lists,
-    old_uid = "patient_id"
+    uid = "patient_id"
 )
 }

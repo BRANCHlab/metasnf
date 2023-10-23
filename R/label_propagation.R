@@ -40,28 +40,38 @@ label_prop <- function(full_fused_network, clusters) {
     return(new_clusters)
 }
 
-#' Label propagation over an output matrix
+#' Label propagation over an solutions matrix
 #'
-#' Given an output matrix and a data_list object containing all subjects, return
+#' Given an solutions matrix and a data_list object containing all subjects, return
 #'  a dataframe of the label propagated results of all om rows
 #'
-#' @param om An output matrix
+#' @param solutions_matrix A solutions matrix
 #' @param full_data_list A data_list object made by rbinding(train, test) data
+#' @param clust_algs_list List of custom clustering algorithms to apply
+#'  to the final fused network. See ?generate_clust_algs_list
+#' @param distance_metrics_list A distance_metrics_list.
+#'  See ?generate_distance_metrics_list.
+#' @param weights_matrix A matrix containing variable weights to use during
+#'  distance matrix calculation. See ?generate_weights_matrix.
 #'
 #' @return labeled_df A dataframe of the label propagated results of all om rows
 #'
 #' @export
-lp_om <- function(om, full_data_list) {
-    if (!"significance" %in% colnames(om)) {
+lp_row <- function(solutions_matrix,
+                   full_data_list,
+                   clust_algs_list = NULL,
+                   distance_metrics_list = NULL,
+                   weights_matrix = NULL) {
+    if (!"significance" %in% colnames(solutions_matrix)) {
         print(paste0(
-            "If you add a 'significance' column to your output matrix",
+            "If you add a 'significance' column to your solutions matrix",
             " those values will be used to name each solution (instead of",
             " row IDs)"
         ))
-        om$"significance" <- om$"row_id"
+        solutions_matrix$"significance" <- solutions_matrix$"row_id"
     }
     # Keep a track of the number of train and test subjects
-    n_train <- length(colnames(subs(om))) - 1
+    n_train <- length(colnames(subs(solutions_matrix))) - 1
     n_test <- summarize_dl(full_data_list)$length[1] - n_train
     train_indices <- 1:n_train
     test_indices <- (1 + n_train):(n_test + n_train)
@@ -71,19 +81,71 @@ lp_om <- function(om, full_data_list) {
     all_subs <- full_data_list[[1]]$"data"$"subjectkey"
     ordered_subs <- c(train_subs, test_subs)
     group_vec <- c(rep("train", n_train), rep("test", n_test))
-    for (i in seq_len(nrow(om))) {
-        print(paste0("Processing row ", i, " of ", nrow(om), "..."))
-        current_row <- om[i, ]
+    #######################################################################
+    # 7. Creation of distance_metrics_list, if it does not already exist
+    #######################################################################
+    if (is.null(distance_metrics_list)) {
+        distance_metrics_list <- generate_distance_metrics_list()
+    }
+    ###########################################################################
+    # 8. Create (or check) weights_matrix
+    ###########################################################################
+    if (is.null(weights_matrix)) {
+        weights_matrix <- generate_weights_matrix(
+            full_data_list,
+            nrow = nrow(solutions_matrix)
+        )
+    } else {
+        if (nrow(weights_matrix) != nrow(solutions_matrix)) {
+            stop(
+                paste0(
+                    "weights_matrix and solutions_matrix should have the same",
+                    " number of rows."
+                )
+            )
+        }
+    }
+    for (i in seq_len(nrow(solutions_matrix))) {
+        print(paste0("Processing row ", i, " of ", nrow(solutions_matrix), "..."))
+        current_row <- solutions_matrix[i, ]
         sig <- paste0(current_row$"significance")
-        reduced_dl <- execute_inclusion(current_row, full_data_list)
-        check_subj_orders_for_lp(reduced_dl,
-                                 current_row,
-                                 n_train = n_train,
-                                 n_test = n_test)
-        full_fused_network <- snf_step(reduced_dl,
-                 scheme = current_row$"snf_scheme",
-                 K = current_row$"K",
-                 alpha = current_row$"alpha"
+        reduced_dl <- drop_inputs(current_row, full_data_list)
+        check_subj_orders_for_lp(
+            reduced_dl,
+            current_row,
+            n_train = n_train,
+            n_test = n_test
+        )
+        #######################################################################
+        # obtaining settings values for snf_step
+        scheme <- current_row$"snf_scheme"
+        k <- current_row$"k"
+        alpha <- current_row$"alpha"
+        t <- current_row$"t"
+        cont_dist <- current_row$"cont_dist"
+        disc_dist <- current_row$"disc_dist"
+        ord_dist <- current_row$"ord_dist"
+        cat_dist <- current_row$"cat_dist"
+        mix_dist <- current_row$"mix_dist"
+        cont_dist_fn <- distance_metrics_list$"continuous_distance"[[cont_dist]]
+        disc_dist_fn <- distance_metrics_list$"discrete_distance"[[disc_dist]]
+        ord_dist_fn <- distance_metrics_list$"ordinal_distance"[[ord_dist]]
+        cat_dist_fn <- distance_metrics_list$"categorical_distance"[[cat_dist]]
+        mix_dist_fn <- distance_metrics_list$"mixed_distance"[[mix_dist]]
+        weights_row <- weights_matrix[i, , drop = FALSE]
+        #######################################################################
+        full_fused_network <- snf_step(
+            reduced_dl,
+            scheme = scheme,
+            k = k,
+            alpha = alpha,
+            t = t,
+            cont_dist_fn = cont_dist_fn,
+            disc_dist_fn = disc_dist_fn,
+            ord_dist_fn = ord_dist_fn,
+            cat_dist_fn = cat_dist_fn,
+            mix_dist_fn = mix_dist_fn,
+            weights_row = weights_row
         )
         full_fused_network <- full_fused_network[ordered_subs, ordered_subs]
         clusters <- get_clusters(current_row)
@@ -92,7 +154,8 @@ lp_om <- function(om, full_data_list) {
             labeled_df <- data.frame(
                 subjectkey = all_subs,
                 group = group_vec,
-                cluster = propagated_labels)
+                cluster = propagated_labels
+            )
             names <- colnames(labeled_df)
             names[which(names == "cluster")] <- sig
             colnames(labeled_df) <- names
@@ -100,14 +163,16 @@ lp_om <- function(om, full_data_list) {
             current_df <- data.frame(
                 subjectkey = all_subs,
                 group = group_vec,
-                cluster = propagated_labels)
+                cluster = propagated_labels
+            )
             names <- colnames(current_df)
             names[which(names == "cluster")] <- sig
             colnames(current_df) <- names
-            labeled_df <-
-                dplyr::inner_join(labeled_df,
-                                  current_df,
-                                  by = c("subjectkey", "group"))
+            labeled_df <- dplyr::inner_join(
+                labeled_df,
+                current_df,
+                by = c("subjectkey", "group")
+            )
         }
     }
     return(labeled_df)

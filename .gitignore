@@ -3,3 +3,5 @@ docs
 /doc/
 /Meta/
 shared-code
+*.html
+*.png

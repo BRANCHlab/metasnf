@@ -10,15 +10,59 @@ Authors@R:
             role = c("aut", "cre"),
         ),
         person(
-            "Eman",
-            "Nishat",
-            email = "eman.nishat@sickkids.ca",
-            role = c("aut"),
+            "Nicholas",
+            "Chan",
+            role = c("aut")
         ),
         person(
-            "Sonja",
-            "Stojanovski",
-            role = c("aut"),
+            "Xiaoqiao",
+            "Xu",
+            role = c("aut")
+        ),
+        person(
+            "Prajkta",
+            "Kallurkar",
+            role = c("aut")
+        ),
+        person(
+            "Shihao",
+            "Ma",
+            role = c("aut")
+        ),
+        person(
+            "Stephanie H",
+            "Ameis",
+            role = c("aut")
+        ),
+        person(
+            "Ana Patricia",
+            "Balbon",
+            role = c("aut")
+        ),
+        person(
+            "Adam",
+            "Taback",
+            role = c("aut")
+        ),
+        person(
+            "Brian",
+            "Cox",
+            role = c("aut")
+        ),
+        person(
+            "Anna",
+            "Goldenberg",
+            role = c("aut")
+        ),
+        person(
+            "Bo",
+            "Wang",
+            role = c("aut")
+        ),
+        person(
+            "Linda",
+            "Hiraki",
+            role = c("aut")
         ),
         person(
             given = "Anne L",
@@ -27,61 +71,22 @@ Authors@R:
             role = c("aut", "ths"),
         ),
         person(
-            "Bo",
-            "Wang",
-            role = c("ctb"),
-            comment = "Author of included SNFtool fragments"
+            "Jasbir",
+            "Dhaliwal",
+            role = c("aut")
         ),
         person(
-            "Aziz",
-            "Mezlini",
-            role = c("ctb"),
-            comment = "Author of included SNFtool fragments"
+            "Colin",
+            "Hawco",
+            role = c("aut")
         ),
         person(
-            "Feyyaz",
-            "Demir",
-            role = c("ctb"),
-            comment = "Author of included SNFtool fragments"
+            given = "Lauren",
+            family = "Erdman",
+            role = c("aut"),
         ),
-        person(
-            "Marc",
-            "Fiume",
-            role = c("ctb"),
-            comment = "Author of included SNFtool fragments"
-        ),
-        person(
-            "Zhuowen",
-            "Tu",
-            role = c("ctb"),
-            comment = "Author of included SNFtool fragments"
-        ),
-        person(
-            "Michael",
-            "Brudno",
-            role = c("ctb"),
-            comment = "Author of included SNFtool fragments"
-        ),
-        person(
-            "Benjamin",
-            "Haibe-Kains",
-            role = c("ctb"),
-            comment = "Author of included SNFtool fragments"
-        ),
-        person(
-            "Anna",
-            "Goldenberg",
-            role = c("ctb"),
-            comment = "Author of included SNFtool fragments"
-        ),
-        person(
-            "Benjamin",
-            "Brew",
-            role = c("ctb"),
-            comment = "Author of included SNFtool fragments"
-        )
     )
-Description: What the package does (one paragraph).
+Description: Tools to facilitate patient subtyping with similarity network fusion
 License: GPL (>= 3) + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -109,6 +114,7 @@ Imports:
 Suggests:
     circlize,
     ComplexHeatmap,
+    clv,
     future,
     future.apply,
     knitr,
@@ -116,7 +122,7 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends:
-    R (>= 2.10)
+    R (>= 4.1.0)
 LazyData: true
 VignetteBuilder: knitr
 URL: https://branchlab.github.io/metasnf/

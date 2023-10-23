@@ -2,17 +2,17 @@
 % Please edit documentation in R/characterization.R
 \name{top_om_per_cluster}
 \alias{top_om_per_cluster}
-\title{Select the top output matrix rows for each cluster}
+\title{Select the top solutions matrix rows for each cluster}
 \usage{
 top_om_per_cluster(om)
 }
 \arguments{
-\item{om}{an output matrix}
+\item{om}{an solutions matrix}
 }
 \value{
 top_clusts_df dataframe with top om rows
 }
 \description{
-Given an output matrix, returns a dataframe containing the row with the
+Given an solutions matrix, returns a dataframe containing the row with the
 lowest mean p-value and lowest min p-value for cluster sizes 2-5
 }

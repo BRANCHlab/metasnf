@@ -7,10 +7,10 @@
 calc_om_aris(om)
 }
 \arguments{
-\item{om}{output_matrix}
+\item{om}{solutions_matrix}
 }
 \value{
-om_aris ARIs between clustering solutions of an output matrix
+om_aris ARIs between clustering solutions of an solutions matrix
 }
 \description{
 Generate matrix of pairwise cluster-solution similarities by Adjusted Rand

@@ -7,7 +7,7 @@
 meta_cluster(mc_om)
 }
 \arguments{
-\item{mc_om}{output matrix}
+\item{mc_om}{solutions matrix}
 }
 \description{
 Outdated calc_om_aris

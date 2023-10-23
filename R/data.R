@@ -142,7 +142,7 @@
 #'  pre-processed by the abcdutils package
 #'  (https://github.com/BRANCHlab/abcdutils) function `get_cbcl_depress`.
 #'  The data was transformed into categorical colour values to demonstrate
-#'  the Chi-squared test capabilities of `extend_om`.
+#'  the Chi-squared test capabilities of `extend_solutions`.
 #'
 #' @format ## `abcd_colour`
 #' A data frame with 275 rows and 2 columns:

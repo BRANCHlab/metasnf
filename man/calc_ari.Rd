@@ -2,7 +2,7 @@
 % Please edit documentation in R/meta_cluster.R
 \name{calc_ari}
 \alias{calc_ari}
-\title{Calculate adjusted rand index between two rows of output matrix}
+\title{Calculate adjusted rand index between two rows of solutions matrix}
 \usage{
 calc_ari(r1, r2, df)
 }

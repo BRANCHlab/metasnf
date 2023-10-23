@@ -4,12 +4,12 @@
 \alias{spectral_clustering}
 \title{Adaptation of SNFtool's spectral clustering function}
 \usage{
-spectral_clustering(affinity, K, type = 3)
+spectral_clustering(affinity, k, type = 3)
 }
 \arguments{
 \item{affinity}{A similarity matrix}
 
-\item{K}{hyperparameter}
+\item{k}{hyperparameter}
 
 \item{type}{type of spectral clustering}
 }

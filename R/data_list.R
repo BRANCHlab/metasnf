@@ -1,7 +1,7 @@
-#' Generate data_list object - but softcoded
+#' Generate data_list object
 #'
 #' This is the major data object that will be processed when iterating through
-#'  the design matrix. The full list contains one list per measurement type.
+#'  the settings matrix. The full list contains one list per measurement type.
 #'  Within each measurement type's list, elements include the actual data
 #'  structure, the name, the domain, and the data 'type' (i.e, numeric or
 #'  categorical).
@@ -11,7 +11,7 @@
 #' @param ... Any number of list formatted as (df, "df_name", "df_domain",
 #'  "df_type") OR any number of lists of lists formatted as (df, "df_name",
 #'  "df_domain", "df_type")
-#' @param old_uid (string) the name of the uid column currently used data
+#' @param uid (string) the name of the uid column currently used data
 #' @param train_subjects character vector of train subjects (useful if building
 #'  a full data list for label propagation)
 #' @param test_subjects character vector of test subjects (useful if building
@@ -34,23 +34,23 @@
 #' )
 #'
 #' dl <- generate_data_list(
-#'     list(heart_rate_df, "data1", "domain1", "numeric"),
-#'     list(personality_test_df, "data2", "domain2", "numeric"),
-#'     old_uid = "patient_id"
+#'     list(heart_rate_df, "data1", "domain1", "continuous"),
+#'     list(personality_test_df, "data2", "domain2", "continuous"),
+#'     uid = "patient_id"
 #' )
 #'
 #' # Alternative loading: providing a single list of lists
 #'
 #' list_of_lists <- list(
-#'     list(heart_rate_df, "data1", "domain1", "numeric"),
-#'     list(personality_test_df, "data2", "domain2", "numeric")
+#'     list(heart_rate_df, "data1", "domain1", "continuous"),
+#'     list(personality_test_df, "data2", "domain2", "continuous")
 #' )
 #'
 #' dl <- generate_data_list(
 #'     list_of_lists,
-#'     old_uid = "patient_id"
+#'     uid = "patient_id"
 #' )
-generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
+generate_data_list <- function(..., uid = NULL, test_subjects = NULL,
                                train_subjects = NULL, assigned_splits = NULL) {
     subjectkey <- "" # trickery to avoid build errors - fix this later
     # The object that will contain all the data
@@ -70,7 +70,7 @@ generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
     # Assign names to the nested list elements
     data_list_names <- c("data", "name", "domain", "type")
     data_list <- lapply(data_list, stats::setNames, data_list_names)
-    data_list <- convert_uids(data_list, old_uid)
+    data_list <- convert_uids(data_list, uid)
     data_list <- data_list |>
         remove_dl_na() |>
         reduce_dl_to_common() |>
@@ -126,12 +126,12 @@ generate_data_list <- function(..., old_uid = NULL, test_subjects = NULL,
 #'  This function ensures all dataframes have their UID set as "subjectkey".
 #'
 #' @param data_list a data_list
-#' @param old_uid (string) the name of the uid column currently used data
+#' @param uid (string) the name of the uid column currently used data
 #'
 #' @return dl_renamed_id data list with 'subjectkey' as UID
 #'
 #' @export
-convert_uids <- function(data_list, old_uid = NULL) {
+convert_uids <- function(data_list, uid = NULL) {
     # Column names of the first dataframe
     d1 <- data_list[[1]]$"data"
     d1_cols  <- colnames(d1)
@@ -151,25 +151,25 @@ convert_uids <- function(data_list, old_uid = NULL) {
         }
     }
     # This if only executes if subjectkey doesn't exist as a column, but also
-    #  there was no old_uid specified.
-    if (is.null(old_uid)) {
+    #  there was no uid specified.
+    if (is.null(uid)) {
         stop(paste0(
-            "Please specify parameter 'old_uid' with the name of the column",
+            "Please specify parameter 'uid' with the name of the column",
             " currently used as each row's unique identifier. This row will",
             " be converted to 'subjectkey' for the remaining metasnf analyses."
         ))
     }
     # Check to ensure that the user specified UID exists in the data_list
-    if (!old_uid %in% d1_cols) {
+    if (!uid %in% d1_cols) {
         stop(paste0(
-            "The specified original UID (", old_uid, ") is not present in",
+            "The specified original UID (", uid, ") is not present in",
             " this data list. Are you sure you spelled it correctly?"
         ))
     }
     # Convert the user specified original UID to 'subjectkey'
     dl_renamed_id <- lapply(data_list,
         function(x) {
-            colnames(x$"data")[colnames(x$"data") == old_uid] <- "subjectkey"
+            colnames(x$"data")[colnames(x$"data") == uid] <- "subjectkey"
             x
         }
     )

@@ -1,0 +1,780 @@
+---
+title: "A Less Simple Example"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{A Less Simple Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+div.aside { background-color:#fff2e6; }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette walks through how this package can be used over a complete SNF-subtyping pipeline.
+
+## Data set-up and pre-processing
+
+### 1. Load the library and data into the R environment
+
+Your data should be loaded into the R environment in the following format:
+
+- The data is in one or multiple *data.frame* objects
+- The data is in wide form (one row per patient)
+- Any dataframe should one column that uniquely identifies which patient the row has data for
+
+It is fine to have missing data at this stage.
+
+The package comes with a few mock dataframes based on real data from the Adolescent Brain Cognitive Development study:
+
+- `abcd_anxiety` (anxiety scores from the CBCL)
+- `abcd_depress` (depression scores from the CBCL)
+- `abcd_cort_t` (cortical thicknesses)
+- `abcd_cort_sa` (cortical surface areas in mm^2)
+- `abcd_subc_v` (subcortical volumes in mm^3)
+- `abcd_income` (household income on a 1-3 scale)
+- `abcd_pubertal` (pubertal status on a 1-5 scale)
+
+Here's what the cortical thickness data looks like:
+
+```{r}
+library(metasnf)
+
+class(abcd_cort_t)
+
+dim(abcd_cort_t)
+
+str(abcd_cort_t[1:5, 1:5])
+
+abcd_cort_t[1:5, 1:5]
+```
+
+The first column "patient" is the unique identifier (UID) for all subjects in the data.
+
+
+Here's the household income data:
+
+```{r}
+dim(abcd_income)
+
+str(abcd_income[1:5, ])
+
+abcd_income[1:5, ]
+```
+
+Putting everything in a list will help us get quicker summaries of all the data.
+
+```{r}
+abcd_data <- list(
+    abcd_anxiety,
+    abcd_depress,
+    abcd_cort_t,
+    abcd_cort_sa,
+    abcd_subc_v,
+    abcd_income,
+    abcd_pubertal
+)
+
+# The number of rows in each dataframe:
+lapply(abcd_data, dim)
+
+# Whether or not each dataframe has missing values:
+lapply(abcd_data,
+    function(x) {
+        any(is.na(x))
+    }
+)
+```
+
+Some of our data has missing values and not all of our dataframes have the same number of participants.
+
+
+## Generating the data list
+
+The `data_list` structure is a structured list of dataframes (like the one already created), but with some additional metadata about each dataframe.
+It should only contain the input dataframes we want to directly use as inputs for the clustering.
+Out of all the data we have available to us, we may be working in a context where the anxiety and depression data are especially important patient outcomes, and we want to know if we can find subtypes using the rest of the data which still do a good job of separating out patients by their anxiety and depression scores.
+We'll set aside anxiety and depression for now and use the rest of the data as inputs for our subtyping, which means loading them into the data_list.
+
+```{r}
+data_list <- generate_data_list(
+    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(abcd_income, "household_income", "demographics", "continuous"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "patient"
+)
+```
+
+The first entries are all lists which contains the following elements:
+
+1. The actual dataframe
+2. A name for the dataframe (string)
+3. A name for the *domain* of information the dataframe is representative of (string)
+4. The type of variable stored in the dataframe (options are continuous, discrete, ordinal, categorical, and mixed)
+
+Finally, there's an argument for the `uid` (the column name that currently uniquely identifies all the subjects in your data).
+
+Behind the scenes, this function is building a nested list that keeps track of all this information, but it is also:
+
+- Converting the UID of the data into "subjectkey"
+- Removing all observations that contain any NAs
+- Removing all subjects who are not present in all input dataframes
+- Arranging the subjects in all the dataframe by their UID
+- Prefixing the UID values with the string "subject_" to help with cluster result characterization
+
+Any rows containing NAs are removed.
+If you don't want a bunch of your data to get removed because there are a few NAs sprinkled around here and there, consider using [imputation](https://en.wikipedia.org/wiki/Imputation_(statistics)).
+The `mice` package in R is nice for this.
+
+We can get a summary of our constructed `data_list` with the `summarize_dl` function:
+
+```{r}
+summarize_dl(data_list)
+```
+
+Each input dataframe now has the same 100 subjects with complete data.
+
+## Generating the settings matrix
+
+The `settings_matrix` stores all the information about the settings we'd like to use for each of our SNF runs.
+Calling the `generate_settings_matrix` function with a specified number of rows will automatically build a randomly populated `settings_matrix`.
+
+```{r}
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 20,
+    min_k = 20,
+    max_k = 50,
+    seed = 42
+)
+
+settings_matrix[1:5, ]
+```
+
+The columns are:
+
+- `row_id`: Integer to keep track of which row is which
+- `alpha` - A hyperparameter for SNF (variable that influences the subtyping process)
+- `k` - A hyperparameter for SNF
+- `t` - A hyperparameter for SNF
+- `snf_scheme` - the specific way in which input data gets collapsed into a final fused network (discussed further in the [SNF schemes vignette](https://branchlab.github.io/metasnf/articles/snf_schemes.html))
+- `clust_alg` - Which clustering algorithm will be applied to the final fused network produced by SNF
+- `*_dist` - Which distance metric will be used for the different types of data (discussed further in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html))
+- `inc_*` - binary columns indicating whether or not an input dataframe is included (1) or excluded (0) from the corresponding SNF run (discussed further in the [random dropout vignette](https://branchlab.github.io/metasnf/articles/random_dropout.html))
+
+Without specifying any additional parameters, `generate_settings_matrix` randomly populates these columns and ensures that no generated rows are identical.
+
+What's important for now is that the matrix (technically a dataframe in the R environment) contains several rows which each outline a different but reasonable way in which the raw data could be converted into patient subtypes.
+Further customization of the `settings_matrix` will enable you to access the broadest possible space of reasonable cluster solutions that your data can produce using SNF and ideally get you closer to a generalizable and useful solution for your context.
+More on `settings_matrix` customization can be found in the [settings matrix vignette](https://branchlab.github.io/metasnf/articles/settings_matrix.html)
+
+Setting the optional `seed` parameter (which will affect the seed of your entire R session) ensures that the same settings matrix is generated each time we run the code.
+
+While we end up with a random set of settings here, there is nothing wrong with manually altering the settings matrix to suit your needs.
+For example, if you wanted to know how much of a difference one input dataframe made, you could ensure that half of the rows included this input dataframe and the other half didn't.
+You can also add random rows to an already existing dataframe using the `add_settings_matrix_rows` function (further discussed in the vignette).
+
+
+## Running SNF for all the rows in the settings matrix
+
+The `batch_snf` function integrates the data in the `data_list` using each of the sets of settings contained in the `settings_matrix`.
+The resulting structure is an `solutions_matrix` which is an extension of the `settings_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `settings_matrix` row.
+
+```{r}
+solutions_matrix <- batch_snf(data_list, settings_matrix)
+
+colnames(solutions_matrix)[1:30]
+```
+
+It goes on like this for some time.
+
+Just like that, the clustering is done!
+
+You can pull the clustering results out of each row using the `get_cluster_df` function:
+
+```{r}
+cluster_solutions <- get_cluster_solutions(solutions_matrix)
+
+head(cluster_solutions)
+```
+
+*Note: Parallel processing is available on an older release of the package (v0.2.0) and will be integrated into the latest release shortly. See the "processes" parameter in `?batch_snf`.*
+
+## Picking a solution
+
+Now that we have access to 20 different clustering solutions, we'll need to find some way to pick a favourite (or a few).
+In this case, plotting or running stats manually on each of the solutions might be a reasonable way to determine which ones we like the most.
+But when the number of solutions generated goes up into the hundreds (or thousands), we're going to need some more automated approaches.
+
+Below are some different tools that you can use to try to pick a solution that is the best for your purposes.
+
+### 1: Examining "meta clusters"
+
+This is the approach introduced by the original meta clustering paper.
+This is a good approach to use when you can't quantitatively describe what makes one cluster solution better than another, but you can have an expert compare the two solutions and "intuit" which of the two is more desirable.
+
+The idea is to cluster the clustering solutions themselves to arrive at a small number of qualitatively different solutions.
+From there, a user can manually pick out some representative solutions and do the evaluations themselves.
+
+The first step is to calculate the [adjusted Rand index](https://en.wikipedia.org/wiki/Rand_index) (ARI) between each pair of cluster solutions.
+This metric is tells us how similar the solutions are to each other, thereby allowing us to find clusters of cluster solutions.
+
+```{r}
+solutions_matrix_aris <- calc_om_aris(solutions_matrix)
+```
+
+We can visualize the resulting inter-cluster similarities with a heatmap:
+
+```{r}
+adjusted_rand_index_heatmap(solutions_matrix_aris)
+```
+
+You can optionally save your heatmap by specifying a path with the `save` parameter (e.g., `adjusted_rand_index_heatmap(solutions_matrix_aris, save = "./adjusted_rand_index_heatmap.png")`).
+
+```{r echo = FALSE, fig.align = 'center'}
+adjusted_rand_index_heatmap(solutions_matrix_aris, save = "./adjusted_rand_index_heatmap.png")
+```
+
+![.](./adjusted_rand_index_heatmap.png){width=400px}
+
+The clustering solutions are along the rows and columns of the above figure, and the cells at the intersection between two solutions show how similar (big ARI) those solutions are to each other.
+The diagonals should always be red, representing the maximum value of 1, as they show the similarity between any clustering solution and itself.
+Agglomerative hierarchical clustering is being applied to these solutions by default (thank you, `pheatmap` package) so the orders of the clustering solutions here do not exactly line up with the order of the clustering solutions present in the settings matrix.
+
+If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your settings matrix.
+
+First, extract the ordering of the rows obtained from the clustering of the cluster solutions:
+
+```{r include = FALSE}
+meta_cluster_order <- get_heatmap_order(solutions_matrix_aris)
+```
+
+```{r eval = FALSE}
+meta_cluster_order <- get_heatmap_order(solutions_matrix_aris)
+```
+
+The order is just a vector of numbers...
+
+```{r}
+meta_cluster_order
+```
+
+... which can be passed into the `settings_matrix_heatmap` function:
+
+```{r include = FALSE}
+settings_matrix_heatmap(settings_matrix, order = meta_cluster_order,
+           save = "./settings_matrix_heatmap_ordered.png")
+```
+
+```{r eval = FALSE}
+settings_matrix_heatmap(settings_matrix, order = meta_cluster_order)
+```
+
+<center>
+![](./settings_matrix_heatmap_ordered.png){width=400px}
+</center>
+
+This heatmap rescales all the columns in the settings_matrix to have a maximum value of 1.
+The purpose of re-ordering the settings matrix in this way is to see if any associations exist between certain settings values and pairwise cluster solution similarities.
+
+Maybe you'll see something interesting!
+
+### 2. Quality measures
+
+Quality metrics are another useful heuristic for the goodness of a cluster that don't require any contextualization of results in the domain they may be used in.
+r-package enables measures of silhouette scores, Dunn indices, and Davies-Bouldin indices.
+To calculate these values, we'll need not only the cluster results but also the final fused network (the similarity matrices produced by SNF) that the clusters came from.
+These affinity matrices can be collected from the `batch_snf` using the `return_affinity_matrices` parameter:
+
+```{r}
+batch_snf_results <- batch_snf(
+    data_list,
+    settings_matrix,
+    return_affinity_matrices = TRUE
+)
+
+solutions_matrix <- batch_snf_results$"solutions_matrix"
+affinity_matrices <- batch_snf_results$"affinity_matrices"
+```
+
+This time, the output of `batch_snf` is a list.
+The first element of the list is a single solutions_matrix, like what we usually get.
+The second element is *yet another list* containing one final fused network (AKA affinity matrix / similarity matrix) per SNF run.
+Using those two lists, we can calculate the above mentioned quality metrics:
+
+```{r eval = FALSE}
+silhouette_scores <- calculate_silhouettes(solutions_matrix, affinity_matrices)
+
+dunn_indices <- calculate_dunn_indices(solutions_matrix, affinity_matrices)
+
+db_indices <- calculate_db_indices(solutions_matrix, affinity_matrices)
+```
+
+The first function is a wrapper around `cluster::silhouette` while the second and third come from the *clv* package.
+*clv* isn't set as a mandatory part of the installation, so you'll ned to install it yourself to calculate these two metrics.
+
+The original documentation on these functions can be helpful for interpreting and working with them:
+
+1. [`cluster::silhouette` documentation](https://www.rdocumentation.org/packages/cluster/versions/2.1.4/topics/silhouette)
+2. [`clv::clv.Dunn` documentation](https://www.rdocumentation.org/packages/clv/versions/0.3-2.1/topics/clv.Dunn)
+3. [`clv::clv.Davies.Bouldin` documentation](https://www.rdocumentation.org/packages/clv/versions/0.3-2.1/topics/clv.Davies.Bouldin)
+
+
+### 3. Stability measures
+
+r-package offers tools to evaluate two different measures of stability:
+
+1. Pairwise adjusted Rand indices (across resamplings of the clustering, on average, how similar was every pair of solutions according to the adjusted Rand index?)
+2. Fraction clustered together (what is the average fraction of times that patients who clustered together in the full results clustered together in resampled results?)
+
+To calculate either of these, you'll need to first generate subsamples of the data_list.
+
+```{r eval = FALSE}
+data_list_subsamples <- subsample_data_list(
+    data_list,
+    n_subsamples = 30, # calculate 30 subsamples
+    subsample_fraction = 0.8 # for each subsample, use random 80% of patients
+)
+```
+
+`data_list_subsamples` is a list that now contains 30 smaller subsamples of the original data_list.
+
+Then the stability calculations:
+
+```{r eval = FALSE}
+pairwise_aris <- subsample_pairwise_aris(
+    data_list_subsamples,
+    settings_matrix
+)
+
+fraction_together <- fraction_clustered_together(
+    data_list_subsamples,
+    settings_matrix,
+    solutions_matrix
+)
+```
+
+Be warned, that second function is especially extremely slow.
+As the number of patients and number of solutions you're evaluating grows, these functions can get pretty slow.
+Consider only using them after eliminating solutions that you are certainly not interested in further characterizing.
+
+### 4. Evaluating separation across "target variables" of importance
+
+**Warning: This approach can very easily result in [overfitting](https://en.wikipedia.org/wiki/Overfitting) your data and producing clustering results that generalize poorly to subjects outside of your dataset.
+Consider setting aside some data to validate your results to avoid this issue.**
+
+If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
+
+There are many ways to go about doing this, but this package offers one way through the `target_list` structure.
+The `target_list` contains dataframes what we can examine our clustering results over through linear regression (continuous data), ordinal regression (ordinal data), or the Chi-squared test (categorical data).
+
+```{r}
+target_list <- generate_target_list(
+    list(abcd_anxiety, "anxiety", "ordinal"),
+    list(abcd_depress, "depressed", "ordinal"),
+    uid = "patient"
+)
+
+summarize_target_list(target_list)
+```
+
+The `target_list` is like the `data_list`, but without the domain attribute.
+At this time, each dataframe used to build an target_list must be a single-feature.
+
+Just like when generating the initial `data_list`, we need to specify the name of the column in the provided dataframes that is originally being used to uniquely identify the different observations from each other with the `uid` parameter.
+
+We will next extend our `solutions_matrix` with p-values from regressing the `target_list` features onto our generated clusters.
+
+```{r}
+extended_solutions_matrix <- extend_solutions(solutions_matrix, target_list)
+
+colnames(extended_solutions_matrix)[1:25]
+
+# Looking at the newly added columns
+head(no_subs(extended_solutions_matrix))
+```
+
+If you just want the p-values:
+
+```{r}
+p_val_select(extended_solutions_matrix)
+```
+
+There is a heatmap for visualizing this too:
+
+```{r include = FALSE}
+target_pvals <- p_val_select(extended_solutions_matrix)
+
+str(target_pvals)
+
+pvals_heatmap(target_pvals, order = meta_cluster_order,
+           save = "./pvals_heatmap_ordered.png")
+
+str(target_pvals)
+```
+
+```{r eval = FALSE}
+target_pvals <- p_val_select(extended_solutions_matrix)
+
+pvals_heatmap(target_pvals, order = meta_cluster_order)
+```
+
+<center>
+![](./pvals_heatmap_ordered.png){width=400px}
+</center>
+
+These p-values hold no real meaning for the traditional hypothesis-testing context, but they are reasonable proxies of the magnitude of the effect size / separation of the clusters across the variables in question.
+Here, they are just a tool to find clustering solutions that are well-separated according to the outcome measures you've specified.
+Finding a cluster solution like this is similar to a supervised learning approach, but where the optimization method is just random sampling.
+The risk for overfitting your data with this approach is considerable, so make sure you have some rigorous external validation before reporting your findings.
+
+We recommend using *label propagation* (provided by the SNFtool package in the `groupPredict` function) for validation: take the top clustering solutions found in some training data, assign predicted clusters to some held out test subjects, and then characterize those test subjects to see how well the clustering solution seemed to have worked.
+
+## Validating results with label propagation
+
+Here's a quick step through of the complete procedure, from the beginning, with label propagation to validate our findings.
+
+The `metasnf` package comes equipped with a function to do the training/testing split for you :)
+
+```{r}
+# All the subjects present in all dataframes with no NAs
+all_subjects <- data_list[[1]]$"data"$"subjectkey"
+
+# Remove the "subject_" prefix to allow merges with the original data
+all_subjects <- gsub("subject_", "", all_subjects)
+
+# Dataframe assigning 80% of subjects to train and 20% to test
+assigned_splits <- train_test_assign(train_frac = 0.8, subjects = all_subjects)
+
+# Partition a training set
+train_abcd_cort_t <- keep_split(abcd_cort_t, assigned_splits, "train", uid = "patient")
+train_abcd_cort_sa <- keep_split(abcd_cort_sa, assigned_splits, "train", uid = "patient")
+train_abcd_subc_v <- keep_split(abcd_subc_v, assigned_splits, "train", uid = "patient")
+train_abcd_income <- keep_split(abcd_income, assigned_splits, "train", uid = "patient")
+train_abcd_pubertal <- keep_split(abcd_pubertal, assigned_splits, "train", uid = "patient")
+train_abcd_anxiety <- keep_split(abcd_anxiety, assigned_splits, "train", uid = "patient")
+train_abcd_depress <- keep_split(abcd_depress, assigned_splits, "train", uid = "patient")
+
+# Partition a test set
+test_abcd_cort_t <- keep_split(abcd_cort_t, assigned_splits, "test", uid = "patient")
+test_abcd_cort_sa <- keep_split(abcd_cort_sa, assigned_splits, "test", uid = "patient")
+test_abcd_subc_v <- keep_split(abcd_subc_v, assigned_splits, "test", uid = "patient")
+test_abcd_income <- keep_split(abcd_income, assigned_splits, "test", uid = "patient")
+test_abcd_pubertal <- keep_split(abcd_pubertal, assigned_splits, "test", uid = "patient")
+test_abcd_anxiety <- keep_split(abcd_anxiety, assigned_splits, "test", uid = "patient")
+test_abcd_depress <- keep_split(abcd_depress, assigned_splits, "test", uid = "patient")
+
+# Construct the data lists
+train_data_list <- generate_data_list(
+    list(train_abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(train_abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(train_abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(train_abcd_income, "household_income", "demographics", "continuous"),
+    list(train_abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "patient"
+)
+
+test_data_list <- generate_data_list(
+    list(test_abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(test_abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(test_abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(test_abcd_income, "household_income", "demographics", "continuous"),
+    list(test_abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "patient"
+)
+```
+
+
+Note, in a label propagation workflow, maintaining a consistent ordering of train and test subjects across all dataframes is particularly important.
+To ensure the full data list is constructed with an order that is compatible with the training and testing splits made above, you can either specify both the `train_subjects` and `test_subjects` parameters yourself, or provide the `assigned_splits` output from the `train_test_assign` function.
+
+```{r}
+
+
+
+full_data_list <- generate_data_list(
+    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(abcd_income, "household_income", "demographics", "continuous"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "patient",
+    assigned_splits = assigned_splits
+)
+
+# Construct the target lists
+train_target_list <- generate_target_list(
+    list(train_abcd_anxiety, "anxiety", "ordinal"),
+    list(train_abcd_depress, "depressed", "ordinal"),
+    uid = "patient"
+)
+
+# Find a clustering solution in your training data
+settings_matrix <- generate_settings_matrix(
+    train_data_list,
+    nrow = 5,
+    seed = 42,
+    min_k = 10,
+    max_k = 30
+)
+
+min(summarize_dl(train_data_list)$"length")
+
+train_solutions_matrix <- batch_snf(
+    train_data_list,
+    settings_matrix
+)
+
+extended_solutions_matrix <- extend_solutions(
+    train_solutions_matrix,
+    train_target_list
+)
+
+# The fourth row had the lowest minimum p-value across our outcomes
+which(extended_solutions_matrix$"min_p_val" ==
+      min(extended_solutions_matrix$"min_p_val"))
+
+# Keep track of your top solution
+top_row <- extended_solutions_matrix[4, ]
+
+# Hand over the solutions matrix as well as the full data list to propagate labels
+#  to the test subjects
+propagated_labels <- lp_row(top_row, full_data_list)
+head(propagated_labels)
+tail(propagated_labels)
+```
+
+You could, if you wanted, see how *all* of your clustering solutions propagate to the test set, but that would mean reusing your test set and removing the protection against overfitting conferred by this procedure.
+
+```{r}
+propagated_labels_all <- lp_row(extended_solutions_matrix, full_data_list)
+head(propagated_labels_all)
+tail(propagated_labels_all)
+```
+
+That's all for now!
+
+If you have any questions, comments, suggestions, bugs, etc. feel free to post an issue at https://github.com/BRANCHlab/metasnf.
+
+## Appendix
+
+(sections below will move into separate vignettes)
+
+### inc*
+
+This section describes how the `generate_settings_matrix` function randomly assigns input dataframess to be dropped from different SNF runs to access a wider space of possible solutions.
+
+By default, `generate_settings_matrix` will build an empty dataframe containing the columns outlined in the [settings matrix][Generating the settings matrix] section.
+If a non-zero number of rows are specified when calling `generate_settings_matrix`, the function calls on `add_settings_matrix_rows` to add rows with randomly valid values.
+The input dataframe inclusion variables rely on yet another helper function:
+
+```{r}
+random_removal
+```
+
+This `random_removal` function randomly picks a number of columns to remove according to an exponential function.
+The most likely number of input dataframes to be removed is 0, followed by 1, all the way up to $D - 1$ dataframes where $D$ is the number of provided input dataframes.
+The exponential distribution seemed preferrable to a uniform one, which would lead to a large number of input dataframes being dropped on every SNF run.
+
+### snf_scheme
+
+This section describes how individual input dataframes are converted into a final fused network in different ways using the `snf_scheme` parameter.
+
+`snf_scheme`: One consideration of SNF is choosing how to organize individual features (columns) into the input dataframes that get fused by SNF.
+
+In the original SNF paper, input dataframes were organized according to "measurement type": three input dataframes each containing several features related to miRNA, mRNA, or DNA methylation.
+In my own work, I had a very large set of input dataframes that had varying amounts of overlap in expected information content, which made the grouping of features a little bit less clear.
+For example, consider having input dataframes for (1) the thicknesses of cortical brain regions, (2) the surface areas of cortical brain regions, (3) the volumes of subcortical brain regions, and (4) mean blood pressure.
+We have 4 distinct sets of features, 3 distinct sets of units (cortical thickness and subcortical volume both being in $mm^3$), and (arguably) 2 distinct sources of information: structural brain data and blood pressure data.
+
+It is not immediately clear that collapsing the data into any one of those mentioned sets will give rise to the most useful clustering solution for our purpose.
+The number of ways in which we can take these individual features and produce a single SNF-fused similarity matrix at the end is quite large.
+
+Here are two examples of getting a single similarity matrix from two single-feature input dataframes:
+
+**Example 1: Concatenation -> single similarity matrix**
+
+```{r}
+df1 <- data.frame(
+    subjectkey = c("person1", "person2", "person3", "person4"),
+    feature1 = c(1, 2, 3, 4)
+)
+
+df2 <- data.frame(
+    subjectkey = c("person1", "person2", "person3", "person4"),
+    feature2 = c(3, 3, 4, 5)
+)
+```
+
+```{r echo = FALSE}
+knitr::kable(
+    list(df1, df2),
+    format = "pipe",
+    caption = "Two individual dataframes, prior to concatenation"
+)
+```
+
+We start by joining our two features by concatenation:
+
+
+```{r}
+df3 <- dplyr::inner_join(df1, df2, by = "subjectkey")
+```
+
+```{r echo = FALSE}
+knitr::kable(
+    df3,
+    format = "pipe",
+    caption = "A single concatenated dataframe"
+)
+```
+
+Giving rise to the following distance matrix:
+
+```{r}
+df3_dist <- df3[, 2:3] |>
+    stats::dist() |>
+    as.matrix() |>
+    round(2)
+```
+
+```{r echo = FALSE, results = 'asis'}
+write_matex <- function(x) {
+  begin <- "$$\\begin{bmatrix}"
+  end <- "\\end{bmatrix}$$"
+  X <-
+    apply(x, 1, function(x) {
+      paste(
+        paste(x, collapse = "&"),
+        "\\\\"
+      )
+    })
+  writeLines(c(begin, X, end))
+}
+
+write_matex(df3_dist)
+```
+
+And subsequent similarity matrix:
+
+```{r}
+df3_sim <- SNFtool::affinityMatrix(df3_dist, K = 3, sigma = 0.5) |>
+    round(2)
+```
+
+```{r echo = FALSE, results = 'asis'}
+write_matex(df3_sim)
+```
+
+$~$
+
+**Example 2: Similarity matrices -> integration by SNF**
+
+```{r}
+df1 <- data.frame(
+    subjectkey = c("person1", "person2", "person3", "person4"),
+    feature1 = c(1, 2, 3, 4)
+)
+
+df2 <- data.frame(
+    subjectkey = c("person1", "person2", "person3", "person4"),
+    feature2 = c(3, 3, 4, 5)
+)
+```
+
+We first convert each of our input dataframes into distance matrices:
+
+```{r}
+df1_dist <- df1[, 2] |>
+    stats::dist() |>
+    as.matrix() |>
+    round(2)
+
+df2_dist <- df2[, 2] |>
+    stats::dist() |>
+    as.matrix() |>
+    round(2)
+
+```
+
+```{r echo = FALSE, results = 'asis'}
+write_matex(df1_dist)
+
+write_matex(df2_dist)
+```
+
+We then convert these distance matrices into similarity matrices:
+
+```{r}
+df1_sim <- SNFtool::affinityMatrix(df1_dist, K = 3, sigma = 0.5) |>
+    round(2)
+
+df2_sim <- SNFtool::affinityMatrix(df2_dist, K = 3, sigma = 0.5) |>
+    round(2)
+```
+
+```{r echo = FALSE, results = 'asis'}
+write_matex(df1_sim)
+
+write_matex(df2_sim)
+```
+
+And then we fuse these similarity matrices together using SNF:
+
+```{r}
+df1_df2_fused <- SNFtool::SNF(list(df1_sim, df2_sim), K = 3) |>
+    round(2)
+```
+
+```{r echo = FALSE, results = 'asis'}
+write_matex(df1_df2_fused)
+```
+
+Contrast this with the similarity matrix we obtained in **Example 1**:
+
+```{r echo = FALSE, results = 'asis'}
+write_matex(df3_sim)
+```
+
+I'm not entirely sure about what is happening with the diagonal values not being identical in the second matrix, but that aside, the results here seem mostly similar. Person 1 is most similar to person 2, person 2 is most similar to person 1, person 3 is most similar to person 4, and person 4 is most similar to person 3.
+
+*But*
+
+The values aren't identical, and you could imagine that for a more complicated example or a slightly different choice in feature collapsing, the resulting clustering solution would be different.
+
+Going back to the example where our input dataframes are:
+
+1. cortical thicknesses
+2. cortical surface areas
+3. subcortical volumes
+4. mean blood pressure
+
+You could imagine that individually converting each of these 4 input dataframes into 4 separate distance matrices, converting those into similarity matrices, and then fusing those 4 matrices into one single network by SNF could be a little bit skewed in favour of the brain imaging information.
+3 of our sources are all describing structural brain features, while 1 source is about the blood.
+
+Varying the `snf_scheme` parameter gives us access to a wider range of possible clustering solutions by changing which of the following approaches are taken to digest the initial input dataframes to a final fused network:
+
+1. Individual: Input dataframes are combined into a final network by SNF.
+2. Two-step: Input dataframes are combined within user-specified data domains by one round of SNF and then combined across domains by a second round of SNF.
+3. Domain: Input dataframes are combined within domains by concatenation and then combined into a single fused network by SNF.
+
+These options are not comprehensive.
+If there are other schemes you would like to be added into the package, feel free to make a request on GitHub.
+
+
+## References
+
+Caruana, Rich, Mohamed Elhawary, Nam Nguyen, and Casey Smith. 2006. “Meta Clustering.” In Sixth International Conference on Data Mining (ICDM’06), 107–18. https://doi.org/10.1109/ICDM.2006.103.
+
+Wang, Bo, Aziz M. Mezlini, Feyyaz Demir, Marc Fiume, Zhuowen Tu, Michael Brudno, Benjamin Haibe-Kains, and Anna Goldenberg. 2014. “Similarity Network Fusion for Aggregating Data Types on a Genomic Scale.” Nature Methods 11 (3): 333–37. https://doi.org/10.1038/nmeth.2810.

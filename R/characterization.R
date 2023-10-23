@@ -1,17 +1,37 @@
-#' Select specific row_ids from an output matrix
+#' Extract all cluster solutions from a solutions_matrix
 #'
-#' @param om output matrix
-#' @param row_ids vector of row_id values to be selected
+#' @param solutions_matrix A solutions_matrix.
 #'
-#' @return selected_om
+#' @return cluster_solutions A dataframe where each row is a patient and each
+#'  column is a different run of SNF stored in the solutions_matrix. Values
+#'  along the columns are the cluster that each patient was assigned to.
 #'
 #' @export
-select_om <- function(om, row_ids) {
-    selected_om <- om[om$"row_id" %in% row_ids, ]
-    return(selected_om)
+get_cluster_solutions <- function(solutions_matrix) {
+    # Create a skeleton dataframe using just the columns of the solutions
+    #  matrix containing information about which cluster each patient was
+    #  assigned to on each SNF run
+    cluster_solutions <- solutions_matrix |>
+        subs() |>
+        t() |>
+        data.frame()
+    # Assign the column names to match the corresponding SNF run
+    colnames(cluster_solutions) <- rownames(solutions_matrix)
+    # Remove the first row, which just contains the row_id. That info is now
+    #  in the column names.
+    cluster_solutions <- cluster_solutions[-1, , drop = FALSE]
+    # Store the subjectkeys of the observations in a separate dataframe
+    subjects_df <- data.frame(rownames(cluster_solutions))
+    colnames(subjects_df) <- "subjectkey"
+    # Append that subject dataframe to the full cluster solution (preserving
+    #  the info without relying on rownames)
+    cluster_solutions <- cbind(subjects_df, cluster_solutions)
+    # Remove the superfluous rownames
+    rownames(cluster_solutions) <- NULL
+    return(cluster_solutions)
 }
 
-#' Extract dataframe of cluster and subject key from output matrix row
+#' Extract dataframe of cluster and subject key from solutions matrix row
 #'
 #' @param om_row Output matrix row
 #'
@@ -50,103 +70,12 @@ get_clusters <- function(om_row) {
     return(clusters)
 }
 
-#' Calculate overall p-values for a characterization_df
+#' Select the top solutions matrix rows for each cluster
 #'
-#' @param characterization_df A merged list containing cluster, subjectkey, and
-#'  various CBCL outcomes
-#' @param bonferroni boolean for reporting bonferroni corrected p-values
-#'
-#' @export
-cbcl_ord_reg <- function(characterization_df, bonferroni = FALSE) {
-    outcomes <- characterization_df |>
-        dplyr::select(dplyr::starts_with("cbcl")) |>
-        colnames()
-    ord_reg_df <- data.frame(
-        outcome = as.character(),
-        pval = as.numeric())
-    for (outcome in outcomes) {
-        outcome_df <- characterization_df[, c("subjectkey", outcome)]
-        cluster_df <- characterization_df[, c("cluster", "subjectkey")]
-        pval <- signif(ord_reg_p(cluster_df, outcome_df, outcome), 2)
-        if (bonferroni) {
-            pval <- pval * length(outcomes)
-        }
-        pval <- format(min(pval, 1), scientific = FALSE)
-        #ord_reg_df <- rbind(ord_reg_df, c(outcome, pval))
-        ord_reg_df[nrow(ord_reg_df) + 1, ] <- c(outcome, pval)
-    }
-    return(ord_reg_df)
-}
-
-#' Calculate overall p-values for an om
-#'
-#' @param om an output matrix
-#' @param cbcl_list a list of CBCL measures
-#' @param bonferroni boolean for reporting bonferroni corrected p-values
-#'
-#' @export
-cbcl_ord_reg_from_om <- function(om, cbcl_list, bonferroni = FALSE) {
-    ord_p_vals <- list()
-    for (row in seq_len(nrow(om))) {
-        current_row <- om[row, ]
-        ord_p_vals
-        cluster_df <- get_cluster_df(current_row)
-        cluster_cbcl_list <- append(list(cluster_df), cbcl_list)
-        characterization_df <- merge_df_list(cluster_cbcl_list)
-        outcomes <- characterization_df |>
-            dplyr::select(dplyr::starts_with("cbcl")) |>
-            colnames()
-        ord_reg_df <- data.frame(
-            outcome = as.character(),
-            pval = as.numeric())
-        for (outcome in outcomes) {
-            outcome_df <- characterization_df[, c("subjectkey", outcome)]
-            cluster_df <- characterization_df[, c("cluster", "subjectkey")]
-            pval <- signif(ord_reg_p(cluster_df, outcome_df, outcome), 2)
-            if (bonferroni) {
-                pval <- pval * length(outcomes)
-            }
-            pval <- format(min(pval, 1), scientific = FALSE)
-            ord_reg_df[nrow(ord_reg_df) + 1, ] <- c(outcome, pval)
-        }
-        ord_p_vals <- append(ord_p_vals, list(ord_reg_df))
-    }
-    names(ord_p_vals) <- om$"significance"
-    return(ord_p_vals)
-}
-
-#' Calculate anova p-values for a characterization_df
-#'
-#' @param characterization_df A merged list containing cluster, subjectkey, and
-#'  various CBCL outcomes
-#' @param bonferroni boolean for reporting bonferroni corrected p-values
-#'
-#' @export
-cbcl_anova <- function(characterization_df, bonferroni = FALSE) {
-    characterization_df$"cluster" <- as.factor(characterization_df$"cluster")
-    outcomes <- characterization_df |>
-        dplyr::select(dplyr::starts_with("cbcl")) |>
-        colnames()
-    print("ANOVA p-values:")
-    print("---------------")
-    for (outcome in outcomes) {
-        aov_summary <- summary(stats::aov(
-            characterization_df[, outcome] ~ characterization_df[, "cluster"]))
-        pval <- aov_summary[[1]][["Pr(>F)"]][1]
-        if (bonferroni) {
-            pval <- pval * length(outcomes)
-        }
-        pval <- min(pval, 1)
-        print(paste0(outcome, ": ", signif(pval, 2)))
-    }
-}
-
-#' Select the top output matrix rows for each cluster
-#'
-#' Given an output matrix, returns a dataframe containing the row with the
+#' Given an solutions matrix, returns a dataframe containing the row with the
 #' lowest mean p-value and lowest min p-value for cluster sizes 2-5
 #'
-#' @param om an output matrix
+#' @param om an solutions matrix
 #'
 #' @return top_clusts_df dataframe with top om rows
 #'
@@ -219,7 +148,7 @@ top_om_per_cluster <- function(om) {
 #'  full fused network and the supplied clustering information are consistent.
 #'
 #' @param data_list A data list
-#' @param om_row An output matrix row
+#' @param om_row An solutions matrix row
 #' @param n_train number of training subjects
 #' @param n_test number of testing subjects
 #'
@@ -249,7 +178,7 @@ check_subj_orders_for_lp <- function(data_list, om_row, n_train, n_test) {
             return(NULL)
         }
     }
-    # Comparing training subjects between data list and output matrix...
+    # Comparing training subjects between data list and solutions matrix...
     current_row_names <- subs(om_row) |>
         dplyr::select(dplyr::starts_with("subject_")) |>
         colnames()

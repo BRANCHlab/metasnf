@@ -87,7 +87,7 @@ char_to_fac <- function(df) {
 #'
 #' @description
 #' Removes the 'subject_' prefixed columns from a dataframe. Useful for printing
-#'  output_matrix structures to the console
+#'  solutions_matrix structures to the console
 #'
 #' @param df A dataframe
 #'
@@ -114,7 +114,7 @@ no_subs <- function(df) {
 #' @description
 #' Removes the columns that are not prefixed with 'subject_' prefixed columns
 #'  from a dataframe. Useful intermediate step for extracting subject UIDs from
-#'  an output_matrix structure.
+#'  an solutions_matrix structure.
 #'
 #' @param df Dataframe
 #'
@@ -197,39 +197,39 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
 #' @param assigned_df Dataframe containing "subjectkey" and "split" cols from
 #'  `train_test_assign()`
 #' @param split String indicating which split to keep ("train" or "test")
-#' @param old_uid (string) the name of the uid column currently used data
+#' @param uid (string) the name of the uid column currently used data
 #'
 #' @return split_df Dataframe subsetted to specified split
 #'
 #' @export
-keep_split <- function(df, assigned_df, split, old_uid = NULL) {
+keep_split <- function(df, assigned_df, split, uid = NULL) {
     # If the UID column of the dataframe is already subjectkey, use it.
-    # Otherwise, if the old_uid is in the dataframe, use that.
+    # Otherwise, if the uid is in the dataframe, use that.
     # Otherwise, raise error.
     if ("subjectkey" %in% colnames(df)) {
         print("Existing `subjectkey` column will be treated as UID.")
-        old_uid <- "subjectkey"
-    } else if (is.null(old_uid)) {
-        stop("Please provide name of unique ID column using `old_uid`.")
-    } else if (!old_uid %in% colnames(df)) {
-        stop("Provided `old_uid` parameter is not present in dataframe.")
+        uid <- "subjectkey"
+    } else if (is.null(uid)) {
+        stop("Please provide name of unique ID column using `uid`.")
+    } else if (!uid %in% colnames(df)) {
+        stop("Provided `uid` parameter is not present in dataframe.")
     } else {
-        colnames(assigned_df)[colnames(assigned_df) == "subjectkey"] <- old_uid
+        colnames(assigned_df)[colnames(assigned_df) == "subjectkey"] <- uid
     }
     train_or_test <- split
     split_df <- assigned_df |>
         dplyr::filter(split == train_or_test) |>
         #dplyr::inner_join(df, by = "subjectkey") |>
-        dplyr::inner_join(df, by = old_uid) |>
+        dplyr::inner_join(df, by = uid) |>
         dplyr::select(-split)
     return(split_df)
 }
 
-#' Remove items from a data_list or outcome_list
+#' Remove items from a data_list or target_list
 #'
-#' Removes specified elements from a provided data_list or outcome_list object
+#' Removes specified elements from a provided data_list or target_list object
 #'
-#' @param list_object The data_list or outcome_list containing components to be
+#' @param list_object The data_list or target_list containing components to be
 #'  removed
 #' @param ... Any number of components to remove from the list object, passed as
 #'  strings
@@ -240,7 +240,7 @@ keep_split <- function(df, assigned_df, split, old_uid = NULL) {
 list_remove <- function(list_object, ...) {
     to_remove <- list(...)
     # Check to make sure all items to remove are components in list_object
-    list_names <- summarize_ol(list_object)$"name"
+    list_names <- summarize_target_list(list_object)$"name"
     invalid_names <- to_remove[!to_remove %in% list_names]
     if (length(invalid_names) > 0) {
         warning(
@@ -252,4 +252,103 @@ list_remove <- function(list_object, ...) {
     }
     pruned_list <- list_object[!list_names %in% to_remove]
     return(pruned_list)
+}
+
+#' Time remaining until batch_snf completion
+#'
+#' @param seconds_per_row Integer in seconds of time taken for most recent SNF
+#'  'run
+#' @param rows_remaining Number of rows left to complete in the settings matrix
+#' @param row Current row in the settings matrix
+#' @param remaining_seconds_vector Vector storing up to the 10 most recent
+#'  row completion times
+#'
+#' @return remaining_seconds_vector Updated remaining_seconds_vector
+#'
+#' @export
+batch_snf_time_remaining <- function(seconds_per_row,
+                                     rows_remaining,
+                                     row,
+                                     remaining_seconds_vector) {
+    remaining_seconds_vector <- c(remaining_seconds_vector, seconds_per_row)
+    if (length(remaining_seconds_vector) > 10) {
+        remaining_seconds_vector <-
+            remaining_seconds_vector[2:length(remaining_seconds_vector)]
+    }
+    remaining_seconds <- round(
+        mean(remaining_seconds_vector) * rows_remaining, 0
+    )
+    print(
+        paste0(
+            "Row: ", row, "/", (row + rows_remaining), " | ",
+            "Time remaining: ", remaining_seconds, " seconds"
+        )
+    )
+    return(remaining_seconds_vector)
+}
+
+#' Generate a complete path and filename to store an affinity matrix
+#'
+#' @param affinity_matrix_dir Directory to store affinity matrices
+#' @param i Corresponding settings matrix row
+#'
+#' @return path Complete path and filename to store an affinity matrix
+#'
+#' @export
+affinity_matrix_path <- function(affinity_matrix_dir, i) {
+    path <- paste0(
+        affinity_matrix_dir,
+        "/",
+        gsub("-", "_", Sys.Date()), # Today's datej
+        "_",
+        "affinity_matrix_",
+        i,
+        ".csv"
+    )
+    path <- gsub("//", "/", path)
+    return(path)
+}
+
+#' Helper resample function found in ?sample
+#'
+#' Like sample, but when given a single value x, returns back that single
+#'  value instead of a random value from 1 to x.
+#'
+#' @param x Vector or single value to sample from
+#' @param ... Remaining arguments for base::sample function
+#'
+#' @export
+resample <- function(x, ...) {
+    return(x[sample.int(length(x), ...)])
+}
+
+#' Check validity of affinity matrices
+#'
+#' Check to see if affinity matrices in a list have the following properties:
+#'  1. The maximum value in the entire matrix is 0.5
+#'  2. Every value in the diagonal is 0.5
+#'
+#' @param affinity_matrices A list of affinity matrices
+#'
+#' @return valid_matrices Boolean indicating if properties are met by all
+#'  affinity matrices
+#'
+#' @export
+check_affinity_matrices <- function(affinity_matrices) {
+    valid_matrices <- affinity_matrices |>
+        lapply(
+            function(x) {
+                max_along_diags <- diag(x) == max(x)
+                max_diag_pt_5 <- diag(x) == 0.5
+                return(max_along_diags & max_diag_pt_5)
+            }
+        ) |>
+        unlist() |>
+        all()
+    if (!valid_matrices) {
+        warning(
+            "Generated affinity matrices did not meet validity parameters."
+        )
+    }
+    return(valid_matrices)
 }
