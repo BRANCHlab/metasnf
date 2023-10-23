@@ -16,5 +16,5 @@ generate_solutions_matrix(data_list, settings_matrix)
 solutions_matrix The solutions matrix
 }
 \description{
-The matrix that will contain all the columns to be populated by SNF results
+The matrix that will contain all the columns to be populated by SNF results.
 }

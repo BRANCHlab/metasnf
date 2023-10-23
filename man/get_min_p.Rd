@@ -13,5 +13,5 @@ get_min_p(solutions_matrix_row)
 min_p minimum p-value
 }
 \description{
-Given an solutions matrix row containing evaluated p-values, returns minimum
+Given an solutions matrix row containing evaluated p-values, returns min.
 }

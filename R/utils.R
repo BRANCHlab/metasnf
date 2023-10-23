@@ -1,9 +1,8 @@
 #' Add columns to a dataframe
 #'
-#' @description
 #' Add new columns to a dataframe by providing a character vector of column
 #'  names (param `newcols`) and a value to occupy each row of the new columns
-#'  (param `fill`, NA by default)
+#'  (param `fill`, NA by default).
 #'
 #' @param df The dataframe to extend
 #' @param newcols The vector containing new column names
@@ -40,7 +39,6 @@ add_columns <- function(df, newcols, fill = NA) {
 
 #' Convert dataframe columns to numeric type
 #'
-#' @description
 #' Converts all columns in a dataframe that can be converted to numeric type to
 #'  numeric type.
 #'
@@ -85,9 +83,8 @@ char_to_fac <- function(df) {
 
 #' Select all columns of a dataframe not starting with the 'subject_' prefix.
 #'
-#' @description
 #' Removes the 'subject_' prefixed columns from a dataframe. Useful for printing
-#'  solutions_matrix structures to the console
+#'  solutions_matrix structures to the console.
 #'
 #' @param df A dataframe
 #'
@@ -111,7 +108,6 @@ no_subs <- function(df) {
 
 #' Select all columns of a dataframe starting with a given string prefix.
 #'
-#' @description
 #' Removes the columns that are not prefixed with 'subject_' prefixed columns
 #'  from a dataframe. Useful intermediate step for extracting subject UIDs from
 #'  an solutions_matrix structure.
@@ -158,7 +154,6 @@ merge_df_list <- function(df_list, join = "inner") {
 
 #' Training and testing split
 #'
-#' @description
 #' Given a vector of subject_id and a threshold, returns a list of which members
 #'  should be in the training set and which should be in the testing set. The
 #'  function relies on whether or not the absolute value of the Jenkins's
@@ -189,9 +184,8 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
 
 #' Filter data to training or testing subjects only
 #'
-#' @description
 #' Given a dataframe and the results of `train_test_split()`, return just the
-#'  data for subjects that were assigned the specified split
+#'  data for subjects that were assigned the specified split.
 #'
 #' @param df Dataframe to be subsetted into training or testing split
 #' @param assigned_df Dataframe containing "subjectkey" and "split" cols from

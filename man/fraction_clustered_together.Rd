@@ -25,5 +25,5 @@ of continued clustering together for all supplied solutions
 \description{
 Calculate average fraction of times that patients who clusted
 together in the full solution continued to cluster together in all the
-subsampled solutions
+subsampled solutions.
 }

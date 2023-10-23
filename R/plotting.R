@@ -1,6 +1,5 @@
 #' Heatmap settings matrix based on meta-clustering results
 #'
-#' @description
 #' Normalizes the settings matrix and plots as a heatmap. Rows are reordered to
 #'  match the row-clustering present within a provided meta-clustering result.
 #'

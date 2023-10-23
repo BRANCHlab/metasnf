@@ -1,7 +1,6 @@
 #' Calculate distance matrices
 #'
-#' @description
-#' Given a dataframe of numerical variables, return a euclidean distance matrix
+#' Given a dataframe of numerical variables, return a euclidean distance matrix.
 #'
 #' @param df Raw dataframe with subject IDs in column "subjectkey"
 #' @param input_type Either "numeric" (resulting in euclidean distances),

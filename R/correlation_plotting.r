@@ -1,6 +1,5 @@
 #' Display SNF cluster output in Heatmap
 #'
-#' @description
 #' Normalize SNF matrix and plot heatmap.
 #'
 #' @param W similarity matrix outputted from SNFtool's SNF function, with rownames and colnames in sample IDs
@@ -52,8 +51,7 @@ displayClustersHeatmap <- function(W,
 
 #' Functions to calculate correlation between cluster assignment to outcome variables and visualize to find meaningful clusters with Manhattan plot
 #'
-#' @description
-#'  Calculate correlation of clusters to each outcome using chi-squared (categorical outcome) and/or kruskal-wallis test (continuous outcome) in each data set that were integrated using SNF, and then generates long format data input for ClustersToOutcomeManhattan
+#' Calculate correlation of clusters to each outcome using chi-squared (categorical outcome) and/or kruskal-wallis test (continuous outcome) in each data set that were integrated using SNF, and then generates long format data input for ClustersToOutcomeManhattan
 #'
 #' @param df a dataframe of samples with cluster_column and outcomes columns.
 #' @param outcomes one or more outcomes of interest from df
@@ -89,9 +87,8 @@ clusterToOutcomeCorr <- function(df,
 
 #' Display cluster assignment to outcome correlation as Manhattan plot
 #'
-#' @description
-#'
 #' Manhattan plot plots the correlation of SNF clustering to specified outcome, colored by data types, dot size represents sample size.
+#'
 #' @param cco short for Correlation of Clusters vs Outcomes (cco). It is a dataframe with columns:
 #'  datatype: data type being integrated and clustered. Think of this as predictor
 #'  outcomes: outcome variables computed against datatype. Think of this as outcome
@@ -156,9 +153,6 @@ clusterToOutcomeManhattan <- function(cco, levels = NULL) {
     return(plot)
 }
 
-#' Generate correlation heatmap
-#'
-#' @description
 #' Generate correlation heatmap
 #'
 #' @param corr matrix of outcomes-outcomes correlation p_values
@@ -252,7 +246,6 @@ corrHeatmap <- function(corr,
 
 #' Generate correlation heatmap legend
 #'
-#' @description
 #' Generate legend for correlation heatmap.
 #'
 #' @param legend_name graph path to be saved to
@@ -340,7 +333,6 @@ corrHeatmap_legend <- function(legend_name,
 
 #' Generate predictor-outcome correlations in Manhattan plot
 #'
-#' @description
 #' Manhattan plot showing predictor correlations to an outcome
 #'
 #' @param df_stat is a dataframe comprised of predictive features vs a single outcome correlation test statistics. It comprises of features in rownames, and columns with the following colnames:
@@ -428,7 +420,6 @@ CorrManhattan <- function(df_stat, outcome, dataset_label) {
 
 #' Spectral clustering from c2 to user-defined max-number of cluster. Used by plotClustersAlluvial_wOutcome function
 #'
-#' @description
 #' Do spectral clustering through cluster 2 to user defined cluster number and outputs clustering result
 #'
 #' @param W a similarity matrix
@@ -453,7 +444,6 @@ output_cluster_file <- function(W, numc = 8){
 
 #' Prepare dataframe for multi-cluster alluvial plot
 #'
-#' @description
 #' Calculates the frequency of different data combinations and prepares dataframe. To be used by plotClustersAlluvial_wDiagnosis function
 #'
 #' @param cluster_env_df is a dataframe with clustering assignments and environmental variables
@@ -491,9 +481,7 @@ prepare_for_alluvial_wDiagnosis <- function(cluster_env_df,
 
 #' Plot alluvial plot
 #'
-#' @description
 #' Plot alluvial plot from 2 clusters to user-defined number of clusters along with outcome/environmental variables.
-#'
 #'
 #' @param W a similarity matrix with sample ids in rownames and colnames
 #' @param df_env dataframe of environmental or outcome variables to color the alluvium. With "Subject_Number" column filled with sample ids
@@ -508,6 +496,12 @@ plotClustersAlluvial_wDiagnosis <- function(W,
                                             numc,
                                             outcome,
                                             key_outcome = NULL) {
+    # Meaningless visible bindings to supply to plotting functions
+    x <- ""
+    Freq <- ""
+    stratum <- ""
+    Count <- ""
+    Fill <- ""
     if (!(is.null(key_outcome))) {
         key_outcome = key_outcome
     }
@@ -582,4 +576,3 @@ plotClustersAlluvial_wDiagnosis <- function(W,
             legend.text = ggplot2::element_text(size = 12)
         )
 }
-

@@ -13,5 +13,5 @@ get_clustered_subs(solutions_matrix_row)
 clustered_subs Dataframe
 }
 \description{
-Pull a dataframe of clustered subjects from an solutions matrix structure
+Pull a dataframe of clustered subjects from an solutions matrix structure.
 }

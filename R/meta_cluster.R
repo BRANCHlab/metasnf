@@ -28,9 +28,8 @@ meta_cluster <- function(mc_om) {
 
 #' Meta-cluster calculations
 #'
-#' @description
 #' Generate matrix of pairwise cluster-solution similarities by Adjusted Rand
-#'  index calculations
+#'  index calculations.
 #'
 #' @param om solutions_matrix
 #'
@@ -65,7 +64,6 @@ calc_om_aris <- function(om) {
 
 #' Return the row ordering of a meta-clustering solution
 #'
-#' @description
 #' Pheatmap reorders meta clustering results to enable meta-cluster
 #'  visualization. This function extracts the new row orders to apply to other
 #'  matrices.

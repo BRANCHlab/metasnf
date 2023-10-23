@@ -21,5 +21,5 @@ split_df Dataframe subsetted to specified split
 }
 \description{
 Given a dataframe and the results of \code{train_test_split()}, return just the
-data for subjects that were assigned the specified split
+data for subjects that were assigned the specified split.
 }

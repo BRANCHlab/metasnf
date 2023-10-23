@@ -44,5 +44,5 @@ fused_network The final fused network for clustering
 }
 \description{
 Given a data_list, returns a new data_list where all original data objects of
-a particlar domain have been concatenated
+a particlar domain have been concatenated.
 }

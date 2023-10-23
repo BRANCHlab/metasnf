@@ -22,5 +22,5 @@ p_val the smallest p-value of interest
 \description{
 Depending on outcome measure, perform ordinal regression or linear regression
 and return p-value as a benchmark measure of how well-separated clusters
-are by the outcome measure
+are by the outcome measure.
 }

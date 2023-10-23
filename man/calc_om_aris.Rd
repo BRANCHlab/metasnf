@@ -14,5 +14,5 @@ om_aris ARIs between clustering solutions of an solutions matrix
 }
 \description{
 Generate matrix of pairwise cluster-solution similarities by Adjusted Rand
-index calculations
+index calculations.
 }

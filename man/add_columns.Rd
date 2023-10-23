@@ -20,5 +20,5 @@ extended_df The dataframe containing the added columns
 \description{
 Add new columns to a dataframe by providing a character vector of column
 names (param \code{newcols}) and a value to occupy each row of the new columns
-(param \code{fill}, NA by default)
+(param \code{fill}, NA by default).
 }

@@ -86,7 +86,7 @@ Authors@R:
             role = c("aut")
         )
     )
-Description: Tools to facilitate patient subtyping with similarity network fusion
+Description: Tools to facilitate patient subtyping with similarity network fusion.
 License: GPL (>= 3) + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

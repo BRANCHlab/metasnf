@@ -13,5 +13,5 @@ get_mean_p(solutions_matrix_row)
 mean_p mean p-value
 }
 \description{
-Given an solutions matrix row containing evaluated p-values, returns mean
+Given an solutions matrix row containing evaluated p-values, returns mean.
 }

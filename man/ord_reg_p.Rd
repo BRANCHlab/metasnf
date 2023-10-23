@@ -18,5 +18,5 @@ p_val The overall p-value distinguishing clusters by the DV
 }
 \description{
 Returns the p-value following an ordinal regression in which cluster
-is the IV and a provided ordinal variable is the DV
+is the IV and a provided ordinal variable is the DV.
 }

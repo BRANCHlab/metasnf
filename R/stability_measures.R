@@ -159,9 +159,9 @@ subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
 
 #' Average fraction of clustering together
 #'
-#' @description Calculate average fraction of times that patients who clusted
+#' Calculate average fraction of times that patients who clusted
 #'  together in the full solution continued to cluster together in all the
-#'  subsampled solutions
+#'  subsampled solutions.
 #'
 #' @param data_list_subsamples A list of subsets of a larger data_list. See
 #'  ?subsample_data_list to obtain this object.
