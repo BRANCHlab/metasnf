@@ -117,7 +117,6 @@ There are two ways to avoid using the default distance metrics if you don't want
 The first way is to use the `keep_defaults` parameter in `generate_distance_metrics_list()`:
 
 ```{r}
-
 no_default_metrics <- generate_distance_metrics_list(
     continuous_distances = list(
         "standard_norm_euclidean" = sn_euclidean_distance
@@ -224,12 +223,38 @@ By default, this function will return a dataframe containing all the columns in 
 To actually use the matrix during SNF, you'll need to make sure that the number of rows in the weights matrix is the same as the number of rows in your settings matrix.
 
 ```{r}
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 10,
+    distance_metrics_list = my_distance_metrics,
+    continuous_distances = 1,
+    discrete_distances = c(2, 3)
+)
+
 weights_matrix <- generate_weights_matrix(
     data_list,
     nrow = nrow(settings_matrix)
 )
 
 weights_matrix[1:5, ]
+
+solutions_matrix_with_ones_for_weights <- batch_snf(
+    data_list,
+    settings_matrix,
+    distance_metrics_list = my_distance_metrics,
+    weights_matrix = weights_matrix
+)
+
+solutions_matrix_with_no_weights <- batch_snf(
+    data_list,
+    settings_matrix,
+    distance_metrics_list = my_distance_metrics
+)
+
+identical(
+    solutions_matrix_with_no_weights,
+    solutions_matrix_with_ones_for_weights
+)
 ```
 
 A `weights_matrix` of all 1s (the default `weights_matrix` used when you don't supply one yourself) 'won't actually do anything to the data.
@@ -243,6 +268,18 @@ weights_matrix <- generate_weights_matrix(
 )
 
 weights_matrix[1:5, ]
+
+solutions_matrix_with_uniform_random_weights <- batch_snf(
+    data_list,
+    settings_matrix,
+    distance_metrics_list = my_distance_metrics,
+    weights_matrix = weights_matrix
+)
+
+identical(
+    solutions_matrix_with_no_weights,
+    solutions_matrix_with_uniform_random_weights
+)
 ```
 
 The default metrics (simple Euclidean for continuous, discrete, and ordinal data and Gower's distance for categorical and mixed data) are both capable of applying weights to data before distance matrix generation.
@@ -259,7 +296,7 @@ Looking at the code from one of the package-provided distance functions shows so
 euclidean_distance
 ```
 
-First, the function should accept two arguments: `df` and `weights`, and only give one output, `distance_matrix`.
+The function should accept two arguments: `df` and `weights_row`, and only give one output, `distance_matrix`.
 The function doesn't actually need to make use of those weights if you don't want it to.
 
 By the time your data reaches a distance metric function, it (referred to as `df`) will always:
@@ -283,7 +320,7 @@ Here's how to make it look more like what the distance metric functions will exp
 processed_abcd_anxiety <- abcd_anxiety |>
     na.omit() |> # no NAs
     dplyr::rename("subjectkey" = "patient") |> # replace the UID with 'subjectkey'
-    data.frame()
+    data.frame(row.names = "subjectkey")
 
 head(processed_abcd_anxiety)
 ```
@@ -291,7 +328,8 @@ head(processed_abcd_anxiety)
 If we want to have a distance metric that calculates Euclidean distance, but also scales the resulting matrix down such that the biggest allowed distance is a 1, it would look like this:
 
 ```{r}
-my_scaled_euclidean <- function(df) {
+my_scaled_euclidean <- function(df, weights_row) {
+    # this function won't apply the weights it is given
     distance_matrix <- df |>
         stats::dist(method = "euclidean") |>
         as.matrix() # make sure it's formatted as a matrix
@@ -300,8 +338,9 @@ my_scaled_euclidean <- function(df) {
 }
 ```
 
-Error handling will be in your hands.
+You'll need to be mindful of any edge cases that your function will run into.
 For example, this function will fail if the pairwise distances for all patients is 0 (a division by 0 will occur).
+If that specific situation ever happens, there's probably something quite wrong with the data.
 
 Once you're happy that you distance function is working as you'd like it to:
 
@@ -319,212 +358,28 @@ my_distance_metrics <- generate_distance_metrics_list(
 )
 ```
 
-## Custom weighting
+## Requesting metrics
 
-Custom weighting at the variable level can get a little bit tricky.
-Importantly, information of the variable weights need to be **a part of** the distance metric functions themselves; weights aren't supplied to the distance metric functions as arguments.
-Below are a few examples of incorporating custom weights into distance matrices.
+If there's a metric you'd like to see added as a prewritten option included in the package, feel free to post an issue or make a pull request on the package's GitHub.
 
-### Example 1: Uniform random reweighting
-
-Here, we will set up a function that first standard normalizes all the variables, then randomly reweights all the variables according to a uniform distribution.
-
-```{r}
-# Setting up some data
-processed_cort_t <- abcd_cort_t |>
-    na.omit() |>
-    dplyr::rename("subjectkey" = "patient") |>
-    data.frame(row.names = "subjectkey")
-
-processed_cort_t[1:5, 1:5]
-
-uniform_weight_euclidean <- function(df) {
-    df <- SNFtool::standardNormalization(df)
-    # generating the random weights
-    number_of_weights <- ncol(df)
-    random_weights <- stats::runif(number_of_weights)
-    print(random_weights[1]) # not necessary - for demonstration
-    # applying the weights
-    weighted_data <- as.matrix(df) %*% diag(random_weights)
-    # distance calculation
-    distance_matrix <- weighted_data |>
-        stats::dist(method = "euclidean") |>
-        as.matrix()
-    return(distance_matrix)
-}
-
-uniform_weight_euclidean(processed_cort_t)[1:5, 1:5]
-```
-
-The approach of formatting variable weights in a diagonal matrix and then doing matrix multiplication with the original dataframe through the `%*%` operator is very handy to know for this purpose:
-
-```{r}
-df <- data.frame(
-    col1 = c(1, 3),
-    col2 = c(50, 100)
-)
-
-df
-
-weights <- c(1, 2)
-
-as.matrix(df) %*% diag(weights)
-```
-
-### Example 2: Fixed random weights
-
-The approach above is limited in that you won't easily be able to find out what the actual weights being used were.
-
-Using [closures](http://adv-r.had.co.nz/Functional-programming.html#closures), we can efficiently churn out distance metric functions that we can examine the weights of out of the gates.
-
-```{r}
-fixed_uniform_weight_euclidean <- function(max_cols) {
-    random_weights <- stats::runif(max_cols)
-    uniform_weight_euclidean <- function(df) {
-        df <- SNFtool::standardNormalization(df)
-        # generating the random weights
-        number_of_weights <- ncol(df)
-        random_weights_trimmed <- random_weights[1:number_of_weights]
-        print(random_weights_trimmed[1]) # not necessary - for demonstration
-        # applying the weights
-        weighted_data <- as.matrix(df) %*% diag(random_weights_trimmed)
-        # distance calculation
-        distance_matrix <- weighted_data |>
-            stats::dist(method = "euclidean") |>
-            as.matrix()
-        return(distance_matrix)
-    }
-    return(uniform_weight_euclidean)
-}
-```
-
-This function will spit out another function that contains within it a fixed string of random uniform numbers.
-The number of random numbers contained is based on the `max_cols` parameter, and should be chosen such that you're certain you'll never have a dataframe with more columns than `max_cols` that needs to be evaluated.
-This may be bigger than the number of columns in any individual dataframe, depending on which SNF schemes you apply.
-A safe value in this case would be something bigger than the total number of variables across all your data.
-
-```{r}
-my_metric_1 <- fixed_uniform_weight_euclidean(500)
-```
-
-Both the original uniform weight function and the closure function were given a print statement to report the first weight they apply.
-Watch what happens when we repeatedly access either of these functions.
-
-```{r}
-uniform_weight <- uniform_weight_euclidean(processed_cort_t)
-uniform_weight <- uniform_weight_euclidean(processed_cort_t)
-uniform_weight <- uniform_weight_euclidean(processed_cort_t)
-
-uniform_weight <- my_metric_1(processed_cort_t)
-uniform_weight <- my_metric_1(processed_cort_t)
-uniform_weight <- my_metric_1(processed_cort_t)
-```
-
-For the first function, a new set of random numbers is generated each time the distance metric is run.
-For the second function, a new set of random numbers is only generated once (during `fixed_uniform_weight_euclidean()`).
-This is particularly useful for resampling purposes.
-
-### Example 3: Specific variable weights
-
-You can also have specific control over how each variable is weighted.
-Like before, this information will need to be built into the distance metric function.
-You may want to have a good understanding of how the different SNF schemes work as they will ultimately define the possible combinations of vectors that any one dataframe requiring distance matrix conversion can have.
-To actually embed the custom weights in this function, you may have to get a little creative.
-Here is one approach, which involves creating a dataframe that stores all the weights we're interested in working with
-
-```{r}
-subset_of_data <- processed_cort_t[1:5, 1:3]
-other_data <- processed_cort_t[1:5, 40:42]
-
-colnames(subset_of_data)
-colnames(other_data)
-```
-
-Let's pretend that is the totality of the data we're working with.
-
-```{r}
-all_variable_names <- c(colnames(subset_of_data), colnames(other_data))
-
-number_of_variables <- length(all_variable_names)
-
-# How many sets of reweightings we want to make
-number_of_weight_combinations <- 5
-
-number_of_weights <- number_of_weight_combinations * number_of_variables
-
-weights_df <- matrix(
-    ncol = number_of_variables,
-    nrow = number_of_weight_combinations,
-    data = runif(number_of_weights) # you could use something specific instead
-) |> data.frame()
-
-colnames(weights_df) <- all_variable_names
-
-weights_df
-```
-
-Those are all the weights.
-Let's say our distance metric encounters some odd subset of the data:
-
-```{r}
-odd_subset <- cbind(subset_of_data[, c(1, 2)], other_data[, c(1, 2)])
-
-odd_subset
-```
-
-This function can take in a row from `weights_df` and spit out a function that always applies that row to weight any data it encounters:
-
-```{r}
-specific_weighted_euclidean <- function(weights_row) {
-    weighted_euclidean <- function(df) {
-        weights <- weights_row[, colnames(df)]
-        weighted_data <- as.matrix(df) %*% diag(weights)
-        distance_matrix <- weighted_data |>
-            stats::dist(method = "euclidean") |>
-            as.matrix()
-        return(distance_matrix)
-    }
-    return(weighted_euclidean)
-}
-```
-
-In action:
-
-```{r}
-first_row_metric <- specific_weighted_euclidean(weights_df[1, ])
-
-first_row_metric(odd_subset)
-```
-
-### Example 4: Generating a range of weighted distance metrics using a weights matrix
-
-(Example using the weighted hamming distance will go here...)
-
-## List of included distance metrics
-
-### Unweighted
+## List of prewritten distance metrics functions
 
 These metrics can be used as is.
+They are all capable of accepting and applying custom weights provided by a `weights_matrix`.
 
-* `euclidean_distance`
-    * simple Euclidean distance
+* `euclidean_distance` (Euclidean distance)
     * applies to continuous, discrete, or ordinal data
-* `sn_euclidean_distance`
-    * Euclidean distance following standard normalization (SNFtool package implementation)
+* `sn_euclidean_distance` (Standard normalized Euclidean distance)
+    * Standard normalize data, then use Euclidean distance
     * applies to continuous, discrete, or ordinal data
-* `gower_distance`
-    * Gower's distance (cluster package implementation)
+* `gower_distance` (Gower's distance)
     * applies to any data
-
-### Weighted (closure-based)
-
-These metrics need to be embedded with weights (see Example 4).
-
-* `weighted_hamming_distance`
-* `weighted_euclidean_distance`
-
-And that's all there is on distance metrics!
-If there's a metric you'd like to see added as a prewritten option included in the package, feel free to post an issue or make a pull request on the package's GitHub.
+* `siw_euclidean_distance` (Squared (including weights) Euclidean distance)
+    * Apply weights to dataframe, then calculate Euclidean distance, then square the results
+* `sew_euclidean_distance` (Squared (excluding weights) Euclidean distance)
+    * Apply *square root* of weights to dataframe, then calculate Euclidean distance, then square the results
+* `hamming_distance` (Hamming distance)
+    * Distance between patients is (1 * variable weight) summed over all variables
 
 ## References
 
