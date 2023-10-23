@@ -4,16 +4,21 @@
 \alias{CorrManhattan}
 \title{Generate predictor-outcome correlations in Manhattan plot}
 \usage{
-CorrManhattan(df_export, outcome)
+CorrManhattan(df_stat, outcome, dataset_label)
 }
 \arguments{
-\item{df_export}{is a dataframe with features in rownames, and columns:
+\item{df_stat}{is a dataframe comprised of predictive features vs a single outcome correlation test statistics. It comprises of features in rownames, and columns with the following colnames:
 "p.value": from correlation test,
 "n": number of samples,
 "Group": datatype name,
 "Group_index": sequence of datatypes to be displayed}
 
 \item{outcome}{name the correlations were computed against. To be displayed in plot title}
+
+\item{dataset_label}{labels that feed into SNF. Will be displayed along x-axis of Manhattan plot}
+}
+\value{
+plot a Manhattan plot
 }
 \description{
 Manhattan plot showing predictor correlations to an outcome

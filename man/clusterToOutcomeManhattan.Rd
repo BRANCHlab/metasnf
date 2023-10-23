@@ -7,10 +7,17 @@
 clusterToOutcomeManhattan(cco, levels = NULL)
 }
 \arguments{
-\item{cco}{cco #!}
+\item{cco}{short for Correlation of Clusters vs Outcomes (cco). It is a dataframe with columns:
+datatype: data type being integrated and clustered. Think of this as predictor
+outcomes: outcome variables computed against datatype. Think of this as outcome
+p_value: p_value from statistical testing on datatype clusters vs outcome
+size:}
 
 \item{levels}{optional argument to re-arrange outcome display on x-axis}
 }
+\value{
+plot A Manhattan plot
+}
 \description{
-Manhattan plot outputs the Correlation of Clusters from spectral clustering with the Outcomes (cco), colored by data types, dot size represents sample size.
+Manhattan plot plots the correlation of SNF clustering to specified outcome, colored by data types, dot size represents sample size.
 }

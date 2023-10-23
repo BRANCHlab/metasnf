@@ -4,14 +4,17 @@
 \alias{corrHeatmap_legend}
 \title{Generate correlation heatmap legend}
 \usage{
-corrHeatmap_legend(legend_name, outcome_labels, outcome_labels_color)
+corrHeatmap_legend(legend_name, labels, labels_color)
 }
 \arguments{
 \item{legend_name}{graph path to be saved to}
 
-\item{outcome_labels}{optional argument to specify outcome label names}
+\item{labels}{argument to specify outcome label names}
 
-\item{outcome_labels_color}{optional argument to specify outcome label name colors}
+\item{labels_color}{argument to specify outcome label name colors}
+}
+\value{
+pd a collection of heatmap legends saved to a file in current path
 }
 \description{
 Generate legend for correlation heatmap.

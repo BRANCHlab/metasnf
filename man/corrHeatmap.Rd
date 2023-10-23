@@ -4,13 +4,20 @@
 \alias{corrHeatmap}
 \title{Generate correlation heatmap}
 \usage{
-corrHeatmap(corr, outcome_label_color = NULL)
+corrHeatmap(corr, row_km, column_km, labels_color = NULL)
 }
 \arguments{
 \item{corr}{matrix of outcomes-outcomes correlation p_values}
 
-\item{outcome_label_color}{optional argument to specify outcome color labels}
+\item{row_km}{kmean partitioning of features along rows for display}
+
+\item{column_km}{kmean partitioning of features along columns for display}
+
+\item{labels_color}{optional argument to specify color labels for datatypes}
+}
+\value{
+hm a correlation heatmap
 }
 \description{
-Generate correlation heatmap (need more generalization. Only tested outcomes-outcomes correlation)
+Generate correlation heatmap
 }

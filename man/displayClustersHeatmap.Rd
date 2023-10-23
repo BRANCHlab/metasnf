@@ -2,7 +2,7 @@
 % Please edit documentation in R/correlation_plotting.r
 \name{displayClustersHeatmap}
 \alias{displayClustersHeatmap}
-\title{Diaplay SNF cluster output in Heatmap}
+\title{Display SNF cluster output in Heatmap}
 \usage{
 displayClustersHeatmap(
   W,
@@ -12,9 +12,9 @@ displayClustersHeatmap(
 )
 }
 \arguments{
-\item{W}{similarity matrix from SNF}
+\item{W}{similarity matrix outputted from SNFtool's SNF function, with rownames and colnames in sample IDs}
 
-\item{group_cluster}{cluster assignment}
+\item{group_cluster}{cluster assignment from spectral clustering}
 
 \item{top_annotation}{annotation to be displayed above the heatmap output}
 

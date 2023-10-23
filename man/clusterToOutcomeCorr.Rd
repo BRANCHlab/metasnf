@@ -4,7 +4,7 @@
 \alias{clusterToOutcomeCorr}
 \title{Functions to calculate correlation between cluster assignment to outcome variables and visualize to find meaningful clusters with Manhattan plot}
 \usage{
-clusterToOutcomeCorr(df, outcomes, method, datatype)
+clusterToOutcomeCorr(df, outcomes, method, datatype, size)
 }
 \arguments{
 \item{df}{a dataframe of samples with cluster_column and outcomes columns.}
@@ -14,6 +14,11 @@ clusterToOutcomeCorr(df, outcomes, method, datatype)
 \item{method}{correlation test method ("chi-squared" or "kruskal")}
 
 \item{datatype}{name of the SNF integration datatype}
+
+\item{size}{sample size of the datatype integrated}
+}
+\value{
+out a dataframe of correlation test results of each cluster categories vs outcomes. output can be fed directly into clusterToOutcomeManhattan
 }
 \description{
 Calculate correlation of clusters to each outcome using chi-squared (categorical outcome) and/or kruskal-wallis test (continuous outcome) in each data set that were integrated using SNF, and then generates long format data input for ClustersToOutcomeManhattan
