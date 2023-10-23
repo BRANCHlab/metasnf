@@ -32,6 +32,9 @@
 #' @param distance_metrics_list A distance_metrics_list.
 #'  See ?generate_distance_metrics_list.
 #'
+#' @param weights_matrix A matrix containing variable weights to use during
+#'  distance matrix calculation. See ?generate_weights_matrix.
+#'
 #' @param quiet If TRUE, will not print out time remaining estimates.
 #'
 #' @return populated_settings_matrix settings matrix with filled columns
@@ -46,6 +49,7 @@ batch_snf <- function(data_list,
                       clust_algs_list = NULL,
                       suppress_clustering = FALSE,
                       distance_metrics_list = NULL,
+                      weights_matrix = NULL,
                       quiet = FALSE) {
     ###########################################################################
     # 1. Checking validity of settings
@@ -205,11 +209,30 @@ batch_snf <- function(data_list,
         }
     }
     ###########################################################################
+    # 8. Create (or check) weights_matrix
+    ###########################################################################
+    if (is.null(weights_matrix)) {
+        weights_matrix <- generate_weights_matrix(
+            data_list,
+            nrow = nrow(settings_matrix)
+        )
+    } else {
+        if (nrow(weights_matrix) != nrow(settings_matrix)) {
+            stop(
+                paste0(
+                    "weights_matrix and settings_matrix should have the same",
+                    " number of rows."
+                )
+            )
+        }
+    }
+    ###########################################################################
     # 8. Iterate through the rows of the settings matrix
     ###########################################################################
     for (i in seq_len(nrow(settings_matrix))) {
         start_time <- Sys.time() # used to estimate time to completion
         settings_matrix_row <- settings_matrix[i, ]
+        weights_row <- weights_matrix[i, , drop = FALSE]
         current_data_list <- drop_inputs(settings_matrix_row, data_list)
         # Apply the current row's SNF scheme
         current_snf_scheme <- dplyr::case_when(
@@ -241,7 +264,8 @@ batch_snf <- function(data_list,
             disc_dist_fn = disc_dist_fn,
             ord_dist_fn = ord_dist_fn,
             cat_dist_fn = cat_dist_fn,
-            mix_dist_fn = mix_dist_fn
+            mix_dist_fn = mix_dist_fn,
+            weights_row = weights_row
         )
         # If user provided a path to save the affinity matrices, save them
         if (!is.null(affinity_matrix_dir)) {

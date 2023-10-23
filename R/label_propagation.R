@@ -45,25 +45,33 @@ label_prop <- function(full_fused_network, clusters) {
 #' Given an solutions matrix and a data_list object containing all subjects, return
 #'  a dataframe of the label propagated results of all om rows
 #'
-#' @param om An solutions matrix
+#' @param solutions_matrix A solutions matrix
 #' @param full_data_list A data_list object made by rbinding(train, test) data
+#' @param clust_algs_list List of custom clustering algorithms to apply
+#'  to the final fused network. See ?generate_clust_algs_list
 #' @param distance_metrics_list A distance_metrics_list.
 #'  See ?generate_distance_metrics_list.
+#' @param weights_matrix A matrix containing variable weights to use during
+#'  distance matrix calculation. See ?generate_weights_matrix.
 #'
 #' @return labeled_df A dataframe of the label propagated results of all om rows
 #'
 #' @export
-lp_row <- function(om, full_data_list, distance_metrics_list = NULL) {
-    if (!"significance" %in% colnames(om)) {
+lp_row <- function(solutions_matrix,
+                   full_data_list,
+                   clust_algs_list = NULL,
+                   distance_metrics_list = NULL,
+                   weights_matrix = NULL) {
+    if (!"significance" %in% colnames(solutions_matrix)) {
         print(paste0(
             "If you add a 'significance' column to your solutions matrix",
             " those values will be used to name each solution (instead of",
             " row IDs)"
         ))
-        om$"significance" <- om$"row_id"
+        solutions_matrix$"significance" <- solutions_matrix$"row_id"
     }
     # Keep a track of the number of train and test subjects
-    n_train <- length(colnames(subs(om))) - 1
+    n_train <- length(colnames(subs(solutions_matrix))) - 1
     n_test <- summarize_dl(full_data_list)$length[1] - n_train
     train_indices <- 1:n_train
     test_indices <- (1 + n_train):(n_test + n_train)
@@ -73,9 +81,33 @@ lp_row <- function(om, full_data_list, distance_metrics_list = NULL) {
     all_subs <- full_data_list[[1]]$"data"$"subjectkey"
     ordered_subs <- c(train_subs, test_subs)
     group_vec <- c(rep("train", n_train), rep("test", n_test))
-    for (i in seq_len(nrow(om))) {
-        print(paste0("Processing row ", i, " of ", nrow(om), "..."))
-        current_row <- om[i, ]
+    #######################################################################
+    # 7. Creation of distance_metrics_list, if it does not already exist
+    #######################################################################
+    if (is.null(distance_metrics_list)) {
+        distance_metrics_list <- generate_distance_metrics_list()
+    }
+    ###########################################################################
+    # 8. Create (or check) weights_matrix
+    ###########################################################################
+    if (is.null(weights_matrix)) {
+        weights_matrix <- generate_weights_matrix(
+            full_data_list,
+            nrow = nrow(solutions_matrix)
+        )
+    } else {
+        if (nrow(weights_matrix) != nrow(solutions_matrix)) {
+            stop(
+                paste0(
+                    "weights_matrix and solutions_matrix should have the same",
+                    " number of rows."
+                )
+            )
+        }
+    }
+    for (i in seq_len(nrow(solutions_matrix))) {
+        print(paste0("Processing row ", i, " of ", nrow(solutions_matrix), "..."))
+        current_row <- solutions_matrix[i, ]
         sig <- paste0(current_row$"significance")
         reduced_dl <- drop_inputs(current_row, full_data_list)
         check_subj_orders_for_lp(
@@ -84,30 +116,6 @@ lp_row <- function(om, full_data_list, distance_metrics_list = NULL) {
             n_train = n_train,
             n_test = n_test
         )
-        #######################################################################
-        # 7. Creation of distance_metrics_list, if it does not already exist
-        #######################################################################
-        if (is.null(distance_metrics_list)) {
-            # Make sure the user didn't just forget to provide their list. If the
-            #  settings matrix has distances chosen beyond a value of 1, the user
-            #  certainly meant to provide a custom list.
-            max_dist_param <- max(
-                current_row$"cont_dist",
-                current_row$"disc_dist",
-                current_row$"ord_dist",
-                current_row$"cat_dist",
-                current_row$"mix_dist"
-            )
-            if (max_dist_param > 1) {
-                stop(
-                    "settings_matrix refers to distance metrics values beyond one",
-                    " but no distance_metrics_list was provided. Did you forget",
-                    " to provide a distance_metrics_list?"
-                )
-            } else {
-                distance_metrics_list <- generate_distance_metrics_list()
-            }
-        }
         #######################################################################
         # obtaining settings values for snf_step
         scheme <- current_row$"snf_scheme"
@@ -124,6 +132,7 @@ lp_row <- function(om, full_data_list, distance_metrics_list = NULL) {
         ord_dist_fn <- distance_metrics_list$"ordinal_distance"[[ord_dist]]
         cat_dist_fn <- distance_metrics_list$"categorical_distance"[[cat_dist]]
         mix_dist_fn <- distance_metrics_list$"mixed_distance"[[mix_dist]]
+        weights_row <- weights_matrix[i, , drop = FALSE]
         #######################################################################
         full_fused_network <- snf_step(
             reduced_dl,
@@ -135,7 +144,8 @@ lp_row <- function(om, full_data_list, distance_metrics_list = NULL) {
             disc_dist_fn = disc_dist_fn,
             ord_dist_fn = ord_dist_fn,
             cat_dist_fn = cat_dist_fn,
-            mix_dist_fn = mix_dist_fn
+            mix_dist_fn = mix_dist_fn,
+            weights_row = weights_row
         )
         full_fused_network <- full_fused_network[ordered_subs, ordered_subs]
         clusters <- get_clusters(current_row)

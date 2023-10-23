@@ -4,13 +4,12 @@
 \alias{gower_distance}
 \title{Distance metric: Gower distance}
 \usage{
-gower_distance(df, weights)
+gower_distance(df, weights_row)
 }
 \arguments{
-\item{df}{Dataframe containing at least 1 data column}
+\item{df}{Dataframe containing at least 1 data column.}
 
-\item{weights}{Single-row dataframe where the column names contain the
-column names in df and the row contains the corresponding weights.}
+\item{weights_row}{For compatibility - function does not accept weights.}
 }
 \value{
 distance_matrix A distance matrix.

@@ -4,18 +4,14 @@
 \alias{generate_weights_matrix}
 \title{Generate a matrix to store variable weights}
 \usage{
-generate_weights_matrix(data = NULL, data_list = NULL, rows = 1, fill = "ones")
+generate_weights_matrix(data_list = NULL, nrow = 1, fill = "ones")
 }
 \arguments{
-\item{data}{A dataframe with column names spanning all the variables that
-may ever require weights. Cannot be provided at the same time as the
-data_list parameter.}
-
 \item{data_list}{A data_list with column names spanning all the variables that
 may ever require weights. Cannot be provided at the same time as the
 data parameter.}
 
-\item{rows}{Number of rows to generate the template weights matrix for.}
+\item{nrow}{Number of rows to generate the template weights matrix for.}
 
 \item{fill}{String indicating what to populate generate rows with. Can be
 "ones" (default; fill matrix with 1), "uniform" (fill matrix with uniformly

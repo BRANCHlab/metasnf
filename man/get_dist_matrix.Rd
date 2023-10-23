@@ -11,7 +11,8 @@ get_dist_matrix(
   disc_dist_fn,
   ord_dist_fn,
   cat_dist_fn,
-  mix_dist_fn
+  mix_dist_fn,
+  weights_row
 )
 }
 \arguments{
@@ -30,6 +31,9 @@ gower distances)}
 \item{cat_dist_fn}{distance metric function for categorical data}
 
 \item{mix_dist_fn}{distance metric function for mixed data}
+
+\item{weights_row}{Single-row dataframe where the column names contain the
+column names in df and the row contains the corresponding weights_row.}
 }
 \value{
 dist_matrix Matrix of inter-observation distances

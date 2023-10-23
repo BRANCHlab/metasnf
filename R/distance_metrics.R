@@ -12,6 +12,8 @@
 #' @param ord_dist_fn distance metric function for ordinal data
 #' @param cat_dist_fn distance metric function for categorical data
 #' @param mix_dist_fn distance metric function for mixed data
+#' @param weights_row Single-row dataframe where the column names contain the
+#'  column names in df and the row contains the corresponding weights_row.
 #'
 #' @return dist_matrix Matrix of inter-observation distances
 #'
@@ -22,24 +24,35 @@ get_dist_matrix <- function(df,
                             disc_dist_fn,
                             ord_dist_fn,
                             cat_dist_fn,
-                            mix_dist_fn) {
+                            mix_dist_fn,
+                            weights_row) {
     # Move subject keys into dataframe rownames
     df <- data.frame(df, row.names = "subjectkey")
+    # Trim down of the full weights row
+    weights_row_trim <-
+        weights_row[, colnames(weights_row) %in% colnames(df), drop = FALSE]
+    # Use 1 for anything that is not present in weights_row
+    missing_weights <-
+        df[1, !colnames(df) %in% colnames(weights_row_trim), drop = FALSE]
+    missing_weights[, ] <- 1
+    weights_row_trim <- cbind(weights_row_trim, missing_weights)
+    weights_row_trim <- weights_row_trim[, colnames(df)]
     if (input_type == "continuous") {
-        dist_matrix <- cont_dist_fn(df)
+        dist_fn <- cont_dist_fn
     } else if (input_type == "discrete") {
-        dist_matrix <- disc_dist_fn(df)
+        dist_fn <- disc_dist_fn
     } else if (input_type == "ordinal") {
-        dist_matrix <- ord_dist_fn(df)
+        dist_fn <- ord_dist_fn
     } else if (input_type == "categorical") {
-        dist_matrix <- cat_dist_fn(df)
+        dist_fn <- cat_dist_fn
     } else if (input_type == "mixed") {
-        dist_matrix <- mix_dist_fn(df)
+        dist_fn <- mix_dist_fn
     } else {
         rlang::abort(
             paste0("The value ", input_type, " is not a valid input type."),
             class = "invalid_input")
     }
+    dist_matrix <- dist_fn(df, weights_row_trim)
     return(dist_matrix)
 }
 
@@ -320,14 +333,15 @@ summarize_distance_metrics_list <- function(distance_metrics_list) {
 #' Distance metric: Euclidean distance
 #'
 #' @param df Dataframe containing at least 1 data column
-#' @param weights Single-row dataframe where the column names contain the
-#'  column names in df and the row contains the corresponding weights.
+#' @param weights_row Single-row dataframe where the column names contain the
+#'  column names in df and the row contains the corresponding weights_row.
 #'
 #' @return distance_matrix A distance matrix.
 #'
 #' @export
-euclidean_distance <- function(df, weights) {
-    distance_matrix <- df |>
+euclidean_distance <- function(df, weights_row) {
+    weighted_df <- as.matrix(df) %*% diag(weights_row)
+    distance_matrix <- weighted_df |>
         stats::dist(method = "euclidean") |>
         as.matrix()
     return(distance_matrix)
@@ -335,14 +349,13 @@ euclidean_distance <- function(df, weights) {
 
 #' Distance metric: Gower distance
 #'
-#' @param df Dataframe containing at least 1 data column
-#' @param weights Single-row dataframe where the column names contain the
-#'  column names in df and the row contains the corresponding weights.
+#' @param df Dataframe containing at least 1 data column.
+#' @param weights_row For compatibility - function does not accept weights.
 #'
 #' @return distance_matrix A distance matrix.
 #'
 #' @export
-gower_distance <- function(df, weights) {
+gower_distance <- function(df, weights_row) {
     df <- char_to_fac(df)
     distance_matrix <- df |>
         cluster::daisy(metric = "gower", warnBin = FALSE) |>
@@ -352,15 +365,16 @@ gower_distance <- function(df, weights) {
 #' Distance metric: Standard normalization then Euclidean
 #'
 #' @param df Dataframe containing at least 1 data column.
-#' @param weights Single-row dataframe where the column names contain the
+#' @param weights_row Single-row dataframe where the column names contain the
 #'  column names in df and the row contains the corresponding weights.
 #'
 #' @return distance_matrix A distance matrix.
 #'
 #' @export
-sn_euclidean_distance <- function(df, weights) {
+sn_euclidean_distance <- function(df, weights_row) {
     df <- SNFtool::standardNormalization(df)
-    distance_matrix <- df |>
+    weighted_df <- as.matrix(df) %*% diag(weights_row)
+    distance_matrix <- weighted_df |>
         stats::dist(method = "euclidean") |>
         as.matrix()
     return(distance_matrix)
@@ -369,15 +383,16 @@ sn_euclidean_distance <- function(df, weights) {
 #' Squared Euclidean distance
 #'
 #' @param df Dataframe containing at least 1 data column.
-#' @param weights Single-row dataframe where the column names contain the
+#' @param weights_row Single-row dataframe where the column names contain the
 #'  column names in df and the row contains the corresponding weights.
 #'
 #' @return distance_matrix A distance matrix.
 #'
 #' @export
-sq_euclidean_distance <- function(df, weights) {
-    weighted_data <- as.matrix(df) %*% diag(weights)
-    distance_matrix <- weighted_data |>
+sq_euclidean_distance <- function(df, weights_row) {
+    weighted_df <- as.matrix(df) %*% diag(weights_row)
+    # fix this
+    distance_matrix <- weighted_df |>
         stats::dist(method = "euclidean") |>
         as.matrix()
     return(distance_matrix)
@@ -415,13 +430,10 @@ hamming_distance <- function(df, weights) {
 
 #' Generate a matrix to store variable weights
 #'
-#' @param data A dataframe with column names spanning all the variables that
-#'  may ever require weights. Cannot be provided at the same time as the
-#'  data_list parameter.
 #' @param data_list A data_list with column names spanning all the variables that
 #'  may ever require weights. Cannot be provided at the same time as the
 #'  data parameter.
-#' @param rows Number of rows to generate the template weights matrix for.
+#' @param nrow Number of rows to generate the template weights matrix for.
 #' @param fill String indicating what to populate generate rows with. Can be
 #'  "ones" (default; fill matrix with 1), "uniform" (fill matrix with uniformly
 #'  distributed random values), or "exponential" (fill matrix with
@@ -431,38 +443,25 @@ hamming_distance <- function(df, weights) {
 #'  all the variables that require weights and rows
 #'
 #' @export
-generate_weights_matrix <- function(data = NULL,
-                                data_list = NULL,
-                                rows = 1,
-                                fill = "ones") {
-    if (is.null(data) + is.null(data_list) != 1) {
-        stop(
-            paste0(
-                "One (and only one) of data or data_list parameter must be",
-                "provided."
-            )
-        )
-    }
-    if (!is.null(data_list)) {
-        matrix_colnames <- data_list |>
-            lapply(
-                function(x) {
-                    colnames(x$"data")[colnames(x$"data") != "subjectkey"]
-                }
-            ) |>
-            unlist()
-    } else {
-        matrix_colnames <- colnames(data)[colnames(data) != "subjectkey"]
-    }
+generate_weights_matrix <- function(data_list = NULL,
+                                    nrow = 1,
+                                    fill = "ones") {
+    matrix_colnames <- data_list |>
+        lapply(
+            function(x) {
+                colnames(x$"data")[colnames(x$"data") != "subjectkey"]
+            }
+        ) |>
+        unlist()
     if (fill == "ones") {
         fill <- 1
     } else if (fill == "uniform") {
-        fill <- stats::runif(rows * length(matrix_colnames))
+        fill <- stats::runif(nrow * length(matrix_colnames))
     } else if (fill == "exponential") {
-        fill <- stats::rexp(rows * length(matrix_colnames))
+        fill <- stats::rexp(nrow * length(matrix_colnames))
     }
     matrix_base <- matrix(
-        nrow = rows,
+        nrow = nrow,
         ncol = length(matrix_colnames),
         data = fill
     )

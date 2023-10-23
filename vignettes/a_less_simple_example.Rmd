@@ -500,6 +500,9 @@ Note, in a label propagation workflow, maintaining a consistent ordering of trai
 To ensure the full data list is constructed with an order that is compatible with the training and testing splits made above, you can either specify both the `train_subjects` and `test_subjects` parameters yourself, or provide the `assigned_splits` output from the `train_test_assign` function.
 
 ```{r}
+
+
+
 full_data_list <- generate_data_list(
     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),

@@ -4,15 +4,27 @@
 \alias{lp_row}
 \title{Label propagation over an solutions matrix}
 \usage{
-lp_row(om, full_data_list, distance_metrics_list = NULL)
+lp_row(
+  solutions_matrix,
+  full_data_list,
+  clust_algs_list = NULL,
+  distance_metrics_list = NULL,
+  weights_matrix = NULL
+)
 }
 \arguments{
-\item{om}{An solutions matrix}
+\item{solutions_matrix}{A solutions matrix}
 
 \item{full_data_list}{A data_list object made by rbinding(train, test) data}
 
+\item{clust_algs_list}{List of custom clustering algorithms to apply
+to the final fused network. See ?generate_clust_algs_list}
+
 \item{distance_metrics_list}{A distance_metrics_list.
 See ?generate_distance_metrics_list.}
+
+\item{weights_matrix}{A matrix containing variable weights to use during
+distance matrix calculation. See ?generate_weights_matrix.}
 }
 \value{
 labeled_df A dataframe of the label propagated results of all om rows

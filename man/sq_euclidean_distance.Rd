@@ -4,12 +4,12 @@
 \alias{sq_euclidean_distance}
 \title{Squared Euclidean distance}
 \usage{
-sq_euclidean_distance(df, weights)
+sq_euclidean_distance(df, weights_row)
 }
 \arguments{
 \item{df}{Dataframe containing at least 1 data column.}
 
-\item{weights}{Single-row dataframe where the column names contain the
+\item{weights_row}{Single-row dataframe where the column names contain the
 column names in df and the row contains the corresponding weights.}
 }
 \value{

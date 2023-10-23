@@ -13,7 +13,8 @@ two_step_merge(
   disc_dist_fn,
   ord_dist_fn,
   cat_dist_fn,
-  mix_dist_fn
+  mix_dist_fn,
+  weights_row
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ two_step_merge(
 \item{cat_dist_fn}{distance metric function for categorical data}
 
 \item{mix_dist_fn}{distance metric function for mixed data}
+
+\item{weights_row}{dataframe row containing variable weights}
 }
 \value{
 fused_network The final fused network for clustering

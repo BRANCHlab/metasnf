@@ -13,6 +13,7 @@ batch_snf(
   clust_algs_list = NULL,
   suppress_clustering = FALSE,
   distance_metrics_list = NULL,
+  weights_matrix = NULL,
   quiet = FALSE
 )
 }
@@ -48,6 +49,9 @@ SNF. If TRUE, parameter \code{affinity_matrix_dir} must be specified.}
 
 \item{distance_metrics_list}{A distance_metrics_list.
 See ?generate_distance_metrics_list.}
+
+\item{weights_matrix}{A matrix containing variable weights to use during
+distance matrix calculation. See ?generate_weights_matrix.}
 
 \item{quiet}{If TRUE, will not print out time remaining estimates.}
 }

@@ -48,7 +48,7 @@ Categorical and mixed data are handled using Gower's formula as implemented by t
 ## How the distance_metrics_list is used
 
 To show how the distance_metrics_list is used, we'll start by extending our distance_metrics_list beyond just the default options.
-r-package provides a Euclidean distance function that applies standard normalization first, `sn_euclidean_distance()` (a wrapper around `SNFtool::standardNormalization`).
+r-package provides a Euclidean distance function that applies standard normalization first, `sn_euclidean_distance()` (a wrapper around `SNFtool::standardNormalization` + `stats::dist`).
 Here's how we can create a custom distance_metrics_list that includes this metric for continuous and discrete variables.
 
 ```{r}
@@ -196,6 +196,56 @@ settings_matrix |> dplyr::select(dplyr::ends_with("dist"))
 In rows 1 to 10, only continuous data will always be handled by the first continuous distance metric while discrete data will be handled by the second and third discrete distance metrics.
 In rows 11 to 20, continuous data will always be handled by the third continuous distance metric while discrete data will only be handled by the first distance metric.
 
+## Supplying weights to distance metrics
+
+Some distance metric functions can accept weights.
+Usually, weights will be applied by direct scaling of specified variables.
+In some cases (e.g. categorical distance metric functions), the way in which weights are applied may be somewhat less intuitive.
+The bottom of this vignette outlines the available distance metric functions grouped by whether or not they accept weights.
+You can examine the documentation of those weighted functions to learn more about how the weights you provide will be used.
+
+An important note on providing weights for a run of SNF is that the specific form of the data may not be what you expect by the time it is ready to be converted into a distance metric function.
+The "individual" and "two-step" SNF schemes involve distance metrics only being applied to the input dataframes in the `data_list` as they are.
+The "domain" scheme, however, concatenates data within a domain before converting that larger dataframe into a distance matrix.
+Anytime you have more than one dataframe with the same domain label and you use the domain SNF scheme, all the columns associated with that domain will be in a single dataframe when the distance metric function is applied.
+
+The first step in providing custom weights is to generate a `weights_matrix`:
+
+```{r}
+weights_matrix <- generate_weights_matrix(
+    data_list
+)
+
+weights_matrix
+```
+
+By default, this function will return a dataframe containing all the columns in the `data_list` and a single row of 1s, which are the weights that will be used for a single run of SNF.
+
+To actually use the matrix during SNF, you'll need to make sure that the number of rows in the weights matrix is the same as the number of rows in your settings matrix.
+
+```{r}
+weights_matrix <- generate_weights_matrix(
+    data_list,
+    nrow = nrow(settings_matrix)
+)
+
+weights_matrix[1:5, ]
+```
+
+A `weights_matrix` of all 1s (the default `weights_matrix` used when you don't supply one yourself) 'won't actually do anything to the data.
+You can either replace the 1s with your own weights that you've calculated outside of the package, or use some random weights following a uniform or exponential distribution.
+
+```{r}
+weights_matrix <- generate_weights_matrix(
+    data_list,
+    nrow = nrow(settings_matrix),
+    fill = "uniform" # or fill = "exponential"
+)
+
+weights_matrix[1:5, ]
+```
+
+The default metrics (simple Euclidean for continuous, discrete, and ordinal data and Gower's distance for categorical and mixed data) are both capable of applying weights to data before distance matrix generation.
 
 ## Custom distance metrics
 
@@ -209,7 +259,8 @@ Looking at the code from one of the package-provided distance functions shows so
 euclidean_distance
 ```
 
-First, the function should only accept one argument: `df`, and only give one output, `distance_matrix`.
+First, the function should accept two arguments: `df` and `weights`, and only give one output, `distance_matrix`.
+The function doesn't actually need to make use of those weights if you don't want it to.
 
 By the time your data reaches a distance metric function, it (referred to as `df`) will always:
 
