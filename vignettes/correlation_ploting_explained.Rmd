@@ -89,7 +89,7 @@ head(cluster_file)
 
 ```
 
-If you are familiar with alluvial plots and would like to create your own alluvial illustration. `prepare_for_alluvial_wOutcome` function generates a "category frequency" dataframe in wide format that you can use to create your own customized plot. Otherwise, we have ` plotClustersAlluvial_wDiagnosis` to conveniently plot alluvial colored by desired outcome variable. 
+If you are familiar with alluvial plots and would like to create your own alluvial illustration. `prepare_for_alluvial_wDiagnosis` function generates a "category frequency" dataframe in wide format that you can use to create your own customized plot. Otherwise, we have ` plotClustersAlluvial_wDiagnosis` to conveniently plot alluvial colored by desired outcome variable. 
 
 ```{r}
 # Let's generate some example outcome variables added to cluster_file
@@ -114,7 +114,7 @@ plotClustersAlluvial_wDiagnosis(W=W,
                                 outcome = "Wheeze_status" )
 ```
 
-`Wheeze status` may be just one of the many outcomes that is part of asthma diagnosis. In heterogeneous diseases, "Asthma_Diagnosis" is the ultimate outcome. To display it along side `Wheeze status`:
+`Wheeze status` may be just one of the many outcomes that is part of asthma diagnosis. In heterogeneous diseases, "Asthma_Diagnosis" is the ultimate outcome. To display it alongside `Wheeze status`:
 ```{r}
 df_outcomes$Asthma_Diagnosis = c(rep("Definite Asthma", 10), 
                                  rep("Possible Asthma", 50), 
@@ -166,12 +166,10 @@ output
 ```
 
 
-You can keep adding more data/row by running this function again, with appropriate test method. Let's add a continuous outcome for lung function `Pre_FEV1_zscore`
-```{r}
-set.seed(1)
-```
+You can keep adding more data/row by running this function again and again, with appropriate test method. Let's add a continuous outcome for lung function `Pre_FEV1_zscore`
 
 ```{r}
+set.seed(100)
 # again, randomly generate some numbers
 df_blood$Pre_FEV1_zscore = runif(200)
   
@@ -182,6 +180,7 @@ output
 
 Let's have another matrix for `Gut_microbiome` integration datatype and add some more data for cluster-outcome association tests
 ```{r}
+set.seed(100)
 # lets say there are 150 samples. Generate a random number matrix for gut_microbiome integration
 W_gut1 <- matrix(runif(300 * 300), nrow = 300, ncol = 300)
 W_gut2 <- matrix(runif(300 * 300), nrow = 300, ncol = 300)
@@ -247,8 +246,6 @@ corrHeatmap_legend("test_func.png",
 ```
 
 
-Hierarchical clustering and significance starts is applied. Now it's convenient to interpret within-feature correlations.
-
 
 ### Part 4 Manhattan plot of correlation to one key outcome
 
@@ -256,7 +253,7 @@ We can also plot correlation of features to **one** user-specified outcome in Ma
 
 *Note: abSNF = Association-signal-annotation Boosted Similarity Network Fusion
 
-Similar to running `clusterToOutcomeCorr`, here we calculate correlation p-value, and use a dataframe with specified format. For convenience let's generate some numbers
+Similar to running `clusterToOutcomeCorr`, here we have pre-calculated correlation p-value between each predictive feature to "Asthma_Diagnosis". For convenience let's generate some numbers
 ```{r}
 #'  "p.value": from correlation test,
 #'  "n": number of samples,
@@ -264,13 +261,14 @@ Similar to running `clusterToOutcomeCorr`, here we calculate correlation p-value
 #'  "Group_index": sequence of datatypes to be displayed
 #'  
 predictor_df = data.frame(
-                p.value = runif(6), 
-                n = c(200, 100, 150, 70, 45, 80),
+                p.value = c(0.002, 0.03, 
+                            0.01, 0.09, 0.02, 0.085), 
+                n = c(200, 100, 
+                      150, 70, 45, 80),
                 Group = c(rep("home environment 3m", 2), rep("parental status", 4)), 
                 Group_Index = c(rep(1, 2), rep(2,4))
   )
-rownames(predictor_df) = c("home_DEP_3m",
-                "home_DNBP_3m",
+rownames(predictor_df) = c("home_DEP_3m", "home_DNBP_3m",
                 "Asthma_mother",
                 "Asthma_father",
                 "Wheeze_mother", 
@@ -287,7 +285,7 @@ CorrManhattan(predictor_df, outcome = "Asthma Diagnosis", dataset_label = labels
 
 ```
 
-Red line represent p-value at 0.05. Now you can see which feature from which dataset is more associated to asthma outcome.
+The red line represents p-value at 0.05. Now you can see which dataset has features (dots) more associated to asthma outcome. 
 
 
 

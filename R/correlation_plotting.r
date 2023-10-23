@@ -1,4 +1,4 @@
-#' Diaplay SNF cluster output in Heatmap
+#' Display SNF cluster output in Heatmap
 #'
 #' @description
 #' Normalize SNF matrix and plot heatmap.
@@ -422,7 +422,7 @@ CorrManhattan <- function(df_stat, outcome, dataset_label) {
             axis.title.x = ggplot2::element_blank(),
             axis.title.y = ggplot2::element_text(size = 15),
             #axis.line = element_line(linewidth = 1, colour = "black"),
-            plot.title = ggplot2::element_text(hjust = 0.5, size = 20)
+            plot.title = ggplot2::element_text(hjust = 0.5, size = 15)
         )
     return(plot)
 }
