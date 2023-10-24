@@ -1,26 +1,38 @@
-#' Display SNF cluster output in Heatmap
-#'
-#' Normalize SNF matrix and plot heatmap.
+#' Plot heatmap of similarity matrix
 #'
 #' @param similarity_matrix A similarity matrix
-#' @param group_cluster cluster assignment from spectral clustering
-#' @param top_annotation annotation to be displayed above the heatmap output
-#' @param left_annotation annotation to be displayed on the left of the heatmap output
+#' @param cluster_solution Vector containing cluster assignments
 #' @param scale_diag Method of rescaling matrix diagonals. Can be "none"
-#'  (default - don't change diagonals), "mean" (replace diagonals with average
-#'  value of off-diagonals), or "zero" (replace diagonals with 0).
+#'  (don't change diagonals), "mean" (replace diagonals with average value of
+#'  off-diagonals), or "zero" (replace diagonals with 0).
 #' @param log_graph If TRUE, log transforms the graph.
+#' @param cluster_rows Parameter for ComplexHeatmap::Heatmap
+#' @param cluster_columns Parameter for ComplexHeatmap::Heatmap
+#' @param show_row_names Parameter for ComplexHeatmap::Heatmap
+#' @param show_column_names Parameter for ComplexHeatmap::Heatmap
+#' @param ... Additional parameters passed into ComplexHeatmap::Heatmap
 #'
 #' @export
-displayClustersHeatmap <- function(similarity_matrix,
-                                   group_cluster,
-                                   top_annotation = NULL,
-                                   left_annotation = NULL,
-                                   scale_diag = "none",
-                                   log_graph = FALSE) {
+similarity_matrix_heatmap <- function(similarity_matrix,
+                                      cluster_solution = NULL,
+                                      scale_diag = "mean",
+                                      log_graph = TRUE,
+                                      cluster_rows = FALSE,
+                                      cluster_columns = FALSE,
+                                      show_row_names = FALSE,
+                                      show_column_names = FALSE,
+                                      ...) {
     # Sort matrix
-    ind = sort(as.vector(group_cluster), index.return = TRUE)
-    ind = ind$ix # index after arranged by cluster
+    if (!is.null(cluster_solution)) {
+        order <- sort(cluster_solution, index.return = TRUE)$"ix"
+        similarity_matrix <- similarity_matrix[order, order]
+    } else {
+        warning(
+            "Without providing a value for the 'cluster_solution' parameter",
+            " the similarity matrix rows and columns won't be sorted by",
+            " cluster."
+        )
+    }
     # Log the graph if requested
     if (log_graph) {
         similarity_matrix <- log(similarity_matrix)
@@ -40,19 +52,18 @@ displayClustersHeatmap <- function(similarity_matrix,
     # Plot
     suppressMessages(
         ComplexHeatmap::Heatmap(
-            similarity_matrix[ind,ind],
-            top_annotation = top_annotation,
-            left_annotation = left_annotation,
-            cluster_rows = FALSE,
-            cluster_columns = FALSE,
-            show_row_names = FALSE,
-            show_column_names = FALSE,
-            show_heatmap_legend = TRUE,
+            #matrix = similarity_matrix[ind,ind],
+            matrix = similarity_matrix,
+            cluster_rows = cluster_rows,
+            cluster_columns = cluster_columns,
+            show_row_names = show_row_names,
+            show_column_names = show_column_names,
             heatmap_legend_param = list(
                 color_bar = "continuous",
                 title = title,
                 at = c(minimum, middle, maximum)
-            )
+            ),
+            ...
         )
     )
 }

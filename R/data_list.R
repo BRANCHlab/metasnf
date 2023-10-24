@@ -291,3 +291,18 @@ domains <- function(data_list) {
     domain_list <- lapply(data_list, function(x) x$"domain")
     return(domain_list)
 }
+
+#' Collapse a data_list into a single dataframe
+#'
+#' @param data_list A data_list.
+#'
+#' @export
+collapse_dl <- function(data_list) {
+    data_only <- data_list |> lapply(
+        function(x) {
+            return(x$"data")
+        }
+    )
+    merged_df <- merge_df_list(data_only)
+    return(merged_df)
+}

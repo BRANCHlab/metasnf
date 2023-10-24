@@ -13,22 +13,21 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+This vignette walks through this package's available plotting functions.
+
 In heterogeneous diseases such as childhood asthma, you can have many predictor datasets that feed into SNF integration and many outcome variable you wish to visualize.
 Not to mention outcomes are also heterogeneous.
 Often times a diagnosis is made based on a variety of clinical symptoms and tests.
-In this case, SNF integration needs to get more organized.
 Some terminology used in this document with respect to heterogeneous disease:
 
 - features/predictor features = a single feature such as `Asthma_mother`
-
 - dataset = comprised of multiple features. Example: a group of features `Asthma_mother`, `Wheeze_mother`, `Asthma_father`, `Wheeze_father` that make up of `parental_asthma` **dataset**
-
 - datatype = Multiple datasets get feed into a datatype-specific SNF integration, after which this whole group is called datetype. Example: `parental_indication` **datatype** that comprised of `parental_asthma` and `genetic_risk_score`
 
+## Data set-up
 
-
-## Part 1 - Using output similarity matrix and cluster assignment to plot heatmap
-In alternative to the simple heatmap SNFtool provides, now you can plot using plotting features from the fancy ComplexHeatmp. Using the sample data from SNFtool:
+Mock data setup is below.
+This example currently makes use of the mock "Data1" and "Data2" objects that are made available by loading the SNFtool package.
 
 ```{r}
 library(SNFtool)
@@ -37,15 +36,67 @@ library(metasnf)
 # Load in data from SNFtool
 data(Data1)
 data(Data2)
+```
 
+By default, these two objects are sorted such that the first 100 patients were drawn from one distribution and the second set of 100 patients were drawn from another.
+We'll extend this data with some fake additional associations.
+The first 100 patients (who come from one cluster) will be more likely to be females with a higher chance of having a definite positive asthma diagnosis and of having atopic asthma than the second set of 100 patients.
+
+```{r}
+
+# Set the possible values
+gender <- c("female", "male")
+diagnosis <- c("definite asthma", "possible asthma", "no asthma")
+atopic_asthma <- c("Yes", "No")
+
+# C1: mostly F, mostly "definite asthma", mostly "Yes" to atopic asthma
+c1_genders <- sample(gender, 100, replace = TRUE, prob = c(3, 1))
+c1_diagnosis <- sample(diagnosis, 100, replace = TRUE, prob = c(3, 2, 1))
+c1_asthma <- sample(atopic_asthma, 100, replace = TRUE, prob = c(3, 1))
+c1_ages <- sample(c(12:18), 100, replace = TRUE, prob = c(1:7))
+
+c2_genders <- sample(gender, 100, replace = TRUE, prob = c(1, 3))
+c2_diagnosis <- sample(diagnosis, 100, replace = TRUE, prob = c(1, 2, 3))
+c2_asthma <- sample(atopic_asthma, 100, replace = TRUE, prob = c(1, 3))
+c2_ages <- sample(c(12:18), 100, replace = TRUE, prob = c(7:1))
+
+genders <- c(c1_genders, c2_genders)
+diagnoses <- c(c1_diagnosis, c2_diagnosis)
+asthmas <- c(c1_asthma, c2_asthma)
+ages <- c(c1_ages, c2_ages)
+
+additional_data <- data.frame(
+    gender = genders,
+    diagnosis = diagnoses,
+    asthma = asthmas,
+    age = ages
+)
+
+additional_data
+```
+
+The patient unique IDs are randomly shuffled in this example to replicate scenarios where the original data doesn't begin ordered by the true cluster labels.
+
+```{r}
 # Assign unique patient identifiers to each patient
-Data1$"patient_id" <- 101:(nrow(Data1) + 100)
-Data2$"patient_id" <- 101:(nrow(Data2) + 100)
+set.seed(42)
+random_ids <- sample(100:999)[1:200]
+
+Data1$"patient_id" <- random_ids
+Data2$"patient_id" <- random_ids
+additional_data$"patient_id" <- random_ids
+
+```
+
+Then the subtyping and clustering proceeds as shown in previous vignettes.
+
+```{r}
 
 # Generate data_list
 data_list <- generate_data_list(
     list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
     list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
+    list(additional_data, "additional_data", "miscellaneous", "mixed"),
     uid = "patient_id"
 )
 
@@ -73,46 +124,102 @@ similarity_matrix <- similarity_matrices[[1]]
 # The first (and only) cluster solution:
 cluster_solution <- get_cluster_solutions(solutions_matrix)$"1"
 
-displayClustersHeatmap(
-    similarity_matrix,
-    cluster_solution,
-    scale_diag = "mean",
-    log_graph = TRUE
+```
+
+## Visualize similarity matrices sorted by cluster label
+
+`similarity_matrix_heatmap` is a wrapper for `ComplexHeatmap::Heatmap`, but with some convenient default transformations and parameters for viewing a similarity matrix.
+
+```{r}
+
+similarity_matrix_heatmap(
+    similarity_matrix = similarity_matrix,
+    cluster_solution = cluster_solution
 )
 
 ```
 
-You can add annotation.
-Say I want to display sex annotation on the left, outcome annotations for asthma diagnosis and atopic asthma at the top (for simplicity here let's stick to 2 outcomes):
+The default transformations include plotting log(Similarity) rather than the default similarity matrix as well as rescaling the diagonal of the matrix to the average value of the off-diagonals.
+Here's what the heatmap looks like without those transformations:
 
 ```{r}
 
-# Set the possible values
-gender <- c("female", "male")
-diagnosis <- c("definite asthma", "possible asthma", "no asthma")
-atopic_asthma <- c("Yes", "No")
-
-# Generate 200 random values
-random_genders <- sample(gender, 200, replace = TRUE)
-random_diagnosis <- sample(diagnosis, 200, replace = TRUE)
-random_allergy_asthma <- sample(atopic_asthma, 200, replace = TRUE)
-
-# set "row" annotation (with respect to heatmap) to display on the left side
-row_ha = ComplexHeatmap::rowAnnotation(
-    Sex = random_genders,
-    col = list(
-        Sex = c(
-            "female" = "pink1",
-            "male" = "skyblue1"
-        )
-    ),
-    show_legend = TRUE
+similarity_matrix_heatmap(
+    similarity_matrix = similarity_matrix,
+    cluster_solution = cluster_solution,
+    scale_diag = "none",
+    log_graph = FALSE
 )
 
+```
+
+## Exporting heatmaps
+
+Here's an example of how you can save this heatmap (or any other heatmap created by `ComplexHeatmap::Heatmap`).
+
+```{r eval = FALSE}
+
+grDevices::png(
+    "my_heatmap.png",
+    width = 300,
+    height = 300,
+    units = "px",
+)
+
+similarity_matrix_heatmap(
+    similarity_matrix = similarity_matrix,
+    cluster_solution = cluster_solution
+)
+
+grDevices::dev.off()
+
+```
+
+## Annotations
+
+One piece of functionality provided by `ComplexHeatmap::Heatmap` is the ability to supply visual annotations along the rows and columns of a heatmap.
+
+We'll make use of the data stores in
+
+Say I want to display sex annotation on the left, outcome annotations for asthma diagnosis and atopic asthma at the top (for simplicity here let's stick to 2 outcomes):
+
+It may have been the case that
+
+Here is some mock data that is meant to be well separated over gender, asthma diagnosis, and p
+
+
+```{r}
+
+
+library(ComplexHeatmap)
+
+data_list
+
+
+collapse_dl(data_list)
+
+#return_annotation <- function(data_list) {
+#
+#}
+
+# set "row" annotation (with respect to heatmap) to display on the left side
+row_ha <- ComplexHeatmap::rowAnnotation(
+    Gender = additional_data$"gender",
+    #col = list(
+    #    Gender = c(
+    #        "female" = "pink1",
+    #        "male" = "skyblue1"
+    #    )
+    #),
+    #text = anno_text(
+    #    additional_data$"asthma"
+    #),
+    show_legend = TRUE
+)
 # top annotation
 top_ha <- ComplexHeatmap::HeatmapAnnotation(
-    Diagnosis = random_diagnosis,
-    Atopic_Asthma = random_allergy_asthma,
+    Diagnosis = additional_data$"diagnosis",
+    Atopic_Asthma = additional_data$"asthma",
     col = list(
         Diagnosis = c(
             "definite asthma" = "red3",
@@ -126,7 +233,6 @@ top_ha <- ComplexHeatmap::HeatmapAnnotation(
     ),
     show_legend = TRUE
 )
-
 # Are the annotations re-ordered correctly?
 displayClustersHeatmap(
     similarity_matrix,
@@ -138,6 +244,10 @@ displayClustersHeatmap(
 )
 
 ```
+
+Do take a look at the [ComplexHeatmap Complete Reference](https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html) to learn more about what is possible with this package.
+
+## Alluvial plots
 
 Curious to see how cluster assignment of samples segregate in different number of clusters?
 Now you can plot **Alluvial Plot** from a minimum of 2 clusters to a user-defined max number of clusters easily
@@ -205,6 +315,7 @@ plotClustersAlluvial_wDiagnosis(
 ```
 
 `Wheeze status` may be just one of the many outcomes that is part of asthma diagnosis. In heterogeneous diseases, "Asthma_Diagnosis" is the ultimate outcome. To display it alongside `Wheeze status`:
+
 ```{r}
 df_outcomes$Asthma_Diagnosis <- c(
     rep("Definite Asthma", 10),
@@ -219,7 +330,6 @@ plotClustersAlluvial_wDiagnosis(
     outcome = "Wheeze_status",
     key_outcome = "Asthma_Diagnosis"
 )
-
 ```
 
 
@@ -243,6 +353,7 @@ and not provding clear indication to asthma diagnosis. However there could still
 In this case, we want to find which integration cluster result (thus dataset(s) used for that integration) show significant association to outcomes-of-interest and display with Manhattan plot.
 
 As of now this function does not recognize data type (categorical or continuous) automatically, so we recommend running categorical outcomes and continuous outcomes separately. Let's assume the matrix `W` is an integration of the two datasets from `blood` datatype
+
 ```{r}
 
 outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
@@ -268,7 +379,6 @@ output <- clusterToOutcomeCorr(
 output
 
 ```
-
 
 You can keep adding more data/row by running this function again and again, with appropriate test method. Let's add a continuous outcome for lung function `Pre_FEV1_zscore`
 
