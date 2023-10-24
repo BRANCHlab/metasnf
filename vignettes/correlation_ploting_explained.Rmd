@@ -58,7 +58,7 @@ c1_ages <- sample(c(12:18), 100, replace = TRUE, prob = c(1:7))
 c2_genders <- sample(gender, 100, replace = TRUE, prob = c(1, 3))
 c2_diagnosis <- sample(diagnosis, 100, replace = TRUE, prob = c(1, 2, 3))
 c2_asthma <- sample(atopic_asthma, 100, replace = TRUE, prob = c(1, 3))
-c2_ages <- sample(c(12:18), 100, replace = TRUE, prob = c(7:1))
+c2_ages <- sample(c(18:30), 100, replace = TRUE,)
 
 genders <- c(c1_genders, c2_genders)
 diagnoses <- c(c1_diagnosis, c2_diagnosis)
@@ -188,38 +188,43 @@ It may have been the case that
 Here is some mock data that is meant to be well separated over gender, asthma diagnosis, and p
 
 
-```{r}
+Want to see something like:
 
+
+heatmap(
+    data_list = data_list,
+    top = list(
+        "feature1",
+        "feature2",
+        "feature3"
+    ),
+    bottom = list(
+        "feature4",
+        "feature5"
+    )
+)
+
+```{r}
 
 library(ComplexHeatmap)
 
 data_list
 
-
 collapse_dl(data_list)
 
 #return_annotation <- function(data_list) {
-#
+#    merged_df <- collapse_dl(data_list)
 #}
 
-# set "row" annotation (with respect to heatmap) to display on the left side
-row_ha <- ComplexHeatmap::rowAnnotation(
-    Gender = additional_data$"gender",
-    #col = list(
-    #    Gender = c(
-    #        "female" = "pink1",
-    #        "male" = "skyblue1"
-    #    )
-    #),
-    #text = anno_text(
-    #    additional_data$"asthma"
-    #),
-    show_legend = TRUE
-)
+merged_df <- collapse_dl(data_list)
+order <- sort(cluster_solution, index.return = TRUE)$"ix"
+merged_df <- merged_df[order, ]
+
 # top annotation
 top_ha <- ComplexHeatmap::HeatmapAnnotation(
-    Diagnosis = additional_data$"diagnosis",
-    Atopic_Asthma = additional_data$"asthma",
+    `age - min(age)` = anno_barplot(merged_df$"age" - min(merged_df$"age")),
+    Diagnosis = merged_df$"diagnosis",
+    Atopic_Asthma = merged_df$"asthma",
     col = list(
         Diagnosis = c(
             "definite asthma" = "red3",
@@ -239,7 +244,6 @@ displayClustersHeatmap(
     cluster_solution,
     scale_diag = "mean",
     log_graph = TRUE,
-    left_annotation = row_ha,
     top_annotation = top_ha
 )
 
