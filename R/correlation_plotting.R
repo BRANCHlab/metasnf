@@ -2,40 +2,45 @@
 #'
 #' Normalize SNF matrix and plot heatmap.
 #'
-#' @param W similarity matrix outputted from SNFtool's SNF function, with rownames and colnames in sample IDs
+#' @param similarity_matrix A similarity matrix
 #' @param group_cluster cluster assignment from spectral clustering
 #' @param top_annotation annotation to be displayed above the heatmap output
 #' @param left_annotation annotation to be displayed on the left of the heatmap output
-#' @param scale_method Method of rescaling matrix diagonals. Can be "none"
+#' @param scale_diag Method of rescaling matrix diagonals. Can be "none"
 #'  (default - don't change diagonals), "mean" (replace diagonals with average
 #'  value of off-diagonals), or "zero" (replace diagonals with 0).
+#' @param log_graph If TRUE, log transforms the graph.
 #'
 #' @export
-displayClustersHeatmap <- function(W,
+displayClustersHeatmap <- function(similarity_matrix,
                                    group_cluster,
                                    top_annotation = NULL,
                                    left_annotation = NULL,
-                                   scale_method = "none") {
+                                   scale_diag = "none",
+                                   log_graph = FALSE) {
     # Sort matrix
     ind = sort(as.vector(group_cluster), index.return = TRUE)
     ind = ind$ix # index after arranged by cluster
-    # Re-scale diagonals
-    W <- scale_diagonals(W, method = scale_method)
-    if (is.null(top_annotation) & is.null(left_annotation)) {
-        ComplexHeatmap::Heatmap(
-            W[ind,ind],
-            cluster_rows = FALSE,
-            cluster_columns = FALSE,
-            show_row_names = FALSE,
-            show_column_names = FALSE,
-            heatmap_legend_param = list(
-                color_bar = 'continuous',
-                title = "Similarity"
-            )
-        )
+    # Log the graph if requested
+    if (log_graph) {
+        similarity_matrix <- log(similarity_matrix)
+        title <- "log(Similarity)"
     } else {
+        title <- "Similarity"
+    }
+    # Re-scale diagonals
+    similarity_matrix <- scale_diagonals(
+        similarity_matrix,
+        method = scale_diag
+    )
+    # Assign breaks in the legend
+    minimum <- min(similarity_matrix) |> signif(2)
+    maximum <- max(similarity_matrix) |> signif(2)
+    middle <- mean(c(minimum, maximum)) |> signif(2)
+    # Plot
+    suppressMessages(
         ComplexHeatmap::Heatmap(
-            W[ind, ind],
+            similarity_matrix[ind,ind],
             top_annotation = top_annotation,
             left_annotation = left_annotation,
             cluster_rows = FALSE,
@@ -43,13 +48,13 @@ displayClustersHeatmap <- function(W,
             show_row_names = FALSE,
             show_column_names = FALSE,
             show_heatmap_legend = TRUE,
-            col = NULL,
             heatmap_legend_param = list(
-                color_bar = 'continuous',
-                title = "Similarity"
+                color_bar = "continuous",
+                title = title,
+                at = c(minimum, middle, maximum)
             )
         )
-    }
+    )
 }
 
 #' Functions to calculate correlation between cluster assignment to outcome variables and visualize to find meaningful clusters with Manhattan plot
@@ -486,7 +491,7 @@ prepare_for_alluvial_wDiagnosis <- function(cluster_env_df,
 #'
 #' Plot alluvial plot from 2 clusters to user-defined number of clusters along with outcome/environmental variables.
 #'
-#' @param W a similarity matrix with sample ids in rownames and colnames
+#' @param similarity_matrix A similarity matrix
 #' @param df_env dataframe of environmental or outcome variables to color the alluvium. With "Subject_Number" column filled with sample ids
 #' @param numc number of clusters
 #' @param outcome column name from df_env to fill the alluvium with
@@ -494,7 +499,7 @@ prepare_for_alluvial_wDiagnosis <- function(cluster_env_df,
 #'
 #'
 #' @export
-plotClustersAlluvial_wDiagnosis <- function(W,
+plotClustersAlluvial_wDiagnosis <- function(similarity_matrix,
                                             df_env,
                                             numc,
                                             outcome,
@@ -509,7 +514,7 @@ plotClustersAlluvial_wDiagnosis <- function(W,
         key_outcome = key_outcome
     }
     # run clustering from c2 to numc
-    cluster_df = output_cluster_file(W, numc = numc)
+    cluster_df = output_cluster_file(similarity_matrix, numc = numc)
     #merge cluster_df with variable_df
     cluster_df$Subject_Number = as.character(rownames(cluster_df))
     #merge df_env in with cluster assignment data

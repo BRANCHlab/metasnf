@@ -30,34 +30,9 @@ Some terminology used in this document with respect to heterogeneous disease:
 ## Part 1 - Using output similarity matrix and cluster assignment to plot heatmap
 In alternative to the simple heatmap SNFtool provides, now you can plot using plotting features from the fancy ComplexHeatmp. Using the sample data from SNFtool:
 
-original chunk:
-
 ```{r}
-library(metasnf)
 library(SNFtool)
-data(Data1) # 200 samples
-data(Data2) # 200 samples
-
-dist1 <- as.matrix(dist(Data1))
-dist2 <- as.matrix(dist(Data2))
-
-W1 <- affinityMatrix(dist1, K = 20, sigma = 0.5)
-W2 <- affinityMatrix(dist2, K = 20, sigma = 0.5)
-
-W = SNF(list(W1,W2), 20, 20)
-group_cluster = spectralClustering(W, K = 3)
-
-displayClustersHeatmap(W, group_cluster)
-
-
-
-min(W)
-max(W)
-```
-
-replacement chunk:
-
-```{r}
+library(metasnf)
 
 # Load in data from SNFtool
 data(Data1)
@@ -95,26 +70,23 @@ similarity_matrices <- batch_snf_results$"similarity_matrices"
 # The first (and only) similarity matrix:
 similarity_matrix <- similarity_matrices[[1]]
 
-# Rescale the diagonals to have the mean value of the off-diagonals. Reduces
-#  contrast during plotting.
-scaled_sim <- scale_diagonals(similarity_matrix, method = "mean")
-
-max(scaled_sim)
-min(scaled_sim)
-
 # The first (and only) cluster solution:
 cluster_solution <- get_cluster_solutions(solutions_matrix)$"1"
 
-displayClustersHeatmap(scaled_sim, cluster_solution)
+displayClustersHeatmap(
+    similarity_matrix,
+    cluster_solution,
+    scale_diag = "mean",
+    log_graph = TRUE
+)
 
-max(scaled_sim) # 0.05166172
-min(scaled_sim) # 0.0002163452
 ```
 
-Most of the times it is ok to ignore the warning message after checking for outliers in your data.For similarity matrices it almost always has outliers since identical sample having too large a value (for example 0.5). Use `suppressMessages(displayClustersHeatmap(W, group_cluster))` to suppress the message.
+You can add annotation.
+Say I want to display sex annotation on the left, outcome annotations for asthma diagnosis and atopic asthma at the top (for simplicity here let's stick to 2 outcomes):
 
-Of course you can add annotation. Say I want to display sex annotation on the left, outcome annotations for asthma diagnosis and atopic asthma at the top (for simplicity here let's stick to 2 outcomes):
 ```{r}
+
 # Set the possible values
 gender <- c("female", "male")
 diagnosis <- c("definite asthma", "possible asthma", "no asthma")
@@ -126,70 +98,128 @@ random_diagnosis <- sample(diagnosis, 200, replace = TRUE)
 random_allergy_asthma <- sample(atopic_asthma, 200, replace = TRUE)
 
 # set "row" annotation (with respect to heatmap) to display on the left side
-row_ha = ComplexHeatmap::rowAnnotation(Sex = random_genders,
-                                       col = list(Sex = c("female" = "pink1",
-                                                          "male" = "skyblue1")),
-                                       show_legend = c(TRUE)
-                                                  )
+row_ha = ComplexHeatmap::rowAnnotation(
+    Sex = random_genders,
+    col = list(
+        Sex = c(
+            "female" = "pink1",
+            "male" = "skyblue1"
+        )
+    ),
+    show_legend = TRUE
+)
+
 # top annotation
-top_ha = ComplexHeatmap::HeatmapAnnotation(Diagnosis = random_diagnosis,
-                                           Atopic_Asthma = random_allergy_asthma,
-                                       col = list(Diagnosis = c("definite asthma" = "red3",
-                                                          "possible asthma" = "pink1",
-                                                          "no asthma" = "bisque1"),
-                                                  Atopic_Asthma = c("Yes" = "red3",
-                                                                    "No" = "lightgreen")),
-                                       show_legend = c(TRUE)
-                                                  )
+top_ha <- ComplexHeatmap::HeatmapAnnotation(
+    Diagnosis = random_diagnosis,
+    Atopic_Asthma = random_allergy_asthma,
+    col = list(
+        Diagnosis = c(
+            "definite asthma" = "red3",
+            "possible asthma" = "pink1",
+            "no asthma" = "bisque1"
+        ),
+        Atopic_Asthma = c(
+            "Yes" = "red3",
+            "No" = "lightgreen"
+        )
+    ),
+    show_legend = TRUE
+)
 
-suppressMessages(displayClustersHeatmap(W, group_cluster,
-                                        left_annotation = row_ha,
-                                        top_annotation = top_ha))
+# Are the annotations re-ordered correctly?
+displayClustersHeatmap(
+    similarity_matrix,
+    cluster_solution,
+    scale_diag = "mean",
+    log_graph = TRUE,
+    left_annotation = row_ha,
+    top_annotation = top_ha
+)
+
 ```
 
-Curious to see how cluster assignment of samples segregate in different number of clusters? Now you can plot **Alluvial Plot** from a minimum of 2 clusters to a user-defined max number of clusters easily
+Curious to see how cluster assignment of samples segregate in different number of clusters?
+Now you can plot **Alluvial Plot** from a minimum of 2 clusters to a user-defined max number of clusters easily
+
+Put together a list of clustering algorithms that range from 1 to the number of clusters you'd like to visualize in the alluvial plot:
 
 ```{r}
-cluster_file = output_cluster_file(W, numc=6)
+
+cluster_sequence <- list(
+    spectral_two,
+    spectral_three,
+    spectral_four,
+    spectral_five,
+    spectral_six
+)
+
+```
+
+```{r}
+
+cluster_file <- output_cluster_file(similarity_matrix, numc = 6)
+
+output_cluster_file(similarity_matrix, numc = 6)
+
+?output_cluster_file
+
 head(cluster_file)
+
 ```
 
-If you are familiar with alluvial plots and would like to create your own alluvial illustration. `prepare_for_alluvial_wDiagnosis` function generates a "category frequency" dataframe in wide format that you can use to create your own customized plot. Otherwise, we have ` plotClustersAlluvial_wDiagnosis` to conveniently plot alluvial colored by desired outcome variable.
+If you are familiar with alluvial plots and would like to create your own alluvial illustration, `prepare_for_alluvial_wDiagnosis` function generates a "category frequency" dataframe in wide format that you can use to create your own customized plot.
+Otherwise, we have `plotClustersAlluvial_wDiagnosis` to conveniently plot alluvial colored by desired outcome variable.
 
 ```{r}
+
 # Let's generate some example outcome variables added to cluster_file
-cluster_file$Wheeze_status = c(rep("Yes", 20), rep("Sometimes", 60), rep("No", 120))
+cluster_file$"Wheeze_status" <- c(
+    rep("Yes", 20),
+    rep("Sometimes", 60),
+    rep("No", 120)
+)
 
-alluvial_df <- prepare_for_alluvial_wDiagnosis(cluster_file,
-                                fill_alluvium_by = "Wheeze_status",
-                                numc=6)
+alluvial_df <- prepare_for_alluvial_wDiagnosis(
+    cluster_file,
+    fill_alluvium_by = "Wheeze_status",
+    numc = 6
+)
+
 alluvial_df
-```
 
-
-```{r}
 # this function assumes outcome variables to be in a separate dataframe, with sampleIDs in "Subject_Number" column
 # Let's generate some outcome variables
-df_outcomes = data.frame(Subject_Number = as.character(rownames(cluster_file)),
-                         Wheeze_status = c(rep("Yes", 20), rep("Sometimes", 60), rep("No", 120)))
+df_outcomes = data.frame(
+    Subject_Number = as.character(rownames(cluster_file)),
+    Wheeze_status = c(rep("Yes", 20), rep("Sometimes", 60), rep("No", 120))
+)
 
-plotClustersAlluvial_wDiagnosis(W=W,
-                                df_env = df_outcomes,
-                                numc=6,
-                                outcome = "Wheeze_status" )
+plotClustersAlluvial_wDiagnosis(
+    similarity_matrix = similarity_matrix,
+    df_env = df_outcomes,
+    numc = 6,
+    outcome = "Wheeze_status"
+)
+
 ```
 
 `Wheeze status` may be just one of the many outcomes that is part of asthma diagnosis. In heterogeneous diseases, "Asthma_Diagnosis" is the ultimate outcome. To display it alongside `Wheeze status`:
 ```{r}
-df_outcomes$Asthma_Diagnosis = c(rep("Definite Asthma", 10),
-                                 rep("Possible Asthma", 50),
-                                 rep("No Asthma", 140))
+df_outcomes$Asthma_Diagnosis <- c(
+    rep("Definite Asthma", 10),
+    rep("Possible Asthma", 50),
+    rep("No Asthma", 140)
+)
 
-plotClustersAlluvial_wDiagnosis(W=W,
-                                df_env = df_outcomes,
-                                numc=6,
-                                outcome = "Wheeze_status",
-                                key_outcome = "Asthma_Diagnosis")
+plotClustersAlluvial_wDiagnosis(
+    similarity_matrix = similarity_matrix,
+    df_env = df_outcomes,
+    numc = 6,
+    outcome = "Wheeze_status",
+    key_outcome = "Asthma_Diagnosis"
+)
+
 ```
 
 
@@ -214,11 +244,12 @@ In this case, we want to find which integration cluster result (thus dataset(s) 
 
 As of now this function does not recognize data type (categorical or continuous) automatically, so we recommend running categorical outcomes and continuous outcomes separately. Let's assume the matrix `W` is an integration of the two datasets from `blood` datatype
 ```{r}
+
 outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
 
 # have a column for sampleID. Make sure cluster column is also in df
 df_blood = data.frame(sampleID = seq(1:200),
-                cluster = group_cluster,
+                cluster = cluster_solution,
                 Asthma_Diagnosis = random_diagnosis,
                 Atopic_Asthma = random_allergy_asthma)
 df_blood
@@ -226,14 +257,23 @@ df_blood
 outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
 
 # because both outcomes are categorical, we use chi-squared test. Assume the input data has 200 samples
-output = clusterToOutcomeCorr(df_blood, outcomes = outcomes, method = "chi-squared", datatype = "blood", size = 200)
+output <- clusterToOutcomeCorr(
+    df_blood,
+    outcomes = outcomes,
+    method = "chi-squared",
+    datatype = "blood",
+    size = 200
+)
+
 output
+
 ```
 
 
 You can keep adding more data/row by running this function again and again, with appropriate test method. Let's add a continuous outcome for lung function `Pre_FEV1_zscore`
 
 ```{r}
+
 set.seed(100)
 # again, randomly generate some numbers
 df_blood$Pre_FEV1_zscore = runif(200)
@@ -241,10 +281,13 @@ df_blood$Pre_FEV1_zscore = runif(200)
 outcomes = c("Pre_FEV1_zscore")
 output = rbind(output, clusterToOutcomeCorr(df_blood, outcomes = outcomes, method = "kruskal", datatype = "blood", size = 200))
 output
+
 ```
 
 Let's have another matrix for `Gut_microbiome` integration datatype and add some more data for cluster-outcome association tests
+
 ```{r}
+
 set.seed(100)
 # lets say there are 150 samples. Generate a random number matrix for gut_microbiome integration
 W_gut1 <- matrix(runif(300 * 300), nrow = 300, ncol = 300)
@@ -255,28 +298,56 @@ W_gut = SNF(list(W_gut1,W_gut2), 20, 20)
 group_cluster_gut = spectralClustering(W_gut, K = 4)
 
 # generate table with outcomes in
-df_gut = data.frame(sampleID = seq(1:300),
-                cluster = group_cluster_gut,
-                Asthma_Diagnosis = sample(diagnosis, 300, replace = TRUE),
-                Atopic_Asthma = sample(atopic_asthma, 300, replace = TRUE))
+df_gut = data.frame(
+    sampleID = seq(1:300),
+    cluster = group_cluster_gut,
+    Asthma_Diagnosis = sample(diagnosis, 300, replace = TRUE),
+    Atopic_Asthma = sample(atopic_asthma, 300, replace = TRUE)
+)
 
 # same as before, add categorical outcomes
 outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
-output = rbind(output, clusterToOutcomeCorr(df_gut, outcomes = outcomes, method = "chi-squared", datatype = "gut_microbiome", size = 300))
+
+output = rbind(
+    output,
+    clusterToOutcomeCorr(
+        df_gut,
+        outcomes = outcomes,
+        method = "chi-squared",
+        datatype = "gut_microbiome",
+        size = 300
+    )
+)
+
 output
 
 # add continuous outcome
 df_gut$Pre_FEV1_zscore = runif(300)
+
 outcomes = c("Pre_FEV1_zscore")
-output = rbind(output, clusterToOutcomeCorr(df_gut, outcomes = outcomes, method = "kruskal", datatype = "gut_microbiome", size = 300))
+
+output = rbind(
+    output,
+    clusterToOutcomeCorr(
+        df_gut,
+        outcomes = outcomes,
+        method = "kruskal",
+        datatype = "gut_microbiome",
+        size = 300
+    )
+
+)
+
 output
 
 ```
 
-
 Next we can feed this dataframe to plot manhanttan using `clusterToOutcomeManhattan`
+
 ```{r}
+
 clusterToOutcomeManhattan(output)
+
 ```
 
 The red dotted line represent p-value of 0.05 cutoff. The black dotted line represent the 0.05 cutoff divided by the number of data types which act as a multiple comparison correction.
@@ -285,31 +356,38 @@ The red dotted line represent p-value of 0.05 cutoff. The black dotted line repr
 If we are to look at predictor-predictor or outcome-outcome correlation, we can plot the correlation heatmap using, again, ComplexHeatmap. Make sure you provide the p-values from correlation tests
 
 ```{r}
+
 # generate a mock correlation table
 corr_predictor <- matrix(runif(50 * 50), nrow = 50, ncol = 50)
 rownames(corr_predictor) = seq(1:50)
 colnames(corr_predictor) = seq(1:50)
 
 # color by data types (optional). Say first 25 outcomes are from blood datatype, the next 25 from gut_microbiome datatype
-labels <- c("Blood",
-            "Gut_microbiome")
-color = c(rep("#cd34b5", 25),
-          rep("goldenrod4", 25))
+labels <- c("Blood", "Gut_microbiome")
+color = c(rep("#cd34b5", 25), rep("goldenrod4", 25))
 
-corrHeatmap(corr_predictor, labels_color = color, row_km=4, column_km = 4)
+corrHeatmap(
+    corr_predictor,
+    labels_color = color,
+    row_km = 4,
+    column_km = 4
+)
 
 ```
 
 Next let's generate heatmap legend. This function as of now will output legend to a file
+
 ```{r}
+
 labels_color = c("#cd34b5", "goldenrod4")
 
-corrHeatmap_legend("test_func.png",
-                   labels = labels,
-                   labels_color = labels_color)
+corrHeatmap_legend(
+    "test_func.png",
+    labels = labels,
+    labels_color = labels_color
+)
 
 ```
-
 
 ### Part 4 Manhattan plot of correlation to one key outcome
 
@@ -326,26 +404,35 @@ Similar to running `clusterToOutcomeCorr`, here we have pre-calculated correlati
 #'  "Group_index": sequence of datatypes to be displayed
 #'
 predictor_df = data.frame(
-                p.value = c(0.002, 0.03,
-                            0.01, 0.09, 0.02, 0.085),
-                n = c(200, 100,
-                      150, 70, 45, 80),
-                Group = c(rep("home environment 3m", 2), rep("parental status", 4)),
-                Group_Index = c(rep(1, 2), rep(2,4))
-  )
-rownames(predictor_df) = c("home_DEP_3m", "home_DNBP_3m",
-                "Asthma_mother",
-                "Asthma_father",
-                "Wheeze_mother",
-                "Wheeze_father"
+    p.value = c(0.002, 0.03, 0.01, 0.09, 0.02, 0.085),
+    n = c(200, 100, 150, 70, 45, 80),
+    Group = c(
+        rep("home environment 3m", 2),
+        rep("parental status", 4)
+    ),
+    Group_Index = c(rep(1, 2), rep(2,4))
+)
 
-  )
+rownames(predictor_df) <- c(
+    "home_DEP_3m",
+    "home_DNBP_3m",
+    "Asthma_mother",
+    "Asthma_father",
+    "Wheeze_mother",
+    "Wheeze_father"
+)
+
 predictor_df
 
 # set dataset labels
-labels = c("home environment 3m", "parental status")
+labels <- c("home environment 3m", "parental status")
 
-CorrManhattan(predictor_df, outcome = "Asthma Diagnosis", dataset_label = labels)
+CorrManhattan(
+    predictor_df,
+    outcome = "Asthma Diagnosis",
+    dataset_label = labels
+)
+
 ```
 
 The red line represents p-value at 0.05. Now you can see which dataset has features (dots) more associated to asthma outcome.
