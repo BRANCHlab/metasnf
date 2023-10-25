@@ -21,6 +21,16 @@ similarity_matrix_heatmap <- function(similarity_matrix,
                                       cluster_columns = FALSE,
                                       show_row_names = FALSE,
                                       show_column_names = FALSE,
+                                      data_list = NULL,
+                                      data = NULL,
+                                      left_bar = NULL,
+                                      right_bar = NULL,
+                                      top_bar = NULL,
+                                      bottom_bar = NULL,
+                                      left_hm = NULL,
+                                      right_hm = NULL,
+                                      top_hm = NULL,
+                                      bottom_hm = NULL,
                                       ...) {
     # Sort matrix
     if (!is.null(cluster_solution)) {
