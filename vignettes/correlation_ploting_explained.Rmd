@@ -239,7 +239,7 @@ top_ha <- ComplexHeatmap::HeatmapAnnotation(
     show_legend = TRUE
 )
 # Are the annotations re-ordered correctly?
-displayClustersHeatmap(
+similarity_matrix_heatmap(
     similarity_matrix,
     cluster_solution,
     scale_diag = "mean",
@@ -365,8 +365,8 @@ outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
 # have a column for sampleID. Make sure cluster column is also in df
 df_blood = data.frame(sampleID = seq(1:200),
                 cluster = cluster_solution,
-                Asthma_Diagnosis = random_diagnosis,
-                Atopic_Asthma = random_allergy_asthma)
+                Asthma_Diagnosis = diagnoses,
+                Atopic_Asthma = asthmas)
 df_blood
 
 outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
