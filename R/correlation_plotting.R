@@ -14,6 +14,7 @@
 #'
 #' @export
 similarity_matrix_heatmap <- function(similarity_matrix,
+                                      order = NULL,
                                       cluster_solution = NULL,
                                       scale_diag = "mean",
                                       log_graph = TRUE,
@@ -32,17 +33,66 @@ similarity_matrix_heatmap <- function(similarity_matrix,
                                       top_hm = NULL,
                                       bottom_hm = NULL,
                                       ...) {
-    # Sort matrix
-    if (!is.null(cluster_solution)) {
-        order <- sort(cluster_solution, index.return = TRUE)$"ix"
-        similarity_matrix <- similarity_matrix[order, order]
-    } else {
-        warning(
-            "Without providing a value for the 'cluster_solution' parameter",
-            " the similarity matrix rows and columns won't be sorted by",
-            " cluster."
-        )
+    ###########################################################################
+    # Assemble any provided data
+    ###########################################################################
+    if (!is.null(data_list)) {
+        merged_df <- collapse_dl(data_list)
     }
+    if (is.null(data)) {
+        if (!is.null(data_list)) {
+            # User didn't provide data, but did provide data list, so just use
+            #  that.
+            data <- merged_df
+        }
+    } else {
+        if (!is.null(data_list)) {
+            # User provided both the data and the data_list, so merge them
+            data <- dplyr::inner_join(data, merged_df, by = "subjectkey")
+        }
+    }
+    ###########################################################################
+    # Ensure that annotations aren't being requested when data isn't given
+    ###########################################################################
+    annotation_requests <- list(
+        left_bar,
+        right_bar,
+        top_bar,
+        bottom_bar,
+        left_hm,
+        right_hm,
+        top_hm,
+        bottom_hm
+    )
+    if (any(!is.null(annotation_requests))) {
+        if (is.null(data)) {
+            stop(
+                "You must provide data, either through a data_list or a",
+                " dataframe passed in with the 'data' parameter to use",
+                " annotations."
+            )
+        }
+    }
+    ###########################################################################
+    # Sort the matrix and any other provided data
+    ###########################################################################
+    # The order can come from the following sources:
+    #  - nowhere (reorder by similarity?)
+    #  - cluster_solution (just sort by cluster_solution)
+    #  - hard specified (sort the similarity_matrix by the order provided)
+    if (is.null(order)) {
+        # Order was not provided
+        if (!is.null(cluster_solution)) {
+            # Cluster solution was provided
+            order <- sort(cluster_solution, index.return = TRUE)$"ix"
+            message("Sorting by cluster solution.")
+        }
+    } else {
+        message("Sorting by order.")
+    }
+    similarity_matrix <- similarity_matrix[order, order]
+    data <- data[order, ]
+    ###########################################################################
     # Log the graph if requested
     if (log_graph) {
         similarity_matrix <- log(similarity_matrix)
@@ -59,6 +109,31 @@ similarity_matrix_heatmap <- function(similarity_matrix,
     minimum <- min(similarity_matrix) |> signif(2)
     maximum <- max(similarity_matrix) |> signif(2)
     middle <- mean(c(minimum, maximum)) |> signif(2)
+    # Generate annotations
+    annotations_list <- generate_annotations_list(
+        df = data,
+        left_hm = left_hm,
+        right_hm = right_hm,
+        top_hm = top_hm,
+        bottom_hm = bottom_hm,
+        left_bar = left_bar,
+        right_bar = right_bar,
+        top_bar = top_bar,
+        bottom_bar = bottom_bar
+    )
+    extra_args <- list(...)
+    if (is.null(extra_args$"top_annotation")) {
+        top_annotation <- annotations_list$"top_annotations"
+    }
+    if (is.null(extra_args$"left_annotation")) {
+        left_annotation <- annotations_list$"left_annotations"
+    }
+    if (is.null(extra_args$"right_annotation")) {
+        right_annotation <- annotations_list$"right_annotations"
+    }
+    if (is.null(extra_args$"bottom_annotation")) {
+        bottom_annotation <- annotations_list$"bottom_annotations"
+    }
     # Plot
     suppressMessages(
         ComplexHeatmap::Heatmap(
@@ -73,6 +148,10 @@ similarity_matrix_heatmap <- function(similarity_matrix,
                 title = title,
                 at = c(minimum, middle, maximum)
             ),
+            top_annotation = top_annotation,
+            bottom_annotation = bottom_annotation,
+            left_annotation = left_annotation,
+            right_annotation = right_annotation,
             ...
         )
     )
@@ -604,4 +683,327 @@ plotClustersAlluvial_wDiagnosis <- function(similarity_matrix,
             legend.title = ggplot2::element_text(size = 12),
             legend.text = ggplot2::element_text(size = 12)
         )
+}
+
+
+#' Generate annotations list
+#'
+#' Intermediate function that takes in formatted lists of variables and the
+#'  annotations they should be viewed through and returns annotation objects
+#'  usable by ComplexHeatmap::Heatmap.
+#'
+#' @param df Dataframe containing all the data that is specified in the
+#'  remaining arguments.
+#' @param left_bar Named list of strings, where the strings are variables in
+#'  df that should be used for a barplot annotation on the left of the plot and
+#'  the names are the names that will be used to caption the plots and their
+#'  legends.
+#' @param left_hm Like left_bar, but with a heatmap annotation instead of a
+#'  barplot annotation.
+#' @param right_bar See left_bar.
+#' @param top_bar See left_bar.
+#' @param bottom_bar See left_bar.
+#' @param right_hm See left_hm.
+#' @param top_hm See left_hm.
+#' @param bottom_hm See left_hm.
+#'
+#' @return annotations_list A named list of all the annotations.
+#'
+#' @export
+generate_annotations_list <- function(df,
+                                      left_bar = NULL,
+                                      right_bar = NULL,
+                                      top_bar = NULL,
+                                      bottom_bar = NULL,
+                                      left_hm = NULL,
+                                      right_hm = NULL,
+                                      top_hm = NULL,
+                                      bottom_hm = NULL) {
+    ###########################################################################
+    # Ensure all the variables specified are in the provided data
+    check_colnames <- function(annotation_list, sorted_df) {
+        if (!all(annotation_list %in% colnames(sorted_df))) {
+            stop(
+                "At least one variable specified for annotation is not",
+                " present in the provided data_list."
+            )
+        }
+    }
+    ###########################################################################
+    # Ensure every variable specified is given a name for plotting/legend
+    check_listnames <- function(list) {
+        if (length(list) != sum(names(list) != "", na.rm = TRUE)) {
+            stop(
+                "All variables provided must in the annotation lists must be",
+                " named."
+            )
+        }
+    }
+    ###########################################################################
+    # Initialize the possible annotations
+    left_annotations <- NULL
+    right_annotations <- NULL
+    top_annotations <- NULL
+    bottom_annotations <- NULL
+    ###########################################################################
+    # Top barplots
+    ###########################################################################
+    if (!is.null(top_bar)) {
+        check_colnames(top_bar, df)
+        check_listnames(top_bar)
+        top_bar_names <- names(top_bar)
+        #######################################################################
+        # Assign names to all the variables in the top_bar
+        #######################################################################
+        for (i in seq_along(top_bar)) {
+            ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
+                temporary_name = anno_barplot(df[, top_bar[[i]]])
+            )
+            # Remove the "temporary_name"s
+            names(ith_annotation@anno_list) <- top_bar_names[[i]]
+            ith_annotation@anno_list[[1]]@name <-
+                top_bar_names[[i]]
+            ith_annotation@anno_list[[1]]@label <-
+                top_bar_names[[i]]
+            ith_annotation@anno_list[[1]]@name_param$"label" <-
+                top_bar_names[[i]]
+            if (length(top_annotations) == 0) {
+                top_annotations <- ith_annotation
+            } else {
+                top_annotations <- c(top_annotations, ith_annotation)
+            }
+        }
+    }
+    ###########################################################################
+    # Top heatmaps
+    ###########################################################################
+    if (!is.null(top_hm)) {
+        check_colnames(top_hm, df)
+        check_listnames(top_hm)
+        top_hm_names <- names(top_hm)
+        #######################################################################
+        # Assign names to all the variables in the top_hm
+        #######################################################################
+        for (i in seq_along(top_hm)) {
+            if (nchar(top_hm_names[[i]]) == 0) {
+                top_hm_names[[i]] <- top_hm[[i]]
+            }
+            ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
+                temporary_name = df[, top_hm[[i]]]
+            )
+            # Remove the "temporary_name"s
+            names(ith_annotation@anno_list) <- top_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@name <-
+                top_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@label <-
+                top_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@color_mapping@name <-
+                top_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@name_param$"label" <-
+                top_hm_names[[i]]
+            if (length(top_annotations) == 0) {
+                top_annotations <- ith_annotation
+            } else {
+                top_annotations <- c(top_annotations, ith_annotation)
+            }
+        }
+    }
+    ###########################################################################
+    # Bottom barplots
+    ###########################################################################
+    if (!is.null(bottom_bar)) {
+        check_colnames(bottom_bar, df)
+        check_listnames(bottom_bar)
+        bottom_bar_names <- names(bottom_bar)
+        #######################################################################
+        # Assign names to all the variables in the bottom_bar
+        #######################################################################
+        for (i in seq_along(bottom_bar)) {
+            ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
+                temporary_name = anno_barplot(df[, bottom_bar[[i]]])
+            )
+            # Remove the "temporary_name"s
+            names(ith_annotation@anno_list) <- bottom_bar_names[[i]]
+            ith_annotation@anno_list[[1]]@name <-
+                bottom_bar_names[[i]]
+            ith_annotation@anno_list[[1]]@label <-
+                bottom_bar_names[[i]]
+            ith_annotation@anno_list[[1]]@name_param$"label" <-
+                bottom_bar_names[[i]]
+            if (length(bottom_annotations) == 0) {
+                bottom_annotations <- ith_annotation
+            } else {
+                bottom_annotations <- c(bottom_annotations, ith_annotation)
+            }
+        }
+    }
+    ###########################################################################
+    # Bottom heatmaps
+    ###########################################################################
+    if (!is.null(bottom_hm)) {
+        check_colnames(bottom_hm, df)
+        check_listnames(bottom_hm)
+        bottom_hm_names <- names(bottom_hm)
+        #######################################################################
+        # Assign names to all the variables in the bottom_hm
+        #######################################################################
+        for (i in seq_along(bottom_hm)) {
+            if (nchar(bottom_hm_names[[i]]) == 0) {
+                bottom_hm_names[[i]] <- bottom_hm[[i]]
+            }
+            ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
+                temporary_name = df[, bottom_hm[[i]]]
+            )
+            # Remove the "temporary_name"s
+            names(ith_annotation@anno_list) <- bottom_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@name <-
+                bottom_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@label <-
+                bottom_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@color_mapping@name <-
+                bottom_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@name_param$"label" <-
+                bottom_hm_names[[i]]
+            if (length(bottom_annotations) == 0) {
+                bottom_annotations <- ith_annotation
+            } else {
+                bottom_annotations <- c(bottom_annotations, ith_annotation)
+            }
+        }
+    }
+    ###########################################################################
+    # Left barplots
+    ###########################################################################
+    if (!is.null(left_bar)) {
+        check_colnames(left_bar, df)
+        check_listnames(left_bar)
+        left_bar_names <- names(left_bar)
+        #######################################################################
+        # Assign names to all the variables in the left_bar
+        #######################################################################
+        for (i in seq_along(left_bar)) {
+            ith_annotation <- ComplexHeatmap::rowAnnotation(
+                temporary_name = anno_barplot(df[, left_bar[[i]]])
+            )
+            # Remove the "temporary_name"s
+            names(ith_annotation@anno_list) <- left_bar_names[[i]]
+            ith_annotation@anno_list[[1]]@name <-
+                left_bar_names[[i]]
+            ith_annotation@anno_list[[1]]@label <-
+                left_bar_names[[i]]
+            ith_annotation@anno_list[[1]]@name_param$"label" <-
+                left_bar_names[[i]]
+            if (length(left_annotations) == 0) {
+                left_annotations <- ith_annotation
+            } else {
+                left_annotations <- c(left_annotations, ith_annotation)
+            }
+        }
+    }
+    ###########################################################################
+    # Left heatmaps
+    ###########################################################################
+    if (!is.null(left_hm)) {
+        check_colnames(left_hm, df)
+        check_listnames(left_hm)
+        left_hm_names <- names(left_hm)
+        #######################################################################
+        # Assign names to all the variables in the left_hm
+        #######################################################################
+        for (i in seq_along(left_hm)) {
+            if (nchar(left_hm_names[[i]]) == 0) {
+                left_hm_names[[i]] <- left_hm[[i]]
+            }
+            ith_annotation <- ComplexHeatmap::rowAnnotation(
+                temporary_name = df[, left_hm[[i]]]
+            )
+            # Remove the "temporary_name"s
+            names(ith_annotation@anno_list) <- left_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@name <-
+                left_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@label <-
+                left_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@color_mapping@name <-
+                left_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@name_param$"label" <-
+                left_hm_names[[i]]
+            if (length(left_annotations) == 0) {
+                left_annotations <- ith_annotation
+            } else {
+                left_annotations <- c(left_annotations, ith_annotation)
+            }
+        }
+    }
+    ###########################################################################
+    # Right barplots
+    ###########################################################################
+    if (!is.null(right_bar)) {
+        check_colnames(right_bar, df)
+        check_listnames(right_bar)
+        right_bar_names <- names(right_bar)
+        #######################################################################
+        # Assign names to all the variables in the right_bar
+        #######################################################################
+        for (i in seq_along(right_bar)) {
+            ith_annotation <- ComplexHeatmap::rowAnnotation(
+                temporary_name = anno_barplot(df[, right_bar[[i]]])
+            )
+            # Remove the "temporary_name"s
+            names(ith_annotation@anno_list) <- right_bar_names[[i]]
+            ith_annotation@anno_list[[1]]@name <-
+                right_bar_names[[i]]
+            ith_annotation@anno_list[[1]]@label <-
+                right_bar_names[[i]]
+            ith_annotation@anno_list[[1]]@name_param$"label" <-
+                right_bar_names[[i]]
+            if (length(right_annotations) == 0) {
+                right_annotations <- ith_annotation
+            } else {
+                right_annotations <- c(right_annotations, ith_annotation)
+            }
+        }
+    }
+    ###########################################################################
+    # Right heatmaps
+    ###########################################################################
+    if (!is.null(right_hm)) {
+        check_colnames(right_hm, df)
+        check_listnames(right_hm)
+        right_hm_names <- names(right_hm)
+        #######################################################################
+        # Assign names to all the variables in the right_hm
+        #######################################################################
+        for (i in seq_along(right_hm)) {
+            if (nchar(right_hm_names[[i]]) == 0) {
+                right_hm_names[[i]] <- right_hm[[i]]
+            }
+            ith_annotation <- ComplexHeatmap::rowAnnotation(
+                temporary_name = df[, right_hm[[i]]]
+            )
+            # Remove the "temporary_name"s
+            names(ith_annotation@anno_list) <- right_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@name <-
+                right_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@label <-
+                right_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@color_mapping@name <-
+                right_hm_names[[i]]
+            ith_annotation@anno_list[[1]]@name_param$"label" <-
+                right_hm_names[[i]]
+            if (length(right_annotations) == 0) {
+                right_annotations <- ith_annotation
+            } else {
+                right_annotations <- c(right_annotations, ith_annotation)
+            }
+        }
+    }
+    ###########################################################################
+    # Return final output
+    annotations_list <- list(
+        left_annotations = left_annotations,
+        right_annotations = right_annotations,
+        top_annotations = top_annotations,
+        bottom_annotations = bottom_annotations
+    )
+    return(annotations_list)
 }
