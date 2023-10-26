@@ -64,7 +64,10 @@ similarity_matrix_heatmap <- function(similarity_matrix,
         top_hm,
         bottom_hm
     )
-    if (any(!is.null(annotation_requests))) {
+    any_null_annotations <- lapply(annotation_requests, is.null) |>
+        unlist() |>
+        any()
+    if (!any_null_annotations) {
         if (is.null(data)) {
             stop(
                 "You must provide data, either through a data_list or a",
@@ -86,6 +89,9 @@ similarity_matrix_heatmap <- function(similarity_matrix,
             # Cluster solution was provided
             order <- sort(cluster_solution, index.return = TRUE)$"ix"
             message("Sorting by cluster solution.")
+        } else {
+            # Neither order nor cluster solution was provided
+            order <- 1:nrow(similarity_matrix)
         }
     } else {
         message("Sorting by order.")
@@ -121,39 +127,54 @@ similarity_matrix_heatmap <- function(similarity_matrix,
         top_bar = top_bar,
         bottom_bar = bottom_bar
     )
-    extra_args <- list(...)
-    if (is.null(extra_args$"top_annotation")) {
-        top_annotation <- annotations_list$"top_annotations"
+    args_list <- list(...)
+    if (is.null(args_list$"top_annotation")) {
+        args_list$"top_annotation" <- annotations_list$"top_annotations"
     }
-    if (is.null(extra_args$"left_annotation")) {
-        left_annotation <- annotations_list$"left_annotations"
+    if (is.null(args_list$"left_annotation")) {
+        args_list$"left_annotation" <- annotations_list$"left_annotations"
     }
-    if (is.null(extra_args$"right_annotation")) {
-        right_annotation <- annotations_list$"right_annotations"
+    if (is.null(args_list$"right_annotation")) {
+        args_list$"right_annotation" <- annotations_list$"right_annotations"
     }
-    if (is.null(extra_args$"bottom_annotation")) {
-        bottom_annotation <- annotations_list$"bottom_annotations"
+    if (is.null(args_list$"bottom_annotation")) {
+        args_list$"bottom_annotation" <- annotations_list$"bottom_annotations"
     }
     # Plot
+    args_list$"matrix" <- similarity_matrix
+    args_list$"cluster_rows" <- cluster_rows
+    args_list$"cluster_columns" <- cluster_columns
+    args_list$"show_row_names" <- show_row_names
+    args_list$"show_column_names" <- show_column_names
+    args_list$"heatmap_legend_param" <- list(
+        color_bar = "continuous",
+        title = title,
+        at = c(minimum, middle, maximum)
+    )
+    return(args_list)
     suppressMessages(
-        ComplexHeatmap::Heatmap(
-            #matrix = similarity_matrix[ind,ind],
-            matrix = similarity_matrix,
-            cluster_rows = cluster_rows,
-            cluster_columns = cluster_columns,
-            show_row_names = show_row_names,
-            show_column_names = show_column_names,
-            heatmap_legend_param = list(
-                color_bar = "continuous",
-                title = title,
-                at = c(minimum, middle, maximum)
-            ),
-            top_annotation = top_annotation,
-            bottom_annotation = bottom_annotation,
-            left_annotation = left_annotation,
-            right_annotation = right_annotation,
-            ...
+        do.call(
+            ComplexHeatmap::Heatmap,
+            args_list
         )
+        #ComplexHeatmap::Heatmap(
+        #    #matrix = similarity_matrix[ind,ind],
+        #    matrix = similarity_matrix,
+        #    cluster_rows = cluster_rows,
+        #    cluster_columns = cluster_columns,
+        #    show_row_names = show_row_names,
+        #    show_column_names = show_column_names,
+        #    heatmap_legend_param = list(
+        #        color_bar = "continuous",
+        #        title = title,
+        #        at = c(minimum, middle, maximum)
+        #    ),
+        #    top_annotation = top_annotation,
+        #    bottom_annotation = bottom_annotation,
+        #    left_annotation = left_annotation,
+        #    right_annotation = right_annotation,
+        #    ...
+        #)
     )
 }
 
@@ -757,7 +778,9 @@ generate_annotations_list <- function(df,
         #######################################################################
         for (i in seq_along(top_bar)) {
             ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
-                temporary_name = anno_barplot(df[, top_bar[[i]]])
+                temporary_name = ComplexHeatmap::anno_barplot(
+                    df[, top_bar[[i]]]
+                )
             )
             # Remove the "temporary_name"s
             names(ith_annotation@anno_list) <- top_bar_names[[i]]

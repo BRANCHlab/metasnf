@@ -78,6 +78,7 @@ additional_data
 The patient unique IDs are randomly shuffled in this example to replicate scenarios where the original data doesn't begin ordered by the true cluster labels.
 
 ```{r}
+
 # Assign unique patient identifiers to each patient
 set.seed(42)
 random_ids <- sample(100:999)[1:200]
@@ -140,13 +141,13 @@ similarity_matrix_heatmap(
 ```
 
 The default transformations include plotting log(Similarity) rather than the default similarity matrix as well as rescaling the diagonal of the matrix to the average value of the off-diagonals.
-Here's what the heatmap looks like without those transformations:
+Additionally, the similarity matrix gets reordered according to the provided cluster solution.
+Here's what the same similarity matrix looks like without those transformations:
 
 ```{r}
 
 similarity_matrix_heatmap(
     similarity_matrix = similarity_matrix,
-    cluster_solution = cluster_solution,
     scale_diag = "none",
     log_graph = FALSE
 )
@@ -179,33 +180,14 @@ grDevices::dev.off()
 
 One piece of functionality provided by `ComplexHeatmap::Heatmap` is the ability to supply visual annotations along the rows and columns of a heatmap.
 
-We'll make use of the data stores in
+You can always build annotations using the standard approaches outline in the [ComplexHeatmap Complete Reference](https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html).
+In addition to that, this package offers some convenient functionality to specify regular heatmap annotations and barplot annotations directly through a provided dataframe or data_list (or both).
 
-Say I want to display sex annotation on the left, outcome annotations for asthma diagnosis and atopic asthma at the top (for simplicity here let's stick to 2 outcomes):
-
-It may have been the case that
-
-Here is some mock data that is meant to be well separated over gender, asthma diagnosis, and p
-
-
-Want to see something like:
-
-
-heatmap(
-    data_list = data_list,
-    top = list(
-        "feature1",
-        "feature2",
-        "feature3"
-    ),
-    bottom = list(
-        "feature4",
-        "feature5"
-    )
-)
+In the example below, we make use of data supplied through a data_list.
 
 ```{r}
 
+# Providing the data for the annotations through a data_list
 similarity_matrix_heatmap(
     similarity_matrix = similarity_matrix,
     cluster_solution = cluster_solution,
@@ -223,8 +205,54 @@ similarity_matrix_heatmap(
     )
 )
 
+df <- collapse_dl(data_list) # Pools all the data in a data_list to a single df
 
+# Providing the data for the annotations through an external dataframe
+similarity_matrix_heatmap(
+    similarity_matrix = similarity_matrix,
+    cluster_solution = cluster_solution,
+    scale_diag = "mean",
+    log_graph = TRUE,
+    data = df,
+    left_hm = list(
+        "Diagnosis" = "diagnosis"
+    ),
+    top_hm = list(
+        "Gender" = "gender"
+    ),
+    top_bar = list(
+        "Age" = "age"
+    )
+)
 
+```
+
+For reference, the code below shows how you would achieve these annotations using standard `ComplexHeatmap` syntax.
+
+```{r}
+
+merged_df <- collapse_dl(data_list)
+order <- sort(cluster_solution, index.return = TRUE)$"ix"
+merged_df <- merged_df[order, ]
+
+#top_ha <- ComplexHeatmap::HeatmapAnnotation(
+#    #Age = anno_barplot(merged_df$"age"),
+#    Gender = merged_df$"gender",
+#    Diagnosis = merged_df$"diagnosis",
+#    Atopic_Asthma = merged_df$"asthma",
+#    col = list(
+#        Diagnosis = c(
+#            "definite asthma" = "red3",
+#            "possible asthma" = "pink1",
+#            "no asthma" = "bisque1"
+#        ),
+#        Atopic_Asthma = c(
+#            "Yes" = "red3",
+#            "No" = "lightgreen"
+#        )
+#    ),
+#    show_legend = TRUE
+#)
 top_ha <- ComplexHeatmap::HeatmapAnnotation(
     #Age = anno_barplot(merged_df$"age"),
     Gender = merged_df$"gender",
@@ -243,14 +271,27 @@ top_ha <- ComplexHeatmap::HeatmapAnnotation(
     ),
     show_legend = TRUE
 )
+similarity_matrix_heatmap(
+    similarity_matrix = similarity_matrix,
+    cluster_solution = cluster_solution,
+    scale_diag = "mean",
+    log_graph = TRUE,
+    data = df,
+    top_annotation = top_ha
+)
 
+z <- list(
+    matrix = similarity_matrix,
+    top_annotation = top_ha
+)
 
-merged_df <- collapse_dl(data_list)
-order <- sort(cluster_solution, index.return = TRUE)$"ix"
-merged_df <- merged_df[order, ]
+length(z)
 
+names(z)
 
-
+do.call(
+    ComplexHeatmap::Heatmap,
+)
 
 top_ha
 

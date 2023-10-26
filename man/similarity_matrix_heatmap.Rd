@@ -6,6 +6,7 @@
 \usage{
 similarity_matrix_heatmap(
   similarity_matrix,
+  order = NULL,
   cluster_solution = NULL,
   scale_diag = "mean",
   log_graph = TRUE,
@@ -13,6 +14,16 @@ similarity_matrix_heatmap(
   cluster_columns = FALSE,
   show_row_names = FALSE,
   show_column_names = FALSE,
+  data_list = NULL,
+  data = NULL,
+  left_bar = NULL,
+  right_bar = NULL,
+  top_bar = NULL,
+  bottom_bar = NULL,
+  left_hm = NULL,
+  right_hm = NULL,
+  top_hm = NULL,
+  bottom_hm = NULL,
   ...
 )
 }
