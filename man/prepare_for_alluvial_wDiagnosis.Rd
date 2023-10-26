@@ -24,5 +24,5 @@ prepare_for_alluvial_wDiagnosis(
 df wide format dataframe
 }
 \description{
-Calculates the frequency of different data combinations and prepares dataframe. To be used by plotClustersAlluvial_wDiagnosis function
+Calculates the frequency of different data combinations and prepares dataframe. To be used by cluster_alluvial function
 }

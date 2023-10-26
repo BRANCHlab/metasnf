@@ -1,16 +1,34 @@
 #' Plot heatmap of similarity matrix
 #'
 #' @param similarity_matrix A similarity matrix
-#' @param cluster_solution Vector containing cluster assignments
+#' @param order Vector of numbers to reorder the similarity matrix (and data
+#'  if provided). Overwrites ordering specified by cluster_solution param.
+#' @param cluster_solution Vector containing cluster assignments.
 #' @param scale_diag Method of rescaling matrix diagonals. Can be "none"
 #'  (don't change diagonals), "mean" (replace diagonals with average value of
 #'  off-diagonals), or "zero" (replace diagonals with 0).
 #' @param log_graph If TRUE, log transforms the graph.
-#' @param cluster_rows Parameter for ComplexHeatmap::Heatmap
-#' @param cluster_columns Parameter for ComplexHeatmap::Heatmap
-#' @param show_row_names Parameter for ComplexHeatmap::Heatmap
-#' @param show_column_names Parameter for ComplexHeatmap::Heatmap
-#' @param ... Additional parameters passed into ComplexHeatmap::Heatmap
+#' @param cluster_rows Parameter for ComplexHeatmap::Heatmap.
+#' @param cluster_columns Parameter for ComplexHeatmap::Heatmap.
+#' @param show_row_names Parameter for ComplexHeatmap::Heatmap.
+#' @param show_column_names Parameter for ComplexHeatmap::Heatmap.
+#' @param data_list A data_list containing elements requested for annotation.
+#' @param data A dataframe containing elements requested for annotation.
+#' @param left_bar Named list of strings, where the strings are variables in
+#'  df that should be used for a barplot annotation on the left of the plot and
+#'  the names are the names that will be used to caption the plots and their
+#'  legends.
+#' @param left_hm Like left_bar, but with a heatmap annotation instead of a
+#'  barplot annotation.
+#' @param right_bar See left_bar.
+#' @param top_bar See left_bar.
+#' @param bottom_bar See left_bar.
+#' @param right_hm See left_hm.
+#' @param top_hm See left_hm.
+#' @param bottom_hm See left_hm.
+#' @param annotation_colours Named list of heatmap annotations and their
+#'  colours.
+#' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
 #'
 #' @export
 similarity_matrix_heatmap <- function(similarity_matrix,
@@ -534,29 +552,30 @@ CorrManhattan <- function(df_stat, outcome, dataset_label) {
 #'
 #' Do spectral clustering through cluster 2 to user defined cluster number and outputs clustering result
 #'
-#' @param W a similarity matrix
-#' @param numc max number of cluster to do spectral clustering
+#' @param similarity_matrix A similarity matrix.
+#' @param numc max number of cluster to do spectral clustering.
 #'
 #' @return result_df dataframe of cluster assignments
 #'
 #' @export
-output_cluster_file <- function(W, numc = 8){
-  id_keep=rownames(W)
-  # result has numc-1 cluster columns and sample names in rownames
-  result_df = data.frame(matrix(NA, ncol = numc-1, nrow = nrow(W)))
-  rownames(result_df) = id_keep
-  for (C in 2:numc) {
-    clustering = SNFtool::spectralClustering(W, C)
-    result_df[,C-1] = clustering
-  }
-  colnames(result_df) <- c(2:numc)
-  return(result_df)
-
+output_cluster_file <- function(similarity_matrix, numc = 8){
+    id_keep <- rownames(similarity_matrix)
+    # result has numc-1 cluster columns and sample names in rownames
+    result_df <- data.frame(
+        matrix(NA, ncol = numc-1, nrow = nrow(similarity_matrix))
+    )
+    rownames(result_df) <- id_keep
+    for (C in 2:numc) {
+      clustering = SNFtool::spectralClustering(similarity_matrix, C)
+      result_df[,C-1] = clustering
+    }
+    colnames(result_df) <- c(2:numc)
+    return(result_df)
 }
 
 #' Prepare dataframe for multi-cluster alluvial plot
 #'
-#' Calculates the frequency of different data combinations and prepares dataframe. To be used by plotClustersAlluvial_wDiagnosis function
+#' Calculates the frequency of different data combinations and prepares dataframe. To be used by cluster_alluvial function
 #'
 #' @param cluster_env_df is a dataframe with clustering assignments and environmental variables
 #' @param fill_alluvium_by variable to color alluvium. This is an outcome variable in cluster_env_df
@@ -569,8 +588,8 @@ output_cluster_file <- function(W, numc = 8){
 prepare_for_alluvial_wDiagnosis <- function(cluster_env_df,
                                             fill_alluvium_by,
                                             numc,
-                                            key_outcome=NULL){
-  if (!(is.null(key_outcome))){
+                                            key_outcome = NULL) {
+  if (!(is.null(key_outcome))) {
     key_outcome = key_outcome
   }
   # prepare data
@@ -603,7 +622,7 @@ prepare_for_alluvial_wDiagnosis <- function(cluster_env_df,
 #'
 #'
 #' @export
-plotClustersAlluvial_wDiagnosis <- function(similarity_matrix,
+cluster_alluvial <- function(similarity_matrix,
                                             df_env,
                                             numc,
                                             outcome,
@@ -689,7 +708,6 @@ plotClustersAlluvial_wDiagnosis <- function(similarity_matrix,
         )
 }
 
-
 #' Generate annotations list
 #'
 #' Intermediate function that takes in formatted lists of variables and the
@@ -710,6 +728,8 @@ plotClustersAlluvial_wDiagnosis <- function(similarity_matrix,
 #' @param right_hm See left_hm.
 #' @param top_hm See left_hm.
 #' @param bottom_hm See left_hm.
+#' @param annotation_colours Named list of heatmap annotations and their
+#'  colours.
 #'
 #' @return annotations_list A named list of all the annotations.
 #'
@@ -845,7 +865,9 @@ generate_annotations_list <- function(df,
         #######################################################################
         for (i in seq_along(bottom_bar)) {
             ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
-                temporary_name = anno_barplot(df[, bottom_bar[[i]]])
+                temporary_name = ComplexHeatmap::anno_barplot(
+                    df[, bottom_bar[[i]]]
+                )
             )
             # Remove the "temporary_name"s
             names(ith_annotation@anno_list) <- bottom_bar_names[[i]]
@@ -926,7 +948,9 @@ generate_annotations_list <- function(df,
         #######################################################################
         for (i in seq_along(left_bar)) {
             ith_annotation <- ComplexHeatmap::rowAnnotation(
-                temporary_name = anno_barplot(df[, left_bar[[i]]])
+                temporary_name = ComplexHeatmap::anno_barplot(
+                    df[, left_bar[[i]]]
+                )
             )
             # Remove the "temporary_name"s
             names(ith_annotation@anno_list) <- left_bar_names[[i]]
@@ -1004,7 +1028,9 @@ generate_annotations_list <- function(df,
         #######################################################################
         for (i in seq_along(right_bar)) {
             ith_annotation <- ComplexHeatmap::rowAnnotation(
-                temporary_name = anno_barplot(df[, right_bar[[i]]])
+                temporary_name = ComplexHeatmap::anno_barplot(
+                    df[, right_bar[[i]]]
+                )
             )
             # Remove the "temporary_name"s
             names(ith_annotation@anno_list) <- right_bar_names[[i]]

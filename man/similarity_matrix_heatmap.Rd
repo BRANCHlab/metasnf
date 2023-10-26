@@ -31,7 +31,10 @@ similarity_matrix_heatmap(
 \arguments{
 \item{similarity_matrix}{A similarity matrix}
 
-\item{cluster_solution}{Vector containing cluster assignments}
+\item{order}{Vector of numbers to reorder the similarity matrix (and data
+if provided). Overwrites ordering specified by cluster_solution param.}
+
+\item{cluster_solution}{Vector containing cluster assignments.}
 
 \item{scale_diag}{Method of rescaling matrix diagonals. Can be "none"
 (don't change diagonals), "mean" (replace diagonals with average value of
@@ -39,15 +42,42 @@ off-diagonals), or "zero" (replace diagonals with 0).}
 
 \item{log_graph}{If TRUE, log transforms the graph.}
 
-\item{cluster_rows}{Parameter for ComplexHeatmap::Heatmap}
+\item{cluster_rows}{Parameter for ComplexHeatmap::Heatmap.}
 
-\item{cluster_columns}{Parameter for ComplexHeatmap::Heatmap}
+\item{cluster_columns}{Parameter for ComplexHeatmap::Heatmap.}
 
-\item{show_row_names}{Parameter for ComplexHeatmap::Heatmap}
+\item{show_row_names}{Parameter for ComplexHeatmap::Heatmap.}
 
-\item{show_column_names}{Parameter for ComplexHeatmap::Heatmap}
+\item{show_column_names}{Parameter for ComplexHeatmap::Heatmap.}
 
-\item{...}{Additional parameters passed into ComplexHeatmap::Heatmap}
+\item{data_list}{A data_list containing elements requested for annotation.}
+
+\item{data}{A dataframe containing elements requested for annotation.}
+
+\item{left_bar}{Named list of strings, where the strings are variables in
+df that should be used for a barplot annotation on the left of the plot and
+the names are the names that will be used to caption the plots and their
+legends.}
+
+\item{right_bar}{See left_bar.}
+
+\item{top_bar}{See left_bar.}
+
+\item{bottom_bar}{See left_bar.}
+
+\item{left_hm}{Like left_bar, but with a heatmap annotation instead of a
+barplot annotation.}
+
+\item{right_hm}{See left_hm.}
+
+\item{top_hm}{See left_hm.}
+
+\item{bottom_hm}{See left_hm.}
+
+\item{annotation_colours}{Named list of heatmap annotations and their
+colours.}
+
+\item{...}{Additional parameters passed into ComplexHeatmap::Heatmap.}
 }
 \description{
 Plot heatmap of similarity matrix

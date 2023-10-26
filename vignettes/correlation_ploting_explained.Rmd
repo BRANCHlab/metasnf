@@ -245,7 +245,7 @@ similarity_matrix_heatmap(
     cluster_solution = cluster_solution,
     scale_diag = "mean",
     log_graph = TRUE,
-    data = df,
+    data_list = data_list,
     left_hm = list(
         "Diagnosis" = "diagnosis"
     ),
@@ -265,7 +265,7 @@ similarity_matrix_heatmap(
             "female" = "purple",
             "male" = "lightgreen"
         )
-    ),
+    )
 )
 
 ```
@@ -274,7 +274,7 @@ The colours `red3`, `pink1`, etc. are built-in R colours that you can browse by 
 
 For reference, the code below shows how you would achieve these annotations using standard `ComplexHeatmap` syntax.
 
-```{r}
+```{r eval = FALSE}
 
 merged_df <- collapse_dl(data_list)
 order <- sort(cluster_solution, index.return = TRUE)$"ix"
@@ -318,7 +318,7 @@ similarity_matrix_heatmap(
 
 ```
 
-Do take a look at the [ComplexHeatmap Complete Reference](https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html) to learn more about what is possible with this package.
+Take a look at the [ComplexHeatmap Complete Reference](https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html) to learn more about what is possible with this package.
 
 ## More on sorting
 
@@ -351,14 +351,12 @@ cluster_file <- output_cluster_file(similarity_matrix, numc = 6)
 
 output_cluster_file(similarity_matrix, numc = 6)
 
-?output_cluster_file
-
 head(cluster_file)
 
 ```
 
 If you are familiar with alluvial plots and would like to create your own alluvial illustration, `prepare_for_alluvial_wDiagnosis` function generates a "category frequency" dataframe in wide format that you can use to create your own customized plot.
-Otherwise, we have `plotClustersAlluvial_wDiagnosis` to conveniently plot alluvial colored by desired outcome variable.
+Otherwise, we have `cluster_alluvial` to conveniently plot alluvial colored by desired outcome variable.
 
 ```{r}
 
@@ -384,7 +382,7 @@ df_outcomes = data.frame(
     Wheeze_status = c(rep("Yes", 20), rep("Sometimes", 60), rep("No", 120))
 )
 
-plotClustersAlluvial_wDiagnosis(
+cluster_alluvial(
     similarity_matrix = similarity_matrix,
     df_env = df_outcomes,
     numc = 6,
@@ -396,19 +394,21 @@ plotClustersAlluvial_wDiagnosis(
 `Wheeze status` may be just one of the many outcomes that is part of asthma diagnosis. In heterogeneous diseases, "Asthma_Diagnosis" is the ultimate outcome. To display it alongside `Wheeze status`:
 
 ```{r}
+
 df_outcomes$Asthma_Diagnosis <- c(
     rep("Definite Asthma", 10),
     rep("Possible Asthma", 50),
     rep("No Asthma", 140)
 )
 
-plotClustersAlluvial_wDiagnosis(
+cluster_alluvial(
     similarity_matrix = similarity_matrix,
     df_env = df_outcomes,
     numc = 6,
     outcome = "Wheeze_status",
     key_outcome = "Asthma_Diagnosis"
 )
+
 ```
 
 
@@ -587,6 +587,7 @@ We can also plot correlation of features to **one** user-specified outcome in Ma
 Similar to running `clusterToOutcomeCorr`, here we have pre-calculated correlation p-value between each predictive feature to "Asthma_Diagnosis". For convenience let's generate some numbers
 
 ```{r}
+
 #'  "p.value": from correlation test,
 #'  "n": number of samples,
 #'  "Group": datatype name,

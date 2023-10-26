@@ -4,12 +4,12 @@
 \alias{output_cluster_file}
 \title{Spectral clustering from c2 to user-defined max-number of cluster. Used by plotClustersAlluvial_wOutcome function}
 \usage{
-output_cluster_file(W, numc = 8)
+output_cluster_file(similarity_matrix, numc = 8)
 }
 \arguments{
-\item{W}{a similarity matrix}
+\item{similarity_matrix}{A similarity matrix.}
 
-\item{numc}{max number of cluster to do spectral clustering}
+\item{numc}{max number of cluster to do spectral clustering.}
 }
 \value{
 result_df dataframe of cluster assignments

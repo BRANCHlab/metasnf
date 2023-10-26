@@ -40,6 +40,9 @@ barplot annotation.}
 \item{top_hm}{See left_hm.}
 
 \item{bottom_hm}{See left_hm.}
+
+\item{annotation_colours}{Named list of heatmap annotations and their
+colours.}
 }
 \value{
 annotations_list A named list of all the annotations.
