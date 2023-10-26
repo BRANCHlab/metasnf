@@ -86,33 +86,32 @@ the qualitatively distinct “meta clusters” that emerge.
 
 ## Recent updates:
 
--   [x] Changes in function names
--   [x] Capability of defining custom clustering algorithms
--   [x] Added flexibility during generation of the settings_matrix
--   [x] Capability of calculating solution stability across patient
-    resamplings for all cluster solutions
--   [x] Capability of calculating a wide range of quality metrics for
-    all cluster solutions
--   [x] Capability of writing affinity matrices to disk
--   [x] Capability of not running the clustering on every run of SNF
-    (only makes sense when paired with the previous change)
+- [x] Changes in function names
+- [x] Capability of defining custom clustering algorithms
+- [x] Added flexibility during generation of the settings_matrix
+- [x] Capability of calculating solution stability across patient
+  resamplings for all cluster solutions
+- [x] Capability of calculating a wide range of quality metrics for all
+  cluster solutions
+- [x] Capability of writing affinity matrices to disk
+- [x] Capability of not running the clustering on every run of SNF (only
+  makes sense when paired with the previous change)
+- [x] Capability of defining custom distance metrics (including feature
+  weights)
 
 ## Work in progress:
 
--   [ ] Change in package name
--   [ ] Capability of defining custom distance metrics (including
-    feature weights)
--   [ ] Capability of defining custom SNF-level weights
--   [ ] New visualization functions and improvements to existing
-    visualization functions
--   [ ] Updated vignette(s) to fully document basic and advance usage of
-    the package
+- [ ] Change in package name
+- [ ] New visualization functions and improvements to existing
+  visualization functions
+- [ ] Updated vignette(s) to fully document basic and advance usage of
+  the package
 
 ### Lower priority:
 
--   [ ] Adapt parallel processing variant of batch_snf to reflect the
-    above changes
--   [ ] Add tests / make package CRAN ready
+- [ ] Adapt parallel processing variant of batch_snf to reflect the
+  above changes
+- [ ] Add tests / make package CRAN ready
 
 ## Contributions
 

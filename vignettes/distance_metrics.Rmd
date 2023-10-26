@@ -222,7 +222,7 @@ By default, this function will return a dataframe containing all the columns in 
 
 To actually use the matrix during SNF, you'll need to make sure that the number of rows in the weights matrix is the same as the number of rows in your settings matrix.
 
-```{r}
+```{r eval = FALSE}
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 10,
@@ -254,13 +254,13 @@ solutions_matrix_with_no_weights <- batch_snf(
 identical(
     solutions_matrix_with_no_weights,
     solutions_matrix_with_ones_for_weights
-)
+) # Try this on your machine - It'll evaluate to TRUE
 ```
 
 A `weights_matrix` of all 1s (the default `weights_matrix` used when you don't supply one yourself) 'won't actually do anything to the data.
 You can either replace the 1s with your own weights that you've calculated outside of the package, or use some random weights following a uniform or exponential distribution.
 
-```{r}
+```{r eval = FALSE}
 weights_matrix <- generate_weights_matrix(
     data_list,
     nrow = nrow(settings_matrix),
@@ -279,7 +279,7 @@ solutions_matrix_with_uniform_random_weights <- batch_snf(
 identical(
     solutions_matrix_with_no_weights,
     solutions_matrix_with_uniform_random_weights
-)
+) # Try this on your machine - It'll evaluate to TRUE
 ```
 
 The default metrics (simple Euclidean for continuous, discrete, and ordinal data and Gower's distance for categorical and mixed data) are both capable of applying weights to data before distance matrix generation.
