@@ -32,6 +32,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
                                       right_hm = NULL,
                                       top_hm = NULL,
                                       bottom_hm = NULL,
+                                      annotation_colours = NULL,
                                       ...) {
     ###########################################################################
     # Assemble any provided data
@@ -125,7 +126,8 @@ similarity_matrix_heatmap <- function(similarity_matrix,
         left_bar = left_bar,
         right_bar = right_bar,
         top_bar = top_bar,
-        bottom_bar = bottom_bar
+        bottom_bar = bottom_bar,
+        annotation_colours = annotation_colours
     )
     args_list <- list(...)
     if (is.null(args_list$"top_annotation")) {
@@ -151,30 +153,11 @@ similarity_matrix_heatmap <- function(similarity_matrix,
         title = title,
         at = c(minimum, middle, maximum)
     )
-    return(args_list)
     suppressMessages(
         do.call(
             ComplexHeatmap::Heatmap,
             args_list
         )
-        #ComplexHeatmap::Heatmap(
-        #    #matrix = similarity_matrix[ind,ind],
-        #    matrix = similarity_matrix,
-        #    cluster_rows = cluster_rows,
-        #    cluster_columns = cluster_columns,
-        #    show_row_names = show_row_names,
-        #    show_column_names = show_column_names,
-        #    heatmap_legend_param = list(
-        #        color_bar = "continuous",
-        #        title = title,
-        #        at = c(minimum, middle, maximum)
-        #    ),
-        #    top_annotation = top_annotation,
-        #    bottom_annotation = bottom_annotation,
-        #    left_annotation = left_annotation,
-        #    right_annotation = right_annotation,
-        #    ...
-        #)
     )
 }
 
@@ -739,7 +722,8 @@ generate_annotations_list <- function(df,
                                       left_hm = NULL,
                                       right_hm = NULL,
                                       top_hm = NULL,
-                                      bottom_hm = NULL) {
+                                      bottom_hm = NULL,
+                                      annotation_colours = NULL) {
     ###########################################################################
     # Ensure all the variables specified are in the provided data
     check_colnames <- function(annotation_list, sorted_df) {
@@ -814,6 +798,24 @@ generate_annotations_list <- function(df,
             ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
                 temporary_name = df[, top_hm[[i]]]
             )
+            ###################################################################
+            # Check for colours
+            colour_position <- which(
+                names(annotation_colours) == top_hm_names[[i]]
+            )
+            if (sum(colour_position) != 0) {
+                ith_colour_map <- annotation_colours[colour_position]
+                names(ith_colour_map) <- "temporary_name"
+                ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
+                    temporary_name = df[, top_hm[[i]]],
+                    col = ith_colour_map
+                )
+            } else {
+                ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
+                    temporary_name = df[, top_hm[[i]]]
+                )
+            }
+            ###################################################################
             # Remove the "temporary_name"s
             names(ith_annotation@anno_list) <- top_hm_names[[i]]
             ith_annotation@anno_list[[1]]@name <-
@@ -877,6 +879,24 @@ generate_annotations_list <- function(df,
             ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
                 temporary_name = df[, bottom_hm[[i]]]
             )
+            ###################################################################
+            # Check for colours
+            colour_position <- which(
+                names(annotation_colours) == bottom_hm_names[[i]]
+            )
+            if (sum(colour_position) != 0) {
+                ith_colour_map <- annotation_colours[colour_position]
+                names(ith_colour_map) <- "temporary_name"
+                ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
+                    temporary_name = df[, bottom_hm[[i]]],
+                    col = ith_colour_map
+                )
+            } else {
+                ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
+                    temporary_name = df[, bottom_hm[[i]]]
+                )
+            }
+            ###################################################################
             # Remove the "temporary_name"s
             names(ith_annotation@anno_list) <- bottom_hm_names[[i]]
             ith_annotation@anno_list[[1]]@name <-
@@ -937,9 +957,24 @@ generate_annotations_list <- function(df,
             if (nchar(left_hm_names[[i]]) == 0) {
                 left_hm_names[[i]] <- left_hm[[i]]
             }
-            ith_annotation <- ComplexHeatmap::rowAnnotation(
-                temporary_name = df[, left_hm[[i]]]
+            ###################################################################
+            # Check for colours
+            colour_position <- which(
+                names(annotation_colours) == left_hm_names[[i]]
             )
+            if (sum(colour_position) != 0) {
+                ith_colour_map <- annotation_colours[colour_position]
+                names(ith_colour_map) <- "temporary_name"
+                ith_annotation <- ComplexHeatmap::rowAnnotation(
+                    temporary_name = df[, left_hm[[i]]],
+                    col = ith_colour_map
+                )
+            } else {
+                ith_annotation <- ComplexHeatmap::rowAnnotation(
+                    temporary_name = df[, left_hm[[i]]]
+                )
+            }
+            ###################################################################
             # Remove the "temporary_name"s
             names(ith_annotation@anno_list) <- left_hm_names[[i]]
             ith_annotation@anno_list[[1]]@name <-
@@ -1003,6 +1038,24 @@ generate_annotations_list <- function(df,
             ith_annotation <- ComplexHeatmap::rowAnnotation(
                 temporary_name = df[, right_hm[[i]]]
             )
+            ###################################################################
+            # Check for colours
+            colour_position <- which(
+                names(annotation_colours) == right_hm_names[[i]]
+            )
+            if (sum(colour_position) != 0) {
+                ith_colour_map <- annotation_colours[colour_position]
+                names(ith_colour_map) <- "temporary_name"
+                ith_annotation <- ComplexHeatmap::rowAnnotation(
+                    temporary_name = df[, right_hm[[i]]],
+                    col = ith_colour_map
+                )
+            } else {
+                ith_annotation <- ComplexHeatmap::rowAnnotation(
+                    temporary_name = df[, right_hm[[i]]]
+                )
+            }
+            ###################################################################
             # Remove the "temporary_name"s
             names(ith_annotation@anno_list) <- right_hm_names[[i]]
             ith_annotation@anno_list[[1]]@name <-

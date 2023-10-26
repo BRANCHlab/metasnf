@@ -188,6 +188,7 @@ In the example below, we make use of data supplied through a data_list.
 ```{r}
 
 # Providing the data for the annotations through a data_list
+set.seed(42)
 similarity_matrix_heatmap(
     similarity_matrix = similarity_matrix,
     cluster_solution = cluster_solution,
@@ -205,9 +206,16 @@ similarity_matrix_heatmap(
     )
 )
 
+```
+
+The chunk below gives an identical plot, but using a dataframe instead of a data_list.
+
+```{r eval = FALSE}
+
 df <- collapse_dl(data_list) # Pools all the data in a data_list to a single df
 
 # Providing the data for the annotations through an external dataframe
+set.seed(42)
 similarity_matrix_heatmap(
     similarity_matrix = similarity_matrix,
     cluster_solution = cluster_solution,
@@ -227,6 +235,43 @@ similarity_matrix_heatmap(
 
 ```
 
+We needed to call `set.seed()` because by default, `ComplexHeatmap::Heatmap` randomly generates colours for heatmap annotations.
+You can instead specify your own colours using the `annotation_colours` parameter:
+
+```{r}
+
+similarity_matrix_heatmap(
+    similarity_matrix = similarity_matrix,
+    cluster_solution = cluster_solution,
+    scale_diag = "mean",
+    log_graph = TRUE,
+    data = df,
+    left_hm = list(
+        "Diagnosis" = "diagnosis"
+    ),
+    top_hm = list(
+        "Gender" = "gender"
+    ),
+    top_bar = list(
+        "Age" = "age"
+    ),
+    annotation_colours = list(
+        Diagnosis = c(
+            "definite asthma" = "red3",
+            "possible asthma" = "pink1",
+            "no asthma" = "bisque1"
+        ),
+        Gender = c(
+            "female" = "purple",
+            "male" = "lightgreen"
+        )
+    ),
+)
+
+```
+
+The colours `red3`, `pink1`, etc. are built-in R colours that you can browse by calling `colours()`.
+
 For reference, the code below shows how you would achieve these annotations using standard `ComplexHeatmap` syntax.
 
 ```{r}
@@ -235,76 +280,51 @@ merged_df <- collapse_dl(data_list)
 order <- sort(cluster_solution, index.return = TRUE)$"ix"
 merged_df <- merged_df[order, ]
 
-#top_ha <- ComplexHeatmap::HeatmapAnnotation(
-#    #Age = anno_barplot(merged_df$"age"),
-#    Gender = merged_df$"gender",
-#    Diagnosis = merged_df$"diagnosis",
-#    Atopic_Asthma = merged_df$"asthma",
-#    col = list(
-#        Diagnosis = c(
-#            "definite asthma" = "red3",
-#            "possible asthma" = "pink1",
-#            "no asthma" = "bisque1"
-#        ),
-#        Atopic_Asthma = c(
-#            "Yes" = "red3",
-#            "No" = "lightgreen"
-#        )
-#    ),
-#    show_legend = TRUE
-#)
-top_ha <- ComplexHeatmap::HeatmapAnnotation(
-    #Age = anno_barplot(merged_df$"age"),
+top_annotations <- ComplexHeatmap::HeatmapAnnotation(
+    Age = ComplexHeatmap::anno_barplot(merged_df$"age"),
     Gender = merged_df$"gender",
+    #Atopic_Asthma = merged_df$"asthma",
+    col = list(
+        Gender = c(
+            "female" = "purple",
+            "male" = "lightgreen"
+        )
+    ),
+    show_legend = TRUE
+)
+
+left_annotations <- ComplexHeatmap::rowAnnotation(
     Diagnosis = merged_df$"diagnosis",
-    Atopic_Asthma = merged_df$"asthma",
+    #Atopic_Asthma = merged_df$"asthma",
     col = list(
         Diagnosis = c(
             "definite asthma" = "red3",
             "possible asthma" = "pink1",
             "no asthma" = "bisque1"
-        ),
-        Atopic_Asthma = c(
-            "Yes" = "red3",
-            "No" = "lightgreen"
         )
     ),
     show_legend = TRUE
 )
+
 similarity_matrix_heatmap(
     similarity_matrix = similarity_matrix,
     cluster_solution = cluster_solution,
     scale_diag = "mean",
     log_graph = TRUE,
     data = df,
-    top_annotation = top_ha
+    top_annotation = top_annotations,
+    left_annotation = left_annotations
 )
-
-z <- list(
-    matrix = similarity_matrix,
-    top_annotation = top_ha
-)
-
-length(z)
-
-names(z)
-
-do.call(
-    ComplexHeatmap::Heatmap,
-)
-
-top_ha
-
-annos
-
-isFALSE(isTRUE(nchar(NULL) < 0))
-
-z <- vector()
-
 
 ```
 
 Do take a look at the [ComplexHeatmap Complete Reference](https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html) to learn more about what is possible with this package.
+
+## More on sorting
+
+Be aware that the ordering of both your data and your similarity matrix will be influenced if you supply values for the `cluster_solution` or `order` parameters.
+If you don't think your data is lining up properly, consider manually making sure your `similarity_matrix` rows and columns are sorted to your preference (e.g., based on cluster) and that the order of your data matches.
+This will be easier to do with a `dataframe` than with a `data_list`, as the `data_list` forces patients to be sorted by their unique IDs upon generation.
 
 ## Alluvial plots
 

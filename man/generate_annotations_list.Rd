@@ -13,7 +13,8 @@ generate_annotations_list(
   left_hm = NULL,
   right_hm = NULL,
   top_hm = NULL,
-  bottom_hm = NULL
+  bottom_hm = NULL,
+  annotation_colours = NULL
 )
 }
 \arguments{

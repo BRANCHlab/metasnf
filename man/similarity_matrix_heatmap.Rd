@@ -24,6 +24,7 @@ similarity_matrix_heatmap(
   right_hm = NULL,
   top_hm = NULL,
   bottom_hm = NULL,
+  annotation_colours = NULL,
   ...
 )
 }
