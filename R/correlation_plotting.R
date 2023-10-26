@@ -623,19 +623,16 @@ prepare_for_alluvial_wDiagnosis <- function(cluster_env_df,
 #'
 #' @export
 cluster_alluvial <- function(similarity_matrix,
-                                            df_env,
-                                            numc,
-                                            outcome,
-                                            key_outcome = NULL) {
+                             df_env,
+                             numc,
+                             outcome,
+                             key_outcome = NULL) {
     # Meaningless visible bindings to supply to plotting functions
     x <- ""
     Freq <- ""
     stratum <- ""
     Count <- ""
     Fill <- ""
-    if (!(is.null(key_outcome))) {
-        key_outcome = key_outcome
-    }
     # run clustering from c2 to numc
     cluster_df = output_cluster_file(similarity_matrix, numc = numc)
     #merge cluster_df with variable_df
@@ -646,6 +643,7 @@ cluster_alluvial <- function(similarity_matrix,
         df_env,
         by = "Subject_Number"
     )
+    print(head(merged_df))
     # prepare data for plotting alluvial
     alluvial_df <- prepare_for_alluvial_wDiagnosis(
         cluster_env_df = merged_df,

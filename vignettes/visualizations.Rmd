@@ -347,7 +347,30 @@ cluster_sequence <- list(
 
 ```{r}
 
+
+alluvial_df <- data.frame()
+
+ncol(alluvial_df)
+
+
+alluvial_cluster_plot <- function(cluster_sequence, similarity_matrix) {
+    alluvial_df <- data.frame(subjectkey = colnames(similarity_matrix))
+    for (algorithm in cluster_sequence) {
+        cluster_output <- algorithm(similarity_matrix)
+        solution <- cluster_output$"solution"
+        nclust <- cluster_output$"nclust"
+        solution_col <- data.frame(solution)
+        colnames(solution_col) <- nclust
+        alluvial_df <- cbind(alluvial_df, solution_col)
+    }
+    return(alluvial_df)
+}
+cluster_file2 <- alluvial_cluster_plot(cluster_sequence, similarity_matrix)
+
+head(cluster_file2)
+
 cluster_file <- output_cluster_file(similarity_matrix, numc = 6)
+
 
 cluster_file
 
@@ -383,6 +406,15 @@ df_outcomes = data.frame(
     Subject_Number = as.character(rownames(cluster_file)),
     Wheeze_status = c(rep("Yes", 20), rep("Sometimes", 60), rep("No", 120))
 )
+
+df_outcomes2 = data.frame(
+    Subject_Number = as.character(rownames(cluster_file2)),
+    Wheeze_status = c(rep("Yes", 20), rep("Sometimes", 60), rep("No", 120))
+)
+
+head(df_outcomes)
+
+head(df_outcomes2)
 
 cluster_alluvial(
     similarity_matrix = similarity_matrix,
