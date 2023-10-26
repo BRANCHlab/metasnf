@@ -10,8 +10,8 @@
 
 **This package is currently under active development.**
 
-We recommend installing the latest development version of the package
-(it has the best stuff!):
+You will need R version 4.1.0 or higher to install this package.
+We recommend installing the latest development version (it has the best stuff!):
 
 ``` r
 devtools::install_github("BRANCHlab/metasnf")
