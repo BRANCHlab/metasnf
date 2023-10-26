@@ -1,10 +1,10 @@
 ---
-title: "Correlation and Plotting"
+title: "Visualizations"
 output:
     rmarkdown::html_vignette:
         toc: true
 vignette: >
-  %\VignetteIndexEntry{Correlation and Plotting}
+  %\VignetteIndexEntry{Visualizations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -348,6 +348,8 @@ cluster_sequence <- list(
 ```{r}
 
 cluster_file <- output_cluster_file(similarity_matrix, numc = 6)
+
+cluster_file
 
 output_cluster_file(similarity_matrix, numc = 6)
 
