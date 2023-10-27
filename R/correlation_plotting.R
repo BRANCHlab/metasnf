@@ -643,7 +643,6 @@ cluster_alluvial <- function(similarity_matrix,
         df_env,
         by = "Subject_Number"
     )
-    print(head(merged_df))
     # prepare data for plotting alluvial
     alluvial_df <- prepare_for_alluvial_wDiagnosis(
         cluster_env_df = merged_df,
