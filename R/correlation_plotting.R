@@ -586,28 +586,19 @@ output_cluster_file <- function(similarity_matrix, numc = 8){
 #'
 #' @export
 prepare_for_alluvial_wDiagnosis <- function(cluster_env_df,
-                                            fill_alluvium_by,
+                                            outcome,
                                             numc,
                                             key_outcome = NULL) {
-  if (!(is.null(key_outcome))) {
-    key_outcome = key_outcome
-  }
-  # prepare data
-  # calculate frequency of each combination/row
-  colnames(cluster_env_df)[1:numc-1] = paste0("c", as.character(c(2:numc)))
-  outcome = fill_alluvium_by
-  cluster_env_df = dplyr::select(cluster_env_df, c(1:numc-1, outcome, key_outcome))
-  cluster_env_df$Fill = cluster_env_df[,fill_alluvium_by]
-  # use concat to find frequency
-  cluster_env_df$'concat' = apply(
-      cluster_env_df,
-      1,
-      function(row) paste0(row, collapse="")
-    )
-  table = as.data.frame(table(cluster_env_df$'concat'))
-  df = unique(cluster_env_df)
-  df = dplyr::left_join(df, table, by = c("concat"="Var1"))
-  return(df)
+    # prepare data
+    # calculate frequency of each combination/row
+    colnames(cluster_env_df)[1:numc-1] = paste0("c", as.character(c(2:numc)))
+    cluster_env_df = dplyr::select(cluster_env_df, c(1:numc-1, outcome, key_outcome))
+    cluster_env_df$Fill = cluster_env_df[, outcome]
+    df <- cluster_env_df |>
+        dplyr::group_by(dplyr::across(1:ncol(cluster_env_df))) |>
+        dplyr::summarize(Freq = dplyr::n(), .groups = "keep") |>
+        data.frame()
+    return(df)
 }
 
 #' Plot alluvial plot
@@ -636,17 +627,23 @@ cluster_alluvial <- function(similarity_matrix,
     # run clustering from c2 to numc
     cluster_df = output_cluster_file(similarity_matrix, numc = numc)
     #merge cluster_df with variable_df
-    cluster_df$Subject_Number = as.character(rownames(cluster_df))
+    cluster_df$subjectkey = as.character(rownames(cluster_df))
     #merge df_env in with cluster assignment data
     merged_df = dplyr::left_join(
         cluster_df,
         df_env,
-        by = "Subject_Number"
+        by = "subjectkey"
     )
     # prepare data for plotting alluvial
+    merged_df2 <- merged_df
+    merged_df2 <- merged_df2 |>
+        dplyr::select(-dplyr::contains("subjectkey")) |>
+        dplyr::group_by(dplyr::across(1:ncol(merged_df2) - 1)) |>
+        dplyr::summarize(Freq = dplyr::n(), .groups = "keep") |>
+        data.frame()
     alluvial_df <- prepare_for_alluvial_wDiagnosis(
         cluster_env_df = merged_df,
-        fill_alluvium_by = outcome,
+        outcome = outcome,
         numc = numc,
         key_outcome = key_outcome
     )
@@ -656,6 +653,8 @@ cluster_alluvial <- function(similarity_matrix,
       key_outcome = key_outcome
       columns_to_lodes = c(1:(numc+1))
     }
+    print(head(alluvial_df))
+    print(columns_to_lodes)
     # change to lode form
     alluvial_df_lodes <- ggalluvial::to_lodes_form(
         alluvial_df,
@@ -665,44 +664,43 @@ cluster_alluvial <- function(similarity_matrix,
     # "stratum" column are categories in each x axes/stratum
     # "Count" column is generated as alluvium
     # PLOT
-    alluvial_df_lodes |>
-        ggplot2::ggplot(
-            ggplot2::aes(
-                x = x,
-                y = Freq,
-                stratum = stratum,
-                alluvium = Count
-            )
-        ) +
-        ggalluvial::geom_alluvium(
-            ggplot2::aes(fill = Fill, color = Fill)
-        ) +
-        ggalluvial::geom_stratum(width = 1/4) +
-        ggplot2::geom_text(
-            stat = ggalluvial::StatStratum,
-            ggplot2::aes(
-                label = ggplot2::after_stat(stratum)
-            ),
-            size = 3
-        ) +
-        ggplot2::labs(title = outcome) +
-        ggplot2::theme_bw() +
-        ggplot2::theme(
-            axis.text.x = ggplot2::element_text(
-                hjust = 1,
-                vjust = 0.5,
-                size = 12,
-                angle = 90
-            ),
-            axis.text.y = ggplot2::element_text(size = 12),
-            axis.title.y = ggplot2::element_text(size = 15),
-            axis.title.x = ggplot2::element_blank(),
-            plot.title = ggplot2::element_text(size = 18, hjust = 0.5),
-            panel.grid.major = ggplot2::element_blank(),
-            panel.grid.minor = ggplot2::element_blank(),
-            legend.title = ggplot2::element_text(size = 12),
-            legend.text = ggplot2::element_text(size = 12)
+    alluvial_df_lodes |> ggplot2::ggplot(
+        ggplot2::aes(
+            x = x,
+            y = Freq,
+            stratum = stratum,
+            alluvium = Count
         )
+    ) +
+    ggalluvial::geom_alluvium(
+        ggplot2::aes(fill = Fill, color = Fill)
+    ) +
+    ggalluvial::geom_stratum(width = 1/4) +
+    ggplot2::geom_text(
+        stat = ggalluvial::StatStratum,
+        ggplot2::aes(
+            label = ggplot2::after_stat(stratum)
+        ),
+        size = 3
+    ) +
+    ggplot2::labs(title = outcome) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+        axis.text.x = ggplot2::element_text(
+            hjust = 1,
+            vjust = 0.5,
+            size = 12,
+            angle = 90
+        ),
+        axis.text.y = ggplot2::element_text(size = 12),
+        axis.title.y = ggplot2::element_text(size = 15),
+        axis.title.x = ggplot2::element_blank(),
+        plot.title = ggplot2::element_text(size = 18, hjust = 0.5),
+        panel.grid.major = ggplot2::element_blank(),
+        panel.grid.minor = ggplot2::element_blank(),
+        legend.title = ggplot2::element_text(size = 12),
+        legend.text = ggplot2::element_text(size = 12)
+    )
 }
 
 #' Generate annotations list
@@ -1105,4 +1103,29 @@ generate_annotations_list <- function(df,
         bottom_annotations = bottom_annotations
     )
     return(annotations_list)
+}
+
+#' Collapse a dataframe and/or a data_list into a single dataframe
+#'
+#' @param data A dataframe.
+#' @param data_list A data_list.
+#'
+#' @export
+assemble_data <- function(data, data_list) {
+    if (!is.null(data_list)) {
+        merged_df <- collapse_dl(data_list)
+    }
+    if (is.null(data)) {
+        if (!is.null(data_list)) {
+            # User didn't provide data, but did provide data list, so just use
+            #  that.
+            data <- merged_df
+        }
+    } else {
+        if (!is.null(data_list)) {
+            # User provided both the data and the data_list, so merge them
+            data <- dplyr::inner_join(data, merged_df, by = "subjectkey")
+        }
+    }
+    return(data)
 }

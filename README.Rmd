@@ -21,10 +21,18 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
+## Requirements
+
+Necessary:
+
+* R version 4.1.0 or higher
+* `devtools` package (`install.packages("devtools")`) for installation
+
 ## Installation
 
 **This package is currently under active development.**
 
+You will need R version 4.1.0 or higher to install this package.
 We recommend installing the latest development version of the package (it has the best stuff!):
 
 ```{r eval = FALSE}
