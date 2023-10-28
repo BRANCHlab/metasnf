@@ -6,7 +6,7 @@
 \usage{
 prepare_for_alluvial_wDiagnosis(
   cluster_env_df,
-  fill_alluvium_by,
+  outcome,
   numc,
   key_outcome = NULL
 )
@@ -14,11 +14,11 @@ prepare_for_alluvial_wDiagnosis(
 \arguments{
 \item{cluster_env_df}{is a dataframe with clustering assignments and environmental variables}
 
-\item{fill_alluvium_by}{variable to color alluvium. This is an outcome variable in cluster_env_df}
-
 \item{numc}{user-defined max number of clusters that went through spectral clustering}
 
 \item{key_outcome}{optional key outcome such as "Disease Diagnosis" that is the ultimate outcome. To be displayed on the last x-axis alluvia}
+
+\item{fill_alluvium_by}{variable to color alluvium. This is an outcome variable in cluster_env_df}
 }
 \value{
 df wide format dataframe

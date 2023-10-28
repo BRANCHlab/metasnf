@@ -573,34 +573,6 @@ output_cluster_file <- function(similarity_matrix, numc = 8){
     return(result_df)
 }
 
-#' Prepare dataframe for multi-cluster alluvial plot
-#'
-#' Calculates the frequency of different data combinations and prepares dataframe. To be used by cluster_alluvial function
-#'
-#' @param cluster_env_df is a dataframe with clustering assignments and environmental variables
-#' @param fill_alluvium_by variable to color alluvium. This is an outcome variable in cluster_env_df
-#' @param numc user-defined max number of clusters that went through spectral clustering
-#' @param key_outcome optional key outcome such as "Disease Diagnosis" that is the ultimate outcome. To be displayed on the last x-axis alluvia
-#'
-#' @return df wide format dataframe
-#'
-#' @export
-prepare_for_alluvial_wDiagnosis <- function(cluster_env_df,
-                                            outcome,
-                                            numc,
-                                            key_outcome = NULL) {
-    # prepare data
-    # calculate frequency of each combination/row
-    colnames(cluster_env_df)[1:numc-1] = paste0("c", as.character(c(2:numc)))
-    cluster_env_df = dplyr::select(cluster_env_df, c(1:numc-1, outcome, key_outcome))
-    cluster_env_df$Fill = cluster_env_df[, outcome]
-    df <- cluster_env_df |>
-        dplyr::group_by(dplyr::across(1:ncol(cluster_env_df))) |>
-        dplyr::summarize(Freq = dplyr::n(), .groups = "keep") |>
-        data.frame()
-    return(df)
-}
-
 #' Plot alluvial plot
 #'
 #' Plot alluvial plot from 2 clusters to user-defined number of clusters along with outcome/environmental variables.
@@ -653,8 +625,6 @@ cluster_alluvial <- function(similarity_matrix,
       key_outcome = key_outcome
       columns_to_lodes = c(1:(numc+1))
     }
-    print(head(alluvial_df))
-    print(columns_to_lodes)
     # change to lode form
     alluvial_df_lodes <- ggalluvial::to_lodes_form(
         alluvial_df,
@@ -1128,4 +1098,110 @@ assemble_data <- function(data, data_list) {
         }
     }
     return(data)
+}
+
+#' Alluvial plot of patients across cluster counts and important variables
+#'
+#' @param cluster_sequence A list of clustering algorithms (typically, the same
+#'  algorithm varied over different numbers of clusters).
+#' @param similarity_matrix A similarity matrix.
+#' @param data_list A data_list that contains variables to include in the plot.
+#' @param data A dataframe that contains variables to include in the plot.
+#' @param key_outcome The name of the variable that determines how each patient
+#'  stream is coloured in the alluvial plot.
+#' @param key_label Name of key outcome to be used for the plot legend.
+#' @param title Title of the plot.
+#' @param extra_outcomes Names of additional variables to add to the plot.
+#'
+#' @export
+alluvial_cluster_plot <- function(cluster_sequence,
+                                  similarity_matrix,
+                                  data_list = NULL,
+                                  data = NULL,
+                                  key_outcome,
+                                  key_label = key_outcome,
+                                  extra_outcomes = NULL,
+                                  title = NULL) {
+    ###########################################################################
+    # Calculate the cluster solutions for each cluster algorithm provided
+    ###########################################################################
+    alluvial_df <- data.frame(subjectkey = colnames(similarity_matrix))
+    for (algorithm in cluster_sequence) {
+        cluster_output <- algorithm(similarity_matrix)
+        solution <- cluster_output$"solution"
+        nclust <- cluster_output$"nclust"
+        solution_col <- data.frame(solution)
+        colnames(solution_col) <- paste0("c", nclust)
+        alluvial_df <- cbind(alluvial_df, solution_col)
+    }
+    ###########################################################################
+    # Isolate variable of interest
+    ###########################################################################
+    data <- assemble_data(data = data, data_list = data_list)
+    outcome_df_cols <- c("subjectkey", key_outcome, extra_outcomes)
+    outcome_df <- data[, colnames(data) %in% outcome_df_cols]
+    alluvial_df <- dplyr::inner_join(
+        alluvial_df,
+        outcome_df,
+        by = "subjectkey"
+    )
+    alluvial_df <- alluvial_df |>
+        dplyr::select(-dplyr::contains("subjectkey")) |>
+        dplyr::group_by(dplyr::across(1:ncol(alluvial_df) - 1)) |>
+        dplyr::summarize(Frequency = dplyr::n(), .groups = "keep") |>
+        data.frame()
+    n_alluvial_columns <- length(cluster_sequence) + 1 + length(extra_outcomes)
+    alluvial_indices <- 1:n_alluvial_columns
+    alluvial_df$"Fill" <- alluvial_df[, key_outcome]
+    # change to lode form
+    alluvial_df_lodes <- ggalluvial::to_lodes_form(
+        alluvial_df,
+        axes = alluvial_indices,
+        id = "Count"
+    )
+    ###########################################################################
+    # Plotting
+    ###########################################################################
+    plot <- alluvial_df_lodes |> ggplot2::ggplot(
+        ggplot2::aes(
+            x = x,
+            y = Frequency,
+            stratum = stratum,
+            alluvium = Count
+        )
+    ) +
+    ggalluvial::geom_alluvium(
+        ggplot2::aes(fill = Fill, color = Fill)
+    ) +
+    ggalluvial::geom_stratum(width = 1/4) +
+    ggplot2::geom_text(
+        stat = ggalluvial::StatStratum,
+        ggplot2::aes(
+            label = ggplot2::after_stat(stratum)
+        ),
+        size = 3
+    ) +
+    ggplot2::labs(
+        color = key_label,
+        fill = key_label,
+        title = title
+    ) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+        axis.text.x = ggplot2::element_text(
+            hjust = 1,
+            vjust = 0.5,
+            size = 12,
+            angle = 90
+        ),
+        axis.text.y = ggplot2::element_text(size = 12),
+        axis.title.y = ggplot2::element_text(size = 15),
+        axis.title.x = ggplot2::element_blank(),
+        plot.title = ggplot2::element_text(size = 18, hjust = 0.5),
+        panel.grid.major = ggplot2::element_blank(),
+        panel.grid.minor = ggplot2::element_blank(),
+        legend.title = ggplot2::element_text(size = 12),
+        legend.text = ggplot2::element_text(size = 12)
+    )
+    return(plot)
 }

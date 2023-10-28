@@ -355,113 +355,43 @@ df_outcomes = data.frame(
 )
 
 
+data_list
 
-alluvial_cluster_plot <- function(cluster_sequence,
-                                  similarity_matrix,
-                                  data_list = NULL,
-                                  data = NULL,
-                                  key_outcome) {
-    ###########################################################################
-    # Calculate the cluster solutions for each cluster algorithm provided
-    ###########################################################################
-    alluvial_df <- data.frame(subjectkey = colnames(similarity_matrix))
-    for (algorithm in cluster_sequence) {
-        cluster_output <- algorithm(similarity_matrix)
-        solution <- cluster_output$"solution"
-        nclust <- cluster_output$"nclust"
-        solution_col <- data.frame(solution)
-        colnames(solution_col) <- paste0("c", nclust)
-        alluvial_df <- cbind(alluvial_df, solution_col)
-    }
-    ###########################################################################
-    # Isolate variable of interest
-    ###########################################################################
-    #merged_df <- collapse_dl(data_list)
-    data <- assemble_data(data = data, data_list = data_list)
-    key_outcome_df <- data[, colnames(data) %in% c("subjectkey", key_outcome)]
-    alluvial_df <- dplyr::inner_join(
-        alluvial_df,
-        key_outcome_df,
-        by = "subjectkey"
-    )
-    alluvial_df <- alluvial_df |>
-        dplyr::select(-dplyr::contains("subjectkey")) |>
-        dplyr::group_by(dplyr::across(1:ncol(alluvial_df) - 1)) |>
-        dplyr::summarize(Freq = dplyr::n(), .groups = "keep") |>
-        data.frame()
-    alluvial_indices <- 1:(length(cluster_sequence) + length(key_outcome))
-    alluvial_df$"Fill" <- alluvial_df[, key_outcome]
-    # change to lode form
-    alluvial_df_lodes <- ggalluvial::to_lodes_form(
-        alluvial_df,
-        axes = alluvial_indices,
-        id = "Count"
-    ) # "x" column is column names being extended to long format;
-    # "stratum" column are categories in each x axes/stratum
-    # "Count" column is generated as alluvium
-    # PLOT
-    plot <- alluvial_df_lodes |> ggplot2::ggplot(
-        ggplot2::aes(
-            x = x,
-            y = Freq,
-            stratum = stratum,
-            alluvium = Count
-        )
-    ) +
-    ggalluvial::geom_alluvium(
-        ggplot2::aes(fill = Fill, color = Fill)
-    ) +
-    ggalluvial::geom_stratum(width = 1/4) +
-    ggplot2::geom_text(
-        stat = ggalluvial::StatStratum,
-        ggplot2::aes(
-            label = ggplot2::after_stat(stratum)
-        ),
-        size = 3
-    ) +
-    ggplot2::labs(title = key_outcome) +
-    ggplot2::theme_bw() +
-    ggplot2::theme(
-        axis.text.x = ggplot2::element_text(
-            hjust = 1,
-            vjust = 0.5,
-            size = 12,
-            angle = 90
-        ),
-        axis.text.y = ggplot2::element_text(size = 12),
-        axis.title.y = ggplot2::element_text(size = 15),
-        axis.title.x = ggplot2::element_blank(),
-        plot.title = ggplot2::element_text(size = 18, hjust = 0.5),
-        panel.grid.major = ggplot2::element_blank(),
-        panel.grid.minor = ggplot2::element_blank(),
-        legend.title = ggplot2::element_text(size = 12),
-        legend.text = ggplot2::element_text(size = 12)
-    )
-    return(plot)
-}
 alluvial_cluster_plot(
     cluster_sequence = cluster_sequence,
     similarity_matrix = similarity_matrix,
     data = df_outcomes,
-    key_outcome = "Wheeze_status"
+    key_outcome = "Wheeze_status",
+    key_label = "Wheeze Status",
+    extra_outcomes = "Asthma_Diagnosis",
+    title = "Wheeze Status Across Cluster Counts"
 )
 
 
-# Examples
-cluster_alluvial(
+alluvial_cluster_plot(
+    cluster_sequence = cluster_sequence,
     similarity_matrix = similarity_matrix,
-    df_env = df_outcomes,
-    numc = 6,
-    outcome = "Wheeze_status"
+    data_list = data_list,
+    key_outcome = "gender",
+    extra_outcomes = "diagnosis"
 )
 
-cluster_alluvial(
-    similarity_matrix = similarity_matrix,
-    df_env = df_outcomes,
-    numc = 6,
-    outcome = "Wheeze_status",
-    key_outcome = "Asthma_Diagnosis"
-)
+
+## Examples
+#cluster_alluvial(
+#    similarity_matrix = similarity_matrix,
+#    df_env = df_outcomes,
+#    numc = 6,
+#    outcome = "Wheeze_status"
+#)
+#
+#cluster_alluvial(
+#    similarity_matrix = similarity_matrix,
+#    df_env = df_outcomes,
+#    numc = 6,
+#    outcome = "Wheeze_status",
+#    key_outcome = "Asthma_Diagnosis"
+#)
 
 ```
 
