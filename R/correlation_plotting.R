@@ -548,131 +548,6 @@ CorrManhattan <- function(df_stat, outcome, dataset_label) {
     return(plot)
 }
 
-#' Spectral clustering from c2 to user-defined max-number of cluster. Used by plotClustersAlluvial_wOutcome function
-#'
-#' Do spectral clustering through cluster 2 to user defined cluster number and outputs clustering result
-#'
-#' @param similarity_matrix A similarity matrix.
-#' @param numc max number of cluster to do spectral clustering.
-#'
-#' @return result_df dataframe of cluster assignments
-#'
-#' @export
-output_cluster_file <- function(similarity_matrix, numc = 8){
-    id_keep <- rownames(similarity_matrix)
-    # result has numc-1 cluster columns and sample names in rownames
-    result_df <- data.frame(
-        matrix(NA, ncol = numc-1, nrow = nrow(similarity_matrix))
-    )
-    rownames(result_df) <- id_keep
-    for (C in 2:numc) {
-      clustering = SNFtool::spectralClustering(similarity_matrix, C)
-      result_df[,C-1] = clustering
-    }
-    colnames(result_df) <- c(2:numc)
-    return(result_df)
-}
-
-#' Plot alluvial plot
-#'
-#' Plot alluvial plot from 2 clusters to user-defined number of clusters along with outcome/environmental variables.
-#'
-#' @param similarity_matrix A similarity matrix
-#' @param df_env dataframe of environmental or outcome variables to color the alluvium. With "Subject_Number" column filled with sample ids
-#' @param numc number of clusters
-#' @param outcome column name from df_env to fill the alluvium with
-#' @param key_outcome optional key outcome such as "Disease Diagnosis" that is the ultimate outcome. To be displayed as the last x-axis alluvia
-#'
-#'
-#' @export
-cluster_alluvial <- function(similarity_matrix,
-                             df_env,
-                             numc,
-                             outcome,
-                             key_outcome = NULL) {
-    # Meaningless visible bindings to supply to plotting functions
-    x <- ""
-    Freq <- ""
-    stratum <- ""
-    Count <- ""
-    Fill <- ""
-    # run clustering from c2 to numc
-    cluster_df = output_cluster_file(similarity_matrix, numc = numc)
-    #merge cluster_df with variable_df
-    cluster_df$subjectkey = as.character(rownames(cluster_df))
-    #merge df_env in with cluster assignment data
-    merged_df = dplyr::left_join(
-        cluster_df,
-        df_env,
-        by = "subjectkey"
-    )
-    # prepare data for plotting alluvial
-    merged_df2 <- merged_df
-    merged_df2 <- merged_df2 |>
-        dplyr::select(-dplyr::contains("subjectkey")) |>
-        dplyr::group_by(dplyr::across(1:ncol(merged_df2) - 1)) |>
-        dplyr::summarize(Freq = dplyr::n(), .groups = "keep") |>
-        data.frame()
-    alluvial_df <- prepare_for_alluvial_wDiagnosis(
-        cluster_env_df = merged_df,
-        outcome = outcome,
-        numc = numc,
-        key_outcome = key_outcome
-    )
-    if (is.null(key_outcome) & !(is.null(outcome))) { # include outcome only
-      columns_to_lodes = c(1:numc)
-    } else if (!(is.null(key_outcome)) & !(is.null(outcome))) { # include both outcome and key_outcome
-      key_outcome = key_outcome
-      columns_to_lodes = c(1:(numc+1))
-    }
-    # change to lode form
-    alluvial_df_lodes <- ggalluvial::to_lodes_form(
-        alluvial_df,
-        axes = columns_to_lodes,
-        id = "Count"
-    ) # "x" column is column names being extended to long format;
-    # "stratum" column are categories in each x axes/stratum
-    # "Count" column is generated as alluvium
-    # PLOT
-    alluvial_df_lodes |> ggplot2::ggplot(
-        ggplot2::aes(
-            x = x,
-            y = Freq,
-            stratum = stratum,
-            alluvium = Count
-        )
-    ) +
-    ggalluvial::geom_alluvium(
-        ggplot2::aes(fill = Fill, color = Fill)
-    ) +
-    ggalluvial::geom_stratum(width = 1/4) +
-    ggplot2::geom_text(
-        stat = ggalluvial::StatStratum,
-        ggplot2::aes(
-            label = ggplot2::after_stat(stratum)
-        ),
-        size = 3
-    ) +
-    ggplot2::labs(title = outcome) +
-    ggplot2::theme_bw() +
-    ggplot2::theme(
-        axis.text.x = ggplot2::element_text(
-            hjust = 1,
-            vjust = 0.5,
-            size = 12,
-            angle = 90
-        ),
-        axis.text.y = ggplot2::element_text(size = 12),
-        axis.title.y = ggplot2::element_text(size = 15),
-        axis.title.x = ggplot2::element_blank(),
-        plot.title = ggplot2::element_text(size = 18, hjust = 0.5),
-        panel.grid.major = ggplot2::element_blank(),
-        panel.grid.minor = ggplot2::element_blank(),
-        legend.title = ggplot2::element_text(size = 12),
-        legend.text = ggplot2::element_text(size = 12)
-    )
-}
-
 #' Generate annotations list
 #'
 #' Intermediate function that takes in formatted lists of variables and the
@@ -1122,6 +997,14 @@ alluvial_cluster_plot <- function(cluster_sequence,
                                   key_label = key_outcome,
                                   extra_outcomes = NULL,
                                   title = NULL) {
+    ###########################################################################
+    # Dismissing the "no visible binding" problem during building
+    ###########################################################################
+    x <- ""
+    Frequency <- ""
+    stratum <- ""
+    Count <- ""
+    Fill <- ""
     ###########################################################################
     # Calculate the cluster solutions for each cluster algorithm provided
     ###########################################################################

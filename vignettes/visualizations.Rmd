@@ -396,7 +396,7 @@ alluvial_cluster_plot(
 ```
 
 
-### Part2 - Calculate and display associations between clusters and outcomes
+### Associations between clusters and outcomes
 
 In downstream data analysis for heterogeneous disease, it is often hard to see clear cluster separation by outcome with heatmap due to the large amount of datatypes/predictive features not capturing the entireity of disease. For example, an integration could integrate datatype `blood`:
 
