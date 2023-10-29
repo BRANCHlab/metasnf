@@ -173,7 +173,6 @@ convert_uids <- function(data_list, uid = NULL) {
             x
         }
     )
-    print("UID successfully converted to subjectkey.")
     return(dl_renamed_id)
 }
 

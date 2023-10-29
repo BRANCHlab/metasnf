@@ -72,7 +72,7 @@ additional_data <- data.frame(
     age = ages
 )
 
-additional_data
+head(additional_data)
 ```
 
 The patient unique IDs are randomly shuffled in this example to replicate scenarios where the original data doesn't begin ordered by the true cluster labels.
@@ -131,11 +131,13 @@ cluster_solution <- get_cluster_solutions(solutions_matrix)$"1"
 
 `similarity_matrix_heatmap` is a wrapper for `ComplexHeatmap::Heatmap`, but with some convenient default transformations and parameters for viewing a similarity matrix.
 
-```{r}
+```{r fig.width = 5, fig.height = 4.5}
 
 similarity_matrix_heatmap(
     similarity_matrix = similarity_matrix,
-    cluster_solution = cluster_solution
+    cluster_solution = cluster_solution,
+    heatmap_height = grid::unit(10, "cm"),
+    heatmap_width = grid::unit(10, "cm")
 )
 
 ```
@@ -144,12 +146,14 @@ The default transformations include plotting log(Similarity) rather than the def
 Additionally, the similarity matrix gets reordered according to the provided cluster solution.
 Here's what the same similarity matrix looks like without those transformations:
 
-```{r}
+```{r fig.width = 5, fig.height = 4.5}
 
 similarity_matrix_heatmap(
     similarity_matrix = similarity_matrix,
     scale_diag = "none",
-    log_graph = FALSE
+    log_graph = FALSE,
+    heatmap_height = grid::unit(10, "cm"),
+    heatmap_width = grid::unit(10, "cm")
 )
 
 ```
@@ -185,7 +189,7 @@ In addition to that, this package offers some convenient functionality to specif
 
 In the example below, we make use of data supplied through a data_list.
 
-```{r}
+```{r fig.width = 7, fig.height = 5.5}
 
 # Providing the data for the annotations through a data_list
 set.seed(42)
@@ -203,7 +207,9 @@ similarity_matrix_heatmap(
     ),
     top_bar = list(
         "Age" = "age"
-    )
+    ),
+    heatmap_height = grid::unit(10, "cm"),
+    heatmap_width = grid::unit(10, "cm")
 )
 
 ```
@@ -238,7 +244,7 @@ similarity_matrix_heatmap(
 We needed to call `set.seed()` because by default, `ComplexHeatmap::Heatmap` randomly generates colours for heatmap annotations.
 You can instead specify your own colours using the `annotation_colours` parameter:
 
-```{r}
+```{r fig.width = 7, fig.height = 5.5}
 
 similarity_matrix_heatmap(
     similarity_matrix = similarity_matrix,
@@ -265,7 +271,9 @@ similarity_matrix_heatmap(
             "female" = "purple",
             "male" = "lightgreen"
         )
-    )
+    ),
+    heatmap_height = grid::unit(10, "cm"),
+    heatmap_width = grid::unit(10, "cm")
 )
 
 ```
@@ -283,7 +291,6 @@ merged_df <- merged_df[order, ]
 top_annotations <- ComplexHeatmap::HeatmapAnnotation(
     Age = ComplexHeatmap::anno_barplot(merged_df$"age"),
     Gender = merged_df$"gender",
-    #Atopic_Asthma = merged_df$"asthma",
     col = list(
         Gender = c(
             "female" = "purple",
@@ -295,7 +302,6 @@ top_annotations <- ComplexHeatmap::HeatmapAnnotation(
 
 left_annotations <- ComplexHeatmap::rowAnnotation(
     Diagnosis = merged_df$"diagnosis",
-    #Atopic_Asthma = merged_df$"asthma",
     col = list(
         Diagnosis = c(
             "definite asthma" = "red3",
@@ -328,13 +334,13 @@ This will be easier to do with a `dataframe` than with a `data_list`, as the `da
 
 ## Alluvial plots
 
-Curious to see how cluster assignment of samples segregate in different number of clusters?
-Now you can plot **Alluvial Plot** from a minimum of 2 clusters to a user-defined max number of clusters easily
+Alluvial plots can be generated to visualize how changing the number of clusters influences the distribution of patients according to one (or a few) variables of interest.
 
-Put together a list of clustering algorithms that range from 1 to the number of clusters you'd like to visualize in the alluvial plot:
+First, assemble a list clustering algorithm functions that cover the range of the number of clusters you'd like to visualize.
+The example below uses `spectral_two` to `spectral_six`, which are spectral clustering functions covering 2 clusters to 6 clusters respectively.
 
-```{r}
-
+```{r eval}
+# Spectral clustering functions ranging from 2 to 6 clusters
 cluster_sequence <- list(
     spectral_two,
     spectral_three,
@@ -343,19 +349,12 @@ cluster_sequence <- list(
     spectral_six
 )
 
-```
-
-```{r}
-
 # Mock data
 df_outcomes = data.frame(
     subjectkey = colnames(similarity_matrix),
     Wheeze_status = c(rep("Yes", 20), rep("Sometimes", 60), rep("No", 120)),
     Asthma_Diagnosis = c( rep("Definite Asthma", 10), rep("Possible Asthma", 50), rep("No Asthma", 140))
 )
-
-
-data_list
 
 alluvial_cluster_plot(
     cluster_sequence = cluster_sequence,
@@ -367,7 +366,6 @@ alluvial_cluster_plot(
     title = "Wheeze Status Across Cluster Counts"
 )
 
-
 alluvial_cluster_plot(
     cluster_sequence = cluster_sequence,
     similarity_matrix = similarity_matrix,
@@ -375,23 +373,6 @@ alluvial_cluster_plot(
     key_outcome = "gender",
     extra_outcomes = "diagnosis"
 )
-
-
-## Examples
-#cluster_alluvial(
-#    similarity_matrix = similarity_matrix,
-#    df_env = df_outcomes,
-#    numc = 6,
-#    outcome = "Wheeze_status"
-#)
-#
-#cluster_alluvial(
-#    similarity_matrix = similarity_matrix,
-#    df_env = df_outcomes,
-#    numc = 6,
-#    outcome = "Wheeze_status",
-#    key_outcome = "Asthma_Diagnosis"
-#)
 
 ```
 
@@ -417,7 +398,7 @@ In this case, we want to find which integration cluster result (thus dataset(s) 
 
 As of now this function does not recognize data type (categorical or continuous) automatically, so we recommend running categorical outcomes and continuous outcomes separately. Let's assume the matrix `W` is an integration of the two datasets from `blood` datatype
 
-```{r}
+```{r eval = FALSE}
 
 outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
 
@@ -426,7 +407,8 @@ df_blood = data.frame(sampleID = seq(1:200),
                 cluster = cluster_solution,
                 Asthma_Diagnosis = diagnoses,
                 Atopic_Asthma = asthmas)
-df_blood
+
+head(df_blood)
 
 outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
 
@@ -445,7 +427,7 @@ output
 
 You can keep adding more data/row by running this function again and again, with appropriate test method. Let's add a continuous outcome for lung function `Pre_FEV1_zscore`
 
-```{r}
+```{r eval = FALSE}
 
 set.seed(100)
 # again, randomly generate some numbers
@@ -459,7 +441,7 @@ output
 
 Let's have another matrix for `Gut_microbiome` integration datatype and add some more data for cluster-outcome association tests
 
-```{r}
+```{r eval = FALSE}
 
 set.seed(100)
 # lets say there are 150 samples. Generate a random number matrix for gut_microbiome integration
@@ -517,7 +499,7 @@ output
 
 Next we can feed this dataframe to plot manhanttan using `clusterToOutcomeManhattan`
 
-```{r}
+```{r eval = FALSE}
 
 clusterToOutcomeManhattan(output)
 
@@ -528,7 +510,7 @@ The red dotted line represent p-value of 0.05 cutoff. The black dotted line repr
 ### Part 3 - correlation heatmap
 If we are to look at predictor-predictor or outcome-outcome correlation, we can plot the correlation heatmap using, again, ComplexHeatmap. Make sure you provide the p-values from correlation tests
 
-```{r}
+```{r eval = FALSE}
 
 # generate a mock correlation table
 corr_predictor <- matrix(runif(50 * 50), nrow = 50, ncol = 50)
@@ -550,7 +532,7 @@ corrHeatmap(
 
 Next let's generate heatmap legend. This function as of now will output legend to a file
 
-```{r}
+```{r eval = FALSE}
 
 labels_color = c("#cd34b5", "goldenrod4")
 
@@ -570,7 +552,7 @@ We can also plot correlation of features to **one** user-specified outcome in Ma
 
 Similar to running `clusterToOutcomeCorr`, here we have pre-calculated correlation p-value between each predictive feature to "Asthma_Diagnosis". For convenience let's generate some numbers
 
-```{r}
+```{r eval = FALSE}
 
 #'  "p.value": from correlation test,
 #'  "n": number of samples,
