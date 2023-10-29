@@ -1,0 +1,142 @@
+---
+title: "Alluvial Plots"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Alluvial Plots}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This vignette walks through this package's available plotting functions.
+
+First, some data setup just as was done in the previous vignettes.
+
+```{r}
+library(SNFtool)
+library(metasnf)
+
+data(Data1)
+data(Data2)
+
+gender <- c("female", "male")
+diagnosis <- c("definite asthma", "possible asthma", "no asthma")
+atopic_asthma <- c("Yes", "No")
+
+c1_genders <- sample(gender, 100, replace = TRUE, prob = c(3, 1))
+c1_diagnosis <- sample(diagnosis, 100, replace = TRUE, prob = c(3, 2, 1))
+c1_asthma <- sample(atopic_asthma, 100, replace = TRUE, prob = c(3, 1))
+c1_ages <- sample(c(12:18), 100, replace = TRUE, prob = c(1:7))
+
+c2_genders <- sample(gender, 100, replace = TRUE, prob = c(1, 3))
+c2_diagnosis <- sample(diagnosis, 100, replace = TRUE, prob = c(1, 2, 3))
+c2_asthma <- sample(atopic_asthma, 100, replace = TRUE, prob = c(1, 3))
+c2_ages <- sample(c(18:30), 100, replace = TRUE,)
+
+genders <- c(c1_genders, c2_genders)
+diagnoses <- c(c1_diagnosis, c2_diagnosis)
+asthmas <- c(c1_asthma, c2_asthma)
+ages <- c(c1_ages, c2_ages)
+
+additional_data <- data.frame(
+    gender = genders,
+    diagnosis = diagnoses,
+    asthma = asthmas,
+    age = ages
+)
+
+set.seed(42)
+random_ids <- sample(100:999)[1:200]
+
+Data1$"patient_id" <- random_ids
+Data2$"patient_id" <- random_ids
+additional_data$"patient_id" <- random_ids
+
+data_list <- generate_data_list(
+    list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
+    list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
+    list(additional_data, "additional_data", "miscellaneous", "mixed"),
+    uid = "patient_id"
+)
+
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 1,
+    max_k = 40,
+    seed = 42
+)
+
+batch_snf_results <- batch_snf(
+    data_list,
+    settings_matrix,
+    return_similarity_matrices = TRUE
+)
+
+solutions_matrix <- batch_snf_results$"solutions_matrix"
+similarity_matrices <- batch_snf_results$"similarity_matrices"
+
+similarity_matrix <- similarity_matrices[[1]]
+
+cluster_solution <- get_cluster_solutions(solutions_matrix)$"1"
+```
+
+Alluvial plots can be generated to visualize how changing the number of clusters influences the distribution of patients according to one (or a few) variables of interest.
+
+First, assemble a list clustering algorithm functions that cover the range of the number of clusters you'd like to visualize.
+The example below uses `spectral_two` to `spectral_six`, which are spectral clustering functions covering 2 clusters to 6 clusters respectively.
+
+```{r}
+# Spectral clustering functions ranging from 2 to 6 clusters
+cluster_sequence <- list(
+    spectral_two,
+    spectral_three,
+    spectral_four
+)
+```
+
+Then, we can either generate an alluvial plot covering our similarity matrix over these clustering algorithms for data in a `data_list`:
+
+```{r fig.width = 7, fig.height = 5.5}
+alluvial_cluster_plot(
+    cluster_sequence = cluster_sequence,
+    similarity_matrix = similarity_matrix,
+    data_list = data_list,
+    key_outcome = "gender", # the name of the variable of interest
+    key_label = "Gender", # how the variable of interest should be displayed
+    extra_outcomes = "diagnosis", # more variables to plot but not colour by
+    title = "Gender Across Cluster Counts"
+)
+```
+
+Or in an external dataframe:
+
+```{r fig.width = 7, fig.height = 5.5}
+df_outcomes = data.frame(
+    subjectkey = colnames(similarity_matrix),
+    wheeze_status = c(
+        rep("Yes", 20),
+        rep("Sometimes", 60),
+        rep("No", 120)
+    ),
+    asthma_diagnosis = c(
+        rep("Definite Asthma", 10),
+        rep("Possible Asthma", 50),
+        rep("No Asthma", 140)
+    )
+)
+
+alluvial_cluster_plot(
+    cluster_sequence = cluster_sequence,
+    similarity_matrix = similarity_matrix,
+    data = df_outcomes,
+    key_outcome = "wheeze_status",
+    key_label = "Wheeze Status",
+    extra_outcomes = "asthma_diagnosis",
+    title = "Wheeze Status Across Cluster Counts"
+)
+```
