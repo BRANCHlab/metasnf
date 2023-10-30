@@ -20,7 +20,7 @@ This vignette walks through this package's available plotting functions.
 Mock data setup is below.
 This example currently makes use of the mock "Data1" and "Data2" objects that are made available by loading the SNFtool package.
 
-```{r}
+```{r message = FALSE, results = 'hide'}
 library(SNFtool)
 library(metasnf)
 
@@ -49,43 +49,37 @@ diagnoses <- c(c1_diagnosis, c2_diagnosis)
 asthmas <- c(c1_asthma, c2_asthma)
 ages <- c(c1_ages, c2_ages)
 
-additional_data <- data.frame(
-    gender = genders,
-    diagnosis = diagnoses,
-    asthma = asthmas,
+gender_df <- data.frame(
+    patient_id = random_ids,
+    gender = genders
+)
+diagnosis_df <- data.frame(
+    patient_id = random_ids,
+    diagnosis = diagnoses
+)
+age_df <- data.frame(
+    patient_id = random_ids,
     age = ages
 )
 
-head(additional_data)
-```
-
-The patient unique IDs are randomly shuffled in this example to replicate scenarios where the original data doesn't begin ordered by the true cluster labels.
-
-```{r}
 # Assign unique patient identifiers to each patient
 set.seed(42)
 random_ids <- sample(100:999)[1:200]
 
 Data1$"patient_id" <- random_ids
 Data2$"patient_id" <- random_ids
-additional_data$"patient_id" <- random_ids
-```
 
-Then the subtyping and clustering proceeds as shown in previous vignettes.
-
-```{r}
 # Generate data_list
 data_list <- generate_data_list(
     list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
     list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
-    list(additional_data, "additional_data", "miscellaneous", "mixed"),
     uid = "patient_id"
 )
 
 # Generate settings_matrix
 settings_matrix <- generate_settings_matrix(
     data_list,
-    nrow = 1,
+    nrow = 5,
     max_k = 40,
     seed = 42
 )
@@ -104,8 +98,73 @@ similarity_matrices <- batch_snf_results$"similarity_matrices"
 similarity_matrix <- similarity_matrices[[1]]
 
 # The first (and only) cluster solution:
-cluster_solution <- get_cluster_solutions(solutions_matrix)$"1"
+cluster_solutions <- get_cluster_solutions(solutions_matrix)
+
+head(cluster_solutions)
 ```
+
+Because this data is so perfect, our solution space is just the same cluster solution repeated 5 times.
+The chunk below artificially varies the results to be a little more realistic:
+
+```{r}
+
+# 10% chance of flipping a patient's assigned cluster
+noise_two_clusters <- function(two_cluster_solution) {
+    noisy_solution <- two_cluster_solution |> lapply(
+        function(x) {
+            if (runif(1) > 0.80) {
+                if (x == 1) {
+                    return(2)
+                } else {
+                    return(1)
+                }
+            } else {
+                return(x)
+            }
+        }
+    ) |>
+        unlist()
+    return(noisy_solution)
+}
+
+for (i in seq_len(ncol(cluster_solutions) - 1)) {
+    current_col <- i + 1
+    cluster_solutions[, current_col] <- cluster_solutions[, current_col] |>
+        noise_two_clusters()
+}
+
+head(cluster_solutions)
+
+# Scrambling the solutions matrix
+solutions_matrix[1, cluster_solutions$"subjectkey"] <- cluster_solutions$"1"
+solutions_matrix[2, cluster_solutions$"subjectkey"] <- cluster_solutions$"2"
+solutions_matrix[3, cluster_solutions$"subjectkey"] <- cluster_solutions$"3"
+solutions_matrix[4, cluster_solutions$"subjectkey"] <- cluster_solutions$"4"
+solutions_matrix[5, cluster_solutions$"subjectkey"] <- cluster_solutions$"5"
+
+
+
+extended_solutions_matrix <- extend_solutions(solutions_matrix, target_list)
+
+extended_solutions_matrix
+
+
+library(ggplot2)
+
+extended_solutions_matrix
+
+pvals <- p_val_select(extended_solutions_matrix)
+
+manhattan_plot(pvals)
+
+
+
+
+
+```
+
+
+
 
 ## Associations between clusters and outcomes
 
@@ -238,7 +297,107 @@ Next we can feed this dataframe to plot manhanttan using `clusterToOutcomeManhat
 
 ```{r fig.width = 7, fig.height = 5.5}
 
+manhattan_plot <- function(pvals) {
+    pvals <- pvals |>
+        dplyr::mutate(
+            gender = -log10(pvals$"gender_p"),
+            diagnosis = -log10(pvals$"diagnosis_p"),
+            age = -log10(pvals$"age_p")
+        ) |>
+        dplyr::select(
+            "row_id",
+            "gender",
+            "diagnosis",
+            "age"
+        )
+    pvals$"row_id" <- factor(pvals$"row_id")
+    pvals <- pvals |>
+        tidyr::pivot_longer(
+            !row_id,
+            names_to = "variable",
+            values_to = "p_value"
+        ) |>
+        data.frame()
+    plot <- pvals |> ggplot() +
+        ggplot2::geom_point(
+            mapping = ggplot2::aes(
+                x = variable,
+                y = p_value,
+                colour = row_id
+            ),
+            alpha = 1,
+            size = 5
+        ) +
+        ggplot2::geom_hline(
+            yintercept = -log10(0.05 / nlevels(pvals$"row_id")),
+            linetype = "dashed",
+            colour = "black"
+        ) +
+        ggplot2::geom_hline(
+            yintercept = -log10(0.05),
+            linetype = "dashed",
+            colour = "red"
+        ) +
+        ggplot2::labs(
+            x = "Variable",
+            y = expression("-log"[10]*"(p)"),
+            colour = "Solution"
+        ) +
+        ggplot2::theme_bw() +
+        ggplot2::theme(
+            axis.text.x = ggplot2::element_text(
+                angle = 90,
+                vjust = 0.5,
+                hjust = 1
+            ),
+            plot.title = ggplot2::element_text(hjust = 0.5)
+        )
+    return(plot)
+}
+
+output
+
 clusterToOutcomeManhattan(output)
+
+
+output2 <- output
+output2$"size" <- NULL
+output2$"statistic" <- NULL
+output2
+
+
+
+target_list <- generate_target_list(
+    list(gender_df, "gender", "categorical"),
+    list(diagnosis_df, "diagnosis", "categorical"),
+    list(age_df, "age", "numeric"),
+    uid = "patient_id"
+)
+
+extended_solutions_matrix <- extend_solutions(solutions_matrix, target_list)
+
+target_pvals <- p_val_select(extended_solutions_matrix)
+
+pvals_row_df <- get_p_vals_row_df(target_pvals, row = 1)
+
+
+pvals_row_df$"domains" <- c("demographics", "medical", "demographics")
+
+pvals_row_df
+
+
+domains_list <- list(
+    "gender" = "demographics",
+    "diagnosis" = "medical",
+    "age" = "demographics"
+)
+
+
+
+
+manhattan_plot(output2)
+
+
 
 ```
 
@@ -258,6 +417,8 @@ colnames(corr_predictor) = seq(1:50)
 # color by data types (optional). Say first 25 outcomes are from blood datatype, the next 25 from gut_microbiome datatype
 labels <- c("Blood", "Gut_microbiome")
 color = c(rep("#cd34b5", 25), rep("goldenrod4", 25))
+
+corr_predictor
 
 corrHeatmap(
     corr_predictor,
