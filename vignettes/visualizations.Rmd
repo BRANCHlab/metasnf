@@ -49,19 +49,6 @@ diagnoses <- c(c1_diagnosis, c2_diagnosis)
 asthmas <- c(c1_asthma, c2_asthma)
 ages <- c(c1_ages, c2_ages)
 
-gender_df <- data.frame(
-    patient_id = random_ids,
-    gender = genders
-)
-diagnosis_df <- data.frame(
-    patient_id = random_ids,
-    diagnosis = diagnoses
-)
-age_df <- data.frame(
-    patient_id = random_ids,
-    age = ages
-)
-
 # Assign unique patient identifiers to each patient
 set.seed(42)
 random_ids <- sample(100:999)[1:200]
@@ -142,54 +129,17 @@ solutions_matrix[3, cluster_solutions$"subjectkey"] <- cluster_solutions$"3"
 solutions_matrix[4, cluster_solutions$"subjectkey"] <- cluster_solutions$"4"
 solutions_matrix[5, cluster_solutions$"subjectkey"] <- cluster_solutions$"5"
 
-
-
-extended_solutions_matrix <- extend_solutions(solutions_matrix, target_list)
-
-extended_solutions_matrix
-
-
-library(ggplot2)
-
-extended_solutions_matrix
-
-pvals <- p_val_select(extended_solutions_matrix)
-
-manhattan_plot(pvals)
-
-
-
-
-
 ```
 
+## Manhattan plots
 
-
-
-## Associations between clusters and outcomes
-
-In downstream data analysis for heterogeneous disease, it is often hard to see clear cluster separation by outcome with heatmap due to the large amount of datatypes/predictive features not capturing the entireity of disease.
-For example, an integration could integrate datatype `blood`:
-
-- white blood cell count at 1 year of age (10 features)
-- white blood cell count at 5 year of age (10 features)
-
-Another integration could integrate datatype `Gut_microbiome`
-
-- gut microbial species relative abundances at 3 month of age (300 features)
-- gut microbial species relative abundances at 1 year of age (350 features)
-
-and not provding clear indication to asthma diagnosis. However there could still be cluster assignment that associates with your outcome-of-interest.
-
-In this case, we want to find which integration cluster result (thus dataset(s) used for that integration) show significant association to outcomes-of-interest and display with Manhattan plot.
-
-As of now this function does not recognize data type (categorical or continuous) automatically, so we recommend running categorical outcomes and continuous outcomes separately. Let's assume the matrix `W` is an integration of the two datasets from `blood` datatype
+Manhattan plots can be used to visualize
 
 ```{r}
 # have a column for sampleID. Make sure cluster column is also in df
 df_blood = data.frame(
     sampleID = seq(1:200),
-    cluster = cluster_solution,
+    cluster = cluster_solutions$"1",
     Asthma_Diagnosis = diagnoses,
     Atopic_Asthma = asthmas
 )
@@ -211,161 +161,20 @@ output
 
 ```
 
-You can keep adding more data/row by running this function again and again, with appropriate test method. Let's add a continuous outcome for lung function `Pre_FEV1_zscore`
-
-```{r}
-
-set.seed(100)
-# again, randomly generate some numbers
-df_blood$Pre_FEV1_zscore = runif(200)
-
-outcomes = c("Pre_FEV1_zscore")
-
-output <- rbind(
-    output,
-    clusterToOutcomeCorr(
-        df_blood,
-        outcomes = outcomes,
-        method = "kruskal",
-        datatype = "blood",
-        size = 200
-    )
-)
-
-output
-
-```
-
-Let's have another matrix for `Gut_microbiome` integration datatype and add some more data for cluster-outcome association tests
-
-```{r}
-
-set.seed(100)
-# lets say there are 150 samples. Generate a random number matrix for gut_microbiome integration
-W_gut1 <- matrix(runif(300 * 300), nrow = 300, ncol = 300)
-W_gut2 <- matrix(runif(300 * 300), nrow = 300, ncol = 300)
-W_gut = SNF(list(W_gut1,W_gut2), 20, 20)
-
-# let's say we go with 4 clusters for gut datatype, you can decide your optimal cluster number
-group_cluster_gut = spectralClustering(W_gut, K = 4)
-
-# generate table with outcomes in
-df_gut = data.frame(
-    sampleID = seq(1:300),
-    cluster = group_cluster_gut,
-    Asthma_Diagnosis = sample(diagnosis, 300, replace = TRUE),
-    Atopic_Asthma = sample(atopic_asthma, 300, replace = TRUE)
-)
-
-# same as before, add categorical outcomes
-outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
-
-output = rbind(
-    output,
-    clusterToOutcomeCorr(
-        df_gut,
-        outcomes = outcomes,
-        method = "chi-squared",
-        datatype = "gut_microbiome",
-        size = 300
-    )
-)
-
-output
-
-# add continuous outcome
-df_gut$Pre_FEV1_zscore = runif(300)
-
-outcomes = c("Pre_FEV1_zscore")
-
-output = rbind(
-    output,
-    clusterToOutcomeCorr(
-        df_gut,
-        outcomes = outcomes,
-        method = "kruskal",
-        datatype = "gut_microbiome",
-        size = 300
-    )
-)
-
-output
-
-```
-
-Next we can feed this dataframe to plot manhanttan using `clusterToOutcomeManhattan`
-
 ```{r fig.width = 7, fig.height = 5.5}
 
-manhattan_plot <- function(pvals) {
-    pvals <- pvals |>
-        dplyr::mutate(
-            gender = -log10(pvals$"gender_p"),
-            diagnosis = -log10(pvals$"diagnosis_p"),
-            age = -log10(pvals$"age_p")
-        ) |>
-        dplyr::select(
-            "row_id",
-            "gender",
-            "diagnosis",
-            "age"
-        )
-    pvals$"row_id" <- factor(pvals$"row_id")
-    pvals <- pvals |>
-        tidyr::pivot_longer(
-            !row_id,
-            names_to = "variable",
-            values_to = "p_value"
-        ) |>
-        data.frame()
-    plot <- pvals |> ggplot() +
-        ggplot2::geom_point(
-            mapping = ggplot2::aes(
-                x = variable,
-                y = p_value,
-                colour = row_id
-            ),
-            alpha = 1,
-            size = 5
-        ) +
-        ggplot2::geom_hline(
-            yintercept = -log10(0.05 / nlevels(pvals$"row_id")),
-            linetype = "dashed",
-            colour = "black"
-        ) +
-        ggplot2::geom_hline(
-            yintercept = -log10(0.05),
-            linetype = "dashed",
-            colour = "red"
-        ) +
-        ggplot2::labs(
-            x = "Variable",
-            y = expression("-log"[10]*"(p)"),
-            colour = "Solution"
-        ) +
-        ggplot2::theme_bw() +
-        ggplot2::theme(
-            axis.text.x = ggplot2::element_text(
-                angle = 90,
-                vjust = 0.5,
-                hjust = 1
-            ),
-            plot.title = ggplot2::element_text(hjust = 0.5)
-        )
-    return(plot)
-}
-
-output
-
-clusterToOutcomeManhattan(output)
-
-
-output2 <- output
-output2$"size" <- NULL
-output2$"statistic" <- NULL
-output2
-
-
+gender_df <- data.frame(
+    patient_id = random_ids,
+    gender = genders
+)
+diagnosis_df <- data.frame(
+    patient_id = random_ids,
+    diagnosis = diagnoses
+)
+age_df <- data.frame(
+    patient_id = random_ids,
+    age = ages
+)
 
 target_list <- generate_target_list(
     list(gender_df, "gender", "categorical"),
@@ -378,115 +187,8 @@ extended_solutions_matrix <- extend_solutions(solutions_matrix, target_list)
 
 target_pvals <- p_val_select(extended_solutions_matrix)
 
-pvals_row_df <- get_p_vals_row_df(target_pvals, row = 1)
-
-
-pvals_row_df$"domains" <- c("demographics", "medical", "demographics")
-
-pvals_row_df
-
-
-domains_list <- list(
-    "gender" = "demographics",
-    "diagnosis" = "medical",
-    "age" = "demographics"
-)
-
-
-
-
-manhattan_plot(output2)
-
-
-
+manhattan_plot(target_pvals)
 ```
 
 The red dotted line represent p-value of 0.05 cutoff. The black dotted line represent the 0.05 cutoff divided by the number of data types which act as a multiple comparison correction.
 
-## Correlation Heatmaps
-
-If we are to look at predictor-predictor or outcome-outcome correlation, we can plot the correlation heatmap using, again, ComplexHeatmap. Make sure you provide the p-values from correlation tests
-
-```{r fig.width = 7, fig.height = 5.5}
-
-# generate a mock correlation table
-corr_predictor <- matrix(runif(50 * 50), nrow = 50, ncol = 50)
-rownames(corr_predictor) = seq(1:50)
-colnames(corr_predictor) = seq(1:50)
-
-# color by data types (optional). Say first 25 outcomes are from blood datatype, the next 25 from gut_microbiome datatype
-labels <- c("Blood", "Gut_microbiome")
-color = c(rep("#cd34b5", 25), rep("goldenrod4", 25))
-
-corr_predictor
-
-corrHeatmap(
-    corr_predictor,
-    labels_color = color,
-    row_km = 4,
-    column_km = 4
-)
-
-```
-
-Next let's generate heatmap legend. This function as of now will output legend to a file
-
-```{r}
-
-labels_color = c("#cd34b5", "goldenrod4")
-
-corrHeatmap_legend(
-    "test_func.png",
-    labels = labels,
-    labels_color = labels_color
-)
-
-```
-
-## Manhattan plots of correlation to one key outcome
-
-We can also plot correlation of features to **one** user-specified outcome in Manhattan. This is useful if you are doing abSNF where correlation of features to **one** outcome is pre-calculated and you want to see the correlation. The more correlated feature indicates more up-weighing in abSNF.
-
-*Note: abSNF = Association-signal-annotation Boosted Similarity Network Fusion
-
-Similar to running `clusterToOutcomeCorr`, here we have pre-calculated correlation p-value between each predictive feature to "Asthma_Diagnosis". For convenience let's generate some numbers
-
-```{r fig.width = 7, fig.height = 5.5}
-
-#'  "p.value": from correlation test,
-#'  "n": number of samples,
-#'  "Group": datatype name,
-#'  "Group_index": sequence of datatypes to be displayed
-predictor_df = data.frame(
-    p.value = c(0.002, 0.03, 0.01, 0.09, 0.02, 0.085),
-    n = c(200, 100, 150, 70, 45, 80),
-    Group = c(
-        rep("home environment 3m", 2),
-        rep("parental status", 4)
-    ),
-    Group_Index = c(rep(1, 2), rep(2,4))
-)
-
-rownames(predictor_df) <- c(
-    "home_DEP_3m",
-    "home_DNBP_3m",
-    "Asthma_mother",
-    "Asthma_father",
-    "Wheeze_mother",
-    "Wheeze_father"
-)
-
-predictor_df
-
-# set dataset labels
-labels <- c("home environment 3m", "parental status")
-
-CorrManhattan(
-    predictor_df,
-    outcome = "Asthma Diagnosis",
-    dataset_label = labels
-)
-
-```
-
-The red line represents p-value at 0.05. Now you can see which dataset has features (dots) more associated to asthma outcome.

@@ -110,6 +110,7 @@ Imports:
     SNFtool,
     stats,
     stringr,
+    tidyr,
     utils
 Suggests:
     circlize,
