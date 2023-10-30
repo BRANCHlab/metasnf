@@ -219,7 +219,7 @@ clusterToOutcomeCorr <- function(df,
 #'
 #' Manhattan plot plots the correlation of SNF clustering to specified outcome, colored by data types, dot size represents sample size.
 #'
-#' @param cco short for Correlation of Clusters vs Outcomes (cco). It is a dataframe with columns:
+#' @param target_pvals short for Correlation of Clusters vs Outcomes (cco). It is a dataframe with columns:
 #'  datatype: data type being integrated and clustered. Think of this as predictor
 #'  outcomes: outcome variables computed against datatype. Think of this as outcome
 #'  p_value: p_value from statistical testing on datatype clusters vs outcome
@@ -1086,53 +1086,5 @@ alluvial_cluster_plot <- function(cluster_sequence,
         legend.title = ggplot2::element_text(size = 12),
         legend.text = ggplot2::element_text(size = 12)
     )
-    return(plot)
-}
-
-
-manhattan_plot <- function(target_pvals, row, features = NULL, title = NULL) {
-    if (is.null(title)) {
-        title <- "Correlation p-value of SNF clusters versus Outcomes"
-    }
-    size = ""
-    plot <- target_pvals |>
-        ggplot2::ggplot(
-            ggplot2::aes(
-                x = factor(outcomes, levels = levels),
-                #y = log_pvalue,
-                y = p_value,
-                color = factor(datatype)
-            )
-        ) +
-        ggplot2::geom_point(
-            alpha = 1,
-            ggplot2::aes(size = 5)
-        ) +
-        ggplot2::geom_hline(
-            yintercept = -log10(0.05),
-            linetype = "dashed",
-            color = "red"
-        ) +
-        ggplot2::geom_hline(
-            yintercept = -log10(0.05 / nlevels(factor(target_pvals$outcomes))),
-            linetype = "dashed",
-            color = "black"
-        ) +
-        ggplot2::labs(
-            x = "Outcome",
-            y = "-log10(p-value)",
-            color = "Data type",
-            title = "Correlation p-value of SNF clusters versus Outcomes"
-        ) +
-        ggplot2::ylim(c(0,5)) +
-        ggplot2::theme_bw() +
-        ggplot2::theme(
-            axis.text.x = ggplot2::element_text(
-                angle = 90,
-                vjust = 0.5,
-                hjust = 1
-            ),
-            plot.title = ggplot2::element_text(hjust = 0.5)
-        )
     return(plot)
 }

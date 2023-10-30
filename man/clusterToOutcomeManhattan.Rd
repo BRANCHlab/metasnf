@@ -4,10 +4,10 @@
 \alias{clusterToOutcomeManhattan}
 \title{Display cluster assignment to outcome correlation as Manhattan plot}
 \usage{
-clusterToOutcomeManhattan(cco, levels = NULL)
+clusterToOutcomeManhattan(target_pvals, levels = NULL)
 }
 \arguments{
-\item{cco}{short for Correlation of Clusters vs Outcomes (cco). It is a dataframe with columns:
+\item{target_pvals}{short for Correlation of Clusters vs Outcomes (cco). It is a dataframe with columns:
 datatype: data type being integrated and clustered. Think of this as predictor
 outcomes: outcome variables computed against datatype. Think of this as outcome
 p_value: p_value from statistical testing on datatype clusters vs outcome
