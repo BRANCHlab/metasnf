@@ -368,3 +368,26 @@ scale_diagonals <- function(matrix, method = "mean") {
     }
     return(matrix)
 }
+
+#' Return the p-values of a single settings_matrix row from a target_pvals df
+#'
+#' @param target_pvals Output of "p_val_select" function.
+#' @param row Row ID of solutions_matrix to extract p-values for.
+#'
+#' @export
+get_p_vals_row_df <- function(target_pvals, row) {
+    pvals_row <- target_pvals[row, -1] |>
+        t()
+    pvals_row_names <- row.names(pvals_row) |>
+        lapply(
+            function(x) {
+                gsub("_p", "", x)
+            }
+        ) |> unlist()
+    pvals_df <- data.frame(
+        target_variable = pvals_row_names,
+        p_value = pvals_row[, 1]
+    )
+    rownames(pvals_df) <- NULL
+    return(pvals_df)
+}

@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This vignette walks through this package's available plotting functions.
+Alluvial plots can be generated to visualize how changing the number of clusters influences the distribution of patients according to one (or a few) variables of interest.
 
 First, some data setup just as was done in the previous vignettes.
 
@@ -85,9 +85,7 @@ similarity_matrix <- similarity_matrices[[1]]
 cluster_solution <- get_cluster_solutions(solutions_matrix)$"1"
 ```
 
-Alluvial plots can be generated to visualize how changing the number of clusters influences the distribution of patients according to one (or a few) variables of interest.
-
-First, assemble a list clustering algorithm functions that cover the range of the number of clusters you'd like to visualize.
+Next, assemble a list clustering algorithm functions that cover the range of the number of clusters you'd like to visualize.
 The example below uses `spectral_two` to `spectral_six`, which are spectral clustering functions covering 2 clusters to 6 clusters respectively.
 
 ```{r}

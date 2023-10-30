@@ -229,20 +229,20 @@ clusterToOutcomeCorr <- function(df,
 #' @return plot A Manhattan plot
 #'
 #' @export
-clusterToOutcomeManhattan <- function(cco, levels = NULL) {
+clusterToOutcomeManhattan <- function(target_pvals, levels = NULL) {
     # Supplying empty values to variables accessed through dlpyr functions to
     #  enable package building
     size <- ""
     datatype <- ""
     # use levels to rearrange sequence of the outcomes
-    p_value <- as.numeric(cco$'p_value')
-    cco$'log_pvalue' <- -log10(cco$'p_value')
-    log_pvalue <- cco$'log_pvalue'
-    outcomes <- cco$'outcomes'
+    p_value <- as.numeric(target_pvals$'p_value')
+    target_pvals$'log_pvalue' <- -log10(target_pvals$'p_value')
+    log_pvalue <- target_pvals$'log_pvalue'
+    outcomes <- target_pvals$'outcomes'
     if (is.null(levels)) {
-        levels <- unique(cco$outcomes)
+        levels <- unique(target_pvals$outcomes)
     }
-    plot <- cco |>
+    plot <- target_pvals |>
         ggplot2::ggplot(
             ggplot2::aes(
                 x = factor(outcomes, levels = levels),
@@ -260,7 +260,7 @@ clusterToOutcomeManhattan <- function(cco, levels = NULL) {
             color = "red"
         ) +
         ggplot2::geom_hline(
-            yintercept = -log10(0.05 / nlevels(factor(cco$outcomes))),
+            yintercept = -log10(0.05 / nlevels(factor(target_pvals$outcomes))),
             linetype = "dashed",
             color = "black"
         ) +
@@ -1086,5 +1086,53 @@ alluvial_cluster_plot <- function(cluster_sequence,
         legend.title = ggplot2::element_text(size = 12),
         legend.text = ggplot2::element_text(size = 12)
     )
+    return(plot)
+}
+
+
+manhattan_plot <- function(target_pvals, row, features = NULL, title = NULL) {
+    if (is.null(title)) {
+        title <- "Correlation p-value of SNF clusters versus Outcomes"
+    }
+    size = ""
+    plot <- target_pvals |>
+        ggplot2::ggplot(
+            ggplot2::aes(
+                x = factor(outcomes, levels = levels),
+                #y = log_pvalue,
+                y = p_value,
+                color = factor(datatype)
+            )
+        ) +
+        ggplot2::geom_point(
+            alpha = 1,
+            ggplot2::aes(size = 5)
+        ) +
+        ggplot2::geom_hline(
+            yintercept = -log10(0.05),
+            linetype = "dashed",
+            color = "red"
+        ) +
+        ggplot2::geom_hline(
+            yintercept = -log10(0.05 / nlevels(factor(target_pvals$outcomes))),
+            linetype = "dashed",
+            color = "black"
+        ) +
+        ggplot2::labs(
+            x = "Outcome",
+            y = "-log10(p-value)",
+            color = "Data type",
+            title = "Correlation p-value of SNF clusters versus Outcomes"
+        ) +
+        ggplot2::ylim(c(0,5)) +
+        ggplot2::theme_bw() +
+        ggplot2::theme(
+            axis.text.x = ggplot2::element_text(
+                angle = 90,
+                vjust = 0.5,
+                hjust = 1
+            ),
+            plot.title = ggplot2::element_text(hjust = 0.5)
+        )
     return(plot)
 }

@@ -408,25 +408,22 @@ head(no_subs(extended_solutions_matrix))
 If you just want the p-values:
 
 ```{r}
-p_val_select(extended_solutions_matrix)
+target_pvals <- p_val_select(extended_solutions_matrix)
+
+head(target_pvals)
 ```
 
 There is a heatmap for visualizing this too:
 
 ```{r include = FALSE}
-target_pvals <- p_val_select(extended_solutions_matrix)
-
-str(target_pvals)
-
-pvals_heatmap(target_pvals, order = meta_cluster_order,
-           save = "./pvals_heatmap_ordered.png")
-
-str(target_pvals)
+pvals_heatmap(
+    target_pvals,
+    order = meta_cluster_order,
+    save = "./pvals_heatmap_ordered.png"
+)
 ```
 
 ```{r eval = FALSE}
-target_pvals <- p_val_select(extended_solutions_matrix)
-
 pvals_heatmap(target_pvals, order = meta_cluster_order)
 ```
 

@@ -15,15 +15,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This vignette walks through this package's available plotting functions.
 
-In heterogeneous diseases such as childhood asthma, you can have many predictor datasets that feed into SNF integration and many outcome variable you wish to visualize.
-Not to mention outcomes are also heterogeneous.
-Often times a diagnosis is made based on a variety of clinical symptoms and tests.
-Some terminology used in this document with respect to heterogeneous disease:
-
-- features/predictor features = a single feature such as `Asthma_mother`
-- dataset = comprised of multiple features. Example: a group of features `Asthma_mother`, `Wheeze_mother`, `Asthma_father`, `Wheeze_father` that make up of `parental_asthma` **dataset**
-- datatype = Multiple datasets get feed into a datatype-specific SNF integration, after which this whole group is called datetype. Example: `parental_indication` **datatype** that comprised of `parental_asthma` and `genetic_risk_score`
-
 ## Data set-up
 
 Mock data setup is below.
@@ -36,13 +27,6 @@ library(metasnf)
 # Load in data from SNFtool
 data(Data1)
 data(Data2)
-```
-
-By default, these two objects are sorted such that the first 100 patients were drawn from one distribution and the second set of 100 patients were drawn from another.
-We'll extend this data with some fake additional associations.
-The first 100 patients (who come from one cluster) will be more likely to be females with a higher chance of having a definite positive asthma diagnosis and of having atopic asthma than the second set of 100 patients.
-
-```{r}
 
 # Set the possible values
 gender <- c("female", "male")
@@ -78,7 +62,6 @@ head(additional_data)
 The patient unique IDs are randomly shuffled in this example to replicate scenarios where the original data doesn't begin ordered by the true cluster labels.
 
 ```{r}
-
 # Assign unique patient identifiers to each patient
 set.seed(42)
 random_ids <- sample(100:999)[1:200]
@@ -86,13 +69,11 @@ random_ids <- sample(100:999)[1:200]
 Data1$"patient_id" <- random_ids
 Data2$"patient_id" <- random_ids
 additional_data$"patient_id" <- random_ids
-
 ```
 
 Then the subtyping and clustering proceeds as shown in previous vignettes.
 
 ```{r}
-
 # Generate data_list
 data_list <- generate_data_list(
     list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
@@ -124,273 +105,20 @@ similarity_matrix <- similarity_matrices[[1]]
 
 # The first (and only) cluster solution:
 cluster_solution <- get_cluster_solutions(solutions_matrix)$"1"
-
 ```
 
-## Visualize similarity matrices sorted by cluster label
+## Associations between clusters and outcomes
 
-`similarity_matrix_heatmap` is a wrapper for `ComplexHeatmap::Heatmap`, but with some convenient default transformations and parameters for viewing a similarity matrix.
-
-```{r fig.width = 5, fig.height = 4.5}
-
-similarity_matrix_heatmap(
-    similarity_matrix = similarity_matrix,
-    cluster_solution = cluster_solution,
-    heatmap_height = grid::unit(10, "cm"),
-    heatmap_width = grid::unit(10, "cm")
-)
-
-```
-
-The default transformations include plotting log(Similarity) rather than the default similarity matrix as well as rescaling the diagonal of the matrix to the average value of the off-diagonals.
-Additionally, the similarity matrix gets reordered according to the provided cluster solution.
-Here's what the same similarity matrix looks like without those transformations:
-
-```{r fig.width = 5, fig.height = 4.5}
-
-similarity_matrix_heatmap(
-    similarity_matrix = similarity_matrix,
-    scale_diag = "none",
-    log_graph = FALSE,
-    heatmap_height = grid::unit(10, "cm"),
-    heatmap_width = grid::unit(10, "cm")
-)
-
-```
-
-## Exporting heatmaps
-
-Here's an example of how you can save this heatmap (or any other heatmap created by `ComplexHeatmap::Heatmap`).
-
-```{r eval = FALSE}
-
-grDevices::png(
-    "my_heatmap.png",
-    width = 300,
-    height = 300,
-    units = "px",
-)
-
-similarity_matrix_heatmap(
-    similarity_matrix = similarity_matrix,
-    cluster_solution = cluster_solution
-)
-
-grDevices::dev.off()
-
-```
-
-## Annotations
-
-One piece of functionality provided by `ComplexHeatmap::Heatmap` is the ability to supply visual annotations along the rows and columns of a heatmap.
-
-You can always build annotations using the standard approaches outline in the [ComplexHeatmap Complete Reference](https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html).
-In addition to that, this package offers some convenient functionality to specify regular heatmap annotations and barplot annotations directly through a provided dataframe or data_list (or both).
-
-In the example below, we make use of data supplied through a data_list.
-
-```{r fig.width = 7, fig.height = 5.5}
-
-# Providing the data for the annotations through a data_list
-set.seed(42)
-similarity_matrix_heatmap(
-    similarity_matrix = similarity_matrix,
-    cluster_solution = cluster_solution,
-    scale_diag = "mean",
-    log_graph = TRUE,
-    data_list = data_list,
-    left_hm = list(
-        "Diagnosis" = "diagnosis"
-    ),
-    top_hm = list(
-        "Gender" = "gender"
-    ),
-    top_bar = list(
-        "Age" = "age"
-    ),
-    heatmap_height = grid::unit(10, "cm"),
-    heatmap_width = grid::unit(10, "cm")
-)
-
-```
-
-The chunk below gives an identical plot, but using a dataframe instead of a data_list.
-
-```{r eval = FALSE}
-
-df <- collapse_dl(data_list) # Pools all the data in a data_list to a single df
-
-# Providing the data for the annotations through an external dataframe
-set.seed(42)
-similarity_matrix_heatmap(
-    similarity_matrix = similarity_matrix,
-    cluster_solution = cluster_solution,
-    scale_diag = "mean",
-    log_graph = TRUE,
-    data = df,
-    left_hm = list(
-        "Diagnosis" = "diagnosis"
-    ),
-    top_hm = list(
-        "Gender" = "gender"
-    ),
-    top_bar = list(
-        "Age" = "age"
-    )
-)
-
-```
-
-We needed to call `set.seed()` because by default, `ComplexHeatmap::Heatmap` randomly generates colours for heatmap annotations.
-You can instead specify your own colours using the `annotation_colours` parameter:
-
-```{r fig.width = 7, fig.height = 5.5}
-
-similarity_matrix_heatmap(
-    similarity_matrix = similarity_matrix,
-    cluster_solution = cluster_solution,
-    scale_diag = "mean",
-    log_graph = TRUE,
-    data_list = data_list,
-    left_hm = list(
-        "Diagnosis" = "diagnosis"
-    ),
-    top_hm = list(
-        "Gender" = "gender"
-    ),
-    top_bar = list(
-        "Age" = "age"
-    ),
-    annotation_colours = list(
-        Diagnosis = c(
-            "definite asthma" = "red3",
-            "possible asthma" = "pink1",
-            "no asthma" = "bisque1"
-        ),
-        Gender = c(
-            "female" = "purple",
-            "male" = "lightgreen"
-        )
-    ),
-    heatmap_height = grid::unit(10, "cm"),
-    heatmap_width = grid::unit(10, "cm")
-)
-
-```
-
-The colours `red3`, `pink1`, etc. are built-in R colours that you can browse by calling `colours()`.
-
-For reference, the code below shows how you would achieve these annotations using standard `ComplexHeatmap` syntax.
-
-```{r eval = FALSE}
-
-merged_df <- collapse_dl(data_list)
-order <- sort(cluster_solution, index.return = TRUE)$"ix"
-merged_df <- merged_df[order, ]
-
-top_annotations <- ComplexHeatmap::HeatmapAnnotation(
-    Age = ComplexHeatmap::anno_barplot(merged_df$"age"),
-    Gender = merged_df$"gender",
-    col = list(
-        Gender = c(
-            "female" = "purple",
-            "male" = "lightgreen"
-        )
-    ),
-    show_legend = TRUE
-)
-
-left_annotations <- ComplexHeatmap::rowAnnotation(
-    Diagnosis = merged_df$"diagnosis",
-    col = list(
-        Diagnosis = c(
-            "definite asthma" = "red3",
-            "possible asthma" = "pink1",
-            "no asthma" = "bisque1"
-        )
-    ),
-    show_legend = TRUE
-)
-
-similarity_matrix_heatmap(
-    similarity_matrix = similarity_matrix,
-    cluster_solution = cluster_solution,
-    scale_diag = "mean",
-    log_graph = TRUE,
-    data = df,
-    top_annotation = top_annotations,
-    left_annotation = left_annotations
-)
-
-```
-
-Take a look at the [ComplexHeatmap Complete Reference](https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html) to learn more about what is possible with this package.
-
-## More on sorting
-
-Be aware that the ordering of both your data and your similarity matrix will be influenced if you supply values for the `cluster_solution` or `order` parameters.
-If you don't think your data is lining up properly, consider manually making sure your `similarity_matrix` rows and columns are sorted to your preference (e.g., based on cluster) and that the order of your data matches.
-This will be easier to do with a `dataframe` than with a `data_list`, as the `data_list` forces patients to be sorted by their unique IDs upon generation.
-
-## Alluvial plots
-
-Alluvial plots can be generated to visualize how changing the number of clusters influences the distribution of patients according to one (or a few) variables of interest.
-
-First, assemble a list clustering algorithm functions that cover the range of the number of clusters you'd like to visualize.
-The example below uses `spectral_two` to `spectral_six`, which are spectral clustering functions covering 2 clusters to 6 clusters respectively.
-
-```{r eval}
-# Spectral clustering functions ranging from 2 to 6 clusters
-cluster_sequence <- list(
-    spectral_two,
-    spectral_three,
-    spectral_four,
-    spectral_five,
-    spectral_six
-)
-
-# Mock data
-df_outcomes = data.frame(
-    subjectkey = colnames(similarity_matrix),
-    Wheeze_status = c(rep("Yes", 20), rep("Sometimes", 60), rep("No", 120)),
-    Asthma_Diagnosis = c( rep("Definite Asthma", 10), rep("Possible Asthma", 50), rep("No Asthma", 140))
-)
-
-alluvial_cluster_plot(
-    cluster_sequence = cluster_sequence,
-    similarity_matrix = similarity_matrix,
-    data = df_outcomes,
-    key_outcome = "Wheeze_status",
-    key_label = "Wheeze Status",
-    extra_outcomes = "Asthma_Diagnosis",
-    title = "Wheeze Status Across Cluster Counts"
-)
-
-alluvial_cluster_plot(
-    cluster_sequence = cluster_sequence,
-    similarity_matrix = similarity_matrix,
-    data_list = data_list,
-    key_outcome = "gender",
-    extra_outcomes = "diagnosis"
-)
-
-```
-
-
-### Associations between clusters and outcomes
-
-In downstream data analysis for heterogeneous disease, it is often hard to see clear cluster separation by outcome with heatmap due to the large amount of datatypes/predictive features not capturing the entireity of disease. For example, an integration could integrate datatype `blood`:
+In downstream data analysis for heterogeneous disease, it is often hard to see clear cluster separation by outcome with heatmap due to the large amount of datatypes/predictive features not capturing the entireity of disease.
+For example, an integration could integrate datatype `blood`:
 
 - white blood cell count at 1 year of age (10 features)
-
 - white blood cell count at 5 year of age (10 features)
 
 Another integration could integrate datatype `Gut_microbiome`
 
 - gut microbial species relative abundances at 3 month of age (300 features)
-
 - gut microbial species relative abundances at 1 year of age (350 features)
-
 
 and not provding clear indication to asthma diagnosis. However there could still be cluster assignment that associates with your outcome-of-interest.
 
@@ -398,19 +126,18 @@ In this case, we want to find which integration cluster result (thus dataset(s) 
 
 As of now this function does not recognize data type (categorical or continuous) automatically, so we recommend running categorical outcomes and continuous outcomes separately. Let's assume the matrix `W` is an integration of the two datasets from `blood` datatype
 
-```{r eval = FALSE}
-
-outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
-
+```{r}
 # have a column for sampleID. Make sure cluster column is also in df
-df_blood = data.frame(sampleID = seq(1:200),
-                cluster = cluster_solution,
-                Asthma_Diagnosis = diagnoses,
-                Atopic_Asthma = asthmas)
+df_blood = data.frame(
+    sampleID = seq(1:200),
+    cluster = cluster_solution,
+    Asthma_Diagnosis = diagnoses,
+    Atopic_Asthma = asthmas
+)
 
 head(df_blood)
 
-outcomes = c('Asthma_Diagnosis','Atopic_Asthma')
+outcomes <- c('Asthma_Diagnosis','Atopic_Asthma')
 
 # because both outcomes are categorical, we use chi-squared test. Assume the input data has 200 samples
 output <- clusterToOutcomeCorr(
@@ -427,21 +154,32 @@ output
 
 You can keep adding more data/row by running this function again and again, with appropriate test method. Let's add a continuous outcome for lung function `Pre_FEV1_zscore`
 
-```{r eval = FALSE}
+```{r}
 
 set.seed(100)
 # again, randomly generate some numbers
 df_blood$Pre_FEV1_zscore = runif(200)
 
 outcomes = c("Pre_FEV1_zscore")
-output = rbind(output, clusterToOutcomeCorr(df_blood, outcomes = outcomes, method = "kruskal", datatype = "blood", size = 200))
+
+output <- rbind(
+    output,
+    clusterToOutcomeCorr(
+        df_blood,
+        outcomes = outcomes,
+        method = "kruskal",
+        datatype = "blood",
+        size = 200
+    )
+)
+
 output
 
 ```
 
 Let's have another matrix for `Gut_microbiome` integration datatype and add some more data for cluster-outcome association tests
 
-```{r eval = FALSE}
+```{r}
 
 set.seed(100)
 # lets say there are 150 samples. Generate a random number matrix for gut_microbiome integration
@@ -490,7 +228,6 @@ output = rbind(
         datatype = "gut_microbiome",
         size = 300
     )
-
 )
 
 output
@@ -499,7 +236,7 @@ output
 
 Next we can feed this dataframe to plot manhanttan using `clusterToOutcomeManhattan`
 
-```{r eval = FALSE}
+```{r fig.width = 7, fig.height = 5.5}
 
 clusterToOutcomeManhattan(output)
 
@@ -507,10 +244,11 @@ clusterToOutcomeManhattan(output)
 
 The red dotted line represent p-value of 0.05 cutoff. The black dotted line represent the 0.05 cutoff divided by the number of data types which act as a multiple comparison correction.
 
-### Part 3 - correlation heatmap
+## Correlation Heatmaps
+
 If we are to look at predictor-predictor or outcome-outcome correlation, we can plot the correlation heatmap using, again, ComplexHeatmap. Make sure you provide the p-values from correlation tests
 
-```{r eval = FALSE}
+```{r fig.width = 7, fig.height = 5.5}
 
 # generate a mock correlation table
 corr_predictor <- matrix(runif(50 * 50), nrow = 50, ncol = 50)
@@ -532,7 +270,7 @@ corrHeatmap(
 
 Next let's generate heatmap legend. This function as of now will output legend to a file
 
-```{r eval = FALSE}
+```{r}
 
 labels_color = c("#cd34b5", "goldenrod4")
 
@@ -544,7 +282,7 @@ corrHeatmap_legend(
 
 ```
 
-### Part 4 Manhattan plot of correlation to one key outcome
+## Manhattan plots of correlation to one key outcome
 
 We can also plot correlation of features to **one** user-specified outcome in Manhattan. This is useful if you are doing abSNF where correlation of features to **one** outcome is pre-calculated and you want to see the correlation. The more correlated feature indicates more up-weighing in abSNF.
 
@@ -552,13 +290,12 @@ We can also plot correlation of features to **one** user-specified outcome in Ma
 
 Similar to running `clusterToOutcomeCorr`, here we have pre-calculated correlation p-value between each predictive feature to "Asthma_Diagnosis". For convenience let's generate some numbers
 
-```{r eval = FALSE}
+```{r fig.width = 7, fig.height = 5.5}
 
 #'  "p.value": from correlation test,
 #'  "n": number of samples,
 #'  "Group": datatype name,
 #'  "Group_index": sequence of datatypes to be displayed
-#'
 predictor_df = data.frame(
     p.value = c(0.002, 0.03, 0.01, 0.09, 0.02, 0.085),
     n = c(200, 100, 150, 70, 45, 80),
