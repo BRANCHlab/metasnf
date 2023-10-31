@@ -1,0 +1,128 @@
+---
+title: "Correlation Heatmaps"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Correlation Heatmaps}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Correlation heatmaps can be used to show you how correlated your variables are to each other and to the final cluster solution.
+
+```{r message = FALSE, results = 'hide'}
+
+library(metasnf)
+
+data_list <- generate_data_list(
+    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(abcd_income, "household_income", "demographics", "continuous"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "patient"
+)
+
+# Generate settings_matrix
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 5,
+    max_k = 40,
+    seed = 42
+)
+
+solutions_matrix <- batch_snf(data_list, settings_matrix)
+
+solutions_matrix
+
+cluster_solutions <- get_cluster_solutions(solutions_matrix)
+
+cluster_solutions |> head()
+
+target_list <- generate_target_list(
+    list(abcd_anxiety, "anxiety", "ordinal"),
+    list(abcd_colour, "favourite_colour", "categorical"),
+    uid = "patient"
+)
+
+
+# The first (and only) cluster solution:
+cluster_solutions <- get_cluster_solutions(solutions_matrix)
+
+head(cluster_solutions)
+```
+
+Using our cluster solutions, data list, and target list, we have everything we need to visualize the associations across all the different columns.
+
+```{r}
+
+head(cluster_solutions)
+
+target_df <- collapse_dl(target_list) |> data.frame()
+
+head(target_df)
+
+input_df <- collapse_dl(data_list) |> data.frame()
+
+head(input_df)
+
+combined_df <- merge_df_list(
+    list(
+        cluster_solutions,
+        target_df,
+        input_df
+    )
+)
+
+colnames(combined_df)[9]
+
+dim(combined_df)
+
+# Data list
+dl_names <- data_list |> lapply(
+    function(x) {
+        colnames(x$"data")[-1]
+    }
+) |> unlist()
+
+dl_types <- data_list |> lapply(
+    function(x) {
+        cols <- length(colnames(x$"data")[-1])
+        rep(x$"type", cols)
+    }
+) |> unlist()
+
+dl_variable_types_df <- data.frame(
+    variable = dl_names,
+    type = dl_types
+)
+
+# Data list
+tl_names <- target_list |> lapply(
+    function(x) {
+        colnames(x$"data")[-1]
+    }
+) |> unlist()
+
+tl_types <- target_list |> lapply(
+    function(x) {
+        cols <- length(colnames(x$"data")[-1])
+        rep(x$"type", cols)
+    }
+) |> unlist()
+
+tl_variable_types_df <- data.frame(
+    variable = tl_names,
+    type = tl_types
+)
+
+head(tl_variable_types_df)
+
+tl_variable_types_df
+
+```
