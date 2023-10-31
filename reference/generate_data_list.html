@@ -72,7 +72,8 @@ categorical).</p>
 <span>  uid <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  test_subjects <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  train_subjects <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  assigned_splits <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  assigned_splits <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  return_missing <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -101,6 +102,12 @@ a full data list for label propagation)</p></dd>
 <dt>assigned_splits</dt>
 <dd><p>ouptut from assign_splits function - can be given
 as an alternative to specifying the train/test subjects separately.</p></dd>
+
+
+<dt>return_missing</dt>
+<dd><p>If TRUE, function returns a list where the first
+element is the data_list and the second element is a vector of unique IDs
+of patients who were removed during the complete data filtration step.</p></dd>
 
 </dl></div>
     <div class="section level2">

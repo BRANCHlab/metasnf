@@ -55,13 +55,19 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">remove_dl_na</span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">remove_dl_na</span><span class="op">(</span><span class="va">data_list</span>, return_missing <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data_list</dt>
 <dd><p>A data_list</p></dd>
+
+
+<dt>return_missing</dt>
+<dd><p>If TRUE, function returns a list where the first
+element is the data_list and the second element is a vector of unique IDs
+of patients who were removed during the complete data filtration step.</p></dd>
 
 </dl></div>
     <div class="section level2">
