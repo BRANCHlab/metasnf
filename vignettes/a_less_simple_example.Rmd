@@ -283,7 +283,7 @@ The idea is to cluster the clustering solutions themselves to arrive at a small 
 From there, a user can manually pick out some representative solutions and do the evaluations themselves.
 
 The first step is to calculate the [adjusted Rand index](https://en.wikipedia.org/wiki/Rand_index) (ARI) between each pair of cluster solutions.
-This metric is tells us how similar the solutions are to each other, thereby allowing us to find clusters of cluster solutions.
+This metric tells us how similar the solutions are to each other, thereby allowing us to find clusters of cluster solutions.
 
 ```{r}
 solutions_matrix_aris <- calc_om_aris(solutions_matrix)

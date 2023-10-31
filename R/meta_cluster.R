@@ -47,10 +47,6 @@ calc_om_aris <- function(om) {
     pairwise_indices <- utils::combn(nrow(om_aris), 2)
     # Calculating pairwise ARIs across rows
     for (col in seq_len(ncol(pairwise_indices))) {
-        if (col %% 100 == 0) {
-            progress <- 100 * col / ncol(pairwise_indices)
-            cat("\r", progress, "% completed...", sep = "")
-        }
         v1 <- pairwise_indices[1, col]
         v2 <- pairwise_indices[2, col]
         ari <- calc_ari(v1, v2, om_no_id)
