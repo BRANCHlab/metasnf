@@ -43,8 +43,11 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/a_less_simple_example.html">A Less Simple Example</a>
     <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
+    <a class="dropdown-item" href="../articles/alluvial_plots.html">Alluvial Plots</a>
     <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
     <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
+    <a class="dropdown-item" href="../articles/manhattan_plots.html">Manhattan Plots</a>
+    <a class="dropdown-item" href="../articles/similarity_matrix_heatmap.html">Plotting Similarity Matrices</a>
   </div>
 </li>
       </ul>
@@ -238,8 +241,7 @@ won’t result in patient 199 being placed before patient 2.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">Data1</span>, <span class="st">"genes_1_and_2_exp"</span>, <span class="st">"gene_expression"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">Data2</span>, <span class="st">"genes_1_and_2_meth"</span>, <span class="st">"gene_methylation"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient_id"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="store-all-the-settings-of-the-desired-snf-runs-in-a-settings_matrix">3. Store all the settings of the desired SNF runs in a
@@ -269,7 +271,7 @@ settings_matrix vignette</a>.</p>
 <span></span>
 <span><span class="va">settings_matrix</span></span>
 <span><span class="co">#&gt;   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
-<span><span class="co">#&gt; 1      1   0.5 20 20          1         1         1         1        1        1</span></span>
+<span><span class="co">#&gt; 1      1   0.5 20 20          1         2         1         1        1        1</span></span>
 <span><span class="co">#&gt;   mix_dist input_wt domain_wt inc_genes_1_and_2_exp inc_genes_1_and_2_meth</span></span>
 <span><span class="co">#&gt; 1        1        1         1                     1                      1</span></span></code></pre></div>
 <p>The columns in this <code>settings_matrix</code> mean the
@@ -311,7 +313,7 @@ in the settings_matrix vignette.</p>
 <span></span>
 <span><span class="va">solutions_matrix</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="co"># it goes on like this for some time...</span></span>
 <span><span class="co">#&gt;   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
-<span><span class="co">#&gt; 1      1   0.5 20 20          1         1         1         1        1        1</span></span>
+<span><span class="co">#&gt; 1      1   0.5 20 20          1         2         1         1        1        1</span></span>
 <span><span class="co">#&gt;   mix_dist input_wt domain_wt inc_genes_1_and_2_exp inc_genes_1_and_2_meth</span></span>
 <span><span class="co">#&gt; 1        1        1         1                     1                      1</span></span>
 <span><span class="co">#&gt;   nclust subject_101 subject_102 subject_103 subject_104</span></span>
@@ -338,32 +340,32 @@ example:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">cluster_solution</span><span class="op">$</span><span class="st">"cluster"</span>, <span class="va">true_label</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>Running <code>batch_snf</code> with the
-<code>return_affinity_matrices</code> parameter set to <code>TRUE</code>
-will let us also take a look at the final fused networks from SNF rather
-than just the results of applying spectral clustering to those
-networks:</p>
+<code>return_similarity_matrices</code> parameter set to
+<code>TRUE</code> will let us also take a look at the final fused
+networks from SNF rather than just the results of applying spectral
+clustering to those networks:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    <span class="va">settings_matrix</span>,</span>
-<span>    return_affinity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/1 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Total time taken: 0 seconds."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">batch_snf_results</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "solutions_matrix"  "affinity_matrices"</span></span>
+<span><span class="co">#&gt; [1] "solutions_matrix"    "similarity_matrices"</span></span>
 <span></span>
 <span><span class="co"># The solutions_matrix</span></span>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
 <span></span>
 <span><span class="co"># The first (and only, in this case) final fused network</span></span>
-<span><span class="va">affinity_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"affinity_matrices"</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<span><span class="va">similarity_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>The fused network obtained through this approach is also the same as
 the one obtained in the original example:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">affinity_matrix</span> <span class="op">-</span> <span class="va">fused_network</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">similarity_matrix</span> <span class="op">-</span> <span class="va">fused_network</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0</span></span></code></pre></div>
 <p>And now we’ve completed a basic example of using this package. The
 subsequent vignettes provide guidance on how you can leverage the
@@ -389,7 +391,7 @@ Scale.” Nature Methods 11 (3): 333–37. <a href="https://doi.org/10.1038/nmet
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Prashanth Velayudhan, Eman Nishat, Sonja Stojanovski, Anne L Wheeler.</p>
+<p>Developed by Prashanth Velayudhan, Nicholas Chan, Xiaoqiao Xu, Prajkta Kallurkar, Shihao Ma, Stephanie H Ameis, Ana Patricia Balbon, Adam Taback, Brian Cox, Anna Goldenberg, Bo Wang, Linda Hiraki, Anne L Wheeler, Jasbir Dhaliwal, Colin Hawco, Lauren Erdman.</p>
 </div>
 
 <div class="pkgdown-footer-right">

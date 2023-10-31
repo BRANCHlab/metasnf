@@ -26,8 +26,11 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/a_less_simple_example.html">A Less Simple Example</a>
     <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
+    <a class="dropdown-item" href="../articles/alluvial_plots.html">Alluvial Plots</a>
     <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
     <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
+    <a class="dropdown-item" href="../articles/manhattan_plots.html">Manhattan Plots</a>
+    <a class="dropdown-item" href="../articles/similarity_matrix_heatmap.html">Plotting Similarity Matrices</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -55,6 +58,11 @@
       
 
       <dl><dt>
+          
+          <code><a href="CorrManhattan.html">CorrManhattan()</a></code> 
+        </dt>
+        <dd>Generate predictor-outcome correlations in Manhattan plot</dd>
+      </dl><dl><dt>
           
           <code><a href="abcd_anxiety.html">abcd_anxiety</a></code> 
         </dt>
@@ -116,14 +124,24 @@
         <dd>Heatmap meta-clustering results</dd>
       </dl><dl><dt>
           
-          <code><a href="affinity_matrix_path.html">affinity_matrix_path()</a></code> 
+          <code><a href="age_df.html">age_df</a></code> 
         </dt>
-        <dd>Generate a complete path and filename to store an affinity matrix</dd>
+        <dd>Mock age data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="alluvial_cluster_plot.html">alluvial_cluster_plot()</a></code> 
+        </dt>
+        <dd>Alluvial plot of patients across cluster counts and important variables</dd>
       </dl><dl><dt>
           
           <code><a href="arrange_dl.html">arrange_dl()</a></code> 
         </dt>
         <dd>Given a data_list object, sort data elements by subjectkey</dd>
+      </dl><dl><dt>
+          
+          <code><a href="assemble_data.html">assemble_data()</a></code> 
+        </dt>
+        <dd>Collapse a dataframe and/or a data_list into a single dataframe</dd>
       </dl><dl><dt>
           
           <code><a href="assigned_clust_hist.html">assigned_clust_hist()</a></code> 
@@ -201,9 +219,9 @@
         <dd>Convert character-type columns of a dataframe to factor-type</dd>
       </dl><dl><dt>
           
-          <code><a href="check_affinity_matrices.html">check_affinity_matrices()</a></code> 
+          <code><a href="check_similarity_matrices.html">check_similarity_matrices()</a></code> 
         </dt>
-        <dd>Check validity of affinity matrices</dd>
+        <dd>Check validity of similarity matrices</dd>
       </dl><dl><dt>
           
           <code><a href="check_subj_orders_for_lp.html">check_subj_orders_for_lp()</a></code> 
@@ -221,19 +239,39 @@
         <dd>Clean a plot</dd>
       </dl><dl><dt>
           
+          <code><a href="clusterToOutcomeCorr.html">clusterToOutcomeCorr()</a></code> 
+        </dt>
+        <dd>Functions to calculate correlation between cluster assignment to outcome variables and visualize to find meaningful clusters with Manhattan plot</dd>
+      </dl><dl><dt>
+          
+          <code><a href="clusterToOutcomeManhattan.html">clusterToOutcomeManhattan()</a></code> 
+        </dt>
+        <dd>Display cluster assignment to outcome correlation as Manhattan plot</dd>
+      </dl><dl><dt>
+          
+          <code><a href="collapse_dl.html">collapse_dl()</a></code> 
+        </dt>
+        <dd>Collapse a data_list into a single dataframe</dd>
+      </dl><dl><dt>
+          
           <code><a href="convert_uids.html">convert_uids()</a></code> 
         </dt>
         <dd>Convert unique identifiers of data_list to 'subjectkey'</dd>
       </dl><dl><dt>
           
-          <code><a href="discretisation.html">discretisation()</a></code> 
+          <code><a href="corrHeatmap.html">corrHeatmap()</a></code> 
         </dt>
-        <dd>Adaptation of SNFtool's discretisation function</dd>
+        <dd>Generate correlation heatmap</dd>
       </dl><dl><dt>
           
-          <code><a href="discretisationeigenvectordata.html">discretisationeigenvectordata()</a></code> 
+          <code><a href="corrHeatmap_legend.html">corrHeatmap_legend()</a></code> 
         </dt>
-        <dd>Adaptation of SNFtool's discretisationeigenvectordata</dd>
+        <dd>Generate correlation heatmap legend</dd>
+      </dl><dl><dt>
+          
+          <code><a href="diagnosis_df.html">diagnosis_df</a></code> 
+        </dt>
+        <dd>Mock diagnosis data</dd>
       </dl><dl><dt>
           
           <code><a href="domain_merge.html">domain_merge()</a></code> 
@@ -271,6 +309,11 @@
         <dd>deprecated function</dd>
       </dl><dl><dt>
           
+          <code><a href="expression_df.html">expression_df</a></code> 
+        </dt>
+        <dd>Modification of SNFtool mock dataframe "Data1"</dd>
+      </dl><dl><dt>
+          
           <code><a href="extend_solutions.html">extend_solutions()</a></code> 
         </dt>
         <dd>Extend an solutions matrix to include outcome evaluations</dd>
@@ -284,6 +327,16 @@
           <code><a href="fraction_clustered_together.html">fraction_clustered_together()</a></code> 
         </dt>
         <dd>Average fraction of clustering together</dd>
+      </dl><dl><dt>
+          
+          <code><a href="gender_df.html">gender_df</a></code> 
+        </dt>
+        <dd>Mock gender data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="generate_annotations_list.html">generate_annotations_list()</a></code> 
+        </dt>
+        <dd>Generate annotations list</dd>
       </dl><dl><dt>
           
           <code><a href="generate_clust_algs_list.html">generate_clust_algs_list()</a></code> 
@@ -376,6 +429,11 @@
         <dd>Get p-value</dd>
       </dl><dl><dt>
           
+          <code><a href="get_p_vals_row_df.html">get_p_vals_row_df()</a></code> 
+        </dt>
+        <dd>Return the p-values of a single settings_matrix row from a target_pvals df</dd>
+      </dl><dl><dt>
+          
           <code><a href="gower_distance.html">gower_distance()</a></code> 
         </dt>
         <dd>Distance metric: Gower distance</dd>
@@ -416,6 +474,11 @@
         <dd>Label propagation over an solutions matrix</dd>
       </dl><dl><dt>
           
+          <code><a href="manhattan_plot.html">manhattan_plot()</a></code> 
+        </dt>
+        <dd>Manhattan plot of p-values</dd>
+      </dl><dl><dt>
+          
           <code><a href="mc_heatmap.html">mc_heatmap()</a></code> 
         </dt>
         <dd>Outdated adjusted_rand_index_heatmap</dd>
@@ -429,6 +492,11 @@
           <code><a href="meta_cluster.html">meta_cluster()</a></code> 
         </dt>
         <dd>Outdated calc_om_aris</dd>
+      </dl><dl><dt>
+          
+          <code><a href="methylation_df.html">methylation_df</a></code> 
+        </dt>
+        <dd>Modification of SNFtool mock dataframe "Data2"</dd>
       </dl><dl><dt>
           
           <code><a href="no_subs.html">no_subs()</a></code> 
@@ -501,6 +569,11 @@
         <dd>Helper resample function found in ?sample</dd>
       </dl><dl><dt>
           
+          <code><a href="scale_diagonals.html">scale_diagonals()</a></code> 
+        </dt>
+        <dd>Adjust the diagonals of a matrix</dd>
+      </dl><dl><dt>
+          
           <code><a href="select_om.html">select_om()</a></code> 
         </dt>
         <dd>deprecated function</dd>
@@ -521,6 +594,16 @@
         <dd>Squared (excluding weights) Euclidean distance</dd>
       </dl><dl><dt>
           
+          <code><a href="similarity_matrix_heatmap.html">similarity_matrix_heatmap()</a></code> 
+        </dt>
+        <dd>Plot heatmap of similarity matrix</dd>
+      </dl><dl><dt>
+          
+          <code><a href="similarity_matrix_path.html">similarity_matrix_path()</a></code> 
+        </dt>
+        <dd>Generate a complete path and filename to store an similarity matrix</dd>
+      </dl><dl><dt>
+          
           <code><a href="siw_euclidean_distance.html">siw_euclidean_distance()</a></code> 
         </dt>
         <dd>Squared (including weights) Euclidean distance</dd>
@@ -539,11 +622,6 @@
           <code><a href="sol.html">sol()</a></code> 
         </dt>
         <dd>deprecated function</dd>
-      </dl><dl><dt>
-          
-          <code><a href="spectral_clustering.html">spectral_clustering()</a></code> 
-        </dt>
-        <dd>Adaptation of SNFtool's spectral clustering function</dd>
       </dl><dl><dt>
           
           <code><a href="spectral_eigen.html">spectral_eigen()</a></code> 
@@ -644,7 +722,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Prashanth Velayudhan, Eman Nishat, Sonja Stojanovski, Anne L Wheeler.</p>
+  <p></p><p>Developed by Prashanth Velayudhan, Nicholas Chan, Xiaoqiao Xu, Prajkta Kallurkar, Shihao Ma, Stephanie H Ameis, Ana Patricia Balbon, Adam Taback, Brian Cox, Anna Goldenberg, Bo Wang, Linda Hiraki, Anne L Wheeler, Jasbir Dhaliwal, Colin Hawco, Lauren Erdman.</p>
 </div>
 
 <div class="pkgdown-footer-right">

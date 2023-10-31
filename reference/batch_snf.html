@@ -26,8 +26,11 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/a_less_simple_example.html">A Less Simple Example</a>
     <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
+    <a class="dropdown-item" href="../articles/alluvial_plots.html">Alluvial Plots</a>
     <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
     <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
+    <a class="dropdown-item" href="../articles/manhattan_plots.html">Manhattan Plots</a>
+    <a class="dropdown-item" href="../articles/similarity_matrix_heatmap.html">Plotting Similarity Matrices</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -55,8 +58,8 @@
 <span>  <span class="va">data_list</span>,</span>
 <span>  <span class="va">settings_matrix</span>,</span>
 <span>  processes <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  return_affinity_matrices <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  affinity_matrix_dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  return_similarity_matrices <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  similarity_matrix_dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  clust_algs_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  suppress_clustering <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  distance_metrics_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -88,15 +91,15 @@ cores will be used.
 * <code>max</code>: All available cores will be used.</p></dd>
 
 
-<dt>return_affinity_matrices</dt>
+<dt>return_similarity_matrices</dt>
 <dd><p>If TRUE, function will return a list where
 the first element is the solutions matrix and the second element is a list
-of affinity matrices for each row in the solutions_matrix. Default FALSE.</p></dd>
+of similarity matrices for each row in the solutions_matrix. Default FALSE.</p></dd>
 
 
-<dt>affinity_matrix_dir</dt>
+<dt>similarity_matrix_dir</dt>
 <dd><p>If specified, this directory will be used to save
-all generated affinity matrices</p></dd>
+all generated similarity matrices</p></dd>
 
 
 <dt>clust_algs_list</dt>
@@ -107,7 +110,7 @@ to the final fused network. See ?generate_clust_algs_list</p></dd>
 <dt>suppress_clustering</dt>
 <dd><p>If FALSE (default), will apply default or custom
 clustering algorithms to provide cluster solutions on every iteration of
-SNF. If TRUE, parameter <code>affinity_matrix_dir</code> must be specified.</p></dd>
+SNF. If TRUE, parameter <code>similarity_matrix_dir</code> must be specified.</p></dd>
 
 
 <dt>distance_metrics_list</dt>
@@ -137,7 +140,7 @@ related to subtype membership</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Prashanth Velayudhan, Eman Nishat, Sonja Stojanovski, Anne L Wheeler.</p>
+  <p></p><p>Developed by Prashanth Velayudhan, Nicholas Chan, Xiaoqiao Xu, Prajkta Kallurkar, Shihao Ma, Stephanie H Ameis, Ana Patricia Balbon, Adam Taback, Brian Cox, Anna Goldenberg, Bo Wang, Linda Hiraki, Anne L Wheeler, Jasbir Dhaliwal, Colin Hawco, Lauren Erdman.</p>
 </div>
 
 <div class="pkgdown-footer-right">

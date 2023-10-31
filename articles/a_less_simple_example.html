@@ -43,8 +43,11 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/a_less_simple_example.html">A Less Simple Example</a>
     <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
+    <a class="dropdown-item" href="../articles/alluvial_plots.html">Alluvial Plots</a>
     <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
     <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
+    <a class="dropdown-item" href="../articles/manhattan_plots.html">Manhattan Plots</a>
+    <a class="dropdown-item" href="../articles/similarity_matrix_heatmap.html">Plotting Similarity Matrices</a>
   </div>
 </li>
       </ul>
@@ -243,8 +246,7 @@ means loading them into the data_list.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p>The first entries are all lists which contains the following
 elements:</p>
 <ol style="list-style-type: decimal">
@@ -390,17 +392,17 @@ cluster each subject was assigned for the corresponding
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 13/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 14/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 15/20 | Time remaining: 1 seconds"</span></span>
@@ -409,7 +411,7 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 3 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span></span>
 <span><span class="co">#&gt;  [1] "row_id"                    "alpha"                    </span></span>
@@ -437,11 +439,11 @@ cluster each subject was assigned for the corresponding
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cluster_solutions</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 subjectkey 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20</span></span>
 <span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 1 2 1 2 1 1 1 2 2  2  5  1  1  2  1  2  1  1  1  1</span></span>
-<span><span class="co">#&gt; 2 subject_NDAR_INV0IZ157F8 2 1 1 1 2 2 2 5 1  1  4  3  2  1  1  1  1  2  2  3</span></span>
+<span><span class="co">#&gt; 2 subject_NDAR_INV0IZ157F8 2 1 1 1 2 2 2 5 1  1  3  3  2  1  1  1  1  2  2  3</span></span>
 <span><span class="co">#&gt; 3 subject_NDAR_INV0J4PYA5F 1 2 1 2 2 2 3 4 2  3  2  2  2  2  2  2  2  3  2  2</span></span>
 <span><span class="co">#&gt; 4 subject_NDAR_INV10OMKVLE 1 1 3 1 2 2 2 1 1  1  5  3  2  1  1  1  1  2  2  3</span></span>
 <span><span class="co">#&gt; 5 subject_NDAR_INV15FPCW4O 1 2 4 2 2 2 2 1 2  1  2  3  2  2  2  2  2  2  2  2</span></span>
-<span><span class="co">#&gt; 6 subject_NDAR_INV19NB4RJK 1 2 3 2 2 2 2 3 2  4  4  3  2  2  2  2  1  2  2  3</span></span></code></pre></div>
+<span><span class="co">#&gt; 6 subject_NDAR_INV19NB4RJK 1 2 3 2 2 2 2 3 2  4  3  3  2  2  2  2  1  2  2  3</span></span></code></pre></div>
 <p><em>Note: Parallel processing is available on an older release of the
 package (v0.2.0) and will be integrated into the latest release shortly.
 See the “processes” parameter in <code><a href="../reference/batch_snf.html">?batch_snf</a></code>.</em></p>
@@ -529,27 +531,27 @@ domain they may be used in. r-package enables measures of silhouette
 scores, Dunn indices, and Davies-Bouldin indices. To calculate these
 values, we’ll need not only the cluster results but also the final fused
 network (the similarity matrices produced by SNF) that the clusters came
-from. These affinity matrices can be collected from the
-<code>batch_snf</code> using the <code>return_affinity_matrices</code>
+from. These similarity matrices can be collected from the
+<code>batch_snf</code> using the <code>return_similarity_matrices</code>
 parameter:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    <span class="va">settings_matrix</span>,</span>
-<span>    return_affinity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 13/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 14/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 15/20 | Time remaining: 1 seconds"</span></span>
@@ -558,22 +560,22 @@ parameter:</p>
 <span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 3 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
-<span><span class="va">affinity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"affinity_matrices"</span></span></code></pre></div>
+<span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span></span></code></pre></div>
 <p>This time, the output of <code>batch_snf</code> is a list. The first
 element of the list is a single solutions_matrix, like what we usually
 get. The second element is <em>yet another list</em> containing one
-final fused network (AKA affinity matrix / similarity matrix) per SNF
+final fused network (AKA similarity matrix / similarity matrix) per SNF
 run. Using those two lists, we can calculate the above mentioned quality
 metrics:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">silhouette_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_silhouettes.html">calculate_silhouettes</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">affinity_matrices</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">silhouette_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_silhouettes.html">calculate_silhouettes</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">similarity_matrices</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">dunn_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_dunn_indices.html">calculate_dunn_indices</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">affinity_matrices</span><span class="op">)</span></span>
+<span><span class="va">dunn_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_dunn_indices.html">calculate_dunn_indices</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">similarity_matrices</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">db_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_db_indices.html">calculate_db_indices</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">affinity_matrices</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">db_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_db_indices.html">calculate_db_indices</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">similarity_matrices</span><span class="op">)</span></span></code></pre></div>
 <p>The first function is a wrapper around
 <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">cluster::silhouette</a></code> while the second and third come from
 the <em>clv</em> package. <em>clv</em> isn’t set as a mandatory part of
@@ -654,7 +656,6 @@ data).</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/summarize_target_list.html">summarize_target_list</a></span><span class="op">(</span><span class="va">target_list</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        name    type length width</span></span>
@@ -712,41 +713,27 @@ clusters.</p>
 <span><span class="co">#&gt; 5                      1                    1                   1      2</span></span>
 <span><span class="co">#&gt; 6                      1                    1                   1      2</span></span>
 <span><span class="co">#&gt;    cbcl_anxiety_r_p   cbcl_depress_r_p  min_p_val mean_p_val</span></span>
-<span><span class="co">#&gt; 1 0.758497782121108  0.253657581105345 0.25365758  0.5060777</span></span>
-<span><span class="co">#&gt; 2 0.436382083446635 0.0851033924288291 0.08510339  0.2607427</span></span>
+<span><span class="co">#&gt; 1 0.758497782121108  0.253657581105355 0.25365758  0.5060777</span></span>
+<span><span class="co">#&gt; 2 0.436382083446635 0.0851033924288317 0.08510339  0.2607427</span></span>
 <span><span class="co">#&gt; 3  0.66671684891662  0.885314469318939 0.66671685  0.7760157</span></span>
 <span><span class="co">#&gt; 4 0.672455644238922  0.863299444565211 0.67245564  0.7678775</span></span>
 <span><span class="co">#&gt; 5 0.530010297592184 0.0899804994296201 0.08998050  0.3099954</span></span>
-<span><span class="co">#&gt; 6 0.677526005779195  0.127648264212471 0.12764826  0.4025871</span></span></code></pre></div>
+<span><span class="co">#&gt; 6 0.677526005779245  0.127648264212471 0.12764826  0.4025871</span></span></code></pre></div>
 <p>If you just want the p-values:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/p_val_select.html">p_val_select</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    row_id cbcl_anxiety_r_p cbcl_depress_r_p</span></span>
-<span><span class="co">#&gt; 1       1       0.75849778       0.25365758</span></span>
-<span><span class="co">#&gt; 2       2       0.43638208       0.08510339</span></span>
-<span><span class="co">#&gt; 3       3       0.66671685       0.88531447</span></span>
-<span><span class="co">#&gt; 4       4       0.67245564       0.86329944</span></span>
-<span><span class="co">#&gt; 5       5       0.53001030       0.08998050</span></span>
-<span><span class="co">#&gt; 6       6       0.67752601       0.12764826</span></span>
-<span><span class="co">#&gt; 7       7       0.14158574       0.61067444</span></span>
-<span><span class="co">#&gt; 8       8       0.65534060       0.52733675</span></span>
-<span><span class="co">#&gt; 9       9       0.62019372       0.06557707</span></span>
-<span><span class="co">#&gt; 10     10       0.18683694       0.02026506</span></span>
-<span><span class="co">#&gt; 11     11       0.09935434       0.18142564</span></span>
-<span><span class="co">#&gt; 12     12       0.13853281       0.57730957</span></span>
-<span><span class="co">#&gt; 13     13       0.48835371       0.31738834</span></span>
-<span><span class="co">#&gt; 14     14       0.24415508       0.21488301</span></span>
-<span><span class="co">#&gt; 15     15       0.93251462       0.51911329</span></span>
-<span><span class="co">#&gt; 16     16       0.28223304       0.91903755</span></span>
-<span><span class="co">#&gt; 17     17       0.42077342       0.39268244</span></span>
-<span><span class="co">#&gt; 18     18       0.14158574       0.61067444</span></span>
-<span><span class="co">#&gt; 19     19       0.53001030       0.05751099</span></span>
-<span><span class="co">#&gt; 20     20       0.12232512       0.45334136</span></span></code></pre></div>
-<p>There is a heatmap for visualizing this too:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">target_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/p_val_select.html">p_val_select</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/pvals_heatmap.html">pvals_heatmap</a></span><span class="op">(</span><span class="va">target_pvals</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">target_pvals</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   row_id cbcl_anxiety_r_p cbcl_depress_r_p</span></span>
+<span><span class="co">#&gt; 1      1        0.7584978       0.25365758</span></span>
+<span><span class="co">#&gt; 2      2        0.4363821       0.08510339</span></span>
+<span><span class="co">#&gt; 3      3        0.6667168       0.88531447</span></span>
+<span><span class="co">#&gt; 4      4        0.6724556       0.86329944</span></span>
+<span><span class="co">#&gt; 5      5        0.5300103       0.08998050</span></span>
+<span><span class="co">#&gt; 6      6        0.6775260       0.12764826</span></span></code></pre></div>
+<p>There is a heatmap for visualizing this too:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/pvals_heatmap.html">pvals_heatmap</a></span><span class="op">(</span><span class="va">target_pvals</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span></code></pre></div>
 <center>
 <img src="pvals_heatmap_ordered.png" width="400">
 </center>
@@ -812,7 +799,6 @@ the training/testing split for you :)</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span>
 <span></span>
 <span><span class="va">test_data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
@@ -821,8 +807,7 @@ the training/testing split for you :)</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Note, in a label propagation workflow, maintaining a consistent
 ordering of train and test subjects across all dataframes is
 particularly important. To ensure the full data list is constructed with
@@ -844,7 +829,6 @@ above, you can either specify both the <code>train_subjects</code> and
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span>,</span>
 <span>    assigned_splits <span class="op">=</span> <span class="va">assigned_splits</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span>
 <span></span>
 <span><span class="co"># Construct the target lists</span></span>
 <span><span class="va">train_target_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_target_list.html">generate_target_list</a></span><span class="op">(</span></span>
@@ -852,7 +836,6 @@ above, you can either specify both the <code>train_subjects</code> and
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "UID successfully converted to subjectkey."</span></span>
 <span></span>
 <span><span class="co"># Find a clustering solution in your training data</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
@@ -1008,7 +991,7 @@ helper function:</p>
 <span><span class="co">#&gt;     rownames(inclusions_df) &lt;- NULL</span></span>
 <span><span class="co">#&gt;     return(inclusions_df)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x557277fc0130&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x5623bbe94920&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
 <p>This <code>random_removal</code> function randomly picks a number of
 columns to remove according to an exponential function. The most likely
@@ -1305,7 +1288,7 @@ Scale.” Nature Methods 11 (3): 333–37. <a href="https://doi.org/10.1038/nmet
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Prashanth Velayudhan, Eman Nishat, Sonja Stojanovski, Anne L Wheeler.</p>
+<p>Developed by Prashanth Velayudhan, Nicholas Chan, Xiaoqiao Xu, Prajkta Kallurkar, Shihao Ma, Stephanie H Ameis, Ana Patricia Balbon, Adam Taback, Brian Cox, Anna Goldenberg, Bo Wang, Linda Hiraki, Anne L Wheeler, Jasbir Dhaliwal, Colin Hawco, Lauren Erdman.</p>
 </div>
 
 <div class="pkgdown-footer-right">
