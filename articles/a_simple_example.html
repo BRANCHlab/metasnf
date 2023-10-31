@@ -80,6 +80,7 @@
 <style>
 div.aside { background-color:#fff2e6; }
 </style>
+<p>Download a copy of the vignette to follow along here: <a href="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/a_simple_example.Rmd" class="external-link">a_simple_example.Rmd</a></p>
 <p>In this vignette, we will show how <em>r-package</em> can be used for
 a very simple SNF workflow.</p>
 <p>This simple workflow is the example of SNF provided in the original
@@ -123,6 +124,8 @@ those same 200 patients.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">pheatmap</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/grDevices/png.html" class="external-link">png</a></span><span class="op">(</span><span class="st">"heatmap.png"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># gene expression data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/pheatmap/man/pheatmap.html" class="external-link">pheatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">Data1</span>,</span>
@@ -130,10 +133,8 @@ those same 200 patients.</p>
 <span>    cluster_cols <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    show_rownames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    show_colnames <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="a_simple_example_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># methylation data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/pheatmap/man/pheatmap.html" class="external-link">pheatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">Data2</span>,</span>
@@ -141,13 +142,14 @@ those same 200 patients.</p>
 <span>    cluster_cols <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    show_rownames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    show_colnames <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="a_simple_example_files/figure-html/unnamed-chunk-5-2.png" width="700"></p>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The “ground truth” of how this data was generated was that patients 1
 to 100 were drawn from one distribution and patients 101 to 200 were
 drawn from another. We don’t have access to that kind of knowledge in
 real data, but we do here.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">true_label</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -163,13 +165,13 @@ have</strong>, how similar all of our patients are to each other.</p>
 patients are to each other for each source, and then converting that
 dissimilarity information into similarity information.</p>
 <p>To calculate dissimilarity, we’ll use Euclidean distance.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">distance_matrix_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">Data1</span>, method <span class="op">=</span> <span class="st">"euclidean"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">distance_matrix_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">Data2</span>, method <span class="op">=</span> <span class="st">"euclidean"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Then, we can use the <code>affinityMatrix</code> function provided by
 <em>SNFtool</em> to convert those distance matrices into similarity
 matrices.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">similarity_matrix_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/affinityMatrix.html" class="external-link">affinityMatrix</a></span><span class="op">(</span><span class="va">distance_matrix_1</span>, <span class="va">K</span>, <span class="va">alpha</span><span class="op">)</span></span>
 <span><span class="va">similarity_matrix_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/affinityMatrix.html" class="external-link">affinityMatrix</a></span><span class="op">(</span><span class="va">distance_matrix_2</span>, <span class="va">K</span>, <span class="va">alpha</span><span class="op">)</span></span></code></pre></div>
 <p>Those similarity matrices can be passed into the <code>SNF</code>
@@ -180,7 +182,7 @@ gene expression and methylation data.</p>
 <div class="section level3">
 <h3 id="integrate-similarity-matrices-with-snf">5. Integrate similarity matrices with SNF<a class="anchor" aria-label="anchor" href="#integrate-similarity-matrices-with-snf"></a>
 </h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fused_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/SNF.html" class="external-link">SNF</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">similarity_matrix_1</span>, <span class="va">similarity_matrix_2</span><span class="op">)</span>,</span>
 <span>    <span class="va">K</span>,</span>
@@ -192,12 +194,12 @@ gene expression and methylation data.</p>
 </h3>
 <p>If we think there are 2 clusters in the data, we can use spectral
 clustering to find 2 clusters in the fused network.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">number_of_clusters</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span><span class="va">assigned_clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/spectralClustering.html" class="external-link">spectralClustering</a></span><span class="op">(</span><span class="va">fused_network</span>, <span class="va">number_of_clusters</span><span class="op">)</span></span></code></pre></div>
 <p>Sure enough, we are able to obtain the correct cluster label for all
 patients.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">true_label</span> <span class="op">==</span> <span class="va">assigned_clusters</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
@@ -213,7 +215,7 @@ works.</p>
 <div class="section level3">
 <h3 id="load-the-package-1">1. Load the package<a class="anchor" aria-label="anchor" href="#load-the-package-1"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -233,11 +235,59 @@ In this case, that information isn’t there, so we’ll have to add it
 ourselves. The added IDs span from 101 onwards (rather than from 1
 onwards) purely for convenience: automatic sorting of patient names
 won’t result in patient 199 being placed before patient 2.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add "patient_id" column to each dataframe</span></span>
 <span><span class="va">Data1</span><span class="op">$</span><span class="st">"patient_id"</span> <span class="op">&lt;-</span> <span class="fl">101</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Data1</span><span class="op">)</span> <span class="op">+</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">Data2</span><span class="op">$</span><span class="st">"patient_id"</span> <span class="op">&lt;-</span> <span class="fl">101</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Data2</span><span class="op">)</span> <span class="op">+</span> <span class="fl">100</span><span class="op">)</span></span>
 <span></span>
+<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        data <span class="op">=</span> <span class="va">Data1</span>,</span>
+<span>        name <span class="op">=</span> <span class="st">"genes_1_and_2_exp"</span>,</span>
+<span>        domain <span class="op">=</span> <span class="st">"gene_expression"</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"continuous"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        data <span class="op">=</span> <span class="va">Data2</span>,</span>
+<span>        name <span class="op">=</span> <span class="st">"genes_1_and_2_meth"</span>,</span>
+<span>        domain <span class="op">=</span> <span class="st">"gene_methylation"</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"continuous"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    uid <span class="op">=</span> <span class="st">"patient_id"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The first entries are all lists which contains the following
+elements:</p>
+<ol style="list-style-type: decimal">
+<li>The actual dataframe</li>
+<li>A name for the dataframe (string)</li>
+<li>A name for the <em>domain</em> of information the dataframe is
+representative of (string)</li>
+<li>The type of variable stored in the dataframe (options are
+continuous, discrete, ordinal, categorical, and mixed)</li>
+</ol>
+<p>Finally, there’s an argument for the <code>uid</code> (the column
+name that currently uniquely identifies all the subjects in your
+data).</p>
+<p>Behind the scenes, this function is building a nested list that keeps
+track of all this information, but it is also:</p>
+<ul>
+<li>Converting the UID of the data into “subjectkey”</li>
+<li>Removing all observations that contain any NAs</li>
+<li>Removing all subjects who are not present in all input
+dataframes</li>
+<li>Arranging the subjects in all the dataframe by their UID</li>
+<li>Prefixing the UID values with the string “subject_” to help with
+cluster result characterization</li>
+</ul>
+<p>Any rows containing NAs are removed. If you don’t want a bunch of
+your data to get removed because there are a few NAs sprinkled around
+here and there, consider using <a href="https://en.wikipedia.org/wiki/Imputation_(statistics)" class="external-link">imputation</a>.
+The <code>mice</code> package in R is nice for this.</p>
+<p>Note that you do not need to name out every element explicitly. As
+long as you provide the objects within each list in the correct order
+(data, name, domain, type), you’ll get the correct result:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Compactly:</span></span>
 <span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">Data1</span>, <span class="st">"genes_1_and_2_exp"</span>, <span class="st">"gene_expression"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">Data2</span>, <span class="st">"genes_1_and_2_meth"</span>, <span class="st">"gene_methylation"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
@@ -272,7 +322,7 @@ settings_matrix vignette</a>.</p>
 <span></span>
 <span><span class="va">settings_matrix</span></span>
 <span><span class="co">#&gt;   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
-<span><span class="co">#&gt; 1      1   0.5 20 20          1         2         1         1        1        1</span></span>
+<span><span class="co">#&gt; 1      1   0.5 20 20          1         1         1         1        1        1</span></span>
 <span><span class="co">#&gt;   mix_dist input_wt domain_wt inc_genes_1_and_2_exp inc_genes_1_and_2_meth</span></span>
 <span><span class="co">#&gt; 1        1        1         1                     1                      1</span></span></code></pre></div>
 <p>The columns in this <code>settings_matrix</code> mean the
@@ -314,7 +364,7 @@ in the settings_matrix vignette.</p>
 <span></span>
 <span><span class="va">solutions_matrix</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="co"># it goes on like this for some time...</span></span>
 <span><span class="co">#&gt;   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
-<span><span class="co">#&gt; 1      1   0.5 20 20          1         2         1         1        1        1</span></span>
+<span><span class="co">#&gt; 1      1   0.5 20 20          1         1         1         1        1        1</span></span>
 <span><span class="co">#&gt;   mix_dist input_wt domain_wt inc_genes_1_and_2_exp inc_genes_1_and_2_meth</span></span>
 <span><span class="co">#&gt; 1        1        1         1                     1                      1</span></span>
 <span><span class="co">#&gt;   nclust subject_101 subject_102 subject_103 subject_104</span></span>
@@ -374,6 +424,8 @@ subsequent vignettes provide guidance on how you can leverage the
 solutions from your data, how you can use other tools in this package to
 pick a best solution for your purposes, and how to validate the
 generalizability.</p>
+<p>Go give the <a href="https://branchlab.github.io/metasnf/articles/a_less_simple_example.html">less
+simple example</a> a try!</p>
 </div>
 </div>
 <div class="section level2">

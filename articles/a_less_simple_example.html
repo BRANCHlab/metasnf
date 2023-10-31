@@ -80,6 +80,9 @@
 <style>
 div.aside { background-color:#fff2e6; }
 </style>
+<p>Download a copy of the vignette to follow along here: <a href="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/a_less_simple_example.Rmd" class="external-link">a_less_simple_example.Rmd</a></p>
+<p>We recommend you go through the <a href="https://branchlab.github.io/metasnf/articles/a_simple_example.html">simple
+example</a> before working through this one!</p>
 <p>This vignette walks through how this package can be used over a
 complete SNF-subtyping pipeline.</p>
 <div class="section level2">
@@ -240,42 +243,41 @@ anxiety and depression scores. We’ll set aside anxiety and depression
 for now and use the rest of the data as inputs for our subtyping, which
 means loading them into the data_list.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<code class="sourceCode R"><span><span class="co"># Note that you do not need to explicitly name every single named element</span></span>
+<span><span class="co"># (data = ..., name = ..., etc.)</span></span>
+<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        data <span class="op">=</span> <span class="va">abcd_cort_t</span>,</span>
+<span>        name <span class="op">=</span> <span class="st">"cortical_thickness"</span>,</span>
+<span>        domain <span class="op">=</span> <span class="st">"neuroimaging"</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"continuous"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        data <span class="op">=</span> <span class="va">abcd_cort_sa</span>,</span>
+<span>        name <span class="op">=</span> <span class="st">"cortical_surface_area"</span>,</span>
+<span>        domain <span class="op">=</span> <span class="st">"neuroimaging"</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"continuous"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        data <span class="op">=</span> <span class="va">abcd_subc_v</span>,</span>
+<span>        name <span class="op">=</span> <span class="st">"subcortical_volume"</span>,</span>
+<span>        domain <span class="op">=</span> <span class="st">"neuroimaging"</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"continuous"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        data <span class="op">=</span> <span class="va">abcd_income</span>,</span>
+<span>        name <span class="op">=</span> <span class="st">"household_income"</span>,</span>
+<span>        domain <span class="op">=</span> <span class="st">"demographics"</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"continuous"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        data <span class="op">=</span> <span class="va">abcd_pubertal</span>,</span>
+<span>        name <span class="op">=</span> <span class="st">"pubertal_status"</span>,</span>
+<span>        domain <span class="op">=</span> <span class="st">"demographics"</span>,</span>
+<span>        type <span class="op">=</span> <span class="st">"continuous"</span></span>
+<span>    <span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>The first entries are all lists which contains the following
-elements:</p>
-<ol style="list-style-type: decimal">
-<li>The actual dataframe</li>
-<li>A name for the dataframe (string)</li>
-<li>A name for the <em>domain</em> of information the dataframe is
-representative of (string)</li>
-<li>The type of variable stored in the dataframe (options are
-continuous, discrete, ordinal, categorical, and mixed)</li>
-</ol>
-<p>Finally, there’s an argument for the <code>uid</code> (the column
-name that currently uniquely identifies all the subjects in your
-data).</p>
-<p>Behind the scenes, this function is building a nested list that keeps
-track of all this information, but it is also:</p>
-<ul>
-<li>Converting the UID of the data into “subjectkey”</li>
-<li>Removing all observations that contain any NAs</li>
-<li>Removing all subjects who are not present in all input
-dataframes</li>
-<li>Arranging the subjects in all the dataframe by their UID</li>
-<li>Prefixing the UID values with the string “subject_” to help with
-cluster result characterization</li>
-</ul>
-<p>Any rows containing NAs are removed. If you don’t want a bunch of
-your data to get removed because there are a few NAs sprinkled around
-here and there, consider using <a href="https://en.wikipedia.org/wiki/Imputation_(statistics)" class="external-link">imputation</a>.
-The <code>mice</code> package in R is nice for this.</p>
 <p>We can get a summary of our constructed <code>data_list</code> with
 the <code>summarize_dl</code> function:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -544,13 +546,13 @@ parameter:</p>
 <span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 13/20 | Time remaining: 1 seconds"</span></span>
@@ -992,7 +994,7 @@ helper function:</p>
 <span><span class="co">#&gt;     rownames(inclusions_df) &lt;- NULL</span></span>
 <span><span class="co">#&gt;     return(inclusions_df)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55eda9e914f0&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x5627d401b010&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
 <p>This <code>random_removal</code> function randomly picks a number of
 columns to remove according to an exponential function. The most likely

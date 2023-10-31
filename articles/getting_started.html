@@ -80,6 +80,7 @@
 <style>
 div.aside { background-color:#fff2e6; }
 </style>
+<p>Download a copy of the vignette to follow along here: <a href="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/getting_started.Rmd" class="external-link">getting_started.Rmd</a></p>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -95,15 +96,16 @@ strong emphasis on context-specific utility and principled validation of
 results.</p>
 <p><br></p>
 <p><strong>Why use meta clustering?</strong></p>
-<p>Clustering algorithms seek solutions that optimize context-agnostic
-metrics of quality. In sufficiently noisy datasets where many
-qualitatively distinct solutions with similar scores of clustering
+<p>Clustering algorithms seek solutions where members of the same
+cluster are very similar to each other and members of distinct clusters
+are very dissimilar to each other. In sufficiently noisy datasets where
+many qualitatively distinct solutions with similar scores of clustering
 quality exist, it is not necessarily the case that the top solution
 selected by a clustering algorithm will also be the most useful one for
 the user’s context.</p>
 <p>To address this issue, the original meta clustering procedure <a href="https://doi.org/10.1109/ICDM.2006.103" class="external-link">Caruana et al., 2006</a>
 involved generating a large number of reasonable clustering solutions,
-clusterign those solutions into qualitatively similar ones, and having
+clustering those solutions into qualitatively similar ones, and having
 the user examine those “meta clusters” to find something that seems like
 it’ll be the most useful.</p>
 <p><strong>Why use SNF?</strong></p>
