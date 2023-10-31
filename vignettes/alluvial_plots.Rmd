@@ -18,49 +18,34 @@ Alluvial plots can be generated to visualize how changing the number of clusters
 First, some data setup just as was done in the previous vignettes.
 
 ```{r}
-library(SNFtool)
 library(metasnf)
 
-data(Data1)
-data(Data2)
-
-gender <- c("female", "male")
-diagnosis <- c("definite asthma", "possible asthma", "no asthma")
-atopic_asthma <- c("Yes", "No")
-
-c1_genders <- sample(gender, 100, replace = TRUE, prob = c(3, 1))
-c1_diagnosis <- sample(diagnosis, 100, replace = TRUE, prob = c(3, 2, 1))
-c1_asthma <- sample(atopic_asthma, 100, replace = TRUE, prob = c(3, 1))
-c1_ages <- sample(c(12:18), 100, replace = TRUE, prob = c(1:7))
-
-c2_genders <- sample(gender, 100, replace = TRUE, prob = c(1, 3))
-c2_diagnosis <- sample(diagnosis, 100, replace = TRUE, prob = c(1, 2, 3))
-c2_asthma <- sample(atopic_asthma, 100, replace = TRUE, prob = c(1, 3))
-c2_ages <- sample(c(18:30), 100, replace = TRUE,)
-
-genders <- c(c1_genders, c2_genders)
-diagnoses <- c(c1_diagnosis, c2_diagnosis)
-asthmas <- c(c1_asthma, c2_asthma)
-ages <- c(c1_ages, c2_ages)
-
-additional_data <- data.frame(
-    gender = genders,
-    diagnosis = diagnoses,
-    asthma = asthmas,
-    age = ages
-)
-
-set.seed(42)
-random_ids <- sample(100:999)[1:200]
-
-Data1$"patient_id" <- random_ids
-Data2$"patient_id" <- random_ids
-additional_data$"patient_id" <- random_ids
-
+# Generate data_list
 data_list <- generate_data_list(
-    list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
-    list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
-    list(additional_data, "additional_data", "miscellaneous", "mixed"),
+    list(
+        expression_df,
+        "genes_1_and_2_exp",
+        "gene_expression",
+        "continuous"
+    ),
+    list(
+        methylation_df,
+        "genes_1_and_2_meth",
+        "gene_methylation",
+        "continuous"
+    ),
+    list(
+        gender_df,
+        "gender",
+        "demographics",
+        "categorical"
+    ),
+    list(
+        diagnosis_df,
+        "diagnosis",
+        "clinical",
+        "categorical"
+    ),
     uid = "patient_id"
 )
 
@@ -114,27 +99,22 @@ alluvial_cluster_plot(
 Or in an external dataframe:
 
 ```{r fig.width = 7, fig.height = 5.5}
-df_outcomes = data.frame(
-    subjectkey = colnames(similarity_matrix),
-    wheeze_status = c(
-        rep("Yes", 20),
-        rep("Sometimes", 60),
-        rep("No", 120)
-    ),
-    asthma_diagnosis = c(
-        rep("Definite Asthma", 10),
-        rep("Possible Asthma", 50),
-        rep("No Asthma", 140)
-    )
-)
+extra_data <- dplyr::inner_join(
+    gender_df,
+    diagnosis_df,
+    by = "patient_id"
+) |>
+    dplyr::mutate(subjectkey = paste0("subject_", patient_id))
+
+head(extra_data)
 
 alluvial_cluster_plot(
     cluster_sequence = cluster_sequence,
     similarity_matrix = similarity_matrix,
-    data = df_outcomes,
-    key_outcome = "wheeze_status",
-    key_label = "Wheeze Status",
-    extra_outcomes = "asthma_diagnosis",
-    title = "Wheeze Status Across Cluster Counts"
+    data = extra_data,
+    key_outcome = "gender",
+    key_label = "Gender",
+    extra_outcomes = "diagnosis",
+    title = "Gender Across Cluster Counts"
 )
 ```

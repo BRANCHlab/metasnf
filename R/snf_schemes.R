@@ -222,7 +222,7 @@ domain_merge <- function(data_list,
             if (current_type == existing_type) {
                 new_type <- existing_type
             } else {
-                new_type == "mixed"
+                new_type <- "mixed"
             }
             merged_dl[[existing_pos]]$"data" <- new_data
             merged_dl[[existing_pos]]$"type" <- new_type
