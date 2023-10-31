@@ -649,7 +649,7 @@ add_settings_matrix_rows <- function(settings_matrix,
         }
     }
     if (num_retries > retry_limit) {
-       print("Matrix row building aborted.")
+       print("Matrix building failed.")
        print("To keep adding rows, try raising the retry_limit parameter.")
     }
     row.names(settings_matrix) <- NULL

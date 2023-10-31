@@ -1,0 +1,215 @@
+---
+title: "The Settings Matrix"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{The Settings Matrix}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This vignette outlines the main functionality of the `generate_settings_matrix` function.
+
+## The basic settings_matrix
+
+The most minimal settings_matrix can be obtained by providing a data_list object.
+
+```{r}
+library(metasnf)
+
+data_list <- generate_data_list(
+    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(abcd_income, "household_income", "demographics", "continuous"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "patient"
+)
+
+
+settings_matrix <- generate_settings_matrix(
+    data_list
+)
+
+head(settings_matrix)
+```
+
+The resulting columns are:
+
+* `row_id`: A label to keep track of which row is which
+* `alpha`: The alpha (also referred to as sigma or eta) hyperparameter in SNF
+* `k`: The K (nearest neighbours) hyperparameter in similarity matrix calculations and SNF
+* `t`: The T (number of iterations) hyperparameter used in SNF
+* `snf_scheme`: Which SNF "scheme" is being used to convert the initial provided dataframes into a final fused network (more on this in the [appendix of the "Less Simple Example" vignette](https://branchlab.github.io/metasnf/articles/a_less_simple_example.html#snf_scheme))
+* `clust_alg`: Which clustering algorithm will be applied to the final fused network. By default, this varies between the pre-provided options of (1) spectral clustering with the number of clusters determined by the eigen-gap heuristic and (2) the same thing but using the rotation cost heuristic. You can learn more about using this parameter in the [clustering algorithnms vignette](https://branchlab.github.io/metasnf/articles/clustering_algorithms.html).
+* Columns ending in `dist`: Which distance metric is being used for the various types of variables (more on this in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html))
+* Columns starting with `inc`: Whether or not the corresponding dataframe will be included (1) or excluded (0) from this row
+
+By varying the values in these columns, we can define distinct SNF pipelines that should give rise to a broader space of possibly patient subtype solutions.
+The following sections outline how to use `generate_settings_matrix` to build a wide range of settings that will hopefully help you find a subtyping solution useful for your purposes.
+
+## Adding random rows
+
+When not specifying any parameters beyond the number of rows that are created, the function will randomly (but sensibly) vary the values in the matrix.
+
+```{r}
+# Through minimums and maximums
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 100,
+)
+
+head(settings_matrix)
+```
+
+The `alpha` and `k` hyperparameters are varied from 0.3 to 0.8 and 10 to 100 respectively based on suggestion from the authors of SNF.
+
+The `t` hyperparameter, which controls how many iterations of updates occur to the fused network during SNF, stays fixed at 20, by default.
+This value (20) has been empirically demonstrated to be sufficient for achieving convergence of the matrix, and varying it doesn't seem to have much relevance to what kinds of cluster solutions are produced.
+
+The `snf_scheme` column will vary from 1 to 3, which outlines the 3 differente schemes that are available.
+
+The `clust_alg` column will vary randomly between (1) spectral clustering using the eigen-gap heuristic and (2) spectral clustering using the rotation cost heuristic by default.
+
+The distance columns will always be 1 by default, as they will just use the default distance metrics of simple Euclidean for anything numeric and Gower's distance for anything mixed or categorical.
+
+Controlling the scheme, the clustering algorithms, and the distance metrics are discussed in more details in separate vignettes linked to above.
+Controlling the remaining options are shown below.
+
+## Alpha, k, and t
+
+You can control any of these parameters either by providing a vector of values you'd like to randomly sample from or by specifying a minimum and maximum range.
+
+```{r}
+# Through minimums and maximums
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 100,
+    min_k = 10,
+    max_k = 60,
+    min_alpha = 0.3,
+    max_alpha = 0.8,
+    min_t = 15,
+    max_t = 30
+)
+
+# Through specific value sampling
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 20,
+    k_values = c(10, 25, 50),
+    alpha_values = c(0.4, 0.8),
+    t_values = c(20, 30)
+)
+
+```
+
+## Inclusion columns
+
+Bounds on the number of input dataframes removed as well as the way in which the number removed is chosen can be controlled.
+
+By default, `generate_settings_matrix` will pick a random value between 0 and 1 less than the total number of available dataframes based on an exponential probability distribution.
+The exponential distribution makes it so that it is very likely that a small number of dataframes will be dropped and much less likely that a large number of dataframes will be dropped.
+
+You can control the distribution by changing the `dropout_dist` value to "uniform" (which will result in a much higher number of dataframes being dropped on average) or "none" (which will result in no dataframes being dropped).
+
+```{r}
+# Exponential dropping
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 20,
+    dropout_dist = "exponential" # the default behaviour
+)
+
+head(settings_matrix)
+
+# Uniform dropping
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 20,
+    dropout_dist = "uniform"
+)
+
+head(settings_matrix)
+
+
+# No dropping
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 20,
+    dropout_dist = "none"
+)
+
+head(settings_matrix)
+```
+
+The bounds on the number of dataframes that can be dropped can be controlled using the `min_removed_inputs` and `max_removed_inputs`:
+
+```{r}
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 20,
+    min_removed_inputs = 3
+)
+
+# No row will exclude fewer than 3 dataframes during SNF
+head(settings_matrix)
+```
+
+## Grid searching
+
+If you are interested in grid searching over perhaps just a specific set of alpha and k values, you may want to consider varying those parameters and keeping everything else fixed:
+
+```{r}
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 10,
+    alpha_values = c(0.3, 0.5, 0.8),
+    k_values = c(20, 40, 60),
+    dropout_dist = "none"
+)
+```
+
+## Assembling a settings_matrix in pieces
+
+Rather than varying everything equally all at once, you may be interested in looking at "chunks" of solution spaces that are based on distinct settings matrices.
+
+For example, you may want to look at 100 solutions generated with k = 50 and look at another 100 solutions generated with k = 80.
+You can absolutely build two separate settings matrices, but you can also build up a single matrix in parts using the `add_settings_matrix_rows` function:
+
+```{r}
+
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 50,
+    k_values = 50
+)
+
+settings_matrix <- add_settings_matrix_rows(
+    settings_matrix,
+    nrow = 50,
+    k_values = 80
+)
+
+dim(settings_matrix)
+
+settings_matrix$"k"
+```
+
+## Manual adjustments
+
+Don't forget that the settings matrix is just a dataframe.
+You can always go in and modify things as you wish, but you do risk generating duplicate or invalid rows that the package functions would have prevented.
+
+## "Matrix building failed"
+
+`generate_settings_matrix` will never build duplicate rows.
+A consequence of this is that if you request a very large number of rows over a very small range of possible values to vary over, it will be impossible for the matrix to be built.
+For example, there's no way to generate 10 unique rows when the only thing allowed to vary is which clustering algorithm (1 or 2) is used - only 2 rows could ever be created.
+
+If you encounter the error "Matrix building failed", try to generate fewer rows or to be a little less strict with what values are allowed.
