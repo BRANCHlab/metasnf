@@ -9,7 +9,7 @@
 
 A data frame with 275 rows and 2 columns:
 \describe{
-\item{subjectkey}{The unique identifier of the ABCD dataset}
+\item{patient}{The unique identifier of the ABCD dataset}
 \item{colour}{Categorical transformation of \code{cbcl_depress}.}
 }
 }

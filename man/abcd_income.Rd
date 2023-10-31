@@ -9,7 +9,7 @@
 
 A data frame with 300 rows and 2 columns:
 \describe{
-\item{subjectkey}{The unique identifier of the ABCD dataset}
+\item{patient}{The unique identifier of the ABCD dataset}
 \item{household_income}{Household income in 3 category levels (low = 1, medium = 2, high = 3)}
 }
 }

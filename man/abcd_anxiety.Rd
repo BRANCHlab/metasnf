@@ -9,7 +9,7 @@
 
 A data frame with 275 rows and 2 columns:
 \describe{
-\item{subjectkey}{The unique identifier of the ABCD dataset}
+\item{patient}{The unique identifier of the ABCD dataset}
 \item{cbcl_anxiety_r}{Ordinal value of impairment on CBCL anxiety, either 0 (no impairment), 1 (borderline clinical), or 2 (clinically impaired)}
 }
 }

@@ -8,7 +8,7 @@
 #' @format ## `abcd_anxiety`
 #' A data frame with 275 rows and 2 columns:
 #' \describe{
-#'     \item{subjectkey}{The unique identifier of the ABCD dataset}
+#'     \item{patient}{The unique identifier of the ABCD dataset}
 #'     \item{cbcl_anxiety_r}{Ordinal value of impairment on CBCL anxiety, either 0 (no impairment), 1 (borderline clinical), or 2 (clinically impaired)}
 #' }
 #' @source
@@ -27,7 +27,7 @@
 #' @format ## `abcd_depress`
 #' A data frame with 275 rows and 2 columns:
 #' \describe{
-#'     \item{subjectkey}{The unique identifier of the ABCD dataset}
+#'     \item{patient}{The unique identifier of the ABCD dataset}
 #'     \item{cbcl_depress_r}{Ordinal value of impairment on CBCL anxiety, either 0 (no impairment), 1 (borderline clinical), or 2 (clinically impaired)}
 #' }
 #' @source
@@ -47,7 +47,7 @@
 #' @format ## `abcd_subc_v`
 #' A data frame with 174 rows and 31 columns:
 #' \describe{
-#'     \item{subjectkey}{The unique identifier of the ABCD dataset}
+#'     \item{patient}{The unique identifier of the ABCD dataset}
 #'     \item{...}{Subcortical volumes of various ROIs (mm^3, I think)}
 #' }
 #' @source
@@ -67,7 +67,7 @@
 #' @format ## `abcd_cort_t`
 #' A data frame with 188 rows and 152 columns:
 #' \describe{
-#'     \item{subjectkey}{The unique identifier of the ABCD dataset}
+#'     \item{patient}{The unique identifier of the ABCD dataset}
 #'     \item{...}{Cortical thicknesses of various ROIs (mm^3, I think)}
 #' }
 #' @source
@@ -87,7 +87,7 @@
 #' @format ## `abcd_cort_sa`
 #' A data frame with 188 rows and 152 columns:
 #' \describe{
-#'     \item{subjectkey}{The unique identifier of the ABCD dataset}
+#'     \item{patient}{The unique identifier of the ABCD dataset}
 #'     \item{...}{Cortical surface areas of various ROIs (mm^2, I think)}
 #' }
 #' @source
@@ -106,7 +106,7 @@
 #' @format ## `abcd_income`
 #' A data frame with 300 rows and 2 columns:
 #' \describe{
-#'     \item{subjectkey}{The unique identifier of the ABCD dataset}
+#'     \item{patient}{The unique identifier of the ABCD dataset}
 #'     \item{household_income}{Household income in 3 category levels (low = 1, medium = 2, high = 3)}
 #' }
 #' @source
@@ -114,6 +114,23 @@
 #'
 #' Data used in the preparation of this article were obtained from the Adolescent Brain Cognitive DevelopmentSM (ABCD) Study (https://abcdstudy.org), held in the NIMH Data Archive (NDA). This is a multisite, longitudinal study designed to recruit more than 10,000 children age 9-10 and follow them over 10 years into early adulthood. The ABCD Study® is supported by the National Institutes of Health and additional federal partners under award numbers U01DA041048, U01DA050989, U01DA051016, U01DA041022, U01DA051018, U01DA051037, U01DA050987, U01DA041174, U01DA041106, U01DA041117, U01DA041028, U01DA041134, U01DA050988, U01DA051039, U01DA041156, U01DA041025, U01DA041120, U01DA051038, U01DA041148, U01DA041093, U01DA041089, U24DA041123, U24DA041147. A full list of supporters is available at https://abcdstudy.org/federal-partners.html. A listing of participating sites and a complete listing of the study investigators can be found at https://abcdstudy.org/consortium_members/. ABCD consortium investigators designed and implemented the study and/or provided data but did not necessarily participate in the analysis or writing of this report. This manuscript reflects the views of the authors and may not reflect the opinions or views of the NIH or ABCD consortium investigators.
 "abcd_income"
+
+#' Mock ABCD income data
+#'
+#' Like abcd_income, but with no NAs in patient column
+#'
+#' @format ## `abcd_income`
+#' A data frame with 300 rows and 2 columns:
+#' \describe{
+#'     \item{patient}{The unique identifier of the ABCD dataset}
+#'     \item{household_income}{Household income in 3 category levels (low = 1, medium = 2, high = 3)}
+#' }
+#' @source
+#'  Though this data is no longer "real" ABCD data, the reference for using ABCD as a data source is below:
+#'
+#' Data used in the preparation of this article were obtained from the Adolescent Brain Cognitive DevelopmentSM (ABCD) Study (https://abcdstudy.org), held in the NIMH Data Archive (NDA). This is a multisite, longitudinal study designed to recruit more than 10,000 children age 9-10 and follow them over 10 years into early adulthood. The ABCD Study® is supported by the National Institutes of Health and additional federal partners under award numbers U01DA041048, U01DA050989, U01DA051016, U01DA041022, U01DA051018, U01DA051037, U01DA050987, U01DA041174, U01DA041106, U01DA041117, U01DA041028, U01DA041134, U01DA050988, U01DA051039, U01DA041156, U01DA041025, U01DA041120, U01DA051038, U01DA041148, U01DA041093, U01DA041089, U24DA041123, U24DA041147. A full list of supporters is available at https://abcdstudy.org/federal-partners.html. A listing of participating sites and a complete listing of the study investigators can be found at https://abcdstudy.org/consortium_members/. ABCD consortium investigators designed and implemented the study and/or provided data but did not necessarily participate in the analysis or writing of this report. This manuscript reflects the views of the authors and may not reflect the opinions or views of the NIH or ABCD consortium investigators.
+"abcd_h_income"
+
 
 #' Mock ABCD pubertal status data
 #'
@@ -125,7 +142,7 @@
 #' @format ## `abcd_pubertal`
 #' A data frame with 275 rows and 2 columns:
 #' \describe{
-#'     \item{subjectkey}{The unique identifier of the ABCD dataset}
+#'     \item{patient}{The unique identifier of the ABCD dataset}
 #'     \item{pubertal_status}{Average reported pubertal status between child and parent (1-5 categorical scale)}
 #' }
 #' @source
@@ -146,7 +163,7 @@
 #' @format ## `abcd_colour`
 #' A data frame with 275 rows and 2 columns:
 #' \describe{
-#'     \item{subjectkey}{The unique identifier of the ABCD dataset}
+#'     \item{patient}{The unique identifier of the ABCD dataset}
 #'     \item{colour}{Categorical transformation of `cbcl_depress`.}
 #' }
 #' @source

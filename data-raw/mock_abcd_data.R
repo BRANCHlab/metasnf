@@ -110,3 +110,12 @@ usethis::use_data(abcd_pubertal, overwrite = TRUE)
 usethis::use_data(abcd_depress, overwrite = TRUE)
 usethis::use_data(abcd_anxiety, overwrite = TRUE)
 usethis::use_data(abcd_colour, overwrite = TRUE)
+
+################################################################################
+# 2023-10-31 Removing NAs from the subjectkey column of abcd_income
+library(metasnf)
+
+abcd_h_income <- abcd_income
+abcd_h_income <- abcd_h_income[!is.na(abcd_h_income$"patient"), ]
+
+usethis::use_data(abcd_h_income, overwrite = TRUE)

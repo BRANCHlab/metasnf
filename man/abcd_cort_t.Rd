@@ -9,7 +9,7 @@
 
 A data frame with 188 rows and 152 columns:
 \describe{
-\item{subjectkey}{The unique identifier of the ABCD dataset}
+\item{patient}{The unique identifier of the ABCD dataset}
 \item{...}{Cortical thicknesses of various ROIs (mm^3, I think)}
 }
 }
