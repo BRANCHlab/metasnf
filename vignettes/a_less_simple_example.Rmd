@@ -147,6 +147,51 @@ data_list <- generate_data_list(
 )
 ```
 
+This process removes any patients who did not have complete data across all provided input dataframes.
+If you'd like to keep track of that information, you can set the "return_missing" parameter to `TRUE` and receive a list containing the data_list as well as the removed patients:
+
+```{r}
+generate_dl_results <- generate_data_list(
+    list(
+        data = abcd_cort_t,
+        name = "cortical_thickness",
+        domain = "neuroimaging",
+        type = "continuous"
+    ),
+    list(
+        data = abcd_cort_sa,
+        name = "cortical_surface_area",
+        domain = "neuroimaging",
+        type = "continuous"
+    ),
+    list(
+        data = abcd_subc_v,
+        name = "subcortical_volume",
+        domain = "neuroimaging",
+        type = "continuous"
+    ),
+    list(
+        data = abcd_h_income,
+        name = "household_income",
+        domain = "demographics",
+        type = "continuous"
+    ),
+    list(
+        data = abcd_pubertal,
+        name = "pubertal_status",
+        domain = "demographics",
+        type = "continuous"
+    ),
+    uid = "patient",
+    return_missing = TRUE
+)
+
+data_list <- generate_dl_results$"data_list"
+removed_subjects <- generate_dl_results$"removed_subjects"
+
+removed_subjects[1:10]
+```
+
 We can get a summary of our constructed `data_list` with the `summarize_dl` function:
 
 ```{r}

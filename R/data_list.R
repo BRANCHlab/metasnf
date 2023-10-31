@@ -18,6 +18,9 @@
 #'  a full data list for label propagation)
 #' @param assigned_splits ouptut from assign_splits function - can be given
 #'  as an alternative to specifying the train/test subjects separately.
+#' @param return_missing If TRUE, function returns a list where the first
+#'  element is the data_list and the second element is a vector of unique IDs
+#'  of patients who were removed during the complete data filtration step.
 #'
 #' @export
 #' @examples
@@ -50,8 +53,12 @@
 #'     list_of_lists,
 #'     uid = "patient_id"
 #' )
-generate_data_list <- function(..., uid = NULL, test_subjects = NULL,
-                               train_subjects = NULL, assigned_splits = NULL) {
+generate_data_list <- function(...,
+                               uid = NULL,
+                               test_subjects = NULL,
+                               train_subjects = NULL,
+                               assigned_splits = NULL,
+                               return_missing = FALSE) {
     subjectkey <- "" # trickery to avoid build errors - fix this later
     # The object that will contain all the data
     data_list <- list()
@@ -87,10 +94,18 @@ generate_data_list <- function(..., uid = NULL, test_subjects = NULL,
         )
     }
     data_list <- convert_uids(data_list, uid)
-    data_list <- data_list |>
-        remove_dl_na() |>
-        reduce_dl_to_common() |>
-        prefix_dl_sk()
+    if (return_missing) {
+        removal_results <- data_list |> remove_dl_na(return_missing = TRUE)
+        data_list <- removal_results$"data_list" |>
+            reduce_dl_to_common() |>
+            prefix_dl_sk()
+        removed_subjects <- removal_results$"removed_subjects"
+    } else {
+        data_list <- data_list |>
+            remove_dl_na() |>
+            reduce_dl_to_common() |>
+            prefix_dl_sk()
+    }
     # Correctly order train and test subjects for label prop
     if (!is.null(test_subjects) & !is.null(train_subjects)) {
         # If test subjects and train subjects are provided, arrange dl subs
@@ -133,7 +148,15 @@ generate_data_list <- function(..., uid = NULL, test_subjects = NULL,
         # If no order is specified, just sort the subjects alphabetically
         data_list <- data_list |> arrange_dl()
     }
-    return(data_list)
+    if (return_missing) {
+        results <- list(
+            data_list = data_list,
+            removed_subjects = removed_subjects
+        )
+        return(results)
+    } else {
+        return(data_list)
+    }
 }
 
 #' Convert unique identifiers of data_list to 'subjectkey'
@@ -195,11 +218,14 @@ convert_uids <- function(data_list, uid = NULL) {
 #' Remove NAs from a data_list object
 #'
 #' @param data_list A data_list
+#' @param return_missing If TRUE, function returns a list where the first
+#'  element is the data_list and the second element is a vector of unique IDs
+#'  of patients who were removed during the complete data filtration step.
 #'
 #' @return data_list A data_list without NAs
 #'
 #' @export
-remove_dl_na <- function(data_list) {
+remove_dl_na <- function(data_list, return_missing = FALSE) {
     dl_no_nas <- lapply(
         data_list,
         function(x) {
@@ -207,7 +233,27 @@ remove_dl_na <- function(data_list) {
             return(x)
         }
     )
-    return(dl_no_nas)
+    # Return both the data list and missing patients based on return_missing
+    if (return_missing) {
+        all_data <- data_list |> lapply(
+            function(x) {
+                x$"data"
+            }
+        ) |>
+            merge_df_list(join = "full")
+        all_subjects <- all_data$"subjectkey"
+        complete_data <- stats::na.omit(all_data)
+        complete_subjects <- complete_data$"subjectkey"
+        complete_indices <- all_subjects %in% complete_subjects
+        removed_subjects <- all_subjects[!complete_indices]
+        results <- list(
+            data_list = dl_no_nas,
+            removed_subjects = removed_subjects
+        )
+        return(results)
+    } else {
+        return(dl_no_nas)
+    }
 }
 
 #' Add "subject_" prefix to all UID values in subjectkey column

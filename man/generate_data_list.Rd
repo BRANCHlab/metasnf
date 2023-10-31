@@ -9,7 +9,8 @@ generate_data_list(
   uid = NULL,
   test_subjects = NULL,
   train_subjects = NULL,
-  assigned_splits = NULL
+  assigned_splits = NULL,
+  return_missing = FALSE
 )
 }
 \arguments{
@@ -27,6 +28,10 @@ a full data list for label propagation)}
 
 \item{assigned_splits}{ouptut from assign_splits function - can be given
 as an alternative to specifying the train/test subjects separately.}
+
+\item{return_missing}{If TRUE, function returns a list where the first
+element is the data_list and the second element is a vector of unique IDs
+of patients who were removed during the complete data filtration step.}
 }
 \description{
 This is the major data object that will be processed when iterating through
