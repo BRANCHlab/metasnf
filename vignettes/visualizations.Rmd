@@ -163,18 +163,6 @@ output
 
 ```{r fig.width = 7, fig.height = 5.5}
 
-gender_df <- data.frame(
-    patient_id = random_ids,
-    gender = genders
-)
-diagnosis_df <- data.frame(
-    patient_id = random_ids,
-    diagnosis = diagnoses
-)
-age_df <- data.frame(
-    patient_id = random_ids,
-    age = ages
-)
 
 target_list <- generate_target_list(
     list(gender_df, "gender", "categorical"),

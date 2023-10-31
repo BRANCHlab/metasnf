@@ -134,7 +134,6 @@
 #' Data used in the preparation of this article were obtained from the Adolescent Brain Cognitive DevelopmentSM (ABCD) Study (https://abcdstudy.org), held in the NIMH Data Archive (NDA). This is a multisite, longitudinal study designed to recruit more than 10,000 children age 9-10 and follow them over 10 years into early adulthood. The ABCD Study® is supported by the National Institutes of Health and additional federal partners under award numbers U01DA041048, U01DA050989, U01DA051016, U01DA041022, U01DA051018, U01DA051037, U01DA050987, U01DA041174, U01DA041106, U01DA041117, U01DA041028, U01DA041134, U01DA050988, U01DA051039, U01DA041156, U01DA041025, U01DA041120, U01DA051038, U01DA041148, U01DA041093, U01DA041089, U24DA041123, U24DA041147. A full list of supporters is available at https://abcdstudy.org/federal-partners.html. A listing of participating sites and a complete listing of the study investigators can be found at https://abcdstudy.org/consortium_members/. ABCD consortium investigators designed and implemented the study and/or provided data but did not necessarily participate in the analysis or writing of this report. This manuscript reflects the views of the authors and may not reflect the opinions or views of the NIH or ABCD consortium investigators.
 "abcd_pubertal"
 
-
 #' Mock ABCD "colour" data
 #'
 #' A randomly shuffled and anonymized copy of depression data from the NIMH
@@ -155,3 +154,65 @@
 #'
 #' Data used in the preparation of this article were obtained from the Adolescent Brain Cognitive DevelopmentSM (ABCD) Study (https://abcdstudy.org), held in the NIMH Data Archive (NDA). This is a multisite, longitudinal study designed to recruit more than 10,000 children age 9-10 and follow them over 10 years into early adulthood. The ABCD Study® is supported by the National Institutes of Health and additional federal partners under award numbers U01DA041048, U01DA050989, U01DA051016, U01DA041022, U01DA051018, U01DA051037, U01DA050987, U01DA041174, U01DA041106, U01DA041117, U01DA041028, U01DA041134, U01DA050988, U01DA051039, U01DA041156, U01DA041025, U01DA041120, U01DA051038, U01DA041148, U01DA041093, U01DA041089, U24DA041123, U24DA041147. A full list of supporters is available at https://abcdstudy.org/federal-partners.html. A listing of participating sites and a complete listing of the study investigators can be found at https://abcdstudy.org/consortium_members/. ABCD consortium investigators designed and implemented the study and/or provided data but did not necessarily participate in the analysis or writing of this report. This manuscript reflects the views of the authors and may not reflect the opinions or views of the NIH or ABCD consortium investigators.
 "abcd_colour"
+
+#' Modification of SNFtool mock dataframe "Data1"
+#'
+#' @format ## `expression_df`
+#' A data frame with 200 rows and 3 columns:
+#' \describe{
+#'     \item{gene_1_expression}{Mock gene expression variable}
+#'     \item{gene_2_expression}{Mock gene expression variable}
+#'     \item{patient_id}{Random three-digit number uniquely identifying the patient}
+#' }
+#' @source
+#' This data came from the SNFtool package, with slight modifications.
+"expression_df"
+
+#' Modification of SNFtool mock dataframe "Data2"
+#'
+#' @format ## `methylation_df`
+#' A data frame with 200 rows and 3 columns:
+#' \describe{
+#'     \item{gene_1_expression}{Mock gene methylation variable}
+#'     \item{gene_2_expression}{Mock gene methylation variable}
+#'     \item{patient_id}{Random three-digit number uniquely identifying the patient}
+#' }
+#' @source
+#' This data came from the SNFtool package, with slight modifications.
+"methylation_df"
+
+#' Mock gender data
+#'
+#' @format ## `gender_df`
+#' A data frame with 200 rows and 2 columns:
+#' \describe{
+#'     \item{patient_id}{Random three-digit number uniquely identifying the patient}
+#'     \item{gender_df}{Mock gene methylation variable}
+#' }
+#' @source
+#' This data came from the SNFtool package, with slight modifications.
+"gender_df"
+
+#' Mock diagnosis data
+#'
+#' @format ## `diagnosis_df`
+#' A data frame with 200 rows and 2 columns:
+#' \describe{
+#'     \item{patient_id}{Random three-digit number uniquely identifying the patient}
+#'     \item{diagnosis}{Mock diagnosis variable}
+#' }
+#' @source
+#' This data came from the SNFtool package, with slight modifications.
+"diagnosis_df"
+
+#' Mock age data
+#'
+#' @format ## `age_df`
+#' A data frame with 200 rows and 2 columns:
+#' \describe{
+#'     \item{patient_id}{Random three-digit number uniquely identifying the patient}
+#'     \item{age}{Mock age variable}
+#' }
+#' @source
+#' This data came from the SNFtool package, with slight modifications.
+"age_df"
