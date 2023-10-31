@@ -20,6 +20,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+Download a copy of the vignette to follow along here: [distance_metrics.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/distance_metrics.Rmd)
+
 ## The distance_metrics_list
 
 r-package enables users to customize what distance metrics are used in the SNF pipeline.

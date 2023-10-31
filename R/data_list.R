@@ -68,8 +68,24 @@ generate_data_list <- function(..., uid = NULL, test_subjects = NULL,
     }
     # To-do: add tests to catch invalid inputs in this function.
     # Assign names to the nested list elements
-    data_list_names <- c("data", "name", "domain", "type")
-    data_list <- lapply(data_list, stats::setNames, data_list_names)
+    named_entries <- data_list |> lapply(
+        function(x) {
+            z <- names(x)
+            return(length(z == ""))
+        }
+    )
+    all_named <- all(named_entries == 4)
+    all_not_named <- all(named_entries == 0)
+    if (all_not_named) {
+        data_list_names <- c("data", "name", "domain", "type")
+        data_list <- lapply(data_list, stats::setNames, data_list_names)
+    } else if (!all_named) {
+        stop(
+            "Please either specify names (i.e., data = ..., name = ...,",
+            " domain = ..., type = ...) for all of the elements or for none",
+            " of them."
+        )
+    }
     data_list <- convert_uids(data_list, uid)
     data_list <- data_list |>
         remove_dl_na() |>

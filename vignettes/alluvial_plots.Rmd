@@ -13,6 +13,8 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Download a copy of the vignette to follow along here: [alluvial_plots.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/alluvial_plots.Rmd)
+
 Alluvial plots can be generated to visualize how changing the number of clusters influences the distribution of patients according to one (or a few) variables of interest.
 
 First, some data setup just as was done in the previous vignettes.
@@ -23,28 +25,28 @@ library(metasnf)
 # Generate data_list
 data_list <- generate_data_list(
     list(
-        expression_df,
-        "genes_1_and_2_exp",
-        "gene_expression",
-        "continuous"
+        data = expression_df,
+        name = "genes_1_and_2_exp",
+        domain = "gene_expression",
+        type = "continuous"
     ),
     list(
-        methylation_df,
-        "genes_1_and_2_meth",
-        "gene_methylation",
-        "continuous"
+        data = methylation_df,
+        name = "genes_1_and_2_meth",
+        domain = "gene_methylation",
+        type = "continuous"
     ),
     list(
-        gender_df,
-        "gender",
-        "demographics",
-        "categorical"
+        data = gender_df,
+        name = "gender",
+        domain = "demographics",
+        type = "categorical"
     ),
     list(
-        diagnosis_df,
-        "diagnosis",
-        "clinical",
-        "categorical"
+        data = diagnosis_df,
+        name = "diagnosis",
+        domain = "clinical",
+        type = "categorical"
     ),
     uid = "patient_id"
 )

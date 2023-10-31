@@ -20,6 +20,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+Download a copy of the vignette to follow along here: [a_less_simple_example.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/a_less_simple_example.Rmd)
+
+We recommend you go through the [simple example](https://branchlab.github.io/metasnf/articles/a_simple_example.html) before working through this one!
+
 This vignette walks through how this package can be used over a complete SNF-subtyping pipeline.
 
 ## Data set-up and pre-processing
@@ -106,36 +110,42 @@ Out of all the data we have available to us, we may be working in a context wher
 We'll set aside anxiety and depression for now and use the rest of the data as inputs for our subtyping, which means loading them into the data_list.
 
 ```{r}
+# Note that you do not need to explicitly name every single named element
+# (data = ..., name = ..., etc.)
 data_list <- generate_data_list(
-    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
-    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
-    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-    list(abcd_income, "household_income", "demographics", "continuous"),
-    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    list(
+        data = abcd_cort_t,
+        name = "cortical_thickness",
+        domain = "neuroimaging",
+        type = "continuous"
+    ),
+    list(
+        data = abcd_cort_sa,
+        name = "cortical_surface_area",
+        domain = "neuroimaging",
+        type = "continuous"
+    ),
+    list(
+        data = abcd_subc_v,
+        name = "subcortical_volume",
+        domain = "neuroimaging",
+        type = "continuous"
+    ),
+    list(
+        data = abcd_income,
+        name = "household_income",
+        domain = "demographics",
+        type = "continuous"
+    ),
+    list(
+        data = abcd_pubertal,
+        name = "pubertal_status",
+        domain = "demographics",
+        type = "continuous"
+    ),
     uid = "patient"
 )
 ```
-
-The first entries are all lists which contains the following elements:
-
-1. The actual dataframe
-2. A name for the dataframe (string)
-3. A name for the *domain* of information the dataframe is representative of (string)
-4. The type of variable stored in the dataframe (options are continuous, discrete, ordinal, categorical, and mixed)
-
-Finally, there's an argument for the `uid` (the column name that currently uniquely identifies all the subjects in your data).
-
-Behind the scenes, this function is building a nested list that keeps track of all this information, but it is also:
-
-- Converting the UID of the data into "subjectkey"
-- Removing all observations that contain any NAs
-- Removing all subjects who are not present in all input dataframes
-- Arranging the subjects in all the dataframe by their UID
-- Prefixing the UID values with the string "subject_" to help with cluster result characterization
-
-Any rows containing NAs are removed.
-If you don't want a bunch of your data to get removed because there are a few NAs sprinkled around here and there, consider using [imputation](https://en.wikipedia.org/wiki/Imputation_(statistics)).
-The `mice` package in R is nice for this.
 
 We can get a summary of our constructed `data_list` with the `summarize_dl` function:
 

@@ -13,6 +13,9 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Download a copy of the vignette to follow along here: [manhattan_plots.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/manhattan_plots.Rmd)
+
+
 Manhattan plots can be used to visualize how several cluster solutions in a solutions matrix show separation across variables of interest.
 
 To generate a Manhattan plot, you'll need to provide a dataframe containing the pvalues of a solutions_matrix.
@@ -25,16 +28,16 @@ library(metasnf)
 # Generate data_list
 data_list <- generate_data_list(
     list(
-        expression_df,
-        "genes_1_and_2_exp",
-        "gene_expression",
-        "continuous"
+        data = expression_df,
+        name = "expression_data",
+        domain = "gene_expression",
+        type = "continuous"
     ),
     list(
-        methylation_df,
-        "genes_1_and_2_meth",
-        "gene_methylation",
-        "continuous"
+        data = methylation_df,
+        name = "methylation_data",
+        domain = "gene_methylation",
+        type = "continuous"
     ),
     uid = "patient_id"
 )

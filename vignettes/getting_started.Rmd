@@ -20,6 +20,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+Download a copy of the vignette to follow along here: [getting_started.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/getting_started.Rmd)
+
 ## Introduction
 
 **What is this package?**
@@ -31,10 +33,10 @@ The package offers a comprehensive suite of tools to assist users in transformin
 
 **Why use meta clustering?**
 
-Clustering algorithms seek solutions that optimize context-agnostic metrics of quality.
+Clustering algorithms seek solutions where members of the same cluster are very similar to each other and members of distinct clusters are very dissimilar to each other.
 In sufficiently noisy datasets where many qualitatively distinct solutions with similar scores of clustering quality exist, it is not necessarily the case that the top solution selected by a clustering algorithm will also be the most useful one for the user's context.
 
-To address this issue, the original meta clustering procedure [Caruana et al., 2006](https://doi.org/10.1109/ICDM.2006.103) involved generating a large number of reasonable clustering solutions, clusterign those solutions into qualitatively similar ones, and having the user examine those "meta clusters" to find something that seems like it'll be the most useful.
+To address this issue, the original meta clustering procedure [Caruana et al., 2006](https://doi.org/10.1109/ICDM.2006.103) involved generating a large number of reasonable clustering solutions, clustering those solutions into qualitatively similar ones, and having the user examine those "meta clusters" to find something that seems like it'll be the most useful.
 
 **Why use SNF?**
 

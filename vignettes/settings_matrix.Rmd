@@ -13,6 +13,8 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Download a copy of the vignette to follow along here: [settings_matrix.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/settings_matrix.Rmd)
+
 This vignette outlines the main functionality of the `generate_settings_matrix` function.
 
 ## The basic settings_matrix
@@ -22,6 +24,8 @@ The most minimal settings_matrix can be obtained by providing a data_list object
 ```{r}
 library(metasnf)
 
+# It's best to list out the individual elements with names, i.e. data = ...,
+#  name = ..., domain = ..., type = ..., but we'll skip that here for brevity.
 data_list <- generate_data_list(
     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
@@ -30,7 +34,6 @@ data_list <- generate_data_list(
     list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
     uid = "patient"
 )
-
 
 settings_matrix <- generate_settings_matrix(
     data_list

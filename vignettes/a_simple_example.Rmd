@@ -20,6 +20,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+Download a copy of the vignette to follow along here: [a_simple_example.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/a_simple_example.Rmd)
+
 In this vignette, we will show how *r-package* can be used for a very simple SNF workflow.
 
 This simple workflow is the example of SNF provided in the original *SNFtool* package.
@@ -57,7 +59,34 @@ data(Data2)
 
 Here's what the mock data looks like:
 
-```{r}
+```{r eval = FALSE}
+library(pheatmap)
+
+png("heatmap.png")
+
+# gene expression data
+pheatmap(
+    Data1,
+    cluster_rows = FALSE,
+    cluster_cols = FALSE,
+    show_rownames = FALSE,
+    show_colnames = FALSE
+)
+
+# methylation data
+pheatmap(
+    Data2,
+    cluster_rows = FALSE,
+    cluster_cols = FALSE,
+    show_rownames = FALSE,
+    show_colnames = FALSE
+)
+
+dev.off()
+```
+
+
+```{r include = FALSE}
 library(pheatmap)
 
 # gene expression data
@@ -161,6 +190,50 @@ Data1$"patient_id" <- 101:(nrow(Data1) + 100)
 Data2$"patient_id" <- 101:(nrow(Data2) + 100)
 
 data_list <- generate_data_list(
+    list(
+        data = Data1,
+        name = "genes_1_and_2_exp",
+        domain = "gene_expression",
+        type = "continuous"
+    ),
+    list(
+        data = Data2,
+        name = "genes_1_and_2_meth",
+        domain = "gene_methylation",
+        type = "continuous"
+    ),
+    uid = "patient_id"
+)
+
+```
+
+The first entries are all lists which contains the following elements:
+
+1. The actual dataframe
+2. A name for the dataframe (string)
+3. A name for the *domain* of information the dataframe is representative of (string)
+4. The type of variable stored in the dataframe (options are continuous, discrete, ordinal, categorical, and mixed)
+
+Finally, there's an argument for the `uid` (the column name that currently uniquely identifies all the subjects in your data).
+
+Behind the scenes, this function is building a nested list that keeps track of all this information, but it is also:
+
+- Converting the UID of the data into "subjectkey"
+- Removing all observations that contain any NAs
+- Removing all subjects who are not present in all input dataframes
+- Arranging the subjects in all the dataframe by their UID
+- Prefixing the UID values with the string "subject_" to help with cluster result characterization
+
+Any rows containing NAs are removed.
+If you don't want a bunch of your data to get removed because there are a few NAs sprinkled around here and there, consider using [imputation](https://en.wikipedia.org/wiki/Imputation_(statistics)).
+The `mice` package in R is nice for this.
+
+Note that you do not need to name out every element explicitly.
+As long as you provide the objects within each list in the correct order (data, name, domain, type), you'll get the correct result:
+
+```{r eval = FALSE}
+# Compactly:
+data_list <- generate_data_list(
     list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
     list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
     uid = "patient_id"
@@ -259,6 +332,7 @@ max(similarity_matrix - fused_network)
 And now we've completed a basic example of using this package.
 The subsequent vignettes provide guidance on how you can leverage the `settings_matrix` to access a wide range of clustering solutions from your data, how you can use other tools in this package to pick a best solution for your purposes, and how to validate the generalizability.
 
+Go give the [less simple example](https://branchlab.github.io/metasnf/articles/a_less_simple_example.html) a try!
 
 ## References
 
