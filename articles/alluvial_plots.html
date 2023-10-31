@@ -82,49 +82,34 @@ a few) variables of interest.</p>
 <p>First, some data setup just as was done in the previous
 vignettes.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">SNFtool</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Data1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Data2</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">gender</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"female"</span>, <span class="st">"male"</span><span class="op">)</span></span>
-<span><span class="va">diagnosis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"definite asthma"</span>, <span class="st">"possible asthma"</span>, <span class="st">"no asthma"</span><span class="op">)</span></span>
-<span><span class="va">atopic_asthma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Yes"</span>, <span class="st">"No"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">c1_genders</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">gender</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">c1_diagnosis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">diagnosis</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">c1_asthma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">atopic_asthma</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">c1_ages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span><span class="op">:</span><span class="fl">18</span><span class="op">)</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">c2_genders</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">gender</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">c2_diagnosis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">diagnosis</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">c2_asthma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">atopic_asthma</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">c2_ages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">18</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>,<span class="op">)</span></span>
-<span></span>
-<span><span class="va">genders</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">c1_genders</span>, <span class="va">c2_genders</span><span class="op">)</span></span>
-<span><span class="va">diagnoses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">c1_diagnosis</span>, <span class="va">c2_diagnosis</span><span class="op">)</span></span>
-<span><span class="va">asthmas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">c1_asthma</span>, <span class="va">c2_asthma</span><span class="op">)</span></span>
-<span><span class="va">ages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">c1_ages</span>, <span class="va">c2_ages</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">additional_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    gender <span class="op">=</span> <span class="va">genders</span>,</span>
-<span>    diagnosis <span class="op">=</span> <span class="va">diagnoses</span>,</span>
-<span>    asthma <span class="op">=</span> <span class="va">asthmas</span>,</span>
-<span>    age <span class="op">=</span> <span class="va">ages</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">random_ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">100</span><span class="op">:</span><span class="fl">999</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">200</span><span class="op">]</span></span>
-<span></span>
-<span><span class="va">Data1</span><span class="op">$</span><span class="st">"patient_id"</span> <span class="op">&lt;-</span> <span class="va">random_ids</span></span>
-<span><span class="va">Data2</span><span class="op">$</span><span class="st">"patient_id"</span> <span class="op">&lt;-</span> <span class="va">random_ids</span></span>
-<span><span class="va">additional_data</span><span class="op">$</span><span class="st">"patient_id"</span> <span class="op">&lt;-</span> <span class="va">random_ids</span></span>
-<span></span>
+<span><span class="co"># Generate data_list</span></span>
 <span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">Data1</span>, <span class="st">"genes_1_and_2_exp"</span>, <span class="st">"gene_expression"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">Data2</span>, <span class="st">"genes_1_and_2_meth"</span>, <span class="st">"gene_methylation"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">additional_data</span>, <span class="st">"additional_data"</span>, <span class="st">"miscellaneous"</span>, <span class="st">"mixed"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        <span class="va">expression_df</span>,</span>
+<span>        <span class="st">"genes_1_and_2_exp"</span>,</span>
+<span>        <span class="st">"gene_expression"</span>,</span>
+<span>        <span class="st">"continuous"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        <span class="va">methylation_df</span>,</span>
+<span>        <span class="st">"genes_1_and_2_meth"</span>,</span>
+<span>        <span class="st">"gene_methylation"</span>,</span>
+<span>        <span class="st">"continuous"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        <span class="va">gender_df</span>,</span>
+<span>        <span class="st">"gender"</span>,</span>
+<span>        <span class="st">"demographics"</span>,</span>
+<span>        <span class="st">"categorical"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        <span class="va">diagnosis_df</span>,</span>
+<span>        <span class="st">"diagnosis"</span>,</span>
+<span>        <span class="st">"clinical"</span>,</span>
+<span>        <span class="st">"categorical"</span></span>
+<span>    <span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient_id"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -178,28 +163,30 @@ matrix over these clustering algorithms for data in a
 <p><img src="alluvial_plots_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 <p>Or in an external dataframe:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df_outcomes</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    subjectkey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">similarity_matrix</span><span class="op">)</span>,</span>
-<span>    wheeze_status <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Yes"</span>, <span class="fl">20</span><span class="op">)</span>,</span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Sometimes"</span>, <span class="fl">60</span><span class="op">)</span>,</span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"No"</span>, <span class="fl">120</span><span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    asthma_diagnosis <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Definite Asthma"</span>, <span class="fl">10</span><span class="op">)</span>,</span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"Possible Asthma"</span>, <span class="fl">50</span><span class="op">)</span>,</span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"No Asthma"</span>, <span class="fl">140</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">extra_data</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span></span>
+<span>    <span class="va">gender_df</span>,</span>
+<span>    <span class="va">diagnosis_df</span>,</span>
+<span>    by <span class="op">=</span> <span class="st">"patient_id"</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>subjectkey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"subject_"</span>, <span class="va">patient_id</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/alluvial_cluster_plot.html">alluvial_cluster_plot</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">extra_data</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   patient_id gender       diagnosis  subjectkey</span></span>
+<span><span class="co">## 1        660 female definite asthma subject_660</span></span>
+<span><span class="co">## 2        420 female possible asthma subject_420</span></span>
+<span><span class="co">## 3        252 female definite asthma subject_252</span></span>
+<span><span class="co">## 4        173 female       no asthma subject_173</span></span>
+<span><span class="co">## 5        327 female definite asthma subject_327</span></span>
+<span><span class="co">## 6        245 female definite asthma subject_245</span></span></code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/alluvial_cluster_plot.html">alluvial_cluster_plot</a></span><span class="op">(</span></span>
 <span>    cluster_sequence <span class="op">=</span> <span class="va">cluster_sequence</span>,</span>
 <span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>
-<span>    data <span class="op">=</span> <span class="va">df_outcomes</span>,</span>
-<span>    key_outcome <span class="op">=</span> <span class="st">"wheeze_status"</span>,</span>
-<span>    key_label <span class="op">=</span> <span class="st">"Wheeze Status"</span>,</span>
-<span>    extra_outcomes <span class="op">=</span> <span class="st">"asthma_diagnosis"</span>,</span>
-<span>    title <span class="op">=</span> <span class="st">"Wheeze Status Across Cluster Counts"</span></span>
+<span>    data <span class="op">=</span> <span class="va">extra_data</span>,</span>
+<span>    key_outcome <span class="op">=</span> <span class="st">"gender"</span>,</span>
+<span>    key_label <span class="op">=</span> <span class="st">"Gender"</span>,</span>
+<span>    extra_outcomes <span class="op">=</span> <span class="st">"diagnosis"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"Gender Across Cluster Counts"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="alluvial_plots_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
   </main>
