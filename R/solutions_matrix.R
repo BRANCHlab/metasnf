@@ -304,6 +304,173 @@ chi_sq_p <- function(clust_membership, outcome_df, outcome_var) {
     return(p)
 }
 
+#' Chi-squared test p-value (generic)
+#'
+#' Return p-value for chi-squared test for any two variables
+#'
+#' @param cat_var1 A categorical variable.
+#' @param cat_var2 A categorical variable.
+#'
+#' @return pval A p-value.
+#'
+#' @export
+chi_squared_pval <- function(cat_var1, cat_var2) {
+    cat_var1 <- factor(cat_var1)
+    cat_var2 <- factor(cat_var2)
+    model <- suppressWarnings(
+        stats::chisq.test(cat_var1, cat_var2, correct = FALSE)
+    )
+    pval <- model$"p.value"
+    return(pval)
+}
+
+#' Linear model p-value (generic)
+#'
+#' Return p-value of F-test for a linear model of any two variables
+#'
+#' @param predictor A categorical or numeric variable.
+#' @param response A numeric variable.
+#'
+#' @return pval A p-value.
+#'
+#' @export
+linear_model_pval <- function(predictor, response) {
+    model <- stats::lm(response ~ predictor)
+    fstat <- summary(model)$"fstatistic"
+    pval <- stats::pf(fstat[1], fstat[2], fstat[3], lower.tail = FALSE)
+    return(pval)
+}
+
+#' Calculate p-values based on variable vectors and their types
+#'
+#' @param var1 A single vector containing a variable.
+#' @param var2 A single vector containing a variable.
+#' @param type1 The type of var1 (continuous, discrete, ordinal, categorical).
+#' @param type2 The type of var2 (continuous, discrete, ordinal, categorical).
+#'
+#' @return pval A p-value from a statistical test based on the provided types.
+#'  Currently, this will either be the F-test p-value from a linear model
+#'  if at least one variable is non-categorical, or the chi-squared test
+#'  p-value if both variables are categorical.
+#'
+#' @export
+calculate_pval <- function(var1, var2, type1, type2) {
+    types <- c(type1, type2)
+    numeric_vars <- c("continuous", "discrete", "ordinal")
+    if (all(types %in% numeric_vars)) {
+        # numeric vs. numeric
+        num_var1 <- as.numeric(var1)
+        print(num_var1)
+        num_var2 <- as.numeric(var2)
+        print(num_var1)
+        pval <- linear_model_pval(num_var1, num_var2)
+    } else if (all(types %in% "categorical")) {
+        # categorical vs. categorical
+        pval <- chi_squared_pval(var1, var2)
+    } else {
+        # numeric vs. categorical
+        if (which(types %in% numeric_vars) == 1) {
+            num_var <- as.numeric(var1)
+            cat_var <- factor(var2)
+        } else {
+            num_var <- as.numeric(var2)
+            cat_var <- factor(var1)
+        }
+        pval <- linear_model_pval(predictor = cat_var, response = num_var)
+    }
+    return(pval)
+}
+
+#' Calculate p-values for pairwise associations of variables in a data_list
+#'
+#' @param data_list data_list containing variables for pairwise associations.
+#' @param verbose If TRUE, prints new line everytime a p-value is being
+#'  calculated.
+#'
+#' @return association_matrix A matrix containing pairwise p-values.
+#'
+#' @export
+calculate_associations <- function(data_list, verbose = FALSE) {
+    ###########################################################################
+    # Ensure that 'mixed' data type is not being used
+    ###########################################################################
+    dl_summary <- summarize_dl(data_list)
+    if (any(dl_summary$"type" == "mixed")) {
+        warning(
+            "When using the 'mixed' data type in the 'calculate_associations'",
+            " function, any data that can be converted to numeric format will",
+            " be treated as continuous and all others will be treated as",
+            " categorical. If you do not want this behaviour, please",
+            " restructure your input data to only use the following types:",
+            " continuous, discrete, ordinal, or categorical."
+        )
+    }
+    ###########################################################################
+    # Build a single data.frame that contains all data
+    ###########################################################################
+    merged_df <- collapse_dl(data_list)
+    merged_df <- merged_df[, colnames(merged_df) != "subjectkey"]
+    ###########################################################################
+    # Build data.frame containing the types of variables in merged_df
+    ###########################################################################
+    types <- data_list |> lapply(
+        function(x) {
+            rep(x$"type", ncol(x$"data") - 1)
+        }
+    ) |> unlist()
+    var_names <- colnames(merged_df[, colnames(merged_df) != "subjectkey"])
+    types_df <- data.frame(
+        name = var_names,
+        type = types
+    )
+    ###########################################################################
+    # Loop through all pairs of variables
+    ###########################################################################
+    pairwise_indices <- utils::combn(ncol(merged_df), 2)
+    print(colnames(merged_df))
+    print(ncol(merged_df))
+    association_matrix <- matrix(ncol = ncol(merged_df), nrow = ncol(merged_df), 0)
+    colnames(association_matrix) <- colnames(merged_df)
+    rownames(association_matrix) <- colnames(merged_df)
+    for (col in seq_len(ncol(pairwise_indices))) {
+        ## The positions of the two variables in the merged dataframe
+        ind1 <- pairwise_indices[1, col]
+        ind2 <- pairwise_indices[2, col]
+        # The actual variables
+        var1 <- merged_df[, ind1]
+        var2 <- merged_df[, ind2]
+        # The names of the variables
+        var1_name <- colnames(merged_df)[ind1]
+        var2_name <- colnames(merged_df)[ind2]
+        # Types of the variables
+        var1_type <- types_df[types_df$"name" == var1_name, "type"]
+        var2_type <- types_df[types_df$"name" == var2_name, "type"]
+        # Output current comparison if user specified verbose = TRUE
+        if (verbose) {
+            print(
+                paste0(
+                    "Calculating ", var1_name, " (", var1_type, ") vs.",
+                    " ", var2_name, " (", var2_type, ")..."
+                ),
+                quote = FALSE
+            )
+        }
+        #######################################################################
+        # Calculate p-values
+        #######################################################################
+        pval <- calculate_pval(var1, var2, var1_type, var2_type)
+        if (is.na(pval)) {
+            stop(
+                "Error returned when comparing ", var1_name, " with ",
+                var2_name, ". Are you sure these are the correct types?"
+            )
+        }
+        association_matrix[ind1, ind2] <- pval
+        association_matrix[ind2, ind1] <- pval
+    }
+    return(association_matrix)
+}
+
 #' Get clustered subjects
 #'
 #' Pull a dataframe of clustered subjects from an solutions matrix structure.

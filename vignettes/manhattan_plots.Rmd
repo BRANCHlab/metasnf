@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Download a copy of the vignette to follow along here: [manhattan_plots.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/manhattan_plots.Rmd)
 
+## Associations with Cluster Solutions
 
 Manhattan plots can be used to visualize how several cluster solutions in a solutions matrix show separation across variables of interest.
 
@@ -115,3 +116,33 @@ manhattan_plot(target_pvals)
 ```
 
 The red dotted line represent p = 0.05.
+
+## Associations with a Key Variable
+
+You can also visualize associations with a key variable of interest rather than cluster solutions.
+
+```{r}
+
+#calculate_associations(data_list)
+#
+#target_list <- generate_data_list(
+#    list(gender_df, "gender", "demographics", "categorical"),
+#    list(diagnosis_df, "diagnosis", "medical", "categorical"),
+#    list(age_df, "age", "demographics", "discrete"),
+#    uid = "patient_id"
+#)
+#
+#target_list
+#
+#am <- calculate_associations(target_list)
+#
+#z <- "gender"
+#
+#data.frame(
+#
+#    am[z, ]
+#)
+#
+#target_pvals
+
+```
