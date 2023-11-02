@@ -2,3 +2,30 @@ url: https://branchlab.github.io/metasnf/
 template:
   bootstrap: 5
 
+navbar:
+ components:
+   articles:
+    text: Articles
+    menu:
+    - text: Getting Started
+      href: articles/getting_started.html
+    - text: -------
+    - text: Example Pipelines
+    - text: A Simple Example
+      href: articles/a_simple_example.html
+    - text: A Less Simple Example
+      href: articles/a_less_simple_example.html
+    - text: -------
+    - text: Advanced Options
+    - text: The Settings Matrix
+      href: articles/settings_matrix.html
+    - text: Custom Distance Metrics
+      href: articles/distance_metrics.html
+    - text: -------
+    - text: Additional Plotting
+    - text: Similarity Matrix Heatmaps
+      href: articles/similarity_matrix_heatmap.html
+    - text: Manhattan Plots
+      href: articles/manhattan_plots.html
+    - text: Alluvial Plots
+      href: articles/alluvial_plots.html
