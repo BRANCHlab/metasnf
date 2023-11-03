@@ -112,7 +112,7 @@ extended_solutions_matrix <- extend_solutions(solutions_matrix, target_list)
 
 target_pvals <- p_val_select(extended_solutions_matrix)
 
-manhattan_plot(target_pvals)
+manhattan_plot(target_pvals, threshold = 0.05, bonferroni_line = TRUE)
 ```
 
 The red dotted line represent p = 0.05.
@@ -140,5 +140,52 @@ key_associations_df
 Setting the `key_mode` parameter to true, you can generate a Manhattan plot from this data to see how strongly associated your other variables are to your chosen outcome of interest.
 
 ```{r}
-manhattan_plot(key_associations_df, key_mode = TRUE)
+manhattan_plot(
+    key_associations_df,
+    key_mode = TRUE,
+    threshold = 0.05,
+    bonferroni_line = TRUE
+)
+```
+
+## Data outside the original data_list
+
+You can also examine more than just data you've prepared in your original data_list by tacking together separate data_lists or target_lists.
+
+
+```{r}
+target_list <- generate_data_list(
+    list(
+        data = gender_df,
+        name = "gender",
+        domain = "demographics",
+        type = "categorical"
+    ),
+    list(
+        data = diagnosis_df,
+        name = "diagnosis",
+        domain = "clinical",
+        type = "categorical"
+    ),
+    uid = "patient_id"
+)
+
+# Additional data stored in a target_list
+summarize_dl(target_list)
+
+combined_data_list <- c(data_list, target_list)
+
+summarize_dl(combined_data_list)
+
+key_associations_df <- calculate_associations(
+    combined_data_list,
+    key_association = "gene_1_expression"
+)
+
+manhattan_plot(
+    key_associations_df,
+    key_mode = TRUE,
+    threshold = 0.05,
+    bonferroni_line = TRUE
+)
 ```
