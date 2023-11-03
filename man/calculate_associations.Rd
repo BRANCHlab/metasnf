@@ -4,7 +4,12 @@
 \alias{calculate_associations}
 \title{Calculate p-values for pairwise associations of variables in a data_list}
 \usage{
-calculate_associations(data_list, verbose = FALSE, key_association = NULL)
+calculate_associations(
+  data_list,
+  verbose = FALSE,
+  key_association = NULL,
+  drop_self = TRUE
+)
 }
 \arguments{
 \item{data_list}{data_list containing variables for pairwise associations.}
@@ -14,6 +19,9 @@ calculated.}
 
 \item{key_association}{If a variable is named, returns a dataframe of
 p-values relative to that variable rather than all pairwise p-values.}
+
+\item{drop_self}{If key_association is specified and drop_self is TRUE,
+removes the p-value row of the key_association variable with itself (0).}
 }
 \description{
 Calculate p-values for pairwise associations of variables in a data_list

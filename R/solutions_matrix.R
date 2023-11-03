@@ -386,11 +386,14 @@ calculate_pval <- function(var1, var2, type1, type2) {
 #'  calculated.
 #' @param key_association If a variable is named, returns a dataframe of
 #'  p-values relative to that variable rather than all pairwise p-values.
+#' @param drop_self If key_association is specified and drop_self is TRUE,
+#'  removes the p-value row of the key_association variable with itself (0).
 #'
 #' @export
 calculate_associations <- function(data_list,
                                    verbose = FALSE,
-                                   key_association = NULL) {
+                                   key_association = NULL,
+                                   drop_self = TRUE) {
     ###########################################################################
     # Ensure that 'mixed' data type is not being used
     ###########################################################################
@@ -473,6 +476,7 @@ calculate_associations <- function(data_list,
         association_matrix[ind2, ind1] <- pval
     }
     if (!is.null(key_association)) {
+        # The user has specified a key_association value.
         key_associations_df <- data.frame(
             name = names(association_matrix[key_association, ]),
             pval = association_matrix[key_association, ]
@@ -484,10 +488,14 @@ calculate_associations <- function(data_list,
             by = "name"
         )
         # Remove the 0 p-value for the association of the variable with self
-        key_associations_df <-
-            key_associations_df[key_associations_df$"name" != key_association]
+        if (drop_self) {
+            keep_rows <- key_associations_df$"name" != key_association
+            key_associations_df <- key_associations_df[keep_rows, ]
+        }
         return(key_associations_df)
     } else {
+        # The user has not specified a key_association value, provide the full
+        #  pairwise association matrix.
         return(association_matrix)
     }
 }

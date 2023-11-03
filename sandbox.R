@@ -1,5 +1,7 @@
+# Load the package
 library(metasnf)
 
+# Setting up the data
 data_list <- generate_data_list(
     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
@@ -9,6 +11,7 @@ data_list <- generate_data_list(
     uid = "patient"
 )
 
+# Specifying 5 different sets of settings for SNF
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 5,
@@ -16,12 +19,5 @@ settings_matrix <- generate_settings_matrix(
     seed = 42
 )
 
-wm <- generate_weights_matrix(data_list, nrow = 5, fill = "uniform")
-
-wm <- generate_weights_matrix(data_list, nrow = 5, fill = "ones")
-
-b <- batch_snf(
-    data_list,
-    settings_matrix,
-    weights_matrix = wm
-)
+# This matrix has clustering solutions for each of the 5 SNF runs!
+solutions_matrix <- batch_snf(data_list, settings_matrix)
