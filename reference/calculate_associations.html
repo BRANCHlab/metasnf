@@ -61,7 +61,12 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculate_associations</span><span class="op">(</span><span class="va">data_list</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, key_association <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculate_associations</span><span class="op">(</span></span>
+<span>  <span class="va">data_list</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  key_association <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  drop_self <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -78,6 +83,11 @@ calculated.</p></dd>
 <dt>key_association</dt>
 <dd><p>If a variable is named, returns a dataframe of
 p-values relative to that variable rather than all pairwise p-values.</p></dd>
+
+
+<dt>drop_self</dt>
+<dd><p>If key_association is specified and drop_self is TRUE,
+removes the p-value row of the key_association variable with itself (0).</p></dd>
 
 </dl></div>
 

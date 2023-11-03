@@ -215,11 +215,10 @@ other variables provided:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">key_associations_df</span></span></code></pre></div>
-<pre><code><span><span class="co">##        pval       type           domain</span></span>
-<span><span class="co">## 1 0.0000000 continuous  gene_expression</span></span>
-<span><span class="co">## 2 0.6258660 continuous  gene_expression</span></span>
-<span><span class="co">## 3 0.5196837 continuous gene_methylation</span></span>
-<span><span class="co">## 4 0.1243955 continuous gene_methylation</span></span></code></pre>
+<pre><code><span><span class="co">##                 name      pval       type           domain</span></span>
+<span><span class="co">## 2  gene_2_expression 0.6258660 continuous  gene_expression</span></span>
+<span><span class="co">## 3 gene_1_methylation 0.5196837 continuous gene_methylation</span></span>
+<span><span class="co">## 4 gene_2_methylation 0.1243955 continuous gene_methylation</span></span></code></pre>
 <p>Setting the <code>key_mode</code> parameter to true, you can generate
 a Manhattan plot from this data to see how strongly associated your
 other variables are to your chosen outcome of interest.</p>
