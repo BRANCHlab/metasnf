@@ -360,9 +360,7 @@ calculate_pval <- function(var1, var2, type1, type2) {
     if (all(types %in% numeric_vars)) {
         # numeric vs. numeric
         num_var1 <- as.numeric(var1)
-        print(num_var1)
         num_var2 <- as.numeric(var2)
-        print(num_var1)
         pval <- linear_model_pval(num_var1, num_var2)
     } else if (all(types %in% "categorical")) {
         # categorical vs. categorical
@@ -386,11 +384,13 @@ calculate_pval <- function(var1, var2, type1, type2) {
 #' @param data_list data_list containing variables for pairwise associations.
 #' @param verbose If TRUE, prints new line everytime a p-value is being
 #'  calculated.
-#'
-#' @return association_matrix A matrix containing pairwise p-values.
+#' @param key_association If a variable is named, returns a dataframe of
+#'  p-values relative to that variable rather than all pairwise p-values.
 #'
 #' @export
-calculate_associations <- function(data_list, verbose = FALSE) {
+calculate_associations <- function(data_list,
+                                   verbose = FALSE,
+                                   key_association = NULL) {
     ###########################################################################
     # Ensure that 'mixed' data type is not being used
     ###########################################################################
@@ -418,17 +418,21 @@ calculate_associations <- function(data_list, verbose = FALSE) {
             rep(x$"type", ncol(x$"data") - 1)
         }
     ) |> unlist()
+    domains <- data_list |> lapply(
+        function(x) {
+            rep(x$"domain", ncol(x$"data") - 1)
+        }
+    ) |> unlist()
     var_names <- colnames(merged_df[, colnames(merged_df) != "subjectkey"])
-    types_df <- data.frame(
+    metadata <- data.frame(
         name = var_names,
-        type = types
+        type = types,
+        domain = domains
     )
     ###########################################################################
     # Loop through all pairs of variables
     ###########################################################################
     pairwise_indices <- utils::combn(ncol(merged_df), 2)
-    print(colnames(merged_df))
-    print(ncol(merged_df))
     association_matrix <- matrix(ncol = ncol(merged_df), nrow = ncol(merged_df), 0)
     colnames(association_matrix) <- colnames(merged_df)
     rownames(association_matrix) <- colnames(merged_df)
@@ -443,8 +447,8 @@ calculate_associations <- function(data_list, verbose = FALSE) {
         var1_name <- colnames(merged_df)[ind1]
         var2_name <- colnames(merged_df)[ind2]
         # Types of the variables
-        var1_type <- types_df[types_df$"name" == var1_name, "type"]
-        var2_type <- types_df[types_df$"name" == var2_name, "type"]
+        var1_type <- metadata[metadata$"name" == var1_name, "type"]
+        var2_type <- metadata[metadata$"name" == var2_name, "type"]
         # Output current comparison if user specified verbose = TRUE
         if (verbose) {
             print(
@@ -468,7 +472,24 @@ calculate_associations <- function(data_list, verbose = FALSE) {
         association_matrix[ind1, ind2] <- pval
         association_matrix[ind2, ind1] <- pval
     }
-    return(association_matrix)
+    if (!is.null(key_association)) {
+        key_associations_df <- data.frame(
+            name = names(association_matrix[key_association, ]),
+            pval = association_matrix[key_association, ]
+        )
+        rownames(key_association) <- NULL
+        key_associations_df <- dplyr::inner_join(
+            key_associations_df,
+            metadata,
+            by = "name"
+        )
+        # Remove the 0 p-value for the association of the variable with self
+        key_associations_df <-
+            key_associations_df[key_associations_df$"name" != key_association]
+        return(key_associations_df)
+    } else {
+        return(association_matrix)
+    }
 }
 
 #' Get clustered subjects

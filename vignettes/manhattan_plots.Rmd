@@ -120,29 +120,25 @@ The red dotted line represent p = 0.05.
 ## Associations with a Key Variable
 
 You can also visualize associations with a key variable of interest rather than cluster solutions.
+This option makes use of the `calculate_associations` function, which can generate pairwise association p-values for any provided data:
 
 ```{r}
+calculate_associations(data_list)
+```
 
-#calculate_associations(data_list)
-#
-#target_list <- generate_data_list(
-#    list(gender_df, "gender", "demographics", "categorical"),
-#    list(diagnosis_df, "diagnosis", "medical", "categorical"),
-#    list(age_df, "age", "demographics", "discrete"),
-#    uid = "patient_id"
-#)
-#
-#target_list
-#
-#am <- calculate_associations(target_list)
-#
-#z <- "gender"
-#
-#data.frame(
-#
-#    am[z, ]
-#)
-#
-#target_pvals
+If you specify a `key_association` of interest, you'll only receive the associations between your variable of interest and the other variables provided:
 
+```{r}
+key_associations_df <- calculate_associations(
+    data_list,
+    key_association = "gene_1_expression"
+)
+
+key_associations_df
+```
+
+Setting the `key_mode` parameter to true, you can generate a Manhattan plot from this data to see how strongly associated your other variables are to your chosen outcome of interest.
+
+```{r}
+manhattan_plot(key_associations_df, key_mode = TRUE)
 ```
