@@ -24,14 +24,20 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/a_less_simple_example.html">A Less Simple Example</a>
-    <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
-    <a class="dropdown-item" href="../articles/alluvial_plots.html">Alluvial Plots</a>
-    <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
     <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
-    <a class="dropdown-item" href="../articles/manhattan_plots.html">Manhattan Plots</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Example Pipelines</h6>
+    <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
+    <a class="dropdown-item" href="../articles/a_less_simple_example.html">A Less Simple Example</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Advanced Options</h6>
     <a class="dropdown-item" href="../articles/settings_matrix.html">The Settings Matrix</a>
-    <a class="dropdown-item" href="../articles/similarity_matrix_heatmap.html">Plotting Similarity Matrices</a>
+    <a class="dropdown-item" href="../articles/distance_metrics.html">Custom Distance Metrics</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Additional Plotting</h6>
+    <a class="dropdown-item" href="../articles/similarity_matrix_heatmap.html">Similarity Matrix Heatmaps</a>
+    <a class="dropdown-item" href="../articles/manhattan_plots.html">Manhattan Plots</a>
+    <a class="dropdown-item" href="../articles/alluvial_plots.html">Alluvial Plots</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -55,13 +61,20 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">manhattan_plot</span><span class="op">(</span><span class="va">pvals_df</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">manhattan_plot</span><span class="op">(</span><span class="va">data</span>, key_mode <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>pvals_df</dt>
-<dd><p>Output of the pval_select() function</p></dd>
+    <dl><dt>data</dt>
+<dd><p>Output from either the pval_select() function when key_mode is
+FALSE or from the calculate_associations() function when key_mode is TRUE</p></dd>
+
+
+<dt>key_mode</dt>
+<dd><p>When TRUE, generates a plot of associations relative to a
+key variable (calculated previously through calculate_associations) rather
+than associations against a cluster solution</p></dd>
 
 </dl></div>
 

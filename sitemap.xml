@@ -118,10 +118,16 @@
     <loc>https://branchlab.github.io/metasnf/reference/calc_om_aris.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/calculate_associations.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/calculate_db_indices.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/calculate_dunn_indices.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/calculate_pval.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/calculate_silhouettes.html</loc>
@@ -149,6 +155,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/chi_sq_p.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/chi_squared_pval.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/clean_plot.html</loc>
@@ -290,6 +299,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/lin_reg_p.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/linear_model_pval.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/list_remove.html</loc>
