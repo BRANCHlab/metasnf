@@ -61,7 +61,12 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">manhattan_plot</span><span class="op">(</span><span class="va">data</span>, key_mode <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">manhattan_plot</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  key_mode <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  threshold <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  bonferroni_line <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,6 +80,15 @@ FALSE or from the calculate_associations() function when key_mode is TRUE</p></d
 <dd><p>When TRUE, generates a plot of associations relative to a
 key variable (calculated previously through calculate_associations) rather
 than associations against a cluster solution</p></dd>
+
+
+<dt>threshold</dt>
+<dd><p>P-value threshold to plot dashed line at.</p></dd>
+
+
+<dt>bonferroni_line</dt>
+<dd><p>If TRUE, plots a dashed black line at the
+Bonferroni-corrected equivalent of the p-value threshold.</p></dd>
 
 </dl></div>
 
