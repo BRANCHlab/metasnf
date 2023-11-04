@@ -186,6 +186,7 @@ generate_dl_results <- generate_data_list(
     return_missing = TRUE
 )
 
+# You only need to do this if you've set `return_missing` to TRUE!
 data_list <- generate_dl_results$"data_list"
 removed_subjects <- generate_dl_results$"removed_subjects"
 
