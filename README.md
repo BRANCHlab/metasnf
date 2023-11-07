@@ -10,8 +10,8 @@
 
 Necessary:
 
-- R version 4.1.0 or higher
-- `devtools` package (`install.packages("devtools")`) for installation
+-   R version 4.1.0 or higher
+-   `devtools` package (`install.packages("devtools")`) for installation
 
 ## Installation
 
@@ -74,7 +74,7 @@ settings_matrix <- generate_settings_matrix(
 # This matrix has clustering solutions for each of the 5 SNF runs!
 solutions_matrix <- batch_snf(data_list, settings_matrix)
 #> [1] "Row: 1/5 | Time remaining: 1 seconds"
-#> [1] "Row: 2/5 | Time remaining: 1 seconds"
+#> [1] "Row: 2/5 | Time remaining: 0 seconds"
 #> [1] "Row: 3/5 | Time remaining: 0 seconds"
 #> [1] "Row: 4/5 | Time remaining: 0 seconds"
 #> [1] "Row: 5/5 | Time remaining: 0 seconds"
@@ -84,10 +84,10 @@ solutions_matrix <- batch_snf(data_list, settings_matrix)
 Check out the tutorial vignettes below to learn about how the package
 can be used:
 
-- [Simple usage of the
-  package](https://branchlab.github.io/metasnf/articles/a_simple_example.html)
-- [Complex usage of the
-  package](https://branchlab.github.io/metasnf/articles/a_less_simple_example.html)
+-   [Simple usage of the
+    package](https://branchlab.github.io/metasnf/articles/a_simple_example.html)
+-   [Complex usage of the
+    package](https://branchlab.github.io/metasnf/articles/a_less_simple_example.html)
 
 And more tutorials can be found under the “articles” section of the
 documentation home page:
@@ -176,31 +176,31 @@ the qualitatively distinct “meta clusters” that emerge.
 
 ## Recent updates:
 
-- [x] Changes in function names
-- [x] Capability of defining custom clustering algorithms
-- [x] Added flexibility during generation of the settings_matrix
-- [x] Capability of calculating solution stability across patient
-  resamplings for all cluster solutions
-- [x] Capability of calculating a wide range of quality metrics for all
-  cluster solutions
-- [x] Capability of writing affinity matrices to disk
-- [x] Capability of not running the clustering on every run of SNF (only
-  makes sense when paired with the previous change)
-- [x] Capability of defining custom distance metrics (including feature
-  weights)
+-   [x] Changes in function names
+-   [x] Capability of defining custom clustering algorithms
+-   [x] Added flexibility during generation of the settings_matrix
+-   [x] Capability of calculating solution stability across patient
+    resamplings for all cluster solutions
+-   [x] Capability of calculating a wide range of quality metrics for
+    all cluster solutions
+-   [x] Capability of writing affinity matrices to disk
+-   [x] Capability of not running the clustering on every run of SNF
+    (only makes sense when paired with the previous change)
+-   [x] Capability of defining custom distance metrics (including
+    feature weights)
 
 ## Work in progress:
 
-- [ ] New visualization functions and improvements to existing
-  visualization functions
-- [ ] Updated vignette(s) to fully document basic and advance usage of
-  the package
+-   [ ] New visualization functions and improvements to existing
+    visualization functions
+-   [ ] Updated vignette(s) to fully document basic and advance usage of
+    the package
 
 ### Lower priority:
 
-- [ ] Adapt parallel processing variant of batch_snf to reflect the
-  above changes
-- [ ] Add tests / make package CRAN ready
+-   [ ] Adapt parallel processing variant of batch_snf to reflect the
+    above changes
+-   [ ] Add tests / make package CRAN ready
 
 ## Contributions
 
