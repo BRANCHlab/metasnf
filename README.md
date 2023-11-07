@@ -35,10 +35,9 @@ devtools::install_github("BRANCHlab/metasnf@8badfd4d7acaaf3b3c7af62d52b5c9324b82
 ## Brief Overview
 
 *metasnf* is a package that facilitates usage of the meta clustering
-paradigm described in [Caruana et al.,
-2006](https://doi.org/10.1109/ICDM.2006.103) with the similarity network
-fusion (SNF) data integration procedure developed in [Wang et al.,
-2014](https://doi.org/10.1038/nmeth.2810). The package offers a
+paradigm described in ([Caruana et al. 2006](#ref-caruanaMeta2006)) with
+the similarity network fusion (SNF) data integration procedure developed
+in ([Wang et al. 2014](#ref-wangSimilarity2014)). The package offers a
 comprehensive suite of tools to assist users in transforming raw patient
 data into patient subtypes, decision making in the subtyping process,
 and visualization along the way with a strong emphasis on
@@ -215,3 +214,24 @@ You are also welcome to simply post suggested changes in the issues tab
 of the repo.
 
 ## References
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-caruanaMeta2006" class="csl-entry">
+
+Caruana, Rich, Mohamed Elhawary, Nam Nguyen, and Casey Smith. 2006.
+“Meta Clustering.” In *Sixth International Conference on Data Mining
+(ICDM’06)*, 107–18. <https://doi.org/10.1109/ICDM.2006.103>.
+
+</div>
+
+<div id="ref-wangSimilarity2014" class="csl-entry">
+
+Wang, Bo, Aziz M. Mezlini, Feyyaz Demir, Marc Fiume, Zhuowen Tu, Michael
+Brudno, Benjamin Haibe-Kains, and Anna Goldenberg. 2014. “Similarity
+Network Fusion for Aggregating Data Types on a Genomic Scale.” *Nature
+Methods* 11 (3): 333–37. <https://doi.org/10.1038/nmeth.2810>.
+
+</div>
+
+</div>
