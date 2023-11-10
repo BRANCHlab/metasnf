@@ -96,9 +96,27 @@ summarize_clust_algs_list <- function(clust_algs_list) {
 #'
 #' @export
 spectral_eigen <- function(similarity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(similarity_matrix)
+    estimated_n <- try_estimating_clusters(similarity_matrix)
     number_of_clusters <- estimated_n$`Eigen-gap best`
-    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
+    solution <- try_spectral_clustering(similarity_matrix, number_of_clusters)
+        error = function(cond) {
+            sm_name <- Sys.time()
+            sm_name <- gsub("-", "_", sm_name)
+            sm_name <- gsub(" ", "_", sm_name)
+            sm_name <- gsub(":", "_", sm_name)
+            sm_name <- gsub("EST", "", sm_name)
+            sm_name <- sub(".[^\\.]+$", "", sm_name, fixed = FALSE)
+            sm_name <- paste0(sm_name, "_similarity_matrix.csv")
+            message(
+                "An error has occurred during a call to",
+                " SNFtool::spectralClustering(). The similarity",
+                " matrix that resulted in the error is being written as: ",
+                sm_name, ". The number of clusters that resulted in this",
+                " error is ", number_of_clusters, "."
+            )
+            write_csv(similarity_matrix, sm_name)
+        }
+    )
     return(list("solution" = solution, "nclust" = number_of_clusters))
 }
 
