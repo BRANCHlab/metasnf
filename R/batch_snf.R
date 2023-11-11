@@ -1,8 +1,17 @@
-#' Run variations of SNF as described by a settings matrix
+#' Run variations of SNF.
 #'
-#' @param data_list Nested list of input data. See ?get_data_list.
+#' This is the core function of the metasnf package. Using the information
+#'  stored in a settings_matrix (see ?generate_settings_matrix) and a data_list
+#'  (see ?generate_data_list), run repeated complete SNF pipelines to generate
+#'  a broad space of post-SNF cluster solutions.
 #'
-#' @param settings_matrix matrix indicating parameters to iterate SNF through.
+#' @param data_list A nested list of input data. See ?generate_data_list.
+#'
+#' @param settings_matrix A data.frame where each row completely defines an SNF
+#'  pipeline transforming individual input dataframes into a final cluster
+#'  solution. See ?generate_settings_matrix or
+#'  https://branchlab.github.io/metasnf/articles/settings_matrix.html for more
+#'  details.
 #'
 #' @param processes Specify number of processes used to complete SNF iterations
 #'     * `1` (default) Sequential processing: function will iterate through the
@@ -19,23 +28,26 @@
 #'  the first element is the solutions matrix and the second element is a list
 #'  of similarity matrices for each row in the solutions_matrix. Default FALSE.
 #'
-#' @param similarity_matrix_dir If specified, this directory will be used to save
-#'  all generated similarity matrices
+#' @param similarity_matrix_dir If specified, this directory will be used to
+#'  save all generated similarity matrices.
 #'
 #' @param clust_algs_list List of custom clustering algorithms to apply
-#'  to the final fused network. See ?generate_clust_algs_list
+#'  to the final fused network. See ?generate_clust_algs_list.
 #'
 #' @param suppress_clustering If FALSE (default), will apply default or custom
 #'  clustering algorithms to provide cluster solutions on every iteration of
 #'  SNF. If TRUE, parameter `similarity_matrix_dir` must be specified.
 #'
-#' @param distance_metrics_list A distance_metrics_list.
-#'  See ?generate_distance_metrics_list.
+#' @param distance_metrics_list An optional nested list containing which
+#'  distance metric function should be used for the various variable types
+#'  (continuous, discrete, ordinal, categorical, and mixed). See
+#'  ?generate_distance_metrics_list for details on how to build this.
 #'
 #' @param weights_matrix A matrix containing variable weights to use during
-#'  distance matrix calculation. See ?generate_weights_matrix.
+#'  distance matrix calculation. See ?generate_weights_matrix for details on
+#'  how to build this.
 #'
-#' @param quiet If TRUE, will not print out time remaining estimates.
+#' @param quiet If TRUE, the function won't print out time remaining estimates.
 #'
 #' @return populated_settings_matrix settings matrix with filled columns
 #'  related to subtype membership
