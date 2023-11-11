@@ -100,7 +100,7 @@ manhattan_plot <- function(data,
             linetype = "dashed",
             colour = "red"
         )
-        if (!is.null(bonferroni_line)) {
+        if (bonferroni_line) {
             plot <- plot + ggplot2::geom_hline(
                 yintercept = -log10(threshold / nrow(data)),
                 linetype = "dashed",
