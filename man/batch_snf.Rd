@@ -2,7 +2,7 @@
 % Please edit documentation in R/batch_snf.R
 \name{batch_snf}
 \alias{batch_snf}
-\title{Run variations of SNF as described by a settings matrix}
+\title{Run variations of SNF.}
 \usage{
 batch_snf(
   data_list,
@@ -18,47 +18,59 @@ batch_snf(
 )
 }
 \arguments{
-\item{data_list}{Nested list of input data. See ?get_data_list.}
+\item{data_list}{A nested list of input data. See ?generate_data_list.}
 
-\item{settings_matrix}{matrix indicating parameters to iterate SNF through.}
+\item{settings_matrix}{A data.frame where each row completely defines an SNF
+pipeline transforming individual input dataframes into a final cluster
+solution. See ?generate_settings_matrix or
+https://branchlab.github.io/metasnf/articles/settings_matrix.html for more
+details.}
 
 \item{processes}{Specify number of processes used to complete SNF iterations
-* \code{1} (default) Sequential processing: function will iterate through the
+\itemize{
+\item \code{1} (default) Sequential processing: function will iterate through the
 \code{settings_matrix} one row at a time with a for loop. This option will
 not make use of multiple CPU cores, but will show a progress bar.
-* \code{2} or higher: Parallel processing will use the
+\item \code{2} or higher: Parallel processing will use the
 \code{future.apply::future_apply} to distribute the SNF iterations across
 the specified number of CPU cores. If higher than the number of
 available cores, a warning will be printed and the maximum number of
 cores will be used.
-* \code{max}: All available cores will be used.}
+\item \code{max}: All available cores will be used.
+}}
 
 \item{return_similarity_matrices}{If TRUE, function will return a list where
 the first element is the solutions matrix and the second element is a list
 of similarity matrices for each row in the solutions_matrix. Default FALSE.}
 
-\item{similarity_matrix_dir}{If specified, this directory will be used to save
-all generated similarity matrices}
+\item{similarity_matrix_dir}{If specified, this directory will be used to
+save all generated similarity matrices.}
 
 \item{clust_algs_list}{List of custom clustering algorithms to apply
-to the final fused network. See ?generate_clust_algs_list}
+to the final fused network. See ?generate_clust_algs_list.}
 
 \item{suppress_clustering}{If FALSE (default), will apply default or custom
 clustering algorithms to provide cluster solutions on every iteration of
 SNF. If TRUE, parameter \code{similarity_matrix_dir} must be specified.}
 
-\item{distance_metrics_list}{A distance_metrics_list.
-See ?generate_distance_metrics_list.}
+\item{distance_metrics_list}{An optional nested list containing which
+distance metric function should be used for the various variable types
+(continuous, discrete, ordinal, categorical, and mixed). See
+?generate_distance_metrics_list for details on how to build this.}
 
 \item{weights_matrix}{A matrix containing variable weights to use during
-distance matrix calculation. See ?generate_weights_matrix.}
+distance matrix calculation. See ?generate_weights_matrix for details on
+how to build this.}
 
-\item{quiet}{If TRUE, will not print out time remaining estimates.}
+\item{quiet}{If TRUE, the function won't print out time remaining estimates.}
 }
 \value{
 populated_settings_matrix settings matrix with filled columns
 related to subtype membership
 }
 \description{
-Run variations of SNF as described by a settings matrix
+This is the core function of the metasnf package. Using the information
+stored in a settings_matrix (see ?generate_settings_matrix) and a data_list
+(see ?generate_data_list), run repeated complete SNF pipelines to generate
+a broad space of post-SNF cluster solutions.
 }

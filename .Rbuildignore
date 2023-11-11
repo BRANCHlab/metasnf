@@ -14,3 +14,5 @@ build_no_v.R
 build_site.R
 sandbox.R
 shared-code
+patch_update.R
+patch_update.sh

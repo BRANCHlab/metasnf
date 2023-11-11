@@ -14,15 +14,15 @@
 #'  details.
 #'
 #' @param processes Specify number of processes used to complete SNF iterations
-#'     * `1` (default) Sequential processing: function will iterate through the
-#'       `settings_matrix` one row at a time with a for loop. This option will
-#'       not make use of multiple CPU cores, but will show a progress bar.
-#'     * `2` or higher: Parallel processing will use the
-#'       `future.apply::future_apply` to distribute the SNF iterations across
-#'       the specified number of CPU cores. If higher than the number of
-#'       available cores, a warning will be printed and the maximum number of
-#'       cores will be used.
-#'     * `max`: All available cores will be used.
+#'  * `1` (default) Sequential processing: function will iterate through the
+#'    `settings_matrix` one row at a time with a for loop. This option will
+#'     not make use of multiple CPU cores, but will show a progress bar.
+#'  * `2` or higher: Parallel processing will use the
+#'    `future.apply::future_apply` to distribute the SNF iterations across
+#'    the specified number of CPU cores. If higher than the number of
+#'    available cores, a warning will be printed and the maximum number of
+#'    cores will be used.
+#'  * `max`: All available cores will be used.
 #'
 #' @param return_similarity_matrices If TRUE, function will return a list where
 #'  the first element is the solutions matrix and the second element is a list

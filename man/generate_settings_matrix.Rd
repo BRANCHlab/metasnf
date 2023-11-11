@@ -51,10 +51,11 @@ dataframes in the data_list.}
 
 \item{dropout_dist}{Parameter controlling how the random removal of input
 dataframes should occur. Can be "none" (no input dataframes are randomly
-removed), "uniform" (uniformly sample between min_removed_inputs and max_removed_inputs
-to determine number of input dataframes to remove), or "exponential" (pick
-number of input dataframes to remove by sampling from min_removed_inputs to
-max_removed_inputs with an exponential distribution; default).}
+removed), "uniform" (uniformly sample between min_removed_inputs and
+max_removed_inputs to determine number of input dataframes to remove), or
+"exponential" (pick number of input dataframes to remove by sampling from
+min_removed_inputs to max_removed_inputs with an exponential distribution;
+the default).}
 
 \item{min_alpha}{The minimum value that the alpha hyperparameter can have.
 Random assigned value of alpha for each row will be obtained by uniformly
@@ -145,5 +146,41 @@ number of times, the function will terminate.}
 settings_matrix A settings matrix
 }
 \description{
-Build a settings matrix
+The settings_matrix is a dataframe whose rows completely specify the
+hyperparameters and decisions required to transform individual input
+dataframes (found in a data_list, see ?generate_data_list) into a single
+similarity matrix through SNF. The format of the settings matrix is as
+follows:
+\itemize{
+\item A column named "row_id": This column is used to keep
+track of the rows and should have integer values only.
+\item A column named "alpha": This column contains the value of the
+alpha hyperparameter that will be used on that run of the SNF pipeline.
+\item A column named "k": Like above, but for the K (nearest neighbours)
+hyperparameter.
+\item A column named "t": Like above, but for the t (number of iterations)
+hyperparameter.
+\item A column named "clust_alg": Specification of which clustering algorithm
+will be applied to the final similarity matrix to identify patient
+subtypes. By default, this column can take on the integer values 1 or 2,
+which correspond to spectral clustering where the number of clusters is
+determined by the eigen-gap or rotation cost heuristic respectively. You
+can learn more about this parameter here:
+https://branchlab.github.io/metasnf/articles/clustering_algorithms.html.
+\item A column named "cont_dist": Specification of which distance metric will be
+used for dataframes of purely continuous data. You can learn about this
+metric and its defaults here:
+https://branchlab.github.io/metasnf/articles/distance_metrics.html
+\item A column named "disc_dist": Like above, but for discrete dataframes.
+\item A column named "ord_dist": Like above, but for ordinal dataframes.
+\item A column named "cat_dist": Like above, but for categorical dataframes.
+\item A column named "mixed_dist": Like above, but for mixed-type (e.g.,
+both categorical and discrete) dataframes.
+\item One column for every input dataframe in the corresponding data_list which
+can either have the value of 0 or 1. The name of the column should be
+formatted as "inc_[]" where the square brackets are replaced with the
+name (as found in dl_summary(data_list)$"name") of each dataframe. When
+0, that dataframe will be excluded from that run of the SNF pipeline. When
+1, that dataframe will be included.
+}
 }

@@ -1,111 +1,148 @@
 #' Build a settings matrix
 #'
+#' The settings_matrix is a dataframe whose rows completely specify the
+#' hyperparameters and decisions required to transform individual input
+#' dataframes (found in a data_list, see ?generate_data_list) into a single
+#' similarity matrix through SNF. The format of the settings matrix is as
+#' follows:
+#' * A column named "row_id": This column is used to keep
+#'   track of the rows and should have integer values only.
+#' * A column named "alpha": This column contains the value of the
+#'   alpha hyperparameter that will be used on that run of the SNF pipeline.
+#' * A column named "k": Like above, but for the K (nearest neighbours)
+#'   hyperparameter.
+#' * A column named "t": Like above, but for the t (number of iterations)
+#'   hyperparameter.
+#' * A column named "clust_alg": Specification of which clustering algorithm
+#'   will be applied to the final similarity matrix to identify patient
+#'   subtypes. By default, this column can take on the integer values 1 or 2,
+#'   which correspond to spectral clustering where the number of clusters is
+#'   determined by the eigen-gap or rotation cost heuristic respectively. You
+#'   can learn more about this parameter here:
+#'   https://branchlab.github.io/metasnf/articles/clustering_algorithms.html.
+#' * A column named "cont_dist": Specification of which distance metric will be
+#'   used for dataframes of purely continuous data. You can learn about this
+#'   metric and its defaults here:
+#'   https://branchlab.github.io/metasnf/articles/distance_metrics.html
+#' * A column named "disc_dist": Like above, but for discrete dataframes.
+#' * A column named "ord_dist": Like above, but for ordinal dataframes.
+#' * A column named "cat_dist": Like above, but for categorical dataframes.
+#' * A column named "mixed_dist": Like above, but for mixed-type (e.g.,
+#'   both categorical and discrete) dataframes.
+#' * One column for every input dataframe in the corresponding data_list which
+#'   can either have the value of 0 or 1. The name of the column should be
+#'   formatted as "inc_[]" where the square brackets are replaced with the
+#'   name (as found in dl_summary(data_list)$"name") of each dataframe. When
+#'   0, that dataframe will be excluded from that run of the SNF pipeline. When
+#'   1, that dataframe will be included.
+#'
 #' @param data_list A data list object to determine variables for inclusion and
-#'  exclusion.
+#' exclusion.
 #'
 #' @param nrows Number of rows to generate for the settings matrix.
 #'
 #' @param seed set a seed for the random matrix generation. Setting this value
-#'  will change the seed of the global environment.
+#' will change the seed of the global environment.
 #'
 #' @param min_removed_inputs The smallest number of input dataframes that may be
-#'  randomly removed. By default, 0.
+#' randomly removed. By default, 0.
 #'
 #' @param max_removed_inputs The largest number of input dataframes that may be
-#'  randomly removed. By default, this is 1 less than all the provided input
-#'  dataframes in the data_list.
+#' randomly removed. By default, this is 1 less than all the provided input
+#' dataframes in the data_list.
 #'
 #' @param dropout_dist Parameter controlling how the random removal of input
-#'  dataframes should occur. Can be "none" (no input dataframes are randomly
-#'  removed), "uniform" (uniformly sample between min_removed_inputs and max_removed_inputs
-#'  to determine number of input dataframes to remove), or "exponential" (pick
-#'  number of input dataframes to remove by sampling from min_removed_inputs to
-#'  max_removed_inputs with an exponential distribution; default).
+#' dataframes should occur. Can be "none" (no input dataframes are randomly
+#' removed), "uniform" (uniformly sample between min_removed_inputs and
+#' max_removed_inputs to determine number of input dataframes to remove), or
+#' "exponential" (pick number of input dataframes to remove by sampling from
+#'  min_removed_inputs to max_removed_inputs with an exponential distribution;
+#'  the default).
 #'
 #' @param min_alpha The minimum value that the alpha hyperparameter can have.
-#'  Random assigned value of alpha for each row will be obtained by uniformly
-#'  sampling numbers between `min_alpha` and `max_alpha` at intervals of 0.1.
-#'  Cannot be used in conjunction with the `alpha_values` parameter.
+#' Random assigned value of alpha for each row will be obtained by uniformly
+#' sampling numbers between `min_alpha` and `max_alpha` at intervals of 0.1.
+#' Cannot be used in conjunction with the `alpha_values` parameter.
 #'
 #' @param max_alpha The maximum value that the alpha hyperparameter can have.
-#'  See `min_alpha` parameter. Cannot be used in conjunction with the
-#'  `alpha_values` parameter.
+#' See `min_alpha` parameter. Cannot be used in conjunction with the
+#' `alpha_values` parameter.
 #'
 #' @param min_k The minimum value that the k hyperparameter can have.
-#'  Random assigned value of k for each row will be obtained by uniformly
-#'  sampling numbers between `min_k` and `max_k` at intervals of 1.
-#'  Cannot be used in conjunction with the `k_values` parameter.
+#' Random assigned value of k for each row will be obtained by uniformly
+#' sampling numbers between `min_k` and `max_k` at intervals of 1.
+#' Cannot be used in conjunction with the `k_values` parameter.
 #'
 #' @param max_k The maximum value that the k hyperparameter can have.
-#'  See `min_k` parameter. Cannot be used in conjunction with the
-#'  `k_values` parameter.
+#' See `min_k` parameter. Cannot be used in conjunction with the
+#' `k_values` parameter.
 #'
 #' @param min_t The minimum value that the t hyperparameter can have.
-#'  Random assigned value of t for each row will be obtained by uniformly
-#'  sampling numbers between `min_t` and `max_t` at intervals of 1.
-#'  Cannot be used in conjunction with the `t_values` parameter.
+#' Random assigned value of t for each row will be obtained by uniformly
+#' sampling numbers between `min_t` and `max_t` at intervals of 1.
+#' Cannot be used in conjunction with the `t_values` parameter.
 #'
 #' @param max_t The maximum value that the t hyperparameter can have.
-#'  See `min_t` parameter. Cannot be used in conjunction with the
-#'  `t_values` parameter.
+#' See `min_t` parameter. Cannot be used in conjunction with the
+#' `t_values` parameter.
 #'
 #' @param alpha_values A number or numeric vector of a set of possible values
-#'  that alpha can take on. Value will be obtained by uniformly sampling the
-#'  vector. Cannot be used in conjunction with the `min_alpha` or `max_alpha`
-#'  parameters.
+#' that alpha can take on. Value will be obtained by uniformly sampling the
+#' vector. Cannot be used in conjunction with the `min_alpha` or `max_alpha`
+#' parameters.
 #'
 #' @param k_values A number or numeric vector of a set of possible values
-#'  that k can take on. Value will be obtained by uniformly sampling the
-#'  vector. Cannot be used in conjunction with the `min_k` or `max_k`
-#'  parameters.
+#' that k can take on. Value will be obtained by uniformly sampling the
+#' vector. Cannot be used in conjunction with the `min_k` or `max_k`
+#' parameters.
 #'
 #' @param t_values A number or numeric vector of a set of possible values
-#'  that t can take on. Value will be obtained by uniformly sampling the
-#'  vector. Cannot be used in conjunction with the `min_t` or `max_t`
-#'  parameters.
+#' that t can take on. Value will be obtained by uniformly sampling the
+#' vector. Cannot be used in conjunction with the `min_t` or `max_t`
+#' parameters.
 #'
 #' @param possible_snf_schemes A vector containing the possible snf_schemes to
-#'  uniformly randomly select from. By default, the vector contains all
-#'  3 possible schemes: c(1, 2, 3). 1 corresponds to the "individual" scheme,
-#'  2 corresponds to the "domain" scheme, and 3 corresponds to the "twostep"
-#'  scheme.
+#' uniformly randomly select from. By default, the vector contains all
+#' 3 possible schemes: c(1, 2, 3). 1 corresponds to the "individual" scheme,
+#' 2 corresponds to the "domain" scheme, and 3 corresponds to the "twostep"
+#' scheme.
 #'
 #' @param clustering_algorithms A list of clustering algorithms to uniformly
-#'  randomly pick from when clustering. When not specified, randomly select
-#'  between spectral clustering using the eigen-gap heuristic and spectral
-#'  clustering using the rotation cost heuristic. See ?generate_clust_algs_list
-#'  for more details on running custom clustering algorithms.
+#' randomly pick from when clustering. When not specified, randomly select
+#' between spectral clustering using the eigen-gap heuristic and spectral
+#' clustering using the rotation cost heuristic. See ?generate_clust_algs_list
+#' for more details on running custom clustering algorithms.
 #'
 #' @param continuous_distances A vector of continuous distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#' when a custom distance_metrics_list is provided.
 #'
 #' @param discrete_distances A vector of categorical distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#' when a custom distance_metrics_list is provided.
 #'
 #' @param ordinal_distances A vector of categorical distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#' when a custom distance_metrics_list is provided.
 #'
 #' @param categorical_distances A vector of categorical distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#' when a custom distance_metrics_list is provided.
 #'
 #' @param mixed_distances A vector of mixed distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#' when a custom distance_metrics_list is provided.
 #'
 #' @param distance_metrics_list List containing distance metrics to vary over.
-#'  See ?generate_distance_metrics_list.
+#' See ?generate_distance_metrics_list.
 #'
 #' @param snf_input_weights Nested list containing weights for when SNF is
-#'  used to merge individual input measures (see ?generate_snf_weights)
+#' used to merge individual input measures (see ?generate_snf_weights)
 #'
 #' @param snf_domain_weights Nested list containing weights for when SNF is
-#'  used to merge domains (see ?generate_snf_weights)
+#' used to merge domains (see ?generate_snf_weights)
 #'
 #' @param retry_limit The maximum number of attempts to generate a novel row.
-#'  This function does not return matrices with identical rows. As the range of
-#'  requested possible settings tightens and the number of requested rows
-#'  increases, the risk of randomly generating a row that already exists
-#'  increases. If a new random row has matched an existing row `retry_limit`
-#'  number of times, the function will terminate.
+#' This function does not return matrices with identical rows. As the range of
+#' requested possible settings tightens and the number of requested rows
+#' increases, the risk of randomly generating a row that already exists
+#' increases. If a new random row has matched an existing row `retry_limit`
+#' number of times, the function will terminate.
 #'
 #' @return settings_matrix A settings matrix
 #'
