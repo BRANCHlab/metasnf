@@ -95,7 +95,7 @@ extend_solutions <- function(solutions_matrix,
             current_outcome_component <- merged_df[, c(1, j + 1)]
             current_outcome_type <- ol_feature_types[j]
             current_outcome_name <- colnames(current_outcome_component)[2]
-            p_value <- tryCatch(
+            try_catch_results <- tryCatch(
                 expr = {
                     p_value <- get_p(
                         assigned_subs,
@@ -104,15 +104,14 @@ extend_solutions <- function(solutions_matrix,
                         ol_features[j],
                         cat_test = cat_test
                     )
-                    p_value
+                    list(
+                        "p_value" = p_value,
+                        "chi_squared_warnings" = chi_squared_warnings
+                    )
                 },
                 warning = function(w, row = i) {
                     if(grep("Chi-squared", w$"message")) {
                         chi_squared_warnings <- c(chi_squared_warnings, row)
-                        print("10")
-                        print(chi_squared_warnings)
-                        print(row)
-                        print("99")
                         suppressWarnings(
                             p_value <- get_p(
                                 assigned_subs,
@@ -122,6 +121,10 @@ extend_solutions <- function(solutions_matrix,
                                 cat_test = cat_test
                             )
                         )
+                        list(
+                            "p_value" = p_value,
+                            "chi_squared_warnings" = chi_squared_warnings
+                        )
                     } else {
                         p_value <- get_p(
                             assigned_subs,
@@ -129,10 +132,15 @@ extend_solutions <- function(solutions_matrix,
                             ol_feature_types[j],
                             ol_features[j]
                         )
+                        list(
+                            "p_value" = p_value,
+                            "chi_squared_warnings" = chi_squared_warnings
+                        )
                     }
-                    p_value
                 }
             )
+            p_value <- try_catch_results$"p_value"
+            chi_squared_warnings <- try_catch_results$"chi_squared_warnings"
             target_col <- grep(current_outcome_name, colnames(solutions_matrix))
             solutions_matrix[i, target_col] <- p_value
         }
@@ -141,17 +149,19 @@ extend_solutions <- function(solutions_matrix,
         solutions_matrix[i, "min_p_val"] <- min_p
         solutions_matrix[i, "mean_p_val"] <- mean_p
     }
-    print(chi_squared_warnings)
-    #warning(
-    #    "In row ", 5, ", the Chi-squared test was",
-    #    " applied on a table that had at least one cell",
-    #    " containing fewer than 5 elements. Please note",
-    #    " that when the expected number of elements per",
-    #    " cell is less than 5, an assumption in the test",
-    #    " is violated. To avoid seeing this message,",
-    #    " re-run the `extend_solutions` function with the",
-    #    " parameter "
-    #)
+    if (length(chi_squared_warnings) > 0) {
+        chi_squared_warnings <- paste(chi_squared_warnings, collapse = ", ")
+        warning(
+            "In calculating p-values for the following rows of the solutions",
+            " matrix: [", chi_squared_warnings, "], the Chi-squared test was",
+            " applied on a table that had at least one cell containing fewer",
+            " than 5 elements. Please note that when the expected number of",
+            " elements per cell is less than 5, an assumption in the test is",
+            " violated. To avoid seeing this message, re-run the",
+            " `extend_solutions` function with the parameter",
+            " `cat_test = \"fisher_exact\"`."
+        )
+    }
     return(solutions_matrix)
 }
 

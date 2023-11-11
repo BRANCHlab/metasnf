@@ -29,10 +29,7 @@ target_list <- generate_target_list(
     uid = "patient"
 )
 
-print(5)
-
 extended_solutions <- extend_solutions(solutions_matrix, target_list)
 
-warning("hi")
 
-
+extended_solutions
