@@ -100,7 +100,6 @@ solutions_matrix[5, cluster_solutions$"subjectkey"] <- cluster_solutions$"5"
 We'll set aside some variables of interest in a target list, use that to calculate p-values for those variables, and supply that information to the manhattan_plot function.
 
 ```{r fig.width = 7, fig.height = 5.5}
-
 target_list <- generate_target_list(
     list(gender_df, "gender", "categorical"),
     list(diagnosis_df, "diagnosis", "categorical"),
