@@ -25,10 +25,14 @@ has the best stuff!):
 devtools::install_github("BRANCHlab/metasnf")
 ```
 
-If you require a stable version of the package, please keep track of
-which commit you want when installing.
+If you require a consistent way to install the package, you can include
+the specific commit or tagged package version you want to install:
 
 ``` r
+# Specifying a tag
+devtools::install_github("BRANCHlab/metasnf@v0.2.1")
+
+# Specifying a commit
 devtools::install_github("BRANCHlab/metasnf@8badfd4d7acaaf3b3c7af62d52b5c9324b82cc6c")
 ```
 
