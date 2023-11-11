@@ -260,7 +260,11 @@ domain_merge <- function(data_list,
             return(similarity_matrix)
         }
     )
-    fused_network <- SNFtool::SNF(Wall = sim_list, K = k, t = t)
+    if (length(sim_list) > 1) {
+        fused_network <- SNFtool::SNF(Wall = sim_list, K = k, t = t)
+    } else {
+        fused_network <- sim_list[[1]]
+    }
     return(fused_network)
 }
 
