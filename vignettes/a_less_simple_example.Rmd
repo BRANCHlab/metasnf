@@ -510,6 +510,10 @@ all_subjects <- gsub("subject_", "", all_subjects)
 # Dataframe assigning 80% of subjects to train and 20% to test
 assigned_splits <- train_test_assign(train_frac = 0.8, subjects = all_subjects)
 
+head(assigned_splits)
+
+tail(assigned_splits)
+
 # Partition a training set
 train_abcd_cort_t <- keep_split(abcd_cort_t, assigned_splits, "train", uid = "patient")
 train_abcd_cort_sa <- keep_split(abcd_cort_sa, assigned_splits, "train", uid = "patient")

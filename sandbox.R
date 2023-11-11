@@ -21,3 +21,18 @@ settings_matrix <- generate_settings_matrix(
 
 # This matrix has clustering solutions for each of the 5 SNF runs!
 solutions_matrix <- batch_snf(data_list, settings_matrix)
+
+target_list <- generate_target_list(
+    list(abcd_anxiety, "anxiety", "ordinal"),
+    list(abcd_depress, "depressed", "ordinal"),
+    list(abcd_colour, "colour", "categorical"),
+    uid = "patient"
+)
+
+print(5)
+
+extended_solutions <- extend_solutions(solutions_matrix, target_list)
+
+warning("hi")
+
+

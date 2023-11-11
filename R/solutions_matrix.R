@@ -37,14 +37,19 @@ generate_solutions_matrix <- function(data_list, settings_matrix) {
 
 #' Extend an solutions matrix to include outcome evaluations
 #'
-#' @param solutions_matrix an solutions_matrix
-#' @param target_list an target_list
+#' @param solutions_matrix A solutions_matrix.
+#' @param target_list A target_list.
+#' @param cat_test String indicating which statistical test will be used to
+#' associate cluster with a categorical variable. Options are "chi_squared" for
+#' the Chi-squared test and "fisher_exact" for Fisher's exact test.
 #'
 #' @return extended_solutions_matrix an extended solutions matrix that contains
 #'  p-value columns for each outcome in the provided target_list
 #'
 #' @export
-extend_solutions <- function(solutions_matrix, target_list) {
+extend_solutions <- function(solutions_matrix,
+                             target_list,
+                             cat_test = "chi_squared") {
     # Single vector of all feature names
     ol_features <- lapply(
         target_list,
@@ -75,6 +80,8 @@ extend_solutions <- function(solutions_matrix, target_list) {
         function(x) {
             x[[1]]
         }) |> merge_df_list()
+    # Store rows that raise chi_squared warnings
+    chi_squared_warnings <- vector()
     # Iterate across rows of the solutions matrix
     for (i in seq_len(nrow(solutions_matrix))) {
         clustered_subs <- get_clustered_subs(solutions_matrix[i, ])
@@ -94,28 +101,25 @@ extend_solutions <- function(solutions_matrix, target_list) {
                         assigned_subs,
                         current_outcome_component,
                         ol_feature_types[j],
-                        ol_features[j]
+                        ol_features[j],
+                        cat_test = cat_test
                     )
                     p_value
                 },
                 warning = function(w, row = i) {
                     if(grep("Chi-squared", w$"message")) {
-                        print(
-                            paste0(
-                                "In row ", row, ", the Chi-squared test",
-                                " was applied on a table that had at least one",
-                                " cell containing fewer than 5 elements.",
-                                " Please note that when the expected number of",
-                                " elements per cell is less than 5, an",
-                                " assumption in the test is violated."
-                            )
-                        )
+                        chi_squared_warnings <- c(chi_squared_warnings, row)
+                        print("10")
+                        print(chi_squared_warnings)
+                        print(row)
+                        print("99")
                         suppressWarnings(
                             p_value <- get_p(
                                 assigned_subs,
                                 current_outcome_component,
                                 ol_feature_types[j],
-                                ol_features[j]
+                                ol_features[j],
+                                cat_test = cat_test
                             )
                         )
                     } else {
@@ -137,6 +141,17 @@ extend_solutions <- function(solutions_matrix, target_list) {
         solutions_matrix[i, "min_p_val"] <- min_p
         solutions_matrix[i, "mean_p_val"] <- mean_p
     }
+    print(chi_squared_warnings)
+    #warning(
+    #    "In row ", 5, ", the Chi-squared test was",
+    #    " applied on a table that had at least one cell",
+    #    " containing fewer than 5 elements. Please note",
+    #    " that when the expected number of elements per",
+    #    " cell is less than 5, an assumption in the test",
+    #    " is violated. To avoid seeing this message,",
+    #    " re-run the `extend_solutions` function with the",
+    #    " parameter "
+    #)
     return(solutions_matrix)
 }
 
@@ -207,13 +222,22 @@ get_mean_p <- function(solutions_matrix_row) {
 #' @return p_val the smallest p-value of interest
 #'
 #' @export
-get_p <- function(assigned_subs, outcome_df, outcome_type, outcome_name) {
+get_p <- function(assigned_subs,
+                  outcome_df,
+                  outcome_type,
+                  outcome_name,
+                  cat_test = "chi_squared") {
     if (outcome_type == "ordinal") {
         p_val <- ord_reg_p(assigned_subs, outcome_df, outcome_name)
     } else if (outcome_type == "numeric") {
         p_val <- lin_reg_p(assigned_subs, outcome_df, outcome_name)
     } else if (outcome_type == "categorical") {
-        p_val <- chi_sq_p(assigned_subs, outcome_df, outcome_name)
+        if (cat_test == "chi_squared") {
+            p_val <- chi_sq_p(assigned_subs, outcome_df, outcome_name)
+        } else if (cat_test == "fisher_exact") {
+            print('cheese')
+            #p_val <- fisher_ex_p(assigned_subs, outcome_df, outcome_name)
+        }
     } else {
         stop(paste0(
             "Unsupported outcome type: ",
