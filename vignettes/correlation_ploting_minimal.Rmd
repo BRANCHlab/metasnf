@@ -1,0 +1,47 @@
+---
+title: "Correlation and Plotting"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Correlation and Plotting}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(metasnf)
+
+# generate a mock correlation table
+corr_predictor <- matrix(
+    runif(50 * 50),
+    nrow = 50,
+    ncol = 50
+)
+
+rownames(corr_predictor) <- seq(1:50)
+colnames(corr_predictor) <- seq(1:50)
+
+# color by data types (optional). Say first 25 outcomes are from blood datatype, the next 25 from gut_microbiome datatype
+labels <- c("Blood", "Gut_microbiome")
+color <- c(rep("#cd34b5", 25), rep("goldenrod4", 25))
+
+corrHeatmap(
+    corr_predictor,
+    labels_color = color,
+    row_km = 4,
+    column_km = 4
+)
+
+labels_color <- c("#cd34b5", "goldenrod4")
+
+corrHeatmap_legend(
+    "test_func.png",
+    labels = labels,
+    labels_color = labels_color
+)
+```
