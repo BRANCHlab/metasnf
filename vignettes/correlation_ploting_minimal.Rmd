@@ -14,7 +14,95 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-library(metasnf)
+#' Generate correlation heatmap
+#'
+#' @param corr matrix of outcomes-outcomes correlation p_values
+#' @param labels_color optional argument to specify color labels for datatypes
+#' @param row_km kmean partitioning of features along rows for display
+#' @param column_km kmean partitioning of features along columns for display
+#'
+#' @return hm a correlation heatmap
+#'
+#' @export
+corrHeatmap <- function(corr,
+                        row_km,
+                        column_km,
+                        labels_color = NULL) {
+    # Calculate the log-10 p-value of the correlation coefficient significance
+    corr_log <- log10(corr + 1)
+    # Color bars
+    outcome_heatmap_color <- circlize::colorRamp2(
+        c(0, 0.0005, 0.005, 0.05, 1),
+        c("navy", "blue", "royalblue", "steelblue2", "white")
+    )
+    # Add color for row and column labels
+    if (is.null(labels_color)) {
+        labels_color <- c(rep("black", ncol(corr_log)))
+        names(labels_color) <- colnames(corr_log)
+    }
+    hm <- ComplexHeatmap::Heatmap(
+        as.matrix(corr_log),
+        name = "Outcomes and Descriptors",
+        cluster_rows = TRUE,
+        cluster_columns = TRUE,
+        # add significance notations to correlation heatmap
+        cell_fun = function(j, i, x, y, width, height, fill) {
+            # in grid.text, corr[i,j] specify values correlation matrix, default.units = "npc"
+            # in grid.text, by default x = unit(0.5, "npc")
+            # in grid.text, by default y = unit(0.5, "npc")
+            flag <- 0
+            if (corr[i, j] < 0.0001) {
+                grid::grid.text(
+                    "***",
+                    x,
+                    y,
+                    hjust = 0.5,
+                    vjust = 0.5,
+                    gp = grid::gpar(fontsize = 12, col = "white")
+                )
+                flag <- 1
+            }
+            if (flag == 0 & corr[i, j] < 0.001) {
+                grid::grid.text(
+                    "**",
+                    x,
+                    y,
+                    hjust = 0.5,
+                    vjust = 0.5,
+                    gp = grid::gpar(fontsize = 12, col = "white")
+                )
+                flag <- 1
+            }
+            if (flag == 0 & corr[i, j] < 0.01) {
+                grid::grid.text(
+                    "*",
+                    x,
+                    y,
+                    hjust = 0.5,
+                    vjust = 0.5,
+                    gp = grid::gpar(fontsize = 12, col = "white")
+                )
+                flag <- 1
+            }
+        },
+        column_names_gp = grid::gpar(fontsize = 9, col = labels_color),
+        row_names_gp = grid::gpar(fontsize = 9, col = labels_color),
+        row_km = row_km,
+        column_km = row_km,
+        column_dend_height = grid::unit(2, "cm"),
+        row_dend_width = grid::unit(2, "cm"),
+        heatmap_legend_param = list(
+            title = expression(paste(log[10], "(p-value)")),
+            title_gp = grid::gpar(fontsize = 15, fontface = "bold"),
+            labels_gp = grid::gpar(fontsize = 10, fontface = "bold"),
+            legend_height = grid::unit(6, "cm"),
+            legend_width = grid::unit(2, "cm")
+        ),
+        col = outcome_heatmap_color,
+        show_heatmap_legend = FALSE
+    )
+    return(hm)
+}
 
 # generate a mock correlation table
 corr_predictor <- matrix(
