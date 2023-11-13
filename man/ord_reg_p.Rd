@@ -2,7 +2,7 @@
 % Please edit documentation in R/solutions_matrix.R
 \name{ord_reg_p}
 \alias{ord_reg_p}
-\title{Ordinal regression p-value}
+\title{Ordinal regression p-value (deprecated)}
 \usage{
 ord_reg_p(clust_membership, outcome_df, outcome_var)
 }

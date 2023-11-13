@@ -97,7 +97,7 @@ extend_solutions <- function(solutions_matrix,
             current_outcome_name <- colnames(current_outcome_component)[2]
             try_catch_results <- tryCatch(
                 expr = {
-                    p_value <- get_p(
+                    p_value <- get_cluster_pval(
                         assigned_subs,
                         current_outcome_component,
                         ol_feature_types[j],
@@ -113,7 +113,7 @@ extend_solutions <- function(solutions_matrix,
                     if(grep("Chi-squared", w$"message")) {
                         chi_squared_warnings <- c(chi_squared_warnings, row)
                         suppressWarnings(
-                            p_value <- get_p(
+                            p_value <- get_cluster_pval(
                                 assigned_subs,
                                 current_outcome_component,
                                 ol_feature_types[j],
@@ -126,7 +126,7 @@ extend_solutions <- function(solutions_matrix,
                             "chi_squared_warnings" = chi_squared_warnings
                         )
                     } else {
-                        p_value <- get_p(
+                        p_value <- get_cluster_pval(
                             assigned_subs,
                             current_outcome_component,
                             ol_feature_types[j],
@@ -159,7 +159,7 @@ extend_solutions <- function(solutions_matrix,
             " elements per cell is less than 5, an assumption in the test is",
             " violated. To avoid seeing this message, re-run the",
             " `extend_solutions` function with the parameter",
-            " `cat_test = \"fisher_exact\"`."
+            " `cat_test = \"fisher_exact\"`, which uses Fisher's exact test."
         )
     }
     return(solutions_matrix)
@@ -224,10 +224,73 @@ get_mean_p <- function(solutions_matrix_row) {
 #'  are by the outcome measure.
 #'
 #' @param assigned_subs dataframe of subjects who were assigned to a cluster
-#'  and the cluster they were assigned to
+#' and the cluster they were assigned to.
 #' @param outcome_df dataframe containing subjectkey and outcome feautre column
 #' @param outcome_type string indicating the outcome type (numeric or ordinal)
 #' @param outcome_name string indicating the name of the feature
+#' @param cat_test String indicating which statistical test will be used to
+#' associate cluster with a categorical variable. Options are "chi_squared" for
+#' the Chi-squared test and "fisher_exact" for Fisher's exact test.
+#'
+#' @return p_val the smallest p-value of interest
+#'
+#' @export
+get_cluster_pval <- function(assigned_subs,
+                     outcome_df,
+                     outcome_type,
+                     outcome_name,
+                     cat_test = "chi_squared") {
+    # Dataframe containing cluster membership and outcome variable as cols
+    merged_df <- dplyr::inner_join(
+        assigned_subs,
+        outcome_df,
+        by = "subjectkey"
+    )
+    if (outcome_type == "ordinal") {
+        pval <- ord_reg_pval(
+            predictor = factor(merged_df$"cluster"),
+            response = merged_df[, outcome_name]
+        )
+    } else if (outcome_type == "numeric") {
+        pval <- linear_model_pval(
+            predictor = factor(merged_df$"cluster"),
+            response = merged_df[, outcome_name]
+        )
+    } else if (outcome_type == "categorical") {
+        if (cat_test == "chi_squared") {
+            pval <- chi_squared_pval(
+                merged_df$"cluster",
+                merged_df[, outcome_name]
+            )
+        } else if (cat_test == "fisher_exact") {
+            pval <- fisher_exact_pval(
+                merged_df$"cluster",
+                merged_df[, outcome_name]
+            )
+        }
+    } else {
+        stop(
+            "Unsupported outcome type: ", outcome_type,
+            ". Accepted types for now are numeric and ordinal."
+        )
+    }
+    return(pval)
+}
+
+#' Get p-value (deprecated)
+#'
+#' Depending on outcome measure, perform ordinal regression or linear regression
+#'  and return p-value as a benchmark measure of how well-separated clusters
+#'  are by the outcome measure.
+#'
+#' @param assigned_subs dataframe of subjects who were assigned to a cluster
+#' and the cluster they were assigned to.
+#' @param outcome_df dataframe containing subjectkey and outcome feautre column
+#' @param outcome_type string indicating the outcome type (numeric or ordinal)
+#' @param outcome_name string indicating the name of the feature
+#' @param cat_test String indicating which statistical test will be used to
+#' associate cluster with a categorical variable. Options are "chi_squared" for
+#' the Chi-squared test and "fisher_exact" for Fisher's exact test.
 #'
 #' @return p_val the smallest p-value of interest
 #'
@@ -245,8 +308,7 @@ get_p <- function(assigned_subs,
         if (cat_test == "chi_squared") {
             p_val <- chi_sq_p(assigned_subs, outcome_df, outcome_name)
         } else if (cat_test == "fisher_exact") {
-            print('cheese')
-            #p_val <- fisher_ex_p(assigned_subs, outcome_df, outcome_name)
+            print(NULL)
         }
     } else {
         stop(paste0(
@@ -258,7 +320,7 @@ get_p <- function(assigned_subs,
     return(p_val)
 }
 
-#' Ordinal regression p-value
+#' Ordinal regression p-value (deprecated)
 #'
 #' Returns the p-value following an ordinal regression in which cluster
 #'  is the IV and a provided ordinal variable is the DV.
@@ -286,6 +348,29 @@ ord_reg_p <- function(clust_membership, outcome_df, outcome_var) {
     return(p_value)
 }
 
+#' Ordinal regression p-value
+#'
+#' Returns the overall p-value of an ordinal regression on a categorical
+#' predictor and response vetors. If the ordinal response
+#'
+#' @param predictor A categorical or numeric variable.
+#' @param response A numeric variable.
+#'
+#' @export
+ord_reg_pval <- function(predictor, response) {
+    # If there are only 2 tiers to the ordinal scale, just use linear model
+    num_classes <- length(unique(response))
+    if (num_classes == 2) {
+        return(linear_model_pval(predictor, response))
+    }
+    # Otherwise, run regular ordinal regression
+    response <- as.ordered(response)
+    null_model <- MASS::polr(response ~ 1)
+    full_model <- MASS::polr(response ~ predictor)
+    pval <- stats::anova(null_model, full_model)$"Pr(Chi)"[2]
+    return(pval)
+}
+
 #' Linear regression p-value
 #'
 #' Returns the p-value following an linear regression in which cluster
@@ -308,7 +393,6 @@ lin_reg_p <- function(clust_membership, outcome_df, outcome_var) {
     attributes(p) <- NULL
     return(p)
 }
-
 
 #' Chi-squared test p-value
 #'
@@ -351,10 +435,28 @@ chi_sq_p <- function(clust_membership, outcome_df, outcome_var) {
 chi_squared_pval <- function(cat_var1, cat_var2) {
     cat_var1 <- factor(cat_var1)
     cat_var2 <- factor(cat_var2)
-    model <- suppressWarnings(
-        stats::chisq.test(cat_var1, cat_var2, correct = FALSE)
-    )
+    model <- stats::chisq.test(cat_var1, cat_var2, correct = FALSE)
     pval <- model$"p.value"
+    attributes(pval) <- NULL
+    return(pval)
+}
+
+#' Fisher exact test p-value
+#'
+#' Return p-value for Fisher exact test for any two variables
+#'
+#' @param cat_var1 A categorical variable.
+#' @param cat_var2 A categorical variable.
+#'
+#' @return pval A p-value.
+#'
+#' @export
+fisher_exact_pval <- function(cat_var1, cat_var2) {
+    cat_var1 <- factor(cat_var1)
+    cat_var2 <- factor(cat_var2)
+    model <- stats::fisher.test(cat_var1, cat_var2)
+    pval <- model$"p.value"
+    attributes(pval) <- NULL
     return(pval)
 }
 
@@ -372,6 +474,7 @@ linear_model_pval <- function(predictor, response) {
     model <- stats::lm(response ~ predictor)
     fstat <- summary(model)$"fstatistic"
     pval <- stats::pf(fstat[1], fstat[2], fstat[3], lower.tail = FALSE)
+    attributes(pval) <- NULL
     return(pval)
 }
 

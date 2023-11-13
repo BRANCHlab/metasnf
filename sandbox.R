@@ -24,12 +24,18 @@ solutions_matrix <- batch_snf(data_list, settings_matrix)
 
 target_list <- generate_target_list(
     list(abcd_anxiety, "anxiety", "ordinal"),
-    list(abcd_depress, "depressed", "ordinal"),
+    list(abcd_depress, "depressed", "numeric"),
     list(abcd_colour, "colour", "categorical"),
     uid = "patient"
 )
 
-extended_solutions <- extend_solutions(solutions_matrix, target_list)
+extended_solutions <- extend_solutions(
+    solutions_matrix,
+    target_list
+)
 
-
-extended_solutions
+extended_solutions <- extend_solutions(
+    solutions_matrix,
+    target_list,
+    cat_test = "fisher_exact"
+)
