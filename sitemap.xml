@@ -211,6 +211,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/extend_solutions.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/fisher_exact_pval.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/format_weights_row.html</loc>
   </url>
   <url>
@@ -251,6 +254,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/get_cluster_df.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/get_cluster_pval.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/get_cluster_solutions.html</loc>
@@ -335,6 +341,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/ord_reg_p.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/ord_reg_pval.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/p_val_select.html</loc>
