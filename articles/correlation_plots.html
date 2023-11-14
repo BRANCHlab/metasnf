@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
@@ -55,6 +55,7 @@
     <a class="dropdown-item" href="../articles/similarity_matrix_heatmap.html">Similarity Matrix Heatmaps</a>
     <a class="dropdown-item" href="../articles/manhattan_plots.html">Manhattan Plots</a>
     <a class="dropdown-item" href="../articles/alluvial_plots.html">Alluvial Plots</a>
+    <a class="dropdown-item" href="../articles/correlation_plots.html">Correlation Plots</a>
   </div>
 </li>
       </ul>
@@ -128,11 +129,9 @@ across all the variables being used in your analyses.</p>
 <span><span class="co">## 7             depressed     ordinal    behaviour     93     2</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This matrix contains all the pairwise association p-values</span></span>
-<span><span class="va">associations_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_associations.html">calculate_associations</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in stats::chisq.test(cat_var1, cat_var2, correct = FALSE): Chi-squared</span></span>
-<span><span class="co">## approximation may be incorrect</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">associations_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
+<span><span class="va">associations_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_associations.html">calculate_associations</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">associations_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##            mrisdp_303 mrisdp_304 mrisdp_305</span></span>
 <span><span class="co">## mrisdp_303  0.0000000  0.6374024  0.4513919</span></span>
 <span><span class="co">## mrisdp_304  0.6374024  0.0000000  0.2790341</span></span>
@@ -142,7 +141,7 @@ across all the variables being used in your analyses.</p>
 <h2 id="heatmaps">Heatmaps<a class="anchor" aria-label="anchor" href="#heatmaps"></a>
 </h2>
 <p>Here’s what a basic heatmap looks like:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/correlation_pval_heatmap.html">correlation_pval_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">associations_matrix</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -174,7 +173,7 @@ is really just a categorical mapping of “cbcl_depress”. The heatmap
 seems to show that quite well!</p>
 <p>You can draw attention to confounding variables and/or any out of
 model measures by specifying their names as shown below.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/correlation_pval_heatmap.html">correlation_pval_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">associations_matrix</span>,</span>
 <span>    confounders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -193,19 +192,19 @@ model measures by specifying their names as shown below.</p>
 <span><span class="co">## household_income       0.3696779 9.933317e-01</span></span>
 <span><span class="co">## cbcl_anxiety_r         0.6757400 1.533850e-01</span></span>
 <span><span class="co">## cbcl_depress_r         0.3250440 6.419098e-25</span></span>
-<span><span class="co">##                  pubertal_status       colour       city</span></span>
-<span><span class="co">## mrisdp_303             0.2632165 1.377306e-01 0.03452617</span></span>
-<span><span class="co">## mrisdp_304             0.1125757 3.930293e-01 0.84472131</span></span>
-<span><span class="co">## mrisdp_305             0.7851721 4.933408e-01 0.32803152</span></span>
-<span><span class="co">## mrisdp_306             0.2801596 5.106181e-01 0.62145904</span></span>
-<span><span class="co">## household_income       0.3696779 9.933317e-01 0.68129302</span></span>
-<span><span class="co">## cbcl_anxiety_r         0.6757400 1.533850e-01 0.47109581</span></span>
-<span><span class="co">## cbcl_depress_r         0.3250440 6.419098e-25 0.25153616</span></span></code></pre>
+<span><span class="co">##                  pubertal_status       colour      city</span></span>
+<span><span class="co">## mrisdp_303             0.2632165 1.377306e-01 0.7803711</span></span>
+<span><span class="co">## mrisdp_304             0.1125757 3.930293e-01 0.2714719</span></span>
+<span><span class="co">## mrisdp_305             0.7851721 4.933408e-01 0.5537139</span></span>
+<span><span class="co">## mrisdp_306             0.2801596 5.106181e-01 0.9385818</span></span>
+<span><span class="co">## household_income       0.3696779 9.933317e-01 0.7091625</span></span>
+<span><span class="co">## cbcl_anxiety_r         0.6757400 1.533850e-01 0.5529767</span></span>
+<span><span class="co">## cbcl_depress_r         0.3250440 6.419098e-25 0.9063027</span></span></code></pre>
 <p><img src="correlation_plots_files/figure-html/unnamed-chunk-3-1.png" width="700"><img src="correlation_plots_files/figure-html/unnamed-chunk-3-2.png" width="700"></p>
 <p>The ComplexHeatmap package offers functionality for splitting
 heatmaps into slices. One way to do the slices is by clustering the
 heatmap with k-means:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/correlation_pval_heatmap.html">correlation_pval_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">associations_matrix</span>,</span>
 <span>    confounders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -226,21 +225,21 @@ heatmap with k-means:</p>
 <span><span class="co">## household_income       0.3696779 9.933317e-01</span></span>
 <span><span class="co">## cbcl_anxiety_r         0.6757400 1.533850e-01</span></span>
 <span><span class="co">## cbcl_depress_r         0.3250440 6.419098e-25</span></span>
-<span><span class="co">##                  pubertal_status       colour       city</span></span>
-<span><span class="co">## mrisdp_303             0.2632165 1.377306e-01 0.03452617</span></span>
-<span><span class="co">## mrisdp_304             0.1125757 3.930293e-01 0.84472131</span></span>
-<span><span class="co">## mrisdp_305             0.7851721 4.933408e-01 0.32803152</span></span>
-<span><span class="co">## mrisdp_306             0.2801596 5.106181e-01 0.62145904</span></span>
-<span><span class="co">## household_income       0.3696779 9.933317e-01 0.68129302</span></span>
-<span><span class="co">## cbcl_anxiety_r         0.6757400 1.533850e-01 0.47109581</span></span>
-<span><span class="co">## cbcl_depress_r         0.3250440 6.419098e-25 0.25153616</span></span></code></pre>
+<span><span class="co">##                  pubertal_status       colour      city</span></span>
+<span><span class="co">## mrisdp_303             0.2632165 1.377306e-01 0.7803711</span></span>
+<span><span class="co">## mrisdp_304             0.1125757 3.930293e-01 0.2714719</span></span>
+<span><span class="co">## mrisdp_305             0.7851721 4.933408e-01 0.5537139</span></span>
+<span><span class="co">## mrisdp_306             0.2801596 5.106181e-01 0.9385818</span></span>
+<span><span class="co">## household_income       0.3696779 9.933317e-01 0.7091625</span></span>
+<span><span class="co">## cbcl_anxiety_r         0.6757400 1.533850e-01 0.5529767</span></span>
+<span><span class="co">## cbcl_depress_r         0.3250440 6.419098e-25 0.9063027</span></span></code></pre>
 <p><img src="correlation_plots_files/figure-html/unnamed-chunk-4-1.png" width="700"><img src="correlation_plots_files/figure-html/unnamed-chunk-4-2.png" width="700"></p>
 <p>Another way is to explicitly pass in a categorical vector that can be
 used to distinguish the columns (according to their order in the
 associations_matrix) into their desired slices. To use the domains of
 the variables, you can make use of the <code>dl_variable_summary</code>
 function.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dl_var_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dl_variable_summary.html">dl_variable_summary</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dl_var_summary</span><span class="op">)</span></span></code></pre></div>
@@ -251,7 +250,7 @@ function.</p>
 <span><span class="co">## 4       mrisdp_306 continuous neuroimaging</span></span>
 <span><span class="co">## 5 household_income    ordinal demographics</span></span>
 <span><span class="co">## 6  pubertal_status continuous demographics</span></span></code></pre>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/correlation_pval_heatmap.html">correlation_pval_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">associations_matrix</span>,</span>
 <span>    confounders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -271,14 +270,14 @@ function.</p>
 <span><span class="co">## household_income       0.3696779 9.933317e-01</span></span>
 <span><span class="co">## cbcl_anxiety_r         0.6757400 1.533850e-01</span></span>
 <span><span class="co">## cbcl_depress_r         0.3250440 6.419098e-25</span></span>
-<span><span class="co">##                  pubertal_status       colour       city</span></span>
-<span><span class="co">## mrisdp_303             0.2632165 1.377306e-01 0.03452617</span></span>
-<span><span class="co">## mrisdp_304             0.1125757 3.930293e-01 0.84472131</span></span>
-<span><span class="co">## mrisdp_305             0.7851721 4.933408e-01 0.32803152</span></span>
-<span><span class="co">## mrisdp_306             0.2801596 5.106181e-01 0.62145904</span></span>
-<span><span class="co">## household_income       0.3696779 9.933317e-01 0.68129302</span></span>
-<span><span class="co">## cbcl_anxiety_r         0.6757400 1.533850e-01 0.47109581</span></span>
-<span><span class="co">## cbcl_depress_r         0.3250440 6.419098e-25 0.25153616</span></span></code></pre>
+<span><span class="co">##                  pubertal_status       colour      city</span></span>
+<span><span class="co">## mrisdp_303             0.2632165 1.377306e-01 0.7803711</span></span>
+<span><span class="co">## mrisdp_304             0.1125757 3.930293e-01 0.2714719</span></span>
+<span><span class="co">## mrisdp_305             0.7851721 4.933408e-01 0.5537139</span></span>
+<span><span class="co">## mrisdp_306             0.2801596 5.106181e-01 0.9385818</span></span>
+<span><span class="co">## household_income       0.3696779 9.933317e-01 0.7091625</span></span>
+<span><span class="co">## cbcl_anxiety_r         0.6757400 1.533850e-01 0.5529767</span></span>
+<span><span class="co">## cbcl_depress_r         0.3250440 6.419098e-25 0.9063027</span></span></code></pre>
 <p><img src="correlation_plots_files/figure-html/unnamed-chunk-5-1.png" width="700"><img src="correlation_plots_files/figure-html/unnamed-chunk-5-2.png" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
