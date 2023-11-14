@@ -23,7 +23,7 @@ navbar:
       href: articles/data_list.html
     - text: -------
     - text: Advanced Options
-    - text: Custom Distance Metrics
+    - text: Distance Metrics
       href: articles/distance_metrics.html
     - text: Feature Weights
       href: articles/feature_weights.html
