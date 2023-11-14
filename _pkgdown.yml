@@ -19,6 +19,8 @@ navbar:
     - text: Essential Objects
     - text: The Settings Matrix
       href: articles/settings_matrix.html
+    - text: The Data List
+      href: articles/data_list.html
     - text: -------
     - text: Advanced Options
     - text: Custom Distance Metrics
