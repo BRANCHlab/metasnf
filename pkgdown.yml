@@ -6,13 +6,14 @@ articles:
   a_simple_example: a_simple_example.html
   alluvial_plots: alluvial_plots.html
   correlation_plots: correlation_plots.html
+  data_list: data_list.html
   distance_metrics: distance_metrics.html
   feature_weights: feature_weights.html
   getting_started: getting_started.html
   manhattan_plots: manhattan_plots.html
   settings_matrix: settings_matrix.html
   similarity_matrix_heatmap: similarity_matrix_heatmap.html
-last_built: 2023-11-14T15:05Z
+last_built: 2023-11-14T16:42Z
 urls:
   reference: https://branchlab.github.io/metasnf/reference
   article: https://branchlab.github.io/metasnf/articles
