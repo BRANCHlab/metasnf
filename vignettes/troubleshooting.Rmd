@@ -1,0 +1,26 @@
+---
+title: "Troubleshooting"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Troubleshooting}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+div.aside { background-color:#fff2e6; }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+If you encounter a problem, believe some part of the documentation could be improved for clarity, or have some suggestions for how the package could be improved, please do not hesitate to post about it in the [issues tab](https://github.com/BRANCHlab/metasnf/issues) of the metasnf GitHub page.
+
+We try to resolve most issues by providing descriptive error and warning messages throughout the code.
+This vignette will also keep track of known problems in the code that have not yet been resolved.
