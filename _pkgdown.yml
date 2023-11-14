@@ -21,6 +21,8 @@ navbar:
       href: articles/settings_matrix.html
     - text: Custom Distance Metrics
       href: articles/distance_metrics.html
+    - text: Feature Weights
+      href: articles/feature_weights.html
     - text: -------
     - text: Additional Plotting
     - text: Similarity Matrix Heatmaps
