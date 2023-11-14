@@ -134,9 +134,11 @@ across all the variables being used in your analyses.</p>
 <span><span class="co">## 7             depressed     ordinal    behaviour     93     2</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This matrix contains all the pairwise association p-values</span></span>
-<span><span class="va">associations_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_associations.html">calculate_associations</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">associations_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
+<span><span class="va">associations_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_associations.html">calculate_associations</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in stats::chisq.test(cat_var1, cat_var2, correct = FALSE): Chi-squared</span></span>
+<span><span class="co">## approximation may be incorrect</span></span></code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">associations_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##            mrisdp_303 mrisdp_304 mrisdp_305</span></span>
 <span><span class="co">## mrisdp_303  0.0000000  0.6374024  0.4513919</span></span>
 <span><span class="co">## mrisdp_304  0.6374024  0.0000000  0.2790341</span></span>
@@ -146,7 +148,7 @@ across all the variables being used in your analyses.</p>
 <h2 id="heatmaps">Heatmaps<a class="anchor" aria-label="anchor" href="#heatmaps"></a>
 </h2>
 <p>Here’s what a basic heatmap looks like:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/correlation_pval_heatmap.html">correlation_pval_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">associations_matrix</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -156,7 +158,7 @@ is really just a categorical mapping of “cbcl_depress”. The heatmap
 seems to show that quite well!</p>
 <p>You can draw attention to confounding variables and/or any out of
 model measures by specifying their names as shown below.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/correlation_pval_heatmap.html">correlation_pval_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">associations_matrix</span>,</span>
 <span>    confounders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -171,7 +173,7 @@ model measures by specifying their names as shown below.</p>
 <p>The ComplexHeatmap package offers functionality for splitting
 heatmaps into slices. One way to do the slices is by clustering the
 heatmap with k-means:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/correlation_pval_heatmap.html">correlation_pval_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">associations_matrix</span>,</span>
 <span>    confounders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -190,7 +192,7 @@ used to distinguish the columns (according to their order in the
 associations_matrix) into their desired slices. To use the domains of
 the variables, you can make use of the <code>dl_variable_summary</code>
 function.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dl_var_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dl_variable_summary.html">dl_variable_summary</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dl_var_summary</span><span class="op">)</span></span>
