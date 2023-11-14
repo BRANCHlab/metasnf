@@ -29,3 +29,5 @@ navbar:
       href: articles/manhattan_plots.html
     - text: Alluvial Plots
       href: articles/alluvial_plots.html
+    - text: Correlation Plots
+      href: articles/correlation_plots.html

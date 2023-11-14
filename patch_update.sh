@@ -5,4 +5,4 @@ Rscript ./patch_update.R
 git commit -m "patch version update"
 VERSION=`git describe --tags --abbrev=0 | awk -F. '{OFS="."; $NF+=1; print $0}'`
 git tag -a $VERSION -m "patch update"
-git push origin $VERSION
+#git push origin $VERSION
