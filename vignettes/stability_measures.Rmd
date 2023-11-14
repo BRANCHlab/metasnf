@@ -1,0 +1,146 @@
+---
+title: "Stability Measures"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Stability Measures}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+div.aside { background-color:#fff2e6; }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Download a copy of the vignette to follow along here: [stability_measures.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/stability_measures.Rmd)
+
+In this vignette, we will highlight the main stability measure options in the metasnf package.
+
+Do brace yourself: stability measures scale SNF computation time by the number of settings matrix rows *times* the number of resamples of the data you use.
+Consider trying these functions on scaled down versions of your data or on just a couple of rows of the settings_matrix to get a sense of how long these functions may take to complete on your full dataset.
+
+```{r}
+library(metasnf)
+
+# Generate data_list
+data_list <- generate_data_list(
+    list(
+        data = gender_df,
+        name = "gender",
+        domain = "demographics",
+        type = "categorical"
+    ),
+    list(
+        data = diagnosis_df,
+        name = "diagnosis",
+        domain = "clinical",
+        type = "categorical"
+    ),
+    list(
+        data = age_df,
+        name = "age",
+        domain = "demographics",
+        type = "discrete"
+    ),
+    uid = "patient_id"
+)
+
+# Generate settings_matrix
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 3,
+    max_k = 40,
+    seed = 42
+)
+
+# Run SNF and clustering
+solutions_matrix <- batch_snf(
+    data_list,
+    settings_matrix
+)
+
+data_list_subsamples <- subsample_data_list(
+    data_list,
+    n_subsamples = 2, # calculate 30 subsamples
+    subsample_fraction = 0.8 # for each subsample, use random 80% of patients
+)
+
+#
+#pairwise_aris <- subsample_pairwise_aris(
+#    data_list_subsamples,
+#    settings_matrix
+#)
+#
+#pairwise_aris
+#
+#fraction_together <- fraction_clustered_together(
+#    data_list_subsamples,
+#    settings_matrix,
+#    solutions_matrix
+#)
+#
+#summarize_dl(data_list)
+
+
+z <- generate_cocluster_data(
+    full_data_list = data_list,
+    data_list_subsamples,
+    settings_matrix[1, ]
+)
+
+names(z)
+
+cocluster_heatmap <- function(cocluster_data) {
+    same_solution <- cocluster_data$"same_solution"
+    if (min(same_solution) == 0) {
+        zero_cols <- apply(b, 2, min) == 0
+        warning(
+            sum(zero_cols), " subject pairs were never a part of the same",
+            " resampled data set. Those subject pairs will be removed from",
+            " the heatmap. To avoid this warning, try using a higher value of",
+            " subsample_fraction or a higher value of n_subsamples when",
+            " calling subsample_data_list."
+        )
+    }
+}
+cocluster_heatmap(z)
+
+
+b <- matrix(runif(4*4), 4, 4)
+b[1, 2] <- 0
+b[2, 1] <- 0
+b[1, 4] <- 0
+b[4, 1] <- 0
+
+
+z[[1]]
+
+min(z[[1]])
+
+min(z[[1]])
+
+cocluster_matrix <- z[[2]] / z[[1]]
+
+library(ComplexHeatmap)
+
+Heatmap(cocluster_matrix)
+
+```
+
+The user might want to know:
+
+* The per-solution average across resamplings (what is currently provided)
+* The per-solution pairwise fraction:
+    * 3 n*n matrices per solution:
+    * A matrix of how many times each pair were in the same solution
+    * A matrix of how many times each pair were in separate solutions
+
+

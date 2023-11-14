@@ -89,11 +89,6 @@ subsample_data_list <- function(data_list,
 #' @export
 subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
     # Generate a new cluster_solutions dataframe for every data_list subsample
-    pb <- utils::txtProgressBar(
-        min = 0,
-        max = length(data_list_subsamples),
-        style = 3
-    )
     subsample_solutions <- lapply(
         1:length(data_list_subsamples),
         function(x) {
@@ -105,7 +100,6 @@ subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
                 )
             )
             cluster_solutions <- get_cluster_solutions(solutions_matrix)
-            utils::setTxtProgressBar(pb, x)
             return(cluster_solutions)
         }
     )
@@ -195,13 +189,13 @@ fraction_clustered_together <- function(data_list_subsamples,
         "mean_fraction_together" = double()
     )
     solution_indices <- seq_len(nrow(solutions_matrix))
-    pb <- utils::txtProgressBar(
-        min = 0,
-        max = nrow(solutions_matrix),
-        style = 3
-    )
     for (solution_index in solution_indices) {
-        utils::setTxtProgressBar(pb, solution_index)
+        print(
+            paste0(
+                "Working on solution ", solution_index, " / ",
+                max(solution_indices), " ..."
+            )
+        )
         current_solution_df <-
             full_cluster_solutions[, c(1, solution_index + 1)]
         colnames(current_solution_df) <- c("subjectkey", "cluster")
