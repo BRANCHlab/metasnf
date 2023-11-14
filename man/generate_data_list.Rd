@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_list.R
 \name{generate_data_list}
 \alias{generate_data_list}
-\title{Generate data_list object}
+\title{Generate a data_list}
 \usage{
 generate_data_list(
   ...,
@@ -34,14 +34,14 @@ element is the data_list and the second element is a vector of unique IDs
 of patients who were removed during the complete data filtration step.}
 }
 \description{
-This is the major data object that will be processed when iterating through
-the settings matrix. The full list contains one list per measurement type.
-Within each measurement type's list, elements include the actual data
-structure, the name, the domain, and the data 'type' (i.e, numeric or
-categorical).
-}
-\details{
-To-do: include checks to make sure format of data list is correct
+This function generates the major data object that will be processed when
+iterating through the each SNF pipeline defined in the settings_matrix. The
+data_list is a named and nested list containing input dataframes (data), the
+name of that input dataframe (for the user's reference), the 'domain' of
+that dataframe (the broader source of information that the input dataframe
+is capturing, determined by user's domain knowledge), and the type of
+variable stored in the dataframe (continuous, discrete, ordinal,
+categorical, or mixed).
 }
 \examples{
 heart_rate_df <- data.frame(
@@ -56,14 +56,59 @@ personality_test_df <- data.frame(
     var4 = c(509, 2209, 83)
 )
 
-dl <- generate_data_list(
-    list(heart_rate_df, "data1", "domain1", "continuous"),
-    list(personality_test_df, "data2", "domain2", "continuous"),
+survey_response_df <- data.frame(
+    patient_id = c("1", "2", "3"),
+    var5 = c(1, 3, 3),
+    var6 = c(2, 3, 3)
+)
+
+city_df <- data.frame(
+    patient_id = c("1", "2", "3"),
+    var7 = c("toronto", "montreal", "vancouver")
+)
+
+# Explicitly (Name each nested list element):
+data_list <- generate_data_list(
+    list(
+        data = heart_rate_df,
+        name = "heart_rate",
+        domain = "clinical",
+        type = "continuous"
+    ),
+    list(
+        data = personality_test_df,
+        name = "personality_test",
+        domain = "surveys",
+        type = "continuous"
+    ),
+    list(
+        data = survey_response_df,
+        name = "survey_response",
+        domain = "surveys",
+        type = "ordinal"
+    ),
+    list(
+        data = city_df,
+        name = "city",
+        domain = "location",
+        type = "categorical"
+    ),
     uid = "patient_id"
 )
 
-# Alternative loading: providing a single list of lists
+# Compact loading
+data_list <- generate_data_list(
+    list(heart_rate_df, "heart_rate", "clinical", "continuous"),
+    list(personality_test_df, "personality_test", "surveys", "continuous"),
+    list(survey_response_df, "survey_response", "surveys", "ordinal"),
+    list(city_df, "city", "location", "categorical"),
+    uid = "patient_id"
+)
 
+# Printing data_list summaries
+summarize_dl(data_list)
+
+# Alternative loading: providing a single list of lists
 list_of_lists <- list(
     list(heart_rate_df, "data1", "domain1", "continuous"),
     list(personality_test_df, "data2", "domain2", "continuous")
