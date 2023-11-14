@@ -319,6 +319,10 @@ individual <- function(data_list,
             SNFtool::affinityMatrix(x, K = k, sigma = alpha)
         }
     )
-    fused_network <- SNFtool::SNF(Wall = sim_list, K = k, t = t)
-    return(fused_network)
+    # If only a single similarity matrix is in the sim_list, no need for SNF
+    if (length(sim_list) > 1) {
+        fused_network <- SNFtool::SNF(Wall = sim_list, K = k, t = t)
+    } else {
+        fused_network <- sim_list[[1]]
+    }
 }

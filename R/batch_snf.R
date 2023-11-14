@@ -279,6 +279,23 @@ batch_snf <- function(data_list,
             mix_dist_fn = mix_dist_fn,
             weights_row = weights_row
         )
+        if (any(is.na(fused_network))) {
+            return(
+                list(
+                    "current_data_list" = current_data_list,
+                    "current_snf_scheme" = current_snf_scheme,
+                    "k" = k,
+                    "alpha" = alpha,
+                    "t" = t,
+                    "cont_dist_fn" = cont_dist_fn,
+                    "disc_dist_fn" = disc_dist_fn,
+                    "ord_dist_fn" = ord_dist_fn,
+                    "cat_dist_fn" = cat_dist_fn,
+                    "mix_dist_fn" = mix_dist_fn,
+                    "weights_row" = weights_row
+                )
+            )
+        }
         # If user provided a path to save the similarity matrices, save them
         if (!is.null(similarity_matrix_dir)) {
             utils::write.csv(
