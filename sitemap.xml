@@ -19,6 +19,9 @@
     <loc>https://branchlab.github.io/metasnf/articles/alluvial_plots.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/articles/correlation_plots.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/articles/distance_metrics.html</loc>
   </url>
   <url>
@@ -118,6 +121,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/calc_om_aris.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/calculate_association_pval.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/calculate_associations.html</loc>
   </url>
   <url>
@@ -125,9 +131,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/calculate_dunn_indices.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/calculate_pval.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/calculate_silhouettes.html</loc>
@@ -143,6 +146,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/cbcl_ord_reg_from_om.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/cell_significance_fn.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/char_to_fac.html</loc>
@@ -181,7 +187,13 @@
     <loc>https://branchlab.github.io/metasnf/reference/corrHeatmap_legend.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/correlation_pval_heatmap.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/diagnosis_df.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/dl_variable_summary.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/domain_merge.html</loc>
