@@ -13,6 +13,8 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Download a copy of the vignette to follow along here: [correlation_plots.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/correlation_plots.Rmd)
+
 In this vignette, we go through how you can visualize correlations across all the variables being used in your analyses.
 
 ## Data set-up
@@ -54,11 +56,17 @@ associations_matrix <- calculate_associations(data_list)
 associations_matrix[1:3, 1:3]
 ```
 
-# Heatmaps
+## Heatmaps
 
 Here's what a basic heatmap looks like:
 
-```{r}
+```{r eval = FALSE}
+heatmap <- correlation_pval_heatmap(
+    associations_matrix
+)
+```
+
+```{r echo = FALSE}
 correlation_pval_heatmap(
     associations_matrix
 )
@@ -69,8 +77,21 @@ The heatmap seems to show that quite well!
 
 You can draw attention to confounding variables and/or any out of model measures by specifying their names as shown below.
 
-```{r}
+```{r eval = FALSE}
 correlation_pval_heatmap(
+    associations_matrix,
+    confounders = list(
+        "Colour" = "colour",
+        "Pubertal Status" = "pubertal_status"
+    ),
+    out_of_models = list(
+        "City" = "city"
+    )
+)
+```
+
+```{r echo = FALSE}
+heatmap <- correlation_pval_heatmap(
     associations_matrix,
     confounders = list(
         "Colour" = "colour",
@@ -85,9 +106,7 @@ correlation_pval_heatmap(
 The ComplexHeatmap package offers functionality for splitting heatmaps into slices.
 One way to do the slices is by clustering the heatmap with k-means:
 
-```{r}
-
-
+```{r eval = FALSE}
 correlation_pval_heatmap(
     associations_matrix,
     confounders = list(
@@ -100,13 +119,45 @@ correlation_pval_heatmap(
     row_km = 3,
     column_km = 3
 )
+```
 
+```{r echo = FALSE}
+heatmap <- correlation_pval_heatmap(
+    associations_matrix,
+    confounders = list(
+        "Colour" = "colour",
+        "Pubertal Status" = "pubertal_status"
+    ),
+    out_of_models = list(
+        "City" = "city"
+    ),
+    row_km = 3,
+    column_km = 3
+)
 ```
 
 Another way is to explicitly pass in a categorical vector that can be used to distinguish the columns (according to their order in the associations_matrix) into their desired slices.
 To use the domains of the variables, you can make use of the `dl_variable_summary` function.
 
-```{r}
+```{r eval = FALSE}
+dl_var_summary <- dl_variable_summary(data_list)
+
+head(dl_var_summary)
+
+correlation_pval_heatmap(
+    associations_matrix,
+    confounders = list(
+        "Colour" = "colour",
+        "Pubertal Status" = "pubertal_status"
+    ),
+    out_of_models = list(
+        "City" = "city"
+    ),
+    split_by_domain = dl_var_summary
+)
+```
+
+```{r echo = FALSE}
 dl_var_summary <- dl_variable_summary(data_list)
 
 head(dl_var_summary)

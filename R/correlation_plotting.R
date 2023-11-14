@@ -1160,10 +1160,8 @@ correlation_pval_heatmap <- function(correlation_matrix,
     oom_indices <- colnames(correlation_matrix) %in% out_of_models_names
     peripheral_indices <- colnames(correlation_matrix) %in% peripheral_names
     confounder_data <- correlation_matrix[!peripheral_indices, confounder_indices]
-    print(correlation_matrix[!peripheral_indices, confounder_indices])
     out_of_model_data <- correlation_matrix[!peripheral_indices, oom_indices]
     peripheral_data <- correlation_matrix[!peripheral_indices, peripheral_indices]
-    print(peripheral_data)
     correlation_matrix <- correlation_matrix[!peripheral_indices, !peripheral_indices]
     ###########################################################################
     if (is.null(labels_colour)) {
@@ -1344,7 +1342,6 @@ correlation_pval_heatmap <- function(correlation_matrix,
         heatmap,
         annotation_legend_list = lgd_list
     )
-    return(heatmap)
 }
 
 #' Place significance stars on ComplexHeatmap cells.
