@@ -224,7 +224,7 @@ By default, this function will return a dataframe containing all the columns in 
 
 To actually use the matrix during SNF, you'll need to make sure that the number of rows in the weights matrix is the same as the number of rows in your settings matrix.
 
-```{r eval = FALSE}
+```{r}
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 10,
