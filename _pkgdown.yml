@@ -16,9 +16,11 @@ navbar:
     - text: A Less Simple Example
       href: articles/a_less_simple_example.html
     - text: -------
-    - text: Advanced Options
+    - text: Essential Objects
     - text: The Settings Matrix
       href: articles/settings_matrix.html
+    - text: -------
+    - text: Advanced Options
     - text: Custom Distance Metrics
       href: articles/distance_metrics.html
     - text: Feature Weights
