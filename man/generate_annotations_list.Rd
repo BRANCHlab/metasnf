@@ -14,6 +14,7 @@ generate_annotations_list(
   right_hm = NULL,
   top_hm = NULL,
   bottom_hm = NULL,
+  show_legend = TRUE,
   annotation_colours = NULL
 )
 }
@@ -40,6 +41,8 @@ barplot annotation.}
 \item{top_hm}{See left_hm.}
 
 \item{bottom_hm}{See left_hm.}
+
+\item{show_legend}{Add legends to the annotations.}
 
 \item{annotation_colours}{Named list of heatmap annotations and their
 colours.}

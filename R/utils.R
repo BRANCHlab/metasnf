@@ -353,8 +353,11 @@ check_similarity_matrices <- function(similarity_matrices) {
 #'  during plotting.
 #'
 #' @param matrix Matrix to rescale.
-#' @param method Method of rescaling. Can be "mean" (replace diagonals with
-#'  average value of off-diagonals) or "zero" (replace diagonals with 0).
+#' @param method Method of rescaling. Can be:
+#' * "mean" (replace diagonals with average value of off-diagonals)
+#' * "zero" (replace diagonals with 0)
+#' * "min" (replace diagonals with min value of off-diagonals)
+#' * "max" (replace diagonals with max value of off-diagonals)
 #'
 #' @export
 scale_diagonals <- function(matrix, method = "mean") {
@@ -363,6 +366,12 @@ scale_diagonals <- function(matrix, method = "mean") {
         diag(matrix) <- mean(off_diagonals)
     } else if (method == "zero") {
         diag(matrix) <- 0
+    } else if (method == "min") {
+        off_diagonals <- matrix[col(matrix) != row(matrix)]
+        diag(matrix) <- min(off_diagonals)
+    } else if (method == "max") {
+        off_diagonals <- matrix[col(matrix) != row(matrix)]
+        diag(matrix) <- max(off_diagonals)
     } else if (method != "none") {
         stop("Invalid scaling method specified.")
     }

@@ -367,3 +367,34 @@ collapse_dl <- function(data_list) {
     merged_df <- merge_df_list(data_only)
     return(merged_df)
 }
+
+#' Variable-level summary of a data_list
+#'
+#' @param data_list A data_list.
+#'
+#' @return variable_level_summary A dataframe containing the name, type, and
+#' domain of every variable in a data_list.
+#'
+#' @export
+dl_variable_summary <- function(data_list) {
+    types <- data_list |> lapply(
+        function(x) {
+            rep(x$"type", ncol(x$"data") - 1)
+        }
+    ) |> unlist()
+    domains <- data_list |> lapply(
+        function(x) {
+            rep(x$"domain", ncol(x$"data") - 1)
+        }
+    ) |> unlist()
+    merged_df <- data_list |>
+        collapse_dl() |>
+        data.frame()
+    var_names <- colnames(merged_df[, colnames(merged_df) != "subjectkey"])
+    variable_level_summary <- data.frame(
+        name = var_names,
+        type = types,
+        domain = domains
+    )
+    return(variable_level_summary)
+}

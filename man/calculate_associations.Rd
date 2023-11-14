@@ -8,7 +8,8 @@ calculate_associations(
   data_list,
   verbose = FALSE,
   key_association = NULL,
-  drop_self = TRUE
+  drop_self = TRUE,
+  cat_test = "chi_squared"
 )
 }
 \arguments{
@@ -22,6 +23,10 @@ p-values relative to that variable rather than all pairwise p-values.}
 
 \item{drop_self}{If key_association is specified and drop_self is TRUE,
 removes the p-value row of the key_association variable with itself (0).}
+
+\item{cat_test}{String indicating which statistical test will be used to
+associate cluster with a categorical variable. Options are "chi_squared" for
+the Chi-squared test and "fisher_exact" for Fisher's exact test.}
 }
 \description{
 Calculate p-values for pairwise associations of variables in a data_list

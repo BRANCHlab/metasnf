@@ -171,12 +171,13 @@ similarity_matrix_heatmap <- function(similarity_matrix,
         title = title,
         at = c(minimum, middle, maximum)
     )
-    suppressMessages(
+    heatmap <- suppressMessages(
         do.call(
             ComplexHeatmap::Heatmap,
             args_list
         )
     )
+    return(heatmap)
 }
 
 #' Functions to calculate correlation between cluster assignment to outcome variables and visualize to find meaningful clusters with Manhattan plot
@@ -286,7 +287,7 @@ clusterToOutcomeManhattan <- function(target_pvals, levels = NULL) {
 #' Generate correlation heatmap
 #'
 #' @param corr matrix of outcomes-outcomes correlation p_values
-#' @param labels_color optional argument to specify color labels for datatypes
+#' @param labels_colour optional argument to specify color labels for datatypes
 #' @param row_km kmean partitioning of features along rows for display
 #' @param column_km kmean partitioning of features along columns for display
 #'
@@ -296,7 +297,7 @@ clusterToOutcomeManhattan <- function(target_pvals, levels = NULL) {
 corrHeatmap <- function(corr,
                         row_km,
                         column_km,
-                        labels_color = NULL) {
+                        labels_colour = NULL) {
     # Calculate the log-10 p-value of the correlation coefficient significance
     corr_log <- log10(corr + 1)
     # Color bars
@@ -305,16 +306,15 @@ corrHeatmap <- function(corr,
         c("navy", "blue", "royalblue", "steelblue2", "white")
     )
     # Add color for row and column labels
-    if (is.null(labels_color)) {
-        labels_color <- c(rep("black", ncol(corr_log)))
-        names(labels_color) <- colnames(corr_log)
+    if (is.null(labels_colour)) {
+        labels_colour <- c(rep("black", ncol(corr_log)))
+        names(labels_colour) <- colnames(corr_log)
     }
     hm <- ComplexHeatmap::Heatmap(
         as.matrix(corr_log),
         name = "Outcomes and Descriptors",
         cluster_rows = TRUE,
         cluster_columns = TRUE,
-
         # add significance notations to correlation heatmap
         cell_fun = function(j, i, x, y, width, height, fill) {
             # in grid.text, corr[i,j] specify values correlation matrix, default.units = "npc"
@@ -355,8 +355,8 @@ corrHeatmap <- function(corr,
                 flag <- 1
             }
         },
-        column_names_gp = grid::gpar(fontsize = 9, col = labels_color),
-        row_names_gp = grid::gpar(fontsize = 9, col = labels_color),
+        column_names_gp = grid::gpar(fontsize = 9, col = labels_colour),
+        row_names_gp = grid::gpar(fontsize = 9, col = labels_colour),
         row_km = row_km,
         column_km = row_km,
         column_dend_height = grid::unit(2, "cm"),
@@ -568,6 +568,7 @@ CorrManhattan <- function(df_stat, outcome, dataset_label) {
 #' @param right_hm See left_hm.
 #' @param top_hm See left_hm.
 #' @param bottom_hm See left_hm.
+#' @param show_legend Add legends to the annotations.
 #' @param annotation_colours Named list of heatmap annotations and their
 #'  colours.
 #'
@@ -583,6 +584,7 @@ generate_annotations_list <- function(df,
                                       right_hm = NULL,
                                       top_hm = NULL,
                                       bottom_hm = NULL,
+                                      show_legend = TRUE,
                                       annotation_colours = NULL) {
     ###########################################################################
     # Ensure all the variables specified are in the provided data
@@ -624,7 +626,8 @@ generate_annotations_list <- function(df,
             ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
                 temporary_name = ComplexHeatmap::anno_barplot(
                     df[, top_bar[[i]]]
-                )
+                ),
+                show_legend = show_legend
             )
             # Remove the "temporary_name"s
             names(ith_annotation@anno_list) <- top_bar_names[[i]]
@@ -656,7 +659,8 @@ generate_annotations_list <- function(df,
                 top_hm_names[[i]] <- top_hm[[i]]
             }
             ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
-                temporary_name = df[, top_hm[[i]]]
+                temporary_name = df[, top_hm[[i]]],
+                show_legend = show_legend
             )
             ###################################################################
             # Check for colours
@@ -668,11 +672,13 @@ generate_annotations_list <- function(df,
                 names(ith_colour_map) <- "temporary_name"
                 ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
                     temporary_name = df[, top_hm[[i]]],
-                    col = ith_colour_map
+                    col = ith_colour_map,
+                    show_legend = show_legend
                 )
             } else {
                 ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
-                    temporary_name = df[, top_hm[[i]]]
+                    temporary_name = df[, top_hm[[i]]],
+                    show_legend = show_legend
                 )
             }
             ###################################################################
@@ -707,7 +713,8 @@ generate_annotations_list <- function(df,
             ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
                 temporary_name = ComplexHeatmap::anno_barplot(
                     df[, bottom_bar[[i]]]
-                )
+                ),
+                show_legend = show_legend
             )
             # Remove the "temporary_name"s
             names(ith_annotation@anno_list) <- bottom_bar_names[[i]]
@@ -739,7 +746,8 @@ generate_annotations_list <- function(df,
                 bottom_hm_names[[i]] <- bottom_hm[[i]]
             }
             ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
-                temporary_name = df[, bottom_hm[[i]]]
+                temporary_name = df[, bottom_hm[[i]]],
+                show_legend = show_legend
             )
             ###################################################################
             # Check for colours
@@ -751,11 +759,13 @@ generate_annotations_list <- function(df,
                 names(ith_colour_map) <- "temporary_name"
                 ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
                     temporary_name = df[, bottom_hm[[i]]],
-                    col = ith_colour_map
+                    col = ith_colour_map,
+                    show_legend = show_legend
                 )
             } else {
                 ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
-                    temporary_name = df[, bottom_hm[[i]]]
+                    temporary_name = df[, bottom_hm[[i]]],
+                    show_legend = show_legend
                 )
             }
             ###################################################################
@@ -790,7 +800,8 @@ generate_annotations_list <- function(df,
             ith_annotation <- ComplexHeatmap::rowAnnotation(
                 temporary_name = ComplexHeatmap::anno_barplot(
                     df[, left_bar[[i]]]
-                )
+                ),
+                show_legend = show_legend
             )
             # Remove the "temporary_name"s
             names(ith_annotation@anno_list) <- left_bar_names[[i]]
@@ -831,11 +842,13 @@ generate_annotations_list <- function(df,
                 names(ith_colour_map) <- "temporary_name"
                 ith_annotation <- ComplexHeatmap::rowAnnotation(
                     temporary_name = df[, left_hm[[i]]],
-                    col = ith_colour_map
+                    col = ith_colour_map,
+                    show_legend = show_legend
                 )
             } else {
                 ith_annotation <- ComplexHeatmap::rowAnnotation(
-                    temporary_name = df[, left_hm[[i]]]
+                    temporary_name = df[, left_hm[[i]]],
+                    show_legend = show_legend
                 )
             }
             ###################################################################
@@ -870,7 +883,8 @@ generate_annotations_list <- function(df,
             ith_annotation <- ComplexHeatmap::rowAnnotation(
                 temporary_name = ComplexHeatmap::anno_barplot(
                     df[, right_bar[[i]]]
-                )
+                ),
+                show_legend = show_legend
             )
             # Remove the "temporary_name"s
             names(ith_annotation@anno_list) <- right_bar_names[[i]]
@@ -902,7 +916,8 @@ generate_annotations_list <- function(df,
                 right_hm_names[[i]] <- right_hm[[i]]
             }
             ith_annotation <- ComplexHeatmap::rowAnnotation(
-                temporary_name = df[, right_hm[[i]]]
+                temporary_name = df[, right_hm[[i]]],
+                show_legend = show_legend
             )
             ###################################################################
             # Check for colours
@@ -914,11 +929,13 @@ generate_annotations_list <- function(df,
                 names(ith_colour_map) <- "temporary_name"
                 ith_annotation <- ComplexHeatmap::rowAnnotation(
                     temporary_name = df[, right_hm[[i]]],
-                    col = ith_colour_map
+                    col = ith_colour_map,
+                    show_legend = show_legend
                 )
             } else {
                 ith_annotation <- ComplexHeatmap::rowAnnotation(
-                    temporary_name = df[, right_hm[[i]]]
+                    temporary_name = df[, right_hm[[i]]],
+                    show_legend = show_legend
                 )
             }
             ###################################################################
@@ -1087,4 +1104,297 @@ alluvial_cluster_plot <- function(cluster_sequence,
         legend.text = ggplot2::element_text(size = 12)
     )
     return(plot)
+}
+
+#' Heatmap of pairwise associations between variables
+#'
+#' @param correlation_matrix Matrix containing all pairwise association
+#' p-values. The recommended way to obtain this matrix is through the
+#' calculate_associations function.
+#' @param scale_diag Parameter that controls how the diagonals of the
+#' correlation_matrix are adjusted in the heatmap. For best viewing, this is
+#' set to "max", which will match the diagonals to whichever pairwise
+#' association has the highest p-value.
+#' @param cluster_rows Parameter for ComplexHeatmap::Heatmap. Will be ignored
+#' if split_by_domain is also provided.
+#' @param cluster_columns Parameter for ComplexHeatmap::Heatmap. Will be
+#' ignored if split_by_domain is also provided.
+#' @param show_row_names Parameter for ComplexHeatmap::Heatmap.
+#' @param show_column_names Parameter for ComplexHeatmap::Heatmap.
+#' @param show_heatmap_legend Parameter for ComplexHeatmap::Heatmap.
+#' @param confounders A named list where the elements are columns in the
+#' correlation_matrix and the names are the corresponding display names.
+#' @param out_of_models Like confounders, but a named list of out of model
+#' measures (who are also present as columns in the correlation_matrix).
+#' @param annotation_colours Named list of heatmap annotations and their
+#'  colours.
+#' @param labels_colour Vector of colours to use for the columns and rows
+#' of the heatmap.
+#' @param split_by_domain The results of `dl_var_summar` - a dataframe that has
+#' the domain of every variable in the plotted data.
+#' columns of the correlation_matrix. Will be used to "slice" the heatmap into
+#' visually separated sections.
+#' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
+#'
+#' @export
+correlation_pval_heatmap <- function(correlation_matrix,
+                                     scale_diag = "max",
+                                     cluster_rows = TRUE,
+                                     cluster_columns = TRUE,
+                                     show_row_names = TRUE,
+                                     show_column_names = TRUE,
+                                     show_heatmap_legend = FALSE,
+                                     confounders = NULL,
+                                     out_of_models = NULL,
+                                     annotation_colours = NULL,
+                                     labels_colour = NULL,
+                                     split_by_domain = NULL,
+                                     ...) {
+    ###########################################################################
+    # Format data
+    ###########################################################################
+    confounder_names <- confounders |> unlist() |> as.character()
+    out_of_models_names <- out_of_models |> unlist() |> as.character()
+    peripheral_names <- c(confounder_names, out_of_models_names)
+    confounder_indices <- colnames(correlation_matrix) %in% confounder_names
+    oom_indices <- colnames(correlation_matrix) %in% out_of_models_names
+    peripheral_indices <- colnames(correlation_matrix) %in% peripheral_names
+    confounder_data <- correlation_matrix[!peripheral_indices, confounder_indices]
+    print(correlation_matrix[!peripheral_indices, confounder_indices])
+    out_of_model_data <- correlation_matrix[!peripheral_indices, oom_indices]
+    peripheral_data <- correlation_matrix[!peripheral_indices, peripheral_indices]
+    print(peripheral_data)
+    correlation_matrix <- correlation_matrix[!peripheral_indices, !peripheral_indices]
+    ###########################################################################
+    if (is.null(labels_colour)) {
+        labels_colour <- c(rep("black", ncol(correlation_matrix)))
+        names(labels_colour) <- colnames(correlation_matrix)
+    }
+    title <- "p-value"
+    ###########################################################################
+    # Scale the matrix diagonals
+    ###########################################################################
+    correlation_matrix <- scale_diagonals(
+        correlation_matrix,
+        method = scale_diag
+    )
+    # Lower threshold on p-values
+    correlation_matrix[correlation_matrix < 0.00001] <- 0.00001
+    # Assign breaks in the legend
+    minimum <- min(correlation_matrix) |> signif(2)
+    maximum <- max(correlation_matrix) |> signif(2)
+    middle <- mean(c(minimum, maximum)) |> signif(2)
+    ###########################################################################
+    # Prepare the annotations
+    ###########################################################################
+    in_model_colours <- c(
+        "black",
+        "navy",
+        "blue",
+        "royalblue",
+        "steelblue2"
+    )
+    confounder_colour_values <- c(
+        "black",
+        "red4",
+        "red2",
+        "red",
+        "lightcoral"
+    )
+    confounder_colours <- circlize::colorRamp2(
+        c(0, 0.0005, 0.005, 0.05, 1),
+        confounder_colour_values
+    )
+    out_of_model_colour_values <- c(
+        "black",
+        "darkgreen",
+        "forestgreen",
+        "chartreuse4",
+        "darkseagreen1"
+    )
+    out_of_model_colours <- circlize::colorRamp2(
+        c(0, 0.0005, 0.005, 0.05, 1),
+        out_of_model_colour_values
+    )
+    clist <- names(confounders) |>
+        lapply(
+            function(x) {
+                confounder_colours
+            }
+        )
+    names(clist) <- names(confounders)
+    olist <- names(out_of_models) |>
+        lapply(
+            function(x) {
+                out_of_model_colours
+            }
+        )
+    names(olist) <- names(out_of_models)
+    annotation_colours <- c(clist, olist)
+    annotations_list <- generate_annotations_list(
+        df = data.frame(peripheral_data),
+        left_hm = confounders,
+        top_hm = out_of_models,
+        annotation_colours = annotation_colours,
+        show_legend = FALSE
+    )
+    ###########################################################################
+    # Combining all the arguments to provide to ComplexHeatmap()
+    ###########################################################################
+    args_list <- list(...)
+    if (is.null(args_list$"top_annotation")) {
+        args_list$"top_annotation" <- annotations_list$"top_annotations"
+    }
+    if (is.null(args_list$"left_annotation")) {
+        args_list$"left_annotation" <- annotations_list$"left_annotations"
+    }
+    args_list$"matrix" <- correlation_matrix
+    args_list$"cluster_rows" <- cluster_rows
+    args_list$"cluster_columns" <- cluster_columns
+    args_list$"show_row_names" <- show_row_names
+    args_list$"show_column_names" <- show_column_names
+    args_list$"heatmap_legend_param" <- list(
+        color_bar = "continuous",
+        title = title,
+        at = c(minimum, middle, maximum)
+    )
+    args_list$"col" <- circlize::colorRamp2(
+        c(0, 0.0005, 0.005, 0.05, 1),
+        in_model_colours
+    )
+    args_list$"column_names_gp" <- grid::gpar(
+        fontsize = 9,
+        col = labels_colour
+    )
+    args_list$"row_names_gp" <- grid::gpar(
+        fontsize = 9,
+        col = labels_colour
+    )
+    args_list$"show_heatmap_legend" <- show_heatmap_legend
+    args_list$"cell_fun" <- cell_significance_fn(correlation_matrix)
+    if (!is.null(split_by_domain)) {
+        keep_vars <- split_by_domain$"name" %in% colnames(correlation_matrix)
+        split_by_domain <- split_by_domain[keep_vars, ]
+        args_list$"cluster_rows" <- FALSE
+        args_list$"cluster_columns" <- FALSE
+        args_list$"row_split" <- factor(split_by_domain$"domain")
+        args_list$"column_split" <- factor(split_by_domain$"domain")
+    }
+    ###########################################################################
+    # Create heatmap
+    ###########################################################################
+    heatmap <- suppressMessages(
+        do.call(
+            ComplexHeatmap::Heatmap,
+            args_list
+        )
+    )
+    ###########################################################################
+    # Add annotation legends
+    ###########################################################################
+    lgd_list <- list(
+        ComplexHeatmap::Legend(
+            labels = c(
+                "p = 1",
+                "p < 0.05",
+                "p < 0.005",
+                "p < 0.0005",
+                "p = 0"
+            ),
+            title = "In-Model Measures",
+            type = "grid",
+            legend_gp = grid::gpar(
+                fill = rev(in_model_colours)
+            ),
+        )
+    )
+    if (!is.null(confounders)) {
+        lgd_list[[length(lgd_list) + 1]] <- ComplexHeatmap::Legend(
+            labels = c(
+                "p = 1",
+                "p < 0.05",
+                "p < 0.005",
+                "p < 0.0005",
+                "p = 0"
+            ),
+            title = "Confounders",
+            type = "grid",
+            legend_gp = grid::gpar(
+                fill = rev(confounder_colour_values)
+            )
+        )
+    }
+    if (!is.null(out_of_models)) {
+        lgd_list[[length(lgd_list) + 1]] <- ComplexHeatmap::Legend(
+            labels = c(
+                "p = 1",
+                "p < 0.05",
+                "p < 0.005",
+                "p < 0.0005",
+                "p = 0"
+            ),
+            title = "Out-of-Model Measures",
+            type = "grid",
+            legend_gp = grid::gpar(
+                fill = rev(out_of_model_colour_values)
+            )
+        )
+    }
+    heatmap <- ComplexHeatmap::draw(
+        heatmap,
+        annotation_legend_list = lgd_list
+    )
+    return(heatmap)
+}
+
+#' Place significance stars on ComplexHeatmap cells.
+#'
+#' This is an internal function meant to be used to by the
+#' correlation_pval_heatmap function.
+#'
+#' @param data The matrix containing the cells to base the significance stars
+#' on.
+#'
+#' @return cell_fn Another function that is well-formatted for usage as the
+#' cell_fun argument in ComplexHeatmap::Heatmap.
+#'
+#' @export
+cell_significance_fn <- function(data) {
+    cell_fn <- function(j, i, x, y, width, height, fill) {
+        flag <- 0
+        if (data[i, j] < 0.0001) {
+            grid::grid.text(
+                "***",
+                x,
+                y,
+                hjust = 0.5,
+                vjust = 0.5,
+                gp = grid::gpar(fontsize = 12, col = "white")
+            )
+            flag <- 1
+        }
+        if (flag == 0 & data[i, j] < 0.001) {
+            grid::grid.text(
+                "**",
+                x,
+                y,
+                hjust = 0.5,
+                vjust = 0.5,
+                gp = grid::gpar(fontsize = 12, col = "white")
+            )
+            flag <- 1
+        }
+        if (flag == 0 & data[i, j] < 0.01) {
+            grid::grid.text(
+                "*",
+                x,
+                y,
+                hjust = 0.5,
+                vjust = 0.5,
+                gp = grid::gpar(fontsize = 12, col = "white")
+            )
+            flag <- 1
+        }
+    }
+    return(cell_fn)
 }

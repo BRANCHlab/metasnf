@@ -484,6 +484,9 @@ linear_model_pval <- function(predictor, response) {
 #' @param var2 A single vector containing a variable.
 #' @param type1 The type of var1 (continuous, discrete, ordinal, categorical).
 #' @param type2 The type of var2 (continuous, discrete, ordinal, categorical).
+#' @param cat_test String indicating which statistical test will be used to
+#' associate cluster with a categorical variable. Options are "chi_squared" for
+#' the Chi-squared test and "fisher_exact" for Fisher's exact test.
 #'
 #' @return pval A p-value from a statistical test based on the provided types.
 #'  Currently, this will either be the F-test p-value from a linear model
@@ -491,25 +494,35 @@ linear_model_pval <- function(predictor, response) {
 #'  p-value if both variables are categorical.
 #'
 #' @export
-calculate_pval <- function(var1, var2, type1, type2) {
+calculate_association_pval <- function(var1,
+                                       var2,
+                                       type1,
+                                       type2,
+                                       cat_test = "chi_squared") {
     types <- c(type1, type2)
     numeric_vars <- c("continuous", "discrete", "ordinal")
     if (all(types %in% numeric_vars)) {
         # numeric vs. numeric
-        num_var1 <- as.numeric(var1)
-        num_var2 <- as.numeric(var2)
+        num_var1 <- as.numeric(unlist(var1))
+        num_var2 <- as.numeric(unlist(var2))
         pval <- linear_model_pval(num_var1, num_var2)
     } else if (all(types %in% "categorical")) {
         # categorical vs. categorical
-        pval <- chi_squared_pval(var1, var2)
+        cat_var1 <- factor(unlist(var1))
+        cat_var2 <- factor(unlist(var2))
+        if (cat_test == "chi_squared") {
+            pval <- chi_squared_pval(cat_var1, cat_var2)
+        } else if (cat_test == "fisher_exact") {
+            pval <- fisher_exact_pval(cat_var1, cat_var2)
+        }
     } else {
         # numeric vs. categorical
         if (which(types %in% numeric_vars) == 1) {
-            num_var <- as.numeric(var1)
-            cat_var <- factor(var2)
+            num_var <- as.numeric(unlist(var1))
+            cat_var <- factor(unlist(var2))
         } else {
-            num_var <- as.numeric(var2)
-            cat_var <- factor(var1)
+            num_var <- as.numeric(unlist(var2))
+            cat_var <- factor(unlist(var1))
         }
         pval <- linear_model_pval(predictor = cat_var, response = num_var)
     }
@@ -525,12 +538,16 @@ calculate_pval <- function(var1, var2, type1, type2) {
 #'  p-values relative to that variable rather than all pairwise p-values.
 #' @param drop_self If key_association is specified and drop_self is TRUE,
 #'  removes the p-value row of the key_association variable with itself (0).
+#' @param cat_test String indicating which statistical test will be used to
+#' associate cluster with a categorical variable. Options are "chi_squared" for
+#' the Chi-squared test and "fisher_exact" for Fisher's exact test.
 #'
 #' @export
 calculate_associations <- function(data_list,
                                    verbose = FALSE,
                                    key_association = NULL,
-                                   drop_self = TRUE) {
+                                   drop_self = TRUE,
+                                   cat_test = "chi_squared") {
     ###########################################################################
     # Ensure that 'mixed' data type is not being used
     ###########################################################################
@@ -602,7 +619,13 @@ calculate_associations <- function(data_list,
         #######################################################################
         # Calculate p-values
         #######################################################################
-        pval <- calculate_pval(var1, var2, var1_type, var2_type)
+        pval <- calculate_association_pval(
+            var1,
+            var2,
+            var1_type,
+            var2_type,
+            cat_test
+        )
         if (is.na(pval)) {
             stop(
                 "Error returned when comparing ", var1_name, " with ",

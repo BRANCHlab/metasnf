@@ -9,8 +9,13 @@ scale_diagonals(matrix, method = "mean")
 \arguments{
 \item{matrix}{Matrix to rescale.}
 
-\item{method}{Method of rescaling. Can be "mean" (replace diagonals with
-average value of off-diagonals) or "zero" (replace diagonals with 0).}
+\item{method}{Method of rescaling. Can be:
+\itemize{
+\item "mean" (replace diagonals with average value of off-diagonals)
+\item "zero" (replace diagonals with 0)
+\item "min" (replace diagonals with min value of off-diagonals)
+\item "max" (replace diagonals with max value of off-diagonals)
+}}
 }
 \description{
 Adjust the diagonals of a matrix to reduce contrast with off-diagonals
