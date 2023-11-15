@@ -192,7 +192,7 @@ fraction_clustered_together <- function(data_list_subsamples,
     for (solution_index in solution_indices) {
         print(
             paste0(
-                "Working on solution ", solution_index, " / ",
+                "Working on solution ", solution_index, "/",
                 max(solution_indices), " ..."
             )
         )
