@@ -46,6 +46,12 @@
     <loc>https://branchlab.github.io/metasnf/articles/similarity_matrix_heatmap.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/articles/stability_measures.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/articles/troubleshooting.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/authors.html</loc>
   </url>
   <url>
@@ -181,6 +187,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/clusterToOutcomeManhattan.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/cocluster_heatmap.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/collapse_dl.html</loc>
   </url>
   <url>
@@ -245,6 +254,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/generate_clust_algs_list.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/generate_cocluster_data.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/generate_data_list.html</loc>
@@ -374,6 +386,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/plot_nmis.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/pooled_cocluster_heatmap.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/prefix_dl_sk.html</loc>

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.4.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,9 +34,10 @@
     <a class="dropdown-item" href="../articles/settings_matrix.html">The Settings Matrix</a>
     <a class="dropdown-item" href="../articles/data_list.html">The Data List</a>
     <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Advanced Options</h6>
-    <a class="dropdown-item" href="../articles/distance_metrics.html">Custom Distance Metrics</a>
+    <h6 class="dropdown-header" data-toc-skip>Advanced Functionality</h6>
+    <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
     <a class="dropdown-item" href="../articles/feature_weights.html">Feature Weights</a>
+    <a class="dropdown-item" href="../articles/stability_measures.html">Stability Measures and Consensus Clustering</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Additional Plotting</h6>
     <a class="dropdown-item" href="../articles/similarity_matrix_heatmap.html">Similarity Matrix Heatmaps</a>
@@ -286,6 +287,11 @@
         <dd>Display cluster assignment to outcome correlation as Manhattan plot</dd>
       </dl><dl><dt>
           
+          <code><a href="cocluster_heatmap.html">cocluster_heatmap()</a></code> 
+        </dt>
+        <dd>Heatmap of patient co-clustering across resampled data</dd>
+      </dl><dl><dt>
+          
           <code><a href="collapse_dl.html">collapse_dl()</a></code> 
         </dt>
         <dd>Collapse a data_list into a single dataframe</dd>
@@ -394,6 +400,11 @@
           <code><a href="generate_clust_algs_list.html">generate_clust_algs_list()</a></code> 
         </dt>
         <dd>Generate a list of custom clustering algorithms</dd>
+      </dl><dl><dt>
+          
+          <code><a href="generate_cocluster_data.html">generate_cocluster_data()</a></code> 
+        </dt>
+        <dd>Calculate patient co-clustering across subsamples</dd>
       </dl><dl><dt>
           
           <code><a href="generate_data_list.html">generate_data_list()</a></code> 
@@ -604,6 +615,11 @@
           <code><a href="plot_nmis.html">plot_nmis()</a></code> 
         </dt>
         <dd>Scatter plot the NMI values for each row of an nmi_df</dd>
+      </dl><dl><dt>
+          
+          <code><a href="pooled_cocluster_heatmap.html">pooled_cocluster_heatmap()</a></code> 
+        </dt>
+        <dd>Plot a co-clustering heatmap across multiple settings_matrix rows</dd>
       </dl><dl><dt>
           
           <code><a href="prefix_dl_sk.html">prefix_dl_sk()</a></code> 
