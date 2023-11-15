@@ -144,8 +144,7 @@ cocluster_heatmap <- function(cocluster_data) {
         )
     }
     cocluster_matrix <- same_cluster / same_solution
-    print(cocluster_matrix[1:5, 1:5])
-    ComplexHeatmap::Heatmap(
+    heatmap <- ComplexHeatmap::Heatmap(
         matrix = cocluster_matrix,
         show_row_names = FALSE,
         show_column_names = FALSE,
@@ -155,6 +154,7 @@ cocluster_heatmap <- function(cocluster_data) {
         ),
         heatmap_legend_param = list(title = "Co-Cluster Fraction")
     )
+    return(heatmap)
 }
 
 #' Plot a co-clustering heatmap across multiple settings_matrix rows
@@ -190,7 +190,7 @@ pooled_cocluster_heatmap <- function(cocluster_list) {
         }
     }
     cocluster_matrix <- cocluster / cosolution
-    ComplexHeatmap::Heatmap(
+    heatmap <- ComplexHeatmap::Heatmap(
         matrix = cocluster_matrix,
         show_row_names = FALSE,
         show_column_names = FALSE,
@@ -200,4 +200,5 @@ pooled_cocluster_heatmap <- function(cocluster_list) {
         ),
         heatmap_legend_param = list(title = "Pooled Co-Cluster Fraction")
     )
+    return(heatmap)
 }

@@ -88,22 +88,41 @@ subsample_data_list <- function(data_list,
 #'
 #' @export
 subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
+    ###########################################################################
+    # If number of subsamples is less than 3, warn that SD can't be calculated
+    ###########################################################################
+    if (length(data_list_subsamples < 3)) {
+        warning(
+            "Fewer than 3 subsamples have been provided. Standard",
+            " deviation of the pairwise ARIs for each settings matrix row",
+            " cannot be computed."
+        )
+    }
+    ###########################################################################
     # Generate a new cluster_solutions dataframe for every data_list subsample
-    subsample_solutions <- lapply(
-        1:length(data_list_subsamples),
-        function(x) {
-            invisible(
-                solutions_matrix <- batch_snf(
-                    data_list = data_list_subsamples[[x]],
-                    settings_matrix,
-                    quiet = TRUE
-                )
+    ###########################################################################
+    subsample_solutions <- list()
+    for (s in seq_along(data_list_subsamples)) {
+        print(
+            paste0(
+                "Clustering subsample ", s, "/", length(data_list_subsamples),
+                "..."
             )
-            cluster_solutions <- get_cluster_solutions(solutions_matrix)
-            return(cluster_solutions)
-        }
-    )
+        )
+        invisible(
+            solutions_matrix <- batch_snf(
+                data_list = data_list_subsamples[[s]],
+                settings_matrix,
+                quiet = TRUE
+            )
+        )
+        cluster_solutions <- get_cluster_solutions(solutions_matrix)
+        index <- length(subsample_solutions) + 1
+        subsample_solutions[[index]] <- cluster_solutions
+    }
+    ###########################################################################
     # Skeleton to store the mean and sd of ARIs for each solution
+    ###########################################################################
     pairwise_ari_df <- data.frame(
         "row" = integer(),
         "mean_ari" = double(),
@@ -111,8 +130,16 @@ subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
     )
     # All the pairwise combinations of subsamples
     pairwise_indices <- utils::combn(length(subsample_solutions), 2)
+    ###########################################################################
     # Loop over all the rows of the solutions_matrix
-    for (solutions_matrix_row in seq_len(ncol(subsample_solutions[[1]]) - 1)) {
+    ###########################################################################
+    for (row in seq_len(ncol(subsample_solutions[[1]]) - 1)) {
+        print(
+            paste0(
+                "Calculating pairwise ARIs for subsample ",
+                row, "/", nrow(settings_matrix), "..."
+            )
+        )
         row_adjusted_rand_indices <- vector()
         # Loop over all pairs of subsamples for that row
         for (col in seq_len(ncol(pairwise_indices))) {
@@ -125,10 +152,10 @@ subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
             v2 <- pairwise_indices[2, col]
             subsample_a <- subsample_solutions[[v1]]
             subsample_b <- subsample_solutions[[v2]]
-            # keep column 1 (subjectkey) and column 1 + solutions_matrix_row
-            #  (the solution corresponding to that solutions_matrix_row)
-            solution_a <- subsample_a[, c(1, solutions_matrix_row + 1)]
-            solution_b <- subsample_b[, c(1, solutions_matrix_row + 1)]
+            # keep column 1 (subjectkey) and column 1 + row
+            #  (the solution corresponding to that row)
+            solution_a <- subsample_a[, c(1, row + 1)]
+            solution_b <- subsample_b[, c(1, row + 1)]
             # remove any subjects who weren't a part of both subsamples
             common_df <- dplyr::inner_join(
                 solution_a,
@@ -141,13 +168,12 @@ subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
             row_adjusted_rand_indices <- c(row_adjusted_rand_indices, ari)
         }
         row_df <- data.frame(
-            "row" = solutions_matrix_row,
+            "row" = row,
             "mean_ari" = mean(row_adjusted_rand_indices),
             "ari_sd" = stats::sd(row_adjusted_rand_indices)
         )
         pairwise_ari_df <- rbind(pairwise_ari_df, row_df)
     }
-    cat("\n")
     return(pairwise_ari_df)
 }
 
@@ -169,19 +195,31 @@ subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
 fraction_clustered_together <- function(data_list_subsamples,
                                         settings_matrix,
                                         solutions_matrix) {
-    subsample_solutions <- lapply(
-        1:length(data_list_subsamples),
-        function(x) {
+    ###########################################################################
+    # Generate a new cluster_solutions dataframe for every data_list subsample
+    ###########################################################################
+    subsample_solutions <- list()
+    for (s in seq_along(data_list_subsamples)) {
+        print(
+            paste0(
+                "Clustering subsample ", s, "/", length(data_list_subsamples),
+                "..."
+            )
+        )
+        invisible(
             solutions_matrix <- batch_snf(
-                data_list = data_list_subsamples[[x]],
+                data_list = data_list_subsamples[[s]],
                 settings_matrix,
                 quiet = TRUE
             )
-            cluster_solutions <- get_cluster_solutions(solutions_matrix)
-            return(cluster_solutions)
-        }
-    )
+        )
+        cluster_solutions <- get_cluster_solutions(solutions_matrix)
+        index <- length(subsample_solutions) + 1
+        subsample_solutions[[index]] <- cluster_solutions
+    }
+    ###########################################################################
     # Dataframe containing the cluster solutions from the full data_list
+    ###########################################################################
     full_cluster_solutions <- get_cluster_solutions(solutions_matrix)
     # The solution we are interested in
     fraction_together_df <- data.frame(
@@ -192,8 +230,8 @@ fraction_clustered_together <- function(data_list_subsamples,
     for (solution_index in solution_indices) {
         print(
             paste0(
-                "Working on solution ", solution_index, "/",
-                max(solution_indices), " ..."
+                "Calculating coclustering fraction for solution ",
+                solution_index, "/", max(solution_indices), "..."
             )
         )
         current_solution_df <-

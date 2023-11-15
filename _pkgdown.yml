@@ -22,11 +22,13 @@ navbar:
     - text: The Data List
       href: articles/data_list.html
     - text: -------
-    - text: Advanced Options
+    - text: Advanced Functionality
     - text: Distance Metrics
       href: articles/distance_metrics.html
     - text: Feature Weights
       href: articles/feature_weights.html
+    - text: Stability Measures and Consensus Clustering
+      href: articles/stability_measures.html
     - text: -------
     - text: Additional Plotting
     - text: Similarity Matrix Heatmaps
