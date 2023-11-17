@@ -63,7 +63,18 @@ generate_clust_algs_list <- function(..., disable_base = FALSE) {
         "spectral_eigen" = spectral_eigen,
         "spectral_rot" = spectral_rot
     )
-    clust_algs_list <- c(base_algs_list, user_algs_list)
+    if (disable_base) {
+        if (is.null(user_algs_list)) {
+            stop(
+                "disable_base is TRUE but no algorithms provided. There is",
+                "nothing to make a list of!"
+            )
+        } else {
+            clust_algs_list <- user_algs_list
+        }
+    } else {
+        clust_algs_list <- c(base_algs_list, user_algs_list)
+    }
     return(clust_algs_list)
 }
 
