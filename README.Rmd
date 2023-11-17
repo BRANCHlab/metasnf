@@ -43,10 +43,10 @@ If you require a consistent way to install the package, you can include the spec
 
 ```{r eval = FALSE}
 # Specifying a tag
-devtools::install_github("BRANCHlab/metasnf@v0.2.1")
+devtools::install_github("BRANCHlab/metasnf@v0.2.5")
 
 # Specifying a commit
-devtools::install_github("BRANCHlab/metasnf@8badfd4d7acaaf3b3c7af62d52b5c9324b82cc6c")
+devtools::install_github("BRANCHlab/metasnf@73d822bb9ca51fbee2ad25448df4380ea59b1d93")
 ```
 
 ## Brief Overview
@@ -149,10 +149,10 @@ Alternatively, a top clustering solution can be selected from a regular `solutio
 - [x] Capability of writing affinity matrices to disk
 - [x] Capability of not running the clustering on every run of SNF (only makes sense when paired with the previous change)
 - [x] Capability of defining custom distance metrics (including feature weights)
+- [x] New visualization functions and improvements to existing visualization functions
 
 ## Work in progress:
 
-- [ ] New visualization functions and improvements to existing visualization functions
 - [ ] Updated vignette(s) to fully document basic and advance usage of the package
 
 ### Lower priority:
