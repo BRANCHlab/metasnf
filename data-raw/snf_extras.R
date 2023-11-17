@@ -70,3 +70,20 @@ usethis::use_data(methylation_df, overwrite = TRUE)
 usethis::use_data(gender_df, overwrite = TRUE)
 usethis::use_data(diagnosis_df, overwrite = TRUE)
 usethis::use_data(age_df, overwrite = TRUE)
+
+
+###############################################################################
+# Tacking on cancer type df to be the same thing as diagnosis_df
+###############################################################################
+library(metasnf)
+
+cancer_diagnosis_df <- diagnosis_df |>
+    dplyr::mutate(
+        diagnosis = dplyr::case_when(
+            diagnosis == "definite asthma" ~ "1",
+            diagnosis == "possible asthma" ~ "2",
+            diagnosis == "no asthma" ~ "3"
+        )
+    )
+
+usethis::use_data(cancer_diagnosis_df, overwrite = TRUE)
