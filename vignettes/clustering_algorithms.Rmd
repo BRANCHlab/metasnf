@@ -1,0 +1,271 @@
+---
+title: "Clustering Algorithms"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Clustering Algorithms}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+div.aside { background-color:#fff2e6; }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Download a copy of the vignette to follow along here: [clustering_algorithms.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/clustering_algorithms.Rmd)
+
+## Clustering Algorithms
+
+SNF produces a single similarity matrix that is meant to describe how similar all the initial patients (or participants, or instances) are to each other across all the provided input features.
+Dividing that similarity matrix into subtypes requires can be done using clustering algorithms.
+Within the metasnf package, clustering is done by default using the spectral clustering algorithm (as implemented by the original SNFtool package).
+The code below goes over what the default clustering looks like.
+
+### Default clustering
+
+```{r}
+# Load the package
+library(metasnf)
+
+# Setting up the data
+data_list <- generate_data_list(
+    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(abcd_income, "household_income", "demographics", "continuous"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "patient"
+)
+
+# Specifying 5 different sets of settings for SNF
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 5,
+    max_k = 40,
+    seed = 42
+)
+
+# This matrix has clustering solutions for each of the 5 SNF runs!
+solutions_matrix <- batch_snf(data_list, settings_matrix)
+
+target_list <- generate_target_list(
+    list(abcd_anxiety, "anxiety", "ordinal"),
+    list(abcd_depress, "depressed", "numeric"),
+    list(abcd_colour, "colour", "categorical"),
+    uid = "patient"
+)
+
+extended_solutions <- extend_solutions(
+    solutions_matrix,
+    target_list,
+    cat_test = "fisher_exact"
+)
+
+target_pvals <- p_val_select(extended_solutions)
+
+manhattan_plot(target_pvals, threshold = 0.05, bonferroni_line = TRUE)
+```
+
+The Manhattan plot shows the p-values (y-axis) of the associations between our target variables (x-axis) and each cluster solution we calculated (colour) for each row of the settings matrix.
+
+The information about the clustering used is tucked away in the settings matrix:
+
+```{r}
+settings_matrix$"clust_alg"
+```
+
+The "1" corresponds to spectral clustering using the eigen-gap heuristic to determine the number of clusters, while the "2" corresponds to spectral clustering using the rotation cost heuristic to determine the number of clusters.
+You can find this information by running `?generate_settings_matrix`.
+
+### Other built-in clustering options
+
+Currently, the available clustering algorithms are:
+
+* `spectral_eigen`
+* `spectral_rot`
+* `spectral_two`
+* `spectral_three`
+* `spectral_four`
+* `spectral_five`
+* `spectral_six`
+* `spectral_seven`
+* `spectral_eight`
+
+The first two are the defaults, and the remaining ones specifically use 2, 3, 4, ... and so on as their number of clusters rather than whatever is calculated by a separate heuristic function.
+
+To make use of any of these alternative algorithms, you'll need to provide `batch_snf` with a custom `clust_algs_list`.
+Here's what that looks like:
+
+```{r}
+
+clust_algs_list <- generate_clust_algs_list()
+
+# The default list:
+clust_algs_list
+
+# A prettier format:
+summarize_clust_algs_list(clust_algs_list)
+
+# Adding algorithms provided by the package
+clust_algs_list <- generate_clust_algs_list(
+    "two_cluster_spectral" = spectral_two,
+    "five_cluster_spectral" = spectral_five
+)
+
+# Note that this one has the default algorithms as well as the newly added ones
+summarize_clust_algs_list(clust_algs_list)
+
+# This list has only the newly added ones, thanks to the disable_base parameter
+clust_algs_list <- generate_clust_algs_list(
+    "two_cluster_spectral" = spectral_two,
+    "five_cluster_spectral" = spectral_five,
+    disable_base = TRUE
+)
+
+summarize_clust_algs_list(clust_algs_list)
+```
+
+**By default, the settings matrix only varies over the values 1 and 2**.
+This is because, by default, it only expects you to use the default clustering algorithms.
+If your custom list is two algorithms long, that's fine, but if it isn't, it's imperative that you either manually adjust the numbers in `settings_matrix$"clust_algs"` or (more easily) you supply your custom list during settings matrix generation:
+
+```{r}
+
+# This list has only the newly added ones, thanks to the disable_base parameter
+clust_algs_list <- generate_clust_algs_list(
+    "two_cluster_spectral" = spectral_two,
+    "three_cluster_spectral" = spectral_three,
+    "five_cluster_spectral" = spectral_five
+)
+
+# Specifying 5 different sets of settings for SNF
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 10,
+    max_k = 40,
+    seed = 42,
+    clustering_algorithms = clust_algs_list
+)
+
+settings_matrix$"clust_alg"
+```
+
+Then, make sure to provide the `clust_algs_list` once more during the call to `batch_snf`:
+
+```{r eval = FALSE}
+solutions_matrix <- batch_snf(
+    data_list,
+    settings_matrix,
+    clust_algs_list = clust_algs_list
+)
+```
+
+### Structure of a clustering algorithm function
+
+Any clustering algorithm can be used as long as you can write a function for it with the following format:
+
+1. Takes a single N*N similarity_matrix as its only input
+2. Returns a named list:
+    * The first item (named "solution") is a single N-dimensional vector of numbers corresponding to the observations in the similarity matrix
+    * The second item (named "nclust") is a single integer indicating the number of clusters that the algorithm is supposed to have generated
+
+That second point seems redundant in that it could be calculated by simply running `length(unique(solution))`, but it's useful to keep track of it separately for troubleshooting purposes.
+
+Note that the function should *not* take number of clusters as an argument - if you want to explore the same clustering algorithm with a varying number of clusters, you'll need to provide a separate function for each number of clusters you're interested in.
+
+The source code for the two default functions are shown below:
+
+```{r eval = FALSE}
+# Default clustering algorithm #1
+spectral_eigen <- function(similarity_matrix) {
+    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(
+        similarity_matrix
+    )
+    number_of_clusters <- estimated_n$`Eigen-gap best`
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
+    return(list("solution" = solution, "nclust" = number_of_clusters))
+}
+
+# Default clustering algorithm #2
+spectral_rot <- function(similarity_matrix) {
+    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(similarity_matrix)
+    number_of_clusters <- estimated_n$`Rotation cost best`
+    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
+    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    return(solution_data)
+}
+
+spectral_rot
+```
+
+### Example: DBSCAN
+
+(WIP)
+
+```{r}
+
+library(dbscan)
+
+## Example 1: use dbscan on the iris data set
+data(iris)
+iris <- as.matrix(iris[, 1:4])
+
+## Find suitable DBSCAN parameters:
+## 1. We use minPts = dim + 1 = 5 for iris. A larger value can also be used.
+## 2. We inspect the k-NN distance plot for k = minPts - 1 = 4
+kNNdistplot(iris, minPts = 5)
+## Noise seems to start around a 4-NN distance of .7
+abline(h=.7, col = "red", lty = 2)
+
+## Cluster with the chosen parameters
+res <- dbscan(iris, eps = .7, minPts = 5)
+res
+
+pairs(iris, col = res$cluster + 1L)
+## Use a precomputed frNN object
+
+fr <- frNN(iris, eps = .7)
+
+dbscan(fr, minPts = 5, borderPoints = FALSE)
+
+dbscan(fr, minPts = 5, borderPoints = TRUE)
+
+```
+
+### Non-automated clustering
+
+You can also extract the similarity matrices for each computed row of the settings matrix and perform the clustering more "manually".
+This is particularly useful for clustering procedures where the transition from a similarity matrix to the final solution requires human intervention (e.g., judgement for clustering hyperparameters).
+
+```{r}
+batch_snf_results <- batch_snf(
+    data_list,
+    settings_matrix,
+    clust_algs_list = clust_algs_list,
+    return_similarity_matrices = TRUE
+)
+
+names(batch_snf_results)
+
+solutions_matrix <- batch_snf_results$"solutions_matrix"
+
+# Similarity matrices are in the list below:
+similarity_matrices <- batch_snf_results$"similarity_matrices"
+
+length(similarity_matrices)
+
+dim(similarity_matrices[[1]])
+
+# Your manual clustering goes here...
+```
