@@ -205,112 +205,6 @@ spectral_rot <- function(similarity_matrix) {
 }
 ```
 
-### A Complex Example: Implementing automated clustering with DBSCAN
-
-Let's say we wanted to cluster our similarity matrices with DBSCAN rather than with spectral clustering.
-Recall that we need our function to (1) not require user's to specify the number of clusters AND (2) cluster a *similarity matrix*.
-DBSCAN is about as challenging as custom clustering can get, as the suggested process for specifying the number of clusters is recommended to involve human intervention and the function itself operates on dissimilarity (distance) matrices rather than similarity matrices.
-
-Start by taking a look at the documentation for running the DBSCAN function from the dbscan R package [https://cran.r-project.org/web/packages/dbscan/dbscan.pdf](https://cran.r-project.org/web/packages/dbscan/dbscan.pdf):
-Below is a slightly adjusted form of their `dbscan` example.
-
-```{r}
-## Example 1: use dbscan on the iris data set
-data(iris)
-iris <- as.matrix(iris[, 1:4])
-iris_dist <- dist(iris)
-
-## Find suitable DBSCAN parameters:
-## 1. We use minPts = dim + 1 = 5 for iris. A larger value can also be used.
-## 2. We inspect the k-NN distance plot for k = minPts - 1 = 4
-kNNdistplot(iris, minPts = 5)
-
-## Noise seems to start around a 4-NN distance of .7
-abline(h=.7, col = "red", lty = 2)
-
-
-results <- dbscan(iris_dist, eps = 0.7, minPts = 5)
-
-# The 1 is added to ensure that those with no cluster (cluster 0) are still
-# plotted.
-pairs(iris, col = results$cluster + 1)
-```
-
-Wrapping up their examples into a single function is not easy and will require some compromises.
-We can't easily inspect a kNN tree to dial in a sensible eps value.
-It's also unclear how practical setting a minPts hyperparameter based on the dimensionality of the data is.
-
-Based on `?dbscan`, it looks like the function can accept precomputed distance matrices (instead of `precomputed_nn_object`s) as long as they actually are `dist` objects (which can be done using the `as.dist()` function).
-There are many formulas to convert between similarity matrices and distance matrices which have their own pros and cons.
-Here, we'll use a common approach of `distance = max(similarity) - similarity`.
-Whichever matrix values had the maximum similarity will now have a distance of 0, and whichever matrix values had the lowest amount of similarity will have distance values that are the closest to the former maximum similarity value.
-So, our function will need to look something like this:
-
-```{r eval = FALSE}
-my_dbscan <- function(similarity_matrix) {
-    distance_matrix <- as.dist(max(similarity_matrix) - similarity_matrix)
-    # the rest of the clustering goes here...
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    return(solution_data)
-}
-```
-
-Generally, it seems like automating the dbscan is not recommended.
-
-```{r}
-
-iris_dist
-
-kNNdistplot(iris_dist, minPts = 9)
-
-knd <- function (x, k, minPts, ...)
-{
-    if (missing(k) && missing(minPts))
-        stop("k or minPts need to be specified.")
-    if (missing(k))
-        k <- minPts - 1
-    kNNdist <- sort(kNNdist(x, k, ...))
-    return(kNNdist)
-}
-
-dists <- knd(iris_dist, minPts = 9)
-
-dists
-
-x <- seq_along(dists)
-y <- dists
-plot(x, y)
-
-spl <- smooth.spline(x, y, df = 3)
-pred <- predict(spl)
-plot(x, y)
-lines(pred)
-dy <- diff(y)/diff(x)
-dpred <- predict(spl, deriv=1)
-dpred2 <- predict(spl, deriv=2)
-#plot(dpred)
-plot(dpred2)
-
-
-x = 1 / c(1000:1)
-y = x^-1.5
-ycs = cumsum(y)
-plot (x, ycs, log="xy")
-
-spl <- smooth.spline(x, y=ycs)
-pred <- predict(spl)
-plot (x, ycs, log="xy")
-lines(pred, col=2)
-
-ycs.prime <- diff(ycs)/diff(x)
-pred.prime <- predict(spl, deriv=1)
-plot(ycs.prime)
-lines(pred.prime$y, col=2)
-
-```
-
-
-
 ### Non-automated clustering
 
 You can also extract the similarity matrices for each computed row of the settings matrix and perform the clustering more "manually".
@@ -337,3 +231,131 @@ dim(similarity_matrices[[1]])
 
 # Your manual clustering goes here...
 ```
+
+### Example of non-automated clustering: DBSCAN
+
+Let's say we wanted to cluster our similarity matrices with DBSCAN rather than with spectral clustering.
+Start by taking a look at the documentation for running the DBSCAN function from the dbscan R package [https://cran.r-project.org/web/packages/dbscan/dbscan.pdf](https://cran.r-project.org/web/packages/dbscan/dbscan.pdf):
+
+DBSCAN is about as challenging as custom clustering can get, as the suggested process for specifying the number of clusters is recommended to involve human intervention and the function itself operates on dissimilarity (distance) matrices rather than similarity matrices.
+
+Below is a slightly adjusted form of their `dbscan` example.
+You can work through this on your own.
+
+```{r eval = FALSE}
+library(dbscan)
+## Example 1: use dbscan on the iris data set
+data(iris)
+iris <- as.matrix(iris[, 1:4])
+iris_dist <- dist(iris)
+
+## Find suitable DBSCAN parameters:
+## 1. We use minPts = dim + 1 = 5 for iris. A larger value can also be used.
+## 2. We inspect the k-NN distance plot for k = minPts - 1 = 4
+kNNdistplot(iris, minPts = 5)
+
+## Noise seems to start around a 4-NN distance of .7
+abline(h=.7, col = "red", lty = 2)
+
+results <- dbscan(iris_dist, eps = 0.7, minPts = 5)
+
+# The 1 is added to ensure that those with no cluster (cluster 0) are still
+# plotted.
+pairs(iris, col = results$cluster + 1)
+```
+
+After some poking around, you will often see people mentioning that DBSCAN just isn't meant to be automated.
+You need to look at your data to have a good idea of what values to use for the hyperparameters `eps` and `minPts`.
+When you need to get involved manually, that's the perfect time to manage the many similarity matrices you've created with `batch_snf` through meta clustering.
+Generate a wide range of similarity matrices and apply meta clustering to find a few representative.
+One way to do this would be based on how the spectral-clustering derived solutions end up clustering together (see [example](https://branchlab.github.io/metasnf/articles/a_less_simple_example.html#examining-meta-clusters)).
+Then pull take the corresponding affinity matrices and go through the dbscan clustering process manually.
+
+Based on `?dbscan`, it looks like the function can accept precomputed distance matrices (instead of `precomputed_nn_object`s) as long as they actually are `dist` objects (which can be done using the `as.dist()` function).
+There are many formulas to convert between similarity matrices and distance matrices which have their own pros and cons.
+Here, we'll use a common approach of `distance = max(similarity) - similarity`.
+Whichever matrix values had the maximum similarity will now have a distance of 0, and whichever matrix values had the lowest amount of similarity will have distance values that are the closest to the former maximum similarity value.
+
+```{r fig.width = 5, fig.height = 4.5}
+library(dbscan)
+library(ggplot2)
+
+data_list <- generate_data_list(
+    list(
+        data = expression_df,
+        name = "genes_1_and_2_exp",
+        domain = "gene_expression",
+        type = "continuous"
+    ),
+    list(
+        data = methylation_df,
+        name = "genes_1_and_2_meth",
+        domain = "gene_methylation",
+        type = "continuous"
+    ),
+    uid = "patient_id"
+)
+
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 5,
+    seed = 42
+)
+
+batch_snf_results <- batch_snf(
+    data_list,
+    settings_matrix,
+    return_similarity_matrices = TRUE
+)
+
+similarity_matrices <- batch_snf_results$"similarity_matrices"
+
+solutions_matrix <- batch_snf_results$"solutions_matrix"
+
+representative_sm <- similarity_matrices[[1]]
+
+representative_sms <- similarity_matrices[c(1, 2)]
+
+distance_matrix1 <- as.dist(
+    max(representative_sm) - representative_sm
+)
+
+kNNdistplot(
+    distance_matrix1,
+    minPts = 10
+)
+
+## Maybe there?
+abline(h=0.4872, col = "red", lty = 2)
+
+dbscan_results <- dbscan(distance_matrix1, eps = 0.4872, minPts = 10)$"cluster"
+
+spectral_results <- get_clusters(solutions_matrix[1, ])
+
+dbscan_vs_spectral <- data.frame(
+    dbscan = dbscan_results,
+    spectral = spectral_results
+)
+
+ggplot(dbscan_vs_spectral, aes(x = dbscan, y = spectral)) +
+    geom_jitter(height = 0.1, width = 0.1, alpha = 0.5) +
+    theme_bw()
+```
+
+There's one bold lie in the code chunk above, which is how easy it was to find that magic hyperparameter combination of `minPts = 10` and `eps = 0.487` parameter value of 0.4872.
+It wasn't based off of the visual inspection of the kNNdistplot, but rather through a lot of trial and error.
+
+Something along the lines of:
+
+```{r eval = FALSE}
+for (i in seq(0.485, 0.488, by = 0.0001)) {
+    results <- dbscan(distance_matrix1, eps = i, minPts = 10)
+    if (length(unique(results$"cluster")) == 3) {
+        print(i)
+    }
+}
+```
+
+In this specific instance, those hyperparameters are incredibly sensitive - a slight change will get very different results.
+That is likely due to the shape of the actual data being clustered.
+Your mileage may vary!
