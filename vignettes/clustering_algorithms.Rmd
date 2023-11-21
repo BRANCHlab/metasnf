@@ -105,7 +105,6 @@ To make use of any of these alternative algorithms, you'll need to provide `batc
 Here's what that looks like:
 
 ```{r}
-
 clust_algs_list <- generate_clust_algs_list()
 
 # The default list:
@@ -138,7 +137,6 @@ This is because, by default, it only expects you to use the default clustering a
 If your custom list is two algorithms long, that's fine, but if it isn't, it's imperative that you either manually adjust the numbers in `settings_matrix$"clust_algs"` or (more easily) you supply your custom list during settings matrix generation:
 
 ```{r}
-
 # This list has only the newly added ones, thanks to the disable_base parameter
 clust_algs_list <- generate_clust_algs_list(
     "two_cluster_spectral" = spectral_two,
@@ -205,43 +203,113 @@ spectral_rot <- function(similarity_matrix) {
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
-
-spectral_rot
 ```
 
-### Example: DBSCAN
+### A Complex Example: Implementing automated clustering with DBSCAN
 
-(WIP)
+Let's say we wanted to cluster our similarity matrices with DBSCAN rather than with spectral clustering.
+Recall that we need our function to (1) not require user's to specify the number of clusters AND (2) cluster a *similarity matrix*.
+DBSCAN is about as challenging as custom clustering can get, as the suggested process for specifying the number of clusters is recommended to involve human intervention and the function itself operates on dissimilarity (distance) matrices rather than similarity matrices.
+
+Start by taking a look at the documentation for running the DBSCAN function from the dbscan R package [https://cran.r-project.org/web/packages/dbscan/dbscan.pdf](https://cran.r-project.org/web/packages/dbscan/dbscan.pdf):
+Below is a slightly adjusted form of their `dbscan` example.
 
 ```{r}
-
-library(dbscan)
-
 ## Example 1: use dbscan on the iris data set
 data(iris)
 iris <- as.matrix(iris[, 1:4])
+iris_dist <- dist(iris)
 
 ## Find suitable DBSCAN parameters:
 ## 1. We use minPts = dim + 1 = 5 for iris. A larger value can also be used.
 ## 2. We inspect the k-NN distance plot for k = minPts - 1 = 4
 kNNdistplot(iris, minPts = 5)
+
 ## Noise seems to start around a 4-NN distance of .7
 abline(h=.7, col = "red", lty = 2)
 
-## Cluster with the chosen parameters
-res <- dbscan(iris, eps = .7, minPts = 5)
-res
 
-pairs(iris, col = res$cluster + 1L)
-## Use a precomputed frNN object
+results <- dbscan(iris_dist, eps = 0.7, minPts = 5)
 
-fr <- frNN(iris, eps = .7)
+# The 1 is added to ensure that those with no cluster (cluster 0) are still
+# plotted.
+pairs(iris, col = results$cluster + 1)
+```
 
-dbscan(fr, minPts = 5, borderPoints = FALSE)
+Wrapping up their examples into a single function is not easy and will require some compromises.
+We can't easily inspect a kNN tree to dial in a sensible eps value.
+It's also unclear how practical setting a minPts hyperparameter based on the dimensionality of the data is.
 
-dbscan(fr, minPts = 5, borderPoints = TRUE)
+Based on `?dbscan`, it looks like the function can accept precomputed distance matrices (instead of `precomputed_nn_object`s) as long as they actually are `dist` objects (which can be done using the `as.dist()` function).
+There are many formulas to convert between similarity matrices and distance matrices which have their own pros and cons.
+Here, we'll use a common approach of `distance = max(similarity) - similarity`.
+Whichever matrix values had the maximum similarity will now have a distance of 0, and whichever matrix values had the lowest amount of similarity will have distance values that are the closest to the former maximum similarity value.
+So, our function will need to look something like this:
+
+```{r eval = FALSE}
+my_dbscan <- function(similarity_matrix) {
+    distance_matrix <- as.dist(max(similarity_matrix) - similarity_matrix)
+    # the rest of the clustering goes here...
+    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    return(solution_data)
+}
+```
+
+Generally, it seems like automating the dbscan is not recommended.
+
+```{r}
+
+iris_dist
+
+kNNdistplot(iris_dist, minPts = 9)
+
+knd <- function (x, k, minPts, ...)
+{
+    if (missing(k) && missing(minPts))
+        stop("k or minPts need to be specified.")
+    if (missing(k))
+        k <- minPts - 1
+    kNNdist <- sort(kNNdist(x, k, ...))
+    return(kNNdist)
+}
+
+dists <- knd(iris_dist, minPts = 9)
+
+dists
+
+x <- seq_along(dists)
+y <- dists
+plot(x, y)
+
+spl <- smooth.spline(x, y, df = 3)
+pred <- predict(spl)
+plot(x, y)
+lines(pred)
+dy <- diff(y)/diff(x)
+dpred <- predict(spl, deriv=1)
+dpred2 <- predict(spl, deriv=2)
+#plot(dpred)
+plot(dpred2)
+
+
+x = 1 / c(1000:1)
+y = x^-1.5
+ycs = cumsum(y)
+plot (x, ycs, log="xy")
+
+spl <- smooth.spline(x, y=ycs)
+pred <- predict(spl)
+plot (x, ycs, log="xy")
+lines(pred, col=2)
+
+ycs.prime <- diff(ycs)/diff(x)
+pred.prime <- predict(spl, deriv=1)
+plot(ycs.prime)
+lines(pred.prime$y, col=2)
 
 ```
+
+
 
 ### Non-automated clustering
 
