@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.5.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.5.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,7 @@
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Advanced Functionality</h6>
     <a class="dropdown-item" href="articles/distance_metrics.html">Distance Metrics</a>
+    <a class="dropdown-item" href="articles/clustering_algorithms.html">Clustering Algorithms</a>
     <a class="dropdown-item" href="articles/feature_weights.html">Feature Weights</a>
     <a class="dropdown-item" href="articles/stability_measures.html">Stability Measures and Consensus Clustering</a>
     <div class="dropdown-divider"></div>
@@ -100,10 +101,10 @@
 <p>If you require a consistent way to install the package, you can include the specific commit or tagged package version you want to install:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Specifying a tag</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf@v0.2.1"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf@v0.2.5"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Specifying a commit</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf@8badfd4d7acaaf3b3c7af62d52b5c9324b82cc6c"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf@73d822bb9ca51fbee2ad25448df4380ea59b1d93"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="brief-overview">Brief Overview<a class="anchor" aria-label="anchor" href="#brief-overview"></a>
@@ -140,7 +141,7 @@
 <span><span class="co"># This matrix has clustering solutions for each of the 5 SNF runs!</span></span>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>
@@ -213,14 +214,14 @@
 <input type="checkbox" disabled checked>Capability of not running the clustering on every run of SNF (only makes sense when paired with the previous change)</li>
 <li>
 <input type="checkbox" disabled checked>Capability of defining custom distance metrics (including feature weights)</li>
+<li>
+<input type="checkbox" disabled checked>New visualization functions and improvements to existing visualization functions</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="work-in-progress">Work in progress:<a class="anchor" aria-label="anchor" href="#work-in-progress"></a>
 </h2>
 <ul class="task-list">
-<li>
-<input type="checkbox" disabled>New visualization functions and improvements to existing visualization functions</li>
 <li>
 <input type="checkbox" disabled>Updated vignette(s) to fully document basic and advance usage of the package</li>
 </ul>
