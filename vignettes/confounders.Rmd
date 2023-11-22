@@ -1,0 +1,232 @@
+---
+title: "Unwanted Signal"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Unwanted Signal}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+div.aside { background-color:#fff2e6; }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Download a copy of the vignette to follow along here: [unwanted_signal.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/unwanted_signal.Rmd)
+
+This vignette walks through handling confounding variables and variables introducing unwanted signal using the metasnf package.
+
+A confounding variable is one that influences both a dependent and independent variable, making it appear as though there is a stronger association between the two than there mechanistically is.
+
+An unwanted variable (terminology which is being defined here) is a variable that a user explicitly does not want their subtyping solution to be strongly associated with.
+
+## Confounding variables
+
+We'll start with confounding variables - that part is easy!
+Really, there's nothing extra to be done.
+Simply include the confounding variable into the cluster analysis and bear in mind that the separation across clusters you see in any variable is not evidence of a causal link.
+
+Consider the following scenario.
+Children raised in wealthy homes can afford to go to better schools, are likely to be raised in less stressful environments, and can afford tutoring outside of school.
+Consequently, they have higher standardized test scores.
+They are also substantially more likely to live near a lake.
+If you were to cluster children according to their standardized test scores and whether or not they live near a lake, you may find one cluster that has kids who live near a lake and who have high test scores and a separate cluster that has kids who don't live near a lake and have low test scores.
+Of course, there is no causal relationship indicating that living near a lake improves your test scores, or that your test scores causally influence your proximity to lakes.
+The confounding variable is household income.
+By including household income in the model, you'll get the same clusters, but those clusters will also separate across the "confounding" variable.
+
+## Unwanted signal
+
+Removing unwanted signal from a clustering solution is a little bit more complicated.
+
+Consider the following scenario.
+You wish to find clusters of basketball players.
+For simplicity, let's say there are three basketball positions:
+
+* point guards, who have a lot of assists and very few blocks
+* centers, who have very few assists and lots of blocks
+* shooting guards, who have a moderate amount of assists and blocks (and a lot of personal fouls)
+
+You are handed a dataset containing the assists and blocks per season of a large number of basketball players.
+However, half of the basketball players are from regular players at a community center and the other half are from the NBA.
+
+What does the data look like?
+
+```{r}
+library(ggplot2)
+
+# Generating function for the blocks-per-season of a player
+generate_blocks <- function(level, position) {
+    # The average blocks per season of all basketball players
+    blocks <- rnorm(n = 1, mean = 500, sd = 50)
+    # Effect of playing in the NBA
+    if (level == "NBA") {
+        blocks <- blocks + rnorm(n = 1, mean = 2000, sd = 100)
+    } else {
+        # Match the noisiness of the NBA players
+        blocks <- blocks + rnorm(n = 1, mean = 0, sd = 100)
+    }
+    # Effect of the player's position
+    if (position == "pg") {
+        blocks <- blocks + 0 # Just to be explicit about it
+    } else if (position == "c") {
+        blocks <- blocks + 500
+    } else if (position == "sg") {
+        blocks <- blocks + 250
+    }
+    return(blocks)
+}
+#
+# Generating function for the assists-per-season of a player
+generate_assists <- function(level, position) {
+    # The average assists per season of all basketball players
+    assists <- rnorm(n = 1, mean = 1000, sd = 30)
+    # Effect of playing in the NBA
+    if (level == "NBA") {
+        assists <- assists + rnorm(n = 1, mean = 2500, sd = 20)
+    } else {
+        # Match the noisiness of the NBA players
+        assists <- assists + rnorm(n = 1, mean = 0, sd = 20)
+    }
+    # Effect of the player's position
+    if (position == "pg") {
+        assists <- assists + 300 # Just to be explicit about it
+    } else if (position == "c") {
+        assists <- assists + 0
+    } else if (position == "sg") {
+        assists <- assists + 150
+    }
+    return(assists)
+}
+#
+# Helper function to fill in blocks and assists for a player given their
+# position and level.
+generate_player_data <- function(df) {
+    df$"blocks" <- df |> apply(
+        MARGIN = 1,
+        FUN = function(x) {
+            generate_blocks(x[[1]], x[[2]])
+        }
+    )
+    df$"assists" <- df |> apply(
+        MARGIN = 1,
+        FUN = function(x) {
+            generate_assists(x[[1]], x[[2]])
+        }
+    )
+    return(df)
+}
+#
+rows <- 300
+player_data <- data.frame(
+    level = sample(c("regular", "NBA"), size = rows, replace = TRUE),
+    position = sample(c("pg", "c", "sg"), size = rows, replace = TRUE)
+) |> generate_player_data()
+#
+player_data$"id" <- as.character(1:nrow(player_data))
+#
+player_data |>
+    ggplot(aes(x = blocks, y = assists, shape = level, colour = position)) +
+    geom_point(size = 5, alpha = 0.3) +
+    theme_bw()
+#
+#
+available_data <- player_data |> dplyr::select("id", "assists", "blocks")
+#
+data_list <- generate_data_list(
+    list(
+        data = available_data,
+        name = "player_data",
+        domain = "player_data",
+        type = "continuous"
+    ),
+    uid = "id"
+)
+#
+settings_matrix <- generate_settings_matrix(
+    data_list = data_list,
+    nrow = 1,
+    possible_snf_schemes = 1
+)
+#
+solutions_matrix <- batch_snf(data_list, settings_matrix)
+#
+cluster_solutions_df <- get_cluster_solutions(solutions_matrix) |>
+    dplyr::rename(
+        "id" = "subjectkey",
+        "cluster" = `1`
+    )
+#
+cluster_solutions_df$"cluster" <- factor(cluster_solutions_df$"cluster")
+available_data$"id" <- paste0("subject_", available_data$"id")
+clustered_data <- dplyr::inner_join(available_data, cluster_solutions_df, by = "id")
+clustered_data |>
+    ggplot(aes(x = blocks, y = assists, colour = cluster)) +
+    geom_point(size = 5, alpha = 0.3) +
+    theme_bw()
+
+```
+
+
+
+
+```{r}
+player_data$"id" <- 1:nrow(player_data)
+
+player_data_df <- player_data |>
+    dplyr::select("id", "blocks", "assists")
+
+player_data_df_no_id <- player_data |>
+    dplyr::select("blocks", "assists")
+
+distance <- as.matrix(dist(player_data_df))
+
+clusters <- SNFtool::spectralClustering(SNFtool::affinityMatrix(distance), K = 6)
+player_data_df_no_id$"clusters" <- factor(clusters)
+player_data_df_no_id |>
+    ggplot(aes(x = blocks, y = assists, colour = clusters)) +
+    geom_point(size = 5, alpha = 0.3) +
+    theme_bw()
+
+clusters <- SNFtool::spectralClustering(SNFtool::affinityMatrix(distance), K = 2)
+player_data_df_no_id$"clusters" <- factor(clusters)
+player_data_df_no_id |>
+    ggplot(aes(x = blocks, y = assists, colour = clusters)) +
+    geom_point(size = 5, alpha = 0.3) +
+    theme_bw()
+
+data_list <- generate_data_list(
+    list(
+        data = player_data_df,
+        name = "player_stats",
+        domain = "player_data",
+        type = "continuous"
+    ),
+    uid = "id"
+)
+
+settings_matrix <- generate_settings_matrix(
+    data_list = data_list,
+    nrow = 1,
+    possible_snf_schemes = 1
+)
+
+solutions_matrix <- batch_snf(data_list, settings_matrix)
+get_clusters(solutions_matrix)
+
+player_data$"cluster" <- factor(get_clusters(solutions_matrix))
+
+player_data |>
+    ggplot(aes(x = blocks, y = assists, shape = position, colour = cluster)) +
+    geom_point(size = 5, alpha = 0.3) +
+    theme_bw()
+```
+
