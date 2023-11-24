@@ -14,9 +14,13 @@ div.aside { background-color:#fff2e6; }
 </style>
 
 ```{r, include = FALSE}
+# Default chunk options
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4.5,
+  fig.align = "center"
 )
 ```
 
@@ -61,8 +65,12 @@ However, half of the basketball players are from regular players at a community 
 What does the data look like?
 
 ```{r}
+library(metasnf)
+library(SNFtool)
 library(ggplot2)
 
+# Generating the player data
+###############################################################################
 # Generating function for the blocks-per-season of a player
 generate_blocks <- function(level, position) {
     # The average blocks per season of all basketball players
@@ -88,21 +96,21 @@ generate_blocks <- function(level, position) {
 # Generating function for the assists-per-season of a player
 generate_assists <- function(level, position) {
     # The average assists per season of all basketball players
-    assists <- rnorm(n = 1, mean = 1000, sd = 30)
+    assists <- rnorm(n = 1, mean = 1000, sd = 10)
     # Effect of playing in the NBA
     if (level == "NBA") {
-        assists <- assists + rnorm(n = 1, mean = 2500, sd = 20)
+        assists <- assists + rnorm(n = 1, mean = 2500, sd = 10)
     } else {
         # Match the noisiness of the NBA players
-        assists <- assists + rnorm(n = 1, mean = 0, sd = 20)
+        assists <- assists + rnorm(n = 1, mean = 0, sd = 10)
     }
     # Effect of the player's position
     if (position == "pg") {
-        assists <- assists + 300 # Just to be explicit about it
+        assists <- assists + 400 # Just to be explicit about it
     } else if (position == "c") {
         assists <- assists + 0
     } else if (position == "sg") {
-        assists <- assists + 150
+        assists <- assists + 200
     }
     return(assists)
 }
@@ -133,39 +141,81 @@ player_data <- data.frame(
 #
 player_data$"id" <- as.character(1:nrow(player_data))
 #
+# Plot by position
 player_data |>
     ggplot(aes(x = blocks, y = assists, shape = level, colour = position)) +
     geom_point(size = 5, alpha = 0.3) +
     theme_bw()
-#
-#
-available_data <- player_data |> dplyr::select("id", "assists", "blocks")
-#
+```
+
+Clustering 1: manually
+
+```{r}
+
+set.seed(42)
+manual_data <- player_data |> dplyr::select("blocks", "assists")
+manual_distance <- as.matrix(dist(manual_data))
+print(sum(manual_distance))
+similarity_matrix <- SNFtool::affinityMatrix(manual_distance, K = 20)
+
+print(sum(similarity_matrix))
+
+# n_clusters <- estimateNumberOfClustersGivenGraph(similarity_matrix, NUMC=2:10)$`Eigen-gap best`
+n_clusters <- estimateNumberOfClustersGivenGraph(similarity_matrix, NUMC=2:10)$`Rotation cost best`
+n_clusters
+clusters <- SNFtool::spectralClustering(similarity_matrix, n_clusters)
+manual_data$"clusters" <- factor(clusters)
+manual_data |>
+    ggplot(aes(x = blocks, y = assists, colour = clusters)) +
+    geom_point(size = 5, alpha = 0.3) +
+    theme_bw()
+
+```
+
+Clustering 2: metasnf
+
+```{r}
+
+set.seed(42)
+
+metasnf_data <- player_data |> dplyr::select("id", "assists", "blocks")
+
 data_list <- generate_data_list(
     list(
-        data = available_data,
+        data = metasnf_data,
         name = "player_data",
         domain = "player_data",
         type = "continuous"
     ),
     uid = "id"
 )
-#
+
 settings_matrix <- generate_settings_matrix(
     data_list = data_list,
     nrow = 1,
-    possible_snf_schemes = 1
+    possible_snf_schemes = 1,
+    k_values = 20
 )
-#
+
 solutions_matrix <- batch_snf(data_list, settings_matrix)
-#
+
+batch_snf_results <- batch_snf(data_list, settings_matrix, return_similarity_matrices = TRUE)
+
+batch_similarity_matrix <- batch_snf_results$"similarity_matrices"[[1]]
+
+estimateNumberOfClustersGivenGraph(batch_similarity_matrix, NUMC=2:10)$`Rotation cost best`
+
+estimateNumberOfClustersGivenGraph(batch_similarity_matrix)$`Rotation cost best`
+
+solutions_matrix$"nclust"
+
 cluster_solutions_df <- get_cluster_solutions(solutions_matrix) |>
     dplyr::rename(
         "id" = "subjectkey",
         "cluster" = `1`
     )
-#
 cluster_solutions_df$"cluster" <- factor(cluster_solutions_df$"cluster")
+
 available_data$"id" <- paste0("subject_", available_data$"id")
 clustered_data <- dplyr::inner_join(available_data, cluster_solutions_df, by = "id")
 clustered_data |>
@@ -175,21 +225,55 @@ clustered_data |>
 
 ```
 
+Clustering 3: metasnf
+
+```{r}
+
+set.seed(42)
+
+metasnf_data <- player_data |> dplyr::select("id", "assists", "blocks")
+
+data_list <- generate_data_list(
+    list(
+        data = metasnf_data,
+        name = "player_data",
+        domain = "player_data",
+        type = "continuous"
+    ),
+    uid = "id"
+)
+
+settings_matrix <- generate_settings_matrix(
+    data_list = data_list,
+    nrow = 1,
+    possible_snf_schemes = 1,
+    k_values = 20,
+    alpha_values = 0.5
+)
+
+solutions_matrix <- batch_snf(data_list, settings_matrix)
+solutions_matrix$"nclust"
+
+cluster_solutions_df <- get_cluster_solutions(solutions_matrix) |>
+    dplyr::rename(
+        "id" = "subjectkey",
+        "cluster" = `1`
+    )
+cluster_solutions_df$"cluster" <- factor(cluster_solutions_df$"cluster")
+
+metasnf_data$"id" <- paste0("subject_", metasnf_data$"id")
+clustered_data <- dplyr::inner_join(metasnf_data, cluster_solutions_df, by = "id")
+clustered_data |>
+    ggplot(aes(x = blocks, y = assists, colour = cluster)) +
+    geom_point(size = 5, alpha = 0.3) +
+    theme_bw()
+
+```
 
 
 
 ```{r}
-player_data$"id" <- 1:nrow(player_data)
 
-player_data_df <- player_data |>
-    dplyr::select("id", "blocks", "assists")
-
-player_data_df_no_id <- player_data |>
-    dplyr::select("blocks", "assists")
-
-distance <- as.matrix(dist(player_data_df))
-
-clusters <- SNFtool::spectralClustering(SNFtool::affinityMatrix(distance), K = 6)
 player_data_df_no_id$"clusters" <- factor(clusters)
 player_data_df_no_id |>
     ggplot(aes(x = blocks, y = assists, colour = clusters)) +
