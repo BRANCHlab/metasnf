@@ -47,6 +47,16 @@
 #'  distance matrix calculation. See ?generate_weights_matrix for details on
 #'  how to build this.
 #'
+#' @param automatic_standard_normalize If TRUE, will automatically apply
+#' standard normalization prior to calculation of any distance matrices. This
+#' parameter cannot be used in conjunction with a custom distance metrics list.
+#' If you wish to supply custom distance metrics but also always have standard
+#' normalization, simply ensure that the numeric (continuous, discrete, and
+#' ordinal) distance metrics are only populated with distance metric functions
+#' that apply standard normalization. See
+#' https://branchlab.github.io/metasnf/articles/distance_metrics.html to learn
+#' more.
+#'
 #' @param quiet If TRUE, the function won't print out time remaining estimates.
 #'
 #' @return populated_settings_matrix settings matrix with filled columns
@@ -62,6 +72,7 @@ batch_snf <- function(data_list,
                       suppress_clustering = FALSE,
                       distance_metrics_list = NULL,
                       weights_matrix = NULL,
+                      automatic_standard_normalize = FALSE,
                       quiet = FALSE) {
     ###########################################################################
     # 1. Checking validity of settings
@@ -217,7 +228,39 @@ batch_snf <- function(data_list,
                 " to provide a distance_metrics_list?"
             )
         } else {
-            distance_metrics_list <- generate_distance_metrics_list()
+            if (automatic_standard_normalize) {
+                # Generate a list where numeric distances are all standard
+                # normalized.
+                distance_metrics_list <- generate_distance_metrics_list(
+                    continuous_distances = list(
+                        "sn_euclidean_distance" = sn_euclidean_distance
+                    ),
+                    discrete_distances = list(
+                        "sn_euclidean_distance" = sn_euclidean_distance
+                    ),
+                    ordinal_distances = list(
+                        "sn_euclidean_distance" = sn_euclidean_distance
+                    ),
+                    categorical_distances = list(
+                        "gower_distance" = gower_distance
+                    ),
+                    mixed_distances = list(
+                        "gower_distance" = gower_distance
+                    ),
+                    keep_defaults = FALSE
+                )
+            } else {
+                distance_metrics_list <- generate_distance_metrics_list()
+            }
+        }
+    } else {
+        if (automatic_standard_normalize) {
+            stop(
+                "The automatic_standard_normalize parameter cannot be used",
+                "at the same time as a custom distance metrics list. Please",
+                "ensure the custom distance metrics you are providing all",
+                "have built in standard normalization."
+            )
         }
     }
     ###########################################################################
