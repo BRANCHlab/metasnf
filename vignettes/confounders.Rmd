@@ -216,9 +216,9 @@ cluster_solutions_df <- get_cluster_solutions(solutions_matrix) |>
     )
 cluster_solutions_df$"cluster" <- factor(cluster_solutions_df$"cluster")
 
-available_data$"id" <- paste0("subject_", available_data$"id")
-clustered_data <- dplyr::inner_join(available_data, cluster_solutions_df, by = "id")
-clustered_data |>
+metasnf_data$"id" <- paste0("subject_", metasnf_data$"id")
+metasnf_data <- dplyr::inner_join(metasnf_data, cluster_solutions_df, by = "id")
+metasnf_data |>
     ggplot(aes(x = blocks, y = assists, colour = cluster)) +
     geom_point(size = 5, alpha = 0.3) +
     theme_bw()
@@ -269,48 +269,3 @@ clustered_data |>
     theme_bw()
 
 ```
-
-
-
-```{r}
-
-player_data_df_no_id$"clusters" <- factor(clusters)
-player_data_df_no_id |>
-    ggplot(aes(x = blocks, y = assists, colour = clusters)) +
-    geom_point(size = 5, alpha = 0.3) +
-    theme_bw()
-
-clusters <- SNFtool::spectralClustering(SNFtool::affinityMatrix(distance), K = 2)
-player_data_df_no_id$"clusters" <- factor(clusters)
-player_data_df_no_id |>
-    ggplot(aes(x = blocks, y = assists, colour = clusters)) +
-    geom_point(size = 5, alpha = 0.3) +
-    theme_bw()
-
-data_list <- generate_data_list(
-    list(
-        data = player_data_df,
-        name = "player_stats",
-        domain = "player_data",
-        type = "continuous"
-    ),
-    uid = "id"
-)
-
-settings_matrix <- generate_settings_matrix(
-    data_list = data_list,
-    nrow = 1,
-    possible_snf_schemes = 1
-)
-
-solutions_matrix <- batch_snf(data_list, settings_matrix)
-get_clusters(solutions_matrix)
-
-player_data$"cluster" <- factor(get_clusters(solutions_matrix))
-
-player_data |>
-    ggplot(aes(x = blocks, y = assists, shape = position, colour = cluster)) +
-    geom_point(size = 5, alpha = 0.3) +
-    theme_bw()
-```
-
