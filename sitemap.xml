@@ -22,6 +22,9 @@
     <loc>https://branchlab.github.io/metasnf/articles/clustering_algorithms.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/articles/confounders.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/articles/correlation_plots.html</loc>
   </url>
   <url>
@@ -59,6 +62,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/index.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/news/index.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/CorrManhattan.html</loc>
@@ -412,6 +418,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/remove_dl_na.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/remove_signal.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/resample.html</loc>
   </url>
   <url>
@@ -451,6 +460,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/spectral_eigen.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/spectral_eigen_classic.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/spectral_eight.html</loc>
   </url>
   <url>
@@ -460,13 +472,22 @@
     <loc>https://branchlab.github.io/metasnf/reference/spectral_four.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/spectral_nine.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/spectral_rot.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/spectral_rot_classic.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/spectral_seven.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/spectral_six.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/spectral_ten.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/spectral_three.html</loc>

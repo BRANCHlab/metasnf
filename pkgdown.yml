@@ -6,6 +6,7 @@ articles:
   a_simple_example: a_simple_example.html
   alluvial_plots: alluvial_plots.html
   clustering_algorithms: clustering_algorithms.html
+  confounders: confounders.html
   correlation_plots: correlation_plots.html
   data_list: data_list.html
   distance_metrics: distance_metrics.html
@@ -16,7 +17,7 @@ articles:
   similarity_matrix_heatmap: similarity_matrix_heatmap.html
   stability_measures: stability_measures.html
   troubleshooting: troubleshooting.html
-last_built: 2023-11-21T19:14Z
+last_built: 2023-11-24T22:36Z
 urls:
   reference: https://branchlab.github.io/metasnf/reference
   article: https://branchlab.github.io/metasnf/articles
