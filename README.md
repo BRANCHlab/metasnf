@@ -193,13 +193,10 @@ the qualitatively distinct “meta clusters” that emerge.
   weights)
 - [x] New visualization functions and improvements to existing
   visualization functions
-
-## Work in progress:
-
-- [ ] Updated vignette(s) to fully document basic and advance usage of
+- [x] Updated vignette(s) to fully document basic and advance usage of
   the package
 
-### Lower priority:
+## Work in progress:
 
 - [ ] Adapt parallel processing variant of batch_snf to reflect the
   above changes
@@ -207,15 +204,8 @@ the qualitatively distinct “meta clusters” that emerge.
 
 ## Contributions
 
-Contributions to the package are very welcome!
-
-If you have collaborator access, please create a new branch based on
-main OR a fork of the repo, make your changes, and submit a pull
-request. If you do not have collaborator access, please make a fork of
-the repo, make your changes, and submit a pull request.
-
-You are also welcome to simply post suggested changes in the issues tab
-of the repo.
+Contributions to the package are very welcome! Please submit a pull
+request or make a post in the issues tab of the repo.
 
 ## References
 

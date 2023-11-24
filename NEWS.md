@@ -18,6 +18,8 @@ solutions_matrix <- batch_snf(
 )
 ```
 
+* Added "workspace=2e7" parameter to `fisher_exact_pval` function to avoid "FEXACT" error (like here https://github.com/Lagkouvardos/Rhea/issues/17). Impact on results is expected to be negligible.
+
 ## New functionality
 
 * Function `remove_signal()` enables correcting a data_list linearly for confounders / unwanted signal. Vignette is available: [https://branchlab.github.io/metasnf/articles/confounders.html](https://branchlab.github.io/metasnf/articles/confounders.html).
