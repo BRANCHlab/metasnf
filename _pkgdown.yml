@@ -31,6 +31,8 @@ navbar:
       href: articles/feature_weights.html
     - text: Stability Measures and Consensus Clustering
       href: articles/stability_measures.html
+    - text: Confounders and Unwanted Signal
+      href: articles/confounders.html
     - text: -------
     - text: Additional Plotting
     - text: Similarity Matrix Heatmaps

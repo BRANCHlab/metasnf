@@ -122,7 +122,8 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0),
     ggalluvial,
-    dbscan
+    dbscan,
+    factoextra
 Config/testthat/edition: 3
 Depends:
     R (>= 4.1.0)

@@ -199,14 +199,9 @@ We have separate clusters just for pro players and just for community center pla
 Other clustering algorithms can fare even worse in this context.
 
 ```{r}
-#library(cluster)
 library(factoextra)
 
 fviz_nbclust(metasnf_data[, c("assists", "blocks")], kmeans, method = "wss")
-
-player_data
-
-metasnf_data
 
 km <- kmeans(metasnf_data[, c("blocks", "assists")], centers = 2, nstart = 25)
 
@@ -228,19 +223,16 @@ player_data$"adjusted_assists" <- resid(lm(assists ~ level, player_data))
 
 # Plot by position
 player_data |>
-    ggplot(aes(x = adjusted_blocks, y = adjusted_assists, shape = level, colour = position)) +
+    ggplot(
+        aes(
+            x = adjusted_blocks,
+            y = adjusted_assists,
+            shape = level,
+            colour = position
+        )
+    ) +
     geom_point(size = 5, alpha = 0.3) +
     theme_bw()
-
-# Too much adjustment:
-# player_data$"adjusted_blocks2" <- resid(lm(blocks ~ level + position, player_data))
-# player_data$"adjusted_assists2" <- resid(lm(assists ~ level + position, player_data))
-#
-# player_data |>
-#     ggplot(aes(x = adjusted_blocks2, y = adjusted_assists2, shape = level, colour = position)) +
-#     geom_point(size = 5, alpha = 0.3) +
-#     theme_bw()
-
 ```
 
 That's looking much more like what we want to see.
@@ -252,7 +244,6 @@ Following this correction, you'll have a much easier identifying the clustering 
 Note that you can only adjust out signal from categorical variables, the adjustment will be linear, it will only be applied to numeric (continuous, discrete, ordinal) data, and that the adjustment can lead to some major information loss (see the section below)!
 
 ```{r}
-
 head(player_data)
 
 dl <- generate_data_list(
@@ -265,7 +256,8 @@ dl <- generate_data_list(
     uid = "id"
 )
 
-usl <- generate_data_list(
+# Correction list for just the level
+unwanted_signal_list1 <- generate_data_list(
     list(
         data = player_data[, c("id", "level")],
         name = "player_level",
@@ -275,73 +267,37 @@ usl <- generate_data_list(
     uid = "id"
 )
 
-dl |> lapply(
-    function(x) {
-        if (x$"type" %in% c("continuous", "discrete", "numeric")) {
-            columns <- colnames(x$"data")
-            data_cols <-
-        }
-        return(x)
-    }
-)
-
-player_data$"adjusted_blocks" <- resid(lm(blocks ~ level, player_data))
-
-
-remove_signal <- function(data_list, unwanted_signal_list) {
-    ###########################################################################
-    # 1. Check to ensure the patients match
-    ###########################################################################
-    ###########################################################################
-    # 2. Adjustment
-    ###########################################################################
-
-}
-
-player_data2 <- player_data
-player_data2$"adjusted_blocks" <- NULL
-player_data2$"adjusted_assists" <- NULL
-
-head(player_data2)
-
-y <- c("blocks", "assists")
-x <- c("position", "level")
-lhs <- "blocks"
-rhs <- paste0(x, collapse = " + ")
-formula <- paste0(lhs, " ~ ", rhs)
-formula
-
-data("mtcars")
-y <- c("mpg","drat","qsec")
-x <- c("cyl+hp","disp")
-
-A <- Map(
-    function(i,j) {
-        formula <- as.formula(paste0(i, "~", j))
-        results <- summary(lm(formula, data = mtcars))
-        results$coef[, c(1, 4)]
-    },
-    rep(
-        y,
-        each=length(x)
+# Correction list for both player level and position
+unwanted_signal_list2 <- generate_data_list(
+    list(
+        data = player_data[, c("id", "level", "position")],
+        name = "player_level",
+        domain = "player_data",
+        type = "categorical"
     ),
-    x
+    uid = "id"
 )
 
-B <- do.call(
-    cbind.data.frame,
-    tapply(
-        A,
-        rep(y,each=length(x)),
-        function(s) {
-            a <- do.call(rbind,s)
-            a[row.names(a)!="(Intercept)",]
-        }
-    )
-)
+adjusted_dl <- remove_signal(dl, unwanted_signal_list1)
 
-B
+# Combine the data from the two data_lists the second list is being merged
+# only because it also has the position data, for plotting purposes
+merged_df <- collapse_dl(c(adjusted_dl, unwanted_signal_list2))
 
+merged_df |>
+     ggplot(aes(x = blocks, y = assists, shape = level, colour = position)) +
+     geom_point(size = 5, alpha = 0.3) +
+     theme_bw()
+
+# Correcting too many things!
+adjusted_dl2 <- remove_signal(dl, unwanted_signal_list2)
+
+merged_df2 <- collapse_dl(c(adjusted_dl2, unwanted_signal_list2))
+
+merged_df2 |>
+     ggplot(aes(x = blocks, y = assists, shape = level, colour = position)) +
+     geom_point(size = 5, alpha = 0.3) +
+     theme_bw()
 ```
 
 ## Limitations and important considerations
