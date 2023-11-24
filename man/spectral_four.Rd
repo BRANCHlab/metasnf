@@ -7,7 +7,7 @@
 spectral_four(similarity_matrix)
 }
 \arguments{
-\item{similarity_matrix}{An similarity matrix}
+\item{similarity_matrix}{A similarity matrix}
 }
 \value{
 solution A vector indicating which cluster each patient was assigned

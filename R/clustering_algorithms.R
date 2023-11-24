@@ -100,14 +100,17 @@ summarize_clust_algs_list <- function(clust_algs_list) {
 #' Applies spectral clustering to similarity matrix. Number of clusters is based
 #'  on the eigen-gap heuristic.
 #'
-#' @param similarity_matrix An similarity matrix
+#' @param similarity_matrix A similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
 #'
 #' @export
 spectral_eigen <- function(similarity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(similarity_matrix)
+    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(
+        W = similarity_matrix,
+        NUMC = 2:10
+    )
     number_of_clusters <- estimated_n$`Eigen-gap best`
     solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
     return(list("solution" = solution, "nclust" = number_of_clusters))
@@ -118,16 +121,71 @@ spectral_eigen <- function(similarity_matrix) {
 #' Applies spectral clustering to similarity matrix. Number of clusters is based
 #'  on the rotation cost heuristic.
 #'
-#' @param similarity_matrix An similarity matrix
+#' @param similarity_matrix A similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
 #'
 #' @export
 spectral_rot <- function(similarity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(similarity_matrix)
+    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(
+        W = similarity_matrix,
+        NUMC = 2:10
+    )
     number_of_clusters <- estimated_n$`Rotation cost best`
-    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
+    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    return(solution_data)
+}
+
+#' Clustering algorithm: Spectral clustering with eigen-gap heuristic
+#'
+#' Applies spectral clustering to similarity matrix. Number of clusters is based
+#'  on the eigen-gap heuristic.
+#'
+#' @param similarity_matrix A similarity matrix
+#'
+#' @return solution A vector indicating which cluster each patient was assigned
+#'  to
+#'
+#' @export
+spectral_eigen_classic <- function(similarity_matrix) {
+    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(
+        W = similarity_matrix,
+        NUMC = 2:5
+    )
+    number_of_clusters <- estimated_n$`Eigen-gap best`
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
+    return(list("solution" = solution, "nclust" = number_of_clusters))
+}
+
+#' Clustering algorithm: Spectral clustering with rotation cost heuristic
+#'
+#' Applies spectral clustering to similarity matrix. Number of clusters is based
+#'  on the rotation cost heuristic.
+#'
+#' @param similarity_matrix A similarity matrix
+#'
+#' @return solution A vector indicating which cluster each patient was assigned
+#'  to
+#'
+#' @export
+spectral_rot_classic <- function(similarity_matrix) {
+    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(
+        W = similarity_matrix,
+        NUMC = 2:5
+    )
+    number_of_clusters <- estimated_n$`Rotation cost best`
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
@@ -136,7 +194,7 @@ spectral_rot <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks two clusters.
 #'
-#' @param similarity_matrix An similarity matrix
+#' @param similarity_matrix A similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
@@ -144,7 +202,10 @@ spectral_rot <- function(similarity_matrix) {
 #' @export
 spectral_two <- function(similarity_matrix) {
     number_of_clusters <- 2
-    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
@@ -153,7 +214,7 @@ spectral_two <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks three clusters.
 #'
-#' @param similarity_matrix An similarity matrix
+#' @param similarity_matrix A similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
@@ -161,7 +222,10 @@ spectral_two <- function(similarity_matrix) {
 #' @export
 spectral_three <- function(similarity_matrix) {
     number_of_clusters <- 3
-    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
@@ -170,7 +234,7 @@ spectral_three <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks four clusters.
 #'
-#' @param similarity_matrix An similarity matrix
+#' @param similarity_matrix A similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
@@ -178,7 +242,10 @@ spectral_three <- function(similarity_matrix) {
 #' @export
 spectral_four <- function(similarity_matrix) {
     number_of_clusters <- 4
-    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
@@ -187,7 +254,7 @@ spectral_four <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks five clusters.
 #'
-#' @param similarity_matrix An similarity matrix
+#' @param similarity_matrix A similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
@@ -195,7 +262,10 @@ spectral_four <- function(similarity_matrix) {
 #' @export
 spectral_five <- function(similarity_matrix) {
     number_of_clusters <- 5
-    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
@@ -204,7 +274,7 @@ spectral_five <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks six clusters.
 #'
-#' @param similarity_matrix An similarity matrix
+#' @param similarity_matrix A similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
@@ -212,7 +282,10 @@ spectral_five <- function(similarity_matrix) {
 #' @export
 spectral_six <- function(similarity_matrix) {
     number_of_clusters <- 6
-    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
@@ -221,7 +294,7 @@ spectral_six <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks seven clusters.
 #'
-#' @param similarity_matrix An similarity matrix
+#' @param similarity_matrix A similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
@@ -229,7 +302,10 @@ spectral_six <- function(similarity_matrix) {
 #' @export
 spectral_seven <- function(similarity_matrix) {
     number_of_clusters <- 7
-    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
@@ -238,7 +314,7 @@ spectral_seven <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks eight clusters.
 #'
-#' @param similarity_matrix An similarity matrix
+#' @param similarity_matrix A similarity matrix
 #'
 #' @return solution A vector indicating which cluster each patient was assigned
 #'  to
@@ -246,7 +322,50 @@ spectral_seven <- function(similarity_matrix) {
 #' @export
 spectral_eight <- function(similarity_matrix) {
     number_of_clusters <- 8
-    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
+    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    return(solution_data)
+}
+
+#' Clustering algorithm: Spectral clustering for a nine cluster solution
+#'
+#' Applies spectral clustering to similarity matrix. Seeks nine clusters.
+#'
+#' @param similarity_matrix A similarity matrix
+#'
+#' @return solution A vector indicating which cluster each patient was assigned
+#'  to
+#'
+#' @export
+spectral_nine <- function(similarity_matrix) {
+    number_of_clusters <- 9
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
+    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    return(solution_data)
+}
+
+#' Clustering algorithm: Spectral clustering for a ten cluster solution
+#'
+#' Applies spectral clustering to similarity matrix. Seeks ten clusters.
+#'
+#' @param similarity_matrix A similarity matrix
+#'
+#' @return solution A vector indicating which cluster each patient was assigned
+#'  to
+#'
+#' @export
+spectral_ten <- function(similarity_matrix) {
+    number_of_clusters <- 9
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
     return(solution_data)
 }
