@@ -121,7 +121,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    ggalluvial
+    ggalluvial,
+    dbscan
 Config/testthat/edition: 3
 Depends:
     R (>= 4.1.0)
