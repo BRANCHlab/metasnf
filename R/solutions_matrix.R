@@ -454,7 +454,8 @@ chi_squared_pval <- function(cat_var1, cat_var2) {
 fisher_exact_pval <- function(cat_var1, cat_var2) {
     cat_var1 <- factor(cat_var1)
     cat_var2 <- factor(cat_var2)
-    model <- stats::fisher.test(cat_var1, cat_var2)
+    print("dog")
+    model <- stats::fisher.test(cat_var1, cat_var2, workspace=2e7)
     pval <- model$"p.value"
     attributes(pval) <- NULL
     return(pval)
