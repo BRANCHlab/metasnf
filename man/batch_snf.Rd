@@ -14,6 +14,7 @@ batch_snf(
   suppress_clustering = FALSE,
   distance_metrics_list = NULL,
   weights_matrix = NULL,
+  automatic_standard_normalize = FALSE,
   quiet = FALSE
 )
 }
@@ -61,6 +62,16 @@ distance metric function should be used for the various variable types
 \item{weights_matrix}{A matrix containing variable weights to use during
 distance matrix calculation. See ?generate_weights_matrix for details on
 how to build this.}
+
+\item{automatic_standard_normalize}{If TRUE, will automatically apply
+standard normalization prior to calculation of any distance matrices. This
+parameter cannot be used in conjunction with a custom distance metrics list.
+If you wish to supply custom distance metrics but also always have standard
+normalization, simply ensure that the numeric (continuous, discrete, and
+ordinal) distance metrics are only populated with distance metric functions
+that apply standard normalization. See
+https://branchlab.github.io/metasnf/articles/distance_metrics.html to learn
+more.}
 
 \item{quiet}{If TRUE, the function won't print out time remaining estimates.}
 }
