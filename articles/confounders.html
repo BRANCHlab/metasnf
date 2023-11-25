@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Unwanted Signal">
 <meta property="og:description" content="metasnf">
+<meta name="google-site-verification" content="Xzz1SIDqvPwru_mXKCXAkX2pNfOz5PO_QO02QG98tZI">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -266,12 +267,12 @@ What kind of clustering results do we get on this data?</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cluster_solutions_df</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            id cluster</span></span>
-<span><span class="co">#&gt; 1   subject_1      10</span></span>
-<span><span class="co">#&gt; 2  subject_10       5</span></span>
-<span><span class="co">#&gt; 3 subject_100       1</span></span>
-<span><span class="co">#&gt; 4 subject_101       2</span></span>
-<span><span class="co">#&gt; 5 subject_102       8</span></span>
-<span><span class="co">#&gt; 6 subject_103      10</span></span>
+<span><span class="co">#&gt; 1   subject_1       5</span></span>
+<span><span class="co">#&gt; 2  subject_10       2</span></span>
+<span><span class="co">#&gt; 3 subject_100       2</span></span>
+<span><span class="co">#&gt; 4 subject_101       1</span></span>
+<span><span class="co">#&gt; 5 subject_102       6</span></span>
+<span><span class="co">#&gt; 6 subject_103       2</span></span>
 <span></span>
 <span><span class="va">cluster_solutions_df</span><span class="op">$</span><span class="st">"cluster"</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cluster_solutions_df</span><span class="op">$</span><span class="st">"cluster"</span><span class="op">)</span></span>
 <span></span>
@@ -302,15 +303,15 @@ even worse in this context.</p>
 <span><span class="va">km</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></span><span class="op">(</span><span class="va">metasnf_data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blocks"</span>, <span class="st">"assists"</span><span class="op">)</span><span class="op">]</span>, centers <span class="op">=</span> <span class="fl">2</span>, nstart <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">km</span><span class="op">$</span><span class="st">"cluster"</span></span>
-<span><span class="co">#&gt;   [1] 2 2 2 2 2 1 2 2 2 1 2 2 2 2 1 2 2 1 2 1 2 2 1 1 1 1 1 1 2 2 1 1 2 1 2 1 2</span></span>
-<span><span class="co">#&gt;  [38] 1 1 2 2 2 1 2 2 2 1 2 2 1 1 1 1 1 2 2 1 1 1 2 2 2 2 1 2 1 1 2 1 2 1 2 2 2</span></span>
-<span><span class="co">#&gt;  [75] 2 1 1 1 2 2 2 1 1 2 1 2 1 1 1 1 2 1 2 1 1 2 2 2 1 2 1 1 2 2 1 1 1 2 1 2 2</span></span>
-<span><span class="co">#&gt; [112] 1 2 2 1 2 2 2 2 1 2 1 2 2 2 1 1 1 2 2 2 2 2 1 2 1 2 2 1 2 1 1 1 2 2 1 2 2</span></span>
-<span><span class="co">#&gt; [149] 2 2 1 1 1 1 1 2 1 2 1 2 2 2 1 1 2 1 1 1 2 2 2 1 2 1 2 2 2 2 2 2 2 2 2 2 1</span></span>
-<span><span class="co">#&gt; [186] 2 1 1 1 1 1 2 1 2 2 1 1 1 1 2 1 1 2 2 2 1 1 2 1 1 2 1 2 2 1 2 2 1 2 2 1 2</span></span>
-<span><span class="co">#&gt; [223] 2 2 2 1 2 2 1 1 1 2 2 1 1 1 2 1 1 1 1 2 1 1 2 1 1 2 2 1 2 2 1 2 1 2 2 2 1</span></span>
-<span><span class="co">#&gt; [260] 1 2 2 2 1 2 2 2 2 2 1 2 1 2 2 1 1 2 2 2 1 2 1 1 1 1 1 2 2 2 2 1 1 1 1 1 2</span></span>
-<span><span class="co">#&gt; [297] 1 1 1 1</span></span>
+<span><span class="co">#&gt;   [1] 2 2 1 2 2 2 1 1 2 1 1 2 2 2 2 2 1 1 2 2 1 2 1 2 1 2 2 2 1 2 2 2 2 2 2 2 1</span></span>
+<span><span class="co">#&gt;  [38] 1 1 1 2 1 1 1 2 2 1 1 2 2 1 2 1 2 1 1 2 2 2 1 1 2 2 1 1 2 1 1 2 2 1 1 1 1</span></span>
+<span><span class="co">#&gt;  [75] 1 2 2 1 1 2 2 2 1 1 1 1 1 2 1 2 2 1 1 2 1 1 1 1 1 1 2 1 1 1 2 2 2 2 2 2 1</span></span>
+<span><span class="co">#&gt; [112] 1 1 2 1 2 2 2 1 2 1 2 2 1 1 1 1 1 1 1 1 1 1 2 1 2 1 2 2 1 1 1 1 1 2 1 2 2</span></span>
+<span><span class="co">#&gt; [149] 1 1 1 2 1 2 2 1 2 1 1 1 2 2 2 1 1 1 2 1 2 2 2 1 2 2 2 1 1 1 1 2 2 2 1 1 1</span></span>
+<span><span class="co">#&gt; [186] 1 2 2 1 2 2 1 2 1 1 1 2 1 1 1 2 2 1 1 1 1 1 2 2 1 1 1 2 2 2 1 1 1 1 2 2 2</span></span>
+<span><span class="co">#&gt; [223] 1 2 2 2 1 1 2 1 1 2 2 1 2 1 2 1 2 2 2 1 1 2 2 2 2 2 2 1 1 2 2 2 1 1 2 2 1</span></span>
+<span><span class="co">#&gt; [260] 2 1 1 2 1 1 2 1 1 2 2 1 1 2 2 2 1 1 1 2 2 2 2 2 1 1 2 2 2 2 1 2 1 1 2 1 1</span></span>
+<span><span class="co">#&gt; [297] 1 2 2 1</span></span>
 <span></span>
 <span><span class="va">metasnf_data</span><span class="op">$</span><span class="st">"kmeans"</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">km</span><span class="op">$</span><span class="st">"cluster"</span><span class="op">)</span></span>
 <span></span>
@@ -354,12 +355,12 @@ to some major information loss (see the section below)!</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">player_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     level position    blocks  assists id adjusted_blocks adjusted_assists</span></span>
-<span><span class="co">#&gt; 1     pro       pg 2596.9278 3905.437  1      -160.49589       208.316861</span></span>
-<span><span class="co">#&gt; 2     pro       pg 2458.9635 3909.878  2      -298.46025       212.757759</span></span>
-<span><span class="co">#&gt; 3     pro       sg 2807.8446 3703.483  3        50.42085         6.362805</span></span>
-<span><span class="co">#&gt; 4     pro       sg 2696.7059 3682.177  4       -60.71778       -14.943555</span></span>
-<span><span class="co">#&gt; 5     pro       sg 2795.2982 3729.409  5        37.87444        32.288486</span></span>
-<span><span class="co">#&gt; 6 regular       pg  406.3883 1398.134  6      -319.00564       186.359191</span></span>
+<span><span class="co">#&gt; 1 regular       sg  794.8460 1211.324  1        30.26479        14.263127</span></span>
+<span><span class="co">#&gt; 2 regular        c 1142.1939 1011.867  2       377.61270      -185.194245</span></span>
+<span><span class="co">#&gt; 3     pro       sg 2643.2683 3696.484  3       -99.27106       -19.555998</span></span>
+<span><span class="co">#&gt; 4 regular       sg  796.5741 1191.150  4        31.99284        -5.911472</span></span>
+<span><span class="co">#&gt; 5 regular        c 1124.1389 1010.991  5       359.55770      -186.070463</span></span>
+<span><span class="co">#&gt; 6 regular       pg  550.5375 1400.458  6      -214.04372       203.397279</span></span>
 <span></span>
 <span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
