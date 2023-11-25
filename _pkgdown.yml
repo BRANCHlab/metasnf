@@ -1,6 +1,8 @@
 url: https://branchlab.github.io/metasnf/
 template:
   bootstrap: 5
+  params:
+    google_site_verification: Xzz1SIDqvPwru_mXKCXAkX2pNfOz5PO_QO02QG98tZI
 
 navbar:
  components:
