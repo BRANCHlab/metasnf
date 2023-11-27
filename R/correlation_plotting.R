@@ -1149,6 +1149,7 @@ correlation_pval_heatmap <- function(correlation_matrix,
                                      annotation_colours = NULL,
                                      labels_colour = NULL,
                                      split_by_domain = NULL,
+                                     significance_stars = TRUE,
                                      ...) {
     ###########################################################################
     # Format data
@@ -1269,7 +1270,9 @@ correlation_pval_heatmap <- function(correlation_matrix,
         col = labels_colour
     )
     args_list$"show_heatmap_legend" <- show_heatmap_legend
-    args_list$"cell_fun" <- cell_significance_fn(correlation_matrix)
+    if (significance_stars) {
+        args_list$"cell_fun" <- cell_significance_fn(correlation_matrix)
+    }
     if (!is.null(split_by_domain)) {
         keep_vars <- split_by_domain$"name" %in% colnames(correlation_matrix)
         split_by_domain <- split_by_domain[keep_vars, ]
