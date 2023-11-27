@@ -549,20 +549,6 @@ calculate_associations <- function(data_list,
                                    drop_self = TRUE,
                                    cat_test = "chi_squared") {
     ###########################################################################
-    # Ensure that 'mixed' data type is not being used
-    ###########################################################################
-    dl_summary <- summarize_dl(data_list)
-    if (any(dl_summary$"type" == "mixed")) {
-        warning(
-            "When using the 'mixed' data type in the 'calculate_associations'",
-            " function, any data that can be converted to numeric format will",
-            " be treated as continuous and all others will be treated as",
-            " categorical. If you do not want this behaviour, please",
-            " restructure your input data to only use the following types:",
-            " continuous, discrete, ordinal, or categorical."
-        )
-    }
-    ###########################################################################
     # Build a single data.frame that contains all data
     ###########################################################################
     merged_df <- collapse_dl(data_list)
@@ -586,6 +572,24 @@ calculate_associations <- function(data_list,
         type = types,
         domain = domains
     )
+    ###########################################################################
+    # Ensure that 'mixed' data type is not being used
+    ###########################################################################
+    dl_summary <- summarize_dl(data_list)
+    if (any(dl_summary$"type" == "mixed")) {
+        warning(
+            "When using the 'mixed' data type in the 'calculate_associations'",
+            " function, any data that can be converted to numeric format will",
+            " be treated as continuous and all others will be treated as",
+            " categorical. If you do not want this behaviour, please",
+            " restructure your input data to only use the following types:",
+            " continuous, discrete, ordinal, or categorical."
+        )
+        merged_df <- numcol_to_numeric(merged_df)
+        classes <- as.vector(sapply(merged_df, class))
+        metadata$"type"[classes == "numeric"] <- "continuous"
+        metadata$"type"[classes != "numeric"] <- "categorical"
+    }
     ###########################################################################
     # Loop through all pairs of variables
     ###########################################################################
