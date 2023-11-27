@@ -254,8 +254,17 @@ fraction_clustered_together <- function(data_list_subsamples,
                         dplyr::filter(cluster %in% cluster_label)
                 }
             )
-        # A list of dataframes, where each dataframe stores all the pairs of
-        #  patients of a specific cluster
+        #######################################################################
+        # Strip clusters that only had a single person
+        #######################################################################
+        not_solo_cluster <- lapply(
+            subs_grouped_by_cluster,
+            function(x) {
+                nrow(x) != 1
+            }
+        ) |> unlist()
+        subs_grouped_by_cluster <- subs_grouped_by_cluster[not_solo_cluster]
+        #######################################################################
         clustered_pairs_df_list <- subs_grouped_by_cluster |>
             lapply(
                 function(cluster_group) {
