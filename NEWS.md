@@ -1,5 +1,19 @@
 # metasnf 0.3.1
 
+## Bug fixes
+
+* fixed `fraction_clustered_together` crashing when a cluster was assigned to only a single observation
+* fixed `fraction_clustered_together` not running due to bracket typo when evaluating length of the data_list
+
+## New functionality
+
+* `correlation_pval_heatmap` function can have significance stars disabled with `significance_stars` parameter
+
+## Other changes
+
+* pkgdown site now has google site verification code
+
+
 # metasnf 0.3.0
 
 ## Breaking changes
