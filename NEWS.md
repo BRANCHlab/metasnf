@@ -1,3 +1,5 @@
+# metasnf 0.3.1
+
 # metasnf 0.3.0
 
 ## Breaking changes
