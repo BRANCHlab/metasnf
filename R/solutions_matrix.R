@@ -150,7 +150,10 @@ extend_solutions <- function(solutions_matrix,
         solutions_matrix[i, "mean_p_val"] <- mean_p
     }
     if (length(chi_squared_warnings) > 0) {
-        chi_squared_warnings <- paste(chi_squared_warnings, collapse = ", ")
+        chi_squared_warnings <- paste(
+            unique(chi_squared_warnings),
+            collapse = ", "
+        )
         warning(
             "In calculating p-values for the following rows of the solutions",
             " matrix: [", chi_squared_warnings, "], the Chi-squared test was",
