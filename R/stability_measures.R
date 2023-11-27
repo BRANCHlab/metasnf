@@ -91,7 +91,7 @@ subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
     ###########################################################################
     # If number of subsamples is less than 3, warn that SD can't be calculated
     ###########################################################################
-    if (length(data_list_subsamples < 3)) {
+    if (length(data_list_subsamples) < 3) {
         warning(
             "Fewer than 3 subsamples have been provided. Standard",
             " deviation of the pairwise ARIs for each settings matrix row",
