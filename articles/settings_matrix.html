@@ -188,24 +188,24 @@ the matrix.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">settings_matrix</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
-<span><span class="co">## 1      1   0.6 81 20          1         2         1         1        1        1</span></span>
-<span><span class="co">## 2      2   0.5 51 20          1         2         1         1        1        1</span></span>
-<span><span class="co">## 3      3   0.4 56 20          3         1         1         1        1        1</span></span>
-<span><span class="co">## 4      4   0.3 20 20          3         1         1         1        1        1</span></span>
-<span><span class="co">## 5      5   0.8 30 20          3         2         1         1        1        1</span></span>
-<span><span class="co">## 6      6   0.3 18 20          2         2         1         1        1        1</span></span>
+<span><span class="co">## 1      1   0.6 24 20          3         1         1         1        1        1</span></span>
+<span><span class="co">## 2      2   0.3 38 20          1         2         1         1        1        1</span></span>
+<span><span class="co">## 3      3   0.5 71 20          3         1         1         1        1        1</span></span>
+<span><span class="co">## 4      4   0.7 19 20          3         1         1         1        1        1</span></span>
+<span><span class="co">## 5      5   0.4 48 20          1         2         1         1        1        1</span></span>
+<span><span class="co">## 6      6   0.3 19 20          2         2         1         1        1        1</span></span>
 <span><span class="co">##   mix_dist input_wt domain_wt inc_cortical_thickness inc_cortical_surface_area</span></span>
 <span><span class="co">## 1        1        1         1                      1                         1</span></span>
-<span><span class="co">## 2        1        1         1                      1                         0</span></span>
+<span><span class="co">## 2        1        1         1                      1                         1</span></span>
 <span><span class="co">## 3        1        1         1                      1                         1</span></span>
-<span><span class="co">## 4        1        1         1                      1                         1</span></span>
+<span><span class="co">## 4        1        1         1                      1                         0</span></span>
 <span><span class="co">## 5        1        1         1                      1                         1</span></span>
 <span><span class="co">## 6        1        1         1                      1                         1</span></span>
 <span><span class="co">##   inc_subcortical_volume inc_household_income inc_pubertal_status</span></span>
 <span><span class="co">## 1                      1                    1                   1</span></span>
 <span><span class="co">## 2                      1                    1                   1</span></span>
 <span><span class="co">## 3                      1                    1                   1</span></span>
-<span><span class="co">## 4                      1                    1                   0</span></span>
+<span><span class="co">## 4                      1                    1                   1</span></span>
 <span><span class="co">## 5                      1                    1                   1</span></span>
 <span><span class="co">## 6                      1                    1                   1</span></span></code></pre>
 <p>The <code>alpha</code> and <code>k</code> hyperparameters are varied
@@ -290,25 +290,25 @@ much higher number of dataframes being dropped on average) or “none”
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">settings_matrix</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
-<span><span class="co">## 1      1   0.4 82 20          3         2         1         1        1        1</span></span>
-<span><span class="co">## 2      2   0.6 70 20          1         1         1         1        1        1</span></span>
-<span><span class="co">## 3      3   0.3 77 20          2         2         1         1        1        1</span></span>
-<span><span class="co">## 4      4   0.6 58 20          1         2         1         1        1        1</span></span>
-<span><span class="co">## 5      5   0.6 19 20          1         2         1         1        1        1</span></span>
-<span><span class="co">## 6      6   0.3 83 20          2         2         1         1        1        1</span></span>
+<span><span class="co">## 1      1   0.8 12 20          2         2         1         1        1        1</span></span>
+<span><span class="co">## 2      2   0.4 76 20          3         2         1         1        1        1</span></span>
+<span><span class="co">## 3      3   0.6 44 20          3         1         1         1        1        1</span></span>
+<span><span class="co">## 4      4   0.4 24 20          1         2         1         1        1        1</span></span>
+<span><span class="co">## 5      5   0.5 76 20          2         2         1         1        1        1</span></span>
+<span><span class="co">## 6      6   0.4 56 20          3         2         1         1        1        1</span></span>
 <span><span class="co">##   mix_dist input_wt domain_wt inc_cortical_thickness inc_cortical_surface_area</span></span>
 <span><span class="co">## 1        1        1         1                      1                         1</span></span>
 <span><span class="co">## 2        1        1         1                      1                         1</span></span>
 <span><span class="co">## 3        1        1         1                      1                         1</span></span>
 <span><span class="co">## 4        1        1         1                      1                         1</span></span>
 <span><span class="co">## 5        1        1         1                      1                         1</span></span>
-<span><span class="co">## 6        1        1         1                      1                         1</span></span>
+<span><span class="co">## 6        1        1         1                      1                         0</span></span>
 <span><span class="co">##   inc_subcortical_volume inc_household_income inc_pubertal_status</span></span>
 <span><span class="co">## 1                      1                    1                   1</span></span>
-<span><span class="co">## 2                      1                    1                   1</span></span>
+<span><span class="co">## 2                      0                    1                   1</span></span>
 <span><span class="co">## 3                      1                    1                   1</span></span>
 <span><span class="co">## 4                      1                    1                   1</span></span>
-<span><span class="co">## 5                      1                    0                   1</span></span>
+<span><span class="co">## 5                      1                    1                   0</span></span>
 <span><span class="co">## 6                      1                    1                   1</span></span></code></pre>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Uniform dropping</span></span>
@@ -320,26 +320,26 @@ much higher number of dataframes being dropped on average) or “none”
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">settings_matrix</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
-<span><span class="co">## 1      1   0.7 12 20          3         1         1         1        1        1</span></span>
-<span><span class="co">## 2      2   0.4 15 20          1         1         1         1        1        1</span></span>
-<span><span class="co">## 3      3   0.4 83 20          3         2         1         1        1        1</span></span>
-<span><span class="co">## 4      4   0.4 28 20          2         1         1         1        1        1</span></span>
-<span><span class="co">## 5      5   0.4 85 20          3         1         1         1        1        1</span></span>
-<span><span class="co">## 6      6   0.7 13 20          1         2         1         1        1        1</span></span>
+<span><span class="co">## 1      1   0.3 96 20          3         1         1         1        1        1</span></span>
+<span><span class="co">## 2      2   0.7 32 20          3         1         1         1        1        1</span></span>
+<span><span class="co">## 3      3   0.4 85 20          3         1         1         1        1        1</span></span>
+<span><span class="co">## 4      4   0.7 26 20          3         1         1         1        1        1</span></span>
+<span><span class="co">## 5      5   0.6 95 20          1         2         1         1        1        1</span></span>
+<span><span class="co">## 6      6   0.7 76 20          3         2         1         1        1        1</span></span>
 <span><span class="co">##   mix_dist input_wt domain_wt inc_cortical_thickness inc_cortical_surface_area</span></span>
-<span><span class="co">## 1        1        1         1                      0                         0</span></span>
+<span><span class="co">## 1        1        1         1                      1                         1</span></span>
 <span><span class="co">## 2        1        1         1                      0                         1</span></span>
-<span><span class="co">## 3        1        1         1                      0                         0</span></span>
-<span><span class="co">## 4        1        1         1                      0                         1</span></span>
+<span><span class="co">## 3        1        1         1                      0                         1</span></span>
+<span><span class="co">## 4        1        1         1                      1                         0</span></span>
 <span><span class="co">## 5        1        1         1                      1                         1</span></span>
-<span><span class="co">## 6        1        1         1                      1                         0</span></span>
+<span><span class="co">## 6        1        1         1                      1                         1</span></span>
 <span><span class="co">##   inc_subcortical_volume inc_household_income inc_pubertal_status</span></span>
-<span><span class="co">## 1                      0                    1                   0</span></span>
-<span><span class="co">## 2                      1                    1                   1</span></span>
-<span><span class="co">## 3                      1                    0                   1</span></span>
-<span><span class="co">## 4                      1                    1                   0</span></span>
-<span><span class="co">## 5                      0                    1                   1</span></span>
-<span><span class="co">## 6                      0                    0                   1</span></span></code></pre>
+<span><span class="co">## 1                      1                    0                   0</span></span>
+<span><span class="co">## 2                      0                    0                   1</span></span>
+<span><span class="co">## 3                      1                    1                   0</span></span>
+<span><span class="co">## 4                      1                    0                   1</span></span>
+<span><span class="co">## 5                      1                    0                   1</span></span>
+<span><span class="co">## 6                      0                    1                   1</span></span></code></pre>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># No dropping</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
@@ -350,12 +350,12 @@ much higher number of dataframes being dropped on average) or “none”
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">settings_matrix</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
-<span><span class="co">## 1      1   0.6 72 20          2         1         1         1        1        1</span></span>
-<span><span class="co">## 2      2   0.7 42 20          1         1         1         1        1        1</span></span>
-<span><span class="co">## 3      3   0.4 58 20          1         1         1         1        1        1</span></span>
-<span><span class="co">## 4      4   0.7 95 20          1         1         1         1        1        1</span></span>
-<span><span class="co">## 5      5   0.4 30 20          1         1         1         1        1        1</span></span>
-<span><span class="co">## 6      6   0.4 21 20          2         2         1         1        1        1</span></span>
+<span><span class="co">## 1      1   0.6 28 20          1         1         1         1        1        1</span></span>
+<span><span class="co">## 2      2   0.6 92 20          3         1         1         1        1        1</span></span>
+<span><span class="co">## 3      3   0.3 69 20          2         1         1         1        1        1</span></span>
+<span><span class="co">## 4      4   0.5 93 20          2         1         1         1        1        1</span></span>
+<span><span class="co">## 5      5   0.3 33 20          1         1         1         1        1        1</span></span>
+<span><span class="co">## 6      6   0.3 30 20          1         1         1         1        1        1</span></span>
 <span><span class="co">##   mix_dist input_wt domain_wt inc_cortical_thickness inc_cortical_surface_area</span></span>
 <span><span class="co">## 1        1        1         1                      1                         1</span></span>
 <span><span class="co">## 2        1        1         1                      1                         1</span></span>
@@ -383,25 +383,25 @@ controlled using the <code>min_removed_inputs</code> and
 <span><span class="co"># No row will exclude fewer than 3 dataframes during SNF</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">settings_matrix</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
-<span><span class="co">## 1      1   0.8 19 20          3         2         1         1        1        1</span></span>
-<span><span class="co">## 2      2   0.3 12 20          2         2         1         1        1        1</span></span>
-<span><span class="co">## 3      3   0.7 47 20          1         1         1         1        1        1</span></span>
-<span><span class="co">## 4      4   0.6 30 20          2         2         1         1        1        1</span></span>
-<span><span class="co">## 5      5   0.8 22 20          2         1         1         1        1        1</span></span>
-<span><span class="co">## 6      6   0.5 39 20          1         2         1         1        1        1</span></span>
+<span><span class="co">## 1      1   0.8 11 20          2         2         1         1        1        1</span></span>
+<span><span class="co">## 2      2   0.7 68 20          1         1         1         1        1        1</span></span>
+<span><span class="co">## 3      3   0.4 20 20          3         1         1         1        1        1</span></span>
+<span><span class="co">## 4      4   0.5 97 20          1         1         1         1        1        1</span></span>
+<span><span class="co">## 5      5   0.5 63 20          2         1         1         1        1        1</span></span>
+<span><span class="co">## 6      6   0.5 48 20          3         2         1         1        1        1</span></span>
 <span><span class="co">##   mix_dist input_wt domain_wt inc_cortical_thickness inc_cortical_surface_area</span></span>
-<span><span class="co">## 1        1        1         1                      0                         1</span></span>
-<span><span class="co">## 2        1        1         1                      1                         1</span></span>
-<span><span class="co">## 3        1        1         1                      1                         0</span></span>
-<span><span class="co">## 4        1        1         1                      0                         1</span></span>
-<span><span class="co">## 5        1        1         1                      1                         0</span></span>
-<span><span class="co">## 6        1        1         1                      1                         0</span></span>
+<span><span class="co">## 1        1        1         1                      1                         0</span></span>
+<span><span class="co">## 2        1        1         1                      1                         0</span></span>
+<span><span class="co">## 3        1        1         1                      0                         0</span></span>
+<span><span class="co">## 4        1        1         1                      1                         0</span></span>
+<span><span class="co">## 5        1        1         1                      0                         1</span></span>
+<span><span class="co">## 6        1        1         1                      0                         1</span></span>
 <span><span class="co">##   inc_subcortical_volume inc_household_income inc_pubertal_status</span></span>
 <span><span class="co">## 1                      1                    0                   0</span></span>
-<span><span class="co">## 2                      0                    0                   0</span></span>
-<span><span class="co">## 3                      0                    1                   0</span></span>
-<span><span class="co">## 4                      0                    1                   0</span></span>
-<span><span class="co">## 5                      0                    1                   0</span></span>
+<span><span class="co">## 2                      1                    0                   0</span></span>
+<span><span class="co">## 3                      0                    1                   1</span></span>
+<span><span class="co">## 4                      0                    0                   1</span></span>
+<span><span class="co">## 5                      1                    0                   0</span></span>
 <span><span class="co">## 6                      1                    0                   0</span></span></code></pre>
 </div>
 <div class="section level2">
