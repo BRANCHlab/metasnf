@@ -17,6 +17,7 @@ correlation_pval_heatmap(
   annotation_colours = NULL,
   labels_colour = NULL,
   split_by_domain = NULL,
+  significance_stars = TRUE,
   ...
 )
 }
@@ -58,6 +59,9 @@ of the heatmap.}
 the domain of every variable in the plotted data.
 columns of the correlation_matrix. Will be used to "slice" the heatmap into
 visually separated sections.}
+
+\item{significance_stars}{If TRUE (default), plots significance stars on
+heatmap cells}
 
 \item{...}{Additional parameters passed into ComplexHeatmap::Heatmap.}
 }

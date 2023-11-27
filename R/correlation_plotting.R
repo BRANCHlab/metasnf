@@ -1134,6 +1134,8 @@ alluvial_cluster_plot <- function(cluster_sequence,
 #' the domain of every variable in the plotted data.
 #' columns of the correlation_matrix. Will be used to "slice" the heatmap into
 #' visually separated sections.
+#' @param significance_stars If TRUE (default), plots significance stars on
+#' heatmap cells
 #' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
 #'
 #' @export
