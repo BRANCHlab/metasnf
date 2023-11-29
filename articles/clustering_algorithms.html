@@ -55,6 +55,7 @@
     <h6 class="dropdown-header" data-toc-skip>Advanced Functionality</h6>
     <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
     <a class="dropdown-item" href="../articles/clustering_algorithms.html">Clustering Algorithms</a>
+    <a class="dropdown-item" href="../articles/snf_schemes.html">SNF schemes</a>
     <a class="dropdown-item" href="../articles/feature_weights.html">Feature Weights</a>
     <a class="dropdown-item" href="../articles/stability_measures.html">Stability Measures and Consensus Clustering</a>
     <a class="dropdown-item" href="../articles/confounders.html">Confounders and Unwanted Signal</a>
@@ -212,7 +213,7 @@ provide <code>batch_snf</code> with a custom
 <span><span class="co">#&gt;         number_of_clusters)</span></span>
 <span><span class="co">#&gt;     return(list(solution = solution, nclust = number_of_clusters))</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x564ebdba4f90&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x556f01aa5d60&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $spectral_rot</span></span>
@@ -226,7 +227,7 @@ provide <code>batch_snf</code> with a custom
 <span><span class="co">#&gt;     solution_data &lt;- list(solution = solution, nclust = number_of_clusters)</span></span>
 <span><span class="co">#&gt;     return(solution_data)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x564ebdba0468&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x556f01aa1238&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span>
 <span></span>
 <span><span class="co"># A prettier format:</span></span>
@@ -427,11 +428,11 @@ to have a good idea of what values to use for the hyperparameters
 manually, that’s the perfect time to manage the many similarity matrices
 you’ve created with <code>batch_snf</code> through meta clustering.
 Generate a wide range of similarity matrices and apply meta clustering
-to find a few representative. One way to do this would be based on how
-the spectral-clustering derived solutions end up clustering together
-(see <a href="https://branchlab.github.io/metasnf/articles/a_less_simple_example.html#examining-meta-clusters">example</a>).
-Then pull take the corresponding affinity matrices and go through the
-dbscan clustering process manually.</p>
+to find a few representative similarity matrices. One way to do this
+would be based on how the spectral-clustering derived solutions end up
+clustering together (see <a href="https://branchlab.github.io/metasnf/articles/a_less_simple_example.html#examining-meta-clusters">example</a>).
+Then take the corresponding affinity matrices and go through the dbscan
+clustering process manually.</p>
 <p>Based on <code><a href="https://rdrr.io/pkg/dbscan/man/dbscan.html" class="external-link">?dbscan</a></code>, it looks like the function can accept
 precomputed distance matrices (instead of
 <code>precomputed_nn_object</code>s) as long as they actually are

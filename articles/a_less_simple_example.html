@@ -55,6 +55,7 @@
     <h6 class="dropdown-header" data-toc-skip>Advanced Functionality</h6>
     <a class="dropdown-item" href="../articles/distance_metrics.html">Distance Metrics</a>
     <a class="dropdown-item" href="../articles/clustering_algorithms.html">Clustering Algorithms</a>
+    <a class="dropdown-item" href="../articles/snf_schemes.html">SNF schemes</a>
     <a class="dropdown-item" href="../articles/feature_weights.html">Feature Weights</a>
     <a class="dropdown-item" href="../articles/stability_measures.html">Stability Measures and Consensus Clustering</a>
     <a class="dropdown-item" href="../articles/confounders.html">Confounders and Unwanted Signal</a>
@@ -421,8 +422,8 @@ metrics vignette</a>)</li>
 <li>
 <code>inc_*</code> - binary columns indicating whether or not an
 input dataframe is included (1) or excluded (0) from the corresponding
-SNF run (discussed further in the <a href="https://branchlab.github.io/metasnf/articles/random_dropout.html">random
-dropout vignette</a>)</li>
+SNF run (discussed further in the <a href="https://branchlab.github.io/metasnf/articles/settings_matrix.html">settings
+matrix vignette</a>)</li>
 </ul>
 <p>Without specifying any additional parameters,
 <code>generate_settings_matrix</code> randomly populates these columns
@@ -468,7 +469,7 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
@@ -481,7 +482,7 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 5 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span></span>
 <span><span class="co">#&gt;  [1] "row_id"                    "alpha"                    </span></span>
@@ -610,9 +611,9 @@ parameter:</p>
 <span>    return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 5 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 3 seconds"</span></span>
@@ -1010,351 +1011,9 @@ this procedure.</p>
 <span><span class="co">#&gt; 98  subject_NDAR_INVKYH529RD  test 6 2 2 2 2</span></span>
 <span><span class="co">#&gt; 99  subject_NDAR_INVL045Z1TY  test 1 2 1 2 2</span></span>
 <span><span class="co">#&gt; 100 subject_NDAR_INVLDQH8ATK  test 1 2 1 2 2</span></span></code></pre></div>
-<p>That’s all for now!</p>
+<p>That’s all!</p>
 <p>If you have any questions, comments, suggestions, bugs, etc. feel
-free to post an issue at <a href="https://github.com/BRANCHlab/metasnf" class="external-link uri">https://github.com/BRANCHlab/metasnf</a>.</p>
-</div>
-<div class="section level2">
-<h2 id="appendix">Appendix<a class="anchor" aria-label="anchor" href="#appendix"></a>
-</h2>
-<p>(sections below will move into separate vignettes)</p>
-<div class="section level3">
-<h3 id="inc">inc*<a class="anchor" aria-label="anchor" href="#inc"></a>
-</h3>
-<p>This section describes how the <code>generate_settings_matrix</code>
-function randomly assigns input dataframess to be dropped from different
-SNF runs to access a wider space of possible solutions.</p>
-<p>By default, <code>generate_settings_matrix</code> will build an empty
-dataframe containing the columns outlined in the <a href="#generating-the-settings-matrix">settings matrix</a> section. If a
-non-zero number of rows are specified when calling
-<code>generate_settings_matrix</code>, the function calls on
-<code>add_settings_matrix_rows</code> to add rows with randomly valid
-values. The input dataframe inclusion variables rely on yet another
-helper function:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">random_removal</span></span>
-<span><span class="co">#&gt; function (columns, min_removed_inputs, max_removed_inputs, dropout_dist = "exponential") </span></span>
-<span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     inclusion_columns &lt;- columns[startsWith(columns, "inc")]</span></span>
-<span><span class="co">#&gt;     num_cols &lt;- length(inclusion_columns)</span></span>
-<span><span class="co">#&gt;     if (dropout_dist == "none") {</span></span>
-<span><span class="co">#&gt;         inclusions_df &lt;- data.frame(t(rep(1, num_cols)))</span></span>
-<span><span class="co">#&gt;         colnames(inclusions_df) &lt;- inclusion_columns</span></span>
-<span><span class="co">#&gt;         rownames(inclusions_df) &lt;- NULL</span></span>
-<span><span class="co">#&gt;         return(inclusions_df)</span></span>
-<span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     if (is.null(min_removed_inputs)) {</span></span>
-<span><span class="co">#&gt;         min_removed_inputs &lt;- 0</span></span>
-<span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     if (is.null(max_removed_inputs)) {</span></span>
-<span><span class="co">#&gt;         max_removed_inputs &lt;- num_cols - 1</span></span>
-<span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     if (max_removed_inputs &gt;= num_cols || min_removed_inputs &lt; </span></span>
-<span><span class="co">#&gt;         0) {</span></span>
-<span><span class="co">#&gt;         stop(paste0("The number of removed elements must be between 0 and the", </span></span>
-<span><span class="co">#&gt;             " total number of elements in the data_list (", num_cols, </span></span>
-<span><span class="co">#&gt;             ")."))</span></span>
-<span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     if (dropout_dist == "uniform") {</span></span>
-<span><span class="co">#&gt;         possible_number_removed &lt;- seq(min_removed_inputs, max_removed_inputs, </span></span>
-<span><span class="co">#&gt;             by = 1)</span></span>
-<span><span class="co">#&gt;         num_removed &lt;- resample(possible_number_removed, 1)</span></span>
-<span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     if (dropout_dist == "exponential") {</span></span>
-<span><span class="co">#&gt;         rand_vals &lt;- stats::rexp(10000)</span></span>
-<span><span class="co">#&gt;         rand_vals &lt;- rand_vals/max(rand_vals)</span></span>
-<span><span class="co">#&gt;         difference &lt;- max_removed_inputs - min_removed_inputs</span></span>
-<span><span class="co">#&gt;         rand_vals &lt;- rand_vals * difference</span></span>
-<span><span class="co">#&gt;         rand_vals &lt;- rand_vals + min_removed_inputs</span></span>
-<span><span class="co">#&gt;         rand_vals &lt;- round(rand_vals)</span></span>
-<span><span class="co">#&gt;         num_removed &lt;- sample(rand_vals, 1)</span></span>
-<span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     remove_placeholders &lt;- rep(0, num_removed)</span></span>
-<span><span class="co">#&gt;     keep_placeholders &lt;- rep(1, num_cols - num_removed)</span></span>
-<span><span class="co">#&gt;     unshuffled_removals &lt;- c(remove_placeholders, keep_placeholders)</span></span>
-<span><span class="co">#&gt;     shuffled_removals &lt;- sample(unshuffled_removals)</span></span>
-<span><span class="co">#&gt;     inclusions_df &lt;- t(data.frame(shuffled_removals))</span></span>
-<span><span class="co">#&gt;     colnames(inclusions_df) &lt;- inclusion_columns</span></span>
-<span><span class="co">#&gt;     rownames(inclusions_df) &lt;- NULL</span></span>
-<span><span class="co">#&gt;     return(inclusions_df)</span></span>
-<span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55856a34e460&gt;</span></span>
-<span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
-<p>This <code>random_removal</code> function randomly picks a number of
-columns to remove according to an exponential function. The most likely
-number of input dataframes to be removed is 0, followed by 1, all the
-way up to <span class="math inline">\(D - 1\)</span> dataframes where
-<span class="math inline">\(D\)</span> is the number of provided input
-dataframes. The exponential distribution seemed preferrable to a uniform
-one, which would lead to a large number of input dataframes being
-dropped on every SNF run.</p>
-</div>
-<div class="section level3">
-<h3 id="snf_scheme">snf_scheme<a class="anchor" aria-label="anchor" href="#snf_scheme"></a>
-</h3>
-<p>This section describes how individual input dataframes are converted
-into a final fused network in different ways using the
-<code>snf_scheme</code> parameter.</p>
-<p><code>snf_scheme</code>: One consideration of SNF is choosing how to
-organize individual features (columns) into the input dataframes that
-get fused by SNF.</p>
-<p>In the original SNF paper, input dataframes were organized according
-to “measurement type”: three input dataframes each containing several
-features related to miRNA, mRNA, or DNA methylation. In my own work, I
-had a very large set of input dataframes that had varying amounts of
-overlap in expected information content, which made the grouping of
-features a little bit less clear. For example, consider having input
-dataframes for (1) the thicknesses of cortical brain regions, (2) the
-surface areas of cortical brain regions, (3) the volumes of subcortical
-brain regions, and (4) mean blood pressure. We have 4 distinct sets of
-features, 3 distinct sets of units (cortical thickness and subcortical
-volume both being in <span class="math inline">\(mm^3\)</span>), and
-(arguably) 2 distinct sources of information: structural brain data and
-blood pressure data.</p>
-<p>It is not immediately clear that collapsing the data into any one of
-those mentioned sets will give rise to the most useful clustering
-solution for our purpose. The number of ways in which we can take these
-individual features and produce a single SNF-fused similarity matrix at
-the end is quite large.</p>
-<p>Here are two examples of getting a single similarity matrix from two
-single-feature input dataframes:</p>
-<p><strong>Example 1: Concatenation -&gt; single similarity
-matrix</strong></p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    subjectkey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"person1"</span>, <span class="st">"person2"</span>, <span class="st">"person3"</span>, <span class="st">"person4"</span><span class="op">)</span>,</span>
-<span>    feature1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">df2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    subjectkey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"person1"</span>, <span class="st">"person2"</span>, <span class="st">"person3"</span>, <span class="st">"person4"</span><span class="op">)</span>,</span>
-<span>    feature2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<table class="table kable_wrapper">
-<caption>
-Two individual dataframes, prior to concatenation
-</caption>
-<tbody><tr>
-<td>
-<table class="table">
-<thead><tr class="header">
-<th align="left">subjectkey</th>
-<th align="right">feature1</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">person1</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">person2</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="left">person3</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">person4</td>
-<td align="right">4</td>
-</tr>
-</tbody>
-</table>
-</td>
-<td>
-<table class="table">
-<thead><tr class="header">
-<th align="left">subjectkey</th>
-<th align="right">feature2</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">person1</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">person2</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="left">person3</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="left">person4</td>
-<td align="right">5</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr></tbody>
-</table>
-<p>We start by joining our two features by concatenation:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df3</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">df1</span>, <span class="va">df2</span>, by <span class="op">=</span> <span class="st">"subjectkey"</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<caption>A single concatenated dataframe</caption>
-<thead><tr class="header">
-<th align="left">subjectkey</th>
-<th align="right">feature1</th>
-<th align="right">feature2</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">person1</td>
-<td align="right">1</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">person2</td>
-<td align="right">2</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="left">person3</td>
-<td align="right">3</td>
-<td align="right">4</td>
-</tr>
-<tr class="even">
-<td align="left">person4</td>
-<td align="right">4</td>
-<td align="right">5</td>
-</tr>
-</tbody>
-</table>
-<p>Giving rise to the following distance matrix:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df3_dist</span> <span class="op">&lt;-</span> <span class="va">df3</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><span class="math display">\[\begin{bmatrix}
-0&amp;1&amp;2.24&amp;3.61 \\
-1&amp;0&amp;1.41&amp;2.83 \\
-2.24&amp;1.41&amp;0&amp;1.41 \\
-3.61&amp;2.83&amp;1.41&amp;0 \\
-\end{bmatrix}\]</span></p>
-<p>And subsequent similarity matrix:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df3_sim</span> <span class="op">&lt;-</span> <span class="fu">SNFtool</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/affinityMatrix.html" class="external-link">affinityMatrix</a></span><span class="op">(</span><span class="va">df3_dist</span>, K <span class="op">=</span> <span class="fl">3</span>, sigma <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><span class="math display">\[\begin{bmatrix}
-0.52&amp;0.23&amp;0.04&amp;0.01 \\
-0.23&amp;0.69&amp;0.11&amp;0.02 \\
-0.04&amp;0.11&amp;0.71&amp;0.14 \\
-0.01&amp;0.02&amp;0.14&amp;0.46 \\
-\end{bmatrix}\]</span></p>
-<p><span class="math inline">\(~\)</span></p>
-<p><strong>Example 2: Similarity matrices -&gt; integration by
-SNF</strong></p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    subjectkey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"person1"</span>, <span class="st">"person2"</span>, <span class="st">"person3"</span>, <span class="st">"person4"</span><span class="op">)</span>,</span>
-<span>    feature1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">df2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    subjectkey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"person1"</span>, <span class="st">"person2"</span>, <span class="st">"person3"</span>, <span class="st">"person4"</span><span class="op">)</span>,</span>
-<span>    feature2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>We first convert each of our input dataframes into distance
-matrices:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df1_dist</span> <span class="op">&lt;-</span> <span class="va">df1</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">df2_dist</span> <span class="op">&lt;-</span> <span class="va">df2</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><span class="math display">\[\begin{bmatrix}
-0&amp;1&amp;2&amp;3 \\
-1&amp;0&amp;1&amp;2 \\
-2&amp;1&amp;0&amp;1 \\
-3&amp;2&amp;1&amp;0 \\
-\end{bmatrix}\]</span> <span class="math display">\[\begin{bmatrix}
-0&amp;0&amp;1&amp;2 \\
-0&amp;0&amp;1&amp;2 \\
-1&amp;1&amp;0&amp;1 \\
-2&amp;2&amp;1&amp;0 \\
-\end{bmatrix}\]</span></p>
-<p>We then convert these distance matrices into similarity matrices:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df1_sim</span> <span class="op">&lt;-</span> <span class="fu">SNFtool</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/affinityMatrix.html" class="external-link">affinityMatrix</a></span><span class="op">(</span><span class="va">df1_dist</span>, K <span class="op">=</span> <span class="fl">3</span>, sigma <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">df2_sim</span> <span class="op">&lt;-</span> <span class="fu">SNFtool</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/affinityMatrix.html" class="external-link">affinityMatrix</a></span><span class="op">(</span><span class="va">df2_dist</span>, K <span class="op">=</span> <span class="fl">3</span>, sigma <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><span class="math display">\[\begin{bmatrix}
-0.6&amp;0.21&amp;0.04&amp;0.01 \\
-0.21&amp;0.9&amp;0.17&amp;0.04 \\
-0.04&amp;0.17&amp;0.9&amp;0.21 \\
-0.01&amp;0.04&amp;0.21&amp;0.6 \\
-\end{bmatrix}\]</span> <span class="math display">\[\begin{bmatrix}
-1.2&amp;1.2&amp;0.11&amp;0.02 \\
-1.2&amp;1.2&amp;0.11&amp;0.02 \\
-0.11&amp;0.11&amp;1.2&amp;0.17 \\
-0.02&amp;0.02&amp;0.17&amp;0.72 \\
-\end{bmatrix}\]</span></p>
-<p>And then we fuse these similarity matrices together using SNF:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df1_df2_fused</span> <span class="op">&lt;-</span> <span class="fu">SNFtool</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/SNF.html" class="external-link">SNF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">df1_sim</span>, <span class="va">df2_sim</span><span class="op">)</span>, K <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><span class="math display">\[\begin{bmatrix}
-0.5&amp;0.24&amp;0.13&amp;0.12 \\
-0.24&amp;0.5&amp;0.14&amp;0.13 \\
-0.13&amp;0.14&amp;0.5&amp;0.24 \\
-0.12&amp;0.13&amp;0.24&amp;0.5 \\
-\end{bmatrix}\]</span></p>
-<p>Contrast this with the similarity matrix we obtained in
-<strong>Example 1</strong>:</p>
-<p><span class="math display">\[\begin{bmatrix}
-0.52&amp;0.23&amp;0.04&amp;0.01 \\
-0.23&amp;0.69&amp;0.11&amp;0.02 \\
-0.04&amp;0.11&amp;0.71&amp;0.14 \\
-0.01&amp;0.02&amp;0.14&amp;0.46 \\
-\end{bmatrix}\]</span></p>
-<p>I’m not entirely sure about what is happening with the diagonal
-values not being identical in the second matrix, but that aside, the
-results here seem mostly similar. Person 1 is most similar to person 2,
-person 2 is most similar to person 1, person 3 is most similar to person
-4, and person 4 is most similar to person 3.</p>
-<p><em>But</em></p>
-<p>The values aren’t identical, and you could imagine that for a more
-complicated example or a slightly different choice in feature
-collapsing, the resulting clustering solution would be different.</p>
-<p>Going back to the example where our input dataframes are:</p>
-<ol style="list-style-type: decimal">
-<li>cortical thicknesses</li>
-<li>cortical surface areas</li>
-<li>subcortical volumes</li>
-<li>mean blood pressure</li>
-</ol>
-<p>You could imagine that individually converting each of these 4 input
-dataframes into 4 separate distance matrices, converting those into
-similarity matrices, and then fusing those 4 matrices into one single
-network by SNF could be a little bit skewed in favour of the brain
-imaging information. 3 of our sources are all describing structural
-brain features, while 1 source is about the blood.</p>
-<p>Varying the <code>snf_scheme</code> parameter gives us access to a
-wider range of possible clustering solutions by changing which of the
-following approaches are taken to digest the initial input dataframes to
-a final fused network:</p>
-<ol style="list-style-type: decimal">
-<li>Individual: Input dataframes are combined into a final network by
-SNF.</li>
-<li>Two-step: Input dataframes are combined within user-specified data
-domains by one round of SNF and then combined across domains by a second
-round of SNF.</li>
-<li>Domain: Input dataframes are combined within domains by
-concatenation and then combined into a single fused network by SNF.</li>
-</ol>
-<p>These options are not comprehensive. If there are other schemes you
-would like to be added into the package, feel free to make a request on
-GitHub.</p>
-</div>
+free to post an issue at <a href="https://github.com/BRANCHlab/metasnf" class="external-link">https://github.com/BRANCHlab/metasnf</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
