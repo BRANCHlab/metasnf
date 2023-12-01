@@ -211,10 +211,8 @@ keep_split <- function(df, assigned_df, split, uid = NULL) {
         colnames(assigned_df)[colnames(assigned_df) == "subjectkey"] <- uid
     }
     train_or_test <- split
-    split_df <- assigned_df |>
-        dplyr::filter(split == train_or_test) |>
-        #dplyr::inner_join(df, by = "subjectkey") |>
-        dplyr::inner_join(df, by = uid) |>
+    requested_split <- assigned_df |> dplyr::filter(split == train_or_test)
+    split_df <- dplyr::left_join(requested_split, df, by = uid) |>
         dplyr::select(-split)
     return(split_df)
 }
