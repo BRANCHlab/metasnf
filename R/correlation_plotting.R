@@ -587,6 +587,9 @@ generate_annotations_list <- function(df,
                                       show_legend = TRUE,
                                       annotation_colours = NULL) {
     ###########################################################################
+    # Make sure dataframe is actually a dataframe and not a tibble etc.
+    df <- data.frame(df)
+    ###########################################################################
     # Ensure all the variables specified are in the provided data
     check_colnames <- function(annotation_list, sorted_df) {
         if (!all(annotation_list %in% colnames(sorted_df))) {
