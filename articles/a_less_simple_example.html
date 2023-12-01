@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -384,12 +384,12 @@ of rows will automatically build a randomly populated
 <span><span class="co">#&gt; 3      3   0.3 44 20          2         2         1         1        1        1</span></span>
 <span><span class="co">#&gt; 4      4   0.3 43 20          1         1         1         1        1        1</span></span>
 <span><span class="co">#&gt; 5      5   0.5 29 20          2         2         1         1        1        1</span></span>
-<span><span class="co">#&gt;   mix_dist input_wt domain_wt inc_cortical_thickness inc_cortical_surface_area</span></span>
-<span><span class="co">#&gt; 1        1        1         1                      1                         0</span></span>
-<span><span class="co">#&gt; 2        1        1         1                      1                         1</span></span>
-<span><span class="co">#&gt; 3        1        1         1                      1                         0</span></span>
-<span><span class="co">#&gt; 4        1        1         1                      1                         1</span></span>
-<span><span class="co">#&gt; 5        1        1         1                      1                         1</span></span>
+<span><span class="co">#&gt;   mix_dist inc_cortical_thickness inc_cortical_surface_area</span></span>
+<span><span class="co">#&gt; 1        1                      1                         0</span></span>
+<span><span class="co">#&gt; 2        1                      1                         1</span></span>
+<span><span class="co">#&gt; 3        1                      1                         0</span></span>
+<span><span class="co">#&gt; 4        1                      1                         1</span></span>
+<span><span class="co">#&gt; 5        1                      1                         1</span></span>
 <span><span class="co">#&gt;   inc_subcortical_volume inc_household_income inc_pubertal_status</span></span>
 <span><span class="co">#&gt; 1                      1                    0                   1</span></span>
 <span><span class="co">#&gt; 2                      1                    1                   1</span></span>
@@ -465,11 +465,11 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
@@ -479,10 +479,10 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [1] "Row: 15/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 16/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 17/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 5 seconds."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span></span>
 <span><span class="co">#&gt;  [1] "row_id"                    "alpha"                    </span></span>
@@ -490,16 +490,16 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt;  [5] "snf_scheme"                "clust_alg"                </span></span>
 <span><span class="co">#&gt;  [7] "cont_dist"                 "disc_dist"                </span></span>
 <span><span class="co">#&gt;  [9] "ord_dist"                  "cat_dist"                 </span></span>
-<span><span class="co">#&gt; [11] "mix_dist"                  "input_wt"                 </span></span>
-<span><span class="co">#&gt; [13] "domain_wt"                 "inc_cortical_thickness"   </span></span>
-<span><span class="co">#&gt; [15] "inc_cortical_surface_area" "inc_subcortical_volume"   </span></span>
-<span><span class="co">#&gt; [17] "inc_household_income"      "inc_pubertal_status"      </span></span>
-<span><span class="co">#&gt; [19] "nclust"                    "subject_NDAR_INV0567T2Y9" </span></span>
-<span><span class="co">#&gt; [21] "subject_NDAR_INV0IZ157F8"  "subject_NDAR_INV0J4PYA5F" </span></span>
-<span><span class="co">#&gt; [23] "subject_NDAR_INV10OMKVLE"  "subject_NDAR_INV15FPCW4O" </span></span>
-<span><span class="co">#&gt; [25] "subject_NDAR_INV19NB4RJK"  "subject_NDAR_INV1HLGR738" </span></span>
-<span><span class="co">#&gt; [27] "subject_NDAR_INV1KR0EZFU"  "subject_NDAR_INV1L3Y9EOP" </span></span>
-<span><span class="co">#&gt; [29] "subject_NDAR_INV1TCP5GNM"  "subject_NDAR_INV1ZHRDJ6B"</span></span></code></pre></div>
+<span><span class="co">#&gt; [11] "mix_dist"                  "inc_cortical_thickness"   </span></span>
+<span><span class="co">#&gt; [13] "inc_cortical_surface_area" "inc_subcortical_volume"   </span></span>
+<span><span class="co">#&gt; [15] "inc_household_income"      "inc_pubertal_status"      </span></span>
+<span><span class="co">#&gt; [17] "nclust"                    "subject_NDAR_INV0567T2Y9" </span></span>
+<span><span class="co">#&gt; [19] "subject_NDAR_INV0IZ157F8"  "subject_NDAR_INV0J4PYA5F" </span></span>
+<span><span class="co">#&gt; [21] "subject_NDAR_INV10OMKVLE"  "subject_NDAR_INV15FPCW4O" </span></span>
+<span><span class="co">#&gt; [23] "subject_NDAR_INV19NB4RJK"  "subject_NDAR_INV1HLGR738" </span></span>
+<span><span class="co">#&gt; [25] "subject_NDAR_INV1KR0EZFU"  "subject_NDAR_INV1L3Y9EOP" </span></span>
+<span><span class="co">#&gt; [27] "subject_NDAR_INV1TCP5GNM"  "subject_NDAR_INV1ZHRDJ6B" </span></span>
+<span><span class="co">#&gt; [29] "subject_NDAR_INV2EJ41YSZ"  "subject_NDAR_INV2PK6C85M"</span></span></code></pre></div>
 <p>It goes on like this for some time.</p>
 <p>Just like that, the clustering is done!</p>
 <p>You can pull the clustering results out of each row using the
@@ -611,14 +611,14 @@ parameter:</p>
 <span>    return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 5 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 2 seconds"</span></span>
@@ -627,7 +627,7 @@ parameter:</p>
 <span><span class="co">#&gt; [1] "Row: 15/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 16/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 17/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Total time taken: 5 seconds."</span></span>
@@ -750,14 +750,14 @@ clusters.</p>
 <span><span class="co">#&gt;  [5] "snf_scheme"                "clust_alg"                </span></span>
 <span><span class="co">#&gt;  [7] "cont_dist"                 "disc_dist"                </span></span>
 <span><span class="co">#&gt;  [9] "ord_dist"                  "cat_dist"                 </span></span>
-<span><span class="co">#&gt; [11] "mix_dist"                  "input_wt"                 </span></span>
-<span><span class="co">#&gt; [13] "domain_wt"                 "inc_cortical_thickness"   </span></span>
-<span><span class="co">#&gt; [15] "inc_cortical_surface_area" "inc_subcortical_volume"   </span></span>
-<span><span class="co">#&gt; [17] "inc_household_income"      "inc_pubertal_status"      </span></span>
-<span><span class="co">#&gt; [19] "nclust"                    "subject_NDAR_INV0567T2Y9" </span></span>
-<span><span class="co">#&gt; [21] "subject_NDAR_INV0IZ157F8"  "subject_NDAR_INV0J4PYA5F" </span></span>
-<span><span class="co">#&gt; [23] "subject_NDAR_INV10OMKVLE"  "subject_NDAR_INV15FPCW4O" </span></span>
-<span><span class="co">#&gt; [25] "subject_NDAR_INV19NB4RJK"</span></span>
+<span><span class="co">#&gt; [11] "mix_dist"                  "inc_cortical_thickness"   </span></span>
+<span><span class="co">#&gt; [13] "inc_cortical_surface_area" "inc_subcortical_volume"   </span></span>
+<span><span class="co">#&gt; [15] "inc_household_income"      "inc_pubertal_status"      </span></span>
+<span><span class="co">#&gt; [17] "nclust"                    "subject_NDAR_INV0567T2Y9" </span></span>
+<span><span class="co">#&gt; [19] "subject_NDAR_INV0IZ157F8"  "subject_NDAR_INV0J4PYA5F" </span></span>
+<span><span class="co">#&gt; [21] "subject_NDAR_INV10OMKVLE"  "subject_NDAR_INV15FPCW4O" </span></span>
+<span><span class="co">#&gt; [23] "subject_NDAR_INV19NB4RJK"  "subject_NDAR_INV1HLGR738" </span></span>
+<span><span class="co">#&gt; [25] "subject_NDAR_INV1KR0EZFU"</span></span>
 <span></span>
 <span><span class="co"># Looking at the newly added columns</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/no_subs.html">no_subs</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span><span class="op">)</span></span>
@@ -768,13 +768,13 @@ clusters.</p>
 <span><span class="co">#&gt; 4      4   0.3 43 20          1         1         1         1        1        1</span></span>
 <span><span class="co">#&gt; 5      5   0.5 29 20          2         2         1         1        1        1</span></span>
 <span><span class="co">#&gt; 6      6   0.4 26 20          2         1         1         1        1        1</span></span>
-<span><span class="co">#&gt;   mix_dist input_wt domain_wt inc_cortical_thickness inc_cortical_surface_area</span></span>
-<span><span class="co">#&gt; 1        1        1         1                      1                         0</span></span>
-<span><span class="co">#&gt; 2        1        1         1                      1                         1</span></span>
-<span><span class="co">#&gt; 3        1        1         1                      1                         0</span></span>
-<span><span class="co">#&gt; 4        1        1         1                      1                         1</span></span>
-<span><span class="co">#&gt; 5        1        1         1                      1                         1</span></span>
-<span><span class="co">#&gt; 6        1        1         1                      1                         1</span></span>
+<span><span class="co">#&gt;   mix_dist inc_cortical_thickness inc_cortical_surface_area</span></span>
+<span><span class="co">#&gt; 1        1                      1                         0</span></span>
+<span><span class="co">#&gt; 2        1                      1                         1</span></span>
+<span><span class="co">#&gt; 3        1                      1                         0</span></span>
+<span><span class="co">#&gt; 4        1                      1                         1</span></span>
+<span><span class="co">#&gt; 5        1                      1                         1</span></span>
+<span><span class="co">#&gt; 6        1                      1                         1</span></span>
 <span><span class="co">#&gt;   inc_subcortical_volume inc_household_income inc_pubertal_status nclust</span></span>
 <span><span class="co">#&gt; 1                      1                    0                   1      2</span></span>
 <span><span class="co">#&gt; 2                      1                    1                   1      2</span></span>
@@ -942,7 +942,7 @@ above, you can either specify both the <code>train_subjects</code> and
 <span>    <span class="va">train_data_list</span>,</span>
 <span>    <span class="va">settings_matrix</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
