@@ -1,3 +1,5 @@
+# metasnf 0.3.2
+
 # metasnf 0.3.1
 
 ## Bug fixes
