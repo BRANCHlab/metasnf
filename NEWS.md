@@ -1,5 +1,9 @@
 # metasnf 0.3.3
 
+## Breaking changes
+
+* input_wt and domain_wt are removed from settings_matrix and rest of package - weighting at this level is no longer planned. This will result in altered settings matrices, but only superficially - the columns "input_wt" and "domain_wt" will be missing, but had no effect on the SNF prior to this patch anyway.
+
 # metasnf 0.3.2
 
 * `keep_split` will preserve observations who were assigned a split but were not present in the dataframe being split. Instead of being removed, those observations will have NA values.
