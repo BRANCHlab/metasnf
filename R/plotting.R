@@ -28,9 +28,7 @@ settings_matrix_heatmap <- function(settings_matrix,
         which(colnames(scaled_matrix) == "t"),
         which(colnames(scaled_matrix) == "snf_scheme"),
         which(colnames(scaled_matrix) == "clust_alg"),
-        which(colnames(scaled_matrix) == "mix_dist"),
-        which(colnames(scaled_matrix) == "input_wt"),
-        which(colnames(scaled_matrix) == "domain_wt")
+        which(colnames(scaled_matrix) == "mix_dist")
     )
     colorscheme <- grDevices::colorRampPalette(c("green", "midnightblue"))(50)
     if (hide_ids == TRUE) {

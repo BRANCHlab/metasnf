@@ -187,8 +187,6 @@ generate_settings_matrix <- function(data_list,
         "ord_dist",
         "cat_dist",
         "mix_dist",
-        "input_wt",
-        "domain_wt",
         paste0("inc_", summarize_dl(data_list)$"name")
     )
     settings_matrix_base <- as.data.frame(
@@ -628,18 +626,6 @@ add_settings_matrix_rows <- function(settings_matrix,
             mix_dist <- resample(mixed_distances, 1)
         }
         #######################################################################
-        # SNF weighting functionality - not yet integrated
-        if (is.null(snf_input_weights)) {
-            input_wt <- 1
-        } else {
-            input_wt <- sample(1:length(snf_input_weights), 1)
-        }
-        if (is.null(snf_domain_weights)) {
-            domain_wt <- 1
-        } else {
-            domain_wt <- sample(1:length(snf_domain_weights), 1)
-        }
-        #######################################################################
         # 7. Combine selected values to a single dataframe row
         #######################################################################
         new_row <- cbind(
@@ -654,8 +640,6 @@ add_settings_matrix_rows <- function(settings_matrix,
             ord_dist,
             cat_dist,
             mix_dist,
-            input_wt,
-            domain_wt,
             inclusions
         )
         #######################################################################
