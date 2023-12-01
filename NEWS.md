@@ -1,5 +1,7 @@
 # metasnf 0.3.2
 
+* `keep_split` will preserve observations who were assigned a split but were not present in the dataframe being split. Instead of being removed, those observations will have NA values.
+
 # metasnf 0.3.1
 
 ## Bug fixes
