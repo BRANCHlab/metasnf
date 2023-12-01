@@ -75,11 +75,11 @@ settings_matrix_heatmap <- function(settings_matrix,
 #'
 #' @export
 pvals_heatmap <- function(pvals,
-                           order = NULL,
-                           cluster_cols = TRUE,
-                           show_rownames = FALSE,
-                           save = NULL,
-                           reverse_colours = FALSE) {
+                          order = NULL,
+                          cluster_cols = TRUE,
+                          show_rownames = FALSE,
+                          save = NULL,
+                          reverse_colours = FALSE) {
     if ("row_id" %in% colnames(pvals)) {
         rownames(pvals) <- pvals$"row_id"
         pvals <- pvals |>

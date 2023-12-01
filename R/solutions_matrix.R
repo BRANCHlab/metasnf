@@ -254,7 +254,7 @@ get_cluster_pval <- function(assigned_subs,
             predictor = factor(merged_df$"cluster"),
             response = merged_df[, outcome_name]
         )
-    } else if (outcome_type == "numeric") {
+    } else if (outcome_type %in% c("numeric", "discrete", "continuous")) {
         pval <- linear_model_pval(
             predictor = factor(merged_df$"cluster"),
             response = merged_df[, outcome_name]
@@ -274,7 +274,8 @@ get_cluster_pval <- function(assigned_subs,
     } else {
         stop(
             "Unsupported outcome type: ", outcome_type,
-            ". Accepted types for now are numeric and ordinal."
+            ". Accepted types for now are numeric (continuous, discrete,",
+            " ordinal) and categorical."
         )
     }
     return(pval)
