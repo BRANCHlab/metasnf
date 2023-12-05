@@ -213,7 +213,7 @@ batch_snf <- function(data_list,
     # 7. Call separate function for parallel processing
     ###########################################################################
     if (processes != 1) {
-        available_cores <- future::availableCores()[["system"]]
+        available_cores <- max(future::availableCores())
         # Use all available cores
         if (processes == "max") {
             solutions_matrix <- parallel_batch_snf(
