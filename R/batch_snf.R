@@ -75,23 +75,22 @@ batch_snf <- function(data_list,
                       automatic_standard_normalize = FALSE,
                       quiet = FALSE) {
     ###########################################################################
-    # 3. Start timer to keep track of entire function duration
+    # 1. Start timer to keep track of entire function duration
     ###########################################################################
     if (!quiet) {
         start <- proc.time() # final time taken for entire function
         remaining_seconds_vector <- vector() # estimate time to completion
     }
     ###########################################################################
-    # 4. Ensure settings_matrix is a data.frame (not a tibble or matrix)
+    # 2. Ensure settings_matrix is a data.frame (not a tibble or matrix)
     ###########################################################################
     settings_matrix <- data.frame(settings_matrix)
     ###########################################################################
+    # 3. Check validity of settings
     ###########################################################################
-    # 1. Checking validity of settings
-    ###########################################################################
-    # 1a. The user may have chosen to simultaneously not save similarity matrices
-    #  and to not apply any clustering algorithms. In that case, this function
-    #  is not really doing anything. Stop the function with an error.
+    # The user may have chosen to simultaneously not save similarity matrices
+    # and to not apply any clustering algorithms. In that case, this function
+    # is not really doing anything. Stop the function with an error.
     no_similarity_matrices <-
         is.null(similarity_matrix_dir) & !return_similarity_matrices
     if (no_similarity_matrices & suppress_clustering) {
@@ -107,16 +106,15 @@ batch_snf <- function(data_list,
             )
         )
     }
-    # 1b. If there is a value of the k hyperparameter that exceeds the number
-    #  of patients in the data_list, SNFtool::affinityMatrix cannot run. This
-    #  check can't go in the generate_settings_matrix function in case the user
-    #  creater their base settings_matrix with a valid k, then extended their
-    #  settings matrix using the add_settings_matrix_rows function with an
-    #  invalid k (a function that doesn't require users to supply the data).
+    # If there is a value of the k hyperparameter that exceeds the number
+    # of patients in the data_list, SNFtool::affinityMatrix cannot run. This
+    # check can't go in the generate_settings_matrix function in case the user
+    # creater their base settings_matrix with a valid k, then extended their
+    # settings matrix using the add_settings_matrix_rows function with an
+    # invalid k (a function that doesn't require users to supply the data).
     max_k <- max(settings_matrix$"k")
-    n_patients <- unique(summarize_dl(data_list)$"length") # using unique like
-    # this does seem risky, but `generate_data_list` should ensure that there
-    # that the patients for all data_list elements are identical.
+    n_patients <- unique(summarize_dl(data_list)$"length")
+    # Ensure that the maximum k value doesn't exceed the number of subjects
     if (max_k >= n_patients) {
         stop(
             paste0(
@@ -129,7 +127,7 @@ batch_snf <- function(data_list,
         )
     }
     ###########################################################################
-    # 7. Creation of distance_metrics_list, if it does not already exist
+    # 4. Creation of distance_metrics_list if it does not already exist
     ###########################################################################
     if (is.null(distance_metrics_list)) {
         # Make sure the user didn't just forget to provide their list. If the
@@ -185,7 +183,7 @@ batch_snf <- function(data_list,
         }
     }
     ###########################################################################
-    # 8. Create (or check) weights_matrix
+    # 5. Creation of weights_matrix, if it does not already exist
     ###########################################################################
     if (is.null(weights_matrix)) {
         weights_matrix <- generate_weights_matrix(
@@ -202,6 +200,9 @@ batch_snf <- function(data_list,
             )
         }
     }
+    ###########################################################################
+    # 6. Creation of clust_algs_list, if it does not already exist
+    ###########################################################################
     # If the user has not provided their own list of clustering algorithms,
     #  use the default ones (spectral clustering with eigen-gap or
     #  rotation cost heuristics).
@@ -209,7 +210,7 @@ batch_snf <- function(data_list,
         clust_algs_list <- generate_clust_algs_list()
     }
     ###########################################################################
-    # 2. Call separate function for parallel processing
+    # 7. Call separate function for parallel processing
     ###########################################################################
     if (processes != 1) {
         available_cores <- future::availableCores()[["system"]]
@@ -239,8 +240,11 @@ batch_snf <- function(data_list,
             }
             solutions_matrix <- parallel_batch_snf(
                 data_list = data_list,
+                distance_metrics_list = distance_metrics_list,
+                clust_algs_list = clust_algs_list,
                 settings_matrix = settings_matrix,
-                processes = processes
+                weights_matrix = weights_matrix,
+                processes = available_cores
             )
             return(solutions_matrix)
         # Invalid input check
@@ -248,7 +252,10 @@ batch_snf <- function(data_list,
             stop("Invalid number of processes specified.")
         }
     }
-    # 5. Creation of solutions_matrix (where clustering results are stored)
+    ###########################################################################
+    # 8. Single thread - Create solutions_matrix
+    ###########################################################################
+    # Creation of solutions_matrix (where clustering results are stored)
     # solutions_matrix is a dataframe with the following columns:
     #  - row_id (1 column): number matching the row of the settings_matrix used
     #    to generate this solution
@@ -285,13 +292,13 @@ batch_snf <- function(data_list,
         )
     }
     ###########################################################################
-    # 6. Creation of list to store similarity matrices (if requested)
+    # 9. Creation of list to store similarity matrices (if requested)
     ###########################################################################
     if (isTRUE(return_similarity_matrices)) {
         similarity_matrices <- list()
     }
     ###########################################################################
-    # 8. Iterate through the rows of the settings matrix
+    # 10. Iterate through the rows of the settings matrix
     ###########################################################################
     for (i in seq_len(nrow(settings_matrix))) {
         start_time <- Sys.time() # used to estimate time to completion
@@ -344,7 +351,7 @@ batch_snf <- function(data_list,
             similarity_matrices[[length(similarity_matrices) + 1]] <- fused_network
         }
         #######################################################################
-        # 7. Clustering of the final fused network
+        # 11. Clustering of the final fused network
         #######################################################################
         # clust_alg stores the function to be used for this run of SNF
         clust_alg <- clust_algs_list[[settings_matrix_row$"clust_alg"]]
@@ -361,7 +368,7 @@ batch_snf <- function(data_list,
             solutions_matrix[i, "nclust"] <- nclust
         }
         #######################################################################
-        # 8. Print estimated time taken until function completion
+        # 12. Print estimated time taken until function completion
         #######################################################################
         if (!quiet) {
             remaining_seconds_vector <- batch_snf_time_remaining(
@@ -373,20 +380,20 @@ batch_snf <- function(data_list,
         }
     }
     ###########################################################################
-    # 9. Format the final solutions_matrix to be numeric where possible
+    # 13. Format the final solutions_matrix to be numeric where possible
     ###########################################################################
     if (!suppress_clustering) {
         solutions_matrix <- numcol_to_numeric(solutions_matrix)
     }
     ###########################################################################
-    # 10. Print total time taken for function completion
+    # 14. Print total time taken for function completion
     ###########################################################################
     if (!quiet) {
         total_time <- (proc.time() - start)[["elapsed"]]
         print(paste0("Total time taken: ", round(total_time, 0), " seconds."))
     }
     ###########################################################################
-    # 11. Return final output
+    # 15. Return final output
     ###########################################################################
     # The user requested that similarity matrices are returned. Create a list
     #  containing the solutions matrix as well as the similarity matrices and
