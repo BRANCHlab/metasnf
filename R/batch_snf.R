@@ -222,6 +222,8 @@ batch_snf <- function(data_list,
                 clust_algs_list = clust_algs_list,
                 settings_matrix = settings_matrix,
                 weights_matrix = weights_matrix,
+                similarity_matrix_dir = similarity_matrix_dir,
+                return_similarity_matrices = return_similarity_matrices,
                 processes = available_cores
             )
             return(solutions_matrix)
@@ -244,7 +246,9 @@ batch_snf <- function(data_list,
                 clust_algs_list = clust_algs_list,
                 settings_matrix = settings_matrix,
                 weights_matrix = weights_matrix,
-                processes = available_cores
+                similarity_matrix_dir = similarity_matrix_dir,
+                return_similarity_matrices = return_similarity_matrices,
+                processes = processes
             )
             return(solutions_matrix)
         # Invalid input check
