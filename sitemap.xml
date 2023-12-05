@@ -133,6 +133,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/assigned_clust_scatter.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/batch_row_closure.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/batch_snf.html</loc>
   </url>
   <url>
@@ -434,9 +437,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/settings_matrix_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/settings_matrix_row_fn.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/sew_euclidean_distance.html</loc>
