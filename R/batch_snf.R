@@ -75,6 +75,18 @@ batch_snf <- function(data_list,
                       automatic_standard_normalize = FALSE,
                       quiet = FALSE) {
     ###########################################################################
+    # 3. Start timer to keep track of entire function duration
+    ###########################################################################
+    if (!quiet) {
+        start <- proc.time() # final time taken for entire function
+        remaining_seconds_vector <- vector() # estimate time to completion
+    }
+    ###########################################################################
+    # 4. Ensure settings_matrix is a data.frame (not a tibble or matrix)
+    ###########################################################################
+    settings_matrix <- data.frame(settings_matrix)
+    ###########################################################################
+    ###########################################################################
     # 1. Checking validity of settings
     ###########################################################################
     # 1a. The user may have chosen to simultaneously not save similarity matrices
@@ -115,97 +127,6 @@ batch_snf <- function(data_list,
                 " in the data: ", n_patients, "."
             )
         )
-    }
-    ###########################################################################
-    # 2. Call separate function for parallel processing
-    ###########################################################################
-    if (processes != 1) {
-        available_cores <- future::availableCores()[["system"]]
-        # Use all available cores
-        if (processes == "max") {
-            solutions_matrix <- parallel_batch_snf(
-                data_list = data_list,
-                settings_matrix = settings_matrix,
-                processes = available_cores
-            )
-            return(solutions_matrix)
-        # Use the user-specified number of cores
-        } else if (is.numeric(processes)) {
-            if (processes > available_cores) {
-                warning("More processes than cores available specified.")
-                print(
-                    paste0(
-                        "You specified ", processes, " processes, but only ",
-                        available_cores, " cores are available. Defaulting to ",
-                        available_cores, " processes."
-                    )
-                )
-                processes <- available_cores
-            }
-            solutions_matrix <- parallel_batch_snf(
-                data_list = data_list,
-                settings_matrix = settings_matrix,
-                processes = processes
-            )
-            return(solutions_matrix)
-        # Invalid input check
-        } else {
-            stop("Invalid number of processes specified.")
-        }
-    }
-    ###########################################################################
-    # 3. Start timer to keep track of entire function duration
-    ###########################################################################
-    if (!quiet) {
-        start <- proc.time() # final time taken for entire function
-        remaining_seconds_vector <- vector() # estimate time to completion
-    }
-    ###########################################################################
-    # 4. Ensure settings_matrix is a data.frame (not a tibble or matrix)
-    ###########################################################################
-    settings_matrix <- data.frame(settings_matrix)
-    ###########################################################################
-    # 5. Creation of solutions_matrix (where clustering results are stored)
-    # solutions_matrix is a dataframe with the following columns:
-    #  - row_id (1 column): number matching the row of the settings_matrix used
-    #    to generate this solution
-    #  - inc_* (1 column per input df): Binary indicating if the input df was
-    #    incuded (1) or excluded (0) for this row of SNF
-    #  - snf_scheme (1 column): number indicating which of the preprogrammed
-    #    'schemes' was used to for this run of SNF
-    #  - alpha (AKA sigma or eta): value of similarity matrix hyperparameter
-    #  - k: value of similarity matrix hyperparameter
-    #  - T: Number of iterations of SNF
-    #  - subject_* (1 column per patient): cluster membership of that patient
-    #    for that row. Only included when run_clustering = TRUE.
-    #  - nclust (1 column): number of clusters in the cluster solution in that
-    #    row. Only included when run_clustering = TRUE.
-    ###########################################################################
-    # `add_columns` extends a dataframe `df` with a column or vector of columns
-    #  whose names are provided in the `newcols` parameter. The values in the
-    #  newly added columns are specified in the `fill` parameter.
-    ###########################################################################
-    # 5a. solutions_matrix begins as the settings_matrix extended with one new
-    #  column for every subjects.
-    if (!suppress_clustering) {
-        solutions_matrix <- add_columns(
-            df = settings_matrix,
-            newcols = data_list[[1]]$"data"$"subjectkey", # one col/patient
-            fill = 0 # populate the new column with 0s by default
-        )
-        # 5b. solutions_matrix gets one new column to store the cluster that
-        # each subject was assigned to.
-        solutions_matrix <- add_columns(
-            df = settings_matrix,
-            newcols = "nclust",
-            fill = 0
-        )
-    }
-    ###########################################################################
-    # 6. Creation of list to store similarity matrices (if requested)
-    ###########################################################################
-    if (isTRUE(return_similarity_matrices)) {
-        similarity_matrices <- list()
     }
     ###########################################################################
     # 7. Creation of distance_metrics_list, if it does not already exist
@@ -281,6 +202,94 @@ batch_snf <- function(data_list,
             )
         }
     }
+    # If the user has not provided their own list of clustering algorithms,
+    #  use the default ones (spectral clustering with eigen-gap or
+    #  rotation cost heuristics).
+    if (is.null(clust_algs_list)) {
+        clust_algs_list <- generate_clust_algs_list()
+    }
+    ###########################################################################
+    # 2. Call separate function for parallel processing
+    ###########################################################################
+    if (processes != 1) {
+        available_cores <- future::availableCores()[["system"]]
+        # Use all available cores
+        if (processes == "max") {
+            solutions_matrix <- parallel_batch_snf(
+                data_list = data_list,
+                distance_metrics_list = distance_metrics_list,
+                clust_algs_list = clust_algs_list,
+                settings_matrix = settings_matrix,
+                weights_matrix = weights_matrix,
+                processes = available_cores
+            )
+            return(solutions_matrix)
+        # Use the user-specified number of cores
+        } else if (is.numeric(processes)) {
+            if (processes > available_cores) {
+                warning("More processes than cores available specified.")
+                print(
+                    paste0(
+                        "You specified ", processes, " processes, but only ",
+                        available_cores, " cores are available. Defaulting to ",
+                        available_cores, " processes."
+                    )
+                )
+                processes <- available_cores
+            }
+            solutions_matrix <- parallel_batch_snf(
+                data_list = data_list,
+                settings_matrix = settings_matrix,
+                processes = processes
+            )
+            return(solutions_matrix)
+        # Invalid input check
+        } else {
+            stop("Invalid number of processes specified.")
+        }
+    }
+    # 5. Creation of solutions_matrix (where clustering results are stored)
+    # solutions_matrix is a dataframe with the following columns:
+    #  - row_id (1 column): number matching the row of the settings_matrix used
+    #    to generate this solution
+    #  - inc_* (1 column per input df): Binary indicating if the input df was
+    #    incuded (1) or excluded (0) for this row of SNF
+    #  - snf_scheme (1 column): number indicating which of the preprogrammed
+    #    'schemes' was used to for this run of SNF
+    #  - alpha (AKA sigma or eta): value of similarity matrix hyperparameter
+    #  - k: value of similarity matrix hyperparameter
+    #  - T: Number of iterations of SNF
+    #  - subject_* (1 column per patient): cluster membership of that patient
+    #    for that row. Only included when run_clustering = TRUE.
+    #  - nclust (1 column): number of clusters in the cluster solution in that
+    #    row. Only included when run_clustering = TRUE.
+    ###########################################################################
+    # `add_columns` extends a dataframe `df` with a column or vector of columns
+    #  whose names are provided in the `newcols` parameter. The values in the
+    #  newly added columns are specified in the `fill` parameter.
+    ###########################################################################
+    # 5a. solutions_matrix begins as the settings_matrix extended with one new
+    #  column for every subjects.
+    if (!suppress_clustering) {
+        solutions_matrix <- add_columns(
+            df = settings_matrix,
+            newcols = data_list[[1]]$"data"$"subjectkey", # one col/patient
+            fill = 0 # populate the new column with 0s by default
+        )
+        # 5b. solutions_matrix gets one new column to store the cluster that
+        # each subject was assigned to.
+        solutions_matrix <- add_columns(
+            df = settings_matrix,
+            newcols = "nclust",
+            fill = 0
+        )
+    }
+    ###########################################################################
+    # 6. Creation of list to store similarity matrices (if requested)
+    ###########################################################################
+    if (isTRUE(return_similarity_matrices)) {
+        similarity_matrices <- list()
+    }
     ###########################################################################
     # 8. Iterate through the rows of the settings matrix
     ###########################################################################
@@ -322,23 +331,6 @@ batch_snf <- function(data_list,
             mix_dist_fn = mix_dist_fn,
             weights_row = weights_row
         )
-        if (any(is.na(fused_network))) {
-            return(
-                list(
-                    "current_data_list" = current_data_list,
-                    "current_snf_scheme" = current_snf_scheme,
-                    "k" = k,
-                    "alpha" = alpha,
-                    "t" = t,
-                    "cont_dist_fn" = cont_dist_fn,
-                    "disc_dist_fn" = disc_dist_fn,
-                    "ord_dist_fn" = ord_dist_fn,
-                    "cat_dist_fn" = cat_dist_fn,
-                    "mix_dist_fn" = mix_dist_fn,
-                    "weights_row" = weights_row
-                )
-            )
-        }
         # If user provided a path to save the similarity matrices, save them
         if (!is.null(similarity_matrix_dir)) {
             utils::write.csv(
@@ -354,12 +346,6 @@ batch_snf <- function(data_list,
         #######################################################################
         # 7. Clustering of the final fused network
         #######################################################################
-        # If the user has not provided their own list of clustering algorithms,
-        #  use the default ones (spectral clustering with eigen-gap or
-        #  rotation cost heuristics).
-        if (is.null(clust_algs_list)) {
-            clust_algs_list <- generate_clust_algs_list()
-        }
         # clust_alg stores the function to be used for this run of SNF
         clust_alg <- clust_algs_list[[settings_matrix_row$"clust_alg"]]
         # cluster_results is a named list containing the cluster solution

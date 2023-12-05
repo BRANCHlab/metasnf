@@ -10,35 +10,100 @@
 #'
 #' @export
 parallel_batch_snf <- function(data_list,
+                               distance_metrics_list,
+                               clust_algs_list,
                                settings_matrix,
+                               weights_matrix,
                                processes) {
-    print(
-        paste0(
-            "Utilizing ", processes, " processes. Real time progress is not",
-            " available during parallel processing."
-        )
-    )
-    start <- proc.time()
     future::plan(future::multisession, workers = processes)
-    settings_matrix <- data.frame(settings_matrix)
+    batch_row_function <- batch_row_closure(
+        data_list,
+        distance_metrics_list,
+        clust_algs_list
+    )
+    print(settings_matrix)
+    settings_and_weights_df <- cbind(settings_matrix, weights_matrix)
     solutions_matrix <- future.apply::future_apply(
-        settings_matrix,
+        settings_and_weights_df,
         1,
-        settings_matrix_row_fn,
-        dl = data_list
+        batch_row_function
     )
     solutions_matrix <- do.call("rbind", solutions_matrix)
-    solutions_matrix <- solutions_matrix |>
-        unique()
+    solutions_matrix <- solutions_matrix |> unique()
     solutions_matrix <- numcol_to_numeric(solutions_matrix)
     future::plan(future::sequential)
-    total_time <- (proc.time() - start)[["elapsed"]]
-    print(
-        paste0(
-            "Total time taken: ", total_time, " seconds."
-        )
-    )
     return(solutions_matrix)
+}
+
+
+batch_row_closure <- function(data_list,
+                              distance_metrics_list,
+                              clust_algs_list,
+                              settings_matrix,
+                              weights_matrix) {
+    settings_matrix_names <- colnames(settings_matrix)
+    weights_matrix_names <- colnames(weights_matrix)
+    row_function <- function(settings_and_weights_row) {
+        settings_and_weights_row_df <- data.frame(t(settings_and_weights_row))
+        settings_matrix_row <- settings_and_weights_row_df[, settings_matrix_names]
+        weights_row <- settings_and_weights_row_df[, weights_matrix_names]
+        # Reduce data list
+        current_data_list <- drop_inputs(settings_matrix_row, data_list)
+        # Extract parameters for snf_step
+        current_snf_scheme <- dplyr::case_when(
+            settings_matrix_row$"snf_scheme" == 1 ~ "individual",
+            settings_matrix_row$"snf_scheme" == 2 ~ "domain",
+            settings_matrix_row$"snf_scheme" == 3 ~ "twostep",
+        )
+        k <- settings_matrix_row$"k"
+        alpha <- settings_matrix_row$"alpha"
+        t <- settings_matrix_row$"t"
+        cont_dist <- settings_matrix_row$"cont_dist"
+        disc_dist <- settings_matrix_row$"disc_dist"
+        ord_dist <- settings_matrix_row$"ord_dist"
+        cat_dist <- settings_matrix_row$"cat_dist"
+        mix_dist <- settings_matrix_row$"mix_dist"
+        cont_dist_fn <- distance_metrics_list$"continuous_distance"[[cont_dist]]
+        disc_dist_fn <- distance_metrics_list$"discrete_distance"[[disc_dist]]
+        ord_dist_fn <- distance_metrics_list$"ordinal_distance"[[ord_dist]]
+        cat_dist_fn <- distance_metrics_list$"categorical_distance"[[cat_dist]]
+        mix_dist_fn <- distance_metrics_list$"mixed_distance"[[mix_dist]]
+        # Integrate data
+        fused_network <- snf_step(
+            current_data_list,
+            current_snf_scheme,
+            k = k,
+            alpha = alpha,
+            t = t,
+            cont_dist_fn = cont_dist_fn,
+            disc_dist_fn = disc_dist_fn,
+            ord_dist_fn = ord_dist_fn,
+            cat_dist_fn = cat_dist_fn,
+            mix_dist_fn = mix_dist_fn,
+            weights_row = weights_row
+        )
+        ## Write similarity matrices if requested
+        #if (!is.null(similarity_matrix_dir)) {
+        #    row_id <- settings_matrix_row$"row_id"
+        #    utils::write.csv(
+        #        x = fused_network,
+        #        file = similarity_matrix_path(similarity_matrix_dir, row_id),
+        #        row.names = TRUE
+        #    )
+        #}
+        clust_alg <- clust_algs_list[[settings_matrix_row$"clust_alg"]]
+        print(clust_algs_list)
+        # cluster_results is a named list containing the cluster solution
+        #  (vector of which cluster each patient was assigned to) and the
+        #  number of clusters for that solution
+        cluster_results <- clust_alg(fused_network)
+        solution <- cluster_results$"solution"
+        nclust <- cluster_results$"nclust"
+        settings_matrix_row[1, rownames(fused_network)] <- solution
+        settings_matrix_row$"nclust" <- nclust
+        return(settings_matrix_row)
+    }
+    return(row_function)
 }
 
 #' Apply-based function for batch_snf
@@ -49,9 +114,9 @@ parallel_batch_snf <- function(data_list,
 #' @return solutions_matrix_row the corresponding solutions_matrix row
 #'
 #' @export
-settings_matrix_row_fn <- function(settings_matrix_row, dl) {
+batch_snf_row_fn <- function(settings_matrix_row, data_list) {
     settings_matrix_row <- data.frame(t(settings_matrix_row))
-    current_data_list <- drop_inputs(settings_matrix_row, dl)
+    current_data_list <- drop_inputs(settings_matrix_row, data_list)
     current_snf_scheme <- dplyr::case_when(
         settings_matrix_row$"snf_scheme" == 1 ~ "individual",
         settings_matrix_row$"snf_scheme" == 2 ~ "domain",
@@ -59,6 +124,7 @@ settings_matrix_row_fn <- function(settings_matrix_row, dl) {
     )
     k <- settings_matrix_row$"k"
     alpha <- settings_matrix_row$"alpha"
+    t <- settings_matrix_row$"t"
     fused_network <- snf_step(
         current_data_list,
         current_snf_scheme,
@@ -79,5 +145,3 @@ settings_matrix_row_fn <- function(settings_matrix_row, dl) {
     settings_matrix_row[1, rownames(fused_network)] <- cluster_results
     return(settings_matrix_row)
 }
-
-
