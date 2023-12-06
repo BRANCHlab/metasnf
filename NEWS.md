@@ -1,4 +1,8 @@
-# metasnf (development version)
+# metasnf 0.4.0
+
+## New functionality
+
+* Parallel processing is now available! Check out the vignette here: https://branchlab.github.io/metasnf/articles/parallel_processing.html
 
 # metasnf 0.3.3
 
