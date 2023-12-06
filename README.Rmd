@@ -115,6 +115,7 @@ Empirically, SNF has been demonstrated to effectively integrate highly diverse p
 
 * [Stability measures and consensus clustering](https://branchlab.github.io/metasnf/articles/stability_measures.html)
 * [Removing unwanted signal](https://branchlab.github.io/metasnf/articles/confounders.html)
+* [Parallel processing](https://branchlab.github.io/metasnf/articles/parallel_processing.html)
 
 ### Plotting
 
