@@ -7,6 +7,9 @@ library(abcdutils)
 library(here)
 library(readr)
 
+proc_path <- path_maker(here(paste0("data/abcd/results/processed")))
+fig_path <- path_maker(here(paste0("data/abcd/results/figures")))
+
 # Setting up the data
 data_list <- generate_data_list(
     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
@@ -58,8 +61,6 @@ for (nproc in c(1, 24)) {
 
 rownames(time_data) <- NULL
 
-proc_path <- path_maker(here(paste0("data/abcd/results/processed")))
-
 write.csv(time_data, proc_path("hpc_parallel_profiling.csv", TRUE))
 
 library(benchmarkme)
@@ -110,7 +111,7 @@ time_data <- data.frame(
     elapsed_time = as.numeric()
 )
 
-for (nproc in c(1, 24)) {
+for (nproc in c(1, 4)) {
     for (rows in c(1, 12, 24, 48, 96, 240)) {
         # 1. Make settings matrix
         settings_matrix <- generate_settings_matrix(
@@ -173,12 +174,21 @@ sessionInfo()
 ###############################################################################
 # Comparisons
 
-hpc_times <- read_csv(proc_path("2023_12_05_hpc_parallel_profiling.csv"))[, -1]
-local_times <- read_csv(proc_path("2023_12_05_local_parallel_profiling.csv"))[, -1]
-
 library(ggplot2)
 
-hpc_times |>
+
+hpc_times <- read_csv(proc_path("2023_12_06_hpc_parallel_profiling.csv"))[, -1]
+
+local_times <- read_csv(proc_path("2023_12_05_local_parallel_profiling.csv"))[, -1]
+
+local_times$"processes"[local_times$"processes" == 24] <- 4
+
+local_times
+
+h <- 6
+w <- 10
+
+local_times |># {~
     ggplot() +
     geom_point(
         aes(
@@ -195,9 +205,25 @@ hpc_times |>
             colour = factor(processes)
         )
     ) +
-    theme_bw()
-
-local_times |>
+    coord_cartesian(
+        ylim = c(0, 125)
+    ) +
+    labs(
+        title = "Local machine",
+        x = "SNF rows",
+        y = "User time (s)",
+        colour = "procs"
+    ) +
+    theme_bw() +
+    theme(
+        text = element_text(size = 20)
+    )# ~}
+ggsave(# {~
+    fig_path("local_parallel_profiling.png", TRUE),
+    width = w,
+    height = h
+)# ~}
+hpc_times |># {~
     ggplot() +
     geom_point(
         aes(
@@ -214,13 +240,30 @@ local_times |>
             colour = factor(processes)
         )
     ) +
-    ylim(0, 125) +
-    theme_bw()
-
-hpc_times$"location" <- "hpc"
+    coord_cartesian(
+        ylim = c(0, 125)
+    ) +
+    labs(
+        title = "HPC",
+        x = "SNF rows",
+        y = "User time (s)",
+        colour = "procs"
+    ) +
+    theme_bw() +
+    theme(
+        text = element_text(size = 20)
+    )# ~}
+ggsave(# {~
+    fig_path("hpc_parallel_profiling.png", TRUE),
+    width = w,
+    height = h
+)# ~}
+hpc_times$"location" <- "hpc"# {~
 local_times$"location" <- "local"
 
 all_times <- rbind(hpc_times, local_times)
+
+all_times
 
 all_times$"condition" <- paste0(all_times$"location", "_", all_times$"processes", "_proc")
 
@@ -231,7 +274,7 @@ all_times |>
             x = snf_rows,
             y = user_time,
             group = condition,
-            colour = location,
+            colour = factor(processes),
             linetype = factor(processes)
         )
     ) +
@@ -240,20 +283,30 @@ all_times |>
             x = snf_rows,
             y = user_time,
             group = condition,
-            colour = location,
+            colour = factor(processes),
             shape = location
         ),
         size = 4
     ) +
-    ylim(0, 125) +
-    xlab("Number of SNF rows") +
-    ylab("User time (s)") +
+    coord_cartesian(
+        ylim = c(0, 15),
+        xlim = c(0, 200)
+    ) +
+    labs(
+        title = "HPC and Local",
+        x = "SNF rows",
+        y = "User time (s)",
+        colour = "procs",
+        linetype = "procs"
+    ) +
     theme_bw() +
-    theme(text = element_text(size=20))
+    theme(text = element_text(size=20))# ~}
+ggsave(# {~
+    fig_path("parallel_profiling.png", TRUE),
+    width = w,
+    height = h
+)# ~}
 
-fig_path <- path_maker(here(paste0("data/abcd/results/figures")))
-
-ggsave(fig_path("parallel_profiling.png", TRUE))
 ###############################################################################
 
 #time_data
