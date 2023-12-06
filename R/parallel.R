@@ -36,14 +36,12 @@ parallel_batch_snf <- function(data_list,
                                similarity_matrix_dir,
                                return_similarity_matrices,
                                processes) {
-    print(
-        paste0(
-            "Utilizing ", processes, " processes. Real time progress is not",
-            " available during parallel processing."
-        )
-    )
+    print(paste0( "Utilizing ", processes, " processes."))
     start <- proc.time()
     future::plan(future::multisession, workers = processes)
+    ############################################################################
+    settings_and_weights_df <- cbind(settings_matrix, weights_matrix)
+    p <- progressr::progressor(steps = nrow(settings_and_weights_df))
     batch_row_function <- batch_row_closure(
         data_list = data_list,
         distance_metrics_list = distance_metrics_list,
@@ -51,14 +49,15 @@ parallel_batch_snf <- function(data_list,
         settings_matrix = settings_matrix,
         weights_matrix = weights_matrix,
         similarity_matrix_dir = similarity_matrix_dir,
-        return_similarity_matrices = return_similarity_matrices
+        return_similarity_matrices = return_similarity_matrices,
+        p = p
     )
-    settings_and_weights_df <- cbind(settings_matrix, weights_matrix)
     batch_snf_results <- future.apply::future_apply(
         settings_and_weights_df,
         1,
         batch_row_function
     )
+    ############################################################################
     future::plan(future::sequential)
     if (return_similarity_matrices) {
         solutions_matrix_rows <- batch_snf_results |>
@@ -125,6 +124,8 @@ parallel_batch_snf <- function(data_list,
 #' @param similarity_matrix_dir If specified, this directory will be used to
 #'  save all generated similarity matrices.
 #'
+#' @param p Progressr function to update parallel processing progress
+#'
 #' @export
 batch_row_closure <- function(data_list,
                               distance_metrics_list,
@@ -132,10 +133,12 @@ batch_row_closure <- function(data_list,
                               settings_matrix,
                               weights_matrix,
                               similarity_matrix_dir,
-                              return_similarity_matrices) {
+                              return_similarity_matrices,
+                              p) {
     settings_matrix_names <- colnames(settings_matrix)
     weights_matrix_names <- colnames(weights_matrix)
     row_function <- function(settings_and_weights_row) {
+        p()
         settings_and_weights_row_df <- data.frame(t(settings_and_weights_row))
         settings_matrix_row <- settings_and_weights_row_df[, settings_matrix_names]
         weights_row <- settings_and_weights_row_df[, weights_matrix_names]

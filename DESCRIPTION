@@ -103,6 +103,7 @@ Imports:
     mclust,
     methods,
     pheatmap,
+    progressr,
     purrr,
     RColorBrewer,
     rlang,

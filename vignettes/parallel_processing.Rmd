@@ -59,8 +59,22 @@ settings_matrix <- generate_settings_matrix(
 solutions_matrix <- batch_snf(
     data_list,
     settings_matrix,
-    processes = "max"
+    processes = "max" # Can also be a specific integer
 )
+```
+
+## Including a progress bar
+
+Use the progressr package to visualize the progress of parallel batch_snf.
+
+```{r eval = FALSE}
+progressr::with_progress({
+    solutions_matrix <- batch_snf(
+        data_list,
+        settings_matrix,
+        processes = "max"
+    )
+})
 ```
 
 ## Number of processes

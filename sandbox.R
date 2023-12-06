@@ -14,7 +14,7 @@ data_list <- generate_data_list(
 # Specifying 5 different sets of settings for SNF
 settings_matrix <- generate_settings_matrix(
     data_list,
-    nrow = 50,
+    nrow = 20,
     max_k = 40,
     seed = 42
 )
@@ -22,13 +22,12 @@ settings_matrix <- generate_settings_matrix(
 # This matrix has clustering solutions for each of the 5 SNF runs!
 solutions_matrix <- batch_snf(data_list, settings_matrix)
 
-sequential <- batch_snf(
-    data_list,
-    settings_matrix
-)
-
-four_core_local <- batch_snf(
-    data_list,
-    settings_matrix,
-    processes = "max"
+progressr::with_progress(
+    {
+        local <- batch_snf(
+            data_list,
+            settings_matrix,
+            processes = "max"
+        )
+    }
 )

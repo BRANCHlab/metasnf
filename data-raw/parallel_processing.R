@@ -307,25 +307,3 @@ ggsave(# {~
     height = h
 )# ~}
 
-###############################################################################
-
-#time_data
-#
-#library(future.apply)
-#plan(multisession)
-#
-#library(progressr)
-#handlers(global = TRUE)
-#handlers("progress", "beepr")
-#
-#my_fcn <- function(xs) {
-#  p <- progressor(along = xs)
-#  future_lapply(xs, function(x, ...) {
-#    Sys.sleep(6.0-x)
-#    p(sprintf("x=%g", x))
-#    sqrt(x)
-#  })
-#}
-#
-#my_fcn(1:5)
-## / [================>-----------------------------]  40% x=2

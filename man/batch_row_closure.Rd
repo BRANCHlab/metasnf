@@ -11,7 +11,8 @@ batch_row_closure(
   settings_matrix,
   weights_matrix,
   similarity_matrix_dir,
-  return_similarity_matrices
+  return_similarity_matrices,
+  p
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ save all generated similarity matrices.}
 \item{return_similarity_matrices}{If TRUE, function will return a list where
 the first element is the solutions matrix and the second element is a list
 of similarity matrices for each row in the solutions_matrix. Default FALSE.}
+
+\item{p}{Progressr function to update parallel processing progress}
 }
 \description{
 Generate closure function to run batch_snf in an apply-friendly format
