@@ -12,33 +12,37 @@ navbar:
     - text: Getting Started
       href: articles/getting_started.html
     - text: -------
-    - text: Example Pipelines
+    - text: Example workflows
     - text: A Simple Example
       href: articles/a_simple_example.html
     - text: A Less Simple Example
       href: articles/a_less_simple_example.html
     - text: -------
-    - text: Essential Objects
+    - text: Essentials
     - text: The Settings Matrix
       href: articles/settings_matrix.html
     - text: The Data List
       href: articles/data_list.html
+    - text: SNF schemes
+      href: articles/snf_schemes.html
     - text: -------
-    - text: Advanced Functionality
+    - text: Further customization
     - text: Distance Metrics
       href: articles/distance_metrics.html
     - text: Clustering Algorithms
       href: articles/clustering_algorithms.html
-    - text: SNF schemes
-      href: articles/snf_schemes.html
     - text: Feature Weights
       href: articles/feature_weights.html
+    - text: -------
+    - text: Additional functionality
     - text: Stability Measures and Consensus Clustering
       href: articles/stability_measures.html
     - text: Confounders and Unwanted Signal
       href: articles/confounders.html
+    - text: Parallel processing
+      href: articles/parallel_processing.html
     - text: -------
-    - text: Additional Plotting
+    - text: Plotting
     - text: Similarity Matrix Heatmaps
       href: articles/similarity_matrix_heatmap.html
     - text: Manhattan Plots
