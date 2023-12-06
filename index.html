@@ -91,40 +91,26 @@
 <!-- badges: start -->
 <!-- badges: end -->
 <div class="section level2">
-<h2 id="requirements">Requirements<a class="anchor" aria-label="anchor" href="#requirements"></a>
-</h2>
-<p>Necessary:</p>
-<ul>
-<li>R version 4.1.0 or higher</li>
-<li>
-<code>devtools</code> package (<code>install.packages("devtools")</code>) for installation</li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
-<p><strong>This package is currently under active development.</strong></p>
-<p>You will need R version 4.1.0 or higher to install this package. We recommend installing the latest development version of the package (it has the best stuff!):</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf"</span><span class="op">)</span></span></code></pre></div>
-<p>If you require a consistent way to install the package, you can include the specific commit or tagged package version you want to install:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Specifying a tag</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf@v0.2.5"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Specifying a commit</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf@73d822bb9ca51fbee2ad25448df4380ea59b1d93"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
 <h2 id="brief-overview">Brief Overview<a class="anchor" aria-label="anchor" href="#brief-overview"></a>
 </h2>
 <p><em>metasnf</em> is a package that facilitates usage of the meta clustering paradigm described in (<a href="#ref-caruanaMeta2006">Caruana et al. 2006</a>) with the similarity network fusion (SNF) data integration procedure developed in (<a href="#ref-wangSimilarity2014">Wang et al. 2014</a>). The package offers a comprehensive suite of tools to assist users in transforming raw patient data into patient subtypes, decision making in the subtyping process, and visualization along the way with a strong emphasis on context-specific utility and principled validation of results.</p>
 </div>
 <div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>You will need R version 4.1.0 or higher to install this package. We recommend installing the latest development version of the package (it has the best stuff!):</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Always get the latest version</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Install a specific tagged version</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf@v0.3.3"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <p>An extremely minimal usage of the package looks something like this:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load the package</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
@@ -172,77 +158,53 @@
 <p>In the clinical data setting, we often have access to patient data across a wide range of domains, such as imaging, genetics, biomarkers, demographics. When trying to extract subtypes out of all this information, direct concatenation of the data followed by cluster analysis can result in a substantial amount of lost (valuable) signal contained in each individual domain. Empirically, SNF has been demonstrated to effectively integrate highly diverse patient data for the purposes of clinical subtyping.</p>
 </div>
 <div class="section level2">
-<h2 id="package-structure">Package Structure<a class="anchor" aria-label="anchor" href="#package-structure"></a>
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
-<p>The major structures are:</p>
 <div class="section level3">
-<h3 id="the-settings_matrix">The <code>settings_matrix</code>
-<a class="anchor" aria-label="anchor" href="#the-settings_matrix"></a>
+<h3 id="example-workflows">Example workflows<a class="anchor" aria-label="anchor" href="#example-workflows"></a>
 </h3>
-<p>The <code>settings_matrix</code> is a dataframe that includes all tunable clustering settings as columns. Each row represents a distinct set of clustering settings that will be used to produce a single clustering solution by SNF and spectral clustering.</p>
-</div>
-<div class="section level3">
-<h3 id="the-data_list">The <code>data_list</code>
-<a class="anchor" aria-label="anchor" href="#the-data_list"></a>
-</h3>
-<p>The <code>data_list</code> is a nested list that contains all preprocessed input data that is ready to be used for clustering. Each list within a <code>data_list</code> contains (1) a dataframe that will be used for clustering, (2) the name of that dataframe, (3) the <strong>domain</strong> of that dataframe, and (4) the type of data (continuous, ordinal, discrete, nominal (categorical), or mixed) of the features within that dataframe.</p>
-<p>Domains are user-specified labels that indicate which dataframes describe similar sources of data. For example, structural MRI data and diffusion MRI data may be grouped within a neuroimaging domain.</p>
-</div>
-<div class="section level3">
-<h3 id="the-target_list">The <code>target_list</code>
-<a class="anchor" aria-label="anchor" href="#the-target_list"></a>
-</h3>
-<p>An optional data structure that closely resembles the <code>data_list</code>, but contains data sources which are not meant to be included as direct inputs for clustering. Data within the <code>target_list</code> is reserved for out-of-model measures for comparing completed clustering solutions.</p>
-</div>
-<div class="section level3">
-<h3 id="the-solutions_matrix">The <code>solutions_matrix</code>
-<a class="anchor" aria-label="anchor" href="#the-solutions_matrix"></a>
-</h3>
-<p>The <code>solutions_matrix</code> is a large dataframe that appends cluster solution columns (one column per subject) to the <code>settings_matrix</code>. It contains all the clustering results generated by the different settings included in the <code>settings_matrix</code>.</p>
-<p>An <code>solutions_matrix</code> can be convereted to an <code>extended_solutions_matrix</code> which contains overall regression p-values for any measures stored in an <code>target_list</code>. The <code>extended_solutions_matrix</code> is useful in pipelines where separation across one or several variables stored in the <code>target_list</code> serve as the primary metric for automating the selection of a top clustering solution.</p>
-<p>Alternatively, a top clustering solution can be selected from a regular <code>solutions_matrix</code> using the traditional meta clustering approach of clustering cluster solutions and manually examining a few solutions from the qualitatively distinct “meta clusters” that emerge.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="recent-updates">Recent updates:<a class="anchor" aria-label="anchor" href="#recent-updates"></a>
-</h2>
-<ul class="task-list">
-<li>
-<input type="checkbox" disabled checked>Changes in function names</li>
-<li>
-<input type="checkbox" disabled checked>Capability of defining custom clustering algorithms</li>
-<li>
-<input type="checkbox" disabled checked>Added flexibility during generation of the settings_matrix</li>
-<li>
-<input type="checkbox" disabled checked>Capability of calculating solution stability across patient resamplings for all cluster solutions</li>
-<li>
-<input type="checkbox" disabled checked>Capability of calculating a wide range of quality metrics for all cluster solutions</li>
-<li>
-<input type="checkbox" disabled checked>Capability of writing affinity matrices to disk</li>
-<li>
-<input type="checkbox" disabled checked>Capability of not running the clustering on every run of SNF (only makes sense when paired with the previous change)</li>
-<li>
-<input type="checkbox" disabled checked>Capability of defining custom distance metrics (including feature weights)</li>
-<li>
-<input type="checkbox" disabled checked>New visualization functions and improvements to existing visualization functions</li>
-<li>
-<input type="checkbox" disabled checked>Updated vignette(s) to fully document basic and advance usage of the package</li>
+<ul>
+<li><a href="https://branchlab.github.io/metasnf/articles/a_simple_example.html">Simple</a></li>
+<li><a href="https://branchlab.github.io/metasnf/articles/a_less_simple_example.html">Complex</a></li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="work-in-progress">Work in progress:<a class="anchor" aria-label="anchor" href="#work-in-progress"></a>
-</h2>
-<ul class="task-list">
-<li>
-<input type="checkbox" disabled>Adapt parallel processing variant of batch_snf to reflect the above changes</li>
-<li>
-<input type="checkbox" disabled>Add tests / make package CRAN ready</li>
+<div class="section level3">
+<h3 id="essentials">Essentials<a class="anchor" aria-label="anchor" href="#essentials"></a>
+</h3>
+<ul>
+<li><a href="https://branchlab.github.io/metasnf/articles/settings_matrix.html">Settings matrix</a></li>
+<li><a href="https://branchlab.github.io/metasnf/articles/data_list.html">Data list</a></li>
+<li><a href="https://branchlab.github.io/metasnf/articles/snf_schemes.html">SNF schemes</a></li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="contributions">Contributions<a class="anchor" aria-label="anchor" href="#contributions"></a>
-</h2>
-<p>Contributions to the package are very welcome! Please submit a pull request or make a post in the issues tab of the repo.</p>
+<div class="section level3">
+<h3 id="further-customization-of-generated-solutions">Further customization of generated solutions<a class="anchor" aria-label="anchor" href="#further-customization-of-generated-solutions"></a>
+</h3>
+<ul>
+<li><a href="https://branchlab.github.io/metasnf/articles/distance_metrics.html">Distance metrics</a></li>
+<li><a href="https://branchlab.github.io/metasnf/articles/clustering_algorithms.html">Clustering algorithms</a></li>
+<li><a href="https://branchlab.github.io/metasnf/articles/feature_weights.html">Feature weighting</a></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="additional-functionality">Additional functionality<a class="anchor" aria-label="anchor" href="#additional-functionality"></a>
+</h3>
+<ul>
+<li><a href="https://branchlab.github.io/metasnf/articles/stability_measures.html">Stability measures and consensus clustering</a></li>
+<li><a href="https://branchlab.github.io/metasnf/articles/confounders.html">Removing unwanted signal</a></li>
+<li><a href="https://branchlab.github.io/metasnf/articles/parallel_processing.html">Parallel processing</a></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
+</h3>
+<ul>
+<li><a href="https://branchlab.github.io/metasnf/articles/correlation_plots.html">Correlation plots</a></li>
+<li><a href="https://branchlab.github.io/metasnf/articles/similarity_matrix_heatmap.html">Similarity matrix heatmaps</a></li>
+<li><a href="https://branchlab.github.io/metasnf/articles/manhattan_plots.html">Manhattan plots</a></li>
+<li><a href="https://branchlab.github.io/metasnf/articles/alluvial_plots.html">Alluvial plots</a></li>
+</ul>
+</div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
