@@ -32,12 +32,14 @@ meta_cluster <- function(mc_om) {
 #'  index calculations.
 #'
 #' @param om solutions_matrix
+#' @param progress If TRUE, wrapping the function with progressr (i.e.,
+#' progressr::with_progress({calc_om_aris(om)}) will reveal a progress bar.
+#' The progress bar slows down the computation considerably.
 #'
 #' @return om_aris ARIs between clustering solutions of an solutions matrix
 #'
 #' @export
-calc_om_aris <- function(om) {
-    print("Please wait - this may take a minute.")
+calc_om_aris <- function(om, progress = FALSE) {
     # Only row id and subject label cols
     om_subs <- subs(om)
     # Only subject label cols
@@ -46,12 +48,25 @@ calc_om_aris <- function(om) {
     om_aris <- matrix(1, nrow(om_subs), nrow(om_subs))
     pairwise_indices <- utils::combn(nrow(om_aris), 2)
     # Calculating pairwise ARIs across rows
-    for (col in seq_len(ncol(pairwise_indices))) {
-        v1 <- pairwise_indices[1, col]
-        v2 <- pairwise_indices[2, col]
-        ari <- calc_ari(v1, v2, om_no_id)
-        om_aris[v1, v2] <- ari
-        om_aris[v2, v1] <- ari
+    if (progress) {
+        p <- progressr::progressor(steps = ncol(pairwise_indices))
+        for (col in seq_len(ncol(pairwise_indices))) {
+            p()
+            v1 <- pairwise_indices[1, col]
+            v2 <- pairwise_indices[2, col]
+            ari <- calc_ari(v1, v2, om_no_id)
+            om_aris[v1, v2] <- ari
+            om_aris[v2, v1] <- ari
+        }
+    } else {
+        print("Please wait - this may take a minute.")
+        for (col in seq_len(ncol(pairwise_indices))) {
+            v1 <- pairwise_indices[1, col]
+            v2 <- pairwise_indices[2, col]
+            ari <- calc_ari(v1, v2, om_no_id)
+            om_aris[v1, v2] <- ari
+            om_aris[v2, v1] <- ari
+        }
     }
     colnames(om_aris) <- om$"row_id"
     rownames(om_aris) <- om$"row_id"
