@@ -116,7 +116,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
         message("Sorting by order.")
     }
     similarity_matrix <- similarity_matrix[order, order]
-    data <- data[order, ]
+    data <- data[order, , drop = FALSE]
     ###########################################################################
     # Log the graph if requested
     if (log_graph) {
