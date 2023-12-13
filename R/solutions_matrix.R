@@ -110,7 +110,7 @@ extend_solutions <- function(solutions_matrix,
                     )
                 },
                 warning = function(w, row = i) {
-                    if(grep("Chi-squared", w$"message")) {
+                    if (grepl("Chi-squared", w$"message")) {
                         chi_squared_warnings <- c(chi_squared_warnings, row)
                         suppressWarnings(
                             p_value <- get_cluster_pval(
