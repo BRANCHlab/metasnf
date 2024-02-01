@@ -40,23 +40,6 @@ label_prop <- function(full_fused_network, clusters) {
     return(new_clusters)
 }
 
-#' Label propagation over an solutions matrix
-#'
-#' Given an solutions matrix and a data_list object containing all subjects, return
-#'  a dataframe of the label propagated results of all om rows
-#'
-#' @param solutions_matrix A solutions matrix
-#' @param full_data_list A data_list object made by rbinding(train, test) data
-#' @param clust_algs_list List of custom clustering algorithms to apply
-#'  to the final fused network. See ?generate_clust_algs_list
-#' @param distance_metrics_list A distance_metrics_list.
-#'  See ?generate_distance_metrics_list.
-#' @param weights_matrix A matrix containing variable weights to use during
-#'  distance matrix calculation. See ?generate_weights_matrix.
-#'
-#' @return labeled_df A dataframe of the label propagated results of all om rows
-#'
-#' @export
 lp_row <- function(solutions_matrix,
                    full_data_list,
                    clust_algs_list = NULL,
@@ -106,7 +89,11 @@ lp_row <- function(solutions_matrix,
         }
     }
     for (i in seq_len(nrow(solutions_matrix))) {
-        print(paste0("Processing row ", i, " of ", nrow(solutions_matrix), "..."))
+        print(
+            paste0(
+                "Processing row ", i, " of ", nrow(solutions_matrix), "..."
+            )
+        )
         current_row <- solutions_matrix[i, ]
         sig <- paste0(current_row$"significance")
         reduced_dl <- drop_inputs(current_row, full_data_list)
@@ -150,7 +137,7 @@ lp_row <- function(solutions_matrix,
         full_fused_network <- full_fused_network[ordered_subs, ordered_subs]
         clusters <- get_clusters(current_row)
         propagated_labels <- label_prop(full_fused_network, clusters)
-        if (i == 1) { # if this is the first row of the OM, establish the dataframe
+        if (i == 1) { # if this is first row of the OM, establish dataframe
             labeled_df <- data.frame(
                 subjectkey = all_subs,
                 group = group_vec,
@@ -162,6 +149,163 @@ lp_row <- function(solutions_matrix,
         } else {
             current_df <- data.frame(
                 subjectkey = all_subs,
+                group = group_vec,
+                cluster = propagated_labels
+            )
+            names <- colnames(current_df)
+            names[which(names == "cluster")] <- sig
+            colnames(current_df) <- names
+            labeled_df <- dplyr::inner_join(
+                labeled_df,
+                current_df,
+                by = c("subjectkey", "group")
+            )
+        }
+    }
+    return(labeled_df)
+}
+
+#' Label propagate cluster solutions to unclustered subjects
+#'
+#' Given a solutions_matrix derived from training subjects and a full_data_list
+#' containing both training and test subjects, re-run SNF to generate a total
+#' affinity matrix of both train and subjects and use the label propagation
+#' algorithm to assigned predicted clusters to test subjects.
+#'
+#' @param solutions_matrix A solutions_matrix. The propagation algorithm is
+#' slow and should be used for validating a top or top few meaningful chosen
+#' clustering solutions. It is advisable to use only a small subset of rows
+#' from the original solutions_matrix for label propagation.
+#' @param clust_algs_list If a custom clustering algorithm list was used during
+#' the original batch_snf call, include that clust_algs_list here as well.
+#' @param distance_metrics_list Like above - the distance_metrics_list (if any)
+#' that was used for the original batch_snf call.
+#' @param weights_matrix Like above.
+#'
+#' @return labeled_df a dataframe containing a column for subjectkeys,
+#' a column for whether the subject was in the train (original) or test (held
+#' out) set, and one column per row of the solutions matrix indicating the
+#' original and propagated clusters.
+#'
+#' @export
+lp_solutions_matrix <- function(train_solutions_matrix,
+                                full_data_list,
+                                clust_algs_list = NULL,
+                                distance_metrics_list = NULL,
+                                weights_matrix = NULL) {
+    ###########################################################################
+    # 1. Reorder data_list subjects
+    ###########################################################################
+    train_subjects <- colnames(subs(train_solutions_matrix))[-1]
+    all_subjects <- full_data_list[[1]][[1]]$"subjectkey"
+    # Quick check to make sure the train subjects are all in the full list
+    if (!all(train_subjects %in% all_subjects)) {
+        stop(
+            "Some of the subjects with known clusters in the",
+            "train_solutions_matrix are not present in the full_data_list."
+        )
+    }
+    test_subjects <- all_subjects[!all_subjects %in% train_subjects]
+    lp_ordered_subjects <- c(train_subjects, test_subjects)
+    full_data_list <- reorder_dl_subs(full_data_list, lp_ordered_subjects)
+    ###########################################################################
+    # 2. Prepare vectors containing the names of the train and test subjects
+    ###########################################################################
+    n_train <- length(train_subjects)
+    n_test <- length(test_subjects)
+    group_vec <- c(rep("train", n_train), rep("test", n_test))
+    ###########################################################################
+    # 3. SNF of the full data list
+    ###########################################################################
+    ###########################################################################
+    ## 3-1. Creation of distance_metrics_list, if it does not already exist
+    ###########################################################################
+    if (is.null(distance_metrics_list)) {
+        distance_metrics_list <- generate_distance_metrics_list()
+    }
+    ###########################################################################
+    ## 3-2. Create (or check) weights_matrix
+    ###########################################################################
+    if (is.null(weights_matrix)) {
+        weights_matrix <- generate_weights_matrix(
+            full_data_list,
+            nrow = nrow(train_solutions_matrix)
+        )
+    } else {
+        if (nrow(weights_matrix) != nrow(train_solutions_matrix)) {
+            stop(
+                paste0(
+                    "Weights_matrix and train_solutions_matrix",
+                    " should have the same number of rows."
+                )
+            )
+        }
+    }
+    ###########################################################################
+    ## 3-3. SNF one row at a time
+    ###########################################################################
+    for (i in seq_len(nrow(train_solutions_matrix))) {
+        print(
+            paste0(
+                "Processing row ", i, " of ",
+                nrow(train_solutions_matrix), "..."
+            )
+        )
+        current_row <- train_solutions_matrix[i, ]
+        sig <- paste0(current_row$"row_id")
+        reduced_dl <- drop_inputs(current_row, full_data_list)
+        scheme <- current_row$"snf_scheme"
+        k <- current_row$"k"
+        alpha <- current_row$"alpha"
+        t <- current_row$"t"
+        cont_dist <- current_row$"cont_dist"
+        disc_dist <- current_row$"disc_dist"
+        ord_dist <- current_row$"ord_dist"
+        cat_dist <- current_row$"cat_dist"
+        mix_dist <- current_row$"mix_dist"
+        cont_dist_fn <- distance_metrics_list$"continuous_distance"[[cont_dist]]
+        disc_dist_fn <- distance_metrics_list$"discrete_distance"[[disc_dist]]
+        ord_dist_fn <- distance_metrics_list$"ordinal_distance"[[ord_dist]]
+        cat_dist_fn <- distance_metrics_list$"categorical_distance"[[cat_dist]]
+        mix_dist_fn <- distance_metrics_list$"mixed_distance"[[mix_dist]]
+        weights_row <- weights_matrix[i, , drop = FALSE]
+        #######################################################################
+        # The actual SNF
+        #######################################################################
+        full_fused_network <- snf_step(
+            reduced_dl,
+            scheme = scheme,
+            k = k,
+            alpha = alpha,
+            t = t,
+            cont_dist_fn = cont_dist_fn,
+            disc_dist_fn = disc_dist_fn,
+            ord_dist_fn = ord_dist_fn,
+            cat_dist_fn = cat_dist_fn,
+            mix_dist_fn = mix_dist_fn,
+            weights_row = weights_row
+        )
+        full_fused_network <- full_fused_network[
+            lp_ordered_subjects,
+            lp_ordered_subjects
+        ]
+        clusters <- get_clusters(current_row)
+        #######################################################################
+        # Label propagation
+        #######################################################################
+        propagated_labels <- label_prop(full_fused_network, clusters)
+        if (i == 1) {
+            labeled_df <- data.frame(
+                subjectkey = c(train_subjects, test_subjects),
+                group = group_vec,
+                cluster = propagated_labels
+            )
+            names <- colnames(labeled_df)
+            names[which(names == "cluster")] <- sig
+            colnames(labeled_df) <- names
+        } else {
+            current_df <- data.frame(
+                subjectkey = c(train_subjects, test_subjects),
                 group = group_vec,
                 cluster = propagated_labels
             )

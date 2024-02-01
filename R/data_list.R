@@ -423,16 +423,20 @@ collapse_dl <- function(data_list) {
 #'
 #' @export
 dl_variable_summary <- function(data_list) {
-    types <- data_list |> lapply(
-        function(x) {
-            rep(x$"type", ncol(x$"data") - 1)
-        }
-    ) |> unlist()
-    domains <- data_list |> lapply(
-        function(x) {
-            rep(x$"domain", ncol(x$"data") - 1)
-        }
-    ) |> unlist()
+    types <- data_list |>
+        lapply(
+            function(x) {
+                rep(x$"type", ncol(x$"data") - 1)
+            }
+        ) |>
+        unlist()
+    domains <- data_list |>
+        lapply(
+            function(x) {
+                rep(x$"domain", ncol(x$"data") - 1)
+            }
+        ) |>
+        unlist()
     merged_df <- data_list |>
         collapse_dl() |>
         data.frame()
@@ -443,4 +447,23 @@ dl_variable_summary <- function(data_list) {
         domain = domains
     )
     return(variable_level_summary)
+}
+
+#' Reorder the subjects in a data_list
+#'
+#' @param data_list data_list to reorder
+#' @param ordered_subjects A vector of the subjectkey values in the data_list
+#' in the desired order of the sorted data_list.
+#'
+#' @export
+reorder_dl_subs <- function(data_list, ordered_subjects) {
+    data_list <- data_list |>
+        lapply(
+            function(x) {
+                index <- match(x$"data"$"subjectkey", ordered_subjects)
+                x$"data" <- x$"data"[order(index), ]
+                return(x)
+            }
+        )
+    return(data_list)
 }
