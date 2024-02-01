@@ -64,6 +64,7 @@ extend_solutions <- function(solutions_matrix,
         function(x) {
             n_features <- ncol(x$"data") - 1
             outcome_type <- rep(x$"type", n_features)
+            return(outcome_type)
         }
     ) |> unlist()
     # Add columns tracking p-values of all features
@@ -79,7 +80,8 @@ extend_solutions <- function(solutions_matrix,
         target_list,
         function(x) {
             x[[1]]
-        }) |> merge_df_list()
+        }
+    ) |> merge_df_list()
     # Store rows that raise chi_squared warnings
     chi_squared_warnings <- vector()
     # Iterate across rows of the solutions matrix

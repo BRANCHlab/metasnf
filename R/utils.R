@@ -50,14 +50,17 @@ add_columns <- function(df, newcols, fill = NA) {
 numcol_to_numeric <- function(df) {
     df[] <- lapply(df,
         function(x) {
-            tryCatch({
-                return(as.numeric(x))
-            },
-            warning = function(cond) {
-                if (cond$"message" == "NAs introduced by coercion")
-                return(x)
-            })
-        })
+            tryCatch(
+                {
+                    return(as.numeric(x))
+                }, warning = function(cond) {
+                    if (cond$"message" == "NAs introduced by coercion") {
+                        return(x)
+                    }
+                }
+            )
+        }
+    )
     return(df)
 }
 
