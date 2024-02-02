@@ -15,14 +15,14 @@ div.aside { background-color:#fff2e6; }
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
 
 Download a copy of the vignette to follow along here: [a_simple_example.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/a_simple_example.Rmd)
 
-In this vignette, we will show how *r-package* can be used for a very simple SNF workflow.
+In this vignette, we will show how metaSNF can be used for a very simple SNF workflow.
 
 This simple workflow is the example of SNF provided in the original *SNFtool* package.
 You can find the example by loading the *SNFtool* package and then viewing the documentation for the main SNF function by running `?SNF`.

@@ -1,0 +1,146 @@
+---
+title: "Label Propagation"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Label Propagation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+div.aside { background-color:#fff2e6; }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+Download a copy of the vignette to follow along here: [label_propagation.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/label_propagation.Rmd)
+
+In this vignette, we will walk through label propagation in the metaSNF package.
+Code from this vignette is largely taken from the end of the [less simple example vignette](https://branchlab.github.io/metasnf/articles/a_less_simple_example.html).
+
+The label propagation procedure can be used to predict cluster membership for new, unlabeled observations based on their similarity to previously labeled observations.
+These unlabeled observations could be a held out test set from your original sample or a new sample entirely.
+
+The process involves the following steps:
+
+1. Assign clusters to some group of patients
+2. Calculate all the pairwise similarities amongst all the already clustered and to-be-labeled patients
+3. Run the label propagation algorithm to predict cluster membership in the to-be-labeled patients
+
+There is a lot of room for flexibility in how steps 1 and 2 are conducted.
+SNF is not necessary at any part of the process.
+For example, step one could be done by assigning clusters in your training set manually or by a simple clustering method like k-means.
+Step two could be done just by calculating the euclidean distances across all the training and testing subjects for a small subset of variables.
+The variables used to calculate the similarities in step 2 don't necessarily need to be the same ones used to derive the cluster solution in the training set either.
+
+All that aside, we show here a simple approach that involves assigning the clusters by a call to `batch_snf`, assembling a data list that has the training and testing set subjects, and feeding the results into a simple label propagating function, `lp_solutions_matrix`.
+
+```{r}
+library(metasnf)
+
+# Get a vector of all the subjects
+all_subjects <- abcd_cort_t$"patient"
+
+# Dataframe assigning 80% of subjects to train and 20% to test
+train_test_split <- train_test_assign(train_frac = 0.8, subjects = all_subjects)
+
+head(train_test_split)
+tail(train_test_split)
+
+# Pulling the training and testing subjects specifically
+train_subs <- train_test_split$"subjectkey"[train_test_split$"split" == "train"]
+test_subs <- train_test_split$"subjectkey"[train_test_split$"split" == "test"]
+
+# Partition a training set
+train_abcd_cort_t <- abcd_cort_t[abcd_cort_t$"patient" %in% train_subs, ]
+train_abcd_cort_sa <- abcd_cort_sa[abcd_cort_sa$"patient" %in% train_subs, ]
+train_abcd_subc_v <- abcd_subc_v[abcd_subc_v$"patient" %in% train_subs, ]
+train_abcd_h_income <- abcd_h_income[abcd_h_income$"patient" %in% train_subs, ]
+train_abcd_pubertal <- abcd_pubertal[abcd_pubertal$"patient" %in% train_subs, ]
+train_abcd_anxiety <- abcd_anxiety[abcd_anxiety$"patient" %in% train_subs, ]
+train_abcd_depress <- abcd_depress[abcd_depress$"patient" %in% train_subs, ]
+
+# Partition a test set
+test_abcd_cort_t <- abcd_cort_t[abcd_cort_t$"patient" %in% test_subs, ]
+test_abcd_cort_sa <- abcd_cort_sa[abcd_cort_sa$"patient" %in% test_subs, ]
+test_abcd_subc_v <- abcd_subc_v[abcd_subc_v$"patient" %in% test_subs, ]
+test_abcd_h_income <- abcd_h_income[abcd_h_income$"patient" %in% test_subs, ]
+test_abcd_pubertal <- abcd_pubertal[abcd_pubertal$"patient" %in% test_subs, ]
+test_abcd_anxiety <- abcd_anxiety[abcd_anxiety$"patient" %in% test_subs, ]
+test_abcd_depress <- abcd_depress[abcd_depress$"patient" %in% test_subs, ]
+
+# Find cluster solutions in the training set
+train_data_list <- generate_data_list(
+    list(train_abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(train_abcd_cort_sa, "cortical_sa", "neuroimaging", "continuous"),
+    list(train_abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(train_abcd_h_income, "household_income", "demographics", "continuous"),
+    list(train_abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "patient"
+)
+
+settings_matrix <- generate_settings_matrix(
+    train_data_list,
+    nrow = 5,
+    seed = 42,
+    min_k = 10,
+    max_k = 30
+)
+
+train_solutions_matrix <- batch_snf(
+    train_data_list,
+    settings_matrix
+)
+
+# Pick a solution that has good separation over our target variables
+train_target_list <- generate_target_list(
+    list(train_abcd_anxiety, "anxiety", "ordinal"),
+    list(train_abcd_depress, "depressed", "ordinal"),
+    uid = "patient"
+)
+
+extended_solutions_matrix <- extend_solutions(
+    train_solutions_matrix,
+    train_target_list
+)
+lowest_min_p <- min(extended_solutions_matrix$"min_p_val")
+which(extended_solutions_matrix$"min_p_val" == lowest_min_p)
+top_row <- extended_solutions_matrix[4, ]
+
+# Propagate that solution to the subjects in the test set
+# data list below has both training and testing subjects
+full_data_list <- generate_data_list(
+    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(abcd_h_income, "household_income", "demographics", "continuous"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "patient"
+)
+
+# Use the solutions matrix from the training subjects and the data list from
+# the training and testing subjects to propagate labels to the test subjects
+propagated_labels <- lp_solutions_matrix(top_row, full_data_list)
+
+head(propagated_labels)
+tail(propagated_labels)
+```
+
+You could, if you wanted, see how *all* of your clustering solutions propagate to the test set, but that would mean reusing your test set and removing the protection against overfitting conferred by this procedure.
+
+```{r}
+propagated_labels_all <- lp_solutions_matrix(
+    extended_solutions_matrix,
+    full_data_list
+)
+
+head(propagated_labels_all)
+tail(propagated_labels_all)
+```
