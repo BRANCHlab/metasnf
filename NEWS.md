@@ -1,4 +1,4 @@
-# metasnf (development version)
+# metasnf 0.4.1
 
 # metasnf 0.4.0
 
