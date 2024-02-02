@@ -1,5 +1,24 @@
 # metasnf 0.4.1
 
+## Breaking changes
+
+* `lp_row` function has been replaced by `lp_solutions_matrix`. The new function is order agnostic: full data lists can be constructed without any restriction on how training and testing set subjects are sorted. Subjects present in the provided solutions matrix to propagate are assumed to be the training subjects.
+
+## New functionality
+
+* `calc_om_aris` now has `progress` parameter. When set to true and used in conjunction with `progressr::with_progress()`, a progress bar is shown for the calculations. Learn more with `?calc_om_aris`.
+
+## Bug fixes
+
+* `grepl` instead of `grep` used in `extend_solutions` to reduce errors when no chi-squared warning occurs
+
+
+## Other changes
+
+* A vignette specifically for label propagation has been added
+* Full removal of several previously deprecated functions
+* Minor source code reformatting
+
 # metasnf 0.4.0
 
 ## New functionality
