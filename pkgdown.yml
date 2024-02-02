@@ -12,6 +12,7 @@ articles:
   distance_metrics: distance_metrics.html
   feature_weights: feature_weights.html
   getting_started: getting_started.html
+  label_propagation: label_propagation.html
   manhattan_plots: manhattan_plots.html
   parallel_processing: parallel_processing.html
   settings_matrix: settings_matrix.html
@@ -19,7 +20,7 @@ articles:
   snf_schemes: snf_schemes.html
   stability_measures: stability_measures.html
   troubleshooting: troubleshooting.html
-last_built: 2023-12-12T22:44Z
+last_built: 2024-02-02T19:47Z
 urls:
   reference: https://branchlab.github.io/metasnf/reference
   article: https://branchlab.github.io/metasnf/articles
