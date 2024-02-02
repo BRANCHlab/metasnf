@@ -15,8 +15,8 @@ div.aside { background-color:#fff2e6; }
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
 
@@ -299,7 +299,10 @@ adjusted_rand_index_heatmap(solutions_matrix_aris)
 You can optionally save your heatmap by specifying a path with the `save` parameter (e.g., `adjusted_rand_index_heatmap(solutions_matrix_aris, save = "./adjusted_rand_index_heatmap.png")`).
 
 ```{r echo = FALSE, fig.align = 'center'}
-adjusted_rand_index_heatmap(solutions_matrix_aris, save = "./adjusted_rand_index_heatmap.png")
+adjusted_rand_index_heatmap(
+    solutions_matrix_aris,
+    save = "./adjusted_rand_index_heatmap.png"
+)
 ```
 
 ![.](./adjusted_rand_index_heatmap.png){width=400px}
@@ -329,8 +332,11 @@ meta_cluster_order
 ... which can be passed into the `settings_matrix_heatmap` function:
 
 ```{r include = FALSE}
-settings_matrix_heatmap(settings_matrix, order = meta_cluster_order,
-           save = "./settings_matrix_heatmap_ordered.png")
+settings_matrix_heatmap(
+    settings_matrix,
+    order = meta_cluster_order,
+    save = "./settings_matrix_heatmap_ordered.png"
+)
 ```
 
 ```{r eval = FALSE}
@@ -511,55 +517,41 @@ all_subjects <- gsub("subject_", "", all_subjects)
 assigned_splits <- train_test_assign(train_frac = 0.8, subjects = all_subjects)
 
 head(assigned_splits)
-
 tail(assigned_splits)
 
+# Pulling the training and testing subjects specifically
+train_subs <- assigned_splits$"subjectkey"[assigned_splits$"split" == "train"]
+test_subs <- assigned_splits$"subjectkey"[assigned_splits$"split" == "test"]
+
 # Partition a training set
-train_abcd_cort_t <- keep_split(abcd_cort_t, assigned_splits, "train", uid = "patient")
-train_abcd_cort_sa <- keep_split(abcd_cort_sa, assigned_splits, "train", uid = "patient")
-train_abcd_subc_v <- keep_split(abcd_subc_v, assigned_splits, "train", uid = "patient")
-train_abcd_h_income <- keep_split(abcd_h_income, assigned_splits, "train", uid = "patient")
-train_abcd_pubertal <- keep_split(abcd_pubertal, assigned_splits, "train", uid = "patient")
-train_abcd_anxiety <- keep_split(abcd_anxiety, assigned_splits, "train", uid = "patient")
-train_abcd_depress <- keep_split(abcd_depress, assigned_splits, "train", uid = "patient")
+train_abcd_cort_t <- abcd_cort_t[abcd_cort_t$"patient" %in% train_subs, ]
+train_abcd_cort_sa <- abcd_cort_sa[abcd_cort_sa$"patient" %in% train_subs, ]
+train_abcd_subc_v <- abcd_subc_v[abcd_subc_v$"patient" %in% train_subs, ]
+train_abcd_h_income <- abcd_h_income[abcd_h_income$"patient" %in% train_subs, ]
+train_abcd_pubertal <- abcd_pubertal[abcd_pubertal$"patient" %in% train_subs, ]
+train_abcd_anxiety <- abcd_anxiety[abcd_anxiety$"patient" %in% train_subs, ]
+train_abcd_depress <- abcd_depress[abcd_depress$"patient" %in% train_subs, ]
 
 # Partition a test set
-test_abcd_cort_t <- keep_split(abcd_cort_t, assigned_splits, "test", uid = "patient")
-test_abcd_cort_sa <- keep_split(abcd_cort_sa, assigned_splits, "test", uid = "patient")
-test_abcd_subc_v <- keep_split(abcd_subc_v, assigned_splits, "test", uid = "patient")
-test_abcd_h_income <- keep_split(abcd_h_income, assigned_splits, "test", uid = "patient")
-test_abcd_pubertal <- keep_split(abcd_pubertal, assigned_splits, "test", uid = "patient")
-test_abcd_anxiety <- keep_split(abcd_anxiety, assigned_splits, "test", uid = "patient")
-test_abcd_depress <- keep_split(abcd_depress, assigned_splits, "test", uid = "patient")
+test_abcd_cort_t <- abcd_cort_t[abcd_cort_t$"patient" %in% test_subs, ]
+test_abcd_cort_sa <- abcd_cort_sa[abcd_cort_sa$"patient" %in% test_subs, ]
+test_abcd_subc_v <- abcd_subc_v[abcd_subc_v$"patient" %in% test_subs, ]
+test_abcd_h_income <- abcd_h_income[abcd_h_income$"patient" %in% test_subs, ]
+test_abcd_pubertal <- abcd_pubertal[abcd_pubertal$"patient" %in% test_subs, ]
+test_abcd_anxiety <- abcd_anxiety[abcd_anxiety$"patient" %in% test_subs, ]
+test_abcd_depress <- abcd_depress[abcd_depress$"patient" %in% test_subs, ]
 
-# Construct the data lists
+# A data list with just training subjects
 train_data_list <- generate_data_list(
     list(train_abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
-    list(train_abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(train_abcd_cort_sa, "cortical_sa", "neuroimaging", "continuous"),
     list(train_abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(train_abcd_h_income, "household_income", "demographics", "continuous"),
     list(train_abcd_pubertal, "pubertal_status", "demographics", "continuous"),
     uid = "patient"
 )
 
-test_data_list <- generate_data_list(
-    list(test_abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
-    list(test_abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
-    list(test_abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-    list(test_abcd_h_income, "household_income", "demographics", "continuous"),
-    list(test_abcd_pubertal, "pubertal_status", "demographics", "continuous"),
-    uid = "patient"
-)
-```
-
-
-Note, in a label propagation workflow, maintaining a consistent ordering of train and test subjects across all dataframes is particularly important.
-To ensure the full data list is constructed with an order that is compatible with the training and testing splits made above, you can either specify both the `train_subjects` and `test_subjects` parameters yourself, or provide the `assigned_splits` output from the `train_test_assign` function.
-
-```{r}
-
-
-
+# A data list with training and testing subjects
 full_data_list <- generate_data_list(
     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
@@ -586,8 +578,6 @@ settings_matrix <- generate_settings_matrix(
     max_k = 30
 )
 
-min(summarize_dl(train_data_list)$"length")
-
 train_solutions_matrix <- batch_snf(
     train_data_list,
     settings_matrix
@@ -598,16 +588,17 @@ extended_solutions_matrix <- extend_solutions(
     train_target_list
 )
 
-# The fourth row had the lowest minimum p-value across our outcomes
-which(extended_solutions_matrix$"min_p_val" ==
-      min(extended_solutions_matrix$"min_p_val"))
+# The fifth row had the lowest minimum p-value across our outcomes
+lowest_min_p <- min(extended_solutions_matrix$"min_p_val")
+which(extended_solutions_matrix$"min_p_val" == lowest_min_p)
 
 # Keep track of your top solution
 top_row <- extended_solutions_matrix[4, ]
 
-# Hand over the solutions matrix as well as the full data list to propagate labels
-#  to the test subjects
-propagated_labels <- lp_row(top_row, full_data_list)
+# Use the solutions matrix from the training subjects and the data list from
+# the training and testing subjects to propagate labels to the test subjects
+propagated_labels <- lp_solutions_matrix(top_row, full_data_list)
+
 head(propagated_labels)
 tail(propagated_labels)
 ```
@@ -615,7 +606,11 @@ tail(propagated_labels)
 You could, if you wanted, see how *all* of your clustering solutions propagate to the test set, but that would mean reusing your test set and removing the protection against overfitting conferred by this procedure.
 
 ```{r}
-propagated_labels_all <- lp_row(extended_solutions_matrix, full_data_list)
+propagated_labels_all <- lp_solutions_matrix(
+    extended_solutions_matrix,
+    full_data_list
+)
+
 head(propagated_labels_all)
 tail(propagated_labels_all)
 ```

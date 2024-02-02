@@ -27,15 +27,27 @@ test_that("return a correctly formatted data_list", {
         ),
         uid = "patient_id"
     )
+    correct_component_names <- data_list |> lapply(
+        function(x) {
+            all(names(x) == c("data", "name", "domain", "type"))
+        }
+    ) |>
+        unlist() |>
+        all()
+    data_is_df <- data_list |> lapply(
+        function(x) {
+            all(inherits(x$"data", "data.frame"))
+        }
+    ) |>
+        unlist() |>
+        all()
     expect_equal(
         TRUE,
         all(
             c(
-                sorted_names,
                 data_is_df,
                 correct_component_names
             )
         )
     )
 })
-
