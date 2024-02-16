@@ -42,6 +42,8 @@ generate_solutions_matrix <- function(data_list, settings_matrix) {
 #' @param cat_test String indicating which statistical test will be used to
 #' associate cluster with a categorical variable. Options are "chi_squared" for
 #' the Chi-squared test and "fisher_exact" for Fisher's exact test.
+#' @param verbose If TRUE, the function will print out which row of the
+#' solutions matrix it's working on.
 #'
 #' @return extended_solutions_matrix an extended solutions matrix that contains
 #'  p-value columns for each outcome in the provided target_list
@@ -49,7 +51,8 @@ generate_solutions_matrix <- function(data_list, settings_matrix) {
 #' @export
 extend_solutions <- function(solutions_matrix,
                              target_list,
-                             cat_test = "chi_squared") {
+                             cat_test = "chi_squared",
+                             verbose = FALSE) {
     # Single vector of all feature names
     ol_features <- lapply(
         target_list,
@@ -85,71 +88,148 @@ extend_solutions <- function(solutions_matrix,
     # Store rows that raise chi_squared warnings
     chi_squared_warnings <- vector()
     # Iterate across rows of the solutions matrix
-    for (i in seq_len(nrow(solutions_matrix))) {
-        clustered_subs <- get_clustered_subs(solutions_matrix[i, ])
-        # This really shouldn't be different from clustered_subs
-        assigned_subs <- clustered_subs |>
-            dplyr::filter(clustered_subs$"cluster" != 0)
-        # Iterate across each outcome measure included
-        # Assign p-values
-        for (j in 1:length(ol_features)) {
-            #current_outcome_component <- target_list[[j]]
-            current_outcome_component <- merged_df[, c(1, j + 1)]
-            current_outcome_type <- ol_feature_types[j]
-            current_outcome_name <- colnames(current_outcome_component)[2]
-            try_catch_results <- tryCatch(
-                expr = {
-                    p_value <- get_cluster_pval(
-                        assigned_subs,
-                        current_outcome_component,
-                        ol_feature_types[j],
-                        ol_features[j],
-                        cat_test = cat_test
-                    )
-                    list(
-                        "p_value" = p_value,
-                        "chi_squared_warnings" = chi_squared_warnings
-                    )
-                },
-                warning = function(w, row = i) {
-                    if (grepl("Chi-squared", w$"message")) {
-                        chi_squared_warnings <- c(chi_squared_warnings, row)
-                        suppressWarnings(
-                            p_value <- get_cluster_pval(
-                                assigned_subs,
-                                current_outcome_component,
-                                ol_feature_types[j],
-                                ol_features[j],
-                                cat_test = cat_test
-                            )
-                        )
-                        list(
-                            "p_value" = p_value,
-                            "chi_squared_warnings" = chi_squared_warnings
-                        )
-                    } else {
+    if (verbose) {
+        for (i in seq_len(nrow(solutions_matrix))) {
+            print(
+                paste0(
+                    "Calculating p-values for row ", i, " of ",
+                    nrow(solutions_matrix)
+                )
+            )
+            clustered_subs <- get_clustered_subs(solutions_matrix[i, ])
+            # This really shouldn't be different from clustered_subs
+            assigned_subs <- clustered_subs |>
+                dplyr::filter(clustered_subs$"cluster" != 0)
+            # Iterate across each outcome measure included
+            # Assign p-values
+            for (j in seq_along(ol_features)) {
+                current_outcome_component <- merged_df[, c(1, j + 1)]
+                current_outcome_name <- colnames(current_outcome_component)[2]
+                try_catch_results <- tryCatch(
+                    expr = {
                         p_value <- get_cluster_pval(
                             assigned_subs,
                             current_outcome_component,
                             ol_feature_types[j],
-                            ol_features[j]
+                            ol_features[j],
+                            cat_test = cat_test
                         )
                         list(
                             "p_value" = p_value,
                             "chi_squared_warnings" = chi_squared_warnings
                         )
+                    },
+                    warning = function(w, row = i) {
+                        if (grepl("Chi-squared", w$"message")) {
+                            chi_squared_warnings <- c(chi_squared_warnings, row)
+                            suppressWarnings(
+                                p_value <- get_cluster_pval(
+                                    assigned_subs,
+                                    current_outcome_component,
+                                    ol_feature_types[j],
+                                    ol_features[j],
+                                    cat_test = cat_test
+                                )
+                            )
+                            list(
+                                "p_value" = p_value,
+                                "chi_squared_warnings" = chi_squared_warnings
+                            )
+                        } else {
+                            p_value <- get_cluster_pval(
+                                assigned_subs,
+                                current_outcome_component,
+                                ol_feature_types[j],
+                                ol_features[j]
+                            )
+                            list(
+                                "p_value" = p_value,
+                                "chi_squared_warnings" = chi_squared_warnings
+                            )
+                        }
                     }
-                }
-            )
-            p_value <- try_catch_results$"p_value"
-            chi_squared_warnings <- try_catch_results$"chi_squared_warnings"
-            target_col <- grep(current_outcome_name, colnames(solutions_matrix))
-            solutions_matrix[i, target_col] <- p_value
+                )
+                p_value <- try_catch_results$"p_value"
+                chi_squared_warnings <- try_catch_results$"chi_squared_warnings"
+                target_col <- grep(
+                    current_outcome_name,
+                    colnames(solutions_matrix)
+                )
+                solutions_matrix[i, target_col] <- p_value
+            }
+            min_p <- get_min_p(solutions_matrix[i, ])
+            mean_p <- get_mean_p(solutions_matrix[i, ])
+            solutions_matrix[i, "min_p_val"] <- min_p
+            solutions_matrix[i, "mean_p_val"] <- mean_p
         }
-        min_p <- get_min_p(solutions_matrix[i, ])
-        mean_p <- get_mean_p(solutions_matrix[i, ])
-        solutions_matrix[i, "min_p_val"] <- min_p
-        solutions_matrix[i, "mean_p_val"] <- mean_p
+    } else {
+        for (i in seq_len(nrow(solutions_matrix))) {
+            clustered_subs <- get_clustered_subs(solutions_matrix[i, ])
+            # This really shouldn't be different from clustered_subs
+            assigned_subs <- clustered_subs |>
+                dplyr::filter(clustered_subs$"cluster" != 0)
+            # Iterate across each outcome measure included
+            # Assign p-values
+            for (j in seq_along(ol_features)) {
+                current_outcome_component <- merged_df[, c(1, j + 1)]
+                current_outcome_name <- colnames(current_outcome_component)[2]
+                try_catch_results <- tryCatch(
+                    expr = {
+                        p_value <- get_cluster_pval(
+                            assigned_subs,
+                            current_outcome_component,
+                            ol_feature_types[j],
+                            ol_features[j],
+                            cat_test = cat_test
+                        )
+                        list(
+                            "p_value" = p_value,
+                            "chi_squared_warnings" = chi_squared_warnings
+                        )
+                    },
+                    warning = function(w, row = i) {
+                        if (grepl("Chi-squared", w$"message")) {
+                            chi_squared_warnings <- c(chi_squared_warnings, row)
+                            suppressWarnings(
+                                p_value <- get_cluster_pval(
+                                    assigned_subs,
+                                    current_outcome_component,
+                                    ol_feature_types[j],
+                                    ol_features[j],
+                                    cat_test = cat_test
+                                )
+                            )
+                            list(
+                                "p_value" = p_value,
+                                "chi_squared_warnings" = chi_squared_warnings
+                            )
+                        } else {
+                            p_value <- get_cluster_pval(
+                                assigned_subs,
+                                current_outcome_component,
+                                ol_feature_types[j],
+                                ol_features[j]
+                            )
+                            list(
+                                "p_value" = p_value,
+                                "chi_squared_warnings" = chi_squared_warnings
+                            )
+                        }
+                    }
+                )
+                p_value <- try_catch_results$"p_value"
+                chi_squared_warnings <- try_catch_results$"chi_squared_warnings"
+                target_col <- grep(
+                    current_outcome_name,
+                    colnames(solutions_matrix)
+                )
+                solutions_matrix[i, target_col] <- p_value
+            }
+            min_p <- get_min_p(solutions_matrix[i, ])
+            mean_p <- get_mean_p(solutions_matrix[i, ])
+            solutions_matrix[i, "min_p_val"] <- min_p
+            solutions_matrix[i, "mean_p_val"] <- mean_p
+        }
     }
     if (length(chi_squared_warnings) > 0) {
         chi_squared_warnings <- paste(
