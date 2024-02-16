@@ -41,6 +41,8 @@ navbar:
       href: articles/confounders.html
     - text: Parallel processing
       href: articles/parallel_processing.html
+    - text: Label propagation
+      href: articles/label_propagation.html
     - text: -------
     - text: Plotting
     - text: Similarity Matrix Heatmaps
