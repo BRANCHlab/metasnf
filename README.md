@@ -143,6 +143,8 @@ the purposes of clinical subtyping.
   signal](https://branchlab.github.io/metasnf/articles/confounders.html)
 - [Parallel
   processing](https://branchlab.github.io/metasnf/articles/parallel_processing.html)
+- [Label
+  propagation](https://branchlab.github.io/metasnf/articles/label_propagation.html)
 
 ### Plotting
 
