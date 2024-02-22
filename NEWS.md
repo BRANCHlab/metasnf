@@ -1,5 +1,9 @@
 # metasnf 0.4.2
 
+## Bug fixes
+
+* `generate_data_list` correctly errors when components are only partially named (resolves https://github.com/BRANCHlab/metasnf/issues/10)
+
 # metasnf 0.4.1
 
 ## Breaking changes
