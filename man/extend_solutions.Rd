@@ -4,7 +4,12 @@
 \alias{extend_solutions}
 \title{Extend an solutions matrix to include outcome evaluations}
 \usage{
-extend_solutions(solutions_matrix, target_list, cat_test = "chi_squared")
+extend_solutions(
+  solutions_matrix,
+  target_list,
+  cat_test = "chi_squared",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{solutions_matrix}{A solutions_matrix.}
@@ -14,6 +19,9 @@ extend_solutions(solutions_matrix, target_list, cat_test = "chi_squared")
 \item{cat_test}{String indicating which statistical test will be used to
 associate cluster with a categorical variable. Options are "chi_squared" for
 the Chi-squared test and "fisher_exact" for Fisher's exact test.}
+
+\item{verbose}{If TRUE, the function will print out which row of the
+solutions matrix it's working on.}
 }
 \value{
 extended_solutions_matrix an extended solutions matrix that contains

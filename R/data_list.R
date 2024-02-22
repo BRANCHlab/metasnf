@@ -105,7 +105,7 @@ generate_data_list <- function(...,
                                train_subjects = NULL,
                                assigned_splits = NULL,
                                return_missing = FALSE) {
-    subjectkey <- "" # trickery to avoid build errors - fix this later
+    subjectkey <- ""
     # The object that will contain all the data
     data_list <- list()
     # The loaded data
@@ -119,20 +119,16 @@ generate_data_list <- function(...,
             data_list <- append(data_list, item)
         }
     }
-    # To-do: add tests to catch invalid inputs in this function.
     # Assign names to the nested list elements
     named_entries <- data_list |> lapply(
         function(x) {
-            z <- names(x)
-            return(length(z == ""))
+            return(sum(names(x) == ""))
         }
     )
-    all_named <- all(named_entries == 4)
-    all_not_named <- all(named_entries == 0)
-    if (all_not_named) {
+    if (all(named_entries == 0)) {
         data_list_names <- c("data", "name", "domain", "type")
         data_list <- lapply(data_list, stats::setNames, data_list_names)
-    } else if (!all_named) {
+    } else if (!(all(named_entries == 4))) {
         stop(
             "Please either specify names (i.e., data = ..., name = ...,",
             " domain = ..., type = ...) for all of the elements or for none",
@@ -153,7 +149,7 @@ generate_data_list <- function(...,
             prefix_dl_sk()
     }
     # Correctly order train and test subjects for label prop
-    if (!is.null(test_subjects) & !is.null(train_subjects)) {
+    if (!is.null(test_subjects) && !is.null(train_subjects)) {
         # If test subjects and train subjects are provided, arrange dl subs
         #  to follow the order of train subjects followed by test subjects
         tts <- paste0("subject_", c(train_subjects, test_subjects))
@@ -226,8 +222,8 @@ convert_uids <- function(data_list, uid = NULL) {
         if (length(unique(d1$"subjectkey")) == length(d1$"subjectkey")) {
             print("Existing `subjectkey` column will be treated as UID.")
             return(data_list)
-        # If subjectkey exists and is not a UID, raise error
         } else {
+            # If subjectkey exists and is not a UID, raise error
             stop(paste0(
                 "Column `subjectkey` exists, but it is not a unique ID.",
                 " Please regenerate this data_list after renaming",
@@ -334,11 +330,12 @@ reduce_dl_to_common <- function(data_list) {
     subjects <- lapply(data_list, function(x) x[[1]]$"subjectkey")
     data_objects <- lapply(data_list, function(x) x[[1]])
     common_subjects <- Reduce(intersect, subjects)
-    filtered_data_objects <-
-        lapply(data_objects,
-        function(x) {
-            dplyr::filter(x, x$"subjectkey" %in% common_subjects)
-        })
+    filtered_data_objects <- data_objects |>
+        lapply(
+            function(x) {
+                dplyr::filter(x, x$"subjectkey" %in% common_subjects)
+            }
+        )
     reduced_data_list <- data_list
     for (i in seq_along(data_list)) {
         reduced_data_list[[i]][[1]] <- filtered_data_objects[[i]]
@@ -355,11 +352,12 @@ reduce_dl_to_common <- function(data_list) {
 #' @export
 arrange_dl <- function(data_list) {
     data_objects <- lapply(data_list, function(x) x[[1]])
-    arranged_data_objects <-
-        lapply(data_objects,
-        function(x) {
-            dplyr::arrange(x, x$"subjectkey")
-        })
+    arranged_data_objects <- data_objects |>
+        lapply(
+            function(x) {
+                dplyr::arrange(x, x$"subjectkey")
+            }
+        )
     arranged_data_list <- data_list
     for (i in seq_along(data_list)) {
         arranged_data_list[[i]][[1]] <- arranged_data_objects[[i]]
@@ -376,13 +374,13 @@ arrange_dl <- function(data_list) {
 #'
 #' @export
 summarize_dl <- function(data_list) {
-    dl_summary <-
-        data.frame(
-            name = unlist(lapply(data_list, function(x) x$"name")),
-            type = unlist(lapply(data_list, function(x) x$"type")),
-            domain = unlist(domains(data_list)),
-            length = unlist(lapply(data_list, function(x) dim(x$"data")[1])),
-            width = unlist(lapply(data_list, function(x) dim(x$"data")[2])))
+    dl_summary <- data.frame(
+        name = unlist(lapply(data_list, function(x) x$"name")),
+        type = unlist(lapply(data_list, function(x) x$"type")),
+        domain = unlist(domains(data_list)),
+        length = unlist(lapply(data_list, function(x) dim(x$"data")[1])),
+        width = unlist(lapply(data_list, function(x) dim(x$"data")[2]))
+    )
     return(dl_summary)
 }
 

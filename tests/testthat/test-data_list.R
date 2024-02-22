@@ -51,3 +51,14 @@ test_that("return a correctly formatted data_list", {
         )
     )
 })
+
+test_that("errors on partial specification of component names", {
+    subjectkey <- LETTERS
+    df <- data.frame(subjectkey, a = seq_along(LETTERS))
+    expect_error(
+        data_list <- generate_data_list(
+            list(df, "name", "domain", type = "discrete")
+        ),
+        "for all of the elements or for none of them"
+    )
+})

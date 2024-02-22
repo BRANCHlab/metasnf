@@ -4,7 +4,7 @@
 \alias{calc_om_aris}
 \title{Meta-cluster calculations}
 \usage{
-calc_om_aris(om, progress = FALSE)
+calc_om_aris(om, progress = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{om}{solutions_matrix}
@@ -12,6 +12,9 @@ calc_om_aris(om, progress = FALSE)
 \item{progress}{If TRUE, wrapping the function with progressr (i.e.,
 progressr::with_progress({calc_om_aris(om)}) will reveal a progress bar.
 The progress bar slows down the computation considerably.}
+
+\item{verbose}{A boolean alternative to progress. If TRUE, the function will
+print out wich unique solution-solution combination it's working on.}
 }
 \value{
 om_aris ARIs between clustering solutions of an solutions matrix

@@ -24,3 +24,19 @@ solutions_matrix_parallel <- batch_snf(
 )
 
 all.equal(solutions_matrix, solutions_matrix_parallel)
+
+library(metasnf)
+
+subjectkey <- LETTERS
+test <- data.frame(subjectkey, a = seq_along(LETTERS))
+
+dl <- generate_data_list(list(test, "a","a",type = "discrete"), uid = "subjectkey")
+
+dl <- generate_data_list(list(test, "a","a","discrete"), uid = "subjectkey")
+
+
+data_list <- generate_data_list(
+    list(test, "name", "domain", type = "discrete")
+)
+
+dl <- generate_data_list(list(test, "a","a","discrete"), uid = "subjectkey")
