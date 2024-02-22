@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -272,12 +272,12 @@ What kind of clustering results do we get on this data?</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cluster_solutions_df</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            id cluster</span></span>
-<span><span class="co">#&gt; 1   subject_1       3</span></span>
-<span><span class="co">#&gt; 2  subject_10       1</span></span>
-<span><span class="co">#&gt; 3 subject_100       1</span></span>
-<span><span class="co">#&gt; 4 subject_101       5</span></span>
-<span><span class="co">#&gt; 5 subject_102       3</span></span>
-<span><span class="co">#&gt; 6 subject_103       6</span></span>
+<span><span class="co">#&gt; 1   subject_1       9</span></span>
+<span><span class="co">#&gt; 2  subject_10       8</span></span>
+<span><span class="co">#&gt; 3 subject_100       2</span></span>
+<span><span class="co">#&gt; 4 subject_101       4</span></span>
+<span><span class="co">#&gt; 5 subject_102       9</span></span>
+<span><span class="co">#&gt; 6 subject_103       8</span></span>
 <span></span>
 <span><span class="va">cluster_solutions_df</span><span class="op">$</span><span class="st">"cluster"</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cluster_solutions_df</span><span class="op">$</span><span class="st">"cluster"</span><span class="op">)</span></span>
 <span></span>
@@ -308,15 +308,15 @@ even worse in this context.</p>
 <span><span class="va">km</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></span><span class="op">(</span><span class="va">metasnf_data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blocks"</span>, <span class="st">"assists"</span><span class="op">)</span><span class="op">]</span>, centers <span class="op">=</span> <span class="fl">2</span>, nstart <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">km</span><span class="op">$</span><span class="st">"cluster"</span></span>
-<span><span class="co">#&gt;   [1] 1 1 1 2 2 1 1 1 1 2 2 2 1 2 1 1 2 1 2 2 1 2 2 1 2 2 2 1 2 1 1 2 2 1 2 1 1</span></span>
-<span><span class="co">#&gt;  [38] 1 2 1 2 2 2 1 2 1 1 1 2 1 2 1 1 2 2 1 1 2 1 2 2 1 2 2 1 1 1 1 2 2 1 1 2 2</span></span>
-<span><span class="co">#&gt;  [75] 1 1 1 1 2 1 2 2 2 2 1 1 1 2 2 1 2 1 2 2 2 2 2 1 2 2 1 1 2 2 1 1 1 1 2 1 2</span></span>
-<span><span class="co">#&gt; [112] 2 2 1 2 1 1 1 2 2 1 1 1 1 1 1 2 2 1 2 2 1 1 2 1 1 2 1 1 2 2 2 2 1 1 1 2 1</span></span>
-<span><span class="co">#&gt; [149] 1 1 1 2 1 2 1 1 1 2 2 2 2 2 2 2 2 2 1 2 2 1 2 1 1 1 1 1 1 2 2 2 2 2 2 1 1</span></span>
-<span><span class="co">#&gt; [186] 2 2 2 1 2 1 1 2 2 2 1 2 2 1 2 2 2 2 2 1 1 1 1 2 1 1 1 2 1 2 2 1 1 1 2 2 1</span></span>
-<span><span class="co">#&gt; [223] 2 2 1 2 1 2 2 1 2 2 2 1 2 2 2 1 2 1 2 2 1 1 1 1 1 2 1 2 1 2 1 2 2 2 1 2 2</span></span>
-<span><span class="co">#&gt; [260] 2 1 1 1 1 1 1 1 1 2 2 1 2 1 2 1 2 1 2 1 2 2 1 1 2 2 1 1 1 2 1 1 2 1 1 1 1</span></span>
-<span><span class="co">#&gt; [297] 1 1 1 1</span></span>
+<span><span class="co">#&gt;   [1] 1 1 2 2 1 1 2 2 1 1 2 2 2 2 2 1 2 1 1 1 1 1 2 2 1 2 2 1 1 1 1 1 1 1 2 1 1</span></span>
+<span><span class="co">#&gt;  [38] 1 2 1 2 2 1 1 2 1 1 1 1 1 1 2 1 1 1 1 1 1 2 1 1 1 1 1 1 2 2 1 1 2 1 2 2 2</span></span>
+<span><span class="co">#&gt;  [75] 1 1 2 1 1 1 2 2 2 2 2 2 2 1 2 1 2 1 1 2 1 1 2 1 1 2 2 1 1 2 2 2 2 1 2 1 1</span></span>
+<span><span class="co">#&gt; [112] 1 1 1 2 2 2 2 2 2 1 1 1 1 2 2 1 2 1 2 1 1 2 1 2 2 2 1 1 2 2 2 1 1 2 2 2 1</span></span>
+<span><span class="co">#&gt; [149] 1 2 2 2 1 2 2 1 2 2 1 1 2 1 2 1 2 2 2 1 2 2 1 2 1 1 1 1 2 2 2 2 1 2 2 1 2</span></span>
+<span><span class="co">#&gt; [186] 1 1 1 2 2 2 2 2 1 1 2 1 1 1 2 1 1 1 1 2 2 2 2 1 2 2 2 2 1 1 1 1 2 2 1 1 1</span></span>
+<span><span class="co">#&gt; [223] 1 1 2 2 1 2 2 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 2 2 1 1 1 2 1 1 1 1 1 1 1 2 2</span></span>
+<span><span class="co">#&gt; [260] 1 2 2 2 2 1 2 1 1 1 2 1 2 1 2 2 2 2 2 1 2 2 2 2 2 1 1 1 1 1 1 1 2 1 1 1 2</span></span>
+<span><span class="co">#&gt; [297] 1 2 2 2</span></span>
 <span></span>
 <span><span class="va">metasnf_data</span><span class="op">$</span><span class="st">"kmeans"</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">km</span><span class="op">$</span><span class="st">"cluster"</span><span class="op">)</span></span>
 <span></span>
@@ -360,12 +360,12 @@ to some major information loss (see the section below)!</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">player_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     level position    blocks  assists id adjusted_blocks adjusted_assists</span></span>
-<span><span class="co">#&gt; 1     pro        c 2969.8758 3513.411  1      215.882238       -173.70761</span></span>
-<span><span class="co">#&gt; 2     pro       pg 2355.5547 3908.430  2     -398.438893        221.31113</span></span>
-<span><span class="co">#&gt; 3     pro       sg 2752.0601 3713.062  3       -1.933431         25.94279</span></span>
-<span><span class="co">#&gt; 4 regular       sg  521.4957 1180.260  4     -210.222687        -35.78737</span></span>
-<span><span class="co">#&gt; 5 regular       pg  591.8111 1405.899  5     -139.907292        189.85164</span></span>
-<span><span class="co">#&gt; 6     pro       sg 2836.8489 3703.903  6       82.855316         16.78372</span></span>
+<span><span class="co">#&gt; 1     pro       sg 2896.9362 3692.572  1       152.81157        -22.30006</span></span>
+<span><span class="co">#&gt; 2     pro        c 2799.9741 3501.240  2        55.84941       -213.63151</span></span>
+<span><span class="co">#&gt; 3 regular       sg  812.4867 1179.275  3        72.82653        -19.64592</span></span>
+<span><span class="co">#&gt; 4 regular       pg  375.1551 1388.608  4      -364.50507        189.68695</span></span>
+<span><span class="co">#&gt; 5     pro       pg 2404.7712 3890.173  5      -339.35347        175.30104</span></span>
+<span><span class="co">#&gt; 6     pro        c 3045.1893 3482.458  6       301.06466       -232.41417</span></span>
 <span></span>
 <span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
