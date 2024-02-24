@@ -288,14 +288,14 @@ pval_select <- function(extended_solutions_matrix,
 #'
 #' @export
 pval_summaries <- function(solutions_matrix) {
-    pval_cols <- extended_solutions_matrix |>
+    pval_cols <- solutions_matrix |>
         dplyr::select(dplyr::ends_with("_p"))
     pval_cols <- numcol_to_numeric(pval_cols)
     mean_pvals <- apply(pval_cols, 1, FUN = mean)
     min_pvals <- apply(pval_cols, 1, FUN = min)
-    extended_solutions_matrix$"min_p_val" <- min_pvals
-    extended_solutions_matrix$"mean_p_val" <- mean_pvals
-    return(extended_solutions_matrix)
+    solutions_matrix$"min_p_val" <- min_pvals
+    solutions_matrix$"mean_p_val" <- mean_pvals
+    return(solutions_matrix)
 }
 
 #' Get minimum p-value
