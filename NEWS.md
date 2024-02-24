@@ -1,3 +1,8 @@
+# metasnf 0.4.3
+
+* Reformatting of `extend_solutions` to better handle extreme p-values (e.g. infinity)
+* Replacement of `p_val_select` with `pval_select` which can also return negative-log p-values
+
 # metasnf 0.4.2
 
 ## Bug fixes
