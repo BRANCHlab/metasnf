@@ -127,6 +127,7 @@ subs <- function(df) {
     df_subs <- df |> dplyr::select(
         "row_id",
         dplyr::starts_with("subject_")
+    )
     if (identical(df, df_subs)) {
         warning("Provided dataframe had no non-'subject_' columns to remove.")
     }
