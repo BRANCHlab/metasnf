@@ -2,7 +2,8 @@
 % Please edit documentation in R/solutions_matrix.R
 \name{p_val_select}
 \alias{p_val_select}
-\title{Select p-values from solutions matrix}
+\title{(DEPRECATED) Select p-values from solutions matrix
+Replaced with "pval_select'}
 \usage{
 p_val_select(solutions_matrix)
 }
@@ -13,5 +14,6 @@ p_val_select(solutions_matrix)
 p_val_matrix P-values ready for heatmap plotting
 }
 \description{
-Select p-values from solutions matrix
+(DEPRECATED) Select p-values from solutions matrix
+Replaced with "pval_select'
 }

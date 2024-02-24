@@ -8,6 +8,8 @@ extend_solutions(
   solutions_matrix,
   target_list,
   cat_test = "chi_squared",
+  calculate_summaries = TRUE,
+  min_pval = NULL,
   verbose = FALSE
 )
 }
@@ -19,6 +21,12 @@ extend_solutions(
 \item{cat_test}{String indicating which statistical test will be used to
 associate cluster with a categorical variable. Options are "chi_squared" for
 the Chi-squared test and "fisher_exact" for Fisher's exact test.}
+
+\item{calculate_summaries}{If TRUE, the function will calculate the minimum
+and mean p-values for each row of the solutions matrix.}
+
+\item{min_pval}{If assigned a value, any p-value less than this will be
+replaced with this value.}
 
 \item{verbose}{If TRUE, the function will print out which row of the
 solutions matrix it's working on.}
