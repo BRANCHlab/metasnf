@@ -5,6 +5,10 @@
 #' @param cat_test String indicating which statistical test will be used to
 #' associate cluster with a categorical variable. Options are "chi_squared" for
 #' the Chi-squared test and "fisher_exact" for Fisher's exact test.
+#' @param calculate_summaries If TRUE, the function will calculate the minimum
+#' and mean p-values for each row of the solutions matrix.
+#' @param min_pval If assigned a value, any p-value less than this will be
+#' replaced with this value.
 #' @param verbose If TRUE, the function will print out which row of the
 #' solutions matrix it's working on.
 #'
@@ -15,6 +19,8 @@
 extend_solutions <- function(solutions_matrix,
                              target_list,
                              cat_test = "chi_squared",
+                             calculate_summaries = TRUE,
+                             min_pval = NULL,
                              verbose = FALSE) {
     # Single vector of all feature names
     ol_features <- lapply(
@@ -120,10 +126,6 @@ extend_solutions <- function(solutions_matrix,
                 )
                 solutions_matrix[i, target_col] <- p_value
             }
-            min_p <- get_min_p(solutions_matrix[i, ])
-            mean_p <- get_mean_p(solutions_matrix[i, ])
-            solutions_matrix[i, "min_p_val"] <- min_p
-            solutions_matrix[i, "mean_p_val"] <- mean_p
         }
     } else {
         for (i in seq_len(nrow(solutions_matrix))) {
@@ -188,10 +190,6 @@ extend_solutions <- function(solutions_matrix,
                 )
                 solutions_matrix[i, target_col] <- p_value
             }
-            min_p <- get_min_p(solutions_matrix[i, ])
-            mean_p <- get_mean_p(solutions_matrix[i, ])
-            solutions_matrix[i, "min_p_val"] <- min_p
-            solutions_matrix[i, "mean_p_val"] <- mean_p
         }
     }
     if (length(chi_squared_warnings) > 0) {
@@ -210,10 +208,28 @@ extend_solutions <- function(solutions_matrix,
             " `cat_test = \"fisher_exact\"`, which uses Fisher's exact test."
         )
     }
+    # If min_pval is assigned, replace any p-value less than this with min_pval
+    if (!is.null(min_pval)) {
+        df <- df |>
+            dplyr::mutate(
+                dplyr::across(
+                    dplyr::ends_with("_p"),
+                    ~ ifelse(
+                        . < min_pval,
+                        min_pval,
+                        .
+                    )
+                )
+            )
+    }
+    if (calculate_summaries) {
+        solutions_matrix <- pval_summaries(solutions_matrix)
+    }
     return(solutions_matrix)
 }
 
-#' Select p-values from solutions matrix
+#' (DEPRECATED) Select p-values from solutions matrix
+#' Replaced with "pval_select'
 #'
 #' @param solutions_matrix The output of batch_snf
 #'
@@ -221,14 +237,65 @@ extend_solutions <- function(solutions_matrix,
 #'
 #' @export
 p_val_select <- function(solutions_matrix) {
-    p_val_matrix <- solutions_matrix |>
+    warning("This function has been replaced by `pval_select`.")
+    return(pval_select(solutions_matrix))
+}
+
+#' Select p-values from an extended solutions matrix
+#'
+#' This function can be used to neatly format the p-values associated with an
+#' extended solutions matrix. It can also calculate the negative logs of those
+#' p-values to make it easier to interpret large-scale differences.
+#'
+#' @param extended_solutions_matrix The output of `extend_solutions`. A
+#' dataframe that contains at least one p-value column ending in "_p".
+#' @param negative_log If TRUE, will replace p-values with negative log
+#' p-values.
+#'
+#' @export
+pval_select <- function(extended_solutions_matrix,
+                        negative_log = FALSE) {
+    # Select p-value columns and convert to numeric
+    pval_df <- extended_solutions_matrix |>
         dplyr::select(
             "row_id",
             dplyr::ends_with("_p"),
-            -c("min_p_val", "mean_p_val")) |>
+            dplyr::contains("p_val")
+        ) |>
         data.frame() |>
-        numcol_to_numeric()
-    return(p_val_matrix)
+        metasnf::numcol_to_numeric()
+    # Convert p-values to negative log p-values if requested
+    if (negative_log) {
+        # Remove summary columns from non-negative log p-value calculations
+        pval_df <- dplyr::select(pval_df, -c("min_p_val", "mean_p_val"))
+        # Negative log conversions
+        neg_log_pval_df <- -log(pval_df)
+        neg_log_pval_df$"row_id" <- pval_df$"row_id"
+        pval_df <- neg_log_pval_df
+        mini_df <- pval_df |> dplyr::select(
+            dplyr::ends_with("_p")
+        )
+        pval_df$"mean_neglog_p" <- apply(mini_df, 1, FUN = mean)
+        pval_df$"max_neglog_p" <- apply(mini_df, 1, FUN = max)
+    }
+    return(pval_df)
+}
+
+#' Add minimum and mean p-values to an extended solutions matrix
+#'
+#' @param solutions_matrix A solutions_matrix object that already has some
+#' p-value columns included.
+#'
+#' @export
+pval_summaries <- function(solutions_matrix) {
+    pval_cols <- extended_solutions_matrix |>
+        dplyr::select(dplyr::ends_with("_p"))
+    pval_cols <- numcol_to_numeric(pval_cols)
+    mean_pvals <- rowMeans(pval_cols)
+    min_pvals <- row_mins(pval_cols)
+    extended_solutions_matrix$"min_p_val" <- min_pvals
+    extended_solutions_matrix$"mean_p_val" <- mean_pvals
+    return(extended_solutions_matrix)
 }
 
 #' Get minimum p-value
