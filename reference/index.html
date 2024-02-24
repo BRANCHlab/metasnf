@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -402,11 +402,6 @@
         <dd>Build a settings matrix</dd>
       </dl><dl><dt>
           
-          <code><a href="generate_solutions_matrix.html">generate_solutions_matrix()</a></code> 
-        </dt>
-        <dd>Build solutions matrix</dd>
-      </dl><dl><dt>
-          
           <code><a href="generate_target_list.html">generate_target_list()</a></code> 
         </dt>
         <dd>Generate target_list object</dd>
@@ -465,11 +460,6 @@
           <code><a href="get_p.html">get_p()</a></code> 
         </dt>
         <dd>Get p-value (deprecated)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_p_vals_row_df.html">get_p_vals_row_df()</a></code> 
-        </dt>
-        <dd>Return the p-values of a single settings_matrix row from a target_pvals df</dd>
       </dl><dl><dt>
           
           <code><a href="gower_distance.html">gower_distance()</a></code> 
@@ -569,7 +559,8 @@
           
           <code><a href="p_val_select.html">p_val_select()</a></code> 
         </dt>
-        <dd>Select p-values from solutions matrix</dd>
+        <dd>(DEPRECATED) Select p-values from solutions matrix
+Replaced with "pval_select'</dd>
       </dl><dl><dt>
           
           <code><a href="parallel_batch_snf.html">parallel_batch_snf()</a></code> 
@@ -585,6 +576,16 @@
           <code><a href="prefix_dl_sk.html">prefix_dl_sk()</a></code> 
         </dt>
         <dd>Add "subject_" prefix to all UID values in subjectkey column</dd>
+      </dl><dl><dt>
+          
+          <code><a href="pval_select.html">pval_select()</a></code> 
+        </dt>
+        <dd>Select p-values from an extended solutions matrix</dd>
+      </dl><dl><dt>
+          
+          <code><a href="pval_summaries.html">pval_summaries()</a></code> 
+        </dt>
+        <dd>Add minimum and mean p-values to an extended solutions matrix</dd>
       </dl><dl><dt>
           
           <code><a href="pvals_heatmap.html">pvals_heatmap()</a></code> 

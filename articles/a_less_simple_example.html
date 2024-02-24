@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -468,7 +468,7 @@ cluster each subject was assigned for the corresponding
 <code class="sourceCode R"><span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
@@ -621,7 +621,7 @@ parameter:</p>
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
@@ -634,7 +634,7 @@ parameter:</p>
 <span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 5 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
 <span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span></span></code></pre></div>
@@ -795,16 +795,16 @@ clusters.</p>
 <span><span class="co">#&gt; 6 0.677526005779245  0.127648264212471 0.12764826  0.4025871</span></span></code></pre></div>
 <p>If you just want the p-values:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">target_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/p_val_select.html">p_val_select</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">target_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pval_select.html">pval_select</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">target_pvals</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   row_id cbcl_anxiety_r_p cbcl_depress_r_p</span></span>
-<span><span class="co">#&gt; 1      1        0.7584978       0.25365758</span></span>
-<span><span class="co">#&gt; 2      2        0.4363821       0.08510339</span></span>
-<span><span class="co">#&gt; 3      3        0.5903421       0.33121958</span></span>
-<span><span class="co">#&gt; 4      4        0.6724556       0.86329944</span></span>
-<span><span class="co">#&gt; 5      5        0.2242061       0.52803327</span></span>
-<span><span class="co">#&gt; 6      6        0.6775260       0.12764826</span></span></code></pre></div>
+<span><span class="co">#&gt;   row_id cbcl_anxiety_r_p cbcl_depress_r_p  min_p_val mean_p_val</span></span>
+<span><span class="co">#&gt; 1      1        0.7584978       0.25365758 0.25365758  0.5060777</span></span>
+<span><span class="co">#&gt; 2      2        0.4363821       0.08510339 0.08510339  0.2607427</span></span>
+<span><span class="co">#&gt; 3      3        0.5903421       0.33121958 0.33121958  0.4607809</span></span>
+<span><span class="co">#&gt; 4      4        0.6724556       0.86329944 0.67245564  0.7678775</span></span>
+<span><span class="co">#&gt; 5      5        0.2242061       0.52803327 0.22420610  0.3761197</span></span>
+<span><span class="co">#&gt; 6      6        0.6775260       0.12764826 0.12764826  0.4025871</span></span></code></pre></div>
 <p>There is a heatmap for visualizing this too:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pvals_heatmap.html">pvals_heatmap</a></span><span class="op">(</span><span class="va">target_pvals</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span></code></pre></div>

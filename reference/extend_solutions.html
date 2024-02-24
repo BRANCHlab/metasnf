@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,6 +81,8 @@
 <span>  <span class="va">solutions_matrix</span>,</span>
 <span>  <span class="va">target_list</span>,</span>
 <span>  cat_test <span class="op">=</span> <span class="st">"chi_squared"</span>,</span>
+<span>  calculate_summaries <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  min_pval <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -99,6 +101,16 @@
 <dd><p>String indicating which statistical test will be used to
 associate cluster with a categorical variable. Options are "chi_squared" for
 the Chi-squared test and "fisher_exact" for Fisher's exact test.</p></dd>
+
+
+<dt>calculate_summaries</dt>
+<dd><p>If TRUE, the function will calculate the minimum
+and mean p-values for each row of the solutions matrix.</p></dd>
+
+
+<dt>min_pval</dt>
+<dd><p>If assigned a value, any p-value less than this will be
+replaced with this value.</p></dd>
 
 
 <dt>verbose</dt>

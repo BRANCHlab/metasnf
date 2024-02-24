@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -163,7 +163,7 @@ looks like.</p>
 <span>    cat_test <span class="op">=</span> <span class="st">"fisher_exact"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">target_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/p_val_select.html">p_val_select</a></span><span class="op">(</span><span class="va">extended_solutions</span><span class="op">)</span></span>
+<span><span class="va">target_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pval_select.html">pval_select</a></span><span class="op">(</span><span class="va">extended_solutions</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/manhattan_plot.html">manhattan_plot</a></span><span class="op">(</span><span class="va">target_pvals</span>, threshold <span class="op">=</span> <span class="fl">0.05</span>, bonferroni_line <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="clustering_algorithms_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
@@ -217,7 +217,7 @@ provide <code>batch_snf</code> with a custom
 <span><span class="co">#&gt;         number_of_clusters)</span></span>
 <span><span class="co">#&gt;     return(list(solution = solution, nclust = number_of_clusters))</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x5563ecb43b70&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x556202b5bab0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $spectral_rot</span></span>
@@ -231,7 +231,7 @@ provide <code>batch_snf</code> with a custom
 <span><span class="co">#&gt;     solution_data &lt;- list(solution = solution, nclust = number_of_clusters)</span></span>
 <span><span class="co">#&gt;     return(solution_data)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x5563ecb482e0&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x556202b5e338&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span>
 <span></span>
 <span><span class="co"># A prettier format:</span></span>
@@ -374,7 +374,7 @@ a similarity matrix to the final solution requires human intervention
 <span><span class="co">#&gt; [1] "Row: 8/10 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/10 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 10/10 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 1 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 2 seconds."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">batch_snf_results</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "solutions_matrix"    "similarity_matrices"</span></span>
