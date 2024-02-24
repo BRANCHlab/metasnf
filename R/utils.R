@@ -401,3 +401,18 @@ get_p_vals_row_df <- function(target_pvals, row) {
     rownames(pvals_df) <- NULL
     return(pvals_df)
 }
+
+#' Like base::rowMeans(), but for minimums. Used as a helper function for
+#' identifying the minimum p-value in an extended solutions matrix.
+#'
+#' @param df Dataframe to collect row minimums for.
+row_mins <- function(df) {
+    mins <- df |>
+        apply(
+            1,
+            function(x) {
+                min(x)
+            }
+        )
+    return(mins)
+}
