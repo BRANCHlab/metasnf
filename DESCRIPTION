@@ -140,8 +140,7 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0),
     ggalluvial,
-    dbscan,
-    factoextra
+    dbscan
 Config/testthat/edition: 3
 Depends:
     R (>= 4.1.0)

@@ -199,9 +199,10 @@ We have separate clusters just for pro players and just for community center pla
 Other clustering algorithms can fare even worse in this context.
 
 ```{r}
-library(factoextra)
-
-fviz_nbclust(metasnf_data[, c("assists", "blocks")], kmeans, method = "wss")
+# If you have R version 4.3.0 or higher, you can use the code below to see that
+# the optimal number of clusters is 2.
+# library(factoextra)
+# fviz_nbclust(metasnf_data[, c("assists", "blocks")], kmeans, method = "wss")
 
 km <- kmeans(metasnf_data[, c("blocks", "assists")], centers = 2, nstart = 25)
 
