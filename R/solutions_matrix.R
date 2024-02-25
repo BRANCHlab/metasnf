@@ -210,7 +210,8 @@ extend_solutions <- function(solutions_matrix,
     }
     # If min_pval is assigned, replace any p-value less than this with min_pval
     if (!is.null(min_pval)) {
-        df <- df |>
+        solutions_matrix <- solutions_matrix |>
+            numcol_to_numeric() |>
             dplyr::mutate(
                 dplyr::across(
                     dplyr::ends_with("_p"),
@@ -291,6 +292,7 @@ pval_summaries <- function(solutions_matrix) {
     pval_cols <- solutions_matrix |>
         dplyr::select(dplyr::ends_with("_p"))
     pval_cols <- numcol_to_numeric(pval_cols)
+    return(pval_cols)
     mean_pvals <- apply(pval_cols, 1, FUN = mean)
     min_pvals <- apply(pval_cols, 1, FUN = min)
     solutions_matrix$"min_p_val" <- min_pvals
