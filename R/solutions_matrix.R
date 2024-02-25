@@ -292,7 +292,6 @@ pval_summaries <- function(solutions_matrix) {
     pval_cols <- solutions_matrix |>
         dplyr::select(dplyr::ends_with("_p"))
     pval_cols <- numcol_to_numeric(pval_cols)
-    return(pval_cols)
     mean_pvals <- apply(pval_cols, 1, FUN = mean)
     min_pvals <- apply(pval_cols, 1, FUN = min)
     solutions_matrix$"min_p_val" <- min_pvals
