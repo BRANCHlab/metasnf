@@ -28,9 +28,10 @@ remove_signal <- function(data_list, unwanted_signal_list) {
     # The right hand side of the linear model formula
     rhs <- paste0(unwanted_vars, collapse = " + ")
     # Outer lapply operates on each component of the data_list
+    numeric_vectors <- c("continuous", "discrete", "numeric", "ordinal")
     adjusted_data_list <- data_list |> lapply(
         function(x) {
-            if (x$"type" %in% c("continuous", "discrete", "numeric")) {
+            if (x$"type" %in% numeric_vectors) {
                 non_sub_cols <- colnames(x$"data") != "subjectkey"
                 columns <- colnames(x$"data")[non_sub_cols]
                 # Inner loop adjusts the numeric columns with their residuals
@@ -47,4 +48,3 @@ remove_signal <- function(data_list, unwanted_signal_list) {
     )
     return(adjusted_data_list)
 }
-
