@@ -469,11 +469,11 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
@@ -486,7 +486,7 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 5 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span></span>
 <span><span class="co">#&gt;  [1] "row_id"                    "alpha"                    </span></span>
@@ -560,8 +560,8 @@ heatmap:</p>
 <p>You can optionally save your heatmap by specifying a path with the
 <code>save</code> parameter (e.g.,
 <code>adjusted_rand_index_heatmap(solutions_matrix_aris, save = "./adjusted_rand_index_heatmap.png")</code>).</p>
-<div class="figure">
-<img src="adjusted_rand_index_heatmap.png" width="400" alt=""><p class="caption">.</p>
+<div class="float">
+<img src="adjusted_rand_index_heatmap.png" width="400" alt="."><div class="figcaption">.</div>
 </div>
 <p>The clustering solutions are along the rows and columns of the above
 figure, and the cells at the intersection between two solutions show how
@@ -616,7 +616,7 @@ parameter:</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
@@ -634,7 +634,7 @@ parameter:</p>
 <span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 5 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
 <span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span></span></code></pre></div>
@@ -927,7 +927,7 @@ the training/testing split for you :)</p>
 <span>    <span class="va">train_data_list</span>,</span>
 <span>    <span class="va">settings_matrix</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
