@@ -110,7 +110,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
             message("Sorting by cluster solution.")
         } else {
             # Neither order nor cluster solution was provided
-            order <- 1:nrow(similarity_matrix)
+            order <- seq_len(nrow(similarity_matrix))
         }
     } else {
         message("Sorting by order.")

@@ -352,10 +352,10 @@ get_mean_p <- function(solutions_matrix_row) {
 #'
 #' @export
 get_cluster_pval <- function(assigned_subs,
-                     outcome_df,
-                     outcome_type,
-                     outcome_name,
-                     cat_test = "chi_squared") {
+                             outcome_df,
+                             outcome_type,
+                             outcome_name,
+                             cat_test = "chi_squared") {
     # Dataframe containing cluster membership and outcome variable as cols
     merged_df <- dplyr::inner_join(
         assigned_subs,
@@ -531,7 +531,7 @@ chi_sq_p <- function(clust_membership, outcome_df, outcome_var) {
         dplyr::inner_join(clust_membership, outcome_df, by = "subjectkey")
     merged_df$"cluster" <- as.factor(merged_df$"cluster")
     model <- stats::chisq.test(
-            merged_df[, "cluster"],
+        merged_df[, "cluster"],
         merged_df[, outcome_var],
         correct = FALSE
     )
@@ -571,7 +571,7 @@ chi_squared_pval <- function(cat_var1, cat_var2) {
 fisher_exact_pval <- function(cat_var1, cat_var2) {
     cat_var1 <- factor(cat_var1)
     cat_var2 <- factor(cat_var2)
-    model <- stats::fisher.test(cat_var1, cat_var2, workspace=2e7)
+    model <- stats::fisher.test(cat_var1, cat_var2, workspace = 2e7)
     pval <- model$"p.value"
     attributes(pval) <- NULL
     return(pval)
@@ -673,16 +673,20 @@ calculate_associations <- function(data_list,
     ###########################################################################
     # Build data.frame containing the types of variables in merged_df
     ###########################################################################
-    types <- data_list |> lapply(
-        function(x) {
-            rep(x$"type", ncol(x$"data") - 1)
-        }
-    ) |> unlist()
-    domains <- data_list |> lapply(
-        function(x) {
-            rep(x$"domain", ncol(x$"data") - 1)
-        }
-    ) |> unlist()
+    types <- data_list |>
+        lapply(
+            function(x) {
+                rep(x$"type", ncol(x$"data") - 1)
+            }
+        ) |>
+        unlist()
+    domains <- data_list |>
+        lapply(
+            function(x) {
+                rep(x$"domain", ncol(x$"data") - 1)
+            }
+        ) |>
+        unlist()
     var_names <- colnames(merged_df[, colnames(merged_df) != "subjectkey"])
     metadata <- data.frame(
         name = var_names,
@@ -711,7 +715,11 @@ calculate_associations <- function(data_list,
     # Loop through all pairs of variables
     ###########################################################################
     pairwise_indices <- utils::combn(ncol(merged_df), 2)
-    association_matrix <- matrix(ncol = ncol(merged_df), nrow = ncol(merged_df), 0)
+    association_matrix <- matrix(
+        ncol = ncol(merged_df),
+        nrow = ncol(merged_df),
+        0
+    )
     colnames(association_matrix) <- colnames(merged_df)
     rownames(association_matrix) <- colnames(merged_df)
     for (col in seq_len(ncol(pairwise_indices))) {
@@ -792,12 +800,22 @@ calculate_associations <- function(data_list,
 #' @export
 get_clustered_subs <- function(solutions_matrix_row) {
     solutions_matrix_row <- data.frame(solutions_matrix_row)
+    ###########################################################################
+    # To-do: Re-write this for clarity
+    ###########################################################################
     clustered_subs <-
         data.frame(
             t(
                 solutions_matrix_row[
                     1,
-                    which(startsWith(colnames(solutions_matrix_row), "subject_"))
+                    which(
+                        startsWith(
+                            colnames(
+                                solutions_matrix_row
+                            ),
+                            "subject_"
+                        )
+                    )
                 ]
             )
         )
