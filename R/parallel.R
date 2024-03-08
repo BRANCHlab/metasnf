@@ -36,7 +36,7 @@ parallel_batch_snf <- function(data_list,
                                similarity_matrix_dir,
                                return_similarity_matrices,
                                processes) {
-    print(paste0( "Utilizing ", processes, " processes."))
+    print(paste0("Utilizing ", processes, " processes."))
     start <- proc.time()
     future::plan(future::multisession, workers = processes)
     ############################################################################
