@@ -1,5 +1,7 @@
 # metasnf 0.4.4
 
+* `calc_om_aris` is now MUCH faster after removing excessive calls to `as.numeric` and enabling parallel processing with `future.apply`. Thanks for the idea, Alper.
+
 # metasnf 0.4.3
 
 * Reformatting of `extend_solutions` to better handle extreme p-values (e.g. infinity)
