@@ -1,3 +1,5 @@
+# metasnf 0.4.4
+
 # metasnf 0.4.3
 
 * Reformatting of `extend_solutions` to better handle extreme p-values (e.g. infinity)
