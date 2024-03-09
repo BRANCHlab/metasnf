@@ -145,7 +145,7 @@
     <loc>https://branchlab.github.io/metasnf/reference/batch_snf_time_remaining.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/calc_ari.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/calc_ari_progressr.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/calc_om_aris.html</loc>
@@ -344,9 +344,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/merge_df_list.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/meta_cluster.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/methylation_df.html</loc>

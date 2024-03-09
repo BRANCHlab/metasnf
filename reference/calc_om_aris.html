@@ -12,7 +12,7 @@ index calculations."><meta name="google-site-verification" content="Xzz1SIDqvPwr
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@ index calculations.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_om_aris</span><span class="op">(</span><span class="va">om</span>, progress <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_om_aris</span><span class="op">(</span><span class="va">om</span>, progress <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">NULL</span>, processes <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -98,6 +98,17 @@ The progress bar slows down the computation considerably.</p></dd>
 <dt>verbose</dt>
 <dd><p>A boolean alternative to progress. If TRUE, the function will
 print out wich unique solution-solution combination it's working on.</p></dd>
+
+
+<dt>processes</dt>
+<dd><p>Specify number of processes used to complete calculations</p><ul><li><p><code>1</code> (default) Sequential processing</p></li>
+<li><p><code>2</code> or higher: Parallel processing will use the
+<code><a href="https://future.apply.futureverse.org/reference/future_apply.html" class="external-link">future.apply::future_apply</a></code> to distribute the calculations across
+the specified number of CPU cores. If higher than the number of
+available cores, a warning will be printed and the maximum number of
+cores will be used.</p></li>
+<li><p><code>max</code>: All available cores will be used.</p></li>
+</ul></dd>
 
 </dl></div>
     <div class="section level2">
