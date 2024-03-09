@@ -4,7 +4,7 @@
 \alias{calc_om_aris}
 \title{Meta-cluster calculations}
 \usage{
-calc_om_aris(om, progress = FALSE, verbose = FALSE)
+calc_om_aris(om, progress = FALSE, verbose = NULL, processes = 1)
 }
 \arguments{
 \item{om}{solutions_matrix}
@@ -15,6 +15,17 @@ The progress bar slows down the computation considerably.}
 
 \item{verbose}{A boolean alternative to progress. If TRUE, the function will
 print out wich unique solution-solution combination it's working on.}
+
+\item{processes}{Specify number of processes used to complete calculations
+\itemize{
+\item \code{1} (default) Sequential processing
+\item \code{2} or higher: Parallel processing will use the
+\code{future.apply::future_apply} to distribute the calculations across
+the specified number of CPU cores. If higher than the number of
+available cores, a warning will be printed and the maximum number of
+cores will be used.
+\item \code{max}: All available cores will be used.
+}}
 }
 \value{
 om_aris ARIs between clustering solutions of an solutions matrix
