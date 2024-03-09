@@ -4,17 +4,10 @@
 \alias{calc_om_aris}
 \title{Meta-cluster calculations}
 \usage{
-calc_om_aris(om, progress = FALSE, verbose = NULL, processes = 1)
+calc_om_aris(om, processes = 1)
 }
 \arguments{
-\item{om}{solutions_matrix}
-
-\item{progress}{If TRUE, wrapping the function with progressr (i.e.,
-progressr::with_progress({calc_om_aris(om)}) will reveal a progress bar.
-The progress bar slows down the computation considerably.}
-
-\item{verbose}{A boolean alternative to progress. If TRUE, the function will
-print out wich unique solution-solution combination it's working on.}
+\item{om}{solutions_matrix to calculate pairwise ARIs for.}
 
 \item{processes}{Specify number of processes used to complete calculations
 \itemize{
@@ -25,6 +18,7 @@ the specified number of CPU cores. If higher than the number of
 available cores, a warning will be printed and the maximum number of
 cores will be used.
 \item \code{max}: All available cores will be used.
+Note that no progress indicator is available during multi-core processing.
 }}
 }
 \value{

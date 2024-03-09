@@ -3,12 +3,7 @@
 #' Generate matrix of pairwise cluster-solution similarities by Adjusted Rand
 #'  index calculations.
 #'
-#' @param om solutions_matrix
-#' @param progress If TRUE, wrapping the function with progressr (i.e.,
-#' progressr::with_progress({calc_om_aris(om)}) will reveal a progress bar.
-#' The progress bar slows down the computation considerably.
-#' @param verbose A boolean alternative to progress. If TRUE, the function will
-#' print out wich unique solution-solution combination it's working on.
+#' @param om solutions_matrix to calculate pairwise ARIs for.
 #' @param processes Specify number of processes used to complete calculations
 #'  * `1` (default) Sequential processing
 #'  * `2` or higher: Parallel processing will use the
@@ -17,23 +12,13 @@
 #'    available cores, a warning will be printed and the maximum number of
 #'    cores will be used.
 #'  * `max`: All available cores will be used.
+#' Note that no progress indicator is available during multi-core processing.
 #'
 #' @return om_aris ARIs between clustering solutions of an solutions matrix
 #'
 #' @export
 calc_om_aris <- function(om,
-                         progress = FALSE,
-                         verbose = NULL,
                          processes = 1) {
-    if (!is.null(verbose)) {
-        print(
-            paste0(
-                "The `verbose` parameter has been deprecated. Instead, please",
-                " use the `progress` parameter. See `?calc_om_aris` for more",
-                " information."
-            )
-        )
-    }
     ###########################################################################
     # Prepare dataframe containing 1 cluster solution per row
     ###########################################################################
@@ -50,18 +35,25 @@ calc_om_aris <- function(om,
     ###########################################################################
     # Run calculations (sequentially or in parallel)
     ###########################################################################
-    print("Please wait - this may take a minute.")
     if (processes == 1) {
-        ari_vector <- apply(
-            pairwise_indices,
-            MARGIN = 2,
-            FUN = function(col) {
-                mclust::adjustedRandIndex(
-                    om_no_id[col[1], ],
-                    om_no_id[col[2], ]
-                )
+        for (col in seq_len(ncol(pairwise_indices))) {
+            if (col %% 100 == 0) {
+                progress <- 100 * col / ncol(pairwise_indices)
+                cat("\r", progress, "% completed...", sep = "")
             }
-        )
+            v1 <- pairwise_indices[1, col]
+            v2 <- pairwise_indices[2, col]
+            ari <- mclust::adjustedRandIndex(om_no_id[v1, ], om_no_id[v2, ])
+            om_aris[v1, v2] <- ari
+            om_aris[v2, v1] <- ari
+        }
+        colnames(om_aris) <- om$"row_id"
+        rownames(om_aris) <- om$"row_id"
+        cat("\r")
+        cat("\n")
+        cat("\r", "Done.", sep = "")
+        cat("\n")
+        return(om_aris)
     } else {
         max_cores <- future::availableCores()
         if (processes == "max") {
@@ -76,60 +68,28 @@ calc_om_aris <- function(om,
         }
         # Parallelized ARI calculations
         future::plan(future::multisession, workers = processes)
-        if (progress) {
-            p <- progressr::progressor(steps = ncol(pairwise_indices))
-            ari_vector <- future.apply::future_apply(
-                pairwise_indices,
-                MARGIN = 2,
-                FUN = function(col) {
-                    calc_ari_progressr(
-                        om_no_id[col[1], ],
-                        om_no_id[col[2], ],
-                        p
-                    )
-                }
-            )
-            future::plan(future::sequential)
-        } else {
-            ari_vector <- future.apply::future_apply(
-                pairwise_indices,
-                MARGIN = 2,
-                FUN = function(col) {
-                    mclust::adjustedRandIndex(
-                        om_no_id[col[1], ],
-                        om_no_id[col[2], ]
-                    )
-                }
-            )
-            future::plan(future::sequential)
-        }
+        ari_vector <- future.apply::future_apply(
+            pairwise_indices,
+            MARGIN = 2,
+            FUN = function(col) {
+                mclust::adjustedRandIndex(
+                    om_no_id[col[1], ],
+                    om_no_id[col[2], ]
+                )
+            }
+        )
+        future::plan(future::sequential)
+        ###########################################################################
+        # Formatting of results to symmetric matrix
+        ###########################################################################
+        n <- length(ari_vector)
+        om_aris[lower.tri(om_aris, diag = FALSE)] <- ari_vector
+        om_aris <- t(om_aris)
+        om_aris[lower.tri(om_aris)] <- t(om_aris)[lower.tri(om_aris)]
+        colnames(om_aris) <- om$"row_id"
+        rownames(om_aris) <- om$"row_id"
+        return(om_aris)
     }
-    ###########################################################################
-    # Formatting of results to symmetric matrix
-    ###########################################################################
-    n <- length(ari_vector)
-    # Relationship between number of elements in triangle of square matrix
-    # and the length of that matrix
-    x <- 0.5 + 0.5 * sqrt(1 + 8 * n)
-    om_aris <- matrix(1, nrow = x, ncol = x)
-    om_aris[lower.tri(om_aris, diag = FALSE)] <- ari_vector
-    om_aris <- t(om_aris)
-    om_aris[lower.tri(om_aris)] <- t(om_aris)[lower.tri(om_aris)]
-    colnames(om_aris) <- om$"row_id"
-    rownames(om_aris) <- om$"row_id"
-    return(om_aris)
-}
-
-#' Wrapper for mclust::adjustedRandIndex compatible with progressr
-#'
-#' @param v1 First vector of cluster memberships
-#' @param v2 Second vector of cluster memberships
-#' @param p Progressr function to update parallel processing progress
-#'
-#' @export
-calc_ari_progressr <- function(v1, v2, p) {
-    p()
-    return(mclust::adjustedRandIndex(v1, v2))
 }
 
 #' Return the row ordering of a meta-clustering solution
