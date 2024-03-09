@@ -80,24 +80,13 @@ index calculations.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_om_aris</span><span class="op">(</span><span class="va">om</span>, progress <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">NULL</span>, processes <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_om_aris</span><span class="op">(</span><span class="va">om</span>, processes <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>om</dt>
-<dd><p>solutions_matrix</p></dd>
-
-
-<dt>progress</dt>
-<dd><p>If TRUE, wrapping the function with progressr (i.e.,
-progressr::with_progress(calc_om_aris(om)) will reveal a progress bar.
-The progress bar slows down the computation considerably.</p></dd>
-
-
-<dt>verbose</dt>
-<dd><p>A boolean alternative to progress. If TRUE, the function will
-print out wich unique solution-solution combination it's working on.</p></dd>
+<dd><p>solutions_matrix to calculate pairwise ARIs for.</p></dd>
 
 
 <dt>processes</dt>
@@ -107,7 +96,8 @@ print out wich unique solution-solution combination it's working on.</p></dd>
 the specified number of CPU cores. If higher than the number of
 available cores, a warning will be printed and the maximum number of
 cores will be used.</p></li>
-<li><p><code>max</code>: All available cores will be used.</p></li>
+<li><p><code>max</code>: All available cores will be used.
+Note that no progress indicator is available during multi-core processing.</p></li>
 </ul></dd>
 
 </dl></div>
