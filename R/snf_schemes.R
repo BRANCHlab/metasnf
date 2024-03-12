@@ -256,7 +256,11 @@ domain_merge <- function(data_list,
     sim_list <- lapply(
         dist_list,
         function(x) {
-            similarity_matrix <- SNFtool::affinityMatrix(x, K = k, sigma = alpha)
+            similarity_matrix <- SNFtool::affinityMatrix(
+                x,
+                K = k,
+                sigma = alpha
+            )
             return(similarity_matrix)
         }
     )
@@ -325,4 +329,5 @@ individual <- function(data_list,
     } else {
         fused_network <- sim_list[[1]]
     }
+    return(fused_network)
 }

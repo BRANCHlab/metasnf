@@ -140,7 +140,8 @@ batch_row_closure <- function(data_list,
     row_function <- function(settings_and_weights_row) {
         p()
         settings_and_weights_row_df <- data.frame(t(settings_and_weights_row))
-        settings_matrix_row <- settings_and_weights_row_df[, settings_matrix_names]
+        settings_matrix_row <-
+            settings_and_weights_row_df[, settings_matrix_names]
         weights_row <- settings_and_weights_row_df[, weights_matrix_names]
         # Reduce data list
         current_data_list <- drop_inputs(settings_matrix_row, data_list)

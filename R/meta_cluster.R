@@ -65,6 +65,7 @@ calc_om_aris <- function(om,
                     " Defaulting to the max avaiilable (", max_cores, ")."
                 )
             )
+            processes <- max_cores
         }
         # Parallelized ARI calculations
         future::plan(future::multisession, workers = processes)
@@ -79,10 +80,9 @@ calc_om_aris <- function(om,
             }
         )
         future::plan(future::sequential)
-        ###########################################################################
+        #######################################################################
         # Formatting of results to symmetric matrix
-        ###########################################################################
-        n <- length(ari_vector)
+        #######################################################################
         om_aris[lower.tri(om_aris, diag = FALSE)] <- ari_vector
         om_aris <- t(om_aris)
         om_aris[lower.tri(om_aris)] <- t(om_aris)[lower.tri(om_aris)]
