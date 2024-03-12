@@ -8,9 +8,10 @@
 #' @param data_list A data_list to correct.
 #' @param unwanted_signal_list A data_list of categorical variables that should
 #' have their mean differences removed in the first data_list.
+#' @param sig_digs Number of significant digits to round the residuals to.
 #'
 #' @export
-remove_signal <- function(data_list, unwanted_signal_list) {
+remove_signal <- function(data_list, unwanted_signal_list, sig_digs = NULL) {
     ###########################################################################
     # 1. Check to ensure the patients match
     ###########################################################################
@@ -40,6 +41,9 @@ remove_signal <- function(data_list, unwanted_signal_list) {
                     formula <- stats::as.formula(paste0(column, " ~ ", rhs))
                     linear_model <- stats::lm(formula, full_df)
                     adjusted_column <- stats::resid(linear_model)
+                    if (!is.null(sig_digs)) {
+                        adjusted_column <- signif(adjusted_column, sig_digs)
+                    }
                     x$"data"[, column] <- adjusted_column
                 }
             }
