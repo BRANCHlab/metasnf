@@ -9,8 +9,8 @@
 #' and mean p-values for each row of the solutions matrix.
 #' @param min_pval If assigned a value, any p-value less than this will be
 #' replaced with this value.
-#' @param verbose If TRUE, the function will print out which row of the
-#' solutions matrix it's working on.
+#' @param processes The number of processes to use for parallelization.
+#' Progress is only reported for sequential processing (processes = 1).
 #'
 #' @return extended_solutions_matrix an extended solutions matrix that contains
 #'  p-value columns for each outcome in the provided target_list
@@ -21,213 +21,143 @@ extend_solutions <- function(solutions_matrix,
                              cat_test = "chi_squared",
                              calculate_summaries = TRUE,
                              min_pval = NULL,
-                             verbose = FALSE) {
-    # Single vector of all feature names
-    ol_features <- lapply(
-        target_list,
-        function(x) {
-            # All the features from each target list dataframe
-            colnames(x[[1]])[-1]
-        }
-    ) |> unlist()
-    # Single vector of all feature types
-    ol_feature_types <- lapply(
-        target_list,
-        function(x) {
-            n_features <- ncol(x$"data") - 1
-            outcome_type <- rep(x$"type", n_features)
-            return(outcome_type)
-        }
-    ) |> unlist()
-    # Add columns tracking p-values of all features
+                             processes = 1) {
+    ###########################################################################
+    # Calculate vector of all feature names
+    ###########################################################################
+    features <- target_list |>
+        lapply(
+            function(x) {
+                colnames(x[[1]])[-1]
+            }
+        ) |>
+        unlist()
+    ###########################################################################
+    # Calculate vector of all feature types
+    ###########################################################################
+    feature_types <- target_list |>
+        lapply(
+            function(x) {
+                n_features <- ncol(x$"data") - 1
+                outcome_type <- rep(x$"type", n_features)
+                return(outcome_type)
+            }
+        ) |>
+        unlist()
+    ###########################################################################
+    # Construct base of extended solutions matrix by adding columns for
+    # p-values of all features
+    ###########################################################################
     # Specifying the dataframe structure avoids tibble-related errors
-    solutions_matrix <- data.frame(solutions_matrix)
-    solutions_matrix <- add_columns(
-        solutions_matrix,
-        paste0(ol_features, "_p"),
-        fill = NA
-    )
-    # Single DF to contain all outcome features
-    merged_df <- lapply(
-        target_list,
-        function(x) {
-            x[[1]]
-        }
-    ) |> merge_df_list()
-    # Store rows that raise chi_squared warnings
-    chi_squared_warnings <- vector()
-    # Iterate across rows of the solutions matrix
-    if (verbose) {
-        for (i in seq_len(nrow(solutions_matrix))) {
-            print(
-                paste0(
-                    "Calculating p-values for row ", i, " of ",
-                    nrow(solutions_matrix)
-                )
-            )
-            clustered_subs <- get_clustered_subs(solutions_matrix[i, ])
-            # This really shouldn't be different from clustered_subs
-            assigned_subs <- clustered_subs |>
-                dplyr::filter(clustered_subs$"cluster" != 0)
-            # Iterate across each outcome measure included
-            # Assign p-values
-            for (j in seq_along(ol_features)) {
+    esm <- solutions_matrix |>
+        data.frame() |>
+        add_columns(
+            paste0(features, "_p"),
+            fill = NA
+        )
+    ###########################################################################
+    # Single DF to contain all features to calculate p-values for
+    ###########################################################################
+    merged_df <- target_list |>
+        lapply(
+            function(x) {
+                x[[1]]
+            }
+        ) |>
+        merge_df_list()
+    ###########################################################################
+    # Sequential extension
+    ###########################################################################
+    if (processes == 1) {
+        # Iterate across rows of the solutions matrix
+        for (i in seq_len(nrow(esm))) {
+            print(paste0("Processing row ", i, " of ", nrow(esm)))
+            clustered_subs <- get_clustered_subs(esm[i, ])
+            for (j in seq_along(features)) {
                 current_outcome_component <- merged_df[, c(1, j + 1)]
                 current_outcome_name <- colnames(current_outcome_component)[2]
-                try_catch_results <- tryCatch(
-                    expr = {
-                        p_value <- get_cluster_pval(
-                            assigned_subs,
-                            current_outcome_component,
-                            ol_feature_types[j],
-                            ol_features[j],
-                            cat_test = cat_test
-                        )
-                        list(
-                            "p_value" = p_value,
-                            "chi_squared_warnings" = chi_squared_warnings
-                        )
-                    },
-                    warning = function(w, row = i) {
-                        if (grepl("Chi-squared", w$"message")) {
-                            chi_squared_warnings <- c(chi_squared_warnings, row)
-                            suppressWarnings(
-                                p_value <- get_cluster_pval(
-                                    assigned_subs,
-                                    current_outcome_component,
-                                    ol_feature_types[j],
-                                    ol_features[j],
-                                    cat_test = cat_test
-                                )
-                            )
-                            list(
-                                "p_value" = p_value,
-                                "chi_squared_warnings" = chi_squared_warnings
-                            )
-                        } else {
-                            p_value <- get_cluster_pval(
-                                assigned_subs,
-                                current_outcome_component,
-                                ol_feature_types[j],
-                                ol_features[j]
-                            )
-                            list(
-                                "p_value" = p_value,
-                                "chi_squared_warnings" = chi_squared_warnings
-                            )
-                        }
-                    }
+                suppressWarnings(
+                    p_value <- get_cluster_pval(
+                        clustered_subs,
+                        current_outcome_component,
+                        feature_types[j],
+                        features[j],
+                        cat_test = cat_test
+                    )
                 )
-                p_value <- try_catch_results$"p_value"
-                chi_squared_warnings <- try_catch_results$"chi_squared_warnings"
                 target_col <- grep(
                     current_outcome_name,
-                    colnames(solutions_matrix)
+                    colnames(esm)
                 )
-                solutions_matrix[i, target_col] <- p_value
+                esm[i, target_col] <- p_value
             }
         }
     } else {
-        for (i in seq_len(nrow(solutions_matrix))) {
-            clustered_subs <- get_clustered_subs(solutions_matrix[i, ])
-            # This really shouldn't be different from clustered_subs
-            assigned_subs <- clustered_subs |>
-                dplyr::filter(clustered_subs$"cluster" != 0)
-            # Iterate across each outcome measure included
-            # Assign p-values
-            for (j in seq_along(ol_features)) {
-                current_outcome_component <- merged_df[, c(1, j + 1)]
-                current_outcome_name <- colnames(current_outcome_component)[2]
-                try_catch_results <- tryCatch(
-                    expr = {
+        #######################################################################
+        # Parallel extension
+        #######################################################################
+        max_cores <- future::availableCores()
+        if (processes == "max") {
+            processes <- max_cores
+        } else if (processes > max_cores) {
+            print(
+                paste0(
+                    "Requested processes exceed available cores.",
+                    " Defaulting to the max avaiilable (", max_cores, ")."
+                )
+            )
+            processes <- max_cores
+        }
+        # Iterate across rows of the solutions matrix
+        future::plan(future::multisession, workers = processes)
+        esm_rows <- future.apply::future_lapply(
+            seq_len(nrow(esm)),
+            function(i) {
+                clustered_subs <- get_clustered_subs(esm[i, ])
+                for (j in seq_along(features)) {
+                    current_outcome_component <- merged_df[, c(1, j + 1)]
+                    current_outcome_name <-
+                        colnames(current_outcome_component)[2]
+                    suppressWarnings(
                         p_value <- get_cluster_pval(
-                            assigned_subs,
+                            clustered_subs,
                             current_outcome_component,
-                            ol_feature_types[j],
-                            ol_features[j],
+                            feature_types[j],
+                            features[j],
                             cat_test = cat_test
                         )
-                        list(
-                            "p_value" = p_value,
-                            "chi_squared_warnings" = chi_squared_warnings
-                        )
-                    },
-                    warning = function(w, row = i) {
-                        if (grepl("Chi-squared", w$"message")) {
-                            chi_squared_warnings <- c(chi_squared_warnings, row)
-                            suppressWarnings(
-                                p_value <- get_cluster_pval(
-                                    assigned_subs,
-                                    current_outcome_component,
-                                    ol_feature_types[j],
-                                    ol_features[j],
-                                    cat_test = cat_test
-                                )
-                            )
-                            list(
-                                "p_value" = p_value,
-                                "chi_squared_warnings" = chi_squared_warnings
-                            )
-                        } else {
-                            p_value <- get_cluster_pval(
-                                assigned_subs,
-                                current_outcome_component,
-                                ol_feature_types[j],
-                                ol_features[j]
-                            )
-                            list(
-                                "p_value" = p_value,
-                                "chi_squared_warnings" = chi_squared_warnings
-                            )
-                        }
-                    }
-                )
-                p_value <- try_catch_results$"p_value"
-                chi_squared_warnings <- try_catch_results$"chi_squared_warnings"
-                target_col <- grep(
-                    current_outcome_name,
-                    colnames(solutions_matrix)
-                )
-                solutions_matrix[i, target_col] <- p_value
+                    )
+                    target_col <- grep(
+                        current_outcome_name,
+                        colnames(esm)
+                    )
+                    esm[i, target_col] <- p_value
+                }
+                return(esm[i, ])
             }
-        }
-    }
-    if (length(chi_squared_warnings) > 0) {
-        chi_squared_warnings <- paste(
-            unique(chi_squared_warnings),
-            collapse = ", "
         )
-        warning(
-            "In calculating p-values for the following rows of the solutions",
-            " matrix: [", chi_squared_warnings, "], the Chi-squared test was",
-            " applied on a table that had at least one cell containing fewer",
-            " than 5 elements. Please note that when the expected number of",
-            " elements per cell is less than 5, an assumption in the test is",
-            " violated. To avoid seeing this message, re-run the",
-            " `extend_solutions` function with the parameter",
-            " `cat_test = \"fisher_exact\"`, which uses Fisher's exact test."
-        )
+        future::plan(future::sequential)
+        esm <- do.call("rbind", esm_rows)
     }
+    ###########################################################################
     # If min_pval is assigned, replace any p-value less than this with min_pval
+    ###########################################################################
     if (!is.null(min_pval)) {
-        solutions_matrix <- solutions_matrix |>
+        esm <- esm |>
             numcol_to_numeric() |>
             dplyr::mutate(
                 dplyr::across(
                     dplyr::ends_with("_p"),
-                    ~ ifelse(
-                        . < min_pval,
-                        min_pval,
-                        .
-                    )
+                    ~ ifelse(. < min_pval, min_pval, .)
                 )
             )
     }
     if (calculate_summaries) {
-        solutions_matrix <- pval_summaries(solutions_matrix)
+        esm <- pval_summaries(esm)
     }
-    return(solutions_matrix)
+    return(esm)
 }
+
 
 #' (DEPRECATED) Select p-values from solutions matrix
 #' Replaced with "pval_select'
