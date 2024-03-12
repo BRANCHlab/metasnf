@@ -1,3 +1,5 @@
+# metasnf 0.4.5
+
 # metasnf 0.4.4
 
 * `calc_om_aris` is now MUCH faster after removing excessive calls to `as.numeric` and enabling parallel processing with `future.apply`. Thanks for the idea, Alper.
