@@ -1,5 +1,8 @@
 # metasnf 0.4.5
 
+* `extend_solutions` can now also be parallelized (see ?extend_solutions)
+* `remove_signal` function has `sig_digs` parameter that can be used to restrict how many significant figures are returned in the resulting residuals
+
 # metasnf 0.4.4
 
 * `calc_om_aris` is now MUCH faster after removing excessive calls to `as.numeric` and enabling parallel processing with `future.apply`. Thanks for the idea, Alper.
