@@ -10,7 +10,7 @@ extend_solutions(
   cat_test = "chi_squared",
   calculate_summaries = TRUE,
   min_pval = NULL,
-  verbose = FALSE
+  processes = 1
 )
 }
 \arguments{
@@ -28,8 +28,8 @@ and mean p-values for each row of the solutions matrix.}
 \item{min_pval}{If assigned a value, any p-value less than this will be
 replaced with this value.}
 
-\item{verbose}{If TRUE, the function will print out which row of the
-solutions matrix it's working on.}
+\item{processes}{The number of processes to use for parallelization.
+Progress is only reported for sequential processing (processes = 1).}
 }
 \value{
 extended_solutions_matrix an extended solutions matrix that contains

@@ -4,13 +4,15 @@
 \alias{remove_signal}
 \title{Linearly correct data_list by variables with unwanted signal}
 \usage{
-remove_signal(data_list, unwanted_signal_list)
+remove_signal(data_list, unwanted_signal_list, sig_digs = NULL)
 }
 \arguments{
 \item{data_list}{A data_list to correct.}
 
 \item{unwanted_signal_list}{A data_list of categorical variables that should
 have their mean differences removed in the first data_list.}
+
+\item{sig_digs}{Number of significant digits to round the residuals to.}
 }
 \description{
 Given a data_list to correct and another data_list of categorical variables
