@@ -1,14 +1,19 @@
 #' Extend an solutions matrix to include outcome evaluations
 #'
 #' @param solutions_matrix A solutions_matrix.
+#'
 #' @param target_list A target_list.
+#'
 #' @param cat_test String indicating which statistical test will be used to
 #' associate cluster with a categorical variable. Options are "chi_squared" for
 #' the Chi-squared test and "fisher_exact" for Fisher's exact test.
+#'
 #' @param calculate_summaries If TRUE, the function will calculate the minimum
 #' and mean p-values for each row of the solutions matrix.
+#'
 #' @param min_pval If assigned a value, any p-value less than this will be
 #' replaced with this value.
+#'
 #' @param processes The number of processes to use for parallelization.
 #' Progress is only reported for sequential processing (processes = 1).
 #'
