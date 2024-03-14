@@ -1,3 +1,5 @@
+# metasnf 0.4.6
+
 # metasnf 0.4.5
 
 * `extend_solutions` can now also be parallelized (see ?extend_solutions)
