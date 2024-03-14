@@ -1,5 +1,7 @@
 # metasnf 0.4.6
 
+* fix bug in extend_solutions that incorrectly assigns p-values to variable columns through grep (substring instead of exact match)
+
 # metasnf 0.4.5
 
 * `extend_solutions` can now also be parallelized (see ?extend_solutions)
