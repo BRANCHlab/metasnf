@@ -90,17 +90,16 @@ extend_solutions <- function(solutions_matrix,
                         cat_test = cat_test
                     )
                 )
-                target_col <- grep(
-                    current_outcome_name,
-                    colnames(esm)
+                target_col <- which(
+                    paste0(current_outcome_name, "_p") == colnames(esm)
                 )
                 esm[i, target_col] <- p_value
             }
         }
+    ###########################################################################
+    # Parallel extension
+    ###########################################################################
     } else {
-        #######################################################################
-        # Parallel extension
-        #######################################################################
         max_cores <- future::availableCores()
         if (processes == "max") {
             processes <- max_cores
@@ -132,9 +131,8 @@ extend_solutions <- function(solutions_matrix,
                             cat_test = cat_test
                         )
                     )
-                    target_col <- grep(
-                        current_outcome_name,
-                        colnames(esm)
+                    target_col <- which(
+                        paste0(current_outcome_name, "_p") == colnames(esm)
                     )
                     esm[i, target_col] <- p_value
                 }
