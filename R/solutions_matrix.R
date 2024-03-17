@@ -194,6 +194,48 @@ get_pvals <- function(extended_solutions_matrix,
     return(pval_df)
 }
 
+#' Summarize p-value columns of an extended solutions matrix
+#'
+#' @param extended_solutions_matrix Result of `extend_solutions`
+#'
+#' @export
+summarize_pvals <- function(extended_solutions_matrix) {
+    # Restrict to just p-value columns
+    pval_cols <- dplyr::select(
+        extended_solutions_matrix,
+        dplyr::ends_with("_p")
+    ) |>
+        numcol_to_numeric()
+    # Calculate summary statistics
+    mean_pvals <- apply(
+        pval_cols,
+        1,
+        FUN = function(x) {
+            mean(x, na.rm = TRUE)
+        }
+    )
+    min_pvals <- apply(
+        pval_cols,
+        1,
+        FUN = function(x) {
+            min(x, na.rm = TRUE)
+        }
+    )
+    max_pvals <- apply(
+        pval_cols,
+        1,
+        FUN = function(x) {
+            max(x, na.rm = TRUE)
+        }
+    )
+    # Attach summary statistics to the solutions matrix
+    extended_solutions_matrix$"min_p" <- min_pvals
+    extended_solutions_matrix$"mean_p" <- mean_pvals
+    extended_solutions_matrix$"max_p" <- max_pvals
+    return(extended_solutions_matrix)
+}
+
+
 #' Get minimum p-value
 #'
 #' Given an solutions matrix row containing evaluated p-values, returns min.
