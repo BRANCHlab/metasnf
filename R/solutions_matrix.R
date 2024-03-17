@@ -2,7 +2,7 @@
 #'
 #' @param solutions_matrix A solutions_matrix.
 #'
-#' @param target_list A target_list.
+#' @param target_list A data_list with variables to calculate p-values for.
 #'
 #' @param cat_test String indicating which statistical test will be used to
 #' associate cluster with a categorical variable. Options are "chi_squared" for
@@ -11,7 +11,7 @@
 #' @param calculate_summaries If TRUE, the function will calculate the minimum
 #' and mean p-values for each row of the solutions matrix.
 #'
-#' @param min_pval If assigned a value, any p-value less than this will be
+#' @param min_p If assigned a value, any p-value less than this will be
 #' replaced with this value.
 #'
 #' @param processes The number of processes to use for parallelization.

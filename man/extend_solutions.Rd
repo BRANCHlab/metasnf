@@ -9,14 +9,14 @@ extend_solutions(
   target_list,
   cat_test = "chi_squared",
   calculate_summaries = TRUE,
-  min_pval = NULL,
+  min_p = NULL,
   processes = 1
 )
 }
 \arguments{
 \item{solutions_matrix}{A solutions_matrix.}
 
-\item{target_list}{A target_list.}
+\item{target_list}{A data_list with variables to calculate p-values for.}
 
 \item{cat_test}{String indicating which statistical test will be used to
 associate cluster with a categorical variable. Options are "chi_squared" for
@@ -25,7 +25,7 @@ the Chi-squared test and "fisher_exact" for Fisher's exact test.}
 \item{calculate_summaries}{If TRUE, the function will calculate the minimum
 and mean p-values for each row of the solutions matrix.}
 
-\item{min_pval}{If assigned a value, any p-value less than this will be
+\item{min_p}{If assigned a value, any p-value less than this will be
 replaced with this value.}
 
 \item{processes}{The number of processes to use for parallelization.
