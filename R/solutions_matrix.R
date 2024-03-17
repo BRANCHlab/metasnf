@@ -25,7 +25,7 @@ extend_solutions <- function(solutions_matrix,
                              target_list,
                              cat_test = "chi_squared",
                              calculate_summaries = TRUE,
-                             min_pval = NULL,
+                             min_p = NULL,
                              processes = 1) {
     ###########################################################################
     # Calculate vector of all feature names
@@ -96,10 +96,10 @@ extend_solutions <- function(solutions_matrix,
                 esm[i, target_col] <- p_value
             }
         }
-    ###########################################################################
-    # Parallel extension
-    ###########################################################################
     } else {
+        #######################################################################
+        # Parallel extension
+        #######################################################################
         max_cores <- future::availableCores()
         if (processes == "max") {
             processes <- max_cores
@@ -123,7 +123,7 @@ extend_solutions <- function(solutions_matrix,
                     current_outcome_name <-
                         colnames(current_outcome_component)[2]
                     suppressWarnings(
-                        p_value <- get_cluster_pval(
+                        pval <- get_cluster_pval(
                             clustered_subs,
                             current_outcome_component,
                             feature_types[j],
@@ -134,7 +134,7 @@ extend_solutions <- function(solutions_matrix,
                     target_col <- which(
                         paste0(current_outcome_name, "_p") == colnames(esm)
                     )
-                    esm[i, target_col] <- p_value
+                    esm[i, target_col] <- pval
                 }
                 return(esm[i, ])
             }
@@ -143,15 +143,15 @@ extend_solutions <- function(solutions_matrix,
         esm <- do.call("rbind", esm_rows)
     }
     ###########################################################################
-    # If min_pval is assigned, replace any p-value less than this with min_pval
+    # If min_p is assigned, replace any p-value less than this with min_p
     ###########################################################################
-    if (!is.null(min_pval)) {
+    if (!is.null(min_p)) {
         esm <- esm |>
             numcol_to_numeric() |>
             dplyr::mutate(
                 dplyr::across(
                     dplyr::ends_with("_p"),
-                    ~ ifelse(. < min_pval, min_pval, .)
+                    ~ ifelse(. < min_p, min_p, .)
                 )
             )
     }
@@ -162,20 +162,7 @@ extend_solutions <- function(solutions_matrix,
 }
 
 
-#' (DEPRECATED) Select p-values from solutions matrix
-#' Replaced with "pval_select'
-#'
-#' @param solutions_matrix The output of batch_snf
-#'
-#' @return p_val_matrix P-values ready for heatmap plotting
-#'
-#' @export
-p_val_select <- function(solutions_matrix) {
-    warning("This function has been replaced by `pval_select`.")
-    return(pval_select(solutions_matrix))
-}
-
-#' Select p-values from an extended solutions matrix
+#' Get p-values from an extended solutions matrix
 #'
 #' This function can be used to neatly format the p-values associated with an
 #' extended solutions matrix. It can also calculate the negative logs of those
@@ -187,49 +174,24 @@ p_val_select <- function(solutions_matrix) {
 #' p-values.
 #'
 #' @export
-pval_select <- function(extended_solutions_matrix,
-                        negative_log = FALSE) {
+get_pvals <- function(extended_solutions_matrix,
+                      negative_log = FALSE) {
     # Select p-value columns and convert to numeric
     pval_df <- extended_solutions_matrix |>
         dplyr::select(
             "row_id",
-            dplyr::ends_with("_p"),
-            dplyr::contains("p_val")
+            dplyr::ends_with("_p")
         ) |>
         data.frame() |>
         metasnf::numcol_to_numeric()
     # Convert p-values to negative log p-values if requested
     if (negative_log) {
-        # Remove summary columns from non-negative log p-value calculations
-        pval_df <- dplyr::select(pval_df, -c("min_p_val", "mean_p_val"))
         # Negative log conversions
         neg_log_pval_df <- -log(pval_df)
         neg_log_pval_df$"row_id" <- pval_df$"row_id"
-        pval_df <- neg_log_pval_df
-        mini_df <- pval_df |> dplyr::select(
-            dplyr::ends_with("_p")
-        )
-        pval_df$"mean_neglog_p" <- apply(mini_df, 1, FUN = mean)
-        pval_df$"max_neglog_p" <- apply(mini_df, 1, FUN = max)
+        return(neg_log_pval_df)
     }
     return(pval_df)
-}
-
-#' Add minimum and mean p-values to an extended solutions matrix
-#'
-#' @param solutions_matrix A solutions_matrix object that already has some
-#' p-value columns included.
-#'
-#' @export
-pval_summaries <- function(solutions_matrix) {
-    pval_cols <- solutions_matrix |>
-        dplyr::select(dplyr::ends_with("_p"))
-    pval_cols <- numcol_to_numeric(pval_cols)
-    mean_pvals <- apply(pval_cols, 1, FUN = mean)
-    min_pvals <- apply(pval_cols, 1, FUN = min)
-    solutions_matrix$"min_p_val" <- min_pvals
-    solutions_matrix$"mean_p_val" <- mean_pvals
-    return(solutions_matrix)
 }
 
 #' Get minimum p-value
