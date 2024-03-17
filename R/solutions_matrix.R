@@ -156,7 +156,7 @@ extend_solutions <- function(solutions_matrix,
             )
     }
     if (calculate_summaries) {
-        esm <- pval_summaries(esm)
+        esm <- summarize_pvals(esm)
     }
     return(esm)
 }
