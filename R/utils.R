@@ -171,54 +171,13 @@ merge_df_list <- function(df_list, join = "inner") {
 #' @return split a named list containing the training and testing subject_ids
 #'
 #' @export
-train_test_assign <- function(train_frac, subjects, seed = 42) {
+train_test_assign <- function(train_frac, subjects) {
     train_thresh <- 2147483647 * train_frac
-    train <-
-        subjects[abs(digest::digest2int(subjects, seed = seed)) < train_thresh]
-    test <-
-        subjects[abs(digest::digest2int(subjects, seed = seed)) >= train_thresh]
-    if (length(train) == 0 || length(test) == 0) {
-        stop("Empty train or test set. Please pick a train_frac closer to 0.5.")
-    }
-    train_df <- data.frame(subjectkey = train, split = "train")
-    test_df <- data.frame(subjectkey = test, split = "test")
-    assigned_df <- rbind(train_df, test_df)
-    return(assigned_df)
-}
-
-#' Filter data to training or testing subjects only
-#'
-#' Given a dataframe and the results of `train_test_split()`, return just the
-#'  data for subjects that were assigned the specified split.
-#'
-#' @param df Dataframe to be subsetted into training or testing split
-#' @param assigned_df Dataframe containing "subjectkey" and "split" cols from
-#'  `train_test_assign()`
-#' @param split String indicating which split to keep ("train" or "test")
-#' @param uid (string) the name of the uid column currently used data
-#'
-#' @return split_df Dataframe subsetted to specified split
-#'
-#' @export
-keep_split <- function(df, assigned_df, split, uid = NULL) {
-    # If the UID column of the dataframe is already subjectkey, use it.
-    # Otherwise, if the uid is in the dataframe, use that.
-    # Otherwise, raise error.
-    if ("subjectkey" %in% colnames(df)) {
-        print("Existing `subjectkey` column will be treated as UID.")
-        uid <- "subjectkey"
-    } else if (is.null(uid)) {
-        stop("Please provide name of unique ID column using `uid`.")
-    } else if (!uid %in% colnames(df)) {
-        stop("Provided `uid` parameter is not present in dataframe.")
-    } else {
-        colnames(assigned_df)[colnames(assigned_df) == "subjectkey"] <- uid
-    }
-    train_or_test <- split
-    requested_split <- assigned_df |> dplyr::filter(split == train_or_test)
-    split_df <- dplyr::left_join(requested_split, df, by = uid) |>
-        dplyr::select(-split)
-    return(split_df)
+    hash <- abs(digest::digest2int(subjects, seed = 42))
+    train <- subjects[hash < train_thresh]
+    test <- subjects[hash >= train_thresh]
+    assigned_subs <- list(train = train, test = test)
+    return(assigned_subs)
 }
 
 #' Remove items from a data_list or target_list
