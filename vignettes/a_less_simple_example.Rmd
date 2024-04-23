@@ -516,12 +516,9 @@ all_subjects <- gsub("subject_", "", all_subjects)
 # Dataframe assigning 80% of subjects to train and 20% to test
 assigned_splits <- train_test_assign(train_frac = 0.8, subjects = all_subjects)
 
-head(assigned_splits)
-tail(assigned_splits)
-
 # Pulling the training and testing subjects specifically
-train_subs <- assigned_splits$"subjectkey"[assigned_splits$"split" == "train"]
-test_subs <- assigned_splits$"subjectkey"[assigned_splits$"split" == "test"]
+train_subs <- assigned_splits$"train"
+test_subs <- assigned_splits$"test"
 
 # Partition a training set
 train_abcd_cort_t <- abcd_cort_t[abcd_cort_t$"patient" %in% train_subs, ]
@@ -558,8 +555,7 @@ full_data_list <- generate_data_list(
     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(abcd_h_income, "household_income", "demographics", "continuous"),
     list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
-    uid = "patient",
-    assigned_splits = assigned_splits
+    uid = "patient"
 )
 
 # Construct the target lists
@@ -588,9 +584,11 @@ extended_solutions_matrix <- extend_solutions(
     train_target_list
 )
 
+extended_solutions_matrix |> colnames()
+
 # The fifth row had the lowest minimum p-value across our outcomes
-lowest_min_p <- min(extended_solutions_matrix$"min_p_val")
-which(extended_solutions_matrix$"min_p_val" == lowest_min_p)
+lowest_min_p <- min(extended_solutions_matrix$"min_p")
+which(extended_solutions_matrix$"min_p" == lowest_min_p)
 
 # Keep track of your top solution
 top_row <- extended_solutions_matrix[4, ]

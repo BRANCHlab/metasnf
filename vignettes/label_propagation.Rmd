@@ -51,12 +51,9 @@ all_subjects <- abcd_cort_t$"patient"
 # Dataframe assigning 80% of subjects to train and 20% to test
 train_test_split <- train_test_assign(train_frac = 0.8, subjects = all_subjects)
 
-head(train_test_split)
-tail(train_test_split)
-
 # Pulling the training and testing subjects specifically
-train_subs <- train_test_split$"subjectkey"[train_test_split$"split" == "train"]
-test_subs <- train_test_split$"subjectkey"[train_test_split$"split" == "test"]
+train_subs <- train_test_split$"train"
+test_subs <- train_test_split$"test"
 
 # Partition a training set
 train_abcd_cort_t <- abcd_cort_t[abcd_cort_t$"patient" %in% train_subs, ]
@@ -110,8 +107,8 @@ extended_solutions_matrix <- extend_solutions(
     train_solutions_matrix,
     train_target_list
 )
-lowest_min_p <- min(extended_solutions_matrix$"min_p_val")
-which(extended_solutions_matrix$"min_p_val" == lowest_min_p)
+lowest_min_p <- min(extended_solutions_matrix$"min_p")
+which(extended_solutions_matrix$"min_p" == lowest_min_p)
 top_row <- extended_solutions_matrix[4, ]
 
 # Propagate that solution to the subjects in the test set
@@ -133,7 +130,7 @@ head(propagated_labels)
 tail(propagated_labels)
 ```
 
-You could, if you wanted, see how *all* of your clustering solutions propagate to the test set, but that would mean reusing your test set and removing the protection against overfitting conferred by this procedure.
+You could, if you wanted, see how *all* of your clustering solutions propagate to the test set, but that would mean reusing your test set and removing much of the protection against overfitting provided by this procedure.
 
 ```{r}
 propagated_labels_all <- lp_solutions_matrix(

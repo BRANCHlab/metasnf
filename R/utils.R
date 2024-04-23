@@ -171,12 +171,15 @@ merge_df_list <- function(df_list, join = "inner") {
 #' @return split a named list containing the training and testing subject_ids
 #'
 #' @export
-train_test_assign <- function(train_frac, subjects) {
+train_test_assign <- function(train_frac, subjects, seed = 42) {
     train_thresh <- 2147483647 * train_frac
-    hash <- abs(digest::digest2int(subjects, seed = 42))
+    hash <- abs(digest::digest2int(subjects, seed = seed))
     train <- subjects[hash < train_thresh]
     test <- subjects[hash >= train_thresh]
     assigned_subs <- list(train = train, test = test)
+    if (length(train) == 0 || length(test) == 0) {
+        warning("Empty train or test set.")
+    }
     return(assigned_subs)
 }
 

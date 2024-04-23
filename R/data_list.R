@@ -17,8 +17,7 @@
 #' a full data list for label propagation)
 #' @param test_subjects character vector of test subjects (useful if building
 #' a full data list for label propagation)
-#' @param assigned_splits ouptut from assign_splits function - can be given
-#' as an alternative to specifying the train/test subjects separately.
+#' @param sort_subjects If TRUE, the subjects in the data_list will be sorted
 #' @param return_missing If TRUE, function returns a list where the first
 #' element is the data_list and the second element is a vector of unique IDs
 #' of patients who were removed during the complete data filtration step.
@@ -103,9 +102,8 @@ generate_data_list <- function(...,
                                uid = NULL,
                                test_subjects = NULL,
                                train_subjects = NULL,
-                               assigned_splits = NULL,
+                               sort_subjects = TRUE,
                                return_missing = FALSE) {
-    subjectkey <- ""
     # The object that will contain all the data
     data_list <- list()
     # The loaded data
@@ -148,46 +146,8 @@ generate_data_list <- function(...,
             reduce_dl_to_common() |>
             prefix_dl_sk()
     }
-    # Correctly order train and test subjects for label prop
-    if (!is.null(test_subjects) && !is.null(train_subjects)) {
-        # If test subjects and train subjects are provided, arrange dl subs
-        #  to follow the order of train subjects followed by test subjects
-        tts <- paste0("subject_", c(train_subjects, test_subjects))
-        data_list <- data_list |>
-            lapply(
-                function(x) {
-                    x$"data" <- x$"data" |> dplyr::arrange(
-                        sapply(
-                            subjectkey,
-                            function(x) which(x == tts)
-                        )
-                    )
-                    return(x)
-                }
-            )
-    } else if (!is.null(assigned_splits)) {
-        # An alternative input to providing test and train subjects
-        train_subjects <- assigned_splits |>
-            dplyr::filter(split == "train")
-        train_subjects <- train_subjects$"subjectkey"
-        test_subjects <- assigned_splits |>
-            dplyr::filter(split == "test")
-        test_subjects <- test_subjects$"subjectkey"
-        tts <- paste0("subject_", c(train_subjects, test_subjects))
-        data_list <- data_list |>
-            lapply(
-                function(x) {
-                    x$"data" <- x$"data" |> dplyr::arrange(
-                        sapply(
-                            subjectkey,
-                            function(x) which(x == tts)
-                        )
-                    )
-                    return(x)
-                }
-            )
-    } else {
-        # If no order is specified, just sort the subjects alphabetically
+    # Sort subjects alphabetically
+    if (sort_subjects) {
         data_list <- data_list |> arrange_dl()
     }
     if (return_missing) {

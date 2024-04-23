@@ -250,52 +250,32 @@ test_that(
 test_that(
     "ensure constant output from train_test_assign",
     {
-        df1 <- train_test_assign(
+        split_results <- train_test_assign(
             0.5,
-            c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
-            seed = 42
+            c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")
         )
-        df2 <- data.frame(
-            subjectkey = c(
-                "b",
-                "c",
-                "d",
-                "e",
-                "h",
-                "i",
-                "a",
-                "f",
-                "g",
-                "j"
-            ),
-            split = c(
-                "train",
-                "train",
-                "train",
-                "train",
-                "train",
-                "train",
-                "test",
-                "test",
-                "test",
-                "test"
-            )
+        train_subs <- split_results$train
+        test_subs <- split_results$test
+        correct_train <- identical(
+            train_subs,
+            c("b", "c", "d", "e", "h", "i")
         )
-        expect_equal(
-            df1,
-            df2
+        correct_test <- identical(
+            test_subs,
+            c("a", "f", "g", "j")
         )
+        both_correct <- correct_train && correct_test
+        expect_true(both_correct)
     }
 )
 
 test_that(
     "ensure constant output from train_test_assign",
     {
-        expect_error(
+        expect_warning(
             train_test_assign(
                 0.9,
-                c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
-                seed = 42
+                c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")
             ),
             regexp = "Empty train or test set"
         )
