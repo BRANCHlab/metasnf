@@ -1,5 +1,16 @@
 # metasnf 0.5.0
 
+## Breaking changes
+
+* All variables and values referencing p-values have been rephrased to end in `_pval` instead of a mix of `p_val`, `pval`, and `p`.
+* Removal of deprecated functions `pval_select`, `p_val_select`, `top_oms_per_cluster`, `check_subj_orders_for_lp`, `get_p`, `chi_sq_pval`,
+* Function `pval_summaries`, which would calculate min/max/mean p-values, has been replaced with `summarize_pvals`
+* `train_test_assign` now provides results as named list of subject vectors instead of a data.frame. `keep_split` function has been removed accordingly.
+
+## Other changes
+
+* `sort_subjects` parameter added to `generate_data_list` to allow for sorting of subjects in the data_list
+
 # metasnf 0.4.6
 
 * fix bug in extend_solutions that incorrectly assigns p-values to variable columns through grep (substring instead of exact match)
