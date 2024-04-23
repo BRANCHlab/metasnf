@@ -1,1 +1,1 @@
-usethis::use_version("patch")
+usethis::use_version("major")
