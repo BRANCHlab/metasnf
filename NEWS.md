@@ -1,3 +1,5 @@
+# metasnf 0.5.0
+
 # metasnf 0.4.6
 
 * fix bug in extend_solutions that incorrectly assigns p-values to variable columns through grep (substring instead of exact match)
