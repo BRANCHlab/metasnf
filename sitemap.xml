@@ -175,12 +175,6 @@
     <loc>https://branchlab.github.io/metasnf/reference/check_similarity_matrices.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/check_subj_orders_for_lp.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/chi_sq_p.html</loc>
-  </url>
-  <url>
     <loc>https://branchlab.github.io/metasnf/reference/chi_squared_pval.html</loc>
   </url>
   <url>
@@ -292,13 +286,13 @@
     <loc>https://branchlab.github.io/metasnf/reference/get_heatmap_order.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_mean_p.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/get_mean_pval.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_min_p.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/get_min_pval.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_p.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/get_pvals.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/gower_distance.html</loc>
@@ -313,13 +307,7 @@
     <loc>https://branchlab.github.io/metasnf/reference/individual.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/keep_split.html</loc>
-  </url>
-  <url>
     <loc>https://branchlab.github.io/metasnf/reference/label_prop.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/lin_reg_p.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/linear_model_pval.html</loc>
@@ -350,9 +338,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/numcol_to_numeric.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/ord_reg_p.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/ord_reg_pval.html</loc>
@@ -478,10 +463,10 @@
     <loc>https://branchlab.github.io/metasnf/reference/summarize_dl.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/summarize_target_list.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/summarize_pvals.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/top_om_per_cluster.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/summarize_target_list.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/train_test_assign.html</loc>
