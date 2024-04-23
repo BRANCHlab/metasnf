@@ -107,8 +107,8 @@ extended_solutions_matrix <- extend_solutions(
     train_solutions_matrix,
     train_target_list
 )
-lowest_min_p <- min(extended_solutions_matrix$"min_p")
-which(extended_solutions_matrix$"min_p" == lowest_min_p)
+lowest_min_pval <- min(extended_solutions_matrix$"min_pval")
+which(extended_solutions_matrix$"min_pval" == lowest_min_pval)
 top_row <- extended_solutions_matrix[4, ]
 
 # Propagate that solution to the subjects in the test set

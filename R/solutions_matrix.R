@@ -11,7 +11,7 @@
 #' @param calculate_summaries If TRUE, the function will calculate the minimum
 #' and mean p-values for each row of the solutions matrix.
 #'
-#' @param min_p If assigned a value, any p-value less than this will be
+#' @param min_pval If assigned a value, any p-value less than this will be
 #' replaced with this value.
 #'
 #' @param processes The number of processes to use for parallelization.
@@ -25,7 +25,7 @@ extend_solutions <- function(solutions_matrix,
                              target_list,
                              cat_test = "chi_squared",
                              calculate_summaries = TRUE,
-                             min_p = NULL,
+                             min_pval = NULL,
                              processes = 1) {
     ###########################################################################
     # Calculate vector of all feature names
@@ -57,7 +57,7 @@ extend_solutions <- function(solutions_matrix,
     esm <- solutions_matrix |>
         data.frame() |>
         add_columns(
-            paste0(features, "_p"),
+            paste0(features, "_pval"),
             fill = NA
         )
     ###########################################################################
@@ -82,7 +82,7 @@ extend_solutions <- function(solutions_matrix,
                 current_outcome_component <- merged_df[, c(1, j + 1)]
                 current_outcome_name <- colnames(current_outcome_component)[2]
                 suppressWarnings(
-                    p_value <- get_cluster_pval(
+                    pval <- get_cluster_pval(
                         clustered_subs,
                         current_outcome_component,
                         feature_types[j],
@@ -91,9 +91,9 @@ extend_solutions <- function(solutions_matrix,
                     )
                 )
                 target_col <- which(
-                    paste0(current_outcome_name, "_p") == colnames(esm)
+                    paste0(current_outcome_name, "_pval") == colnames(esm)
                 )
-                esm[i, target_col] <- p_value
+                esm[i, target_col] <- pval
             }
         }
     } else {
@@ -132,7 +132,7 @@ extend_solutions <- function(solutions_matrix,
                         )
                     )
                     target_col <- which(
-                        paste0(current_outcome_name, "_p") == colnames(esm)
+                        paste0(current_outcome_name, "_pval") == colnames(esm)
                     )
                     esm[i, target_col] <- pval
                 }
@@ -143,15 +143,15 @@ extend_solutions <- function(solutions_matrix,
         esm <- do.call("rbind", esm_rows)
     }
     ###########################################################################
-    # If min_p is assigned, replace any p-value less than this with min_p
+    # If min_pval is assigned, use to replace any smaller p-value
     ###########################################################################
-    if (!is.null(min_p)) {
+    if (!is.null(min_pval)) {
         esm <- esm |>
             numcol_to_numeric() |>
             dplyr::mutate(
                 dplyr::across(
-                    dplyr::ends_with("_p"),
-                    ~ ifelse(. < min_p, min_p, .)
+                    dplyr::ends_with("_pval"),
+                    ~ ifelse(. < min_pval, min_pval, .)
                 )
             )
     }
@@ -169,7 +169,7 @@ extend_solutions <- function(solutions_matrix,
 #' p-values to make it easier to interpret large-scale differences.
 #'
 #' @param extended_solutions_matrix The output of `extend_solutions`. A
-#' dataframe that contains at least one p-value column ending in "_p".
+#' dataframe that contains at least one p-value column ending in "_pval".
 #' @param negative_log If TRUE, will replace p-values with negative log
 #' p-values.
 #'
@@ -180,7 +180,7 @@ get_pvals <- function(extended_solutions_matrix,
     pval_df <- extended_solutions_matrix |>
         dplyr::select(
             "row_id",
-            dplyr::ends_with("_p")
+            dplyr::ends_with("_pval")
         ) |>
         data.frame() |>
         metasnf::numcol_to_numeric()
@@ -203,7 +203,7 @@ summarize_pvals <- function(extended_solutions_matrix) {
     # Restrict to just p-value columns
     pval_cols <- dplyr::select(
         extended_solutions_matrix,
-        dplyr::ends_with("_p")
+        dplyr::ends_with("_pval")
     ) |>
         numcol_to_numeric()
     # Calculate summary statistics
@@ -229,9 +229,9 @@ summarize_pvals <- function(extended_solutions_matrix) {
         }
     )
     # Attach summary statistics to the solutions matrix
-    extended_solutions_matrix$"min_p" <- min_pvals
-    extended_solutions_matrix$"mean_p" <- mean_pvals
-    extended_solutions_matrix$"max_p" <- max_pvals
+    extended_solutions_matrix$"min_pval" <- min_pvals
+    extended_solutions_matrix$"mean_pval" <- mean_pvals
+    extended_solutions_matrix$"max_pval" <- max_pvals
     return(extended_solutions_matrix)
 }
 
@@ -242,15 +242,17 @@ summarize_pvals <- function(extended_solutions_matrix) {
 #'
 #' @param solutions_matrix_row row of solutions_matrix object
 #'
-#' @return min_p minimum p-value
+#' @return min_pval minimum p-value
 #'
 #' @export
-get_min_p <- function(solutions_matrix_row) {
-    min_p <- solutions_matrix_row |>
-        dplyr::mutate(dplyr::across(dplyr::ends_with("_p"), ~ as.numeric(.))) |>
-        dplyr::select(dplyr::ends_with("_p")) |>
+get_min_pval <- function(solutions_matrix_row) {
+    min_pval <- solutions_matrix_row |>
+        dplyr::mutate(
+            dplyr::across(dplyr::ends_with("_pval"), ~ as.numeric(.))
+        ) |>
+        dplyr::select(dplyr::ends_with("_pval")) |>
         min()
-    return(min_p)
+    return(min_pval)
 }
 
 #' Get mean p-value
@@ -259,15 +261,17 @@ get_min_p <- function(solutions_matrix_row) {
 #'
 #' @param solutions_matrix_row row of solutions_matrix object
 #'
-#' @return mean_p mean p-value
+#' @return mean_pval mean p-value
 #'
 #' @export
-get_mean_p <- function(solutions_matrix_row) {
-    mean_p <- solutions_matrix_row |>
-        dplyr::mutate(dplyr::across(dplyr::ends_with("_p"), ~ as.numeric(.))) |>
-        dplyr::select(dplyr::ends_with("_p")) |>
+get_mean_pval <- function(solutions_matrix_row) {
+    mean_pval <- solutions_matrix_row |>
+        dplyr::mutate(
+            dplyr::across(dplyr::ends_with("_pval"), ~ as.numeric(.))
+        ) |>
+        dplyr::select(dplyr::ends_with("_pval")) |>
         rowMeans()
-    return(mean_p)
+    return(mean_pval)
 }
 
 #' Get p-value
@@ -285,7 +289,7 @@ get_mean_p <- function(solutions_matrix_row) {
 #' associate cluster with a categorical variable. Options are "chi_squared" for
 #' the Chi-squared test and "fisher_exact" for Fisher's exact test.
 #'
-#' @return p_val the smallest p-value of interest
+#' @return pval the smallest p-value of interest
 #'
 #' @export
 get_cluster_pval <- function(assigned_subs,
@@ -331,77 +335,6 @@ get_cluster_pval <- function(assigned_subs,
     return(pval)
 }
 
-#' Get p-value (deprecated)
-#'
-#' Depending on outcome measure, perform ordinal regression or linear regression
-#'  and return p-value as a benchmark measure of how well-separated clusters
-#'  are by the outcome measure.
-#'
-#' @param assigned_subs dataframe of subjects who were assigned to a cluster
-#' and the cluster they were assigned to.
-#' @param outcome_df dataframe containing subjectkey and outcome feautre column
-#' @param outcome_type string indicating the outcome type (numeric or ordinal)
-#' @param outcome_name string indicating the name of the feature
-#' @param cat_test String indicating which statistical test will be used to
-#' associate cluster with a categorical variable. Options are "chi_squared" for
-#' the Chi-squared test and "fisher_exact" for Fisher's exact test.
-#'
-#' @return p_val the smallest p-value of interest
-#'
-#' @export
-get_p <- function(assigned_subs,
-                  outcome_df,
-                  outcome_type,
-                  outcome_name,
-                  cat_test = "chi_squared") {
-    if (outcome_type == "ordinal") {
-        p_val <- ord_reg_p(assigned_subs, outcome_df, outcome_name)
-    } else if (outcome_type == "numeric") {
-        p_val <- lin_reg_p(assigned_subs, outcome_df, outcome_name)
-    } else if (outcome_type == "categorical") {
-        if (cat_test == "chi_squared") {
-            p_val <- chi_sq_p(assigned_subs, outcome_df, outcome_name)
-        } else if (cat_test == "fisher_exact") {
-            print(NULL)
-        }
-    } else {
-        stop(paste0(
-            "Unsupported outcome type: ",
-            outcome_type,
-            ". Accepted types for now are numeric and ordinal."
-        ))
-    }
-    return(p_val)
-}
-
-#' Ordinal regression p-value (deprecated)
-#'
-#' Returns the p-value following an ordinal regression in which cluster
-#'  is the IV and a provided ordinal variable is the DV.
-#'
-#' @param clust_membership Dataframe of cluster membership (get_clustered_subs)
-#' @param outcome_df Dataframe containing DV
-#' @param outcome_var DV as a string
-#'
-#' @return p_val The overall p-value distinguishing clusters by the DV
-#'
-#' @export
-ord_reg_p <- function(clust_membership, outcome_df, outcome_var) {
-    merged_df <-
-        dplyr::inner_join(clust_membership, outcome_df, by = "subjectkey")
-    num_classes <- length(unique(merged_df[, outcome_var]))
-    # If there are only 2 tiers to the ordinal scale, just use linear model
-    if (num_classes == 2) {
-        return(lin_reg_p(clust_membership, outcome_df, outcome_var))
-    }
-    merged_df$"cluster" <- as.factor(merged_df$"cluster")
-    merged_df[, outcome_var] <- as.ordered(merged_df[, outcome_var])
-    null_model <- MASS::polr(merged_df[, outcome_var] ~ 1)
-    full_model <- MASS::polr(merged_df[, outcome_var] ~ merged_df[, "cluster"])
-    p_value <- stats::anova(null_model, full_model)$"Pr(Chi)"[2]
-    return(p_value)
-}
-
 #' Ordinal regression p-value
 #'
 #' Returns the overall p-value of an ordinal regression on a categorical
@@ -423,57 +356,6 @@ ord_reg_pval <- function(predictor, response) {
     full_model <- MASS::polr(response ~ predictor)
     pval <- stats::anova(null_model, full_model)$"Pr(Chi)"[2]
     return(pval)
-}
-
-#' Linear regression p-value
-#'
-#' Returns the p-value following an linear regression in which cluster
-#'  is the IV and a provided ordinal variable is the DV.
-#'
-#' @param clust_membership Dataframe of cluster membership (get_clustered_subs)
-#' @param outcome_df Dataframe containing DV
-#' @param outcome_var DV as a string
-#'
-#' @return p_val The overall p-value distinguishing clusters by the DV
-#'
-#' @export
-lin_reg_p <- function(clust_membership, outcome_df, outcome_var) {
-    merged_df <-
-        dplyr::inner_join(clust_membership, outcome_df, by = "subjectkey")
-    merged_df$"cluster" <- as.factor(merged_df$"cluster")
-    model <- stats::lm(merged_df[, outcome_var] ~ merged_df[, "cluster"])
-    fstat <- summary(model)$"fstatistic"
-    p <- stats::pf(fstat[1], fstat[2], fstat[3], lower.tail = FALSE)
-    attributes(p) <- NULL
-    return(p)
-}
-
-#' Chi-squared test p-value
-#'
-#' Returns the p-value following a chi-squared test (without Yates' continuity
-#'  correction) on the distribution of a categorical variable by cluster.
-#'
-#' @param clust_membership Dataframe of cluster membership (get_clustered_subs)
-#' @param outcome_df Dataframe containing outcome feature
-#' @param outcome_var Outcome feature as a string
-#'
-#' @return p_val The chi-squared test p-value
-#'
-#' @export
-chi_sq_p <- function(clust_membership, outcome_df, outcome_var) {
-    # This dataframe merges clust_membership, which has the cluster of each
-    #  column, with outcome_df, which has the data of each subject on the
-    #  outcome feature being evaluated.
-    merged_df <-
-        dplyr::inner_join(clust_membership, outcome_df, by = "subjectkey")
-    merged_df$"cluster" <- as.factor(merged_df$"cluster")
-    model <- stats::chisq.test(
-        merged_df[, "cluster"],
-        merged_df[, outcome_var],
-        correct = FALSE
-    )
-    p <- model$"p.value"
-    return(p)
 }
 
 #' Chi-squared test p-value (generic)

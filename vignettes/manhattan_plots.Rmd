@@ -109,7 +109,7 @@ target_list <- generate_target_list(
 
 extended_solutions_matrix <- extend_solutions(solutions_matrix, target_list)
 
-target_pvals <- pval_select(extended_solutions_matrix)
+target_pvals <- get_pvals(extended_solutions_matrix)
 
 manhattan_plot(target_pvals, threshold = 0.05, bonferroni_line = TRUE)
 ```

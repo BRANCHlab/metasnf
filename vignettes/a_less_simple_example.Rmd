@@ -470,7 +470,7 @@ head(no_subs(extended_solutions_matrix))
 If you just want the p-values:
 
 ```{r}
-target_pvals <- pval_select(extended_solutions_matrix)
+target_pvals <- get_pvals(extended_solutions_matrix)
 
 head(target_pvals)
 ```
@@ -587,8 +587,8 @@ extended_solutions_matrix <- extend_solutions(
 extended_solutions_matrix |> colnames()
 
 # The fifth row had the lowest minimum p-value across our outcomes
-lowest_min_p <- min(extended_solutions_matrix$"min_p")
-which(extended_solutions_matrix$"min_p" == lowest_min_p)
+lowest_min_pval <- min(extended_solutions_matrix$"min_pval")
+which(extended_solutions_matrix$"min_pval" == lowest_min_pval)
 
 # Keep track of your top solution
 top_row <- extended_solutions_matrix[4, ]

@@ -27,7 +27,7 @@ associate cluster with a categorical variable. Options are "chi_squared" for
 the Chi-squared test and "fisher_exact" for Fisher's exact test.}
 }
 \value{
-p_val the smallest p-value of interest
+pval the smallest p-value of interest
 }
 \description{
 Depending on outcome measure, perform ordinal regression or linear regression

@@ -8,7 +8,7 @@ get_pvals(extended_solutions_matrix, negative_log = FALSE)
 }
 \arguments{
 \item{extended_solutions_matrix}{The output of \code{extend_solutions}. A
-dataframe that contains at least one p-value column ending in "_p".}
+dataframe that contains at least one p-value column ending in "_pval".}
 
 \item{negative_log}{If TRUE, will replace p-values with negative log
 p-values.}

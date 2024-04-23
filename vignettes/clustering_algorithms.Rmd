@@ -69,7 +69,7 @@ extended_solutions <- extend_solutions(
     cat_test = "fisher_exact"
 )
 
-target_pvals <- pval_select(extended_solutions)
+target_pvals <- get_pvals(extended_solutions)
 
 manhattan_plot(target_pvals, threshold = 0.05, bonferroni_line = TRUE)
 ```

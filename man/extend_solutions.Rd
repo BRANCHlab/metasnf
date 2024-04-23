@@ -9,7 +9,7 @@ extend_solutions(
   target_list,
   cat_test = "chi_squared",
   calculate_summaries = TRUE,
-  min_p = NULL,
+  min_pval = NULL,
   processes = 1
 )
 }
@@ -25,7 +25,7 @@ the Chi-squared test and "fisher_exact" for Fisher's exact test.}
 \item{calculate_summaries}{If TRUE, the function will calculate the minimum
 and mean p-values for each row of the solutions matrix.}
 
-\item{min_p}{If assigned a value, any p-value less than this will be
+\item{min_pval}{If assigned a value, any p-value less than this will be
 replaced with this value.}
 
 \item{processes}{The number of processes to use for parallelization.
