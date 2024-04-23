@@ -9,7 +9,7 @@ generate_data_list(
   uid = NULL,
   test_subjects = NULL,
   train_subjects = NULL,
-  assigned_splits = NULL,
+  sort_subjects = TRUE,
   return_missing = FALSE
 )
 }
@@ -26,8 +26,7 @@ a full data list for label propagation)}
 \item{train_subjects}{character vector of train subjects (useful if building
 a full data list for label propagation)}
 
-\item{assigned_splits}{ouptut from assign_splits function - can be given
-as an alternative to specifying the train/test subjects separately.}
+\item{sort_subjects}{If TRUE, the subjects in the data_list will be sorted}
 
 \item{return_missing}{If TRUE, function returns a list where the first
 element is the data_list and the second element is a vector of unique IDs
