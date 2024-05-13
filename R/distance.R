@@ -296,37 +296,36 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
 #' @param distance_metrics_list A distance_metrics_list.
 #'
 #' @export
-summarize_distance_metrics_list <- function(distance_metrics_list) {
+summarize_dml <- function(distance_metrics_list) {
     # continuous
     if (length(names(distance_metrics_list$"continuous_distances")) > 0) {
         cat("\nContinuous distances:")
         cont_names <- distance_metrics_list$"continuous_distances" |> names()
-        paste0("\n", 1:length(cont_names), ". ", cont_names) |> cat()
+        paste0("\n", seq_along(cont_names), ". ", cont_names) |> cat()
     }
     # discrete
     if (length(names(distance_metrics_list$"discrete_distances")) > 0) {
         cat("\n\nDiscrete distances:")
         disc_names <- distance_metrics_list$"discrete_distances" |> names()
-        paste0("\n", 1:length(disc_names), ". ", disc_names) |> cat()
+        paste0("\n", seq_along(disc_names), ". ", disc_names) |> cat()
     }
     # ordinal
     if (length(names(distance_metrics_list$"ordinal_distances")) > 0) {
         cat("\n\nOrdinal distances:")
         ord_names <- distance_metrics_list$"ordinal_distances" |> names()
-        paste0("\n", 1:length(ord_names), ". ", ord_names) |> cat()
+        paste0("\n", seq_along(ord_names), ". ", ord_names) |> cat()
     }
     # categorical
     if (length(names(distance_metrics_list$"categorical_distances")) > 0) {
         cat("\n\nCategorical distances:")
         cat_names <- distance_metrics_list$"categorical_distances" |> names()
-        paste0("\n", 1:length(cat_names), ". ", cat_names) |> cat()
+        paste0("\n", seq_along(cat_names), ". ", cat_names) |> cat()
     }
     # mixed
     if (length(names(distance_metrics_list$"mixed_distances")) > 0) {
         cat("\n\nMixed distances:")
         mixed_names <- distance_metrics_list$"mixed_distances" |> names()
-        paste0("\n", 1:length(mixed_names), ". ", mixed_names) |> cat()
+        paste0("\n", seq_along(mixed_names), ". ", mixed_names) |> cat()
     }
     cat("\n")
 }
-
