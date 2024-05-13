@@ -49,7 +49,8 @@ get_dist_matrix <- function(df,
     } else {
         rlang::abort(
             paste0("The value ", input_type, " is not a valid input type."),
-            class = "invalid_input")
+            class = "invalid_input"
+        )
     }
     dist_matrix <- dist_fn(df, weights_row_trim)
     return(dist_matrix)

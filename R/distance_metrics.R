@@ -29,6 +29,7 @@ gower_distance <- function(df, weights_row) {
     distance_matrix <- df |>
         cluster::daisy(metric = "gower", warnBin = FALSE) |>
         as.matrix()
+    return(distance_matrix)
 }
 
 #' Distance metric: Standard normalization then Euclidean
@@ -104,11 +105,11 @@ sew_euclidean_distance <- function(df, weights_row) {
 hamming_distance <- function(df, weights_row) {
     weights <- t(weights_row)
     weights <- weights[, 1]
-    distance_matrix = sapply(
-        1:nrow(df),
+    distance_matrix <- sapply(
+        seq_len(nrow(df)),
         function(i) {
             sapply(
-                1:nrow(df),
+                seq_len(nrow(df)),
                 function(j) {
                     apply_condition <- df[i, ] != df[j, ]
                     apply_condition <- as.numeric(apply_condition)
