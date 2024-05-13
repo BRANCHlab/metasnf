@@ -1,16 +1,23 @@
-#' Extract all cluster solutions from a solutions_matrix
+#' Extract cluster membership information from a solutions_matrix
+#'
+#' This function takes in a solutions matrix and returns a dataframe containing
+#' the cluster assignments for each subjectkey. It is similar to
+#' '`get_clusters()`, which takes one solutions matrix row and returns a vector
+#' of cluster assignments' and `get_cluster_df()`, which takes a solutions
+#' matrix with only one row and returns a dataframe with two columns: "cluster"
+#' and "subjectkey" (the UID of the observation).
 #'
 #' @param solutions_matrix A solutions_matrix.
 #'
-#' @return cluster_solutions A dataframe where each row is a patient and each
-#'  column is a different run of SNF stored in the solutions_matrix. Values
-#'  along the columns are the cluster that each patient was assigned to.
+#' @return cluster_solutions A dataframe where each row is an observation and
+#' each column (apart from the subjectkey column) indicates the cluster that
+#' observation was assigned to for the corresponding solutions matrix row.
 #'
 #' @export
 get_cluster_solutions <- function(solutions_matrix) {
     # Create a skeleton dataframe using just the columns of the solutions
-    #  matrix containing information about which cluster each patient was
-    #  assigned to on each SNF run
+    # matrix containing information about which cluster each patient was
+    # assigned to on each SNF run
     cluster_solutions <- solutions_matrix |>
         subs() |>
         t() |>
@@ -31,35 +38,52 @@ get_cluster_solutions <- function(solutions_matrix) {
     return(cluster_solutions)
 }
 
-#' Extract dataframe of cluster and subject key from solutions matrix row
+#' Extract cluster membership information from one solutions matrix row
+#'
+#' This function takes in a single row of a solutions matrix and returns a
+#' dataframe containing the cluster assignments for each subjectkey. It is
+#' similar to `get_clusters()`, which takes one solutions matrix row and
+#' returns a vector of cluster assignments' and `get_cluster_solutions()`,
+#' which takes a solutions matrix with any number of rows and returns a
+#' dataframe indicating the cluster assignments for each of those rows.
 #'
 #' @param om_row Output matrix row
 #'
 #' @return cluster_df dataframe of cluster and subjectkey
 #'
 #' @export
-get_cluster_df <- function(om_row) {
+get_cluster_df <- function(solutions_matrix_row) {
     cluster_df <-
-        subs(om_row) |>
+        subs(solutions_matrix_row) |>
         t() |>
         data.frame()
     cluster_df$id <- rownames(cluster_df)
     rownames(cluster_df) <- NULL
     colnames(cluster_df) <- c("cluster", "subjectkey")
     cluster_df <- cluster_df[2:nrow(cluster_df), ]
+    cluster_df <- cluster_df |>
+        dplyr::select("subjectkey", "cluster")
     return(cluster_df)
 }
 
-#' Extract list of assigned clusters
+#' Extract cluster membership vector from one solutions matrix row
 #'
-#' @param om_row Output matrix row
+#' This function takes in a single row of a solutions matrix and returns a
+#' vector containing the cluster assignments for each observation. It is
+#' similar to `get_cluster_df()`, which takes a solutions matrix with only one
+#' row and returns a dataframe with two columns: "cluster" and "subjectkey"
+#' '(the UID of the observation) and `get_cluster_solutions()`, which takes a
+#' solutions matrix with any number of rows and returns a dataframe indicating
+#' the cluster assignments for each of those rows.
+#'
+#' @param solutions_matrix_row Output matrix row
 #'
 #' @return clusters list of assigned clusters
 #'
 #' @export
-get_clusters <- function(om_row) {
+get_clusters <- function(solutions_matrix_row) {
     cluster_df <-
-        subs(om_row) |>
+        subs(solutions_matrix_row) |>
         t() |>
         data.frame()
     cluster_df$id <- rownames(cluster_df)
