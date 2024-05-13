@@ -98,6 +98,9 @@
 <span>  top_hm <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bottom_hm <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  annotation_colours <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  min_colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  split_vector <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -144,7 +147,7 @@ off-diagonals), or "zero" (replace diagonals with 0).</p></dd>
 
 
 <dt>data_list</dt>
-<dd><p>A data_list containing elements requested for annotation.</p></dd>
+<dd><p>A nested list of input data from <code><a href="generate_data_list.html">generate_data_list()</a></code>.</p></dd>
 
 
 <dt>data</dt>
@@ -190,6 +193,18 @@ barplot annotation.</p></dd>
 <dt>annotation_colours</dt>
 <dd><p>Named list of heatmap annotations and their
 colours.</p></dd>
+
+
+<dt>min_colour</dt>
+<dd><p>Colour used for the lowest value in the heatmap.</p></dd>
+
+
+<dt>max_colour</dt>
+<dd><p>Colour used for the highest value in the heatmap.</p></dd>
+
+
+<dt>split_vector</dt>
+<dd><p>A vector of partition indices.</p></dd>
 
 
 <dt>...</dt>
