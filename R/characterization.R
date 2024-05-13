@@ -58,11 +58,11 @@ get_cluster_df <- function(solutions_matrix_row) {
         t() |>
         data.frame()
     cluster_df$id <- rownames(cluster_df)
-    rownames(cluster_df) <- NULL
     colnames(cluster_df) <- c("cluster", "subjectkey")
     cluster_df <- cluster_df[2:nrow(cluster_df), ]
     cluster_df <- cluster_df |>
         dplyr::select("subjectkey", "cluster")
+    rownames(cluster_df) <- NULL
     return(cluster_df)
 }
 
