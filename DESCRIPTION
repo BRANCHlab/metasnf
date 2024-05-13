@@ -118,6 +118,7 @@ Imports:
     ggplot2,
     graphics,
     grDevices,
+    InteractiveComplexHeatmap,
     MASS,
     mclust,
     methods,

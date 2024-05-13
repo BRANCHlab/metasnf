@@ -30,6 +30,7 @@
 #'  colours.
 #' @param min_colour Colour used for the lowest value in the heatmap.
 #' @param max_colour Colour used for the highest value in the heatmap.
+#' @param split_vector A vector of partition indices.
 #' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
 #'
 #' @export
