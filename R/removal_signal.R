@@ -5,7 +5,7 @@
 #' of the linear model relating the numeric variables in the first data_list
 #' to the unwanted signal variables in the second data list.
 #'
-#' @param data_list A data_list to correct.
+#' @param data_list A nested list of input data from `generate_data_list()`.
 #' @param unwanted_signal_list A data_list of categorical variables that should
 #' have their mean differences removed in the first data_list.
 #' @param sig_digs Number of significant digits to round the residuals to.

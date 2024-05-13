@@ -1,16 +1,16 @@
 #' Generate a matrix to store variable weights
 #'
-#' @param data_list A data_list with column names spanning all the variables that
-#'  may ever require weights. Cannot be provided at the same time as the
-#'  data parameter.
+#' @param data_list A nested list of input data from `generate_data_list()`.
+#'
 #' @param nrow Number of rows to generate the template weights matrix for.
+#'
 #' @param fill String indicating what to populate generate rows with. Can be
 #'  "ones" (default; fill matrix with 1), "uniform" (fill matrix with uniformly
 #'  distributed random values), or "exponential" (fill matrix with
 #'  exponentially distributed random values).
 #'
 #' @return weights_matrix A properly formatted matrix containing columns for
-#'  all the variables that require weights and rows
+#'  all the variables that require weights and rows.
 #'
 #' @export
 generate_weights_matrix <- function(data_list = NULL,
@@ -39,11 +39,11 @@ generate_weights_matrix <- function(data_list = NULL,
     matrix_base
 }
 
-#' Prep weights_row for matrix multiplication
+#' Properly format a vector of weights for matrix multiplication
 #'
 #' Wrapper around the diag() function. This function was created because diag()
-#'  applied to a scalar doesn't spit that scalar back out, but instead returns
-#'  identity matrix of dimension (scalar * scalar).
+#' applied to a scalar doesn't spit that scalar back out, but instead returns
+#' identity matrix of dimension (scalar * scalar).
 #'
 #' @param weights_row Vector (possibly size 1) of weights.
 #'

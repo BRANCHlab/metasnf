@@ -7,7 +7,7 @@
 #' cluster. These two pieces of information are stored as matrices that can
 #' be supplied to the cocluster_heatmap and pooled_cocluster_heatmap functions.
 #'
-#' @param data_list A data_list (see ?generate_data_list).
+#' @param data_list A nested list of input data from `generate_data_list()`.
 #' @param data_list_subsamples A list of subsampled forms of the data_list
 #' (see ?subsample_data_list).
 #' @param settings_matrix_row A single row of the settings matrix to calculate

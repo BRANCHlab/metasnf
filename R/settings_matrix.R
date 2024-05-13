@@ -36,8 +36,7 @@
 #'   0, that dataframe will be excluded from that run of the SNF pipeline. When
 #'   1, that dataframe will be included.
 #'
-#' @param data_list A data list object to determine variables for inclusion and
-#' exclusion.
+#' @param data_list A nested list of input data from `generate_data_list()`.
 #'
 #' @param nrows Number of rows to generate for the settings matrix.
 #'

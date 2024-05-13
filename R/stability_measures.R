@@ -1,6 +1,6 @@
 #' Create subsamples of a data_list
 #'
-#' @param data_list A data_list.
+#' @param data_list A nested list of input data from `generate_data_list()`.
 #' @param n_subsamples Number of subsamples to create.
 #' @param subsample_fraction Percentage of patients to include per subsample.
 #' @param n_subjects Number of patients to include per subsample.

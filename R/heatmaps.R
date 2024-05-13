@@ -12,7 +12,7 @@
 #' @param cluster_columns Parameter for ComplexHeatmap::Heatmap.
 #' @param show_row_names Parameter for ComplexHeatmap::Heatmap.
 #' @param show_column_names Parameter for ComplexHeatmap::Heatmap.
-#' @param data_list A data_list containing elements requested for annotation.
+#' @param data_list A nested list of input data from `generate_data_list()`.
 #' @param data A dataframe containing elements requested for annotation.
 #' @param left_bar Named list of strings, where the strings are variables in
 #'  df that should be used for a barplot annotation on the left of the plot and
@@ -641,7 +641,7 @@ generate_annotations_list <- function(df,
 #' Collapse a dataframe and/or a data_list into a single dataframe
 #'
 #' @param data A dataframe.
-#' @param data_list A data_list.
+#' @param data_list A nested list of input data from `generate_data_list()`.
 #'
 #' @export
 assemble_data <- function(data, data_list) {
@@ -650,8 +650,7 @@ assemble_data <- function(data, data_list) {
     }
     if (is.null(data)) {
         if (!is.null(data_list)) {
-            # User didn't provide data, but did provide data list, so just use
-            #  that.
+            # User didn't provide data, but did provide data list
             data <- merged_df
         }
     } else {
@@ -668,7 +667,7 @@ assemble_data <- function(data, data_list) {
 #' @param cluster_sequence A list of clustering algorithms (typically, the same
 #'  algorithm varied over different numbers of clusters).
 #' @param similarity_matrix A similarity matrix.
-#' @param data_list A data_list that contains variables to include in the plot.
+#' @param data_list A nested list of input data from `generate_data_list()`.
 #' @param data A dataframe that contains variables to include in the plot.
 #' @param key_outcome The name of the variable that determines how each patient
 #'  stream is coloured in the alluvial plot.

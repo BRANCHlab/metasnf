@@ -467,7 +467,7 @@ calculate_association_pval <- function(var1,
 
 #' Calculate p-values for pairwise associations of variables in a data_list
 #'
-#' @param data_list data_list containing variables for pairwise associations.
+#' @param data_list A nested list of input data from `generate_data_list()`.
 #' @param verbose If TRUE, prints new line everytime a p-value is being
 #'  calculated.
 #' @param key_association If a variable is named, returns a dataframe of
