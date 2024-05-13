@@ -121,11 +121,10 @@ across all the variables being used in your analyses.</p>
 <span><span class="op">)</span></span>
 <span><span class="va">abcd_city</span> <span class="op">&lt;-</span> <span class="va">abcd_city</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="st">"colour"</span><span class="op">)</span></span>
 <span></span>
-<span></span>
 <span><span class="co"># Make sure to throw in all the data you're interested in visualizing for this</span></span>
 <span><span class="co"># data_list, including out-of-model measures and confounding variables.</span></span>
 <span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa_minimal</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa_minimal</span>, <span class="st">"cortical_sa"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_h_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_colour</span>, <span class="st">"favourite_colour"</span>, <span class="st">"demographics"</span>, <span class="st">"categorical"</span><span class="op">)</span>,</span>
@@ -136,19 +135,19 @@ across all the variables being used in your analyses.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                    name        type       domain length width</span></span>
-<span><span class="co">## 1 cortical_surface_area  continuous neuroimaging     93     5</span></span>
-<span><span class="co">## 2      household_income     ordinal demographics     93     2</span></span>
-<span><span class="co">## 3       pubertal_status  continuous demographics     93     2</span></span>
-<span><span class="co">## 4      favourite_colour categorical demographics     93     2</span></span>
-<span><span class="co">## 5                  city categorical demographics     93     2</span></span>
-<span><span class="co">## 6               anxiety     ordinal    behaviour     93     2</span></span>
-<span><span class="co">## 7             depressed     ordinal    behaviour     93     2</span></span></code></pre>
+<pre><code><span><span class="co">##               name        type       domain length width</span></span>
+<span><span class="co">## 1      cortical_sa  continuous neuroimaging     93     5</span></span>
+<span><span class="co">## 2 household_income     ordinal demographics     93     2</span></span>
+<span><span class="co">## 3  pubertal_status  continuous demographics     93     2</span></span>
+<span><span class="co">## 4 favourite_colour categorical demographics     93     2</span></span>
+<span><span class="co">## 5             city categorical demographics     93     2</span></span>
+<span><span class="co">## 6          anxiety     ordinal    behaviour     93     2</span></span>
+<span><span class="co">## 7        depressed     ordinal    behaviour     93     2</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This matrix contains all the pairwise association p-values</span></span>
-<span><span class="va">associations_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_associations.html">calculate_associations</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
+<span><span class="va">association_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_associations.html">calculate_associations</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">associations_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
+<span><span class="va">association_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##            mrisdp_303 mrisdp_304 mrisdp_305</span></span>
 <span><span class="co">## mrisdp_303  0.0000000  0.6374024  0.4513919</span></span>
 <span><span class="co">## mrisdp_304  0.6374024  0.0000000  0.2790341</span></span>
@@ -159,8 +158,8 @@ across all the variables being used in your analyses.</p>
 </h2>
 <p>Here’s what a basic heatmap looks like:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">heatmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/correlation_pval_heatmap.html">correlation_pval_heatmap</a></span><span class="op">(</span></span>
-<span>    <span class="va">associations_matrix</span></span>
+<code class="sourceCode R"><span><span class="va">heatmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/association_heatmap.html">association_heatmap</a></span><span class="op">(</span></span>
+<span>    <span class="va">association_matrix</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="correlation_plots_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>Most of this data was generated randomly, but the “colour” variable
@@ -169,8 +168,8 @@ seems to show that quite well!</p>
 <p>You can draw attention to confounding variables and/or any out of
 model measures by specifying their names as shown below.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/correlation_pval_heatmap.html">correlation_pval_heatmap</a></span><span class="op">(</span></span>
-<span>    <span class="va">associations_matrix</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/association_heatmap.html">association_heatmap</a></span><span class="op">(</span></span>
+<span>    <span class="va">association_matrix</span>,</span>
 <span>    confounders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="st">"Colour"</span> <span class="op">=</span> <span class="st">"colour"</span>,</span>
 <span>        <span class="st">"Pubertal Status"</span> <span class="op">=</span> <span class="st">"pubertal_status"</span></span>
@@ -184,8 +183,8 @@ model measures by specifying their names as shown below.</p>
 heatmaps into slices. One way to do the slices is by clustering the
 heatmap with k-means:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/correlation_pval_heatmap.html">correlation_pval_heatmap</a></span><span class="op">(</span></span>
-<span>    <span class="va">associations_matrix</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/association_heatmap.html">association_heatmap</a></span><span class="op">(</span></span>
+<span>    <span class="va">association_matrix</span>,</span>
 <span>    confounders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="st">"Colour"</span> <span class="op">=</span> <span class="st">"colour"</span>,</span>
 <span>        <span class="st">"Pubertal Status"</span> <span class="op">=</span> <span class="st">"pubertal_status"</span></span>
@@ -199,16 +198,16 @@ heatmap with k-means:</p>
 <p><img src="correlation_plots_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>Another way is to explicitly pass in a categorical vector that can be
 used to distinguish the columns (according to their order in the
-associations_matrix) into their desired slices. To use the domains of
-the variables, you can make use of the <code>dl_variable_summary</code>
+association_matrix) into their desired slices. To use the domains of the
+variables, you can make use of the <code>dl_variable_summary</code>
 function.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dl_var_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dl_variable_summary.html">dl_variable_summary</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dl_var_summary</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/correlation_pval_heatmap.html">correlation_pval_heatmap</a></span><span class="op">(</span></span>
-<span>    <span class="va">associations_matrix</span>,</span>
+<span><span class="fu"><a href="../reference/association_heatmap.html">association_heatmap</a></span><span class="op">(</span></span>
+<span>    <span class="va">association_matrix</span>,</span>
 <span>    confounders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="st">"Colour"</span> <span class="op">=</span> <span class="st">"colour"</span>,</span>
 <span>        <span class="st">"Pubertal Status"</span> <span class="op">=</span> <span class="st">"pubertal_status"</span></span>

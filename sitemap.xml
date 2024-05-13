@@ -76,9 +76,6 @@
     <loc>https://branchlab.github.io/metasnf/news/index.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/CorrManhattan.html</loc>
-  </url>
-  <url>
     <loc>https://branchlab.github.io/metasnf/reference/abcd_anxiety.html</loc>
   </url>
   <url>
@@ -136,6 +133,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/assigned_clust_scatter.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/association_heatmap.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/batch_row_closure.html</loc>
   </url>
   <url>
@@ -181,12 +181,6 @@
     <loc>https://branchlab.github.io/metasnf/reference/clean_plot.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/clusterToOutcomeCorr.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/clusterToOutcomeManhattan.html</loc>
-  </url>
-  <url>
     <loc>https://branchlab.github.io/metasnf/reference/cocluster_heatmap.html</loc>
   </url>
   <url>
@@ -194,15 +188,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/convert_uids.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/corrHeatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/corrHeatmap_legend.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/correlation_pval_heatmap.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/diagnosis_df.html</loc>
@@ -319,9 +304,6 @@
     <loc>https://branchlab.github.io/metasnf/reference/list_remove.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/lp_row.html</loc>
-  </url>
-  <url>
     <loc>https://branchlab.github.io/metasnf/reference/lp_solutions_matrix.html</loc>
   </url>
   <url>
@@ -346,9 +328,6 @@
     <loc>https://branchlab.github.io/metasnf/reference/ord_reg_pval.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/p_val_select.html</loc>
-  </url>
-  <url>
     <loc>https://branchlab.github.io/metasnf/reference/parallel_batch_snf.html</loc>
   </url>
   <url>
@@ -356,12 +335,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/prefix_dl_sk.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/pval_select.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/pval_summaries.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/pvals_heatmap.html</loc>
@@ -460,10 +433,10 @@
     <loc>https://branchlab.github.io/metasnf/reference/summarize_clust_algs_list.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/summarize_distance_metrics_list.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/summarize_dl.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/summarize_dl.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/summarize_dml.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/summarize_pvals.html</loc>
