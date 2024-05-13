@@ -301,7 +301,7 @@ fraction_clustered_together <- function(data_list_subsamples,
                 sub_2 <- current_row$"subject_2"
                 has_sub_1 <- sub_1 %in% subsample_subjects
                 has_sub_2 <- sub_2 %in% subsample_subjects
-                if (has_sub_1 & has_sub_2) {
+                if (has_sub_1 && has_sub_2) {
                     clustered_pairs_df[row, ]$"n_same_solution" <-
                         clustered_pairs_df[row, ]$"n_same_solution" + 1
                     sub_1_pos <-
