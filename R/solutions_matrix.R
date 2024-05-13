@@ -77,7 +77,7 @@ extend_solutions <- function(solutions_matrix,
         # Iterate across rows of the solutions matrix
         for (i in seq_len(nrow(esm))) {
             print(paste0("Processing row ", i, " of ", nrow(esm)))
-            clustered_subs <- get_clustered_subs(esm[i, ])
+            clustered_subs <- get_cluster_df(esm[i, ])
             for (j in seq_along(features)) {
                 current_outcome_component <- merged_df[, c(1, j + 1)]
                 current_outcome_name <- colnames(current_outcome_component)[2]
@@ -117,7 +117,7 @@ extend_solutions <- function(solutions_matrix,
         esm_rows <- future.apply::future_lapply(
             seq_len(nrow(esm)),
             function(i) {
-                clustered_subs <- get_clustered_subs(esm[i, ])
+                clustered_subs <- get_cluster_df(esm[i, ])
                 for (j in seq_along(features)) {
                     current_outcome_component <- merged_df[, c(1, j + 1)]
                     current_outcome_name <-
@@ -606,42 +606,4 @@ calculate_associations <- function(data_list,
         #  pairwise association matrix.
         return(association_matrix)
     }
-}
-
-#' Get clustered subjects
-#'
-#' Pull a dataframe of clustered subjects from an solutions matrix structure.
-#'
-#' @param solutions_matrix_row Output matrix row containing subtype membership
-#'
-#' @return clustered_subs Dataframe
-#'
-#' @export
-get_clustered_subs <- function(solutions_matrix_row) {
-    solutions_matrix_row <- data.frame(solutions_matrix_row)
-    ###########################################################################
-    # To-do: Re-write this for clarity
-    ###########################################################################
-    clustered_subs <-
-        data.frame(
-            t(
-                solutions_matrix_row[
-                    1,
-                    which(
-                        startsWith(
-                            colnames(
-                                solutions_matrix_row
-                            ),
-                            "subject_"
-                        )
-                    )
-                ]
-            )
-        )
-    clustered_subs$"subjectkey" <- rownames(clustered_subs)
-    rownames(clustered_subs) <- NULL
-    clustered_subs <- clustered_subs |>
-        dplyr::select("subjectkey", dplyr::starts_with("X")) |>
-        dplyr::rename("cluster" = dplyr::starts_with("X"))
-    return(clustered_subs)
 }
