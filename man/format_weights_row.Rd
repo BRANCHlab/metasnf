@@ -2,7 +2,7 @@
 % Please edit documentation in R/weights.R
 \name{format_weights_row}
 \alias{format_weights_row}
-\title{Prep weights_row for matrix multiplication}
+\title{Properly format a vector of weights for matrix multiplication}
 \usage{
 format_weights_row(weights_row)
 }

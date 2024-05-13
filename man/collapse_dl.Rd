@@ -7,7 +7,7 @@
 collapse_dl(data_list)
 }
 \arguments{
-\item{data_list}{A data_list.}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 }
 \description{
 Collapse a data_list into a single dataframe

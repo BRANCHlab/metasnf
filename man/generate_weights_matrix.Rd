@@ -7,9 +7,7 @@
 generate_weights_matrix(data_list = NULL, nrow = 1, fill = "ones")
 }
 \arguments{
-\item{data_list}{A data_list with column names spanning all the variables that
-may ever require weights. Cannot be provided at the same time as the
-data parameter.}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{nrow}{Number of rows to generate the template weights matrix for.}
 
@@ -20,7 +18,7 @@ exponentially distributed random values).}
 }
 \value{
 weights_matrix A properly formatted matrix containing columns for
-all the variables that require weights and rows
+all the variables that require weights and rows.
 }
 \description{
 Generate a matrix to store variable weights

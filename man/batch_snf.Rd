@@ -19,7 +19,7 @@ batch_snf(
 )
 }
 \arguments{
-\item{data_list}{A nested list of input data. See ?generate_data_list.}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{settings_matrix}{A data.frame where each row completely defines an SNF
 pipeline transforming individual input dataframes into a final cluster

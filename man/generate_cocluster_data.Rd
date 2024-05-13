@@ -7,7 +7,7 @@
 generate_cocluster_data(data_list, data_list_subsamples, settings_matrix_row)
 }
 \arguments{
-\item{data_list}{A data_list (see ?generate_data_list).}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{data_list_subsamples}{A list of subsampled forms of the data_list
 (see ?subsample_data_list).}

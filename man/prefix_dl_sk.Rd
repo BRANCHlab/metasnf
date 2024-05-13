@@ -7,7 +7,7 @@
 prefix_dl_sk(data_list)
 }
 \arguments{
-\item{data_list}{A data_list}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 }
 \value{
 data_list A data_list without NAs

@@ -13,7 +13,7 @@ calculate_associations(
 )
 }
 \arguments{
-\item{data_list}{data_list containing variables for pairwise associations.}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{verbose}{If TRUE, prints new line everytime a p-value is being
 calculated.}

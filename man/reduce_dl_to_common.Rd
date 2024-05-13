@@ -7,7 +7,7 @@
 reduce_dl_to_common(data_list)
 }
 \arguments{
-\item{data_list}{The data_list object to be reduced}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 }
 \value{
 reduced_data_list The data_list object subsetted only to subjectssnf

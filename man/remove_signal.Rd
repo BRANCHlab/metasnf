@@ -7,7 +7,7 @@
 remove_signal(data_list, unwanted_signal_list, sig_digs = NULL)
 }
 \arguments{
-\item{data_list}{A data_list to correct.}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{unwanted_signal_list}{A data_list of categorical variables that should
 have their mean differences removed in the first data_list.}

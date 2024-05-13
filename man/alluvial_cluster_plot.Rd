@@ -21,7 +21,7 @@ algorithm varied over different numbers of clusters).}
 
 \item{similarity_matrix}{A similarity matrix.}
 
-\item{data_list}{A data_list that contains variables to include in the plot.}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{data}{A dataframe that contains variables to include in the plot.}
 

@@ -7,7 +7,7 @@
 remove_dl_na(data_list, return_missing = FALSE)
 }
 \arguments{
-\item{data_list}{A data_list}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{return_missing}{If TRUE, function returns a list where the first
 element is the data_list and the second element is a vector of unique IDs

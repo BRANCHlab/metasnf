@@ -7,7 +7,7 @@
 convert_uids(data_list, uid = NULL)
 }
 \arguments{
-\item{data_list}{a data_list}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{uid}{(string) the name of the uid column currently used data}
 }

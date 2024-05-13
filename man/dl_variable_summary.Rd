@@ -7,7 +7,7 @@
 dl_variable_summary(data_list)
 }
 \arguments{
-\item{data_list}{A data_list.}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 }
 \value{
 variable_level_summary A dataframe containing the name, type, and

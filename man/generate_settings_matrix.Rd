@@ -34,8 +34,7 @@ generate_settings_matrix(
 )
 }
 \arguments{
-\item{data_list}{A data list object to determine variables for inclusion and
-exclusion.}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{seed}{set a seed for the random matrix generation. Setting this value
 will change the seed of the global environment.}

@@ -9,7 +9,7 @@ assemble_data(data, data_list)
 \arguments{
 \item{data}{A dataframe.}
 
-\item{data_list}{A data_list.}
+\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 }
 \description{
 Collapse a dataframe and/or a data_list into a single dataframe
