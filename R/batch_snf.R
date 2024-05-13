@@ -430,7 +430,7 @@ batch_snf <- function(data_list,
 #' Execute inclusion
 #'
 #' Given a data list and a settings matrix row, returns a data list of selected
-#'  inputs
+#' inputs
 #'
 #' @param settings_matrix matrix indicating parameters to iterate SNF through
 #' @param data_list A nested list of input data from `generate_data_list()`.
