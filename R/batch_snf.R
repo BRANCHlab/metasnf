@@ -448,7 +448,8 @@ drop_inputs <- function(settings_matrix, data_list) {
     in_keeps_list <- lapply(data_list,
         function(x) {
             paste0("inc_", x$"name") %in% keepcols
-        }) # Converting to a logical type to do the selection
+        }
+    ) # Converting to a logical type to do the selection
     in_keeps_log <- c(unlist(in_keeps_list))
     # The selection
     selected_dl <- data_list[in_keeps_log]
