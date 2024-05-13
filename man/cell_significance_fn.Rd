@@ -16,5 +16,5 @@ cell_fun argument in ComplexHeatmap::Heatmap.
 }
 \description{
 This is an internal function meant to be used to by the
-correlation_pval_heatmap function.
+association_heatmap function.
 }

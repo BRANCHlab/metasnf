@@ -688,10 +688,10 @@ alluvial_cluster_plot <- function(cluster_sequence,
     # Dismissing the "no visible binding" problem during building
     ###########################################################################
     x <- ""
-    Frequency <- ""
+    frequency <- ""
     stratum <- ""
-    Count <- ""
-    Fill <- ""
+    count <- ""
+    fill <- ""
     ###########################################################################
     # Calculate the cluster solutions for each cluster algorithm provided
     ###########################################################################
@@ -717,31 +717,35 @@ alluvial_cluster_plot <- function(cluster_sequence,
     )
     alluvial_df <- alluvial_df |>
         dplyr::select(-dplyr::contains("subjectkey")) |>
-        dplyr::group_by(dplyr::across(1:ncol(alluvial_df) - 1)) |>
-        dplyr::summarize(Frequency = dplyr::n(), .groups = "keep") |>
+        dplyr::group_by(dplyr::across(0:(ncol(alluvial_df) - 1))) |>
+        dplyr::summarize("frequency" = dplyr::n(), .groups = "keep") |>
         data.frame()
     n_alluvial_columns <- length(cluster_sequence) + 1 + length(extra_outcomes)
     alluvial_indices <- 1:n_alluvial_columns
-    alluvial_df$"Fill" <- alluvial_df[, key_outcome]
+    alluvial_df$"fill" <- alluvial_df[, key_outcome]
     # change to lode form
     alluvial_df_lodes <- ggalluvial::to_lodes_form(
         alluvial_df,
         axes = alluvial_indices,
-        id = "Count"
+        id = "count"
     )
     ###########################################################################
     # Plotting
     ###########################################################################
-    plot <- alluvial_df_lodes |> ggplot2::ggplot(
+    plot <- ggplot2::ggplot(
+        alluvial_df_lodes,
         ggplot2::aes(
             x = x,
-            y = Frequency,
+            y = frequency,
             stratum = stratum,
-            alluvium = Count
+            alluvium = count
         )
     ) +
         ggalluvial::geom_alluvium(
-            ggplot2::aes(fill = Fill, color = Fill)
+            ggplot2::aes(
+                fill = fill,
+                color = fill
+            )
         ) +
         ggalluvial::geom_stratum(width = 1 / 4) +
         ggplot2::geom_text(
@@ -754,7 +758,8 @@ alluvial_cluster_plot <- function(cluster_sequence,
         ggplot2::labs(
             color = key_label,
             fill = key_label,
-            title = title
+            title = title,
+            y = "Frequency"
         ) +
         ggplot2::theme_bw() +
         ggplot2::theme(
@@ -809,7 +814,7 @@ alluvial_cluster_plot <- function(cluster_sequence,
 #' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
 #'
 #' @export
-correlation_pval_heatmap <- function(correlation_matrix,
+association_heatmap <- function(correlation_matrix,
                                      scale_diag = "max",
                                      cluster_rows = TRUE,
                                      cluster_columns = TRUE,
@@ -829,13 +834,9 @@ correlation_pval_heatmap <- function(correlation_matrix,
     confounder_names <- confounders |> unlist() |> as.character()
     out_of_models_names <- out_of_models |> unlist() |> as.character()
     peripheral_names <- c(confounder_names, out_of_models_names)
-    confounder_indices <- colnames(correlation_matrix) %in% confounder_names
-    oom_indices <- colnames(correlation_matrix) %in% out_of_models_names
-    peripheral_indices <- colnames(correlation_matrix) %in% peripheral_names
-    confounder_data <- correlation_matrix[!peripheral_indices, confounder_indices]
-    out_of_model_data <- correlation_matrix[!peripheral_indices, oom_indices]
-    peripheral_data <- correlation_matrix[!peripheral_indices, peripheral_indices]
-    correlation_matrix <- correlation_matrix[!peripheral_indices, !peripheral_indices]
+    peripheral_idx <- colnames(correlation_matrix) %in% peripheral_names
+    peripheral_data <- correlation_matrix[!peripheral_idx, peripheral_idx]
+    correlation_matrix <- correlation_matrix[!peripheral_idx, !peripheral_idx]
     ###########################################################################
     if (is.null(labels_colour)) {
         labels_colour <- c(rep("black", ncol(correlation_matrix)))
@@ -1022,7 +1023,7 @@ correlation_pval_heatmap <- function(correlation_matrix,
 #' Place significance stars on ComplexHeatmap cells.
 #'
 #' This is an internal function meant to be used to by the
-#' correlation_pval_heatmap function.
+#' association_heatmap function.
 #'
 #' @param data The matrix containing the cells to base the significance stars
 #' on.
@@ -1045,7 +1046,7 @@ cell_significance_fn <- function(data) {
             )
             flag <- 1
         }
-        if (flag == 0 & data[i, j] < 0.001) {
+        if (flag == 0 && data[i, j] < 0.001) {
             grid::grid.text(
                 "**",
                 x,
@@ -1056,7 +1057,7 @@ cell_significance_fn <- function(data) {
             )
             flag <- 1
         }
-        if (flag == 0 & data[i, j] < 0.01) {
+        if (flag == 0 && data[i, j] < 0.01) {
             grid::grid.text(
                 "*",
                 x,
