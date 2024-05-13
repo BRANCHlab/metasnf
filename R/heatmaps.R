@@ -212,7 +212,7 @@ label_splits <- function(split_vector, nrow) {
         start <- split_vector[i]
         end <- split_vector[i + 1]
         labels[start:end] <- LETTERS[i + 1]
-}
+    }
     return(labels)
 }
 
