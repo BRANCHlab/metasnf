@@ -7,13 +7,14 @@
 spectral_eigen_classic(similarity_matrix)
 }
 \arguments{
-\item{similarity_matrix}{A similarity matrix}
+\item{similarity_matrix}{A similarity matrix.}
 }
 \value{
-solution A vector indicating which cluster each patient was assigned
-to
+solution_data A list storing cluster assignments and the number of
+clusters.
 }
 \description{
 Applies spectral clustering to similarity matrix. Number of clusters is based
-on the eigen-gap heuristic.
+on the eigen-gap heuristic. Range of possible cluster solutions is fixed
+between 2 and 5 inclusive.
 }

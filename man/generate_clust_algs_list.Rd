@@ -42,7 +42,10 @@ clust_algs_list <- generate_clust_algs_list(
 # This will contain the base and user-provided clustering algorithms
 my_clustering_algorithm <- function(similarity_matrix) {
     # your code that converts similarity matrix to clusters here...
-    # solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    # solution_data <- list(
+    #     "solution" = solution,
+    #     "nclust" = number_of_clusters
+    # )
     # return(solution_data)
 }
 

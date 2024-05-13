@@ -10,8 +10,8 @@ spectral_ten(similarity_matrix)
 \item{similarity_matrix}{A similarity matrix}
 }
 \value{
-solution A vector indicating which cluster each patient was assigned
-to
+solution_data A list storing cluster assignments and the number of
+clusters.
 }
 \description{
 Applies spectral clustering to similarity matrix. Seeks ten clusters.

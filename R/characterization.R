@@ -47,9 +47,9 @@ get_cluster_solutions <- function(solutions_matrix) {
 #' which takes a solutions matrix with any number of rows and returns a
 #' dataframe indicating the cluster assignments for each of those rows.
 #'
-#' @param om_row Output matrix row
+#' @param solutions_matrix_row One row from a solutions matrix.
 #'
-#' @return cluster_df dataframe of cluster and subjectkey
+#' @return cluster_df dataframe of cluster and subjectkey.
 #'
 #' @export
 get_cluster_df <- function(solutions_matrix_row) {
