@@ -269,7 +269,7 @@ prefix_dl_sk <- function(data_list) {
     dl_prefixed <- lapply(
         data_list,
         function(x) {
-            x[[1]]$"subjectkey" <- paste0("subject_", x[[1]]$"subjectkey" )
+            x[[1]]$"subjectkey" <- paste0("subject_", x[[1]]$"subjectkey")
             return(x)
         }
     )
