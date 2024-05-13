@@ -15,8 +15,8 @@ div.aside { background-color:#fff2e6; }
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
 
@@ -36,10 +36,10 @@ distance_metrics_list <- generate_distance_metrics_list()
 ```
 
 The list is a list of functions (`euclidean_distance()` and `gower_distance()`), and printing them out directly can be messy.
-The `summarize_distance_metrics_list()` function prints the object with a nicer format.
+The `summarize_dml()` function prints the object with a nicer format.
 
 ```{r}
-summarize_distance_metrics_list(distance_metrics_list)
+summarize_dml(distance_metrics_list)
 ```
 
 These lists must always contain at least 1 distance metric for each of the 5 recognized types of variables: continuous, discrete, ordinal, categorical, and mixed (any combination of the previous four).
@@ -63,7 +63,7 @@ my_distance_metrics <- generate_distance_metrics_list(
     )
 )
 
-summarize_distance_metrics_list(my_distance_metrics)
+summarize_dml(my_distance_metrics)
 ```
 
 Now, during settings_matrix generation, we can provide our distance_metrics_list to ensure our new distance metrics will be used on some of our SNF runs.
@@ -138,7 +138,7 @@ no_default_metrics <- generate_distance_metrics_list(
     keep_defaults = FALSE
 )
 
-summarize_distance_metrics_list(no_default_metrics)
+summarize_dml(no_default_metrics)
 ```
 
 For this option, it is necessary to provide at least one distance metric for every variable type.
@@ -158,7 +158,7 @@ my_distance_metrics <- generate_distance_metrics_list(
     )
 )
 
-summarize_distance_metrics_list(my_distance_metrics)
+summarize_dml(my_distance_metrics)
 
 settings_matrix <- generate_settings_matrix(
     data_list,
