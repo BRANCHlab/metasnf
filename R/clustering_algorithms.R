@@ -32,7 +32,10 @@
 #' # This will contain the base and user-provided clustering algorithms
 #' my_clustering_algorithm <- function(similarity_matrix) {
 #'     # your code that converts similarity matrix to clusters here...
-#'     # solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+#'     # solution_data <- list(
+#'     #     "solution" = solution,
+#'     #     "nclust" = number_of_clusters
+#'     # )
 #'     # return(solution_data)
 #' }
 #'
@@ -102,8 +105,8 @@ summarize_clust_algs_list <- function(clust_algs_list) {
 #'
 #' @param similarity_matrix A similarity matrix
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_eigen <- function(similarity_matrix) {
@@ -112,8 +115,20 @@ spectral_eigen <- function(similarity_matrix) {
         NUMC = 2:10
     )
     number_of_clusters <- estimated_n$`Eigen-gap best`
-    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
-    return(list("solution" = solution, "nclust" = number_of_clusters))
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
+    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    if (number_of_clusters != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ",
+            length(unique(solution)),
+            " when the number requested based on the eigen-gap heuristic",
+            " was ", number_of_clusters, "."
+        )
+    }
+    return(solution_data)
 }
 
 #' Clustering algorithm: Spectral clustering with rotation cost heuristic
@@ -123,8 +138,8 @@ spectral_eigen <- function(similarity_matrix) {
 #'
 #' @param similarity_matrix A similarity matrix
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_rot <- function(similarity_matrix) {
@@ -138,18 +153,27 @@ spectral_rot <- function(similarity_matrix) {
         number_of_clusters
     )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    if (number_of_clusters != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ",
+            length(unique(solution)),
+            " when the number requested based on the rotation cost heuristic",
+            " was ", number_of_clusters, "."
+        )
+    }
     return(solution_data)
 }
 
 #' Clustering algorithm: Spectral clustering with eigen-gap heuristic
 #'
 #' Applies spectral clustering to similarity matrix. Number of clusters is based
-#'  on the eigen-gap heuristic.
+#' on the eigen-gap heuristic. Range of possible cluster solutions is fixed
+#' between 2 and 5 inclusive.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_eigen_classic <- function(similarity_matrix) {
@@ -172,8 +196,8 @@ spectral_eigen_classic <- function(similarity_matrix) {
 #'
 #' @param similarity_matrix A similarity matrix
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_rot_classic <- function(similarity_matrix) {
@@ -187,6 +211,14 @@ spectral_rot_classic <- function(similarity_matrix) {
         number_of_clusters
     )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    if (number_of_clusters != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ",
+            length(unique(solution)),
+            " when the number requested based on the rotation cost heuristic",
+            " was ", number_of_clusters, "."
+        )
+    }
     return(solution_data)
 }
 
@@ -196,8 +228,8 @@ spectral_rot_classic <- function(similarity_matrix) {
 #'
 #' @param similarity_matrix A similarity matrix
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_two <- function(similarity_matrix) {
@@ -207,6 +239,14 @@ spectral_two <- function(similarity_matrix) {
         number_of_clusters
     )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    if (number_of_clusters != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ",
+            length(unique(solution)),
+            " when the number requested based on the eigen-gap heuristic",
+            " was 2."
+        )
+    }
     return(solution_data)
 }
 
@@ -216,8 +256,8 @@ spectral_two <- function(similarity_matrix) {
 #'
 #' @param similarity_matrix A similarity matrix
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_three <- function(similarity_matrix) {
@@ -227,6 +267,14 @@ spectral_three <- function(similarity_matrix) {
         number_of_clusters
     )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    if (number_of_clusters != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ",
+            length(unique(solution)),
+            " when the number requested based on the eigen-gap heuristic",
+            " was 3."
+        )
+    }
     return(solution_data)
 }
 
@@ -236,8 +284,8 @@ spectral_three <- function(similarity_matrix) {
 #'
 #' @param similarity_matrix A similarity matrix
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_four <- function(similarity_matrix) {
@@ -247,6 +295,14 @@ spectral_four <- function(similarity_matrix) {
         number_of_clusters
     )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    if (number_of_clusters != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ",
+            length(unique(solution)),
+            " when the number requested based on the eigen-gap heuristic",
+            " was 4."
+        )
+    }
     return(solution_data)
 }
 
@@ -256,8 +312,8 @@ spectral_four <- function(similarity_matrix) {
 #'
 #' @param similarity_matrix A similarity matrix
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_five <- function(similarity_matrix) {
@@ -267,6 +323,14 @@ spectral_five <- function(similarity_matrix) {
         number_of_clusters
     )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    if (number_of_clusters != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ",
+            length(unique(solution)),
+            " when the number requested based on the eigen-gap heuristic",
+            " was 5."
+        )
+    }
     return(solution_data)
 }
 
@@ -276,8 +340,8 @@ spectral_five <- function(similarity_matrix) {
 #'
 #' @param similarity_matrix A similarity matrix
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_six <- function(similarity_matrix) {
@@ -287,6 +351,14 @@ spectral_six <- function(similarity_matrix) {
         number_of_clusters
     )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    if (number_of_clusters != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ",
+            length(unique(solution)),
+            " when the number requested based on the eigen-gap heuristic",
+            " was 6."
+        )
+    }
     return(solution_data)
 }
 
@@ -296,8 +368,8 @@ spectral_six <- function(similarity_matrix) {
 #'
 #' @param similarity_matrix A similarity matrix
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_seven <- function(similarity_matrix) {
@@ -307,6 +379,14 @@ spectral_seven <- function(similarity_matrix) {
         number_of_clusters
     )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    if (number_of_clusters != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ",
+            length(unique(solution)),
+            " when the number requested based on the eigen-gap heuristic",
+            " was 7."
+        )
+    }
     return(solution_data)
 }
 
@@ -316,8 +396,8 @@ spectral_seven <- function(similarity_matrix) {
 #'
 #' @param similarity_matrix A similarity matrix
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_eight <- function(similarity_matrix) {
@@ -327,6 +407,14 @@ spectral_eight <- function(similarity_matrix) {
         number_of_clusters
     )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    if (number_of_clusters != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ",
+            length(unique(solution)),
+            " when the number requested based on the eigen-gap heuristic",
+            " was 8."
+        )
+    }
     return(solution_data)
 }
 
@@ -336,8 +424,8 @@ spectral_eight <- function(similarity_matrix) {
 #'
 #' @param similarity_matrix A similarity matrix
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_nine <- function(similarity_matrix) {
@@ -347,6 +435,14 @@ spectral_nine <- function(similarity_matrix) {
         number_of_clusters
     )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    if (number_of_clusters != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ",
+            length(unique(solution)),
+            " when the number requested based on the eigen-gap heuristic",
+            " was 9."
+        )
+    }
     return(solution_data)
 }
 
@@ -356,8 +452,8 @@ spectral_nine <- function(similarity_matrix) {
 #'
 #' @param similarity_matrix A similarity matrix
 #'
-#' @return solution A vector indicating which cluster each patient was assigned
-#'  to
+#' @return solution_data A list storing cluster assignments and the number of
+#' clusters.
 #'
 #' @export
 spectral_ten <- function(similarity_matrix) {
@@ -367,5 +463,13 @@ spectral_ten <- function(similarity_matrix) {
         number_of_clusters
     )
     solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    if (number_of_clusters != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ",
+            length(unique(solution)),
+            " when the number requested based on the eigen-gap heuristic",
+            " was 10."
+        )
+    }
     return(solution_data)
 }
