@@ -16,43 +16,6 @@ dunn_indices A vector of Dunn indices for each cluster solution
 }
 \description{
 Given a solutions_matrix and a list of similarity_matrices (or a single
-similarity_matrix if the solutions_matrix has only 1 row), return a vector of
+similarity_matrix if the solutions_matrix has only 1 row), return vector of
 Dunn indices
-}
-\examples{
-
-if (require("clv")) {
-    # load package
-    library(metasnf)
-
-    # generate data_list
-    data_list <- generate_data_list(
-        list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
-        list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
-        list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-        list(abcd_income, "household_income", "demographics", "continuous"),
-        list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
-        uid = "patient"
-    )
-
-    # build settings_matrix
-    settings_matrix <- generate_settings_matrix(data_list, nrow = 15, seed = 42)
-
-    # collect similarity matrices and solutions matrix from batch_snf
-    batch_snf_results <- batch_snf(
-        data_list,
-        settings_matrix,
-        return_similarity_matrices = TRUE
-    )
-
-    solutions_matrix <- batch_snf_results$"solutions_matrix"
-    similarity_matrices <- batch_snf_results$"similarity_matrices"
-
-    # calculate Dunn indices
-    dunn_indices <- calculate_dunn_indices(
-        solutions_matrix,
-        similarity_matrices
-    )
-}
-
 }
