@@ -323,13 +323,13 @@ meta_cluster_order <- get_heatmap_order(solutions_matrix_aris)
 meta_cluster_order <- get_heatmap_order(solutions_matrix_aris)
 ```
 
-The order is just a vector of numbers...
+The order is just a vector of numbers:
 
 ```{r}
 meta_cluster_order
 ```
 
-... which can be passed into the `settings_matrix_heatmap` function:
+which can be passed into the `settings_matrix_heatmap` function:
 
 ```{r include = FALSE}
 settings_matrix_heatmap(
@@ -355,7 +355,7 @@ Maybe you'll see something interesting!
 ### 2. Quality measures
 
 Quality metrics are another useful heuristic for the goodness of a cluster that don't require any contextualization of results in the domain they may be used in.
-r-package enables measures of silhouette scores, Dunn indices, and Davies-Bouldin indices.
+metaSNF enables measures of silhouette scores, Dunn indices, and Davies-Bouldin indices.
 To calculate these values, we'll need not only the cluster results but also the final fused network (the similarity matrices produced by SNF) that the clusters came from.
 These similarity matrices can be collected from the `batch_snf` using the `return_similarity_matrices` parameter:
 
@@ -376,11 +376,20 @@ The second element is *yet another list* containing one final fused network (AKA
 Using those two lists, we can calculate the above mentioned quality metrics:
 
 ```{r eval = FALSE}
-silhouette_scores <- calculate_silhouettes(solutions_matrix, similarity_matrices)
+silhouette_scores <- calculate_silhouettes(
+    solutions_matrix,
+    similarity_matrices
+)
 
-dunn_indices <- calculate_dunn_indices(solutions_matrix, similarity_matrices)
+dunn_indices <- calculate_dunn_indices(
+    solutions_matrix,
+    similarity_matrices
+)
 
-db_indices <- calculate_db_indices(solutions_matrix, similarity_matrices)
+db_indices <- calculate_db_indices(
+    solutions_matrix,
+    similarity_matrices
+)
 ```
 
 The first function is a wrapper around `cluster::silhouette` while the second and third come from the *clv* package.
@@ -395,7 +404,7 @@ The original documentation on these functions can be helpful for interpreting an
 
 ### 3. Stability measures
 
-r-package offers tools to evaluate two different measures of stability:
+metaSNF offers tools to evaluate two different measures of stability:
 
 1. Pairwise adjusted Rand indices (across resamplings of the clustering, on average, how similar was every pair of solutions according to the adjusted Rand index?)
 2. Fraction clustered together (what is the average fraction of times that patients who clustered together in the full results clustered together in resampled results?)
@@ -477,20 +486,19 @@ head(target_pvals)
 
 There is a heatmap for visualizing this too:
 
-```{r include = FALSE}
-pvals_heatmap(
-    target_pvals,
-    order = meta_cluster_order,
-    save = "./pvals_heatmap_ordered.png"
+```{r eval = FALSE}
+pval_hm <- pval_heatmap(target_pvals, order = meta_cluster_order)
+
+save_heatmap(
+    heatmap = pval_hm,
+    path = "./pval_heatmap_ordered.png",
+    width = 400,
+    height = 500,
+    res = 100
 )
 ```
 
-```{r eval = FALSE}
-pvals_heatmap(target_pvals, order = meta_cluster_order)
-```
-
 <center>
-![](./pvals_heatmap_ordered.png){width=400px}
 </center>
 
 These p-values hold no real meaning for the traditional hypothesis-testing context, but they are reasonable proxies of the magnitude of the effect size / separation of the clusters across the variables in question.

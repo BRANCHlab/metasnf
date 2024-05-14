@@ -164,10 +164,10 @@ Sure enough, we are able to obtain the correct cluster label for all patients.
 all(true_label == assigned_clusters)
 ```
 
-## The same example using *r-package*
+## The same example using metaSNF
 
-The purpose of *r-package* is primarily to aid users explore a wide possible range of solutions.
-Recreating the example provided with the original `SNF` function will be an extremely restricted usage of the package, but will reveal, broadly, how *r-package* works.
+The purpose of metaSNF is primarily to aid users explore a wide possible range of solutions.
+Recreating the example provided with the original `SNF` function will be an extremely restricted usage of the package, but will reveal, broadly, how metaSNF works.
 
 ### 1. Load the package
 

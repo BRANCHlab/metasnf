@@ -24,7 +24,7 @@ Download a copy of the vignette to follow along here: [distance_metrics.Rmd](htt
 
 ## The distance_metrics_list
 
-r-package enables users to customize what distance metrics are used in the SNF pipeline.
+metaSNF enables users to customize what distance metrics are used in the SNF pipeline.
 All information about distance metrics are stored in a `distance_metrics_list` object.
 
 By default, `batch_snf` will create its own `distance_metrics_list` by calling the `generate_distance_metrics_list` function with no additional arguments.
@@ -50,7 +50,7 @@ Categorical and mixed data are handled using Gower's formula as implemented by t
 ## How the distance_metrics_list is used
 
 To show how the distance_metrics_list is used, we'll start by extending our distance_metrics_list beyond just the default options.
-r-package provides a Euclidean distance function that applies standard normalization first, `sn_euclidean_distance()` (a wrapper around `SNFtool::standardNormalization` + `stats::dist`).
+metaSNF provides a Euclidean distance function that applies standard normalization first, `sn_euclidean_distance()` (a wrapper around `SNFtool::standardNormalization` + `stats::dist`).
 Here's how we can create a custom distance_metrics_list that includes this metric for continuous and discrete variables.
 
 ```{r}
@@ -310,7 +310,7 @@ By the time your data reaches a distance metric function, it (referred to as `df
 
 The variable column names won't be altered from the values they had when they were loaded into the data_list.
 
-For example, consider the `abcd_anxiety` raw data supplied by r-package:
+For example, consider the `abcd_anxiety` raw data supplied by metaSNF:
 
 ```{r}
 head(abcd_anxiety)

@@ -26,7 +26,7 @@ Download a copy of the vignette to follow along here: [getting_started.Rmd](http
 
 **What is this package?**
 
-*r-package* is a package that facilitates usage of the meta clustering paradigm described in [Caruana et al., 2006](https://doi.org/10.1109/ICDM.2006.103) with the similarity network fusion (SNF) data integration procedure developed in [Wang et al., 2014](https://doi.org/10.1038/nmeth.2810).
+*metaSNF* is a package that facilitates usage of the meta clustering paradigm described in [Caruana et al., 2006](https://doi.org/10.1109/ICDM.2006.103) with the similarity network fusion (SNF) data integration procedure developed in [Wang et al., 2014](https://doi.org/10.1038/nmeth.2810).
 The package offers a comprehensive suite of tools to assist users in transforming raw patient data into patient subtypes, decision making in the subtyping process, and visualization along the way with a strong emphasis on context-specific utility and principled validation of results.
 
 <br>
