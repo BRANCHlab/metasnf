@@ -11,7 +11,7 @@
 #' @param sig_digs Number of significant digits to round the residuals to.
 #'
 #' @export
-remove_signal <- function(data_list, unwanted_signal_list, sig_digs = NULL) {
+linear_adjust <- function(data_list, unwanted_signal_list, sig_digs = NULL) {
     ###########################################################################
     # 1. Check to ensure the patients match
     ###########################################################################
