@@ -279,7 +279,7 @@ unwanted_signal_list2 <- generate_data_list(
     uid = "id"
 )
 
-adjusted_dl <- remove_signal(dl, unwanted_signal_list1)
+adjusted_dl <- linear_adjust(dl, unwanted_signal_list1)
 
 # Combine the data from the two data_lists the second list is being merged
 # only because it also has the position data, for plotting purposes
@@ -291,7 +291,7 @@ merged_df |>
      theme_bw()
 
 # Correcting too many things!
-adjusted_dl2 <- remove_signal(dl, unwanted_signal_list2)
+adjusted_dl2 <- linear_adjust(dl, unwanted_signal_list2)
 
 merged_df2 <- collapse_dl(c(adjusted_dl2, unwanted_signal_list2))
 
