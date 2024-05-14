@@ -33,6 +33,7 @@ summarize_target_list <- function(target_list) {
             name = unlist(lapply(target_list, function(x) x$"name")),
             type = unlist(lapply(target_list, function(x) x$"type")),
             length = unlist(lapply(target_list, function(x) dim(x$"data")[1])),
-            width = unlist(lapply(target_list, function(x) dim(x$"data")[2])))
+            width = unlist(lapply(target_list, function(x) dim(x$"data")[2]))
+    )
     return(ol_summary)
 }
