@@ -1,0 +1,80 @@
+---
+title: "Quality Measures"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+vignette: >
+  %\VignetteIndexEntry{Quality Measures}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+div.aside { background-color:#fff2e6; }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+Download a copy of the vignette to follow along here: [quality_measures.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/quality_measures.Rmd)
+
+This vignette walks through calculation of silhouette scores, Dunn indices, and Davies-Boulding indices a we will highlight the main stability measure options in the metaSNF package.
+
+To use these functions, you will need to have the `clv` package installed.
+
+```{r eval = FALSE}
+# load package
+library(metasnf)
+
+# generate data_list
+data_list <- generate_data_list(
+    list(abcd_cort_t, "cort_t", "neuroimaging", "continuous"),
+    list(abcd_cort_sa, "cort_sa", "neuroimaging", "continuous"),
+    list(abcd_subc_v, "subc_v", "neuroimaging", "continuous"),
+    list(abcd_income, "income", "demographics", "continuous"),
+    list(abcd_pubertal, "pubertal", "demographics", "continuous"),
+    uid = "patient"
+)
+
+# build settings_matrix
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 15,
+    seed = 42
+)
+
+# collect similarity matrices and solutions matrix from batch_snf
+batch_snf_results <- batch_snf(
+    data_list,
+    settings_matrix,
+    return_similarity_matrices = TRUE
+)
+
+solutions_matrix <- batch_snf_results$"solutions_matrix"
+similarity_matrices <- batch_snf_results$"similarity_matrices"
+
+# calculate Davies-Bouldin indices
+davies_bouldin_indices <- calculate_db_indices(
+    solutions_matrix,
+    similarity_matrices
+)
+
+# calculate Dunn indices
+dunn_indices <- calculate_dunn_indices(
+    solutions_matrix,
+    similarity_matrices
+)
+
+# calculate silhouette scores
+silhouette_scores <- calculate_silhouettes(
+    solutions_matrix,
+    similarity_matrices
+)
+
+# plot the silhouette scores of the first solutions
+plot(silhouette_scores[[1]])
+```
