@@ -93,16 +93,16 @@ batch_snf <- function(data_list,
     # is not really doing anything. Stop the function with an error.
     no_similarity_matrices <-
         is.null(similarity_matrix_dir) & !return_similarity_matrices
-    if (no_similarity_matrices & suppress_clustering) {
+    if (no_similarity_matrices && suppress_clustering) {
         stop(
             paste0(
-               "batch_snf has been called with the suppress_clustering",
-               " parameter set to TRUE (no clustering will occur), no path",
-               " provided in the similarity_matrix_dir parameter for storing",
-               " matrices, and return_similarity_matrices set to FALSE so that",
-               " similarity matrices are not being returned. With this",
-               " combination of settings, the batch_snf function yields no",
-               " meaningful output."
+                "batch_snf has been called with the suppress_clustering",
+                " parameter set to TRUE (no clustering will occur), no path",
+                " provided in the similarity_matrix_dir parameter for storing",
+                " matrices, and return_similarity_matrices set to FALSE so",
+                " that similarity matrices are not being returned. With this",
+                " combination of settings, the batch_snf function yields no",
+                " meaningful output."
             )
         )
     }
@@ -227,8 +227,8 @@ batch_snf <- function(data_list,
                 processes = available_cores
             )
             return(solutions_matrix)
-        # Use the user-specified number of cores
         } else if (is.numeric(processes)) {
+            # Use the user-specified number of cores
             if (processes > available_cores) {
                 warning("More processes than cores available specified.")
                 print(
@@ -251,8 +251,8 @@ batch_snf <- function(data_list,
                 processes = processes
             )
             return(solutions_matrix)
-        # Invalid input check
         } else {
+            # Invalid input check
             stop("Invalid number of processes specified.")
         }
     }
@@ -455,4 +455,397 @@ drop_inputs <- function(settings_matrix, data_list) {
     selected_dl <- data_list[in_keeps_log]
     reduced_selected_dl <- reduce_dl_to_common(selected_dl)
     return(reduced_selected_dl)
+}
+
+#' Calculate distance matrices
+#'
+#' Given a dataframe of numerical variables, return a euclidean distance matrix.
+#'
+#' @param df Raw dataframe with subject IDs in column "subjectkey"
+#' @param input_type Either "numeric" (resulting in euclidean distances),
+#'  "categorical" (resulting in binary distances), or "mixed" (resulting in
+#'  gower distances)
+#' @param cont_dist_fn distance metric function for continuous data
+#' @param disc_dist_fn distance metric function for discrete data
+#' @param ord_dist_fn distance metric function for ordinal data
+#' @param cat_dist_fn distance metric function for categorical data
+#' @param mix_dist_fn distance metric function for mixed data
+#' @param weights_row Single-row dataframe where the column names contain the
+#'  column names in df and the row contains the corresponding weights_row.
+#'
+#' @return dist_matrix Matrix of inter-observation distances
+#'
+#' @export
+get_dist_matrix <- function(df,
+                            input_type,
+                            cont_dist_fn,
+                            disc_dist_fn,
+                            ord_dist_fn,
+                            cat_dist_fn,
+                            mix_dist_fn,
+                            weights_row) {
+    # Move subject keys into dataframe rownames
+    df <- data.frame(df, row.names = "subjectkey")
+    # Trim down of the full weights row
+    weights_row_trim <-
+        weights_row[, colnames(weights_row) %in% colnames(df), drop = FALSE]
+    # Use 1 for anything that is not present in weights_row
+    missing_weights <-
+        df[1, !colnames(df) %in% colnames(weights_row_trim), drop = FALSE]
+    missing_weights[, ] <- 1
+    weights_row_trim <- cbind(weights_row_trim, missing_weights)
+    weights_row_trim <- weights_row_trim[, colnames(df)]
+    if (input_type == "continuous") {
+        dist_fn <- cont_dist_fn
+    } else if (input_type == "discrete") {
+        dist_fn <- disc_dist_fn
+    } else if (input_type == "ordinal") {
+        dist_fn <- ord_dist_fn
+    } else if (input_type == "categorical") {
+        dist_fn <- cat_dist_fn
+    } else if (input_type == "mixed") {
+        dist_fn <- mix_dist_fn
+    } else {
+        rlang::abort(
+            paste0("The value ", input_type, " is not a valid input type."),
+            class = "invalid_input"
+        )
+    }
+    dist_matrix <- dist_fn(df, weights_row_trim)
+    return(dist_matrix)
+}
+
+#' Convert a data list to a similarity matrix through a variety of SNF schemes
+#'
+#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param scheme Which SNF system to use to achieve the final fused network
+#' @param k k hyperparameter
+#' @param alpha alpha/eta/sigma hyperparameter
+#' @param t SNF number of iterations hyperparameter
+#' @param cont_dist_fn distance metric function for continuous data
+#' @param disc_dist_fn distance metric function for discrete data
+#' @param ord_dist_fn distance metric function for ordinal data
+#' @param cat_dist_fn distance metric function for categorical data
+#' @param mix_dist_fn distance metric function for mixed data
+#' @param weights_row dataframe row containing variable weights
+#'
+#' @return fused_network The final fused network for clustering
+#'
+#' @export
+snf_step <- function(data_list,
+                     scheme,
+                     k = 20,
+                     alpha = 0.5,
+                     t = 20,
+                     cont_dist_fn,
+                     disc_dist_fn,
+                     ord_dist_fn,
+                     cat_dist_fn,
+                     mix_dist_fn,
+                     weights_row) {
+    # The individual scheme creates similarity matrices for each dl element
+    # and pools them all into a single SNF run.
+    #
+    # The domain scheme first runs domain merge on the data list (concatenates
+    # any data of the same domain) and then pools the concatenated data into a
+    # single SNF run.
+    #
+    # The twostep scheme
+    if (scheme %in% c("individual", 1)) {
+        fused_network <- individual(
+            data_list,
+            cont_dist_fn = cont_dist_fn,
+            disc_dist_fn = disc_dist_fn,
+            ord_dist_fn = ord_dist_fn,
+            cat_dist_fn = cat_dist_fn,
+            mix_dist_fn = mix_dist_fn,
+            weights_row = weights_row,
+            k = k,
+            alpha = alpha,
+            t = t
+        )
+    } else if (scheme %in% c("domain", 2)) {
+        fused_network <- domain_merge(
+            data_list,
+            cont_dist_fn = cont_dist_fn,
+            disc_dist_fn = disc_dist_fn,
+            ord_dist_fn = ord_dist_fn,
+            cat_dist_fn = cat_dist_fn,
+            mix_dist_fn = mix_dist_fn,
+            weights_row = weights_row,
+            k = k,
+            alpha = alpha,
+            t = t
+        )
+    } else if (scheme %in% c("twostep", 3)) {
+        fused_network <- two_step_merge(
+            data_list,
+            k = k,
+            alpha = alpha,
+            t = t,
+            cont_dist_fn = cont_dist_fn,
+            disc_dist_fn = disc_dist_fn,
+            ord_dist_fn = ord_dist_fn,
+            cat_dist_fn = cat_dist_fn,
+            mix_dist_fn = mix_dist_fn,
+            weights_row = weights_row
+        )
+    } else {
+        rlang::abort(
+            paste0("The value '", scheme, "' is not a valid snf scheme."),
+            class = "invalid_input"
+        )
+    }
+    return(fused_network)
+}
+
+#' Two step SNF
+#'
+#' Individual dataframes into individual similarity matrices into one fused
+#'  network per domain into one final fused network.
+#'
+#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param k k hyperparameter
+#' @param alpha alpha/eta/sigma hyperparameter
+#' @param t SNF number of iterations hyperparameter
+#' @param cont_dist_fn distance metric function for continuous data
+#' @param disc_dist_fn distance metric function for discrete data
+#' @param ord_dist_fn distance metric function for ordinal data
+#' @param cat_dist_fn distance metric function for categorical data
+#' @param mix_dist_fn distance metric function for mixed data
+#' @param weights_row dataframe row containing variable weights
+#'
+#' @return fused_network The final fused network for clustering
+#'
+#' @export
+two_step_merge <- function(data_list,
+                           k = 20,
+                           alpha = 0.5,
+                           t = 20,
+                           cont_dist_fn,
+                           disc_dist_fn,
+                           ord_dist_fn,
+                           cat_dist_fn,
+                           mix_dist_fn,
+                           weights_row) {
+    dist_list <- lapply(
+        data_list,
+        function(x) {
+            get_dist_matrix(
+                df = x$"data",
+                input_type = x$"type",
+                cont_dist_fn = cont_dist_fn,
+                disc_dist_fn = disc_dist_fn,
+                ord_dist_fn = ord_dist_fn,
+                cat_dist_fn = cat_dist_fn,
+                mix_dist_fn = mix_dist_fn,
+                weights_row = weights_row
+            )
+        }
+    )
+    sim_list <- lapply(
+        dist_list,
+        function(x) {
+            SNFtool::affinityMatrix(x, K = k, sigma = alpha)
+        }
+    )
+    similarity_list <- data_list
+    for (i in seq_along(similarity_list)) {
+        similarity_list[[i]]$"data" <- sim_list[[i]]
+    }
+    similarity_unique_dl <- list()
+    unique_domains <- unique(unlist(domains(similarity_list)))
+    for (i in seq_along(unique_domains)) {
+        similarity_unique_dl <- append(similarity_unique_dl, list(list()))
+    }
+    names(similarity_unique_dl) <- unique_domains
+    for (i in seq_along(similarity_list)) {
+        al_current_domain <- similarity_list[[i]]$"domain"
+        al_current_amatrix <- similarity_list[[i]]$"data"
+        audl_domain_pos <- which(
+            names(similarity_unique_dl) == al_current_domain
+        )
+        similarity_unique_dl[[audl_domain_pos]] <- append(
+            similarity_unique_dl[[audl_domain_pos]],
+            list(al_current_amatrix)
+        )
+    }
+    # Fusing individual matrices into domain similarity matrices
+    step_one <- lapply(
+        similarity_unique_dl,
+        function(x) {
+            if (length(x) == 1) {
+                x[[1]]
+            } else {
+                SNFtool::SNF(Wall = x, K = k, t = t)
+            }
+        }
+    )
+    # Fusing domain similarity matrices into final fused network
+    if (length(step_one) > 1) {
+        fused_network <- SNFtool::SNF(Wall = step_one, K = k, t = t)
+    } else {
+        fused_network <- step_one[[1]]
+    }
+    return(fused_network)
+}
+
+#' SNF scheme: Domain merge
+#'
+#' Given a data_list, returns a new data_list where all original data objects of
+#'  a particlar domain have been concatenated.
+#'
+#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param k k hyperparameter
+#' @param alpha alpha/eta/sigma hyperparameter
+#' @param t SNF number of iterations hyperparameter
+#' @param cont_dist_fn distance metric function for continuous data
+#' @param disc_dist_fn distance metric function for discrete data
+#' @param ord_dist_fn distance metric function for ordinal data
+#' @param cat_dist_fn distance metric function for categorical data
+#' @param mix_dist_fn distance metric function for mixed data
+#' @param weights_row dataframe row containing variable weights
+#'
+#' @return fused_network The final fused network for clustering
+#'
+#' @export
+domain_merge <- function(data_list,
+                         cont_dist_fn,
+                         disc_dist_fn,
+                         ord_dist_fn,
+                         cat_dist_fn,
+                         mix_dist_fn,
+                         weights_row,
+                         k,
+                         alpha,
+                         t) {
+    # list to store all the possible values
+    merged_dl <- list()
+    for (i in seq_along(data_list)) {
+        current_domain <- data_list[[i]]$"domain"
+        current_data <- data_list[[i]]$"data"
+        current_type <- data_list[[i]]$"type"
+        merged_dl_domains <- summarize_dl(merged_dl)$"domain" |> unique()
+        if (current_domain %in% merged_dl_domains) {
+            # the index of the new data_list that already has the domain of the
+            #  ith component of the original data_list
+            existing_pos <- which(merged_dl_domains == current_domain)
+            existing_component <- merged_dl[[existing_pos]]
+            existing_data <- existing_component$"data"
+            existing_type <- existing_component$"type"
+            new_data <- dplyr::inner_join(
+                existing_data,
+                current_data,
+                by = "subjectkey"
+            )
+            if (current_type == existing_type) {
+                new_type <- existing_type
+            } else {
+                new_type <- "mixed"
+            }
+            merged_dl[[existing_pos]]$"data" <- new_data
+            merged_dl[[existing_pos]]$"type" <- new_type
+        } else {
+            merged_dl[[length(merged_dl) + 1]] <- data_list[[i]]
+        }
+    }
+    merged_dl <- merged_dl |>
+        lapply(
+            function(x) {
+                x$"name" <- paste0("merged_", x$"domain")
+                return(x)
+            }
+        )
+    # now that we have the merged data_list, complete the conversion to
+    #  distance and similarity matrices
+    dist_list <- lapply(merged_dl,
+        function(x) {
+            get_dist_matrix(
+                df = x$"data",
+                input_type = x$"type",
+                cont_dist_fn = cont_dist_fn,
+                disc_dist_fn = disc_dist_fn,
+                ord_dist_fn = ord_dist_fn,
+                cat_dist_fn = cat_dist_fn,
+                mix_dist_fn = mix_dist_fn,
+                weights_row = weights_row
+            )
+        }
+    )
+    sim_list <- lapply(
+        dist_list,
+        function(x) {
+            similarity_matrix <- SNFtool::affinityMatrix(
+                x,
+                K = k,
+                sigma = alpha
+            )
+            return(similarity_matrix)
+        }
+    )
+    if (length(sim_list) > 1) {
+        fused_network <- SNFtool::SNF(Wall = sim_list, K = k, t = t)
+    } else {
+        fused_network <- sim_list[[1]]
+    }
+    return(fused_network)
+}
+
+#' SNF Scheme: Individual
+#'
+#' The "vanilla" scheme - does distance matrix conversions of each input
+#'  dataframe in a list and
+#'
+#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param k k hyperparameter
+#' @param alpha alpha/eta/sigma hyperparameter
+#' @param t SNF number of iterations hyperparameter
+#' @param cont_dist_fn distance metric function for continuous data
+#' @param disc_dist_fn distance metric function for discrete data
+#' @param ord_dist_fn distance metric function for ordinal data
+#' @param cat_dist_fn distance metric function for categorical data
+#' @param mix_dist_fn distance metric function for mixed data
+#' @param weights_row dataframe row containing variable weights
+#'
+#' @return fused_network The final fused network for clustering
+#'
+#' @export
+individual <- function(data_list,
+                       cont_dist_fn,
+                       disc_dist_fn,
+                       ord_dist_fn,
+                       cat_dist_fn,
+                       mix_dist_fn,
+                       weights_row,
+                       k,
+                       alpha,
+                       t) {
+    dist_list <- lapply(
+        data_list,
+        function(x) {
+            get_dist_matrix(
+                df = x$"data",
+                input_type = x$"type",
+                cont_dist_fn = cont_dist_fn,
+                disc_dist_fn = disc_dist_fn,
+                ord_dist_fn = ord_dist_fn,
+                cat_dist_fn = cat_dist_fn,
+                mix_dist_fn = mix_dist_fn,
+                weights_row = weights_row
+            )
+        }
+    )
+    sim_list <- lapply(
+        dist_list,
+        function(x) {
+            SNFtool::affinityMatrix(x, K = k, sigma = alpha)
+        }
+    )
+    # If only a single similarity matrix is in the sim_list, no need for SNF
+    if (length(sim_list) > 1) {
+        fused_network <- SNFtool::SNF(Wall = sim_list, K = k, t = t)
+    } else {
+        fused_network <- sim_list[[1]]
+    }
+    return(fused_network)
 }
