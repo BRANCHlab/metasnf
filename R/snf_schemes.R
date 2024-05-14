@@ -27,7 +27,13 @@ snf_step <- function(data_list,
                      mix_dist_fn,
                      weights_row) {
     # The individual scheme creates similarity matrices for each dl element
-    #  and pools them all into a single SNF run
+    # and pools them all into a single SNF run.
+    #
+    # The domain scheme first runs domain merge on the data list (concatenates
+    # any data of the same domain) and then pools the concatenated data into a
+    # single SNF run.
+    #
+    # The twostep scheme
     if (scheme %in% c("individual", 1)) {
         fused_network <- individual(
             data_list,
@@ -41,9 +47,6 @@ snf_step <- function(data_list,
             alpha = alpha,
             t = t
         )
-    # The domain scheme first runs domain merge on the data list (concatenates
-    #  any data of the same domain) and then pools the concatenated data into a
-    #  single SNF run
     } else if (scheme %in% c("domain", 2)) {
         fused_network <- domain_merge(
             data_list,
@@ -57,7 +60,6 @@ snf_step <- function(data_list,
             alpha = alpha,
             t = t
         )
-    # The twostep scheme
     } else if (scheme %in% c("twostep", 3)) {
         fused_network <- two_step_merge(
             data_list,
@@ -74,7 +76,8 @@ snf_step <- function(data_list,
     } else {
         rlang::abort(
             paste0("The value '", scheme, "' is not a valid snf scheme."),
-            class = "invalid_input")
+            class = "invalid_input"
+        )
     }
     return(fused_network)
 }
@@ -142,20 +145,25 @@ two_step_merge <- function(data_list,
     for (i in seq_along(similarity_list)) {
         al_current_domain <- similarity_list[[i]]$"domain"
         al_current_amatrix <- similarity_list[[i]]$"data"
-        audl_domain_pos <- which(names(similarity_unique_dl) == al_current_domain)
-        similarity_unique_dl[[audl_domain_pos]] <-
-            append(similarity_unique_dl[[audl_domain_pos]],
-            list(al_current_amatrix))
+        audl_domain_pos <- which(
+            names(similarity_unique_dl) == al_current_domain
+        )
+        similarity_unique_dl[[audl_domain_pos]] <- append(
+            similarity_unique_dl[[audl_domain_pos]],
+            list(al_current_amatrix)
+        )
     }
     # Fusing individual matrices into domain similarity matrices
-    step_one <- lapply(similarity_unique_dl,
-       function(x) {
-           if (length(x) == 1) {
-               x[[1]]
-           } else {
-               SNFtool::SNF(Wall = x, K = k, t = t)
-           }
-       })
+    step_one <- lapply(
+        similarity_unique_dl,
+        function(x) {
+            if (length(x) == 1) {
+                x[[1]]
+            } else {
+                SNFtool::SNF(Wall = x, K = k, t = t)
+            }
+        }
+    )
     # Fusing domain similarity matrices into final fused network
     if (length(step_one) > 1) {
         fused_network <- SNFtool::SNF(Wall = step_one, K = k, t = t)
@@ -194,14 +202,11 @@ domain_merge <- function(data_list,
                          k,
                          alpha,
                          t) {
-    #dl_summary <- summarize_dl(data_list)
-    #domains <- dl_summary$"domain" |> unique()
     # list to store all the possible values
     merged_dl <- list()
     for (i in seq_along(data_list)) {
         current_domain <- data_list[[i]]$"domain"
         current_data <- data_list[[i]]$"data"
-        current_name <- data_list[[i]]$"name"
         current_type <- data_list[[i]]$"type"
         merged_dl_domains <- summarize_dl(merged_dl)$"domain" |> unique()
         if (current_domain %in% merged_dl_domains) {
