@@ -52,6 +52,9 @@
     <loc>https://branchlab.github.io/metasnf/articles/parallel_processing.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/articles/quality_measures.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/articles/settings_matrix.html</loc>
   </url>
   <url>
@@ -124,15 +127,6 @@
     <loc>https://branchlab.github.io/metasnf/reference/assemble_data.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/assigned_clust_hist.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/assigned_clust_pheatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/assigned_clust_scatter.html</loc>
-  </url>
-  <url>
     <loc>https://branchlab.github.io/metasnf/reference/association_heatmap.html</loc>
   </url>
   <url>
@@ -176,9 +170,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/chi_squared_pval.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/clean_plot.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/cocluster_heatmap.html</loc>
@@ -295,6 +286,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/label_splits.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/linear_adjust.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/linear_model_pval.html</loc>
   </url>
   <url>
@@ -334,7 +328,7 @@
     <loc>https://branchlab.github.io/metasnf/reference/prefix_dl_sk.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/pvals_heatmap.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/pval_heatmap.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/random_removal.html</loc>
@@ -346,13 +340,16 @@
     <loc>https://branchlab.github.io/metasnf/reference/remove_dl_na.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/remove_signal.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/rename_dl.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/reorder_dl_subs.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/resample.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/save_heatmap.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/scale_diagonals.html</loc>

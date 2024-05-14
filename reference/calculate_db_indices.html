@@ -46,6 +46,7 @@ Davies-Bouldin indices"><meta name="google-site-verification" content="Xzz1SIDqv
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Additional functionality</h6>
     <a class="dropdown-item" href="../articles/stability_measures.html">Stability Measures and Consensus Clustering</a>
+    <a class="dropdown-item" href="../articles/quality_measures.html">Quality Measures</a>
     <a class="dropdown-item" href="../articles/confounders.html">Confounders and Unwanted Signal</a>
     <a class="dropdown-item" href="../articles/parallel_processing.html">Parallel processing</a>
     <a class="dropdown-item" href="../articles/label_propagation.html">Label propagation</a>
@@ -101,67 +102,9 @@ Davies-Bouldin indices</p>
     
 
 <p>davies_bouldin_indices A vector of Davies-Bouldin indices for each
-cluster solution</p>
+cluster solution.</p>
     </div>
 
-    <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st">"clv"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="co"># load package</span></span></span>
-<span class="r-in"><span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span>    <span class="co"># generate data_list</span></span></span>
-<span class="r-in"><span>    <span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>        uid <span class="op">=</span> <span class="st">"patient"</span></span></span>
-<span class="r-in"><span>    <span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span>    <span class="co"># build settings_matrix</span></span></span>
-<span class="r-in"><span>    <span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span><span class="va">data_list</span>, nrow <span class="op">=</span> <span class="fl">15</span>, seed <span class="op">=</span> <span class="fl">42</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span>    <span class="co"># collect similarity matrices and solutions matrix from batch_snf</span></span></span>
-<span class="r-in"><span>    <span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="batch_snf.html">batch_snf</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>        <span class="va">data_list</span>,</span></span>
-<span class="r-in"><span>        <span class="va">settings_matrix</span>,</span></span>
-<span class="r-in"><span>        return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span></span>
-<span class="r-in"><span>    <span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span>    <span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span></span>
-<span class="r-in"><span>    <span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span>    <span class="co"># calculate Davies-Bouldin indices</span></span></span>
-<span class="r-in"><span>    <span class="va">davies_bouldin_indices</span> <span class="op">&lt;-</span> <span class="fu">calculate_db_indices</span><span class="op">(</span></span></span>
-<span class="r-in"><span>        <span class="va">solutions_matrix</span>,</span></span>
-<span class="r-in"><span>        <span class="va">similarity_matrices</span></span></span>
-<span class="r-in"><span>    <span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: clv</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: cluster</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: class</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "The global seed has been changed!"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 1/15 | Time remaining: 3 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 2/15 | Time remaining: 3 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 3/15 | Time remaining: 3 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 4/15 | Time remaining: 2 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 5/15 | Time remaining: 2 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 6/15 | Time remaining: 2 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 7/15 | Time remaining: 2 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 8/15 | Time remaining: 2 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 9/15 | Time remaining: 1 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 10/15 | Time remaining: 1 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 11/15 | Time remaining: 1 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 12/15 | Time remaining: 1 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 13/15 | Time remaining: 1 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 14/15 | Time remaining: 0 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Row: 15/15 | Time remaining: 0 seconds"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Total time taken: 4 seconds."</span>
-</code></pre></div>
-    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

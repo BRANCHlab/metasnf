@@ -60,6 +60,7 @@
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Additional functionality</h6>
     <a class="dropdown-item" href="../articles/stability_measures.html">Stability Measures and Consensus Clustering</a>
+    <a class="dropdown-item" href="../articles/quality_measures.html">Quality Measures</a>
     <a class="dropdown-item" href="../articles/confounders.html">Confounders and Unwanted Signal</a>
     <a class="dropdown-item" href="../articles/parallel_processing.html">Parallel processing</a>
     <a class="dropdown-item" href="../articles/label_propagation.html">Label propagation</a>
@@ -107,9 +108,9 @@ div.aside { background-color:#fff2e6; }
 <div class="section level2">
 <h2 id="the-distance_metrics_list">The distance_metrics_list<a class="anchor" aria-label="anchor" href="#the-distance_metrics_list"></a>
 </h2>
-<p>r-package enables users to customize what distance metrics are used
-in the SNF pipeline. All information about distance metrics are stored
-in a <code>distance_metrics_list</code> object.</p>
+<p>metaSNF enables users to customize what distance metrics are used in
+the SNF pipeline. All information about distance metrics are stored in a
+<code>distance_metrics_list</code> object.</p>
 <p>By default, <code>batch_snf</code> will create its own
 <code>distance_metrics_list</code> by calling the
 <code>generate_distance_metrics_list</code> function with no additional
@@ -152,7 +153,7 @@ package (see <code><a href="https://rdrr.io/pkg/cluster/man/daisy.html" class="e
 </h2>
 <p>To show how the distance_metrics_list is used, we’ll start by
 extending our distance_metrics_list beyond just the default options.
-r-package provides a Euclidean distance function that applies standard
+metaSNF provides a Euclidean distance function that applies standard
 normalization first, <code><a href="../reference/sn_euclidean_distance.html">sn_euclidean_distance()</a></code> (a wrapper
 around <code><a href="https://rdrr.io/pkg/SNFtool/man/standardNormalization.html" class="external-link">SNFtool::standardNormalization</a></code> +
 <code><a href="https://rdrr.io/r/stats/dist.html" class="external-link">stats::dist</a></code>). Here’s how we can create a custom
@@ -479,7 +480,7 @@ rows in your settings matrix.</p>
 <span>    <span class="va">settings_matrix</span>,</span>
 <span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/10 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 1/10 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/10 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/10 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/10 | Time remaining: 2 seconds"</span></span>
@@ -546,7 +547,7 @@ the essential aspects of a well-formated distance function.</p>
 <span><span class="co">#&gt;     distance_matrix &lt;- as.matrix(stats::dist(weighted_df, method = "euclidean"))</span></span>
 <span><span class="co">#&gt;     return(distance_matrix)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55a313574cc8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55df3c1d66e0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
 <p>The function should accept two arguments: <code>df</code> and
 <code>weights_row</code>, and only give one output,
@@ -563,7 +564,7 @@ use of those weights if you don’t want it to.</p>
 <p>The variable column names won’t be altered from the values they had
 when they were loaded into the data_list.</p>
 <p>For example, consider the <code>abcd_anxiety</code> raw data supplied
-by r-package:</p>
+by metaSNF:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">abcd_anxiety</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 2</span></span></span>

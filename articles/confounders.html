@@ -60,6 +60,7 @@
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Additional functionality</h6>
     <a class="dropdown-item" href="../articles/stability_measures.html">Stability Measures and Consensus Clustering</a>
+    <a class="dropdown-item" href="../articles/quality_measures.html">Quality Measures</a>
     <a class="dropdown-item" href="../articles/confounders.html">Confounders and Unwanted Signal</a>
     <a class="dropdown-item" href="../articles/parallel_processing.html">Parallel processing</a>
     <a class="dropdown-item" href="../articles/label_propagation.html">Label propagation</a>
@@ -397,7 +398,7 @@ to some major information loss (see the section below)!</p>
 <span>    uid <span class="op">=</span> <span class="st">"id"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">adjusted_dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_signal.html">remove_signal</a></span><span class="op">(</span><span class="va">dl</span>, <span class="va">unwanted_signal_list1</span><span class="op">)</span></span>
+<span><span class="va">adjusted_dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/linear_adjust.html">linear_adjust</a></span><span class="op">(</span><span class="va">dl</span>, <span class="va">unwanted_signal_list1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Combine the data from the two data_lists the second list is being merged</span></span>
 <span><span class="co"># only because it also has the position data, for plotting purposes</span></span>
@@ -411,7 +412,7 @@ to some major information loss (see the section below)!</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Correcting too many things!</span></span>
-<span><span class="va">adjusted_dl2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/remove_signal.html">remove_signal</a></span><span class="op">(</span><span class="va">dl</span>, <span class="va">unwanted_signal_list2</span><span class="op">)</span></span>
+<span><span class="va">adjusted_dl2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/linear_adjust.html">linear_adjust</a></span><span class="op">(</span><span class="va">dl</span>, <span class="va">unwanted_signal_list2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">merged_df2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/collapse_dl.html">collapse_dl</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">adjusted_dl2</span>, <span class="va">unwanted_signal_list2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>

@@ -15,12 +15,13 @@ articles:
   label_propagation: label_propagation.html
   manhattan_plots: manhattan_plots.html
   parallel_processing: parallel_processing.html
+  quality_measures: quality_measures.html
   settings_matrix: settings_matrix.html
   similarity_matrix_heatmap: similarity_matrix_heatmap.html
   snf_schemes: snf_schemes.html
   stability_measures: stability_measures.html
   troubleshooting: troubleshooting.html
-last_built: 2024-05-13T23:47Z
+last_built: 2024-05-14T19:25Z
 urls:
   reference: https://branchlab.github.io/metasnf/reference
   article: https://branchlab.github.io/metasnf/articles

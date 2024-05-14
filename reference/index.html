@@ -42,6 +42,7 @@
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Additional functionality</h6>
     <a class="dropdown-item" href="../articles/stability_measures.html">Stability Measures and Consensus Clustering</a>
+    <a class="dropdown-item" href="../articles/quality_measures.html">Quality Measures</a>
     <a class="dropdown-item" href="../articles/confounders.html">Confounders and Unwanted Signal</a>
     <a class="dropdown-item" href="../articles/parallel_processing.html">Parallel processing</a>
     <a class="dropdown-item" href="../articles/label_propagation.html">Label propagation</a>
@@ -162,21 +163,6 @@
         <dd>Collapse a dataframe and/or a data_list into a single dataframe</dd>
       </dl><dl><dt>
           
-          <code><a href="assigned_clust_hist.html">assigned_clust_hist()</a></code> 
-        </dt>
-        <dd>Histogram of cluster membership across an solutions matrix</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assigned_clust_pheatmap.html">assigned_clust_pheatmap()</a></code> 
-        </dt>
-        <dd>Heatmap of cluster membership across an solutions matrix</dd>
-      </dl><dl><dt>
-          
-          <code><a href="assigned_clust_scatter.html">assigned_clust_scatter()</a></code> 
-        </dt>
-        <dd>Scatter plot of cluster membership across an solutions matrix</dd>
-      </dl><dl><dt>
-          
           <code><a href="association_heatmap.html">association_heatmap()</a></code> 
         </dt>
         <dd>Heatmap of pairwise associations between variables</dd>
@@ -250,11 +236,6 @@
           <code><a href="chi_squared_pval.html">chi_squared_pval()</a></code> 
         </dt>
         <dd>Chi-squared test p-value (generic)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="clean_plot.html">clean_plot()</a></code> 
-        </dt>
-        <dd>Clean a plot</dd>
       </dl><dl><dt>
           
           <code><a href="cocluster_heatmap.html">cocluster_heatmap()</a></code> 
@@ -442,6 +423,11 @@
         <dd>Convert a vector of partition indices into meta cluster labels</dd>
       </dl><dl><dt>
           
+          <code><a href="linear_adjust.html">linear_adjust()</a></code> 
+        </dt>
+        <dd>Linearly correct data_list by variables with unwanted signal</dd>
+      </dl><dl><dt>
+          
           <code><a href="linear_model_pval.html">linear_model_pval()</a></code> 
         </dt>
         <dd>Linear model p-value (generic)</dd>
@@ -507,9 +493,9 @@
         <dd>Add "subject_" prefix to all UID values in subjectkey column</dd>
       </dl><dl><dt>
           
-          <code><a href="pvals_heatmap.html">pvals_heatmap()</a></code> 
+          <code><a href="pval_heatmap.html">pval_heatmap()</a></code> 
         </dt>
-        <dd>Pheatmap a matrix of p-values</dd>
+        <dd>Heatmap of p-values</dd>
       </dl><dl><dt>
           
           <code><a href="random_removal.html">random_removal()</a></code> 
@@ -527,9 +513,9 @@
         <dd>Remove NAs from a data_list object</dd>
       </dl><dl><dt>
           
-          <code><a href="remove_signal.html">remove_signal()</a></code> 
+          <code><a href="rename_dl.html">rename_dl()</a></code> 
         </dt>
-        <dd>Linearly correct data_list by variables with unwanted signal</dd>
+        <dd>Rename features in a data_list</dd>
       </dl><dl><dt>
           
           <code><a href="reorder_dl_subs.html">reorder_dl_subs()</a></code> 
@@ -540,6 +526,11 @@
           <code><a href="resample.html">resample()</a></code> 
         </dt>
         <dd>Helper resample function found in ?sample</dd>
+      </dl><dl><dt>
+          
+          <code><a href="save_heatmap.html">save_heatmap()</a></code> 
+        </dt>
+        <dd>Save a heatmap object to a file</dd>
       </dl><dl><dt>
           
           <code><a href="scale_diagonals.html">scale_diagonals()</a></code> 
@@ -579,7 +570,7 @@
           
           <code><a href="snf_step.html">snf_step()</a></code> 
         </dt>
-        <dd>SNF a data_list</dd>
+        <dd>Convert a data list to a similarity matrix through a variety of SNF schemes</dd>
       </dl><dl><dt>
           
           <code><a href="spectral_eigen.html">spectral_eigen()</a></code> 
@@ -669,7 +660,7 @@
           
           <code><a href="summarize_dl.html">summarize_dl()</a></code> 
         </dt>
-        <dd>Summarize data list</dd>
+        <dd>Summarize a data list</dd>
       </dl><dl><dt>
           
           <code><a href="summarize_dml.html">summarize_dml()</a></code> 

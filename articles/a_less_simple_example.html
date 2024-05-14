@@ -60,6 +60,7 @@
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Additional functionality</h6>
     <a class="dropdown-item" href="../articles/stability_measures.html">Stability Measures and Consensus Clustering</a>
+    <a class="dropdown-item" href="../articles/quality_measures.html">Quality Measures</a>
     <a class="dropdown-item" href="../articles/confounders.html">Confounders and Unwanted Signal</a>
     <a class="dropdown-item" href="../articles/parallel_processing.html">Parallel processing</a>
     <a class="dropdown-item" href="../articles/label_propagation.html">Label propagation</a>
@@ -478,7 +479,7 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 13/20 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 13/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 14/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 15/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 16/20 | Time remaining: 1 seconds"</span></span>
@@ -580,11 +581,11 @@ matrix.</p>
 of the cluster solutions:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">meta_cluster_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_heatmap_order.html">get_heatmap_order</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span><span class="op">)</span></span></code></pre></div>
-<p>The order is just a vector of numbers…</p>
+<p>The order is just a vector of numbers:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">meta_cluster_order</span></span>
 <span><span class="co">#&gt;  [1] 11  8 17  3 19 18  5 12  7 20 10  6 13  1 15 16  2  9  4 14</span></span></code></pre></div>
-<p>… which can be passed into the <code>settings_matrix_heatmap</code>
+<p>which can be passed into the <code>settings_matrix_heatmap</code>
 function:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/settings_matrix_heatmap.html">settings_matrix_heatmap</a></span><span class="op">(</span><span class="va">settings_matrix</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span></code></pre></div>
@@ -602,7 +603,7 @@ values and pairwise cluster solution similarities.</p>
 </h3>
 <p>Quality metrics are another useful heuristic for the goodness of a
 cluster that don’t require any contextualization of results in the
-domain they may be used in. r-package enables measures of silhouette
+domain they may be used in. metaSNF enables measures of silhouette
 scores, Dunn indices, and Davies-Bouldin indices. To calculate these
 values, we’ll need not only the cluster results but also the final fused
 network (the similarity matrices produced by SNF) that the clusters came
@@ -617,7 +618,7 @@ parameter:</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
@@ -646,11 +647,20 @@ final fused network (AKA similarity matrix / similarity matrix) per SNF
 run. Using those two lists, we can calculate the above mentioned quality
 metrics:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">silhouette_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_silhouettes.html">calculate_silhouettes</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">similarity_matrices</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">silhouette_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_silhouettes.html">calculate_silhouettes</a></span><span class="op">(</span></span>
+<span>    <span class="va">solutions_matrix</span>,</span>
+<span>    <span class="va">similarity_matrices</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">dunn_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_dunn_indices.html">calculate_dunn_indices</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">similarity_matrices</span><span class="op">)</span></span>
+<span><span class="va">dunn_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_dunn_indices.html">calculate_dunn_indices</a></span><span class="op">(</span></span>
+<span>    <span class="va">solutions_matrix</span>,</span>
+<span>    <span class="va">similarity_matrices</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">db_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_db_indices.html">calculate_db_indices</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">similarity_matrices</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">db_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_db_indices.html">calculate_db_indices</a></span><span class="op">(</span></span>
+<span>    <span class="va">solutions_matrix</span>,</span>
+<span>    <span class="va">similarity_matrices</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>The first function is a wrapper around
 <code><a href="https://rdrr.io/pkg/cluster/man/silhouette.html" class="external-link">cluster::silhouette</a></code> while the second and third come from
 the <em>clv</em> package. <em>clv</em> isn’t set as a mandatory part of
@@ -670,7 +680,7 @@ documentation</a></li>
 <div class="section level3">
 <h3 id="stability-measures">3. Stability measures<a class="anchor" aria-label="anchor" href="#stability-measures"></a>
 </h3>
-<p>r-package offers tools to evaluate two different measures of
+<p>metaSNF offers tools to evaluate two different measures of
 stability:</p>
 <ol style="list-style-type: decimal">
 <li>Pairwise adjusted Rand indices (across resamplings of the
@@ -828,9 +838,16 @@ clusters.</p>
 <span><span class="co">#&gt; 6      6           0.6775260          0.12764826 0.12764826 0.4025871 0.6775260</span></span></code></pre></div>
 <p>There is a heatmap for visualizing this too:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/pvals_heatmap.html">pvals_heatmap</a></span><span class="op">(</span><span class="va">target_pvals</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pval_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pval_heatmap.html">pval_heatmap</a></span><span class="op">(</span><span class="va">target_pvals</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/save_heatmap.html">save_heatmap</a></span><span class="op">(</span></span>
+<span>    heatmap <span class="op">=</span> <span class="va">pval_hm</span>,</span>
+<span>    path <span class="op">=</span> <span class="st">"./pval_heatmap_ordered.png"</span>,</span>
+<span>    width <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>    height <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>    res <span class="op">=</span> <span class="fl">100</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <center>
-<img src="pvals_heatmap_ordered.png" width="400">
 </center>
 <p>These p-values hold no real meaning for the traditional
 hypothesis-testing context, but they are reasonable proxies of the
@@ -930,8 +947,8 @@ the training/testing split for you :)</p>
 <span>    <span class="va">train_data_list</span>,</span>
 <span>    <span class="va">settings_matrix</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>
