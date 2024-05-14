@@ -12,12 +12,17 @@
 #' @param ... Any number of list formatted as (df, "df_name", "df_domain",
 #' "df_type") OR any number of lists of lists formatted as (df, "df_name",
 #' "df_domain", "df_type")
+#'
 #' @param uid (string) the name of the uid column currently used data
+#'
 #' @param train_subjects character vector of train subjects (useful if building
 #' a full data list for label propagation)
+#'
 #' @param test_subjects character vector of test subjects (useful if building
 #' a full data list for label propagation)
+#'
 #' @param sort_subjects If TRUE, the subjects in the data_list will be sorted
+#'
 #' @param return_missing If TRUE, function returns a list where the first
 #' element is the data_list and the second element is a vector of unique IDs
 #' of patients who were removed during the complete data filtration step.
@@ -167,6 +172,7 @@ generate_data_list <- function(...,
 #'  This function ensures all dataframes have their UID set as "subjectkey".
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
+#'
 #' @param uid (string) the name of the uid column currently used data
 #'
 #' @return dl_renamed_id data list with 'subjectkey' as UID
@@ -220,6 +226,7 @@ convert_uids <- function(data_list, uid = NULL) {
 #' Remove NAs from a data_list object
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
+#'
 #' @param return_missing If TRUE, function returns a list where the first
 #'  element is the data_list and the second element is a vector of unique IDs
 #'  of patients who were removed during the complete data filtration step.
@@ -325,21 +332,48 @@ arrange_dl <- function(data_list) {
     return(arranged_data_list)
 }
 
-#' Summarize data list
+#' Summarize a data list
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
 #'
-#' @return dl_summary Summarized output
+#' @param scope The level of detail for the summary. Options are:
+#' - "component" (default): One row per component (dataframe) in the data_list.
+#' - "feature": One row for each feature in the data_list.
 #'
 #' @export
-summarize_dl <- function(data_list) {
-    dl_summary <- data.frame(
-        name = unlist(lapply(data_list, function(x) x$"name")),
-        type = unlist(lapply(data_list, function(x) x$"type")),
-        domain = unlist(domains(data_list)),
-        length = unlist(lapply(data_list, function(x) dim(x$"data")[1])),
-        width = unlist(lapply(data_list, function(x) dim(x$"data")[2]))
-    )
+summarize_dl <- function(data_list, scope = "component") {
+    if (scope == "component") {
+        dl_summary <- data.frame(
+            name = unlist(lapply(data_list, function(x) x$"name")),
+            type = unlist(lapply(data_list, function(x) x$"type")),
+            domain = unlist(domains(data_list)),
+            length = unlist(lapply(data_list, function(x) dim(x$"data")[1])),
+            width = unlist(lapply(data_list, function(x) dim(x$"data")[2]))
+        )
+    } else if (scope == "feature") {
+        dl_df <- collapse_dl(data_list)
+        dl_df <- dl_df[, colnames(dl_df) != "subjectkey"]
+        types <- data_list |>
+            lapply(
+                function(x) {
+                    rep(x$"type", ncol(x$"data") - 1)
+                }
+            ) |>
+            unlist()
+        domains <- data_list |>
+            lapply(
+                function(x) {
+                    rep(x$"domain", ncol(x$"data") - 1)
+                }
+            ) |>
+            unlist()
+        var_names <- colnames(dl_df[, colnames(dl_df) != "subjectkey"])
+        dl_summary <- data.frame(
+            name = var_names,
+            type = types,
+            domain = domains
+        )
+    }
     return(dl_summary)
 }
 
@@ -408,6 +442,7 @@ dl_variable_summary <- function(data_list) {
 #' Reorder the subjects in a data_list
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
+#'
 #' @param ordered_subjects A vector of the subjectkey values in the data_list
 #' in the desired order of the sorted data_list.
 #'
@@ -421,5 +456,64 @@ reorder_dl_subs <- function(data_list, ordered_subjects) {
                 return(x)
             }
         )
+    return(data_list)
+}
+
+#' Rename features in a data_list
+#'
+#' @param data_list A nested list of input data from `generate_data_list()`.
+#'
+#' @param name_mapping A named vector where the values are the features to be
+#' renamed and the names are the new names for those features.
+#'
+#' @export
+#' @examples
+#'
+#' library(metasnf)
+#'
+#' data_list <- generate_data_list(
+#'     list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+#'     list(abcd_anxiety, "anxiety", "behaviour", "ordinal"),
+#'     list(abcd_depress, "depressed", "behaviour", "ordinal"),
+#'     uid = "patient"
+#' )
+#'
+#' summarize_dl(data_list, "feature")
+#'
+#' name_changes <- c(
+#'     "anxiety_score" = "cbcl_anxiety_r",
+#'     "depression_score" = "cbcl_depress_r"
+#' )
+#'
+#' data_list <- rename_dl(data_list, name_changes)
+#'
+#' summarize_dl(data_list, "feature")
+rename_dl <- function(data_list, name_mapping) {
+    dl_features <- summarize_dl(data_list, "feature")$"name"
+    mismatches <- which(!name_mapping %in% dl_features)
+    if (length(mismatches) > 0) {
+        warning(
+            "The following feature names were not found in the provided",
+            " data_list: ", name_mapping[mismatches]
+        )
+    }
+    data_list <- data_list |> lapply(
+        function(x) {
+            old_colnames <- colnames(x$"data")
+            new_colnames <- old_colnames |> lapply(
+                function(old_name) {
+                    if (old_name %in% name_mapping) {
+                        name_match <- which(name_mapping == old_name)
+                        new_name <- names(name_mapping)[name_match]
+                    } else {
+                        new_name <- old_name
+                    }
+                    return(new_name)
+                }
+            )
+            colnames(x$"data") <- new_colnames
+            return(x)
+        }
+    )
     return(data_list)
 }

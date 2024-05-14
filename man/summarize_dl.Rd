@@ -2,16 +2,19 @@
 % Please edit documentation in R/data_list.R
 \name{summarize_dl}
 \alias{summarize_dl}
-\title{Summarize data list}
+\title{Summarize a data list}
 \usage{
-summarize_dl(data_list)
+summarize_dl(data_list, scope = "component")
 }
 \arguments{
 \item{data_list}{A nested list of input data from \code{generate_data_list()}.}
-}
-\value{
-dl_summary Summarized output
+
+\item{scope}{The level of detail for the summary. Options are:
+\itemize{
+\item "component" (default): One row per component (dataframe) in the data_list.
+\item "feature": One row for each feature in the data_list.
+}}
 }
 \description{
-Summarize data list
+Summarize a data list
 }
