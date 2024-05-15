@@ -2,28 +2,36 @@
 % Please edit documentation in R/heatmaps.R
 \name{settings_matrix_heatmap}
 \alias{settings_matrix_heatmap}
-\title{Heatmap settings matrix based on meta-clustering results}
+\title{Heatmap for visualizing a settings matrix}
 \usage{
 settings_matrix_heatmap(
   settings_matrix,
   order = NULL,
-  show_rownames = TRUE,
-  save = NULL,
-  hide_ids = FALSE
+  remove_fixed_columns = TRUE,
+  show_column_names = TRUE,
+  show_row_names = TRUE,
+  colour_breaks = c(0, 1),
+  colours = c("black", "darkseagreen")
 )
 }
 \arguments{
-\item{settings_matrix}{matrix indicating parameters to iterate SNF through}
+\item{settings_matrix}{Matrix indicating parameters to iterate SNF through.}
 
-\item{order}{numeric vector indicating row ordering of settings matrix}
+\item{order}{Numeric vector indicating row ordering of settings matrix.}
 
-\item{show_rownames}{If TRUE (default), rownames are shown on heatmap}
+\item{remove_fixed_columns}{Whether columns that have no variation should be
+removed.}
 
-\item{save}{optional path to save figure to}
+\item{show_column_names}{Whether column names should be shown.}
 
-\item{hide_ids}{boolean indicating if row_id numbers should be hidden}
+\item{show_row_names}{Whether row names should be shown.}
+
+\item{colour_breaks}{Numeric vector of breaks for the legend.}
+
+\item{colours}{Vector of colours to use for the heatmap. Should match the
+length of colour_breaks.}
 }
 \description{
-Normalizes the settings matrix and plots as a heatmap. Rows are reordered to
-match the row-clustering present within a provided meta-clustering result.
+Scales settings matrix values between 0 and 1 and plots as a heatmap. Rows
+can be reordered to match prior meta clustering results.
 }

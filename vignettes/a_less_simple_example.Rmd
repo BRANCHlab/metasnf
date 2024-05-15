@@ -290,67 +290,64 @@ This metric tells us how similar the solutions are to each other, thereby allowi
 solutions_matrix_aris <- calc_om_aris(solutions_matrix)
 ```
 
-We can visualize the resulting inter-cluster similarities with a heatmap:
-
-```{r}
-adjusted_rand_index_heatmap(solutions_matrix_aris)
-```
-
-You can optionally save your heatmap by specifying a path with the `save` parameter (e.g., `adjusted_rand_index_heatmap(solutions_matrix_aris, save = "./adjusted_rand_index_heatmap.png")`).
-
-```{r echo = FALSE, fig.align = 'center'}
-adjusted_rand_index_heatmap(
-    solutions_matrix_aris,
-    save = "./adjusted_rand_index_heatmap.png"
-)
-```
-
-![.](./adjusted_rand_index_heatmap.png){width=400px}
-
-The clustering solutions are along the rows and columns of the above figure, and the cells at the intersection between two solutions show how similar (big ARI) those solutions are to each other.
-The diagonals should always be red, representing the maximum value of 1, as they show the similarity between any clustering solution and itself.
-Agglomerative hierarchical clustering is being applied to these solutions by default (thank you, `pheatmap` package) so the orders of the clustering solutions here do not exactly line up with the order of the clustering solutions present in the settings matrix.
-
-If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your settings matrix.
-
-First, extract the ordering of the rows obtained from the clustering of the cluster solutions:
-
-```{r include = FALSE}
-meta_cluster_order <- get_heatmap_order(solutions_matrix_aris)
-```
+We can visualize the resulting inter-cluster similarities with a heatmap.
+First, call `get_matrix_order` to get a hierarchical clustering-based ordering of the rows in the adjusted rand indices.
+This order can be passed into the `adjusted_rand_index_heatmap` function to get a clearer view of existing meta clusters.
 
 ```{r eval = FALSE}
-meta_cluster_order <- get_heatmap_order(solutions_matrix_aris)
-```
+meta_cluster_order <- get_matrix_order(solutions_matrix_aris)
 
-The order is just a vector of numbers:
-
-```{r}
+# Just a vector of numbers
 meta_cluster_order
-```
 
-which can be passed into the `settings_matrix_heatmap` function:
-
-```{r include = FALSE}
-settings_matrix_heatmap(
-    settings_matrix,
-    order = meta_cluster_order,
-    save = "./settings_matrix_heatmap_ordered.png"
+ari_hm <- adjusted_rand_index_heatmap(
+    solutions_matrix_aris,
+    order = meta_cluster_order
 )
-```
 
-```{r eval = FALSE}
-settings_matrix_heatmap(settings_matrix, order = meta_cluster_order)
+save_heatmap(
+    heatmap = ari_hm,
+    path = "./adjusted_rand_index_heatmap.png",
+    width = 400,
+    height = 500,
+    res = 100
+)
 ```
 
 <center>
-![](./settings_matrix_heatmap_ordered.png){width=400px}
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/adjusted_rand_index_heatmap.png)
+</center>
+
+The clustering solutions are along the rows and columns of the above figure, and the cells at the intersection between two solutions show how similar (big ARI) those solutions are to each other.
+The diagonals should always be red, representing the maximum value of 1, as they show the similarity between any clustering solution and itself.
+Complete-linkage, Euclidean-distance based hierarchical clustering is being applied to these solutions to obtain the row ordering.
+This is also the default approach used by the `ComplexHeatmap` package, the backbone of all heatmap functions in `metaSNF`.
+
+If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your settings matrix.
+
+```{r eval = FALSE}
+sm_hm <- settings_matrix_heatmap(
+    settings_matrix,
+    order = meta_cluster_order
+)
+
+save_heatmap(
+    heatmap = sm_hm,
+    path = "./settings_matrix_heatmap_ordered.png",
+    width = 400,
+    height = 500,
+    res = 75
+)
+```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/settings_matrix_heatmap_ordered.png)
 </center>
 
 This heatmap rescales all the columns in the settings_matrix to have a maximum value of 1.
 The purpose of re-ordering the settings matrix in this way is to see if any associations exist between certain settings values and pairwise cluster solution similarities.
 
-Maybe you'll see something interesting!
+This heatmap can show you if any particular settings levels were associated with the formation of distinct meta clusters.
 
 ### 2. Quality measures
 
@@ -499,6 +496,7 @@ save_heatmap(
 ```
 
 <center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/pval_heatmap_ordered.png)
 </center>
 
 These p-values hold no real meaning for the traditional hypothesis-testing context, but they are reasonable proxies of the magnitude of the effect size / separation of the clusters across the variables in question.

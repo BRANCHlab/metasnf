@@ -16,11 +16,11 @@ div.aside { background-color:#fff2e6; }
 ```{r, include = FALSE}
 # Default chunk options
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.width = 6,
-  fig.height = 4.5,
-  fig.align = "center"
+    collapse = TRUE,
+    comment = "#>",
+    fig.width = 6,
+    fig.height = 4.5,
+    fig.align = "center"
 )
 ```
 
@@ -199,19 +199,25 @@ for (nproc in c(1, 4)) {
 
 ### Results
 
-![](2023_12_06_local_parallel_profiling.png){width=700px}
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/local_parallel_profiling.png){width=700px}
+</center>
 
 The local machine has access to 4 cores and scales quite well in parallel on the toy data.
 
 </br>
 
-![](2023_12_06_hpc_parallel_profiling.png){width=700px}
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/hpc_parallel_profiling.png){width=700px}
+</center>
 
 24 cores were requested - quite a massive difference in time taken!
 
 </br>
 
-![](2023_12_06_parallel_profiling.png){width=700px}
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/parallel_profiling.png){width=700px}
+</center>
 
 This figure zooms in on the performances at both locations.
 

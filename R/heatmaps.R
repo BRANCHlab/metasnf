@@ -1172,20 +1172,33 @@ save_heatmap <- function(heatmap,
     grDevices::dev.off()
 }
 
-#' Return the row order of a meta-clustering solution
+#' Return the hierarchical clustering order of a matrix
 #'
-#' Pheatmap reorders meta clustering results to enable meta-cluster
-#'  visualization. This function extracts the new row orders to apply to other
-#'  matrices.
-#'
-#' @param matrix matrix used as pheatmap input
-#'
-#' @return pheatmap_order Row orders of the clustered pheatmap
+#' @param matrix Matrix to cluster.
 #'
 #' @export
-get_heatmap_order <- function(matrix) {
-    distance_matrix <- dist(matrix, method = "euclidean")
-    hclust_result <- hclust(distance_matrix, method = "complete")
+get_matrix_order <- function(matrix) {
+    distance_matrix <- stats::dist(matrix, method = "euclidean")
+    hclust_result <- stats::hclust(distance_matrix, method = "complete")
     order <- hclust_result$order
+    return(order)
+}
+
+#' Return the row or column ordering present in a heatmap
+#'
+#' @param heatmap A heatmap object to collect ordering from.
+#'
+#' @param type The type of ordering to return. Either "rows" or "columns".
+#'
+#' @export
+get_heatmap_order <- function(heatmap, type = "rows") {
+    drawn_heatmap <- ComplexHeatmap::draw(heatmap)
+    if (type == "rows") {
+        order <- ComplexHeatmap::row_order(drawn_heatmap)
+    } else if (type == "columns") {
+        order <- ComplexHeatmap::column_order(drawn_heatmap)
+    } else {
+        stop("Valid types are 'rows' and 'columns'.")
+    }
     return(order)
 }

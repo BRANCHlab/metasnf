@@ -121,7 +121,6 @@ Imports:
     MASS,
     mclust,
     methods,
-    pheatmap,
     progressr,
     purrr,
     rlang,
