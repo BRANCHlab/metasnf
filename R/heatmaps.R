@@ -199,23 +199,41 @@ similarity_matrix_heatmap <- function(similarity_matrix,
 
 #' Heatmap of pairwise adjusted rand indices between solutions
 #'
-#' SHORT DESCRIPTION
+#' @param aris Matrix of adjusted rand indices from `calc_om_aris`
 #'
-#' @param PARAM1
+#' @param order Numeric vector containing row order of the heatmap.
 #'
-#' @return RETURN
+#' @param cluster_rows Whether rows should be clustered.
+#'
+#' @param cluster_columns Whether columns should be clustered.
+#'
+#' @param log_graph If TRUE, log transforms the graph.
+#'
+#' @param scale_diag Method of rescaling matrix diagonals. Can be "none"
+#' (don't change diagonals), "mean" (replace diagonals with average value of
+#' off-diagonals), or "zero" (replace diagonals with 0).
+#'
+#' @param min_colour Colour used for the lowest value in the heatmap.
+#'
+#' @param max_colour Colour used for the highest value in the heatmap.
+#'
+#' @param col Colour ramp to use for the heatmap.
+#'
+#' @param ... Additional parameters passed to `similarity_matrix_heatmap()`,
+#' the function that this function wraps.
 #'
 #' @export
 adjusted_rand_index_heatmap <- function(aris,
                                         order = NULL,
-                                        extended_solutions,
                                         cluster_rows = FALSE,
                                         cluster_columns = FALSE,
                                         log_graph = FALSE,
                                         scale_diag = "none",
+                                        min_colour = "#282828",
+                                        max_colour = "firebrick2",
                                         col = circlize::colorRamp2(
                                             c(min(aris), max(aris)),
-                                            c("#282828", "firebrick2")
+                                            c(min_colour, max_colour)
                                         ),
                                         ...) {
     heatmap <- similarity_matrix_heatmap(
@@ -590,63 +608,6 @@ pval_heatmap <- function(pvals,
     )
     return(heatmap)
 }
-
-#' Heatmap meta-clustering results
-#'
-#' @param solutions_matrix_aris results from meta_cluster function
-#' @param title plot title
-#' @param save optional path to save figure to
-#' @param cluster_cols boolean indicating if columns shold be clustered
-#' @param cluster_rows boolean indicating if rows shold be clustered
-#' @param hide_columns boolean indicating if column names should be hidden
-#' @param hide_rows boolean indicating if row names should be hidden
-#' @param ... additional parameters to pass into pheatmap
-#'
-#' @export
-adjusted_rand_index_heatmap <- function(solutions_matrix_aris,
-                                        title = "",
-                                        save = NULL,
-                                        cluster_cols = TRUE,
-                                        cluster_rows = TRUE,
-                                        hide_columns = FALSE,
-                                        hide_rows = FALSE,
-                                        ...) {
-    if (hide_columns) {
-        colnames(solutions_matrix_aris) <- NULL
-    }
-    if (hide_rows) {
-        rownames(solutions_matrix_aris) <- NULL
-    }
-    if (!(is.null(grDevices::dev.list()))) {
-        grDevices::dev.off()
-    }
-    if (!(is.null(save))) {
-        pheatmap::pheatmap(
-            solutions_matrix_aris,
-            legend_breaks = c(0, 0.5, 1, max(solutions_matrix_aris)),
-            main = title,
-            legend_labels = c("0", "0.5", "1", "ARI\n\n"),
-            legend = TRUE,
-            border_color = FALSE,
-            cluster_cols = cluster_cols,
-            cluster_rows = cluster_rows,
-            filename = save,
-            ...
-        )
-    }
-    pheatmap::pheatmap(
-        solutions_matrix_aris,
-        legend_breaks = c(0, 0.5, 1, max(solutions_matrix_aris)),
-        main = title,
-        legend_labels = c("0", "0.5", "1", "ARI\n\n"),
-        legend = TRUE,
-        border_color = FALSE,
-        cluster_cols = cluster_cols,
-        cluster_rows = cluster_rows,
-        ...
-    )
-}
-
 
 shiny_annotator <- function(mc_heatmap) {
     drawn_heatmap <- ComplexHeatmap::draw(mc_heatmap)
