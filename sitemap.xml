@@ -259,6 +259,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/get_heatmap_order.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/get_matrix_order.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/get_mean_pval.html</loc>
   </url>
   <url>
@@ -299,9 +302,6 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/manhattan_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/mc_heatmap.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/merge_df_list.html</loc>

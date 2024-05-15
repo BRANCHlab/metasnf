@@ -556,47 +556,66 @@ clusters of cluster solutions.</p>
 <span><span class="co">#&gt; 52.63158% completed...</span></span>
 <span><span class="co">#&gt; Done.</span></span></code></pre></div>
 <p>We can visualize the resulting inter-cluster similarities with a
-heatmap:</p>
+heatmap. First, call <code>get_matrix_order</code> to get a hierarchical
+clustering-based ordering of the rows in the adjusted rand indices. This
+order can be passed into the <code>adjusted_rand_index_heatmap</code>
+function to get a clearer view of existing meta clusters.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/adjusted_rand_index_heatmap.html">adjusted_rand_index_heatmap</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span><span class="op">)</span></span></code></pre></div>
-<p>You can optionally save your heatmap by specifying a path with the
-<code>save</code> parameter (e.g.,
-<code>adjusted_rand_index_heatmap(solutions_matrix_aris, save = "./adjusted_rand_index_heatmap.png")</code>).</p>
-<div class="float">
-<img src="adjusted_rand_index_heatmap.png" width="400" alt="."><div class="figcaption">.</div>
-</div>
+<code class="sourceCode R"><span><span class="va">meta_cluster_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_matrix_order.html">get_matrix_order</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Just a vector of numbers</span></span>
+<span><span class="va">meta_cluster_order</span></span>
+<span></span>
+<span><span class="va">ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjusted_rand_index_heatmap.html">adjusted_rand_index_heatmap</a></span><span class="op">(</span></span>
+<span>    <span class="va">solutions_matrix_aris</span>,</span>
+<span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/save_heatmap.html">save_heatmap</a></span><span class="op">(</span></span>
+<span>    heatmap <span class="op">=</span> <span class="va">ari_hm</span>,</span>
+<span>    path <span class="op">=</span> <span class="st">"./adjusted_rand_index_heatmap.png"</span>,</span>
+<span>    width <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>    height <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>    res <span class="op">=</span> <span class="fl">100</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<center>
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/adjusted_rand_index_heatmap.png">
+</center>
 <p>The clustering solutions are along the rows and columns of the above
 figure, and the cells at the intersection between two solutions show how
 similar (big ARI) those solutions are to each other. The diagonals
 should always be red, representing the maximum value of 1, as they show
-the similarity between any clustering solution and itself. Agglomerative
-hierarchical clustering is being applied to these solutions by default
-(thank you, <code>pheatmap</code> package) so the orders of the
-clustering solutions here do not exactly line up with the order of the
-clustering solutions present in the settings matrix.</p>
+the similarity between any clustering solution and itself.
+Complete-linkage, Euclidean-distance based hierarchical clustering is
+being applied to these solutions to obtain the row ordering. This is
+also the default approach used by the <code>ComplexHeatmap</code>
+package, the backbone of all heatmap functions in
+<code>metaSNF</code>.</p>
 <p>If you see something interesting in your heatmap, you may be curious
 to know how that corresponds to the settings that were in your settings
 matrix.</p>
-<p>First, extract the ordering of the rows obtained from the clustering
-of the cluster solutions:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">meta_cluster_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_heatmap_order.html">get_heatmap_order</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span><span class="op">)</span></span></code></pre></div>
-<p>The order is just a vector of numbers:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">meta_cluster_order</span></span>
-<span><span class="co">#&gt;  [1] 11  8 17  3 19 18  5 12  7 20 10  6 13  1 15 16  2  9  4 14</span></span></code></pre></div>
-<p>which can be passed into the <code>settings_matrix_heatmap</code>
-function:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/settings_matrix_heatmap.html">settings_matrix_heatmap</a></span><span class="op">(</span><span class="va">settings_matrix</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sm_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/settings_matrix_heatmap.html">settings_matrix_heatmap</a></span><span class="op">(</span></span>
+<span>    <span class="va">settings_matrix</span>,</span>
+<span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/save_heatmap.html">save_heatmap</a></span><span class="op">(</span></span>
+<span>    heatmap <span class="op">=</span> <span class="va">sm_hm</span>,</span>
+<span>    path <span class="op">=</span> <span class="st">"./settings_matrix_heatmap_ordered.png"</span>,</span>
+<span>    width <span class="op">=</span> <span class="fl">400</span>,</span>
+<span>    height <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>    res <span class="op">=</span> <span class="fl">75</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <center>
-<img src="settings_matrix_heatmap_ordered.png" width="400">
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/settings_matrix_heatmap_ordered.png">
 </center>
 <p>This heatmap rescales all the columns in the settings_matrix to have
 a maximum value of 1. The purpose of re-ordering the settings matrix in
 this way is to see if any associations exist between certain settings
 values and pairwise cluster solution similarities.</p>
-<p>Maybe you’ll see something interesting!</p>
+<p>This heatmap can show you if any particular settings levels were
+associated with the formation of distinct meta clusters.</p>
 </div>
 <div class="section level3">
 <h3 id="quality-measures">2. Quality measures<a class="anchor" aria-label="anchor" href="#quality-measures"></a>
@@ -610,7 +629,7 @@ network (the similarity matrices produced by SNF) that the clusters came
 from. These similarity matrices can be collected from the
 <code>batch_snf</code> using the <code>return_similarity_matrices</code>
 parameter:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    <span class="va">settings_matrix</span>,</span>
@@ -633,10 +652,10 @@ parameter:</p>
 <span><span class="co">#&gt; [1] "Row: 15/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 16/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 17/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 5 seconds."</span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
 <span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span></span></code></pre></div>
@@ -646,7 +665,7 @@ get. The second element is <em>yet another list</em> containing one
 final fused network (AKA similarity matrix / similarity matrix) per SNF
 run. Using those two lists, we can calculate the above mentioned quality
 metrics:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">silhouette_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_silhouettes.html">calculate_silhouettes</a></span><span class="op">(</span></span>
 <span>    <span class="va">solutions_matrix</span>,</span>
 <span>    <span class="va">similarity_matrices</span></span>
@@ -692,7 +711,7 @@ together in resampled results?)</li>
 </ol>
 <p>To calculate either of these, you’ll need to first generate
 subsamples of the data_list.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_list_subsamples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsample_data_list.html">subsample_data_list</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    n_subsamples <span class="op">=</span> <span class="fl">30</span>, <span class="co"># calculate 30 subsamples</span></span>
@@ -701,7 +720,7 @@ subsamples of the data_list.</p>
 <p><code>data_list_subsamples</code> is a list that now contains 30
 smaller subsamples of the original data_list.</p>
 <p>Then the stability calculations:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pairwise_aris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsample_pairwise_aris.html">subsample_pairwise_aris</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list_subsamples</span>,</span>
 <span>    <span class="va">settings_matrix</span></span>
@@ -735,7 +754,7 @@ one way through the <code>target_list</code> structure. The
 clustering results over through linear regression (continuous data),
 ordinal regression (ordinal data), or the Chi-squared test (categorical
 data).</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">target_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_target_list.html">generate_target_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
@@ -756,7 +775,7 @@ from each other with the <code>uid</code> parameter.</p>
 <p>We will next extend our <code>solutions_matrix</code> with p-values
 from regressing the <code>target_list</code> features onto our generated
 clusters.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">target_list</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Processing row 1 of 20"</span></span>
 <span><span class="co">#&gt; [1] "Processing row 2 of 20"</span></span>
@@ -825,7 +844,7 @@ clusters.</p>
 <span><span class="co">#&gt; 5   0.224206099694958   0.528033268858081 0.22420610 0.3761197 0.5280333</span></span>
 <span><span class="co">#&gt; 6   0.677526005779245   0.127648264212471 0.12764826 0.4025871 0.6775260</span></span></code></pre></div>
 <p>If you just want the p-values:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">target_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pvals.html">get_pvals</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">target_pvals</span><span class="op">)</span></span>
@@ -837,7 +856,7 @@ clusters.</p>
 <span><span class="co">#&gt; 5      5           0.2242061          0.52803327 0.22420610 0.3761197 0.5280333</span></span>
 <span><span class="co">#&gt; 6      6           0.6775260          0.12764826 0.12764826 0.4025871 0.6775260</span></span></code></pre></div>
 <p>There is a heatmap for visualizing this too:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pval_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pval_heatmap.html">pval_heatmap</a></span><span class="op">(</span><span class="va">target_pvals</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/save_heatmap.html">save_heatmap</a></span><span class="op">(</span></span>
@@ -848,6 +867,7 @@ clusters.</p>
 <span>    res <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <center>
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/pval_heatmap_ordered.png">
 </center>
 <p>These p-values hold no real meaning for the traditional
 hypothesis-testing context, but they are reasonable proxies of the
@@ -874,7 +894,7 @@ seemed to have worked.</p>
 beginning, with label propagation to validate our findings.</p>
 <p>The <code>metasnf</code> package comes equipped with a function to do
 the training/testing split for you :)</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># All the subjects present in all dataframes with no NAs</span></span>
 <span><span class="va">all_subjects</span> <span class="op">&lt;-</span> <span class="va">data_list</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="st">"data"</span><span class="op">$</span><span class="st">"subjectkey"</span></span>
 <span></span>
@@ -1052,7 +1072,7 @@ the training/testing split for you :)</p>
 solutions propagate to the test set, but that would mean reusing your
 test set and removing the protection against overfitting conferred by
 this procedure.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">propagated_labels_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_solutions_matrix.html">lp_solutions_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">extended_solutions_matrix</span>,</span>
 <span>    <span class="va">full_data_list</span></span>
