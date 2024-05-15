@@ -197,6 +197,40 @@ similarity_matrix_heatmap <- function(similarity_matrix,
     return(heatmap)
 }
 
+#' Heatmap of pairwise adjusted rand indices between solutions
+#'
+#' SHORT DESCRIPTION
+#'
+#' @param PARAM1
+#'
+#' @return RETURN
+#'
+#' @export
+adjusted_rand_index_heatmap <- function(aris,
+                                        order = NULL,
+                                        extended_solutions,
+                                        cluster_rows = FALSE,
+                                        cluster_columns = FALSE,
+                                        log_graph = FALSE,
+                                        scale_diag = "none",
+                                        col = circlize::colorRamp2(
+                                            c(min(aris), max(aris)),
+                                            c("#282828", "firebrick2")
+                                        ),
+                                        ...) {
+    heatmap <- similarity_matrix_heatmap(
+        aris,
+        order = order,
+        cluster_rows = cluster_rows,
+        cluster_columns = cluster_columns,
+        log_graph = log_graph,
+        scale_diag = scale_diag,
+        col = col,
+        ...
+    )
+    return(heatmap)
+}
+
 #' Heatmap of pairwise associations between variables
 #'
 #' @param correlation_matrix Matrix containing all pairwise association
@@ -436,70 +470,71 @@ association_heatmap <- function(correlation_matrix,
     )
 }
 
-#' Heatmap settings matrix based on meta-clustering results
+#' Heatmap for visualizing a settings matrix
 #'
-#' Normalizes the settings matrix and plots as a heatmap. Rows are reordered to
-#'  match the row-clustering present within a provided meta-clustering result.
+#' Scales settings matrix values between 0 and 1 and plots as a heatmap. Rows
+#' can be reordered to match prior meta clustering results.
 #'
-#' @param settings_matrix matrix indicating parameters to iterate SNF through
-#' @param order numeric vector indicating row ordering of settings matrix
-#' @param show_rownames If TRUE (default), rownames are shown on heatmap
-#' @param save optional path to save figure to
-#' @param hide_ids boolean indicating if row_id numbers should be hidden
+#' @param settings_matrix Matrix indicating parameters to iterate SNF through.
+#'
+#' @param remove_fixed_columns Whether columns that have no variation should be
+#' removed.
+#'
+#' @param order Numeric vector indicating row ordering of settings matrix.
+#'
+#' @param show_column_names Whether column names should be shown.
+#'
+#' @param show_row_names Whether row names should be shown.
+#'
+#' @param colour_breaks Numeric vector of breaks for the legend.
+#'
+#' @param colours Vector of colours to use for the heatmap. Should match the
+#' length of colour_breaks.
 #'
 #' @export
 settings_matrix_heatmap <- function(settings_matrix,
                                     order = NULL,
-                                    show_rownames = TRUE,
-                                    save = NULL,
-                                    hide_ids = FALSE) {
+                                    remove_fixed_columns = TRUE,
+                                    show_column_names = TRUE,
+                                    show_row_names = TRUE,
+                                    colour_breaks = c(0, 1),
+                                    colours = c("black", "darkseagreen")) {
     if (!is.null(order)) {
         settings_matrix <- settings_matrix[order, ]
     }
     # Scaling everything to have a max of 1
-    col_maxes <- apply(settings_matrix, 2, function(x) 1/max(x))
+    col_maxes <- apply(settings_matrix, 2, function(x) 1 / max(x))
     scaled_matrix <- as.matrix(settings_matrix) %*% diag(col_maxes)
     colnames(scaled_matrix) <- colnames(settings_matrix)
     rownames(scaled_matrix) <- rownames(settings_matrix)
-    gaps <- c(
-        which(colnames(scaled_matrix) == "row_id"),
-        which(colnames(scaled_matrix) == "t"),
-        which(colnames(scaled_matrix) == "snf_scheme"),
-        which(colnames(scaled_matrix) == "clust_alg"),
-        which(colnames(scaled_matrix) == "mix_dist")
-    )
-    colorscheme <- grDevices::colorRampPalette(c("green", "midnightblue"))(50)
-    if (hide_ids == TRUE) {
-        row_labels <- ""
-    } else {
-        row_labels <- rownames(scaled_matrix)
+    ###########################################################################
+    # Function to check number of unique values in each column
+    unique_values <- apply(scaled_matrix, 2, function(x) length(unique(x)))
+    fixed_columns <- colnames(scaled_matrix[, unique_values == 1])
+    if (length(fixed_columns) > 0 && remove_fixed_columns) {
+        message(
+            "Removing columns that had no variation across settings matrix: \n",
+            paste(
+                paste0(seq_along(fixed_columns), ". ", fixed_columns),
+                collapse = "\n "
+            )
+        )
+        scaled_matrix <- scaled_matrix[, unique_values > 1]
     }
-    if (!(is.null(grDevices::dev.list())) && !(is.null(save))) {
-        grDevices::dev.off()
-    }
-    if (!(is.null(save))) {
-        pheatmap::pheatmap(
-            scaled_matrix,
-            cluster_rows = FALSE,
-            cluster_cols = FALSE,
-            labels_row = row_labels,
-            gaps_col = gaps,
-            show_rownames = show_rownames,
-            color = colorscheme,
-            legend = FALSE,
-            fontsize = 12,
-            filename = save)
-    }
-    pheatmap::pheatmap(
+    ###########################################################################
+    heatmap <- ComplexHeatmap::Heatmap(
         scaled_matrix,
         cluster_rows = FALSE,
-        cluster_cols = FALSE,
-        labels_row = row_labels,
-        gaps_col = gaps,
-        show_rownames = show_rownames,
-        color = colorscheme,
-        legend = FALSE,
-        fontsize = 12)
+        cluster_columns = FALSE,
+        rect_gp = grid::gpar(col = "black"),
+        col = circlize::colorRamp2(colour_breaks, colours),
+        heatmap_legend_param = list(
+            color_bar = "continuous",
+            title = "Scaled Setting",
+            at = colour_breaks
+        ),
+    )
+    return(heatmap)
 }
 
 #' Heatmap of p-values
@@ -555,6 +590,63 @@ pval_heatmap <- function(pvals,
     )
     return(heatmap)
 }
+
+#' Heatmap meta-clustering results
+#'
+#' @param solutions_matrix_aris results from meta_cluster function
+#' @param title plot title
+#' @param save optional path to save figure to
+#' @param cluster_cols boolean indicating if columns shold be clustered
+#' @param cluster_rows boolean indicating if rows shold be clustered
+#' @param hide_columns boolean indicating if column names should be hidden
+#' @param hide_rows boolean indicating if row names should be hidden
+#' @param ... additional parameters to pass into pheatmap
+#'
+#' @export
+adjusted_rand_index_heatmap <- function(solutions_matrix_aris,
+                                        title = "",
+                                        save = NULL,
+                                        cluster_cols = TRUE,
+                                        cluster_rows = TRUE,
+                                        hide_columns = FALSE,
+                                        hide_rows = FALSE,
+                                        ...) {
+    if (hide_columns) {
+        colnames(solutions_matrix_aris) <- NULL
+    }
+    if (hide_rows) {
+        rownames(solutions_matrix_aris) <- NULL
+    }
+    if (!(is.null(grDevices::dev.list()))) {
+        grDevices::dev.off()
+    }
+    if (!(is.null(save))) {
+        pheatmap::pheatmap(
+            solutions_matrix_aris,
+            legend_breaks = c(0, 0.5, 1, max(solutions_matrix_aris)),
+            main = title,
+            legend_labels = c("0", "0.5", "1", "ARI\n\n"),
+            legend = TRUE,
+            border_color = FALSE,
+            cluster_cols = cluster_cols,
+            cluster_rows = cluster_rows,
+            filename = save,
+            ...
+        )
+    }
+    pheatmap::pheatmap(
+        solutions_matrix_aris,
+        legend_breaks = c(0, 0.5, 1, max(solutions_matrix_aris)),
+        main = title,
+        legend_labels = c("0", "0.5", "1", "ARI\n\n"),
+        legend = TRUE,
+        border_color = FALSE,
+        cluster_cols = cluster_cols,
+        cluster_rows = cluster_rows,
+        ...
+    )
+}
+
 
 shiny_annotator <- function(mc_heatmap) {
     drawn_heatmap <- ComplexHeatmap::draw(mc_heatmap)
@@ -1117,4 +1209,22 @@ save_heatmap <- function(heatmap,
     )
     print(heatmap)
     grDevices::dev.off()
+}
+
+#' Return the row order of a meta-clustering solution
+#'
+#' Pheatmap reorders meta clustering results to enable meta-cluster
+#'  visualization. This function extracts the new row orders to apply to other
+#'  matrices.
+#'
+#' @param matrix matrix used as pheatmap input
+#'
+#' @return pheatmap_order Row orders of the clustered pheatmap
+#'
+#' @export
+get_heatmap_order <- function(matrix) {
+    distance_matrix <- dist(matrix, method = "euclidean")
+    hclust_result <- hclust(distance_matrix, method = "complete")
+    order <- hclust_result$order
+    return(order)
 }
