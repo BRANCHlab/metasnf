@@ -199,7 +199,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
 
 #' Heatmap of pairwise adjusted rand indices between solutions
 #'
-#' @param aris Matrix of adjusted rand indices from `calc_om_aris`
+#' @param aris Matrix of adjusted rand indices from `calc_aris()`
 #'
 #' @param order Numeric vector containing row order of the heatmap.
 #'
