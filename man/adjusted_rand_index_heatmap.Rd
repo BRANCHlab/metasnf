@@ -18,7 +18,7 @@ adjusted_rand_index_heatmap(
 )
 }
 \arguments{
-\item{aris}{Matrix of adjusted rand indices from \code{calc_om_aris}}
+\item{aris}{Matrix of adjusted rand indices from \code{calc_aris()}}
 
 \item{order}{Numeric vector containing row order of the heatmap.}
 

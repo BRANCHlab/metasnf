@@ -74,7 +74,7 @@ can be used:
 - [Simple usage of the
   package](https://branchlab.github.io/metasnf/articles/a_simple_example.html)
 - [Complex usage of the
-  package](https://branchlab.github.io/metasnf/articles/a_less_simple_example.html)
+  package](https://branchlab.github.io/metasnf/articles/a_complete_example.html)
 
 And more tutorials can be found under the “articles” section of the
 documentation home page:
@@ -115,7 +115,7 @@ the purposes of clinical subtyping.
 ### Example workflows
 
 - [Simple](https://branchlab.github.io/metasnf/articles/a_simple_example.html)
-- [Complex](https://branchlab.github.io/metasnf/articles/a_less_simple_example.html)
+- [Complex](https://branchlab.github.io/metasnf/articles/a_complete_example.html)
 
 ### Essentials
 

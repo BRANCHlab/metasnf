@@ -16,7 +16,7 @@ navbar:
     - text: A Simple Example
       href: articles/a_simple_example.html
     - text: A Less Simple Example
-      href: articles/a_less_simple_example.html
+      href: articles/a_complete_example.html
     - text: -------
     - text: Essentials
     - text: The Settings Matrix
