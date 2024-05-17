@@ -48,7 +48,7 @@ The resulting columns are:
 * `alpha`: The alpha (also referred to as sigma or eta) hyperparameter in SNF
 * `k`: The K (nearest neighbours) hyperparameter in similarity matrix calculations and SNF
 * `t`: The T (number of iterations) hyperparameter used in SNF
-* `snf_scheme`: Which SNF "scheme" is being used to convert the initial provided dataframes into a final fused network (more on this in the [appendix of the "Less Simple Example" vignette](https://branchlab.github.io/metasnf/articles/a_less_simple_example.html#snf_scheme))
+* `snf_scheme`: Which SNF "scheme" is being used to convert the initial provided dataframes into a final fused network (more on this in the [appendix of the "Less Simple Example" vignette](https://branchlab.github.io/metasnf/articles/a_complete_example.html#snf_scheme))
 * `clust_alg`: Which clustering algorithm will be applied to the final fused network. By default, this varies between the pre-provided options of (1) spectral clustering with the number of clusters determined by the eigen-gap heuristic and (2) the same thing but using the rotation cost heuristic. You can learn more about using this parameter in the [clustering algorithnms vignette](https://branchlab.github.io/metasnf/articles/clustering_algorithms.html).
 * Columns ending in `dist`: Which distance metric is being used for the various types of variables (more on this in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html))
 * Columns starting with `inc`: Whether or not the corresponding dataframe will be included (1) or excluded (0) from this row

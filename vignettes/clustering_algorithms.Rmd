@@ -268,7 +268,7 @@ After some poking around, you will often see people mentioning that DBSCAN just 
 You need to look at your data to have a good idea of what values to use for the hyperparameters `eps` and `minPts`.
 When you need to get involved manually, that's the perfect time to manage the many similarity matrices you've created with `batch_snf` through meta clustering.
 Generate a wide range of similarity matrices and apply meta clustering to find a few representative similarity matrices.
-One way to do this would be based on how the spectral-clustering derived solutions end up clustering together (see [example](https://branchlab.github.io/metasnf/articles/a_less_simple_example.html#examining-meta-clusters)).
+One way to do this would be based on how the spectral-clustering derived solutions end up clustering together (see [example](https://branchlab.github.io/metasnf/articles/a_complete_example.html#examining-meta-clusters)).
 Then take the corresponding affinity matrices and go through the dbscan clustering process manually.
 
 Based on `?dbscan`, it looks like the function can accept precomputed distance matrices (instead of `precomputed_nn_object`s) as long as they actually are `dist` objects (which can be done using the `as.dist()` function).

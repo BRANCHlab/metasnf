@@ -325,7 +325,7 @@ max(similarity_matrix - fused_network)
 And now we've completed a basic example of using this package.
 The subsequent vignettes provide guidance on how you can leverage the `settings_matrix` to access a wide range of clustering solutions from your data, how you can use other tools in this package to pick a best solution for your purposes, and how to validate the generalizability.
 
-Go give the [less simple example](https://branchlab.github.io/metasnf/articles/a_less_simple_example.html) a try!
+Go give the [less simple example](https://branchlab.github.io/metasnf/articles/a_complete_example.html) a try!
 
 ## References
 

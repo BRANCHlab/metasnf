@@ -1,10 +1,10 @@
 ---
-title: "A Less Simple Example"
+title: "A Complete Example"
 output:
     rmarkdown::html_vignette:
         toc: true
 vignette: >
-  %\VignetteIndexEntry{A Less Simple Example}
+  %\VignetteIndexEntry{A Complete Example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,23 +20,33 @@ knitr::opts_chunk$set(
 )
 ```
 
-Download a copy of the vignette to follow along here: [a_less_simple_example.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/a_less_simple_example.Rmd)
+Download a copy of the vignette to follow along here: [a_complete_example.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/a_complete_example.Rmd)
 
-We recommend you go through the [simple example](https://branchlab.github.io/metasnf/articles/a_simple_example.html) before working through this one!
+We recommend you go through the [simple example](https://branchlab.github.io/metasnf/articles/a_simple_example.html) before working through this one.
 
-This vignette walks through how this package can be used over a complete SNF-subtyping pipeline.
+This vignette walks through how the core functionality of this package, including:
 
-## Data set-up and pre-processing
+1. Setting up the data
+2. Building a space of settings to cluster over
+3. Running SNF
+4. Identifying and visualizing meta clusters
+5. Characterizing and selecting top meta clusters
+6. Selecting a representative cluster solution from a meta cluster
+7. Cluster solution characterization
+9. Cluster solution validation
 
-### 1. Load the library and data into the R environment
+## 1. Setting up the data
+
+### Load the library and data into the R environment
 
 Your data should be loaded into the R environment in the following format:
 
-- The data is in one or multiple *data.frame* objects
-- The data is in wide form (one row per patient)
-- Any dataframe should one column that uniquely identifies which patient the row has data for
+1. The data is in one or more *data.frame* objects
+2. The data is in wide form (one row per patient to cluster)
+3. All dataframes should have exactly one column that uniquely identifies which patient the row has data for
+4. All data should be complete (no missing values)
 
-It is fine to have missing data at this stage.
+A future vignette will outline how metaSNF can be used to simultaneously cluster over distinct imputations of a dataset.
 
 The package comes with a few mock dataframes based on real data from the Adolescent Brain Cognitive Development study:
 
@@ -102,12 +112,13 @@ lapply(abcd_data,
 Some of our data has missing values and not all of our dataframes have the same number of participants.
 
 
-## Generating the data list
+### Generating the data list
 
 The `data_list` structure is a structured list of dataframes (like the one already created), but with some additional metadata about each dataframe.
 It should only contain the input dataframes we want to directly use as inputs for the clustering.
 Out of all the data we have available to us, we may be working in a context where the anxiety and depression data are especially important patient outcomes, and we want to know if we can find subtypes using the rest of the data which still do a good job of separating out patients by their anxiety and depression scores.
-We'll set aside anxiety and depression for now and use the rest of the data as inputs for our subtyping, which means loading them into the data_list.
+
+We'll start by creating a data list that stores our input variables.
 
 ```{r}
 # Note that you do not need to explicitly name every single named element
@@ -189,7 +200,6 @@ generate_dl_results <- generate_data_list(
 # You only need to do this if you've set `return_missing` to TRUE!
 data_list <- generate_dl_results$"data_list"
 removed_subjects <- generate_dl_results$"removed_subjects"
-
 removed_subjects[1:10]
 ```
 
@@ -201,7 +211,25 @@ summarize_dl(data_list)
 
 Each input dataframe now has the same 100 subjects with complete data.
 
-## Generating the settings matrix
+`data_list` now stores all the variables we intend on using for the clustering.
+We're interested in knowing if any of the clustering solutions we generate can distinguish children apart based on their anxiety and depression scores.
+To do this, we'll also create a data list storing only variables that we'll use for evaluating our cluster solutions and not for the clustering itself.
+We'll refer to this as the "target_list".
+
+```{r}
+target_list <- generate_data_list(
+    list(abcd_anxiety, "anxiety", "behaviour", "ordinal"),
+    list(abcd_depress, "depressed", "behaviour", "ordinal"),
+    uid = "patient"
+)
+
+summarize_dl(target_list)
+```
+
+Note that it is not necessary to make use of a partition of input and out-of-model measures in this way.
+If you'd like to have no target list and instead use every single variable of interest for the clustering, you can stick to just using one data list.
+
+## 2. Building a space of settings to cluster over
 
 The `settings_matrix` stores all the information about the settings we'd like to use for each of our SNF runs.
 Calling the `generate_settings_matrix` function with a specified number of rows will automatically build a randomly populated `settings_matrix`.
@@ -233,7 +261,7 @@ Without specifying any additional parameters, `generate_settings_matrix` randoml
 
 What's important for now is that the matrix (technically a dataframe in the R environment) contains several rows which each outline a different but reasonable way in which the raw data could be converted into patient subtypes.
 Further customization of the `settings_matrix` will enable you to access the broadest possible space of reasonable cluster solutions that your data can produce using SNF and ideally get you closer to a generalizable and useful solution for your context.
-More on `settings_matrix` customization can be found in the [settings matrix vignette](https://branchlab.github.io/metasnf/articles/settings_matrix.html)
+More on `settings_matrix` customization can be found in the [settings matrix vignette](https://branchlab.github.io/metasnf/articles/settings_matrix.html).
 
 Setting the optional `seed` parameter (which will affect the seed of your entire R session) ensures that the same settings matrix is generated each time we run the code.
 
@@ -241,8 +269,7 @@ While we end up with a random set of settings here, there is nothing wrong with 
 For example, if you wanted to know how much of a difference one input dataframe made, you could ensure that half of the rows included this input dataframe and the other half didn't.
 You can also add random rows to an already existing dataframe using the `add_settings_matrix_rows` function (further discussed in the vignette).
 
-
-## Running SNF for all the rows in the settings matrix
+## 3. Running SNF
 
 The `batch_snf` function integrates the data in the `data_list` using each of the sets of settings contained in the `settings_matrix`.
 The resulting structure is an `solutions_matrix` which is an extension of the `settings_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `settings_matrix` row.
@@ -255,9 +282,13 @@ colnames(solutions_matrix)[1:30]
 
 It goes on like this for some time.
 
-Just like that, the clustering is done!
+Just like that, 20 different cluster solutions have been generated!
 
-You can pull the clustering results out of each row using the `get_cluster_df` function:
+In practice, you may end up wanting to create hundreds or thousands of cluster solutions at a time.
+If you have access to a multi-core system, `batch_snf` can be run with parallel processing enabled.
+See `?batch_snf` or the [parallel processing vignette](https://branchlab.github.io/metasnf/articles/parallel_processing.html) for more information.
+
+You can pull the clustering results out of each row using the `get_cluster_solutions` function:
 
 ```{r}
 cluster_solutions <- get_cluster_solutions(solutions_matrix)
@@ -265,41 +296,38 @@ cluster_solutions <- get_cluster_solutions(solutions_matrix)
 head(cluster_solutions)
 ```
 
-*Note: Parallel processing is available on an older release of the package (v0.2.0) and will be integrated into the latest release shortly. See the "processes" parameter in `?batch_snf`.*
+## 4. Identifying and visualizing meta clusters
 
-## Picking a solution
-
-Now that we have access to 20 different clustering solutions, we'll need to find some way to pick a favourite (or a few).
+Now that we have access to 20 different clustering solutions, we'll need to find some way to pick an optimal one to move forward with for additional characterization.
 In this case, plotting or running stats manually on each of the solutions might be a reasonable way to determine which ones we like the most.
 But when the number of solutions generated goes up into the hundreds (or thousands), we're going to need some more automated approaches.
 
-Below are some different tools that you can use to try to pick a solution that is the best for your purposes.
+The main approach we recommend using is the meta clustering approach described in Caruana et al., 2016.
+Meta clustering is a good approach to use when the criterion for what makes one cluster solution better than another is hard to formalize quantitatively (and hence, hard to fully automate).
 
-### 1: Examining "meta clusters"
-
-This is the approach introduced by the original meta clustering paper.
-This is a good approach to use when you can't quantitatively describe what makes one cluster solution better than another, but you can have an expert compare the two solutions and "intuit" which of the two is more desirable.
-
-The idea is to cluster the clustering solutions themselves to arrive at a small number of qualitatively different solutions.
-From there, a user can manually pick out some representative solutions and do the evaluations themselves.
+The idea is to cluster the *clustering solutions themselves* to arrive at a manageable number of qualitatively similar meta clusters.
+From there, characterization of representative solutions from each meta cluster can be done to efficiently identify the top choice.
 
 The first step is to calculate the [adjusted Rand index](https://en.wikipedia.org/wiki/Rand_index) (ARI) between each pair of cluster solutions.
 This metric tells us how similar the solutions are to each other, thereby allowing us to find clusters of cluster solutions.
 
 ```{r}
-solutions_matrix_aris <- calc_om_aris(solutions_matrix)
+solutions_matrix_aris <- calc_aris(solutions_matrix)
 ```
 
 We can visualize the resulting inter-cluster similarities with a heatmap.
 First, call `get_matrix_order` to get a hierarchical clustering-based ordering of the rows in the adjusted rand indices.
-This order can be passed into the `adjusted_rand_index_heatmap` function to get a clearer view of existing meta clusters.
 
-```{r eval = FALSE}
+```{r}
 meta_cluster_order <- get_matrix_order(solutions_matrix_aris)
 
 # Just a vector of numbers
 meta_cluster_order
+```
 
+This order can be passed into the `adjusted_rand_index_heatmap` function to get a clearer view of existing meta clusters.
+
+```{r eval = FALSE}
 ari_hm <- adjusted_rand_index_heatmap(
     solutions_matrix_aris,
     order = meta_cluster_order
@@ -308,7 +336,7 @@ ari_hm <- adjusted_rand_index_heatmap(
 save_heatmap(
     heatmap = ari_hm,
     path = "./adjusted_rand_index_heatmap.png",
-    width = 400,
+    width = 550,
     height = 500,
     res = 100
 )
@@ -323,7 +351,172 @@ The diagonals should always be red, representing the maximum value of 1, as they
 Complete-linkage, Euclidean-distance based hierarchical clustering is being applied to these solutions to obtain the row ordering.
 This is also the default approach used by the `ComplexHeatmap` package, the backbone of all heatmap functions in `metaSNF`.
 
+This heatmap is integral to understanding what meta clusters exist in your data (given the space of parameters you explored in the settings matrix).
+We will later see how to further customize this heatmap to add in rich information about how each plotted cluster solution differs on various measures of quality, different clustering settings, and different levels of separation on input and out-of-model measures.
+
+First, we'll divide the heatmap into meta clusters by visual inspection.
+The indices of our meta cluster boundaries can be passed into the `adjusted_rand_index_heatmap` function as the `split_vector` parameter.
+You can determine this vector through trial and error or by using the `shiny_annotator` function (a wrapper around functionality from the `InteractiveComplexHeatmap` package).
+
+```{r eval = FALSE}
+shiny_annotator(ari_hm)
+```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/meta_cluster_shiny.png)
+</center>
+
+A demonstration of the shiny app can be seen here: [Meta Cluster Identification](https://pvelayudhan.shinyapps.io/shiny/)
+
+Note that while the shiny app is running, your R console will be unresponsive.
+
+Clicking on cell boundaries and tracking the row/column indices (printed to the R console as well as displayed in the app) can get us results looking something like this:
+
+```{r eval = FALSE}
+ari_mc_hm <- adjusted_rand_index_heatmap(
+    solutions_matrix_aris,
+    order = meta_cluster_order,
+    split_vector = c(11, 14)
+)
+
+save_heatmap(
+    heatmap = ari_mc_hm,
+    path = "./ari_mc_hm.png",
+    width = 550,
+    height = 500,
+    res = 100
+)
+```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/ari_mc_hm.png)
+</center>
+
+At this point, we have our meta clusters but are not yet sure of how they differ in terms of their structure across the input variables.
+To get a quick overview of which meta cluster we want to further explore, let's determine how good these meta clusters were at separating apart our patients over their anxiety and depression scores.
+
+We start by running the `extend_solutions` function, which will calculate p-values representing the strength of the association between cluster membership (treated as a categorical variable) and any feature present in a provided target list.
+
+```{r}
+extended_solutions_matrix <- extend_solutions(
+    solutions_matrix,
+    target_list = target_list
+)
+
+# What columns have been added?
+new_cols <- !colnames(extended_solutions_matrix) %in%
+    colnames(solutions_matrix)
+head(extended_solutions_matrix[, new_cols])
+```
+
+The `extended_solutions_matrix` can be passed into the `adjusted_rand_index_heatmap` function to easily visualize the level of separation on each of our variables for each of our cluster solutions.
+
+```{r}
+annotated_ari_hm <- adjusted_rand_index_heatmap(
+    solutions_matrix_aris,
+    order = meta_cluster_order,
+    split_vector = c(11, 14),
+    data = extended_solutions_matrix,
+    top_hm = list(
+        "Depression p-value" = "cbcl_depress_r_pval",
+        "Anxiety p-value" = "cbcl_anxiety_r_pval"
+    ),
+    bottom_bar = list(
+        "Number of Clusters" = "nclust"
+    ),
+    annotation_colours = list(
+        "Depression p-value" = colour_scale(
+            extended_solutions_matrix$"cbcl_depress_r_pval",
+            min_colour = "purple",
+            max_colour = "black"
+        ),
+        "Anxiety p-value" = colour_scale(
+            extended_solutions_matrix$"cbcl_anxiety_r_pval",
+            min_colour = "green",
+            max_colour = "black"
+        )
+    )
+)
+
+save_heatmap(
+    heatmap = annotated_ari_hm,
+    path = "./annotated_ari_hm.png",
+    width = 650,
+    height = 500,
+    res = 100
+)
+```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/annotated_ari_hm.png)
+</center>
+
+This heatmap and its annotations is perhaps the richest visualization offered in this package for rapidly understanding the sorts of cluster solutions you've generated over a wide range of settings.
+The `adjusted_rand_index_heatmap` function wraps around a more generic `similarity_matrix_heatmap` function in this package, which itself is a wrapper around `ComplexHeatmap::Heatmap()`.
+Consequently, anything that can be done in the `ComplexHeatmap` package can be done here.
+This also makes the documentation for the `ComplexHeatmap` package one of the best places to learn more about what can be done for these heatmaps.
+
+The data for the annotations don't necessarily need to come from functions in metaSNF either.
+Anything is possible!
+If you wanted to, for example, highlight the solutions where two very specific patients happened to cluster together, you could easily add that in as another annotation:
+
+```{r eval = FALSE}
+extended_solutions_matrix <- extended_solutions_matrix |>
+    dplyr::mutate(
+        key_patients_cluster_together = dplyr::case_when(
+            subject_NDAR_INVLF3TNDUZ == subject_NDAR_INVLDQH8ATK ~ TRUE,
+            TRUE ~ FALSE
+        )
+    )
+
+annotated_ari_hm2 <- adjusted_rand_index_heatmap(
+    solutions_matrix_aris,
+    order = meta_cluster_order,
+    split_vector = c(11, 14),
+    data = extended_solutions_matrix,
+    top_hm = list(
+        "Depression p-value" = "cbcl_depress_r_pval",
+        "Anxiety p-value" = "cbcl_anxiety_r_pval",
+        "Key Patients Clustered Together" = "key_patients_cluster_together"
+    ),
+    bottom_bar = list(
+        "Number of Clusters" = "nclust"
+    ),
+    annotation_colours = list(
+        "Depression p-value" = colour_scale(
+            extended_solutions_matrix$"cbcl_depress_r_pval",
+            min_colour = "purple",
+            max_colour = "black"
+        ),
+        "Anxiety p-value" = colour_scale(
+            extended_solutions_matrix$"cbcl_anxiety_r_pval",
+            min_colour = "purple",
+            max_colour = "black"
+        ),
+        "Key Patients Clustered Together" = c(
+            "TRUE" = "blue",
+            "FALSE" = "black"
+        )
+    )
+)
+
+save_heatmap(
+    heatmap = annotated_ari_hm2,
+    path = "./annotated_ari_hm2.png",
+    width = 650,
+    height = 500,
+    res = 100
+)
+```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/annotated_ari_hm2.png)
+</center>
+
 If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your settings matrix.
+
+You could certainly stack on each setting to the ARI heatmap as annotations, but that may be a bit cumbersome given how many settings there are.
+Another option is to start by taking a first look at entire `settings_matrix`, sorted by the meta cluster results, through the `settings_matrix_heatmap` function.
 
 ```{r eval = FALSE}
 sm_hm <- settings_matrix_heatmap(
@@ -347,7 +540,51 @@ save_heatmap(
 This heatmap rescales all the columns in the settings_matrix to have a maximum value of 1.
 The purpose of re-ordering the settings matrix in this way is to see if any associations exist between certain settings values and pairwise cluster solution similarities.
 
-This heatmap can show you if any particular settings levels were associated with the formation of distinct meta clusters.
+This heatmap can show you if any settings values were associated with a particular type of clustering result.
+If there are any particular important settings, you can simply add them into your adjusted rand index heatmap annotations.
+Recall that the `solutions_matrix` (and, by extension, the `extended_solutions_matrix`) is an extension of the settings matrix, so no further data manipulation is needed to add a setting variable as a heatmap annotation.
+
+
+Give it a try with the code below:
+
+```{r eval = FALSE}
+annotated_ari_hm3 <- adjusted_rand_index_heatmap(
+    solutions_matrix_aris,
+    order = meta_cluster_order,
+    split_vector = c(11, 14),
+    data = extended_solutions_matrix,
+    top_hm = list(
+        "Depression p-value" = "cbcl_depress_r_pval",
+        "Anxiety p-value" = "cbcl_anxiety_r_pval",
+        "Key Patients Clustered Together" = "key_patients_cluster_together"
+    ),
+    left_hm = list(
+        "Clustering Algorithm" = "clust_alg" # from the original settings
+    ),
+    bottom_bar = list(
+        "Number of Clusters" = "nclust" # also from the original settings
+    ),
+    annotation_colours = list(
+        "Depression p-value" = colour_scale(
+            extended_solutions_matrix$"cbcl_depress_r_pval",
+            min_colour = "purple",
+            max_colour = "black"
+        ),
+        "Anxiety p-value" = colour_scale(
+            extended_solutions_matrix$"cbcl_anxiety_r_pval",
+            min_colour = "purple",
+            max_colour = "black"
+        ),
+        "Key Patients Clustered Together" = c(
+            "TRUE" = "blue",
+            "FALSE" = "black"
+        )
+    )
+)
+```
+
+It may be useful to get a quick view of how the original input variables separated for each of the generated cluster solutions as well.
+
 
 ### 2. Quality measures
 
@@ -439,26 +676,10 @@ Consider only using them after eliminating solutions that you are certainly not 
 
 ### 4. Evaluating separation across "target variables" of importance
 
-**Warning: This approach can very easily result in [overfitting](https://en.wikipedia.org/wiki/Overfitting) your data and producing clustering results that generalize poorly to subjects outside of your dataset.
-Consider setting aside some data to validate your results to avoid this issue.**
-
 If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
 
-There are many ways to go about doing this, but this package offers one way through the `target_list` structure.
+There are many ways to go about doing this, but this package offers one way through a `target_list`.
 The `target_list` contains dataframes what we can examine our clustering results over through linear regression (continuous data), ordinal regression (ordinal data), or the Chi-squared test (categorical data).
-
-```{r}
-target_list <- generate_target_list(
-    list(abcd_anxiety, "anxiety", "ordinal"),
-    list(abcd_depress, "depressed", "ordinal"),
-    uid = "patient"
-)
-
-summarize_target_list(target_list)
-```
-
-The `target_list` is like the `data_list`, but without the domain attribute.
-At this time, each dataframe used to build an target_list must be a single-feature.
 
 Just like when generating the initial `data_list`, we need to specify the name of the column in the provided dataframes that is originally being used to uniquely identify the different observations from each other with the `uid` parameter.
 
