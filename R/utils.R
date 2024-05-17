@@ -341,3 +341,24 @@ scale_diagonals <- function(matrix, method = "mean") {
     }
     return(matrix)
 }
+
+#' Return a colour ramp for a given vector
+#'
+#' Given a numeric vector and min and max colour values, return a colour ramp
+#' that assigns a colour to each element in the vector. This function is a
+#' wrapper for `circlize::colorRamp2`.'
+#'
+#' @param data Vector of numeric values.
+#'
+#' @param min_colour Minimum colour value.
+#'
+#' @param max_colour Maximum colour value.
+#'
+#' @export
+colour_scale <- function(data, min_colour, max_colour) {
+    colours <- circlize::colorRamp2(
+        c(min(data), max(data)),
+        c(min_colour, max_colour)
+    )
+    return(colours)
+}
