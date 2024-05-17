@@ -158,6 +158,7 @@ extend_solutions <- function(solutions_matrix,
     if (calculate_summaries) {
         esm <- summarize_pvals(esm)
     }
+    esm <- numcol_to_numeric(esm)
     return(esm)
 }
 
