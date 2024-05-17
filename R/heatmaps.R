@@ -609,8 +609,13 @@ pval_heatmap <- function(pvals,
     return(heatmap)
 }
 
-shiny_annotator <- function(mc_heatmap) {
-    drawn_heatmap <- ComplexHeatmap::draw(mc_heatmap)
+#' Launch shiny app to identify meta cluster boundaries
+#'
+#' @param ari_heatmap Heatmap of ARIs to divide into meta clusters.
+#'
+#' @export
+shiny_annotator <- function(ari_heatmap) {
+    drawn_heatmap <- ComplexHeatmap::draw(ari_heatmap)
     InteractiveComplexHeatmap::htShiny(
         drawn_heatmap,
         response = "click",
