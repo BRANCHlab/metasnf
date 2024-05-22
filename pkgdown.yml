@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
-  a_less_simple_example: a_less_simple_example.html
+  a_complete_example: a_complete_example.html
   a_simple_example: a_simple_example.html
   alluvial_plots: alluvial_plots.html
   clustering_algorithms: clustering_algorithms.html
@@ -21,7 +21,7 @@ articles:
   snf_schemes: snf_schemes.html
   stability_measures: stability_measures.html
   troubleshooting: troubleshooting.html
-last_built: 2024-05-15T22:18Z
+last_built: 2024-05-22T17:51Z
 urls:
   reference: https://branchlab.github.io/metasnf/reference
   article: https://branchlab.github.io/metasnf/articles

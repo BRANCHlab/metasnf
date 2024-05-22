@@ -10,7 +10,7 @@
     <loc>https://branchlab.github.io/metasnf/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/articles/a_less_simple_example.html</loc>
+    <loc>https://branchlab.github.io/metasnf/articles/a_complete_example.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/articles/a_simple_example.html</loc>
@@ -139,7 +139,7 @@
     <loc>https://branchlab.github.io/metasnf/reference/batch_snf_time_remaining.html</loc>
   </url>
   <url>
-    <loc>https://branchlab.github.io/metasnf/reference/calc_om_aris.html</loc>
+    <loc>https://branchlab.github.io/metasnf/reference/calc_aris.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/calculate_association_pval.html</loc>
@@ -176,6 +176,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/collapse_dl.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/colour_scale.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/convert_uids.html</loc>
@@ -359,6 +362,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/sew_euclidean_distance.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/shiny_annotator.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/similarity_matrix_heatmap.html</loc>

@@ -46,7 +46,7 @@
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Example workflows</h6>
     <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
-    <a class="dropdown-item" href="../articles/a_less_simple_example.html">A Less Simple Example</a>
+    <a class="dropdown-item" href="../articles/a_complete_example.html">A Less Simple Example</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Essentials</h6>
     <a class="dropdown-item" href="../articles/settings_matrix.html">The Settings Matrix</a>
@@ -132,8 +132,9 @@ weights_matrix (dataframe containing feature weights) object.</p>
 <span><span class="co">#&gt; 2  pubertal_status  continuous demographics    136     2</span></span>
 <span><span class="co">#&gt; 3 favourite_colour categorical demographics    136     2</span></span>
 <span><span class="co">#&gt; 4          anxiety     ordinal    behaviour    136     2</span></span>
-<span><span class="co">#&gt; 5        depressed     ordinal    behaviour    136     2</span></span>
-<span></span>
+<span><span class="co">#&gt; 5        depressed     ordinal    behaviour    136     2</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    nrow <span class="op">=</span> <span class="fl">20</span>,</span>
@@ -141,8 +142,9 @@ weights_matrix (dataframe containing feature weights) object.</p>
 <span>    max_k <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>    seed <span class="op">=</span> <span class="fl">42</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="va">weights_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    nrow <span class="op">=</span> <span class="fl">20</span></span>
@@ -165,7 +167,7 @@ the number of rows in the settings_matrix.</p>
 <p>If you are just looking to broaden the space of cluster solutions you
 generate, you can use some of the built-in randomization options for the
 weights:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Random uniformly distributed values</span></span>
 <span><span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
@@ -177,8 +179,9 @@ weights:</p>
 <span><span class="co">#&gt; [2,]       0.40378037       0.4627980 0.3132912      0.7119147      0.9593465</span></span>
 <span><span class="co">#&gt; [3,]       0.83551451       0.9353873 0.2794196      0.4951427      0.1132382</span></span>
 <span><span class="co">#&gt; [4,]       0.59499701       0.5917005 0.7100717      0.8079317      0.2355968</span></span>
-<span><span class="co">#&gt; [5,]       0.35140389       0.5460431 0.3481677      0.5611197      0.5104740</span></span>
-<span></span>
+<span><span class="co">#&gt; [5,]       0.35140389       0.5460431 0.3481677      0.5611197      0.5104740</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Random exponentially distributed values</span></span>
 <span><span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
@@ -193,7 +196,7 @@ weights:</p>
 <span><span class="co">#&gt; [5,]        0.1756311       0.5256458 1.3623835      0.1072554     0.24304379</span></span></code></pre></div>
 <p>Once you’re happy with your weights_matrix, you can pass it into
 batch_snf:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    data_list <span class="op">=</span> <span class="va">data_list</span>,</span>
 <span>    settings_matrix <span class="op">=</span> <span class="va">settings_matrix</span>,</span>

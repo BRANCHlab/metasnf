@@ -46,7 +46,7 @@
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Example workflows</h6>
     <a class="dropdown-item" href="../articles/a_simple_example.html">A Simple Example</a>
-    <a class="dropdown-item" href="../articles/a_less_simple_example.html">A Less Simple Example</a>
+    <a class="dropdown-item" href="../articles/a_complete_example.html">A Less Simple Example</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Essentials</h6>
     <a class="dropdown-item" href="../articles/settings_matrix.html">The Settings Matrix</a>
@@ -107,7 +107,7 @@ div.aside { background-color:#fff2e6; }
 <p>Download a copy of the vignette to follow along here: <a href="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/label_propagation.Rmd" class="external-link">label_propagation.Rmd</a></p>
 <p>In this vignette, we will walk through label propagation in the
 metaSNF package. Code from this vignette is largely taken from the end
-of the <a href="https://branchlab.github.io/metasnf/articles/a_less_simple_example.html">less
+of the <a href="https://branchlab.github.io/metasnf/articles/a_complete_example.html">less
 simple example vignette</a>.</p>
 <p>The label propagation procedure can be used to predict cluster
 membership for new, unlabeled observations based on their similarity to
@@ -184,8 +184,9 @@ the results into a simple label propagating function,
 <span>    min_k <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">30</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="va">train_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    <span class="va">train_data_list</span>,</span>
 <span>    <span class="va">settings_matrix</span></span>
@@ -195,8 +196,9 @@ the results into a simple label propagating function,
 <span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 1 seconds."</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] "Total time taken: 1 seconds."</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Pick a solution that has good separation over our target variables</span></span>
 <span><span class="va">train_target_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_target_list.html">generate_target_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
@@ -212,11 +214,13 @@ the results into a simple label propagating function,
 <span><span class="co">#&gt; [1] "Processing row 2 of 5"</span></span>
 <span><span class="co">#&gt; [1] "Processing row 3 of 5"</span></span>
 <span><span class="co">#&gt; [1] "Processing row 4 of 5"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 5 of 5"</span></span>
-<span><span class="va">lowest_min_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Processing row 5 of 5"</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lowest_min_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span> <span class="op">==</span> <span class="va">lowest_min_pval</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 5</span></span>
-<span><span class="va">top_row</span> <span class="op">&lt;-</span> <span class="va">extended_solutions_matrix</span><span class="op">[</span><span class="fl">4</span>, <span class="op">]</span></span>
+<span><span class="co">#&gt; [1] 5</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">top_row</span> <span class="op">&lt;-</span> <span class="va">extended_solutions_matrix</span><span class="op">[</span><span class="fl">4</span>, <span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Propagate that solution to the subjects in the test set</span></span>
 <span><span class="co"># data list below has both training and testing subjects</span></span>
@@ -232,8 +236,9 @@ the results into a simple label propagating function,
 <span><span class="co"># Use the solutions matrix from the training subjects and the data list from</span></span>
 <span><span class="co"># the training and testing subjects to propagate labels to the test subjects</span></span>
 <span><span class="va">propagated_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_solutions_matrix.html">lp_solutions_matrix</a></span><span class="op">(</span><span class="va">top_row</span>, <span class="va">full_data_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Processing row 1 of 1..."</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] "Processing row 1 of 1..."</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 subjectkey group 4</span></span>
 <span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 train 2</span></span>
@@ -241,8 +246,9 @@ the results into a simple label propagating function,
 <span><span class="co">#&gt; 3 subject_NDAR_INV0J4PYA5F train 2</span></span>
 <span><span class="co">#&gt; 4 subject_NDAR_INV10OMKVLE train 2</span></span>
 <span><span class="co">#&gt; 5 subject_NDAR_INV15FPCW4O train 2</span></span>
-<span><span class="co">#&gt; 6 subject_NDAR_INV19NB4RJK train 2</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 6 subject_NDAR_INV19NB4RJK train 2</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                   subjectkey group 4</span></span>
 <span><span class="co">#&gt; 95  subject_NDAR_INVGDBYXWV4  test 2</span></span>
 <span><span class="co">#&gt; 96  subject_NDAR_INVHEUWA52I  test 2</span></span>
@@ -254,7 +260,7 @@ the results into a simple label propagating function,
 solutions propagate to the test set, but that would mean reusing your
 test set and removing much of the protection against overfitting
 provided by this procedure.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">propagated_labels_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_solutions_matrix.html">lp_solutions_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">extended_solutions_matrix</span>,</span>
 <span>    <span class="va">full_data_list</span></span>
@@ -263,8 +269,9 @@ provided by this procedure.</p>
 <span><span class="co">#&gt; [1] "Processing row 2 of 5..."</span></span>
 <span><span class="co">#&gt; [1] "Processing row 3 of 5..."</span></span>
 <span><span class="co">#&gt; [1] "Processing row 4 of 5..."</span></span>
-<span><span class="co">#&gt; [1] "Processing row 5 of 5..."</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] "Processing row 5 of 5..."</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 subjectkey group 1 2  3 4 5</span></span>
 <span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 train 5 2 10 2 1</span></span>
@@ -272,8 +279,9 @@ provided by this procedure.</p>
 <span><span class="co">#&gt; 3 subject_NDAR_INV0J4PYA5F train 6 2  8 2 2</span></span>
 <span><span class="co">#&gt; 4 subject_NDAR_INV10OMKVLE train 1 1  3 2 2</span></span>
 <span><span class="co">#&gt; 5 subject_NDAR_INV15FPCW4O train 1 2  7 2 2</span></span>
-<span><span class="co">#&gt; 6 subject_NDAR_INV19NB4RJK train 3 2 10 2 2</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 6 subject_NDAR_INV19NB4RJK train 3 2 10 2 2</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                   subjectkey group 1 2 3 4 5</span></span>
 <span><span class="co">#&gt; 95  subject_NDAR_INVGDBYXWV4  test 1 2 7 2 2</span></span>
 <span><span class="co">#&gt; 96  subject_NDAR_INVHEUWA52I  test 4 2 6 2 2</span></span>
