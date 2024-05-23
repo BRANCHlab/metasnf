@@ -137,21 +137,36 @@ subs <- function(df) {
 #' Merge list of dataframes
 #'
 #' @param df_list list of dataframes
+#'
 #' @param join String indicating if join should be "inner" or "full"
+#'
+#' @param uid Column name to join on. Default is "subjectkey"
+#'
+#' @param no_na Whether to remove NA values from the merged dataframe
 #'
 #' @return merged_df inner join of all dataframes in list
 #'
 #' @export
-merge_df_list <- function(df_list, join = "inner") {
+merge_df_list <- function(df_list,
+                          join = "inner",
+                          uid = "subjectkey",
+                          no_na = FALSE) {
     if (join == "inner") {
-        merged_df <- df_list |>
-            purrr::reduce(dplyr::inner_join, by = "subjectkey")
+        merged_df <- df_list |> purrr::reduce(
+            dplyr::inner_join,
+            by = uid
+        )
     } else if (join == "full") {
-        merged_df <- df_list |>
-            purrr::reduce(dplyr::full_join, by = "subjectkey")
+        merged_df <- df_list |> purrr::reduce(
+            dplyr::full_join,
+            by = uid
+        )
     } else {
         print("Invalid join type specified. Options are 'inner' and 'full'.")
         return(NULL)
+    }
+    if (no_na) {
+        merged_df <- na.omit(merged_df)
     }
     return(merged_df)
 }
