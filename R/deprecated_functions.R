@@ -15,9 +15,20 @@ generate_target_list <- function(...) {
 #' @param ... Function arguments
 #'
 #' @export
-summarize_target_list <- function(target_list) {
+summarize_target_list <- function(...) {
     message(
         "`summarize_target_list` has been deprecated. Please use",
         " `summarize_dl` instead."
+    )
+}
+
+#' (DEPRECATED) Get p-value
+#'
+#' @param ... Function arguments
+#'
+#' @export
+get_cluster_pval <- function(...) {
+    message(
+        "`get_cluster_pval` has been deprecated. Please use `calc_assoc_pval`."
     )
 }
