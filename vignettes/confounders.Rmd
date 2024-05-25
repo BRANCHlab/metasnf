@@ -16,11 +16,11 @@ div.aside { background-color:#fff2e6; }
 ```{r, include = FALSE}
 # Default chunk options
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.width = 6,
-  fig.height = 4.5,
-  fig.align = "center"
+    collapse = TRUE,
+    comment = "#>",
+    fig.width = 6,
+    fig.height = 4.5,
+    fig.align = "center"
 )
 ```
 
@@ -134,7 +134,7 @@ player_data <- data.frame(
     position = sample(c("pg", "c", "sg"), size = rows, replace = TRUE)
 ) |> generate_player_data()
 
-player_data$"id" <- as.character(1:nrow(player_data))
+player_data$"id" <- as.character(seq_len(nrow(player_data)))
 
 # Plot by position
 player_data |>
@@ -198,12 +198,9 @@ In this case, the default spectral clustering has done a decent job of separatin
 We have separate clusters just for pro players and just for community center players, which is not what we want.
 Other clustering algorithms can fare even worse in this context.
 
-```{r}
-# If you have R version 4.3.0 or higher, you can use the code below to see that
-# the optimal number of clusters is 2.
-# library(factoextra)
-# fviz_nbclust(metasnf_data[, c("assists", "blocks")], kmeans, method = "wss")
+If you have R version 4.3.0 or higher, you can use the snippet `factoextra::fviz_nbclust(metasnf_data[, c("assists", "blocks")], kmeans, method = "wss")` to see that the optimal number of clusters is 2.
 
+```{r}
 km <- kmeans(metasnf_data[, c("blocks", "assists")], centers = 2, nstart = 25)
 
 km$"cluster"
@@ -286,9 +283,9 @@ adjusted_dl <- linear_adjust(dl, unwanted_signal_list1)
 merged_df <- collapse_dl(c(adjusted_dl, unwanted_signal_list2))
 
 merged_df |>
-     ggplot(aes(x = blocks, y = assists, shape = level, colour = position)) +
-     geom_point(size = 5, alpha = 0.3) +
-     theme_bw()
+    ggplot(aes(x = blocks, y = assists, shape = level, colour = position)) +
+    geom_point(size = 5, alpha = 0.3) +
+    theme_bw()
 
 # Correcting too many things!
 adjusted_dl2 <- linear_adjust(dl, unwanted_signal_list2)
@@ -296,12 +293,14 @@ adjusted_dl2 <- linear_adjust(dl, unwanted_signal_list2)
 merged_df2 <- collapse_dl(c(adjusted_dl2, unwanted_signal_list2))
 
 merged_df2 |>
-     ggplot(aes(x = blocks, y = assists, shape = level, colour = position)) +
-     geom_point(size = 5, alpha = 0.3) +
-     theme_bw()
+    ggplot(aes(x = blocks, y = assists, shape = level, colour = position)) +
+    geom_point(size = 5, alpha = 0.3) +
+    theme_bw()
 ```
 
 ## Limitations and important considerations
+
+### 1. Excessive loss of signal
 
 When you remove the signal associated with a variable, you will impact every other variable to a degree that is proportional to the correlation between that variable and the unwanted one.
 Practically, any variable that is strongly correlated with your unwanted signal variable may be better off removed.
@@ -312,3 +311,12 @@ There is no other information that one could collect to improve their ability to
 
 If you wanted to learn about the structure of ice cream sales *excluding* the signal introduced by temperature, the adjustment would turn the ice cream sales data into genuine pure noise.
 At that point any clusters generated would be totally meaningless and non-reproducible.
+
+### 2. Lack of accounting for non-linearities
+
+The adjustment procedure is purely linear.
+
+### 3. Inability to adjust ordinal, discrete, or categorical data
+
+Linearly adjusting categorical/factor variables is not possible.
+Attempting to adjust data that has a discrete or ordinal structure will likely not completely remove the association between the regressor variables and the variables being regressed.

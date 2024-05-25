@@ -110,7 +110,27 @@ lapply(abcd_data,
 ```
 
 Some of our data has missing values and not all of our dataframes have the same number of participants.
+SNF can only be run with complete data, so you'll need to either use complete case analysis (removal of observations with any missing values) or impute the missing values to proceed with the clustering.
 
+As mentioned above, `metaSNF` can be used to visualize changes in clustering results across different imputations of the data.
+For now, we'll just examine the simpler complete-case analysis approach by reducing our dataframes to only common and complete patients.
+
+```{r}
+abcd_merged_df <- merge_df_list(abcd_data, uid = "patient", no_na = TRUE)
+
+common_patients <- abcd_merged_df$"patient"
+
+print(length(common_patients))
+
+# Reducing dataframes to only common subjects with no missing data
+abcd_anxiety <- abcd_anxiety[abcd_anxiety$"patient" %in% common_patients, ]
+abcd_depress <- abcd_depress[abcd_depress$"patient" %in% common_patients, ]
+abcd_cort_t <- abcd_cort_t[abcd_cort_t$"patient" %in% common_patients, ]
+abcd_cort_sa <- abcd_cort_sa[abcd_cort_sa$"patient" %in% common_patients, ]
+abcd_subc_v <- abcd_subc_v[abcd_subc_v$"patient" %in% common_patients, ]
+abcd_h_income <- abcd_h_income[abcd_h_income$"patient" %in% common_patients, ]
+abcd_pubertal <- abcd_pubertal[abcd_pubertal$"patient" %in% common_patients, ]
+```
 
 ### Generating the data list
 
@@ -159,49 +179,12 @@ data_list <- generate_data_list(
 ```
 
 This process removes any patients who did not have complete data across all provided input dataframes.
-If you'd like to keep track of that information, you can set the "return_missing" parameter to `TRUE` and receive a list containing the data_list as well as the removed patients:
+If you'd like to keep track of that information, you can set the "return_missing" parameter to `TRUE` and receive a list containing the data_list as well as the removed patients.
+The structure of the data list is a nested list tracking the data, the name of the dataframe, what domain (broader source of information) the data belongs to, and the type of variable stored in the dataframe.
+Options for variable type include "continuous", "discrete", "ordinal", and "categorical".
 
-```{r}
-generate_dl_results <- generate_data_list(
-    list(
-        data = abcd_cort_t,
-        name = "cortical_thickness",
-        domain = "neuroimaging",
-        type = "continuous"
-    ),
-    list(
-        data = abcd_cort_sa,
-        name = "cortical_surface_area",
-        domain = "neuroimaging",
-        type = "continuous"
-    ),
-    list(
-        data = abcd_subc_v,
-        name = "subcortical_volume",
-        domain = "neuroimaging",
-        type = "continuous"
-    ),
-    list(
-        data = abcd_h_income,
-        name = "household_income",
-        domain = "demographics",
-        type = "continuous"
-    ),
-    list(
-        data = abcd_pubertal,
-        name = "pubertal_status",
-        domain = "demographics",
-        type = "continuous"
-    ),
-    uid = "patient",
-    return_missing = TRUE
-)
-
-# You only need to do this if you've set `return_missing` to TRUE!
-data_list <- generate_dl_results$"data_list"
-removed_subjects <- generate_dl_results$"removed_subjects"
-removed_subjects[1:10]
-```
+The "uid" parameter is the name of the column in the dataframes that uniquely identifies each patient.
+Upon data list creation, the UID will be converted to "subjectkey" for consistency across other functions in the package.
 
 We can get a summary of our constructed `data_list` with the `summarize_dl` function:
 
@@ -209,7 +192,8 @@ We can get a summary of our constructed `data_list` with the `summarize_dl` func
 summarize_dl(data_list)
 ```
 
-Each input dataframe now has the same 100 subjects with complete data.
+Each input dataframe now has the same 87 subjects with complete data.
+The width refers to the number of columns in each dataframe, which equals 1 for the UID (subjectkey) column + the number of features in the dataframe.
 
 `data_list` now stores all the variables we intend on using for the clustering.
 We're interested in knowing if any of the clustering solutions we generate can distinguish children apart based on their anxiety and depression scores.
@@ -373,10 +357,12 @@ Note that while the shiny app is running, your R console will be unresponsive.
 Clicking on cell boundaries and tracking the row/column indices (printed to the R console as well as displayed in the app) can get us results looking something like this:
 
 ```{r eval = FALSE}
+split_vec <- c(2, 5, 12, 17)
+
 ari_mc_hm <- adjusted_rand_index_heatmap(
     solutions_matrix_aris,
     order = meta_cluster_order,
-    split_vector = c(11, 14)
+    split_vector = split_vec
 )
 
 save_heatmap(
@@ -392,34 +378,64 @@ save_heatmap(
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/ari_mc_hm.png)
 </center>
 
-At this point, we have our meta clusters but are not yet sure of how they differ in terms of their structure across the input variables.
-To get a quick overview of which meta cluster we want to further explore, let's determine how good these meta clusters were at separating apart our patients over their anxiety and depression scores.
+At this point, we have our meta clusters but are not yet sure of how they differ in terms of their structure across our input and out-of-model variables.
 
-We start by running the `extend_solutions` function, which will calculate p-values representing the strength of the association between cluster membership (treated as a categorical variable) and any feature present in a provided target list.
+We start by running the `extend_solutions` function, which will calculate p-values representing the strength of the association between cluster membership (treated as a categorical variable) and any feature present in a provided data list and/or target_list.
+
+`extend_solutions` also adds summary p-value measures (min, mean, and max) of any features present in the target list.
 
 ```{r}
+# Only looking at our out-of-model p-values
 extended_solutions_matrix <- extend_solutions(
     solutions_matrix,
     target_list = target_list
 )
 
 # What columns have been added?
-new_cols <- !colnames(extended_solutions_matrix) %in%
-    colnames(solutions_matrix)
+old_cols <- colnames(extended_solutions_matrix) %in% colnames(solutions_matrix)
+new_cols <- !old_cols
+
 head(extended_solutions_matrix[, new_cols])
+
+# Re-running to calculate the p-value for every single input and out-of-model
+# feature:
+extended_solutions_matrix <- extend_solutions(
+    solutions_matrix,
+    data_list = data_list,
+    target_list = target_list
+)
 ```
 
-The `extended_solutions_matrix` can be passed into the `adjusted_rand_index_heatmap` function to easily visualize the level of separation on each of our variables for each of our cluster solutions.
+Functionally, the only difference between the `data_list` and `target_list` arguments are that the `target_list` features will also be a part of those summary measures.
 
-```{r}
+```{r eval = FALSE}
+# Also would work, but without any summary p-values
+extended_solutions_matrix <- extend_solutions(
+    solutions_matrix,
+    data_list = c(data_list, target_list)
+)
+
+# Also would work, but now every feature would be part of the summaries
+extended_solutions_matrix <- extend_solutions(
+    solutions_matrix,
+    target_list = c(data_list, target_list)
+)
+```
+
+The summary p-value measures can be suppressed by setting `calculate_summaries = FALSE`.
+
+This `extended_solutions_matrix` we created can be passed into the `adjusted_rand_index_heatmap` function to easily visualize the level of separation on each of our variables for each of our cluster solutions.
+
+```{r eval = FALSE}
 annotated_ari_hm <- adjusted_rand_index_heatmap(
     solutions_matrix_aris,
     order = meta_cluster_order,
-    split_vector = c(11, 14),
+    split_vector = split_vec,
     data = extended_solutions_matrix,
     top_hm = list(
         "Depression p-value" = "cbcl_depress_r_pval",
-        "Anxiety p-value" = "cbcl_anxiety_r_pval"
+        "Anxiety p-value" = "cbcl_anxiety_r_pval",
+        "Overall outcomes p-value" = "mean_pval"
     ),
     bottom_bar = list(
         "Number of Clusters" = "nclust"
@@ -434,6 +450,11 @@ annotated_ari_hm <- adjusted_rand_index_heatmap(
             extended_solutions_matrix$"cbcl_anxiety_r_pval",
             min_colour = "green",
             max_colour = "black"
+        ),
+        "Overall outcomes p-value" = colour_scale(
+            extended_solutions_matrix$"mean_pval",
+            min_colour = "lightblue",
+            max_colour = "black"
         )
     )
 )
@@ -441,7 +462,7 @@ annotated_ari_hm <- adjusted_rand_index_heatmap(
 save_heatmap(
     heatmap = annotated_ari_hm,
     path = "./annotated_ari_hm.png",
-    width = 650,
+    width = 700,
     height = 500,
     res = 100
 )
@@ -451,17 +472,15 @@ save_heatmap(
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/annotated_ari_hm.png)
 </center>
 
-This heatmap and its annotations is perhaps the richest visualization offered in this package for rapidly understanding the sorts of cluster solutions you've generated over a wide range of settings.
 The `adjusted_rand_index_heatmap` function wraps around a more generic `similarity_matrix_heatmap` function in this package, which itself is a wrapper around `ComplexHeatmap::Heatmap()`.
 Consequently, anything that can be done in the `ComplexHeatmap` package can be done here.
 This also makes the documentation for the `ComplexHeatmap` package one of the best places to learn more about what can be done for these heatmaps.
 
 The data for the annotations don't necessarily need to come from functions in metaSNF either.
-Anything is possible!
 If you wanted to, for example, highlight the solutions where two very specific patients happened to cluster together, you could easily add that in as another annotation:
 
 ```{r eval = FALSE}
-extended_solutions_matrix <- extended_solutions_matrix |>
+extended_solutions_matrix2 <- extended_solutions_matrix |>
     dplyr::mutate(
         key_patients_cluster_together = dplyr::case_when(
             subject_NDAR_INVLF3TNDUZ == subject_NDAR_INVLDQH8ATK ~ TRUE,
@@ -472,8 +491,8 @@ extended_solutions_matrix <- extended_solutions_matrix |>
 annotated_ari_hm2 <- adjusted_rand_index_heatmap(
     solutions_matrix_aris,
     order = meta_cluster_order,
-    split_vector = c(11, 14),
-    data = extended_solutions_matrix,
+    split_vector = split_vec,
+    data = extended_solutions_matrix2,
     top_hm = list(
         "Depression p-value" = "cbcl_depress_r_pval",
         "Anxiety p-value" = "cbcl_anxiety_r_pval",
@@ -503,11 +522,98 @@ annotated_ari_hm2 <- adjusted_rand_index_heatmap(
 save_heatmap(
     heatmap = annotated_ari_hm2,
     path = "./annotated_ari_hm2.png",
-    width = 650,
+    width = 700,
     height = 500,
     res = 100
 )
 ```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/annotated_ari_hm2.png)
+</center>
+
+Now that we've visually delineated our meta clusters, we can get a quick summary of what sort of separation exists across our input and held out variables by taking a closer look at one representative cluster solution from each meta cluster.
+
+This can be achieved by the `get_representative_solutions` function, which extracts one cluster solution per meta cluster based on having the highest average ARI with the other solutions in that meta cluster.
+
+```{r eval = FALSE}
+rep_solutions <- get_representative_solutions(
+    solutions_matrix_aris,
+    split_vector = split_vec,
+    order = meta_cluster_order,
+    extended_solutions_matrix
+)
+
+mc_manhattan <- mc_manhattan_plot(
+    rep_solutions,
+    data_list = data_list,
+    target_list = target_list,
+    hide_x_labels = TRUE,
+    point_size = 2,
+    text_size = 12,
+    threshold = 0.05,
+    neg_log_pval_thresh = 5
+)
+
+ggsave(
+    "mc_manhattan.png",
+    mc_manhattan,
+    height = 6,
+    width = 12
+)
+
+```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/mc_manhattan.png)
+</center>
+
+`neg_log_pval_thresh` sets a threshold for the negative log of the p-values to be displayed.
+At a value of 5, any p-value that is smaller than 1e-5 will be truncated to 1e-5.
+
+Note that the Manhattan plot automatically uses a vertical line to separate features in the data_list argument from those in the target_list.
+Vertical boundaries can be controlled with the `xints` parameter.
+
+The plot as it is is a bit unwieldy plot given how many neuroimaging ROIs are present.
+Let's take out the cortical thickness and surface area measures to make the plot a little clearer.
+
+We'll also be able to read some variable measures more clearly when we dial the number of features plotted back a bit, as well.
+
+```{r eval = FALSE}
+rep_solutions_no_cort <- dplyr::select(
+    rep_solutions,
+    -dplyr::contains("mrisdp")
+)
+
+mc_manhattan2 <- mc_manhattan_plot(
+    rep_solutions_no_cort,
+    data_list = data_list,
+    target_list = target_list,
+    point_size = 4,
+    threshold = 0.01,
+    text_size = 12,
+    domain_colours = c(
+        "neuroimaging" = "cadetblue",
+        "demographics" = "purple",
+        "behaviour" = "firebrick"
+    )
+)
+mc_manhattan2
+
+ggsave(
+    "mc_manhattan2.png",
+    mc_manhattan2,
+    height = 8,
+    width = 12
+)
+```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/mc_manhattan2.png)
+</center>
+
+
+
 
 <center>
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/annotated_ari_hm2.png)
@@ -543,7 +649,6 @@ The purpose of re-ordering the settings matrix in this way is to see if any asso
 This heatmap can show you if any settings values were associated with a particular type of clustering result.
 If there are any particular important settings, you can simply add them into your adjusted rand index heatmap annotations.
 Recall that the `solutions_matrix` (and, by extension, the `extended_solutions_matrix`) is an extension of the settings matrix, so no further data manipulation is needed to add a setting variable as a heatmap annotation.
-
 
 Give it a try with the code below:
 
@@ -582,9 +687,6 @@ annotated_ari_hm3 <- adjusted_rand_index_heatmap(
     )
 )
 ```
-
-It may be useful to get a quick view of how the original input variables separated for each of the generated cluster solutions as well.
-
 
 ### 2. Quality measures
 
@@ -786,9 +888,9 @@ full_data_list <- generate_data_list(
 )
 
 # Construct the target lists
-train_target_list <- generate_target_list(
-    list(train_abcd_anxiety, "anxiety", "ordinal"),
-    list(train_abcd_depress, "depressed", "ordinal"),
+train_target_list <- generate_data_list(
+    list(train_abcd_anxiety, "anxiety", "behaviour", "ordinal"),
+    list(train_abcd_depress, "depressed", "behaviour", "ordinal"),
     uid = "patient"
 )
 

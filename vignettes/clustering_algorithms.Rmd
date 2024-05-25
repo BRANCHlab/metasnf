@@ -15,8 +15,8 @@ div.aside { background-color:#fff2e6; }
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
 
@@ -35,15 +35,20 @@ The code below goes over what the default clustering looks like.
 # Load the package
 library(metasnf)
 
-# Setting up the data
-data_list <- generate_data_list(
-    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
-    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+# Start by making a data list containing all our dataframes to more easily
+# identify subjects without missing data
+full_data_list <- generate_data_list(
     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-    list(abcd_income, "household_income", "demographics", "continuous"),
+    list(abcd_h_income, "household_income", "demographics", "continuous"),
     list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    list(abcd_anxiety, "anxiety", "behaviour", "ordinal"),
+    list(abcd_depress, "depressed", "behaviour", "ordinal"),
     uid = "patient"
 )
+
+# Partition into a data and target list (optional)
+data_list <- full_data_list[1:3]
+target_list <- full_data_list[4:5]
 
 # Specifying 5 different sets of settings for SNF
 settings_matrix <- generate_settings_matrix(
@@ -56,23 +61,32 @@ settings_matrix <- generate_settings_matrix(
 # This matrix has clustering solutions for each of the 5 SNF runs!
 solutions_matrix <- batch_snf(data_list, settings_matrix)
 
-target_list <- generate_target_list(
-    list(abcd_anxiety, "anxiety", "ordinal"),
-    list(abcd_depress, "depressed", "numeric"),
-    list(abcd_colour, "colour", "categorical"),
-    uid = "patient"
-)
-
 extended_solutions <- extend_solutions(
     solutions_matrix,
     target_list,
     cat_test = "fisher_exact"
 )
-
-target_pvals <- get_pvals(extended_solutions)
-
-manhattan_plot(target_pvals, threshold = 0.05, bonferroni_line = TRUE)
 ```
+
+```{r eval = FALSE}
+clust_esm_manhattan <- esm_manhattan_plot(
+    extended_solutions,
+    threshold = 0.05,
+    bonferroni_line = TRUE
+)
+
+ggplot2::ggsave(
+    "clust_esm_manhattan.png",
+    clust_esm_manhattan,
+    width = 5,
+    height = 5,
+    dpi = 100
+)
+```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/clust_esm_manhattan.png)
+</center>
 
 The Manhattan plot shows the p-values (y-axis) of the associations between our target variables (x-axis) and each cluster solution we calculated (colour) for each row of the settings matrix.
 

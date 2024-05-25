@@ -45,11 +45,27 @@ All that aside, we show here a simple approach that involves assigning the clust
 ```{r}
 library(metasnf)
 
+# Start by making a data list containing all our dataframes to more easily
+# identify subjects without missing data
+all_patient <- generate_data_list(
+    list(abcd_cort_t, "cort_t", "neuroimaging", "continuous"),
+    list(abcd_cort_sa, "cort_sa", "neuroimaging", "continuous"),
+    list(abcd_subc_v, "subc_v", "neuroimaging", "continuous"),
+    list(abcd_h_income, "household_income", "demographics", "continuous"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    list(abcd_anxiety, "anxiety", "behaviour", "ordinal"),
+    list(abcd_depress, "depressed", "behaviour", "ordinal"),
+    uid = "patient"
+)
+
 # Get a vector of all the subjects
-all_subjects <- abcd_cort_t$"patient"
+all_subjects <- get_dl_subjects(all_patient)
 
 # Dataframe assigning 80% of subjects to train and 20% to test
-train_test_split <- train_test_assign(train_frac = 0.8, subjects = all_subjects)
+train_test_split <- train_test_assign(
+    train_frac = 0.8,
+    subjects = all_subjects
+)
 
 # Pulling the training and testing subjects specifically
 train_subs <- train_test_split$"train"
@@ -75,11 +91,18 @@ test_abcd_depress <- abcd_depress[abcd_depress$"patient" %in% test_subs, ]
 
 # Find cluster solutions in the training set
 train_data_list <- generate_data_list(
-    list(train_abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(train_abcd_cort_t, "cort_t", "neuroimaging", "continuous"),
     list(train_abcd_cort_sa, "cortical_sa", "neuroimaging", "continuous"),
-    list(train_abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(train_abcd_subc_v, "subc_v", "neuroimaging", "continuous"),
     list(train_abcd_h_income, "household_income", "demographics", "continuous"),
     list(train_abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "patient"
+)
+
+# We'll pick a solution that has good separation over our target variables
+train_target_list <- generate_data_list(
+    list(train_abcd_anxiety, "anxiety", "behaviour", "ordinal"),
+    list(train_abcd_depress, "depressed", "behaviour", "ordinal"),
     uid = "patient"
 )
 
@@ -96,17 +119,12 @@ train_solutions_matrix <- batch_snf(
     settings_matrix
 )
 
-# Pick a solution that has good separation over our target variables
-train_target_list <- generate_target_list(
-    list(train_abcd_anxiety, "anxiety", "ordinal"),
-    list(train_abcd_depress, "depressed", "ordinal"),
-    uid = "patient"
-)
-
 extended_solutions_matrix <- extend_solutions(
     train_solutions_matrix,
     train_target_list
 )
+
+# Determining solution with the lowest minimum p-value
 lowest_min_pval <- min(extended_solutions_matrix$"min_pval")
 which(extended_solutions_matrix$"min_pval" == lowest_min_pval)
 top_row <- extended_solutions_matrix[4, ]
@@ -114,9 +132,9 @@ top_row <- extended_solutions_matrix[4, ]
 # Propagate that solution to the subjects in the test set
 # data list below has both training and testing subjects
 full_data_list <- generate_data_list(
-    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
-    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
-    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(abcd_cort_t, "cort_t", "neuroimaging", "continuous"),
+    list(abcd_cort_sa, "cort_sa", "neuroimaging", "continuous"),
+    list(abcd_subc_v, "subc_v", "neuroimaging", "continuous"),
     list(abcd_h_income, "household_income", "demographics", "continuous"),
     list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
     uid = "patient"

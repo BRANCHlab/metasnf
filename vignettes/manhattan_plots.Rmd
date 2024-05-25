@@ -15,176 +15,171 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Download a copy of the vignette to follow along here: [manhattan_plots.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/manhattan_plots.Rmd)
 
-## Associations with Cluster Solutions
+Manhattan plots can be quickly visualize the relationships between variables and cluster solutions.
 
-Manhattan plots can be used to visualize how several cluster solutions in a solutions matrix show separation across variables of interest.
+There are three main Manhattan plot variations provided in metaSNF.
 
-To generate a Manhattan plot, you'll need to provide a dataframe containing the pvalues of a solutions_matrix.
+1. `esm_manhattan_plot` Visualize how a set of cluster solutions separate over input/out-of-model variables
+2. `mc_manhattan_plot` Visualize how representative solutions from defined meta clusters separate over input/out-of-model variables
+3. `var_manhattan_plot` Visualize how one raw feature associates with other raw features (similar to `assoc_pval_heatmap`)
 
-The example below makes use of `expression_df` and `methylation_df` dataframes, which are both available to you after loading the `metasnf` package.
+## Data set-up
 
-```{r message = FALSE, results = 'hide'}
+The example below is taken from the ["complete example" vignette](https://branchlab.github.io/metasnf/articles/a_complete_example.html).
+
+```{r eval = FALSE}
 library(metasnf)
 
-# Generate data_list
-data_list <- generate_data_list(
-    list(
-        data = expression_df,
-        name = "expression_data",
-        domain = "gene_expression",
-        type = "continuous"
-    ),
-    list(
-        data = methylation_df,
-        name = "methylation_data",
-        domain = "gene_methylation",
-        type = "continuous"
-    ),
-    uid = "patient_id"
+# Start by making a data list containing all our dataframes to more easily
+# identify subjects without missing data
+full_data_list <- generate_data_list(
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(abcd_h_income, "household_income", "demographics", "continuous"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    list(abcd_anxiety, "anxiety", "behaviour", "ordinal"),
+    list(abcd_depress, "depressed", "behaviour", "ordinal"),
+    uid = "patient"
 )
 
-# Generate settings_matrix
+# Partition into a data and target list (optional)
+data_list <- full_data_list[1:3]
+target_list <- full_data_list[4:5]
+
+summarize_dl(data_list)
+summarize_dl(target_list)
+
+data_list
+
+# Build space of settings to cluster over
 settings_matrix <- generate_settings_matrix(
     data_list,
-    nrow = 5,
-    max_k = 40,
+    nrow = 20,
+    min_k = 20,
+    max_k = 50,
     seed = 42
 )
 
-# Run SNF and clustering
+# Clustering
 solutions_matrix <- batch_snf(data_list, settings_matrix)
 
-# The first (and only) cluster solution:
-cluster_solutions <- get_cluster_solutions(solutions_matrix)
-
-head(cluster_solutions)
+# Calculate p-values between cluster solutions and features
+extended_solutions_matrix <- extend_solutions(
+    solutions_matrix,
+    data_list = data_list,
+    target_list = target_list,
+    min_pval = 1e-10 # p-values below 1e-10 will be thresholded to 1e-10
+)
 ```
 
-For this particular set of mock data, the separation is so strong that the cluster solutions across all the different runs of SNF were identical.
-The chunk below perturbs the cluster solutions a little bit to make the purpose of the subsequent Manhattan plot a little easier to see.
+## Associations with Multiple Cluster Solutions (`esm_manhattan_plot`)
 
-```{r}
-# 20% chance of flipping a patient's assigned cluster
-noise_two_clusters <- function(two_cluster_solution) {
-    noisy_solution <- two_cluster_solution |> lapply(
-        function(x) {
-            if (runif(1) > 0.80) {
-                if (x == 1) {
-                    return(2)
-                } else {
-                    return(1)
-                }
-            } else {
-                return(x)
-            }
-        }
-    ) |>
-        unlist()
-    return(noisy_solution)
-}
-
-for (i in seq_len(ncol(cluster_solutions) - 1)) {
-    current_col <- i + 1
-    cluster_solutions[, current_col] <- cluster_solutions[, current_col] |>
-        noise_two_clusters()
-}
-
-# Scrambling the solutions matrix
-solutions_matrix[1, cluster_solutions$"subjectkey"] <- cluster_solutions$"1"
-solutions_matrix[2, cluster_solutions$"subjectkey"] <- cluster_solutions$"2"
-solutions_matrix[3, cluster_solutions$"subjectkey"] <- cluster_solutions$"3"
-solutions_matrix[4, cluster_solutions$"subjectkey"] <- cluster_solutions$"4"
-solutions_matrix[5, cluster_solutions$"subjectkey"] <- cluster_solutions$"5"
-```
-
-We'll set aside some variables of interest in a target list, use that to calculate p-values for those variables, and supply that information to the manhattan_plot function.
-
-```{r fig.width = 7, fig.height = 5.5}
-target_list <- generate_target_list(
-    list(gender_df, "gender", "categorical"),
-    list(diagnosis_df, "diagnosis", "categorical"),
-    list(age_df, "age", "numeric"),
-    uid = "patient_id"
+```{r eval = FALSE}
+esm_manhattan <- esm_manhattan_plot(
+    extended_solutions_matrix[1:5, ],
+    threshold = 0.05,
+    bonferroni_line = TRUE,
+    jitter_width = 0.1,
+    jitter_height = 0.1,
+    neg_log_pval_thresh = 5,
+    point_size = 3
 )
 
-extended_solutions_matrix <- extend_solutions(solutions_matrix, target_list)
-
-target_pvals <- get_pvals(extended_solutions_matrix)
-
-manhattan_plot(target_pvals, threshold = 0.05, bonferroni_line = TRUE)
+ggplot2::ggsave(
+    "esm_manhattan.png",
+    esm_manhattan,
+    height = 5,
+    width = 8,
+    dpi = 100
+)
 ```
 
-The red dotted line represent p = 0.05.
+A bit of an unwieldy plot if you try looking at too many solutions at a time, but it can be handy if you intend on just examining a few cluster solutions.
+
+## Associations with Meta Clusters (`mc_manhattan_plot`)
+
+The `mc_manhattan_plot` function can be used after meta clustering to more efficiently examine the entire space of generated cluster solutions.
+
+```{r eval = FALSE}
+# Calculate pairwise similarities between cluster solutions
+solutions_matrix_aris <- calc_aris(solutions_matrix)
+
+# Extract hierarchical clustering order of the cluster solutions
+meta_cluster_order <- get_matrix_order(solutions_matrix_aris)
+
+# Create a base heatmap for visual meta clustering
+ari_hm <- adjusted_rand_index_heatmap(
+    solutions_matrix_aris,
+    order = meta_cluster_order
+)
+
+# Identify meta cluster boundaries
+# This can also be by trial & error if you do not wish to use the shiny app.
+shiny_annotator(ari_hm)
+
+# Result of meta cluster examination
+split_vec <- c(2, 5, 12, 17)
+
+# Create a base heatmap for visual meta clustering
+ari_hm <- adjusted_rand_index_heatmap(
+    solutions_matrix_aris,
+    order = meta_cluster_order,
+    split_vector = split_vec
+)
+
+# Extracting representative solutions from each defined meta cluster
+rep_solutions <- get_representative_solutions(
+    solutions_matrix_aris,
+    split_vector = split_vec,
+    order = meta_cluster_order,
+    extended_solutions_matrix
+)
+
+mc_manhattan <- mc_manhattan_plot(
+    rep_solutions,
+    data_list = data_list,
+    target_list = target_list,
+    point_size = 3,
+    text_size = 12,
+    threshold = 0.05,
+    neg_log_pval_thresh = 5
+)
+
+ggplot2::ggsave(
+    "mc_manhattan_clean.png",
+    mc_manhattan,
+    height = 10,
+    width = 10,
+    dpi = 100
+)
+```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/mc_manhattan_clean.png)
+</center>
 
 ## Associations with a Key Variable
 
-You can also visualize associations with a key variable of interest rather than cluster solutions.
-This option makes use of the `calculate_associations` function, which can generate pairwise association p-values for any provided data:
+You can also visualize associations with a specific variable of interest rather than cluster solutions.
 
-```{r}
-calculate_associations(data_list)
-```
+The only thing needed for this plot is a data_list - no clustering necessary.
 
-If you specify a `key_association` of interest, you'll only receive the associations between your variable of interest and the other variables provided:
-
-```{r}
-key_associations_df <- calculate_associations(
+```{r eval = FALSE}
+var_manhattan <- var_manhattan_plot(
     data_list,
-    key_association = "gene_1_expression"
+    key_var = "household_income",
+    plot_title = "Correlation of Features with Household Income",
+    threshold = 0.05
 )
 
-key_associations_df
-```
-
-Setting the `key_mode` parameter to true, you can generate a Manhattan plot from this data to see how strongly associated your other variables are to your chosen outcome of interest.
-
-```{r}
-manhattan_plot(
-    key_associations_df,
-    key_mode = TRUE,
-    threshold = 0.05,
-    bonferroni_line = TRUE
+ggplot2::ggsave(
+    "var_manhattan.png",
+    var_manhattan,
+    height = 10,
+    width = 10,
+    dpi = 100
 )
 ```
 
-## Data outside the original data_list
-
-You can also examine more than just data you've prepared in your original data_list by tacking together separate data_lists or target_lists.
-
-
-```{r}
-target_list <- generate_data_list(
-    list(
-        data = gender_df,
-        name = "gender",
-        domain = "demographics",
-        type = "categorical"
-    ),
-    list(
-        data = diagnosis_df,
-        name = "diagnosis",
-        domain = "clinical",
-        type = "categorical"
-    ),
-    uid = "patient_id"
-)
-
-# Additional data stored in a target_list
-summarize_dl(target_list)
-
-combined_data_list <- c(data_list, target_list)
-
-summarize_dl(combined_data_list)
-
-key_associations_df <- calculate_associations(
-    combined_data_list,
-    key_association = "gene_1_expression"
-)
-
-manhattan_plot(
-    key_associations_df,
-    key_mode = TRUE,
-    threshold = 0.05,
-    bonferroni_line = TRUE
-)
-```
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/var_manhattan.png)
+</center>

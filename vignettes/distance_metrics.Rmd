@@ -76,8 +76,8 @@ library(SNFtool)
 data(Data1)
 data(Data2)
 
-Data1$"patient_id" <- 101:(nrow(Data1) + 100)
-Data2$"patient_id" <- 101:(nrow(Data2) + 100)
+Data1$"patient_id" <- 101:(nrow(Data1) + 100) # nolint
+Data2$"patient_id" <- 101:(nrow(Data2) + 100) # nolint
 
 data_list <- generate_data_list(
     list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
@@ -240,22 +240,22 @@ weights_matrix <- generate_weights_matrix(
 
 weights_matrix[1:5, ]
 
-solutions_matrix_with_ones_for_weights <- batch_snf(
+solutions_matrix_1 <- batch_snf(
     data_list,
     settings_matrix,
     distance_metrics_list = my_distance_metrics,
     weights_matrix = weights_matrix
 )
 
-solutions_matrix_with_no_weights <- batch_snf(
+solutions_matrix_2 <- batch_snf(
     data_list,
     settings_matrix,
     distance_metrics_list = my_distance_metrics
 )
 
 identical(
-    solutions_matrix_with_no_weights,
-    solutions_matrix_with_ones_for_weights
+    solutions_matrix_1,
+    solutions_matrix_2
 ) # Try this on your machine - It'll evaluate to TRUE
 ```
 
@@ -268,20 +268,6 @@ weights_matrix <- generate_weights_matrix(
     nrow = nrow(settings_matrix),
     fill = "uniform" # or fill = "exponential"
 )
-
-weights_matrix[1:5, ]
-
-solutions_matrix_with_uniform_random_weights <- batch_snf(
-    data_list,
-    settings_matrix,
-    distance_metrics_list = my_distance_metrics,
-    weights_matrix = weights_matrix
-)
-
-identical(
-    solutions_matrix_with_no_weights,
-    solutions_matrix_with_uniform_random_weights
-) # Try this on your machine - It'll evaluate to TRUE
 ```
 
 The default metrics (simple Euclidean for continuous, discrete, and ordinal data and Gower's distance for categorical and mixed data) are both capable of applying weights to data before distance matrix generation.
@@ -321,7 +307,7 @@ Here's how to make it look more like what the distance metric functions will exp
 ```{r}
 processed_abcd_anxiety <- abcd_anxiety |>
     na.omit() |> # no NAs
-    dplyr::rename("subjectkey" = "patient") |> # replace the UID with 'subjectkey'
+    dplyr::rename("subjectkey" = "patient") |>
     data.frame(row.names = "subjectkey")
 
 head(processed_abcd_anxiety)
