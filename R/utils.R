@@ -166,7 +166,7 @@ merge_df_list <- function(df_list,
         return(NULL)
     }
     if (no_na) {
-        merged_df <- na.omit(merged_df)
+        merged_df <- stats::na.omit(merged_df)
     }
     return(merged_df)
 }
@@ -198,22 +198,20 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
     return(assigned_subs)
 }
 
-#' Remove items from a data_list or target_list
+#' Remove items from a data_list
 #'
-#' Removes specified elements from a provided data_list or target_list object
+#' Removes specified elements from a provided data_list
 #'
-#' @param list_object The data_list or target_list containing components to be
-#'  removed
+#' @param list_object The data_list containing components to be removed
+#'
 #' @param ... Any number of components to remove from the list object, passed as
-#'  strings
-#'
-#' @return pruned_list The pruned list object
+#' strings
 #'
 #' @export
 list_remove <- function(list_object, ...) {
     to_remove <- list(...)
     # Check to make sure all items to remove are components in list_object
-    list_names <- summarize_target_list(list_object)$"name"
+    list_names <- summarize_dl(list_object)$"name"
     invalid_names <- to_remove[!to_remove %in% list_names]
     if (length(invalid_names) > 0) {
         warning(
