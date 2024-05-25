@@ -45,3 +45,27 @@ manhattan_plot <- function(...) {
         " `mc_manhattan_plot` to achieve similar functionality."
     )
 }
+
+#' (DEPRECATED) Association p-value calculations
+#'
+#' @param ... Function arguments
+#'
+#' @export
+calculate_associations <- function(...) {
+    message(
+        "`calculate_associations` has been deprecated. Please use",
+        " `calc_assoc_pval` instead."
+    )
+}
+
+#' (DEPRECATED) Association p-value heatmap
+#'
+#' @param ... Function arguments
+#'
+#' @export
+association_heatmap <- function(...) {
+    message(
+        "`association_heatmap` has been deprecated. Please use",
+        " `assoc_pval_heatmap` instead."
+    )
+}

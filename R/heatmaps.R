@@ -1,36 +1,59 @@
 #' Plot heatmap of similarity matrix
 #'
 #' @param similarity_matrix A similarity matrix
+#'
 #' @param order Vector of numbers to reorder the similarity matrix (and data
 #'  if provided). Overwrites ordering specified by cluster_solution param.
+#'
 #' @param cluster_solution Vector containing cluster assignments.
+#'
 #' @param scale_diag Method of rescaling matrix diagonals. Can be "none"
 #'  (don't change diagonals), "mean" (replace diagonals with average value of
 #'  off-diagonals), or "zero" (replace diagonals with 0).
+#'
 #' @param log_graph If TRUE, log transforms the graph.
+#'
 #' @param cluster_rows Parameter for ComplexHeatmap::Heatmap.
+#'
 #' @param cluster_columns Parameter for ComplexHeatmap::Heatmap.
+#'
 #' @param show_row_names Parameter for ComplexHeatmap::Heatmap.
+#'
 #' @param show_column_names Parameter for ComplexHeatmap::Heatmap.
+#'
 #' @param data_list A nested list of input data from `generate_data_list()`.
+#'
 #' @param data A dataframe containing elements requested for annotation.
+#'
 #' @param left_bar Named list of strings, where the strings are variables in
 #'  df that should be used for a barplot annotation on the left of the plot and
 #'  the names are the names that will be used to caption the plots and their
 #'  legends.
+#'
 #' @param left_hm Like left_bar, but with a heatmap annotation instead of a
 #'  barplot annotation.
+#'
 #' @param right_bar See left_bar.
+#'
 #' @param top_bar See left_bar.
+#'
 #' @param bottom_bar See left_bar.
+#'
 #' @param right_hm See left_hm.
+#'
 #' @param top_hm See left_hm.
+#'
 #' @param bottom_hm See left_hm.
+#'
 #' @param annotation_colours Named list of heatmap annotations and their
 #'  colours.
+#'
 #' @param min_colour Colour used for the lowest value in the heatmap.
+#'
 #' @param max_colour Colour used for the highest value in the heatmap.
+#'
 #' @param split_vector A vector of partition indices.
+#'
 #' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
 #'
 #' @export
@@ -253,49 +276,68 @@ adjusted_rand_index_heatmap <- function(aris,
 #'
 #' @param correlation_matrix Matrix containing all pairwise association
 #' p-values. The recommended way to obtain this matrix is through the
-#' calculate_associations function.
+#' calc_assoc_pval function.
+#'
 #' @param scale_diag Parameter that controls how the diagonals of the
 #' correlation_matrix are adjusted in the heatmap. For best viewing, this is
 #' set to "max", which will match the diagonals to whichever pairwise
 #' association has the highest p-value.
+#'
 #' @param cluster_rows Parameter for ComplexHeatmap::Heatmap. Will be ignored
 #' if split_by_domain is also provided.
+#'
 #' @param cluster_columns Parameter for ComplexHeatmap::Heatmap. Will be
 #' ignored if split_by_domain is also provided.
+#'
 #' @param show_row_names Parameter for ComplexHeatmap::Heatmap.
+#'
 #' @param show_column_names Parameter for ComplexHeatmap::Heatmap.
+#'
 #' @param show_heatmap_legend Parameter for ComplexHeatmap::Heatmap.
+#'
 #' @param confounders A named list where the elements are columns in the
 #' correlation_matrix and the names are the corresponding display names.
+#'
 #' @param out_of_models Like confounders, but a named list of out of model
 #' measures (who are also present as columns in the correlation_matrix).
+#'
 #' @param annotation_colours Named list of heatmap annotations and their
 #'  colours.
+#'
 #' @param labels_colour Vector of colours to use for the columns and rows
 #' of the heatmap.
+#'
 #' @param split_by_domain The results of `dl_var_summar` - a dataframe that has
 #' the domain of every variable in the plotted data.
 #' columns of the correlation_matrix. Will be used to "slice" the heatmap into
 #' visually separated sections.
+#'
+#' @param data_list A nested list of input data from `generate_data_list()`.
+#'
 #' @param significance_stars If TRUE (default), plots significance stars on
 #' heatmap cells
+#'
+#' @param slice_font_size Font size for domain separating labels.
+#'
 #' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
 #'
 #' @export
-association_heatmap <- function(correlation_matrix,
-                                     scale_diag = "max",
-                                     cluster_rows = TRUE,
-                                     cluster_columns = TRUE,
-                                     show_row_names = TRUE,
-                                     show_column_names = TRUE,
-                                     show_heatmap_legend = FALSE,
-                                     confounders = NULL,
-                                     out_of_models = NULL,
-                                     annotation_colours = NULL,
-                                     labels_colour = NULL,
-                                     split_by_domain = NULL,
-                                     significance_stars = TRUE,
-                                     ...) {
+assoc_pval_heatmap <- function(correlation_matrix,
+                               scale_diag = "max",
+                               cluster_rows = TRUE,
+                               cluster_columns = TRUE,
+                               show_row_names = TRUE,
+                               show_column_names = TRUE,
+                               show_heatmap_legend = FALSE,
+                               confounders = NULL,
+                               out_of_models = NULL,
+                               annotation_colours = NULL,
+                               labels_colour = NULL,
+                               split_by_domain = FALSE,
+                               data_list = NULL,
+                               significance_stars = TRUE,
+                               slice_font_size = 8,
+                               ...) {
     ###########################################################################
     # Format data
     ###########################################################################
@@ -414,13 +456,21 @@ association_heatmap <- function(correlation_matrix,
     if (significance_stars) {
         args_list$"cell_fun" <- cell_significance_fn(correlation_matrix)
     }
-    if (!is.null(split_by_domain)) {
-        keep_vars <- split_by_domain$"name" %in% colnames(correlation_matrix)
-        split_by_domain <- split_by_domain[keep_vars, ]
+    if (split_by_domain) {
+        if (is.null(data_list)) {
+            stop(
+                "You must provide a data_list to split the heatmap by domain."
+            )
+        }
+        dl_var_summary <- dl_variable_summary(data_list)
+        keep_vars <- dl_var_summary$"name" %in% colnames(correlation_matrix)
+        dl_var_summary <- dl_var_summary[keep_vars, ]
         args_list$"cluster_rows" <- FALSE
         args_list$"cluster_columns" <- FALSE
-        args_list$"row_split" <- factor(split_by_domain$"domain")
-        args_list$"column_split" <- factor(split_by_domain$"domain")
+        args_list$"row_split" <- factor(dl_var_summary$"domain")
+        args_list$"column_split" <- factor(dl_var_summary$"domain")
+        args_list$"row_title_gp" <- grid::gpar(fontsize = slice_font_size)
+        args_list$"column_title_gp" <- grid::gpar(fontsize = slice_font_size)
     }
     ###########################################################################
     # Create heatmap
@@ -443,7 +493,7 @@ association_heatmap <- function(correlation_matrix,
                 "p < 0.0005",
                 "p = 0"
             ),
-            title = "In-Model Measures",
+            title = "Association p-values",
             type = "grid",
             legend_gp = grid::gpar(
                 fill = rev(in_model_colours)
@@ -459,7 +509,7 @@ association_heatmap <- function(correlation_matrix,
                 "p < 0.0005",
                 "p = 0"
             ),
-            title = "Confounders",
+            title = "Confounder p-values",
             type = "grid",
             legend_gp = grid::gpar(
                 fill = rev(confounder_colour_values)
@@ -475,7 +525,7 @@ association_heatmap <- function(correlation_matrix,
                 "p < 0.0005",
                 "p = 0"
             ),
-            title = "Out-of-Model Measures",
+            title = "Out-of-Model p-values",
             type = "grid",
             legend_gp = grid::gpar(
                 fill = rev(out_of_model_colour_values)
@@ -635,7 +685,7 @@ shiny_annotator <- function(ari_heatmap) {
 #' Place significance stars on ComplexHeatmap cells.
 #'
 #' This is an internal function meant to be used to by the
-#' association_heatmap function.
+#' assoc_pval_heatmap function.
 #'
 #' @param data The matrix containing the cells to base the significance stars
 #' on.
