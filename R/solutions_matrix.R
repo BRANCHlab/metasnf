@@ -215,7 +215,6 @@ extend_solutions <- function(solutions_matrix,
     return(esm)
 }
 
-
 #' Get p-values from an extended solutions matrix
 #'
 #' This function can be used to neatly format the p-values associated with an
@@ -554,12 +553,16 @@ calc_assoc_pval <- function(var1,
 #' Calculate p-values for pairwise associations of variables in a data_list
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
+#'
 #' @param verbose If TRUE, prints new line everytime a p-value is being
 #'  calculated.
+#'
 #' @param key_association If a variable is named, returns a dataframe of
 #'  p-values relative to that variable rather than all pairwise p-values.
+#'
 #' @param drop_self If key_association is specified and drop_self is TRUE,
 #'  removes the p-value row of the key_association variable with itself (0).
+#'
 #' @param cat_test String indicating which statistical test will be used to
 #' associate cluster with a categorical variable. Options are "chi_squared" for
 #' the Chi-squared test and "fisher_exact" for Fisher's exact test.
@@ -693,6 +696,7 @@ calculate_associations <- function(data_list,
         return(association_matrix)
     }
 }
+
 #' Calculate p-values for all pairwise associations of variables in a data_list
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
