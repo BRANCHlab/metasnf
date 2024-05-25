@@ -517,3 +517,21 @@ rename_dl <- function(data_list, name_mapping) {
     )
     return(data_list)
 }
+
+#' Extract subjects from a data_list
+#'
+#' @param data_list A nested list of input data from `generate_data_list()`.
+#'
+#' @param prefix If TRUE, preserves the "subject_" prefix added to UIDs when
+#' creating a data_list.
+#'
+#' @export
+get_dl_subjects <- function(data_list, prefix = FALSE) {
+    dl_df <- collapse_dl(data_list)
+    subjects <- dl_df$"subjectkey"
+    if (prefix) {
+        return(subjects)
+    }
+    subjects <- gsub("subject_", "", subjects)
+    return(subjects)
+}
