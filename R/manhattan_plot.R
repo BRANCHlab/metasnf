@@ -1,122 +1,124 @@
-#' Manhattan plot of p-values
+#' Manhattan plot of variable-variable associaiton p-values
 #'
-#' @param data Output from either the pval_select() function when key_mode is
-#'  FALSE or from the calculate_associations() function when key_mode is TRUE
-#' @param key_mode When TRUE, generates a plot of associations relative to a
-#'  key variable (calculated previously through calculate_associations) rather
-#'  than associations against a cluster solution
-#' @param threshold P-value threshold to plot dashed line at.
+#' @param data_list List of dataframes containing data information.
+#'
+#' @param key_var Variable for which the association p-values of all other
+#' variables are plotted.
+#'
+#' @param neg_log_pval_thresh Threshold for negative log p-values.
+#'
+#' @param point_size Size of points in the plot.
+#'
+#' @param text_size Size of text in the plot.
+#'
+#' @param threshold p-value threshold to plot dashed line at.
+#'
+#' @param plot_title Title of the plot.
+#'
+#' @param hide_x_labels If TRUE, hides x-axis labels.
+#'
 #' @param bonferroni_line If TRUE, plots a dashed black line at the
-#'  Bonferroni-corrected equivalent of the p-value threshold.
+#' Bonferroni-corrected equivalent of the p-value threshold.
 #'
 #' @export
-manhattan_plot <- function(data,
-                           key_mode = FALSE,
-                           threshold = NULL,
-                           bonferroni_line = FALSE) {
-    if (!key_mode) {
-        # Suppress global visible binding errors during building
-        row_id <- ""
-        variable <- ""
-        pval <- ""
-        var_cols <- 2:ncol(data)
-        data[, var_cols] <- data[, var_cols] |>
-            apply(
-                MARGIN = 2,
-                FUN = function(x) {
-                    -log10(x)
-                }
-            )
-        data$"row_id" <- factor(data$"row_id")
-        data <- data |>
-            tidyr::pivot_longer(
-                !row_id,
-                names_to = "variable",
-                values_to = "pval"
-            ) |>
-            data.frame()
-        plot <- data |>
-            ggplot2::ggplot() +
-            ggplot2::geom_point(
-                mapping = ggplot2::aes(
-                    x = variable,
-                    y = pval,
-                    colour = row_id
-                ),
-                alpha = 1,
-                size = 5
-            ) +
-            ggplot2::labs(
-                x = "Variable",
-                y = expression("-log"[10]*"(p)"),
-                colour = "Solution"
-            ) +
-            ggplot2::theme_bw() +
-            ggplot2::theme(
-                axis.text.x = ggplot2::element_text(
-                    angle = 90,
-                    vjust = 0.5,
-                    hjust = 1
-                ),
-                plot.title = ggplot2::element_text(hjust = 0.5)
-            )
-    } else {
-        # Suppress global visible binding errors during building
-        name <- ""
-        pval <- ""
-        domain <- ""
-        data$"pval" <- -log10(data$"pval")
-        plot <- data |>
-            ggplot2::ggplot(
-                mapping = ggplot2::aes(
-                    x = name,
-                    y = pval,
-                    colour = domain,
-                    group = domain
-                )
-            ) +
-            ggplot2::geom_point(
-                alpha = 1,
-                size = 5
-            ) +
-            ggplot2::labs(
-                x = "Variable",
-                y = expression("-log"[10]*"(p)"),
-                colour = "Domain"
-            ) +
-            ggplot2::theme_bw() +
-            ggplot2::theme(
-                axis.text.x = ggplot2::element_text(
-                    angle = 90,
-                    vjust = 0.5,
-                    hjust = 1
-                ),
-                plot.title = ggplot2::element_text(hjust = 0.5)
-            )
-    }
+var_manhattan_plot <- function(data_list,
+                               key_var,
+                               neg_log_pval_thresh = 5,
+                               point_size = 5,
+                               text_size = 20,
+                               threshold = NULL,
+                               plot_title = NULL,
+                               hide_x_labels = FALSE,
+                               bonferroni_line = FALSE) {
+    pval_matrix <- calc_assoc_pval_matrix(data_list)
+    ###########################################################################
+    # Suppress warnings related to non-standard evaluation
+    ###########################################################################
+    variable <- ""
+    neg_log_pval <- ""
+    domain <- ""
+    ###########################################################################
+    pval_df <- data.frame(pval_matrix[, key_var, drop = FALSE])
+    pval_df$"variable" <- rownames(pval_df)
+    rownames(pval_df) <- NULL
+    pval_df <- pval_df[pval_df$"variable" != key_var, ]
+    colnames(pval_df) <- c("neg_log_pval", "variable")
+    pval_df$"neg_log_pval" <- -log10(pval_df$"neg_log_pval")
+    pval_df <- dplyr::mutate(
+        pval_df,
+        neg_log_pval = dplyr::case_when(
+            neg_log_pval > neg_log_pval_thresh ~ neg_log_pval_thresh,
+            neg_log_pval <= neg_log_pval_thresh ~ neg_log_pval,
+            TRUE ~ NA
+        )
+    )
+    summary_data <- dplyr::inner_join(
+        pval_df,
+        dl_variable_summary(data_list),
+        by = dplyr::join_by("variable" == "name")
+    )
+    summary_data <- dplyr::arrange(summary_data, domain)
+    summary_data$"variable" <- factor(
+        summary_data$"variable",
+        levels = unique(summary_data$"variable")
+    )
+    ###########################################################################
+    # Base plot creation
+    ###########################################################################
+    plot <- summary_data |>
+        ggplot2::ggplot() +
+        ggplot2::geom_jitter(
+            mapping = ggplot2::aes(
+                group = domain,
+                x = variable,
+                y = neg_log_pval,
+                colour = domain
+            ),
+            height = 0,
+            width = 0,
+            size = point_size
+        ) +
+        ggplot2::labs(
+            x = NULL,
+            y = expression("-log"[10] * "(p)"),
+            colour = "Domain",
+            title = plot_title
+        ) +
+        ggplot2::ylim(0, neg_log_pval_thresh) +
+        ggplot2::theme_bw() +
+        ggplot2::theme(
+            axis.text.x = ggplot2::element_text(
+                angle = 90,
+                vjust = 0.5,
+                hjust = 1
+            ),
+            plot.title = ggplot2::element_text(hjust = 0.5),
+            text = ggplot2::element_text(size = text_size)
+        )
     if (!is.null(threshold)) {
         plot <- plot + ggplot2::geom_hline(
             yintercept = -log10(threshold),
             linetype = "dashed",
             colour = "red"
         )
-        if (bonferroni_line) {
-            plot <- plot + ggplot2::geom_hline(
-                yintercept = -log10(threshold / nrow(data)),
-                linetype = "dashed",
-                colour = "black"
-            )
-        }
-    } else if (bonferroni_line) {
-        stop(
-            "Please specify threshold p-value which will be used",
-            " for calculting the Bonferroni-corrected line."
+    }
+    if (bonferroni_line) {
+        plot <- plot + ggplot2::geom_hline(
+            yintercept = -log10(threshold / nrow(pval_df)),
+            linetype = "dashed",
+            colour = "black"
         )
+    }
+    ############################################################################
+    ## Hide x-axis ticks
+    ############################################################################
+    if (hide_x_labels) {
+        plot <- plot + ggplot2::theme(axis.text.x = ggplot2::element_blank())
     }
     return(plot)
 }
 
-#' Manhattan plots of variable separation across meta clusters
+#' Manhattan plot of variable-meta cluster associaiton p-values
 #'
 #' Given a dataframe of representative meta cluster solutions (see
 #' `get_representative_solutions()`, returns a Manhattan plot for showing
@@ -140,7 +142,7 @@ manhattan_plot <- function(data,
 #'
 #' @param point_size Size of points in the plot.
 #'
-#' @param neg_log_p_thresh Threshold for negative log p-values.
+#' @param neg_log_pval_thresh Threshold for negative log p-values.
 #'
 #' @param hide_x_labels If TRUE, hides x-axis labels.
 #'
@@ -149,15 +151,21 @@ manhattan_plot <- function(data,
 #' @export
 mc_manhattan_plot <- function(rep_solution,
                               threshold = NULL,
-                              data_list,
-                              target_list,
+                              data_list = NULL,
+                              target_list = NULL,
                               variable_order = NULL,
-                              xints = "outcomes",
+                              xints = NULL,
                               text_size = 20,
                               point_size = 5,
-                              neg_log_p_thresh = 5,
+                              neg_log_pval_thresh = 5,
                               hide_x_labels = FALSE,
                               domain_colours = NULL) {
+    ###########################################################################
+    # Ensure one of data_list or target_list is not NULL
+    ###########################################################################
+    if (is.null(data_list) && is.null(target_list)) {
+        stop("At least one of data_list or target_list must be provided.")
+    }
     ###########################################################################
     # Suppress warnings related to non-standard evaluation
     ###########################################################################
@@ -208,7 +216,7 @@ mc_manhattan_plot <- function(rep_solution,
         data_list <- c(data_list_renamed, target_list_renamed)
     }
     ###########################################################################
-    # Columns that end with _p are truncated by neg_log_p_thresh
+    # Columns that end with _pval are truncated by neg_log_pval_thresh
     ###########################################################################
     var_cols_idx <- endsWith(colnames(rep_solution), "_pval")
     var_cols <- colnames(rep_solution)[var_cols_idx]
@@ -218,11 +226,11 @@ mc_manhattan_plot <- function(rep_solution,
             FUN = function(x) {
                 p <- -log10(x)
                 if (length(p) == 1) {
-                    if (p > neg_log_p_thresh) {
-                        p <- neg_log_p_thresh
+                    if (p > neg_log_pval_thresh) {
+                        p <- neg_log_pval_thresh
                     }
                 } else {
-                    p[p > neg_log_p_thresh] <- neg_log_p_thresh
+                    p[p > neg_log_pval_thresh] <- neg_log_pval_thresh
                 }
                 return(p)
             }
@@ -291,16 +299,16 @@ mc_manhattan_plot <- function(rep_solution,
             y = expression("-log"[10] * "(p)"),
             colour = "Domain"
         ) +
-        ggplot2::ylim(0, neg_log_p_thresh) +
+        ggplot2::ylim(0, neg_log_pval_thresh) +
         ggplot2::theme_bw() +
         ggplot2::theme(
-            axis.text.x = ggplot2::element_text( # nolint
+            axis.text.x = ggplot2::element_text(
                 angle = 90,
                 vjust = 0.5,
                 hjust = 1
             ),
             plot.title = ggplot2::element_text(hjust = 0.5),
-            text = element_text(size = text_size)
+            text = ggplot2::element_text(size = text_size)
         ) +
         ggplot2::facet_grid(label ~ .)
     ###########################################################################
@@ -336,17 +344,15 @@ mc_manhattan_plot <- function(rep_solution,
     n_vars <- length(unique(summary_data$"variable"))
     target_rows <- startsWith(summary_data$"domain", "O")
     n_outcomes <- length(unique(summary_data[target_rows, "variable"]))
-    if (!is.null(xints)) {
-        if (identical(xints, "outcomes") && n_outcomes > 0) {
-            plot <- plot + ggplot2::geom_vline(
-                xintercept = n_vars - n_outcomes + 0.5
-            )
-        } else if (is.numeric(xints)) {
-            xints <- xints + 0.5
-            plot <- plot + ggplot2::geom_vline(
-                xintercept = xints
-            )
-        }
+    if (is.null(xints) && !is.null(data_list) && !is.null(target_list)) {
+        plot <- plot + ggplot2::geom_vline(
+            xintercept = n_vars - n_outcomes + 0.5
+        )
+    } else if (!is.null(xints)) {
+        xints <- xints + 0.5
+        plot <- plot + ggplot2::geom_vline(
+            xintercept = xints
+        )
     }
     ###########################################################################
     # Add p-value threshold if requested
@@ -357,6 +363,124 @@ mc_manhattan_plot <- function(rep_solution,
             linetype = "dashed",
             colour = "red"
         )
+    }
+    return(plot)
+}
+
+#' Manhattan plot of variable-cluster associaiton p-values
+#'
+#' @param esm Extended solutions matrix storing associations between variables
+#' and cluster assignments. See `?extend_solutions`.
+#'
+#' @param point_size Size of points in the plot.
+#'
+#' @param jitter_width Width of jitter.
+#'
+#' @param jitter_height Height of jitter.
+#'
+#' @param neg_log_pval_thresh Threshold for negative log p-values.
+#'
+#' @param threshold P-value threshold to plot dashed line at.
+#'
+#' @param hide_x_labels If TRUE, hides x-axis labels.
+#'
+#' @param bonferroni_line If TRUE, plots a dashed black line at the
+#'  Bonferroni-corrected equivalent of the p-value threshold.
+#'
+#' @export
+esm_manhattan_plot <- function(esm,
+                               point_size = 5,
+                               jitter_width = 0.1,
+                               jitter_height = 0.1,
+                               neg_log_pval_thresh = 5,
+                               threshold = NULL,
+                               hide_x_labels = FALSE,
+                               bonferroni_line = FALSE) {
+    pval_df <- get_pvals(esm, keep_summaries = FALSE)
+    ###########################################################################
+    # Columns that end with _pval are truncated by neg_log_pval_thresh
+    ###########################################################################
+    var_cols <- colnames(pval_df)[2:ncol(pval_df)]
+    cutoff_var_cols <- pval_df[, var_cols] |>
+        apply(
+            MARGIN = 2,
+            FUN = function(x) {
+                p <- -log10(x)
+                if (length(p) == 1) {
+                    if (p > neg_log_pval_thresh) {
+                        p <- neg_log_pval_thresh
+                    }
+                } else {
+                    p[p > neg_log_pval_thresh] <- neg_log_pval_thresh
+                }
+                return(p)
+            }
+        ) |>
+        as.matrix()
+    if (dim(cutoff_var_cols)[2] == 1) {
+        cutoff_var_cols <- t(cutoff_var_cols)
+    }
+    pval_df[, var_cols] <- cutoff_var_cols
+    ###########################################################################
+    # Suppress global visible binding errors during building
+    row_id <- ""
+    variable <- ""
+    pval <- ""
+    pval_df$"row_id" <- factor(pval_df$"row_id")
+    pval_df <- pval_df |>
+        tidyr::pivot_longer(
+            !row_id,
+            names_to = "variable",
+            values_to = "pval"
+        ) |>
+        data.frame()
+    pval_df$"variable" <- gsub("_pval", "", pval_df$"variable")
+    plot <- pval_df |>
+        ggplot2::ggplot() +
+        ggplot2::geom_jitter(
+            mapping = ggplot2::aes(
+                x = variable,
+                y = pval,
+                colour = row_id
+            ),
+            width = jitter_width,
+            height = jitter_height,
+            alpha = 1,
+            size = point_size
+        ) +
+        ggplot2::labs(
+            x = NULL,
+            y = expression("-log"[10] * "(p)"),
+            colour = "Solution"
+        ) +
+        ggplot2::theme_bw() +
+        ggplot2::theme(
+            axis.text.x = ggplot2::element_text(
+                angle = 90,
+                vjust = 0.5,
+                hjust = 1
+            ),
+            plot.title = ggplot2::element_text(hjust = 0.5)
+        )
+    if (!is.null(threshold)) {
+        plot <- plot + ggplot2::geom_hline(
+            yintercept = -log10(threshold),
+            linetype = "dashed",
+            colour = "red"
+        )
+    }
+    if (bonferroni_line) {
+        plot <- plot + ggplot2::geom_hline(
+            yintercept = -log10(threshold / nrow(pval_df)),
+            linetype = "dashed",
+            colour = "black"
+        )
+    }
+    ###########################################################################
+    # Hide x-axis ticks
+    ###########################################################################
+    if (hide_x_labels) {
+        plot <- plot + ggplot2::theme(axis.text.x = ggplot2::element_blank())
     }
     return(plot)
 }

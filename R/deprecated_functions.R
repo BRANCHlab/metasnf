@@ -32,3 +32,16 @@ get_cluster_pval <- function(...) {
         "`get_cluster_pval` has been deprecated. Please use `calc_assoc_pval`."
     )
 }
+
+#' (DEPRECATED) Manhattan plot creation
+#'
+#' @param ... Function arguments
+#'
+#' @export
+manhattan_plot <- function(...) {
+    message(
+        "`manhattan_plot` has been deprecated. Please check one of the new",
+        " functions, `esm_manhattan_plot`, `var_manhattan_plot`, or",
+        " `mc_manhattan_plot` to achieve similar functionality."
+    )
+}
