@@ -311,7 +311,9 @@ ord_reg_pval <- function(predictor, response) {
 chi_squared_pval <- function(cat_var1, cat_var2) {
     cat_var1 <- factor(cat_var1)
     cat_var2 <- factor(cat_var2)
-    model <- stats::chisq.test(cat_var1, cat_var2, correct = FALSE)
+    suppressWarnings(
+        model <- stats::chisq.test(cat_var1, cat_var2, correct = FALSE)
+    )
     pval <- model$"p.value"
     attributes(pval) <- NULL
     return(pval)
