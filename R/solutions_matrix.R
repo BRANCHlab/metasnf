@@ -628,3 +628,113 @@ calculate_associations <- function(data_list,
         return(association_matrix)
     }
 }
+#' Calculate p-values for all pairwise associations of variables in a data_list
+#'
+#' @param data_list A nested list of input data from `generate_data_list()`.
+#'
+#' @param verbose If TRUE, prints new line everytime a p-value is being
+#'  calculated.
+#'
+#' @param cat_test String indicating which statistical test will be used to
+#' associate cluster with a categorical variable. Options are "chi_squared" for
+#' the Chi-squared test and "fisher_exact" for Fisher's exact test.
+#'
+#' @export
+calc_assoc_pval_matrix <- function(data_list,
+                                   verbose = FALSE,
+                                   cat_test = "chi_squared") {
+    ###########################################################################
+    # Build a single data.frame that contains all data
+    ###########################################################################
+    merged_df <- collapse_dl(data_list)
+    merged_df <- merged_df[, colnames(merged_df) != "subjectkey"]
+    ###########################################################################
+    # Build data.frame containing the types of variables in merged_df
+    ###########################################################################
+    types <- data_list |>
+        lapply(
+            function(x) {
+                rep(x$"type", ncol(x$"data") - 1)
+            }
+        ) |>
+        unlist()
+    domains <- data_list |>
+        lapply(
+            function(x) {
+                rep(x$"domain", ncol(x$"data") - 1)
+            }
+        ) |>
+        unlist()
+    var_names <- colnames(merged_df[, colnames(merged_df) != "subjectkey"])
+    metadata <- data.frame(
+        name = var_names,
+        type = types,
+        domain = domains
+    )
+    ###########################################################################
+    # Ensure that 'mixed' data type is not being used
+    ###########################################################################
+    dl_summary <- summarize_dl(data_list)
+    if (any(dl_summary$"type" == "mixed")) {
+        warning(
+            "When using the 'mixed' data type in the 'calculate_associations'",
+            " function, any data that can be converted to numeric format will",
+            " be treated as continuous and all others will be treated as",
+            " categorical. If you do not want this behaviour, please",
+            " restructure your input data to only use the following types:",
+            " continuous, discrete, ordinal, or categorical."
+        )
+        merged_df <- numcol_to_numeric(merged_df)
+        classes <- as.vector(sapply(merged_df, class))
+        metadata$"type"[classes == "numeric"] <- "continuous"
+        metadata$"type"[classes != "numeric"] <- "categorical"
+    }
+    ###########################################################################
+    # Loop through all pairs of variables
+    ###########################################################################
+    pairwise_indices <- utils::combn(ncol(merged_df), 2)
+    association_matrix <- matrix(
+        ncol = ncol(merged_df),
+        nrow = ncol(merged_df),
+        0
+    )
+    colnames(association_matrix) <- colnames(merged_df)
+    rownames(association_matrix) <- colnames(merged_df)
+    for (col in seq_len(ncol(pairwise_indices))) {
+        ## The positions of the two variables in the merged dataframe
+        ind1 <- pairwise_indices[1, col]
+        ind2 <- pairwise_indices[2, col]
+        # The actual variables
+        var1 <- merged_df[, ind1]
+        var2 <- merged_df[, ind2]
+        # The names of the variables
+        var1_name <- colnames(merged_df)[ind1]
+        var2_name <- colnames(merged_df)[ind2]
+        # Types of the variables
+        var1_type <- metadata[metadata$"name" == var1_name, "type"]
+        var2_type <- metadata[metadata$"name" == var2_name, "type"]
+        # Output current comparison if user specified verbose = TRUE
+        if (verbose) {
+            print(
+                paste0(
+                    "Calculating ", var1_name, " (", var1_type, ") vs.",
+                    " ", var2_name, " (", var2_type, ")..."
+                ),
+                quote = FALSE
+            )
+        }
+        #######################################################################
+        # Calculate p-values
+        #######################################################################
+        pval <- calc_assoc_pval(
+            var1,
+            var2,
+            var1_type,
+            var2_type,
+            cat_test
+        )
+        association_matrix[ind1, ind2] <- pval
+        association_matrix[ind2, ind1] <- pval
+    }
+    return(association_matrix)
+}
