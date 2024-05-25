@@ -224,12 +224,16 @@ extend_solutions <- function(solutions_matrix,
 #'
 #' @param extended_solutions_matrix The output of `extend_solutions`. A
 #' dataframe that contains at least one p-value column ending in "_pval".
+#'
 #' @param negative_log If TRUE, will replace p-values with negative log
 #' p-values.
 #'
+#' @param keep_summaries If FALSE, will remove the mean, min, and max p-value.
+#'
 #' @export
 get_pvals <- function(extended_solutions_matrix,
-                      negative_log = FALSE) {
+                      negative_log = FALSE,
+                      keep_summaries = TRUE) {
     # Select p-value columns and convert to numeric
     pval_df <- extended_solutions_matrix |>
         dplyr::select(
@@ -244,6 +248,14 @@ get_pvals <- function(extended_solutions_matrix,
         neg_log_pval_df <- -log(pval_df)
         neg_log_pval_df$"row_id" <- pval_df$"row_id"
         return(neg_log_pval_df)
+    }
+    if (!keep_summaries) {
+        pval_df <- dplyr::select(
+            pval_df,
+            -"mean_pval",
+            -"min_pval",
+            -"max_pval"
+        )
     }
     return(pval_df)
 }
