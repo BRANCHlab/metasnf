@@ -275,67 +275,6 @@ get_mean_pval <- function(solutions_matrix_row) {
     return(mean_pval)
 }
 
-#' Get p-value
-#'
-#' Depending on outcome measure, perform ordinal regression or linear regression
-#'  and return p-value as a benchmark measure of how well-separated clusters
-#'  are by the outcome measure.
-#'
-#' @param assigned_subs dataframe of subjects who were assigned to a cluster
-#' and the cluster they were assigned to.
-#' @param outcome_df dataframe containing subjectkey and outcome feautre column
-#' @param outcome_type string indicating the outcome type (numeric or ordinal)
-#' @param outcome_name string indicating the name of the feature
-#' @param cat_test String indicating which statistical test will be used to
-#' associate cluster with a categorical variable. Options are "chi_squared" for
-#' the Chi-squared test and "fisher_exact" for Fisher's exact test.
-#'
-#' @return pval the smallest p-value of interest
-#'
-#' @export
-get_cluster_pval <- function(assigned_subs,
-                             outcome_df,
-                             outcome_type,
-                             outcome_name,
-                             cat_test = "chi_squared") {
-    # Dataframe containing cluster membership and outcome variable as cols
-    merged_df <- dplyr::inner_join(
-        assigned_subs,
-        outcome_df,
-        by = "subjectkey"
-    )
-    if (outcome_type == "ordinal") {
-        pval <- ord_reg_pval(
-            predictor = factor(merged_df$"cluster"),
-            response = merged_df[, outcome_name]
-        )
-    } else if (outcome_type %in% c("numeric", "discrete", "continuous")) {
-        pval <- linear_model_pval(
-            predictor = factor(merged_df$"cluster"),
-            response = merged_df[, outcome_name]
-        )
-    } else if (outcome_type == "categorical") {
-        if (cat_test == "chi_squared") {
-            pval <- chi_squared_pval(
-                merged_df$"cluster",
-                merged_df[, outcome_name]
-            )
-        } else if (cat_test == "fisher_exact") {
-            pval <- fisher_exact_pval(
-                merged_df$"cluster",
-                merged_df[, outcome_name]
-            )
-        }
-    } else {
-        stop(
-            "Unsupported outcome type: ", outcome_type,
-            ". Accepted types for now are numeric (continuous, discrete,",
-            " ordinal) and categorical."
-        )
-    }
-    return(pval)
-}
-
 #' Ordinal regression p-value
 #'
 #' Returns the overall p-value of an ordinal regression on a categorical
