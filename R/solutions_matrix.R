@@ -407,6 +407,85 @@ calculate_association_pval <- function(var1,
     return(pval)
 }
 
+calc_assoc_pval <- function(var1,
+                            var2,
+                            type1,
+                            type2,
+                            cat_test = "chi_squared") {
+    ###########################################################################
+    # Strip any list structure from the variables
+    ###########################################################################
+    var1 <- unlist(var1)
+    var2 <- unlist(var2)
+    ###########################################################################
+    # Double categorical variables
+    ###########################################################################
+    if (type1 == "categorical" && type2 == "categorical") {
+        cat_test_fns <- list(
+            "chi_squared" = chi_squared_pval,
+            "fisher_exact" = fisher_exact_pval
+        )
+        cat_test_fn <- cat_test_fns[[cat_test]]
+        pval <- cat_test_fn(var1, var2)
+        return(pval)
+    }
+    ###########################################################################
+    # Any ordinal variable
+    ###########################################################################
+    if (type1 == "ordinal") {
+        if (type2 == "categorical") {
+            pval <- ord_reg_pval(
+                predictor = factor(var2),
+                response = var1
+            )
+            return(pval)
+        } else {
+            pval <- ord_reg_pval(
+                predictor = var2,
+                response = var1
+            )
+            return(pval)
+        }
+    }
+    if (type2 == "ordinal") {
+        if (type1 == "categorical") {
+            pval <- ord_reg_pval(
+                predictor = factor(var1),
+                response = var2
+            )
+            return(pval)
+        } else {
+            pval <- ord_reg_pval(
+                predictor = var1,
+                response = var2
+            )
+            return(pval)
+        }
+    }
+    ###########################################################################
+    # One categorical variable, one numeric variable
+    ###########################################################################
+    if (type1 == "categorical") {
+        pval <- linear_model_pval(
+            predictor = factor(var1),
+            response = var2
+        )
+        return(pval)
+    }
+    if (type2 == "categorical") {
+        pval <- linear_model_pval(
+            predictor = factor(var2),
+            response = var1
+        )
+        return(pval)
+    }
+    ###########################################################################
+    # Two numeric variables
+    ###########################################################################
+    pval <- linear_model_pval(var1, var2)
+    return(pval)
+}
+
 #' Calculate p-values for pairwise associations of variables in a data_list
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
