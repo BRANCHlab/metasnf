@@ -6,17 +6,24 @@
 \usage{
 extend_solutions(
   solutions_matrix,
-  target_list,
+  target_list = NULL,
+  data_list = NULL,
   cat_test = "chi_squared",
   calculate_summaries = TRUE,
-  min_pval = NULL,
+  min_pval = 1e-10,
   processes = 1
 )
 }
 \arguments{
 \item{solutions_matrix}{A solutions_matrix.}
 
-\item{target_list}{A data_list with variables to calculate p-values for.}
+\item{target_list}{A data_list with variables to calculate p-values for.
+Variables in the target list will be included during p-value summary
+measure calculations.}
+
+\item{data_list}{A data_list with variables to calcualte p-values for, but
+that should not be incorporated into p-value summary measure columns (i.e.,
+min/mean/max p-value columns).}
 
 \item{cat_test}{String indicating which statistical test will be used to
 associate cluster with a categorical variable. Options are "chi_squared" for

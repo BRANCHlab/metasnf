@@ -4,7 +4,11 @@
 \alias{get_pvals}
 \title{Get p-values from an extended solutions matrix}
 \usage{
-get_pvals(extended_solutions_matrix, negative_log = FALSE)
+get_pvals(
+  extended_solutions_matrix,
+  negative_log = FALSE,
+  keep_summaries = TRUE
+)
 }
 \arguments{
 \item{extended_solutions_matrix}{The output of \code{extend_solutions}. A
@@ -12,6 +16,8 @@ dataframe that contains at least one p-value column ending in "_pval".}
 
 \item{negative_log}{If TRUE, will replace p-values with negative log
 p-values.}
+
+\item{keep_summaries}{If FALSE, will remove the mean, min, and max p-value.}
 }
 \description{
 This function can be used to neatly format the p-values associated with an
