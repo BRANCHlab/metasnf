@@ -2,7 +2,13 @@
 #'
 #' @param solutions_matrix A solutions_matrix.
 #'
+#' @param data_list A data_list with variables to calcualte p-values for, but
+#' that should not be incorporated into p-value summary measure columns (i.e.,
+#' min/mean/max p-value columns).
+#'
 #' @param target_list A data_list with variables to calculate p-values for.
+#' Variables in the target list will be included during p-value summary
+#' measure calculations.
 #'
 #' @param cat_test String indicating which statistical test will be used to
 #' associate cluster with a categorical variable. Options are "chi_squared" for
@@ -22,15 +28,40 @@
 #'
 #' @export
 extend_solutions <- function(solutions_matrix,
-                             target_list,
+                             target_list = NULL,
+                             data_list = NULL,
                              cat_test = "chi_squared",
                              calculate_summaries = TRUE,
-                             min_pval = NULL,
+                             min_pval = 1e-10,
                              processes = 1) {
+    ###########################################################################
+    # If data_list and target_list exist, merge them as data_list.
+    ###########################################################################
+    data_list <- c(data_list, target_list)
+    ###########################################################################
+    # If target_list not given but calculate_summaries is TRUE, give a warning.
+    ###########################################################################
+    if (is.null(target_list) && calculate_summaries) {
+        warning(
+            "Calculate summaries only applies to target_list features, but",
+            " target_list parameter was not specified."
+        )
+    }
+    ###########################################################################
+    # Check to see if the data_list and solutions_matrix have matching subjects
+    ###########################################################################
+    solution_subs <- colnames(subs(solutions_matrix))[-1]
+    target_subs <- target_list[[1]]$"data"$"subjectkey"
+    if (!identical(solution_subs, target_subs)) {
+        stop(
+            "Subjects in data_list/target_list do not match those in",
+            " solutions_matrix."
+        )
+    }
     ###########################################################################
     # Calculate vector of all feature names
     ###########################################################################
-    features <- target_list |>
+    features <- data_list |>
         lapply(
             function(x) {
                 colnames(x[[1]])[-1]
@@ -40,7 +71,7 @@ extend_solutions <- function(solutions_matrix,
     ###########################################################################
     # Calculate vector of all feature types
     ###########################################################################
-    feature_types <- target_list |>
+    feature_types <- data_list |>
         lapply(
             function(x) {
                 n_features <- ncol(x$"data") - 1
@@ -63,7 +94,7 @@ extend_solutions <- function(solutions_matrix,
     ###########################################################################
     # Single DF to contain all features to calculate p-values for
     ###########################################################################
-    merged_df <- target_list |>
+    merged_df <- data_list |>
         lapply(
             function(x) {
                 x[[1]]
@@ -79,19 +110,22 @@ extend_solutions <- function(solutions_matrix,
             print(paste0("Processing row ", i, " of ", nrow(esm)))
             clustered_subs <- get_cluster_df(esm[i, ])
             for (j in seq_along(features)) {
-                current_outcome_component <- merged_df[, c(1, j + 1)]
-                current_outcome_name <- colnames(current_outcome_component)[2]
-                suppressWarnings(
-                    pval <- get_cluster_pval(
-                        clustered_subs,
-                        current_outcome_component,
-                        feature_types[j],
-                        features[j],
-                        cat_test = cat_test
-                    )
+                current_component <- merged_df[, c(1, j + 1)]
+                current_feature <- colnames(current_component)[2]
+                evaluation_df <- dplyr::inner_join(
+                    clustered_subs,
+                    current_component,
+                    by = "subjectkey"
+                )
+                pval <- calc_assoc_pval(
+                    evaluation_df[, "cluster"],
+                    evaluation_df[, features[j]],
+                    "categorical",
+                    feature_types[j],
+                    cat_test = cat_test
                 )
                 target_col <- which(
-                    paste0(current_outcome_name, "_pval") == colnames(esm)
+                    paste0(current_feature, "_pval") == colnames(esm)
                 )
                 esm[i, target_col] <- pval
             }
@@ -119,20 +153,22 @@ extend_solutions <- function(solutions_matrix,
             function(i) {
                 clustered_subs <- get_cluster_df(esm[i, ])
                 for (j in seq_along(features)) {
-                    current_outcome_component <- merged_df[, c(1, j + 1)]
-                    current_outcome_name <-
-                        colnames(current_outcome_component)[2]
-                    suppressWarnings(
-                        pval <- get_cluster_pval(
-                            clustered_subs,
-                            current_outcome_component,
-                            feature_types[j],
-                            features[j],
-                            cat_test = cat_test
-                        )
+                    current_component <- merged_df[, c(1, j + 1)]
+                    current_feature <- colnames(current_component)[2]
+                    evaluation_df <- dplyr::inner_join(
+                        clustered_subs,
+                        current_component,
+                        by = "subjectkey"
+                    )
+                    pval <- calc_assoc_pval(
+                        evaluation_df[, "cluster"],
+                        evaluation_df[, features[j]],
+                        "categorical",
+                        feature_types[j],
+                        cat_test = cat_test
                     )
                     target_col <- which(
-                        paste0(current_outcome_name, "_pval") == colnames(esm)
+                        paste0(current_feature, "_pval") == colnames(esm)
                     )
                     esm[i, target_col] <- pval
                 }
@@ -156,7 +192,24 @@ extend_solutions <- function(solutions_matrix,
             )
     }
     if (calculate_summaries) {
-        esm <- summarize_pvals(esm)
+        #######################################################################
+        # Identify features present in target_list
+        #######################################################################
+        target_features <- target_list |>
+            lapply(
+                function(x) {
+                    colnames(x[[1]][-1])
+                }
+            )
+        target_features <- paste0(target_features, "_pval")
+        target_esm <- dplyr::select(
+            esm,
+            "row_id",
+            dplyr::all_of(target_features)
+        )
+        target_esm <- summarize_pvals(target_esm)
+        esm <- dplyr::select(esm, -dplyr::all_of(target_features))
+        esm <- dplyr::inner_join(esm, target_esm, by = "row_id")
     }
     esm <- numcol_to_numeric(esm)
     return(esm)
