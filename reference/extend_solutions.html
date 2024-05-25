@@ -80,10 +80,11 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">extend_solutions</span><span class="op">(</span></span>
 <span>  <span class="va">solutions_matrix</span>,</span>
-<span>  <span class="va">target_list</span>,</span>
+<span>  target_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  data_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cat_test <span class="op">=</span> <span class="st">"chi_squared"</span>,</span>
 <span>  calculate_summaries <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  min_pval <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  min_pval <span class="op">=</span> <span class="fl">1e-10</span>,</span>
 <span>  processes <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -95,7 +96,15 @@
 
 
 <dt>target_list</dt>
-<dd><p>A data_list with variables to calculate p-values for.</p></dd>
+<dd><p>A data_list with variables to calculate p-values for.
+Variables in the target list will be included during p-value summary
+measure calculations.</p></dd>
+
+
+<dt>data_list</dt>
+<dd><p>A data_list with variables to calcualte p-values for, but
+that should not be incorporated into p-value summary measure columns (i.e.,
+min/mean/max p-value columns).</p></dd>
 
 
 <dt>cat_test</dt>

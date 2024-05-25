@@ -139,11 +139,27 @@ the results into a simple label propagating function,
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># Start by making a data list containing all our dataframes to more easily</span></span>
+<span><span class="co"># identify subjects without missing data</span></span>
+<span><span class="va">all_patient</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="st">"cort_t"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="st">"cort_sa"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="st">"subc_v"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_h_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
+<span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Get a vector of all the subjects</span></span>
-<span><span class="va">all_subjects</span> <span class="op">&lt;-</span> <span class="va">abcd_cort_t</span><span class="op">$</span><span class="st">"patient"</span></span>
+<span><span class="va">all_subjects</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_dl_subjects.html">get_dl_subjects</a></span><span class="op">(</span><span class="va">all_patient</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Dataframe assigning 80% of subjects to train and 20% to test</span></span>
-<span><span class="va">train_test_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/train_test_assign.html">train_test_assign</a></span><span class="op">(</span>train_frac <span class="op">=</span> <span class="fl">0.8</span>, subjects <span class="op">=</span> <span class="va">all_subjects</span><span class="op">)</span></span>
+<span><span class="va">train_test_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/train_test_assign.html">train_test_assign</a></span><span class="op">(</span></span>
+<span>    train_frac <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>    subjects <span class="op">=</span> <span class="va">all_subjects</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Pulling the training and testing subjects specifically</span></span>
 <span><span class="va">train_subs</span> <span class="op">&lt;-</span> <span class="va">train_test_split</span><span class="op">$</span><span class="st">"train"</span></span>
@@ -169,11 +185,18 @@ the results into a simple label propagating function,
 <span></span>
 <span><span class="co"># Find cluster solutions in the training set</span></span>
 <span><span class="va">train_data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_cort_t</span>, <span class="st">"cort_t"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_cort_sa</span>, <span class="st">"cortical_sa"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_subc_v</span>, <span class="st">"subc_v"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_h_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># We'll pick a solution that has good separation over our target variables</span></span>
+<span><span class="va">train_target_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -199,13 +222,6 @@ the results into a simple label propagating function,
 <span><span class="co">#&gt; [1] "Total time taken: 1 seconds."</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="co"># Pick a solution that has good separation over our target variables</span></span>
-<span><span class="va">train_target_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_target_list.html">generate_target_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
-<span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
 <span>    <span class="va">train_solutions_matrix</span>,</span>
 <span>    <span class="va">train_target_list</span></span>
@@ -216,18 +232,20 @@ the results into a simple label propagating function,
 <span><span class="co">#&gt; [1] "Processing row 4 of 5"</span></span>
 <span><span class="co">#&gt; [1] "Processing row 5 of 5"</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lowest_min_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Determining solution with the lowest minimum p-value</span></span>
+<span><span class="va">lowest_min_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span> <span class="op">==</span> <span class="va">lowest_min_pval</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 5</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">top_row</span> <span class="op">&lt;-</span> <span class="va">extended_solutions_matrix</span><span class="op">[</span><span class="fl">4</span>, <span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Propagate that solution to the subjects in the test set</span></span>
 <span><span class="co"># data list below has both training and testing subjects</span></span>
 <span><span class="va">full_data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="st">"cort_t"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="st">"cort_sa"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="st">"subc_v"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_h_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
@@ -241,21 +259,21 @@ the results into a simple label propagating function,
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 subjectkey group 4</span></span>
-<span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 train 2</span></span>
-<span><span class="co">#&gt; 2 subject_NDAR_INV0IZ157F8 train 1</span></span>
-<span><span class="co">#&gt; 3 subject_NDAR_INV0J4PYA5F train 2</span></span>
-<span><span class="co">#&gt; 4 subject_NDAR_INV10OMKVLE train 2</span></span>
-<span><span class="co">#&gt; 5 subject_NDAR_INV15FPCW4O train 2</span></span>
-<span><span class="co">#&gt; 6 subject_NDAR_INV19NB4RJK train 2</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 train 1</span></span>
+<span><span class="co">#&gt; 2 subject_NDAR_INV0J4PYA5F train 1</span></span>
+<span><span class="co">#&gt; 3 subject_NDAR_INV10OMKVLE train 2</span></span>
+<span><span class="co">#&gt; 4 subject_NDAR_INV15FPCW4O train 1</span></span>
+<span><span class="co">#&gt; 5 subject_NDAR_INV19NB4RJK train 2</span></span>
+<span><span class="co">#&gt; 6 subject_NDAR_INV1HLGR738 train 1</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                   subjectkey group 4</span></span>
-<span><span class="co">#&gt; 95  subject_NDAR_INVGDBYXWV4  test 2</span></span>
-<span><span class="co">#&gt; 96  subject_NDAR_INVHEUWA52I  test 2</span></span>
-<span><span class="co">#&gt; 97  subject_NDAR_INVK9ULDQA2  test 2</span></span>
-<span><span class="co">#&gt; 98  subject_NDAR_INVKYH529RD  test 2</span></span>
+<span><span class="co">#&gt; 95  subject_NDAR_INVJEV61XIU  test 2</span></span>
+<span><span class="co">#&gt; 96  subject_NDAR_INVJR3S271G  test 2</span></span>
+<span><span class="co">#&gt; 97  subject_NDAR_INVK9ULDQA2  test 1</span></span>
+<span><span class="co">#&gt; 98  subject_NDAR_INVKYH529RD  test 1</span></span>
 <span><span class="co">#&gt; 99  subject_NDAR_INVL045Z1TY  test 2</span></span>
-<span><span class="co">#&gt; 100 subject_NDAR_INVLDQH8ATK  test 2</span></span></code></pre></div>
+<span><span class="co">#&gt; 100 subject_NDAR_INVLDQH8ATK  test 1</span></span></code></pre></div>
 <p>You could, if you wanted, see how <em>all</em> of your clustering
 solutions propagate to the test set, but that would mean reusing your
 test set and removing much of the protection against overfitting
@@ -273,22 +291,22 @@ provided by this procedure.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                 subjectkey group 1 2  3 4 5</span></span>
-<span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 train 5 2 10 2 1</span></span>
-<span><span class="co">#&gt; 2 subject_NDAR_INV0IZ157F8 train 4 1 10 1 2</span></span>
-<span><span class="co">#&gt; 3 subject_NDAR_INV0J4PYA5F train 6 2  8 2 2</span></span>
-<span><span class="co">#&gt; 4 subject_NDAR_INV10OMKVLE train 1 1  3 2 2</span></span>
-<span><span class="co">#&gt; 5 subject_NDAR_INV15FPCW4O train 1 2  7 2 2</span></span>
-<span><span class="co">#&gt; 6 subject_NDAR_INV19NB4RJK train 3 2 10 2 2</span></span></code></pre></div>
+<span><span class="co">#&gt;                 subjectkey group 1 2 3 4  5</span></span>
+<span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 train 1 1 5 1 10</span></span>
+<span><span class="co">#&gt; 2 subject_NDAR_INV0J4PYA5F train 2 1 5 1  3</span></span>
+<span><span class="co">#&gt; 3 subject_NDAR_INV10OMKVLE train 1 1 3 2  5</span></span>
+<span><span class="co">#&gt; 4 subject_NDAR_INV15FPCW4O train 1 1 4 1  4</span></span>
+<span><span class="co">#&gt; 5 subject_NDAR_INV19NB4RJK train 1 1 8 2  9</span></span>
+<span><span class="co">#&gt; 6 subject_NDAR_INV1HLGR738 train 1 2 8 1  9</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                   subjectkey group 1 2 3 4 5</span></span>
-<span><span class="co">#&gt; 95  subject_NDAR_INVGDBYXWV4  test 1 2 7 2 2</span></span>
-<span><span class="co">#&gt; 96  subject_NDAR_INVHEUWA52I  test 4 2 6 2 2</span></span>
-<span><span class="co">#&gt; 97  subject_NDAR_INVK9ULDQA2  test 3 2 6 2 1</span></span>
-<span><span class="co">#&gt; 98  subject_NDAR_INVKYH529RD  test 6 2 2 2 2</span></span>
-<span><span class="co">#&gt; 99  subject_NDAR_INVL045Z1TY  test 1 2 1 2 2</span></span>
-<span><span class="co">#&gt; 100 subject_NDAR_INVLDQH8ATK  test 1 2 1 2 2</span></span></code></pre></div>
+<span><span class="co">#&gt; 95  subject_NDAR_INVJEV61XIU  test 2 2 2 2 2</span></span>
+<span><span class="co">#&gt; 96  subject_NDAR_INVJR3S271G  test 1 1 4 2 4</span></span>
+<span><span class="co">#&gt; 97  subject_NDAR_INVK9ULDQA2  test 1 1 1 1 1</span></span>
+<span><span class="co">#&gt; 98  subject_NDAR_INVKYH529RD  test 1 1 7 1 7</span></span>
+<span><span class="co">#&gt; 99  subject_NDAR_INVL045Z1TY  test 1 2 6 2 8</span></span>
+<span><span class="co">#&gt; 100 subject_NDAR_INVLDQH8ATK  test 1 1 6 1 8</span></span></code></pre></div>
   </main>
 </div>
 

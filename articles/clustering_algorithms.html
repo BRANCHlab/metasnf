@@ -123,15 +123,20 @@ looks like.</p>
 <code class="sourceCode R"><span><span class="co"># Load the package</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Setting up the data</span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span><span class="co"># Start by making a data list containing all our dataframes to more easily</span></span>
+<span><span class="co"># identify subjects without missing data</span></span>
+<span><span class="va">full_data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_h_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Partition into a data and target list (optional)</span></span>
+<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="va">full_data_list</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
+<span><span class="va">target_list</span> <span class="op">&lt;-</span> <span class="va">full_data_list</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Specifying 5 different sets of settings for SNF</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
@@ -146,20 +151,13 @@ looks like.</p>
 <span><span class="co"># This matrix has clustering solutions for each of the 5 SNF runs!</span></span>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Total time taken: 1 seconds."</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="va">target_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_target_list.html">generate_target_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"numeric"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_colour</span>, <span class="st">"colour"</span>, <span class="st">"categorical"</span><span class="op">)</span>,</span>
-<span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">extended_solutions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
 <span>    <span class="va">solutions_matrix</span>,</span>
 <span>    <span class="va">target_list</span>,</span>
@@ -171,11 +169,22 @@ looks like.</p>
 <span><span class="co">#&gt; [1] "Processing row 4 of 5"</span></span>
 <span><span class="co">#&gt; [1] "Processing row 5 of 5"</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">target_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pvals.html">get_pvals</a></span><span class="op">(</span><span class="va">extended_solutions</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">clust_esm_manhattan</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/esm_manhattan_plot.html">esm_manhattan_plot</a></span><span class="op">(</span></span>
+<span>    <span class="va">extended_solutions</span>,</span>
+<span>    threshold <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>    bonferroni_line <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/manhattan_plot.html">manhattan_plot</a></span><span class="op">(</span><span class="va">target_pvals</span>, threshold <span class="op">=</span> <span class="fl">0.05</span>, bonferroni_line <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="clustering_algorithms_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
+<span>    <span class="st">"clust_esm_manhattan.png"</span>,</span>
+<span>    <span class="va">clust_esm_manhattan</span>,</span>
+<span>    width <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>    height <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>    dpi <span class="op">=</span> <span class="fl">100</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<center>
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/clust_esm_manhattan.png">
+</center>
 <p>The Manhattan plot shows the p-values (y-axis) of the associations
 between our target variables (x-axis) and each cluster solution we
 calculated (colour) for each row of the settings matrix.</p>
@@ -183,7 +192,7 @@ calculated (colour) for each row of the settings matrix.</p>
 settings matrix:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">settings_matrix</span><span class="op">$</span><span class="st">"clust_alg"</span></span>
-<span><span class="co">#&gt; [1] 1 1 2 1 2</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 2 1 2 1 1</span></span></code></pre></div>
 <p>The “1” corresponds to spectral clustering using the eigen-gap
 heuristic to determine the number of clusters, while the “2” corresponds
 to spectral clustering using the rotation cost heuristic to determine
@@ -232,7 +241,7 @@ provide <code>batch_snf</code> with a custom
 <span><span class="co">#&gt;     }</span></span>
 <span><span class="co">#&gt;     return(solution_data)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x5557d3f3dfc8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55dd14b2db38&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $spectral_rot</span></span>
@@ -251,7 +260,7 @@ provide <code>batch_snf</code> with a custom
 <span><span class="co">#&gt;     }</span></span>
 <span><span class="co">#&gt;     return(solution_data)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x5557d3f40070&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55dd14b2fc88&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -315,7 +324,7 @@ generation:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">settings_matrix</span><span class="op">$</span><span class="st">"clust_alg"</span></span>
-<span><span class="co">#&gt;  [1] 5 3 4 1 4 3 3 3 2 2</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] 3 1 1 5 2 2 4 1 3 3</span></span></code></pre></div>
 <p>Then, make sure to provide the <code>clust_algs_list</code> once more
 during the call to <code>batch_snf</code>:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -388,12 +397,12 @@ a similarity matrix to the final solution requires human intervention
 <span>    clust_algs_list <span class="op">=</span> <span class="va">clust_algs_list</span>,</span>
 <span>    return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/10 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 1/10 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/10 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/10 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/10 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/10 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 6/10 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 6/10 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/10 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 8/10 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/10 | Time remaining: 0 seconds"</span></span>
@@ -415,7 +424,7 @@ a similarity matrix to the final solution requires human intervention
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">similarity_matrices</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 100 100</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 87 87</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Your manual clustering goes here...</span></span></code></pre></div>
@@ -516,7 +525,7 @@ value.</p>
 <span>    <span class="va">settings_matrix</span>,</span>
 <span>    return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 2 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
@@ -543,7 +552,7 @@ value.</p>
 <span></span>
 <span><span class="co">## Maybe there?</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>h<span class="op">=</span><span class="fl">0.4872</span>, col <span class="op">=</span> <span class="st">"red"</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="clustering_algorithms_files/figure-html/unnamed-chunk-10-1.png" width="480"></p>
+<p><img src="clustering_algorithms_files/figure-html/unnamed-chunk-11-1.png" width="480"></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">dbscan_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/dbscan/man/dbscan.html" class="external-link">dbscan</a></span><span class="op">(</span><span class="va">distance_matrix1</span>, eps <span class="op">=</span> <span class="fl">0.4872</span>, minPts <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">$</span><span class="st">"cluster"</span></span>
@@ -558,7 +567,7 @@ value.</p>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">dbscan_vs_spectral</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dbscan</span>, y <span class="op">=</span> <span class="va">spectral</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html" class="external-link">geom_jitter</a></span><span class="op">(</span>height <span class="op">=</span> <span class="fl">0.1</span>, width <span class="op">=</span> <span class="fl">0.1</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="clustering_algorithms_files/figure-html/unnamed-chunk-10-2.png" width="480"></p>
+<p><img src="clustering_algorithms_files/figure-html/unnamed-chunk-11-2.png" width="480"></p>
 <p>There’s one bold lie in the code chunk above, which is how easy it
 was to find that magic hyperparameter combination of
 <code>minPts = 10</code> and <code>eps = 0.487</code> parameter value of

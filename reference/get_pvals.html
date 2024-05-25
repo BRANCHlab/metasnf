@@ -84,7 +84,11 @@ p-values to make it easier to interpret large-scale differences.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_pvals</span><span class="op">(</span><span class="va">extended_solutions_matrix</span>, negative_log <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_pvals</span><span class="op">(</span></span>
+<span>  <span class="va">extended_solutions_matrix</span>,</span>
+<span>  negative_log <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  keep_summaries <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -97,6 +101,10 @@ dataframe that contains at least one p-value column ending in "_pval".</p></dd>
 <dt>negative_log</dt>
 <dd><p>If TRUE, will replace p-values with negative log
 p-values.</p></dd>
+
+
+<dt>keep_summaries</dt>
+<dd><p>If FALSE, will remove the mean, min, and max p-value.</p></dd>
 
 </dl></div>
 
