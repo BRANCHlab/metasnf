@@ -130,6 +130,9 @@
     <loc>https://branchlab.github.io/metasnf/reference/assoc_pval_heatmap.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/reference/association_heatmap.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/reference/batch_row_closure.html</loc>
   </url>
   <url>
@@ -314,6 +317,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/lp_solutions_matrix.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/manhattan_plot.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/mc_manhattan_plot.html</loc>
