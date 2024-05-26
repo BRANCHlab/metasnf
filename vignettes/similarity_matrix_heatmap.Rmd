@@ -86,48 +86,30 @@ cluster_solution <- get_cluster_solutions(solutions_matrix)$"1"
 
 `similarity_matrix_heatmap` is a wrapper for `ComplexHeatmap::Heatmap`, but with some convenient default transformations and parameters for viewing a similarity matrix.
 
-```{r fig.width = 5, fig.height = 4.5}
-similarity_matrix_heatmap(
+```{r eval = FALSE}
+similarity_matrix_hm <- similarity_matrix_heatmap(
     similarity_matrix = similarity_matrix,
     cluster_solution = cluster_solution,
     heatmap_height = grid::unit(10, "cm"),
     heatmap_width = grid::unit(10, "cm")
 )
+
+# Export heatmaps using the `save_heatmap` function
+save_heatmap(
+    heatmap = similarity_matrix_hm,
+    path = "./similarity_matrix_heatmap.png",
+    width = 410,
+    height = 330,
+    res = 80
+)
 ```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/similarity_matrix_heatmap.png)
+</center>
 
 The default transformations include plotting log(Similarity) rather than the default similarity matrix as well as rescaling the diagonal of the matrix to the average value of the off-diagonals.
 Additionally, the similarity matrix gets reordered according to the provided cluster solution.
-Here's what the same similarity matrix looks like without those transformations:
-
-```{r fig.width = 5, fig.height = 4.5}
-similarity_matrix_heatmap(
-    similarity_matrix = similarity_matrix,
-    scale_diag = "none",
-    log_graph = FALSE,
-    heatmap_height = grid::unit(10, "cm"),
-    heatmap_width = grid::unit(10, "cm")
-)
-```
-
-## Exporting heatmaps
-
-Here's an example of how you can save this heatmap (or any other heatmap created by `ComplexHeatmap::Heatmap`).
-
-```{r eval = FALSE}
-grDevices::png(
-    "my_heatmap.png",
-    width = 300,
-    height = 300,
-    units = "px",
-)
-
-similarity_matrix_heatmap(
-    similarity_matrix = similarity_matrix,
-    cluster_solution = cluster_solution
-)
-
-grDevices::dev.off()
-```
 
 ## Annotations
 
@@ -138,59 +120,9 @@ In addition to that, this package offers some convenient functionality to specif
 
 In the example below, we make use of data supplied through a data_list.
 
-```{r fig.width = 7, fig.height = 5.5}
-# Providing the data for the annotations through a data_list
-set.seed(42)
-similarity_matrix_heatmap(
-    similarity_matrix = similarity_matrix,
-    cluster_solution = cluster_solution,
-    scale_diag = "mean",
-    log_graph = TRUE,
-    data_list = data_list,
-    left_hm = list(
-        "Diagnosis" = "diagnosis"
-    ),
-    top_hm = list(
-        "Gender" = "gender"
-    ),
-    top_bar = list(
-        "Age" = "age"
-    ),
-    heatmap_height = grid::unit(10, "cm"),
-    heatmap_width = grid::unit(10, "cm")
-)
-```
-
-The chunk below gives an identical plot, but using a dataframe instead of a data_list.
-
 ```{r eval = FALSE}
-df <- collapse_dl(data_list) # Pools all the data in a data_list to a single df
 
-# Providing the data for the annotations through an external dataframe
-set.seed(42)
-similarity_matrix_heatmap(
-    similarity_matrix = similarity_matrix,
-    cluster_solution = cluster_solution,
-    scale_diag = "mean",
-    log_graph = TRUE,
-    data = df,
-    left_hm = list(
-        "Diagnosis" = "diagnosis"
-    ),
-    top_hm = list(
-        "Gender" = "gender"
-    ),
-    top_bar = list(
-        "Age" = "age"
-    )
-)
-```
-
-We needed to call `set.seed()` because by default, `ComplexHeatmap::Heatmap` randomly generates colours for heatmap annotations.
-You can instead specify your own colours using the `annotation_colours` parameter:
-
-```{r fig.width = 7, fig.height = 5.5}
-similarity_matrix_heatmap(
+annotated_sm_hm <- similarity_matrix_heatmap(
     similarity_matrix = similarity_matrix,
     cluster_solution = cluster_solution,
     scale_diag = "mean",
@@ -219,7 +151,19 @@ similarity_matrix_heatmap(
     heatmap_height = grid::unit(10, "cm"),
     heatmap_width = grid::unit(10, "cm")
 )
+
+save_heatmap(
+    heatmap = annotated_sm_hm,
+    path = "./annotated_sm_heatmap.png",
+    width = 500,
+    height = 440,
+    res = 80
+)
 ```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_sm_heatmap.png)
+</center>
 
 The colours `red3`, `pink1`, etc. are built-in R colours that you can browse by calling `colours()`.
 
