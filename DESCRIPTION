@@ -117,7 +117,6 @@ Imports:
     dplyr,
     ggplot2,
     grDevices,
-    InteractiveComplexHeatmap,
     MASS,
     mclust,
     methods,
@@ -131,6 +130,7 @@ Imports:
 Suggests:
     circlize,
     ComplexHeatmap,
+    InteractiveComplexHeatmap,
     clv,
     future,
     future.apply,
