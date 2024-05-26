@@ -1,6 +1,7 @@
 #' Extend an solutions matrix to include outcome evaluations
 #'
-#' @param solutions_matrix A solutions_matrix.
+#' @param solutions_matrix Result of `batch_snf` storing cluster solutions and
+#' the settings that were used to generate them.
 #'
 #' @param data_list A data_list with variables to calcualte p-values for, but
 #' that should not be incorporated into p-value summary measure columns (i.e.,
