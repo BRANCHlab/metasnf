@@ -15,7 +15,8 @@ extend_solutions(
 )
 }
 \arguments{
-\item{solutions_matrix}{A solutions_matrix.}
+\item{solutions_matrix}{Result of \code{batch_snf} storing cluster solutions and
+the settings that were used to generate them.}
 
 \item{target_list}{A data_list with variables to calculate p-values for.
 Variables in the target list will be included during p-value summary

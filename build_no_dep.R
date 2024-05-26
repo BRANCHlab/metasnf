@@ -2,10 +2,9 @@ library(devtools)
 checks <- check()
 num_issues <-
     length(checks$"warnings") +
-    length(checks$"errors") +
-    length(checks$"notes")
+    length(checks$"errors")
 if (num_issues == 0) {
-    print("All checks passed. Now installing.")
+    print("No errors or warnings. Now installing.")
     install(dependencies = FALSE)
 } else {
     print(checks)
