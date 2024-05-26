@@ -327,7 +327,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/adjusted_rand_index_heatmap.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/adjusted_rand_index_heatmap.png)
 </center>
 
 The clustering solutions are along the rows and columns of the above figure, and the cells at the intersection between two solutions show how similar (big ARI) those solutions are to each other.
@@ -347,7 +347,7 @@ shiny_annotator(ari_hm)
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/meta_cluster_shiny.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/meta_cluster_shiny.png)
 </center>
 
 A demonstration of the shiny app can be seen here: [Meta Cluster Identification](https://pvelayudhan.shinyapps.io/shiny/)
@@ -375,7 +375,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/ari_mc_hm.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/ari_mc_hm.png)
 </center>
 
 At this point, we have our meta clusters but are not yet sure of how they differ in terms of their structure across our input and out-of-model variables.
@@ -469,7 +469,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/annotated_ari_hm.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm.png)
 </center>
 
 The `adjusted_rand_index_heatmap` function wraps around a more generic `similarity_matrix_heatmap` function in this package, which itself is a wrapper around `ComplexHeatmap::Heatmap()`.
@@ -529,7 +529,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/annotated_ari_hm2.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm2.png)
 </center>
 
 Now that we've visually delineated our meta clusters, we can get a quick summary of what sort of separation exists across our input and held out variables by taking a closer look at one representative cluster solution from each meta cluster.
@@ -565,7 +565,7 @@ ggsave(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/mc_manhattan.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan.png)
 </center>
 
 `neg_log_pval_thresh` sets a threshold for the negative log of the p-values to be displayed.
@@ -609,14 +609,14 @@ ggsave(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/mc_manhattan2.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan2.png)
 </center>
 
 
 
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/annotated_ari_hm2.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm2.png)
 </center>
 
 If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your settings matrix.
@@ -640,7 +640,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/settings_matrix_heatmap_ordered.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/settings_matrix_heatmap_ordered.png)
 </center>
 
 This heatmap rescales all the columns in the settings_matrix to have a maximum value of 1.
@@ -819,7 +819,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/pval_heatmap_ordered.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/pval_heatmap_ordered.png)
 </center>
 
 These p-values hold no real meaning for the traditional hypothesis-testing context, but they are reasonable proxies of the magnitude of the effect size / separation of the clusters across the variables in question.

@@ -154,7 +154,7 @@ ggplot2::ggsave(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/mc_manhattan_clean.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan_clean.png)
 </center>
 
 ## Associations with a Key Variable
@@ -181,5 +181,5 @@ ggplot2::ggsave(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/var_manhattan.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/var_manhattan.png)
 </center>

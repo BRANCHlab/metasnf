@@ -200,7 +200,7 @@ for (nproc in c(1, 4)) {
 ### Results
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/local_parallel_profiling.png){width=700px}
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/local_parallel_profiling.png){width=700px}
 </center>
 
 The local machine has access to 4 cores and scales quite well in parallel on the toy data.
@@ -208,7 +208,7 @@ The local machine has access to 4 cores and scales quite well in parallel on the
 </br>
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/hpc_parallel_profiling.png){width=700px}
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/hpc_parallel_profiling.png){width=700px}
 </center>
 
 24 cores were requested - quite a massive difference in time taken!
@@ -216,7 +216,7 @@ The local machine has access to 4 cores and scales quite well in parallel on the
 </br>
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/parallel_profiling.png){width=700px}
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/parallel_profiling.png){width=700px}
 </center>
 
 This figure zooms in on the performances at both locations.

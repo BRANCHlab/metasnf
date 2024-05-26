@@ -78,7 +78,7 @@ gene_expression_hm
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/gene_expression_heatmap.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/gene_expression_heatmap.png)
 </center>
 
 ```{r eval = FALSE}
@@ -98,7 +98,7 @@ methylation_hm
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/media/methylation_heatmap.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/methylation_heatmap.png)
 </center>
 
 The "ground truth" of how this data was generated was that patients 1 to 100 were drawn from one distribution and patients 101 to 200 were drawn from another.
