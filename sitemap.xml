@@ -40,6 +40,9 @@
     <loc>https://branchlab.github.io/metasnf/articles/getting_started.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/articles/imputations.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/articles/index.html</loc>
   </url>
   <url>
@@ -47,6 +50,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/articles/manhattan_plots.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/articles/nmi.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/articles/parallel_processing.html</loc>
@@ -131,6 +137,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/association_heatmap.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/batch_nmi.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/batch_row_closure.html</loc>

@@ -181,49 +181,29 @@ other patient attributes.</p>
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code>, but with some convenient default
 transformations and parameters for viewing a similarity matrix.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/similarity_matrix_heatmap.html">similarity_matrix_heatmap</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">similarity_matrix_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/similarity_matrix_heatmap.html">similarity_matrix_heatmap</a></span><span class="op">(</span></span>
 <span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>
 <span>    cluster_solution <span class="op">=</span> <span class="va">cluster_solution</span>,</span>
 <span>    heatmap_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
 <span>    heatmap_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"cm"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Export heatmaps using the `save_heatmap` function</span></span>
+<span><span class="fu"><a href="../reference/save_heatmap.html">save_heatmap</a></span><span class="op">(</span></span>
+<span>    heatmap <span class="op">=</span> <span class="va">similarity_matrix_hm</span>,</span>
+<span>    path <span class="op">=</span> <span class="st">"./similarity_matrix_heatmap.png"</span>,</span>
+<span>    width <span class="op">=</span> <span class="fl">410</span>,</span>
+<span>    height <span class="op">=</span> <span class="fl">330</span>,</span>
+<span>    res <span class="op">=</span> <span class="fl">80</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Sorting by cluster solution.</span></span></code></pre>
-<p><img src="similarity_matrix_heatmap_files/figure-html/unnamed-chunk-2-1.png" width="480"></p>
+<center>
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/similarity_matrix_heatmap.png">
+</center>
 <p>The default transformations include plotting log(Similarity) rather
 than the default similarity matrix as well as rescaling the diagonal of
 the matrix to the average value of the off-diagonals. Additionally, the
 similarity matrix gets reordered according to the provided cluster
-solution. Here’s what the same similarity matrix looks like without
-those transformations:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/similarity_matrix_heatmap.html">similarity_matrix_heatmap</a></span><span class="op">(</span></span>
-<span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>
-<span>    scale_diag <span class="op">=</span> <span class="st">"none"</span>,</span>
-<span>    log_graph <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    heatmap_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
-<span>    heatmap_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"cm"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="similarity_matrix_heatmap_files/figure-html/unnamed-chunk-3-1.png" width="480"></p>
-</div>
-<div class="section level2">
-<h2 id="exporting-heatmaps">Exporting heatmaps<a class="anchor" aria-label="anchor" href="#exporting-heatmaps"></a>
-</h2>
-<p>Here’s an example of how you can save this heatmap (or any other
-heatmap created by <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code>).</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">grDevices</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grDevices/png.html" class="external-link">png</a></span><span class="op">(</span></span>
-<span>    <span class="st">"my_heatmap.png"</span>,</span>
-<span>    width <span class="op">=</span> <span class="fl">300</span>,</span>
-<span>    height <span class="op">=</span> <span class="fl">300</span>,</span>
-<span>    units <span class="op">=</span> <span class="st">"px"</span>,</span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/similarity_matrix_heatmap.html">similarity_matrix_heatmap</a></span><span class="op">(</span></span>
-<span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>
-<span>    cluster_solution <span class="op">=</span> <span class="va">cluster_solution</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">grDevices</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+solution.</p>
 </div>
 <div class="section level2">
 <h2 id="annotations">Annotations<a class="anchor" aria-label="anchor" href="#annotations"></a>
@@ -239,58 +219,8 @@ barplot annotations directly through a provided dataframe or data_list
 (or both).</p>
 <p>In the example below, we make use of data supplied through a
 data_list.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Providing the data for the annotations through a data_list</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/similarity_matrix_heatmap.html">similarity_matrix_heatmap</a></span><span class="op">(</span></span>
-<span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>
-<span>    cluster_solution <span class="op">=</span> <span class="va">cluster_solution</span>,</span>
-<span>    scale_diag <span class="op">=</span> <span class="st">"mean"</span>,</span>
-<span>    log_graph <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    data_list <span class="op">=</span> <span class="va">data_list</span>,</span>
-<span>    left_hm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"Diagnosis"</span> <span class="op">=</span> <span class="st">"diagnosis"</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    top_hm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"Gender"</span> <span class="op">=</span> <span class="st">"gender"</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    top_bar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"Age"</span> <span class="op">=</span> <span class="st">"age"</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    heatmap_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
-<span>    heatmap_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"cm"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Sorting by cluster solution.</span></span></code></pre>
-<p><img src="similarity_matrix_heatmap_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
-<p>The chunk below gives an identical plot, but using a dataframe
-instead of a data_list.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/collapse_dl.html">collapse_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span> <span class="co"># Pools all the data in a data_list to a single df</span></span>
-<span></span>
-<span><span class="co"># Providing the data for the annotations through an external dataframe</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/similarity_matrix_heatmap.html">similarity_matrix_heatmap</a></span><span class="op">(</span></span>
-<span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>
-<span>    cluster_solution <span class="op">=</span> <span class="va">cluster_solution</span>,</span>
-<span>    scale_diag <span class="op">=</span> <span class="st">"mean"</span>,</span>
-<span>    log_graph <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    data <span class="op">=</span> <span class="va">df</span>,</span>
-<span>    left_hm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"Diagnosis"</span> <span class="op">=</span> <span class="st">"diagnosis"</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    top_hm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"Gender"</span> <span class="op">=</span> <span class="st">"gender"</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    top_bar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"Age"</span> <span class="op">=</span> <span class="st">"age"</span></span>
-<span>    <span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>We needed to call <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> because by default,
-<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code> randomly generates colours for
-heatmap annotations. You can instead specify your own colours using the
-<code>annotation_colours</code> parameter:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/similarity_matrix_heatmap.html">similarity_matrix_heatmap</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">annotated_sm_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/similarity_matrix_heatmap.html">similarity_matrix_heatmap</a></span><span class="op">(</span></span>
 <span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>
 <span>    cluster_solution <span class="op">=</span> <span class="va">cluster_solution</span>,</span>
 <span>    scale_diag <span class="op">=</span> <span class="st">"mean"</span>,</span>
@@ -318,14 +248,23 @@ heatmap annotations. You can instead specify your own colours using the
 <span>    <span class="op">)</span>,</span>
 <span>    heatmap_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
 <span>    heatmap_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"cm"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/save_heatmap.html">save_heatmap</a></span><span class="op">(</span></span>
+<span>    heatmap <span class="op">=</span> <span class="va">annotated_sm_hm</span>,</span>
+<span>    path <span class="op">=</span> <span class="st">"./annotated_sm_heatmap.png"</span>,</span>
+<span>    width <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>    height <span class="op">=</span> <span class="fl">440</span>,</span>
+<span>    res <span class="op">=</span> <span class="fl">80</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Sorting by cluster solution.</span></span></code></pre>
-<p><img src="similarity_matrix_heatmap_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
+<center>
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_sm_heatmap.png">
+</center>
 <p>The colours <code>red3</code>, <code>pink1</code>, etc. are built-in
 R colours that you can browse by calling <code><a href="https://rdrr.io/r/grDevices/colors.html" class="external-link">colours()</a></code>.</p>
 <p>For reference, the code below shows how you would achieve these
 annotations using standard <code>ComplexHeatmap</code> syntax.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">merged_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/collapse_dl.html">collapse_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
 <span><span class="va">order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">cluster_solution</span>, index.return <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="st">"ix"</span></span>
 <span><span class="va">merged_df</span> <span class="op">&lt;-</span> <span class="va">merged_df</span><span class="op">[</span><span class="va">order</span>, <span class="op">]</span></span>
