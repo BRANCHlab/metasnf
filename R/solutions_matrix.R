@@ -193,7 +193,6 @@ extend_solutions <- function(solutions_matrix,
             )
     }
     if (calculate_summaries) {
-        return(esm)
         #######################################################################
         # Identify features present in target_list
         #######################################################################
@@ -210,8 +209,9 @@ extend_solutions <- function(solutions_matrix,
             dplyr::all_of(target_features)
         )
         target_esm <- summarize_pvals(target_esm)
+        target_esm <- dplyr::select(target_esm, -"row_id")
         esm <- dplyr::select(esm, -dplyr::all_of(target_features))
-        esm <- dplyr::inner_join(esm, target_esm, by = "row_id")
+        esm <- cbind(esm, target_esm)
     }
     esm <- numcol_to_numeric(esm)
     return(esm)
