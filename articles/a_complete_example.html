@@ -64,6 +64,7 @@
     <a class="dropdown-item" href="../articles/confounders.html">Confounders and Unwanted Signal</a>
     <a class="dropdown-item" href="../articles/parallel_processing.html">Parallel processing</a>
     <a class="dropdown-item" href="../articles/label_propagation.html">Label propagation</a>
+    <a class="dropdown-item" href="../articles/imputations.html">Handling imputations</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Plotting</h6>
     <a class="dropdown-item" href="../articles/similarity_matrix_heatmap.html">Similarity Matrix Heatmaps</a>
@@ -710,13 +711,13 @@ feature present in a provided data list and/or target_list.</p>
 <span><span class="va">new_cols</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="va">old_cols</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">[</span>, <span class="va">new_cols</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   cbcl_anxiety_r_pval cbcl_depress_r_pval</span></span>
-<span><span class="co">#&gt; 1           0.7344315           0.7263495</span></span>
-<span><span class="co">#&gt; 2           0.6644469           0.3238038</span></span>
-<span><span class="co">#&gt; 3           0.3961268           0.6817113</span></span>
-<span><span class="co">#&gt; 4           0.4843825           0.7564136</span></span>
-<span><span class="co">#&gt; 5           0.2256718           0.7895325</span></span>
-<span><span class="co">#&gt; 6           0.2566391           0.1324778</span></span></code></pre></div>
+<span><span class="co">#&gt;   cbcl_anxiety_r_pval cbcl_depress_r_pval  min_pval mean_pval  max_pval</span></span>
+<span><span class="co">#&gt; 1           0.7344315           0.7263495 0.7263495 0.7303905 0.7344315</span></span>
+<span><span class="co">#&gt; 2           0.6644469           0.3238038 0.3238038 0.4941253 0.6644469</span></span>
+<span><span class="co">#&gt; 3           0.3961268           0.6817113 0.3961268 0.5389191 0.6817113</span></span>
+<span><span class="co">#&gt; 4           0.4843825           0.7564136 0.4843825 0.6203981 0.7564136</span></span>
+<span><span class="co">#&gt; 5           0.2256718           0.7895325 0.2256718 0.5076021 0.7895325</span></span>
+<span><span class="co">#&gt; 6           0.2566391           0.1324778 0.1324778 0.1945585 0.2566391</span></span></code></pre></div>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Re-running to calculate the p-value for every single input and out-of-model</span></span>
@@ -1235,25 +1236,25 @@ clusters.</p>
 <span><span class="co">#&gt; 4                      0                    1                   1      2</span></span>
 <span><span class="co">#&gt; 5                      1                    1                   1      8</span></span>
 <span><span class="co">#&gt; 6                      1                    1                   1      2</span></span>
-<span><span class="co">#&gt;   cbcl_anxiety_r_pval cbcl_depress_r_pval</span></span>
-<span><span class="co">#&gt; 1           0.7344315           0.7263495</span></span>
-<span><span class="co">#&gt; 2           0.6644469           0.3238038</span></span>
-<span><span class="co">#&gt; 3           0.3961268           0.6817113</span></span>
-<span><span class="co">#&gt; 4           0.4843825           0.7564136</span></span>
-<span><span class="co">#&gt; 5           0.2256718           0.7895325</span></span>
-<span><span class="co">#&gt; 6           0.2566391           0.1324778</span></span></code></pre></div>
+<span><span class="co">#&gt;   cbcl_anxiety_r_pval cbcl_depress_r_pval  min_pval mean_pval  max_pval</span></span>
+<span><span class="co">#&gt; 1           0.7344315           0.7263495 0.7263495 0.7303905 0.7344315</span></span>
+<span><span class="co">#&gt; 2           0.6644469           0.3238038 0.3238038 0.4941253 0.6644469</span></span>
+<span><span class="co">#&gt; 3           0.3961268           0.6817113 0.3961268 0.5389191 0.6817113</span></span>
+<span><span class="co">#&gt; 4           0.4843825           0.7564136 0.4843825 0.6203981 0.7564136</span></span>
+<span><span class="co">#&gt; 5           0.2256718           0.7895325 0.2256718 0.5076021 0.7895325</span></span>
+<span><span class="co">#&gt; 6           0.2566391           0.1324778 0.1324778 0.1945585 0.2566391</span></span></code></pre></div>
 <p>If you just want the p-values:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">target_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pvals.html">get_pvals</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">target_pvals</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   row_id cbcl_anxiety_r_pval cbcl_depress_r_pval</span></span>
-<span><span class="co">#&gt; 1      1           0.7344315           0.7263495</span></span>
-<span><span class="co">#&gt; 2      2           0.6644469           0.3238038</span></span>
-<span><span class="co">#&gt; 3      3           0.3961268           0.6817113</span></span>
-<span><span class="co">#&gt; 4      4           0.4843825           0.7564136</span></span>
-<span><span class="co">#&gt; 5      5           0.2256718           0.7895325</span></span>
-<span><span class="co">#&gt; 6      6           0.2566391           0.1324778</span></span></code></pre></div>
+<span><span class="co">#&gt;   row_id cbcl_anxiety_r_pval cbcl_depress_r_pval  min_pval mean_pval  max_pval</span></span>
+<span><span class="co">#&gt; 1      1           0.7344315           0.7263495 0.7263495 0.7303905 0.7344315</span></span>
+<span><span class="co">#&gt; 2      2           0.6644469           0.3238038 0.3238038 0.4941253 0.6644469</span></span>
+<span><span class="co">#&gt; 3      3           0.3961268           0.6817113 0.3961268 0.5389191 0.6817113</span></span>
+<span><span class="co">#&gt; 4      4           0.4843825           0.7564136 0.4843825 0.6203981 0.7564136</span></span>
+<span><span class="co">#&gt; 5      5           0.2256718           0.7895325 0.2256718 0.5076021 0.7895325</span></span>
+<span><span class="co">#&gt; 6      6           0.2566391           0.1324778 0.1324778 0.1945585 0.2566391</span></span></code></pre></div>
 <p>There is a heatmap for visualizing this too:</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pval_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pval_heatmap.html">pval_heatmap</a></span><span class="op">(</span><span class="va">target_pvals</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span>
@@ -1433,17 +1434,15 @@ the training/testing split for you :)</p>
 <span><span class="co">#&gt; [87] "subject_NDAR_INVLI58ERQC" "subject_NDAR_INVLIQRM8KC"</span></span>
 <span><span class="co">#&gt; [89] "subject_NDAR_INVLXDP1SWT" "subject_NDAR_INVMBOZVEA4"</span></span>
 <span><span class="co">#&gt; [91] "subject_NDAR_INVMIWOSHJN" "cbcl_anxiety_r_pval"     </span></span>
-<span><span class="co">#&gt; [93] "cbcl_depress_r_pval"</span></span></code></pre></div>
+<span><span class="co">#&gt; [93] "cbcl_depress_r_pval"      "min_pval"                </span></span>
+<span><span class="co">#&gt; [95] "mean_pval"                "max_pval"</span></span></code></pre></div>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># The fifth row had the lowest minimum p-value across our outcomes</span></span>
 <span><span class="va">lowest_min_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in min(extended_solutions_matrix$min_pval): no non-missing arguments to</span></span>
-<span><span class="co">#&gt; min; returning Inf</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span> <span class="op">==</span> <span class="va">lowest_min_pval</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span> <span class="op">==</span> <span class="va">lowest_min_pval</span><span class="op">)</span></span>
-<span><span class="co">#&gt; integer(0)</span></span></code></pre></div>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Keep track of your top solution</span></span>
 <span><span class="va">top_row</span> <span class="op">&lt;-</span> <span class="va">extended_solutions_matrix</span><span class="op">[</span><span class="fl">4</span>, <span class="op">]</span></span>
@@ -1452,7 +1451,7 @@ the training/testing split for you :)</p>
 <span><span class="co"># the training and testing subjects to propagate labels to the test subjects</span></span>
 <span><span class="va">propagated_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_solutions_matrix.html">lp_solutions_matrix</a></span><span class="op">(</span><span class="va">top_row</span>, <span class="va">full_data_list</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Processing row 1 of 1..."</span></span></code></pre></div>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 subjectkey group 4</span></span>
@@ -1462,7 +1461,7 @@ the training/testing split for you :)</p>
 <span><span class="co">#&gt; 4 subject_NDAR_INV15FPCW4O train 1</span></span>
 <span><span class="co">#&gt; 5 subject_NDAR_INV19NB4RJK train 2</span></span>
 <span><span class="co">#&gt; 6 subject_NDAR_INV1HLGR738 train 1</span></span></code></pre></div>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  subjectkey group 4</span></span>
 <span><span class="co">#&gt; 82 subject_NDAR_INVG5CI7XK4  test 1</span></span>
@@ -1475,7 +1474,7 @@ the training/testing split for you :)</p>
 solutions propagate to the test set, but that would mean reusing your
 test set and removing the protection against overfitting conferred by
 this procedure.</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">propagated_labels_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_solutions_matrix.html">lp_solutions_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">extended_solutions_matrix</span>,</span>
 <span>    <span class="va">full_data_list</span></span>
@@ -1485,7 +1484,7 @@ this procedure.</p>
 <span><span class="co">#&gt; [1] "Processing row 3 of 5..."</span></span>
 <span><span class="co">#&gt; [1] "Processing row 4 of 5..."</span></span>
 <span><span class="co">#&gt; [1] "Processing row 5 of 5..."</span></span></code></pre></div>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 subjectkey group 1 2 3 4  5</span></span>
@@ -1495,7 +1494,7 @@ this procedure.</p>
 <span><span class="co">#&gt; 4 subject_NDAR_INV15FPCW4O train 1 1 4 1  4</span></span>
 <span><span class="co">#&gt; 5 subject_NDAR_INV19NB4RJK train 1 1 8 2  9</span></span>
 <span><span class="co">#&gt; 6 subject_NDAR_INV1HLGR738 train 1 2 8 1  9</span></span></code></pre></div>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  subjectkey group 1 2 3 4 5</span></span>
 <span><span class="co">#&gt; 82 subject_NDAR_INVG5CI7XK4  test 1 1 2 1 2</span></span>
