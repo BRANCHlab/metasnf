@@ -193,6 +193,7 @@ extend_solutions <- function(solutions_matrix,
             )
     }
     if (calculate_summaries) {
+        return(esm)
         #######################################################################
         # Identify features present in target_list
         #######################################################################
@@ -437,41 +438,6 @@ linear_model_pval <- function(predictor, response) {
 #'  p-value if both variables are categorical.
 #'
 #' @export
-calculate_association_pval <- function(var1,
-                                       var2,
-                                       type1,
-                                       type2,
-                                       cat_test = "chi_squared") {
-    types <- c(type1, type2)
-    numeric_vars <- c("continuous", "discrete", "ordinal")
-    if (all(types %in% numeric_vars)) {
-        # numeric vs. numeric
-        num_var1 <- as.numeric(unlist(var1))
-        num_var2 <- as.numeric(unlist(var2))
-        pval <- linear_model_pval(num_var1, num_var2)
-    } else if (all(types %in% "categorical")) {
-        # categorical vs. categorical
-        cat_var1 <- factor(unlist(var1))
-        cat_var2 <- factor(unlist(var2))
-        if (cat_test == "chi_squared") {
-            pval <- chi_squared_pval(cat_var1, cat_var2)
-        } else if (cat_test == "fisher_exact") {
-            pval <- fisher_exact_pval(cat_var1, cat_var2)
-        }
-    } else {
-        # numeric vs. categorical
-        if (which(types %in% numeric_vars) == 1) {
-            num_var <- as.numeric(unlist(var1))
-            cat_var <- factor(unlist(var2))
-        } else {
-            num_var <- as.numeric(unlist(var2))
-            cat_var <- factor(unlist(var1))
-        }
-        pval <- linear_model_pval(predictor = cat_var, response = num_var)
-    }
-    return(pval)
-}
-
 calc_assoc_pval <- function(var1,
                             var2,
                             type1,
