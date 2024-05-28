@@ -3,7 +3,7 @@ title: "Quality Measures"
 output:
     rmarkdown::html_vignette:
         toc: true
-descriptipn: >
+description: >
   Calculate context-agnostic measures of clustering compactness and separation.
 vignette: >
   %\VignetteIndexEntry{Quality Measures}

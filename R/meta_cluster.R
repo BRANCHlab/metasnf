@@ -116,11 +116,18 @@ calc_aris <- function(solutions_matrix,
 #'
 #' @param solutions_matrix Output of `batch_snf` containing cluster solutions.
 #'
+#' @param filter_fn Optional function to filter the meta-cluster by prior to
+#' maximum average ARI determination. This can be useful if you are explicitly
+#' trying to select a solution that meets a certain condition, such as only
+#' picking from the 4 cluster solutions within a meta cluster. An example
+#' valid function could be `fn <- function(x) x[x$"nclust" == 4, ]`.
+#'
 #' @export
 get_representative_solutions <- function(aris,
                                          split_vector,
                                          order,
-                                         solutions_matrix) {
+                                         solutions_matrix,
+                                         filter_fn = NULL) {
     ###########################################################################
     # Re-sort the solutions matrix based on the aris
     ###########################################################################
@@ -144,8 +151,13 @@ get_representative_solutions <- function(aris,
         mc_ari <- aris[aris$"label" == mc, ]
         mc_ari$"label" <- NULL
         # The most representative solution based on total ARI within MC
-        rep_mc <- which(rowSums(mc_ari) == max(rowSums(mc_ari)))[1]
+        mc_sm$"total_aris" <- rowSums(mc_ari)
+        if (!is.null(filter_fn)) {
+            mc_sm <- filter_fn(mc_sm)
+        }
+        rep_mc <- which(mc_sm$"total_aris" == max(mc_sm$"total_aris"))[1]
         rep_solution <- mc_sm[rep_mc, ]
+        rep_solution$"total_aris" <- NULL
         rep_solutions <- rbind(rep_solutions, rep_solution)
     }
     ###########################################################################

@@ -4,7 +4,13 @@
 \alias{get_representative_solutions}
 \title{Extract representative solutions from a matrix of ARIs}
 \usage{
-get_representative_solutions(aris, split_vector, order, solutions_matrix)
+get_representative_solutions(
+  aris,
+  split_vector,
+  order,
+  solutions_matrix,
+  filter_fn = NULL
+)
 }
 \arguments{
 \item{aris}{Matrix of adjusted rand indices from \code{calc_aris()}}
@@ -14,6 +20,12 @@ get_representative_solutions(aris, split_vector, order, solutions_matrix)
 \item{order}{Numeric vector indicating row ordering of settings matrix.}
 
 \item{solutions_matrix}{Output of \code{batch_snf} containing cluster solutions.}
+
+\item{filter_fn}{Optional function to filter the meta-cluster by prior to
+maximum average ARI determination. This can be useful if you are explicitly
+trying to select a solution that meets a certain condition, such as only
+picking from the 4 cluster solutions within a meta cluster. An example
+valid function could be \code{fn <- function(x) x[x$"nclust" == 4, ]}.}
 }
 \description{
 Following clustering with \code{batch_snf}, a matrix of pairwise ARIs that show
