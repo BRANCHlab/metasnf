@@ -1,3 +1,40 @@
+# metasnf 0.6.0
+
+## New functionality
+
+* `shiny_annotator()` function can be used to identify indices of meta clusters within an `adjusted_rand_index_heatmap`
+* `adjusted_rand_index_heatmap()` now has a `split_vector` parameter that will slice a heatmap into meta clusters
+* `rename_dl()` can be used to rename features in a data_list
+* `manhattan_plot` has been split into `var_manhattan_plot` (key variable - all variables), `esm_manhattan_plot` (cluster solutions in an extended solutions matrix to all variables), and `mc_manhattan_plot` (like `esm_manhattan_plot`, but at the meta-cluster level)
+* `get_representative_solutions` extracts max-ARI solutions from an extended solutions matrix based on a `split_vector` containing meta cluster boundaries
+* `batch_nmi` calculates NMI scores (see https://branchlab.github.io/metasnf/articles/nmi_scores.html)
+* `extend_solutions` will only calculate p-value summary measures (min/max/mean) for data_list passed in as a `target_list` parameter, but will also accept and calculate p-values for a data_list passed in through the `data_list` parameter
+* heatmap function `adjusted_rand_index_heatmap` and `assoc_pval_heatmap` have updated parameters to improve ease of use and flexibility (including easier colour control)
+
+## Deprecated functions
+
+* `get_clustered_subs` has been removed (does the same thing as `get_cluster_df`)
+* `get_cluster_pval` deprecated for `calc_assoc_pval`
+* All functions related to target_lists specifically have been deprecated in favour of simply using `generate_data_list()` and its corresponding functions
+
+## Name changes
+
+* `remove_signal` has been renamed to `linear_adjust` to better reflect its function
+* `summarize_distance_metrics_list` has been shortened to `summarize_dml`
+* `correlation_pval_heatmap` has been renamed to `assoc_pval_heatmap`
+* `calc_om_aris` has been renamed to `calc_aris`
+
+## New vignettes
+
+* NMI scores: https://branchlab.github.io/metasnf/articles/nmi_scores.html
+* Imputations: https://branchlab.github.io/metasnf/articles/imputations.html
+
+## Other changes
+
+* Vignettes have been updated
+* Warnings are raised if spectral clustering does not generate a cluster solution matching the number of clusters requested
+* Chi-squared and `extend_solutions` p-value calculation warnings are now suppressed
+
 # metasnf 0.5.0
 
 ## Breaking changes
