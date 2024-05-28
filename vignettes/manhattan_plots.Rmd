@@ -3,6 +3,8 @@ title: "Manhattan Plots"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  Visualize how cluster solutions separate over input/out-of-model variables.
 vignette: >
   %\VignetteIndexEntry{Manhattan Plots}
   %\VignetteEngine{knitr::rmarkdown}
@@ -45,11 +47,6 @@ full_data_list <- generate_data_list(
 data_list <- full_data_list[1:3]
 target_list <- full_data_list[4:5]
 
-summarize_dl(data_list)
-summarize_dl(target_list)
-
-data_list
-
 # Build space of settings to cluster over
 settings_matrix <- generate_settings_matrix(
     data_list,
@@ -76,12 +73,14 @@ extended_solutions_matrix <- extend_solutions(
 ```{r eval = FALSE}
 esm_manhattan <- esm_manhattan_plot(
     extended_solutions_matrix[1:5, ],
+    neg_log_pval_thresh = 5,
     threshold = 0.05,
-    bonferroni_line = TRUE,
+    point_size = 3,
     jitter_width = 0.1,
     jitter_height = 0.1,
-    neg_log_pval_thresh = 5,
-    point_size = 3
+    plot_title = "Variable-Solution Associations",
+    text_size = 14,
+    bonferroni_line = TRUE
 )
 
 ggplot2::ggsave(
@@ -92,6 +91,10 @@ ggplot2::ggsave(
     dpi = 100
 )
 ```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/esm_manhattan.png)
+</center>
 
 A bit of an unwieldy plot if you try looking at too many solutions at a time, but it can be handy if you intend on just examining a few cluster solutions.
 
@@ -140,6 +143,7 @@ mc_manhattan <- mc_manhattan_plot(
     target_list = target_list,
     point_size = 3,
     text_size = 12,
+    plot_title = "Variable-Meta Cluster Associations",
     threshold = 0.05,
     neg_log_pval_thresh = 5
 )
@@ -168,14 +172,15 @@ var_manhattan <- var_manhattan_plot(
     data_list,
     key_var = "household_income",
     plot_title = "Correlation of Features with Household Income",
+    text_size = 16,
+    neg_log_pval_thresh = 3,
     threshold = 0.05
 )
-
 ggplot2::ggsave(
     "var_manhattan.png",
     var_manhattan,
-    height = 10,
-    width = 10,
+    height = 7,
+    width = 12,
     dpi = 100
 )
 ```

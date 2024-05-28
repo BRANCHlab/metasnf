@@ -3,6 +3,8 @@ title: "The Settings Matrix"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  The object that controls all hyperparameters defining the space of cluster solutions to explore.
 vignette: >
   %\VignetteIndexEntry{The Settings Matrix}
   %\VignetteEngine{knitr::rmarkdown}

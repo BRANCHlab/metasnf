@@ -3,6 +3,8 @@ title: "Alluvial Plots"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  Visualize how cluster number influences the distribution of observations.
 vignette: >
   %\VignetteIndexEntry{Alluvial Plots}
   %\VignetteEngine{knitr::rmarkdown}

@@ -3,6 +3,8 @@ title: "SNF Schemes"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  Controlling the way that individual input dataframes are combined into a final fused network.
 vignette: >
   %\VignetteIndexEntry{SNF Schemes}
   %\VignetteEngine{knitr::rmarkdown}

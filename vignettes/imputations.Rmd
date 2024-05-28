@@ -3,6 +3,8 @@ title: "Imputations"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  Incorporate imputation approach as another source of variability in the generated space of cluster solutions.
 vignette: >
   %\VignetteIndexEntry{Imputations}
   %\VignetteEngine{knitr::rmarkdown}

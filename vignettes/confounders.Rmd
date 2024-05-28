@@ -3,6 +3,8 @@ title: "Unwanted Signal"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  Linearly regress out unwanted signal from variables for clustering.
 vignette: >
   %\VignetteIndexEntry{Unwanted Signal}
   %\VignetteEngine{knitr::rmarkdown}

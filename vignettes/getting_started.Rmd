@@ -3,6 +3,8 @@ title: "Getting Started"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  An introduction to the `metasnf` package and installation instructions.
 vignette: >
   %\VignetteIndexEntry{Getting Started}
   %\VignetteEngine{knitr::rmarkdown}

@@ -7,11 +7,11 @@
 #'
 #' @param neg_log_pval_thresh Threshold for negative log p-values.
 #'
+#' @param threshold p-value threshold to plot dashed line at.
+#'
 #' @param point_size Size of points in the plot.
 #'
 #' @param text_size Size of text in the plot.
-#'
-#' @param threshold p-value threshold to plot dashed line at.
 #'
 #' @param plot_title Title of the plot.
 #'
@@ -24,9 +24,9 @@
 var_manhattan_plot <- function(data_list,
                                key_var,
                                neg_log_pval_thresh = 5,
+                               threshold = NULL,
                                point_size = 5,
                                text_size = 20,
-                               threshold = NULL,
                                plot_title = NULL,
                                hide_x_labels = FALSE,
                                bonferroni_line = FALSE) {
@@ -127,22 +127,24 @@ var_manhattan_plot <- function(data_list,
 #' @param rep_solution The dataframe of representative solutions from the
 #' `get_representative_solutions()` function.
 #'
-#' @param threshold p-value threshold to plot horizontal dashed line at.
-#'
 #' @param data_list List of dataframes containing data information.
 #'
 #' @param target_list List of dataframes containing target information.
 #'
 #' @param variable_order Order of variables to be displayed in the plot.
 #'
-#' @param xints Either "outcomes" or a vector of numeric values to plot
-#' vertical lines at.
+#' @param neg_log_pval_thresh Threshold for negative log p-values.
 #'
-#' @param text_size Size of text in the plot.
+#' @param threshold p-value threshold to plot horizontal dashed line at.
 #'
 #' @param point_size Size of points in the plot.
 #'
-#' @param neg_log_pval_thresh Threshold for negative log p-values.
+#' @param text_size Size of text in the plot.
+#'
+#' @param plot_title Title of the plot.
+#'
+#' @param xints Either "outcomes" or a vector of numeric values to plot
+#' vertical lines at.
 #'
 #' @param hide_x_labels If TRUE, hides x-axis labels.
 #'
@@ -150,14 +152,15 @@ var_manhattan_plot <- function(data_list,
 #'
 #' @export
 mc_manhattan_plot <- function(rep_solution,
-                              threshold = NULL,
                               data_list = NULL,
                               target_list = NULL,
                               variable_order = NULL,
-                              xints = NULL,
-                              text_size = 20,
-                              point_size = 5,
                               neg_log_pval_thresh = 5,
+                              threshold = NULL,
+                              point_size = 5,
+                              text_size = 20,
+                              plot_title = NULL,
+                              xints = NULL,
                               hide_x_labels = FALSE,
                               domain_colours = NULL) {
     ###########################################################################
@@ -297,7 +300,8 @@ mc_manhattan_plot <- function(rep_solution,
         ggplot2::labs(
             x = NULL,
             y = expression("-log"[10] * "(p)"),
-            colour = "Domain"
+            colour = "Domain",
+            title = plot_title
         ) +
         ggplot2::ylim(0, neg_log_pval_thresh) +
         ggplot2::theme_bw() +
@@ -372,15 +376,19 @@ mc_manhattan_plot <- function(rep_solution,
 #' @param esm Extended solutions matrix storing associations between variables
 #' and cluster assignments. See `?extend_solutions`.
 #'
+#' @param neg_log_pval_thresh Threshold for negative log p-values.
+#'
+#' @param threshold P-value threshold to plot dashed line at.
+#'
 #' @param point_size Size of points in the plot.
 #'
 #' @param jitter_width Width of jitter.
 #'
 #' @param jitter_height Height of jitter.
 #'
-#' @param neg_log_pval_thresh Threshold for negative log p-values.
+#' @param text_size Size of text in the plot.
 #'
-#' @param threshold P-value threshold to plot dashed line at.
+#' @param plot_title Title of the plot.
 #'
 #' @param hide_x_labels If TRUE, hides x-axis labels.
 #'
@@ -389,11 +397,13 @@ mc_manhattan_plot <- function(rep_solution,
 #'
 #' @export
 esm_manhattan_plot <- function(esm,
+                               neg_log_pval_thresh = 5,
+                               threshold = NULL,
                                point_size = 5,
                                jitter_width = 0.1,
                                jitter_height = 0.1,
-                               neg_log_pval_thresh = 5,
-                               threshold = NULL,
+                               text_size = 15,
+                               plot_title = NULL,
                                hide_x_labels = FALSE,
                                bonferroni_line = FALSE) {
     pval_df <- get_pvals(esm, keep_summaries = FALSE)
@@ -451,7 +461,8 @@ esm_manhattan_plot <- function(esm,
         ggplot2::labs(
             x = NULL,
             y = expression("-log"[10] * "(p)"),
-            colour = "Solution"
+            colour = "Solution",
+            title = plot_title
         ) +
         ggplot2::theme_bw() +
         ggplot2::theme(
@@ -460,7 +471,10 @@ esm_manhattan_plot <- function(esm,
                 vjust = 0.5,
                 hjust = 1
             ),
-            plot.title = ggplot2::element_text(hjust = 0.5)
+            plot.title = ggplot2::element_text(
+                hjust = 0.5
+            ),
+            text = ggplot2::element_text(size = text_size)
         )
     if (!is.null(threshold)) {
         plot <- plot + ggplot2::geom_hline(

@@ -6,14 +6,15 @@
 \usage{
 mc_manhattan_plot(
   rep_solution,
-  threshold = NULL,
   data_list = NULL,
   target_list = NULL,
   variable_order = NULL,
-  xints = NULL,
-  text_size = 20,
-  point_size = 5,
   neg_log_pval_thresh = 5,
+  threshold = NULL,
+  point_size = 5,
+  text_size = 20,
+  plot_title = NULL,
+  xints = NULL,
   hide_x_labels = FALSE,
   domain_colours = NULL
 )
@@ -22,22 +23,24 @@ mc_manhattan_plot(
 \item{rep_solution}{The dataframe of representative solutions from the
 \code{get_representative_solutions()} function.}
 
-\item{threshold}{p-value threshold to plot horizontal dashed line at.}
-
 \item{data_list}{List of dataframes containing data information.}
 
 \item{target_list}{List of dataframes containing target information.}
 
 \item{variable_order}{Order of variables to be displayed in the plot.}
 
-\item{xints}{Either "outcomes" or a vector of numeric values to plot
-vertical lines at.}
+\item{neg_log_pval_thresh}{Threshold for negative log p-values.}
 
-\item{text_size}{Size of text in the plot.}
+\item{threshold}{p-value threshold to plot horizontal dashed line at.}
 
 \item{point_size}{Size of points in the plot.}
 
-\item{neg_log_pval_thresh}{Threshold for negative log p-values.}
+\item{text_size}{Size of text in the plot.}
+
+\item{plot_title}{Title of the plot.}
+
+\item{xints}{Either "outcomes" or a vector of numeric values to plot
+vertical lines at.}
 
 \item{hide_x_labels}{If TRUE, hides x-axis labels.}
 

@@ -3,6 +3,8 @@ title: "A Complete Example"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  Step through a complex subtyping workflow.
 vignette: >
   %\VignetteIndexEntry{A Complete Example}
   %\VignetteEngine{knitr::rmarkdown}

@@ -3,6 +3,8 @@ title: "A Simple Example"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  A minimal example of generating cluster solutions.
 vignette: >
   %\VignetteIndexEntry{A Simple Example}
   %\VignetteEngine{knitr::rmarkdown}

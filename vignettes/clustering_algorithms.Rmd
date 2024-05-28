@@ -3,6 +3,8 @@ title: "Clustering Algorithms"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  Vary clustering algorithm to expand or refine the space of generated cluster solutions.
 vignette: >
   %\VignetteIndexEntry{Clustering Algorithms}
   %\VignetteEngine{knitr::rmarkdown}

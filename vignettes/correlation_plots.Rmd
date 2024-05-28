@@ -3,6 +3,8 @@ title: "Correlation Plots"
 output:
     rmarkdown::html_vignette:
         toc: true
+description:
+  Visualize correlations between data prior to clustering.
 vignette: >
   %\VignetteIndexEntry{Correlation Plots}
   %\VignetteEngine{knitr::rmarkdown}

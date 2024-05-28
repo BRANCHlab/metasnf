@@ -3,6 +3,8 @@ title: "The Data List"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  The main object used to store data in the metasnf package.
 vignette: >
   %\VignetteIndexEntry{The Data List}
   %\VignetteEngine{knitr::rmarkdown}

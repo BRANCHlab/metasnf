@@ -6,11 +6,13 @@
 \usage{
 esm_manhattan_plot(
   esm,
+  neg_log_pval_thresh = 5,
+  threshold = NULL,
   point_size = 5,
   jitter_width = 0.1,
   jitter_height = 0.1,
-  neg_log_pval_thresh = 5,
-  threshold = NULL,
+  text_size = 15,
+  plot_title = NULL,
   hide_x_labels = FALSE,
   bonferroni_line = FALSE
 )
@@ -19,15 +21,19 @@ esm_manhattan_plot(
 \item{esm}{Extended solutions matrix storing associations between variables
 and cluster assignments. See \code{?extend_solutions}.}
 
+\item{neg_log_pval_thresh}{Threshold for negative log p-values.}
+
+\item{threshold}{P-value threshold to plot dashed line at.}
+
 \item{point_size}{Size of points in the plot.}
 
 \item{jitter_width}{Width of jitter.}
 
 \item{jitter_height}{Height of jitter.}
 
-\item{neg_log_pval_thresh}{Threshold for negative log p-values.}
+\item{text_size}{Size of text in the plot.}
 
-\item{threshold}{P-value threshold to plot dashed line at.}
+\item{plot_title}{Title of the plot.}
 
 \item{hide_x_labels}{If TRUE, hides x-axis labels.}
 

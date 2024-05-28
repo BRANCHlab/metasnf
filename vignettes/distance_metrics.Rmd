@@ -3,6 +3,8 @@ title: "Distance Metrics"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  Vary distance metrics to expand or refine the space of generated cluster solutions.
 vignette: >
   %\VignetteIndexEntry{Distance Metrics}
   %\VignetteEngine{knitr::rmarkdown}

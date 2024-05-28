@@ -3,6 +3,8 @@ title: "Parallel Processing"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  Leverage parallel processing to speed up the metaSNF pipeline.
 vignette: >
   %\VignetteIndexEntry{Parallel Processing}
   %\VignetteEngine{knitr::rmarkdown}

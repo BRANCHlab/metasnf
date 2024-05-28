@@ -3,6 +3,8 @@ title: "Feature Weighting"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  Vary feature weights to expand or refine the space of generated cluster solutions.
 vignette: >
   %\VignetteIndexEntry{Feature Weighting}
   %\VignetteEngine{knitr::rmarkdown}

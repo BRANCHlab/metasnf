@@ -3,6 +3,8 @@ title: "Label Propagation"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  Validate or extend cluster insights to new observations through semi-supervised label propagation.
 vignette: >
   %\VignetteIndexEntry{Label Propagation}
   %\VignetteEngine{knitr::rmarkdown}

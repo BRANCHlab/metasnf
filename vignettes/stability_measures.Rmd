@@ -3,6 +3,8 @@ title: "Stability Measures and Consensus Clustering"
 output:
     rmarkdown::html_vignette:
         toc: true
+description: >
+  Evaluating robustness of cluster solutions through resampling methods.
 vignette: >
   %\VignetteIndexEntry{Stability Measures and Consensus Clustering}
   %\VignetteEngine{knitr::rmarkdown}

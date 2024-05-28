@@ -8,9 +8,9 @@ var_manhattan_plot(
   data_list,
   key_var,
   neg_log_pval_thresh = 5,
+  threshold = NULL,
   point_size = 5,
   text_size = 20,
-  threshold = NULL,
   plot_title = NULL,
   hide_x_labels = FALSE,
   bonferroni_line = FALSE
@@ -24,11 +24,11 @@ variables are plotted.}
 
 \item{neg_log_pval_thresh}{Threshold for negative log p-values.}
 
+\item{threshold}{p-value threshold to plot dashed line at.}
+
 \item{point_size}{Size of points in the plot.}
 
 \item{text_size}{Size of text in the plot.}
-
-\item{threshold}{p-value threshold to plot dashed line at.}
 
 \item{plot_title}{Title of the plot.}
 
