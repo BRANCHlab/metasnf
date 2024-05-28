@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,6 +48,64 @@
       
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.6.0" id="metasnf-060">metasnf 0.6.0<a class="anchor" aria-label="anchor" href="#metasnf-060"></a></h2>
+<div class="section level3">
+<h3 id="new-functionality-0-6-0">New functionality<a class="anchor" aria-label="anchor" href="#new-functionality-0-6-0"></a></h3>
+<ul><li>
+<code><a href="../reference/shiny_annotator.html">shiny_annotator()</a></code> function can be used to identify indices of meta clusters within an <code>adjusted_rand_index_heatmap</code>
+</li>
+<li>
+<code><a href="../reference/adjusted_rand_index_heatmap.html">adjusted_rand_index_heatmap()</a></code> now has a <code>split_vector</code> parameter that will slice a heatmap into meta clusters</li>
+<li>
+<code><a href="../reference/rename_dl.html">rename_dl()</a></code> can be used to rename features in a data_list</li>
+<li>
+<code>manhattan_plot</code> has been split into <code>var_manhattan_plot</code> (key variable - all variables), <code>esm_manhattan_plot</code> (cluster solutions in an extended solutions matrix to all variables), and <code>mc_manhattan_plot</code> (like <code>esm_manhattan_plot</code>, but at the meta-cluster level)</li>
+<li>
+<code>get_representative_solutions</code> extracts max-ARI solutions from an extended solutions matrix based on a <code>split_vector</code> containing meta cluster boundaries</li>
+<li>
+<code>batch_nmi</code> calculates NMI scores (see <a href="https://branchlab.github.io/metasnf/articles/nmi_scores.html" class="uri">https://branchlab.github.io/metasnf/articles/nmi_scores.html</a>)</li>
+<li>
+<code>extend_solutions</code> will only calculate p-value summary measures (min/max/mean) for data_list passed in as a <code>target_list</code> parameter, but will also accept and calculate p-values for a data_list passed in through the <code>data_list</code> parameter</li>
+<li>heatmap function <code>adjusted_rand_index_heatmap</code> and <code>assoc_pval_heatmap</code> have updated parameters to improve ease of use and flexibility (including easier colour control)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="deprecated-functions-0-6-0">Deprecated functions<a class="anchor" aria-label="anchor" href="#deprecated-functions-0-6-0"></a></h3>
+<ul><li>
+<code>get_clustered_subs</code> has been removed (does the same thing as <code>get_cluster_df</code>)</li>
+<li>
+<code>get_cluster_pval</code> deprecated for <code>calc_assoc_pval</code>
+</li>
+<li>All functions related to target_lists specifically have been deprecated in favour of simply using <code><a href="../reference/generate_data_list.html">generate_data_list()</a></code> and its corresponding functions</li>
+</ul></div>
+<div class="section level3">
+<h3 id="name-changes-0-6-0">Name changes<a class="anchor" aria-label="anchor" href="#name-changes-0-6-0"></a></h3>
+<ul><li>
+<code>remove_signal</code> has been renamed to <code>linear_adjust</code> to better reflect its function</li>
+<li>
+<code>summarize_distance_metrics_list</code> has been shortened to <code>summarize_dml</code>
+</li>
+<li>
+<code>correlation_pval_heatmap</code> has been renamed to <code>assoc_pval_heatmap</code>
+</li>
+<li>
+<code>calc_om_aris</code> has been renamed to <code>calc_aris</code>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-vignettes-0-6-0">New vignettes<a class="anchor" aria-label="anchor" href="#new-vignettes-0-6-0"></a></h3>
+<ul><li>NMI scores: <a href="https://branchlab.github.io/metasnf/articles/nmi_scores.html" class="uri">https://branchlab.github.io/metasnf/articles/nmi_scores.html</a>
+</li>
+<li>Imputations: <a href="https://branchlab.github.io/metasnf/articles/imputations.html" class="uri">https://branchlab.github.io/metasnf/articles/imputations.html</a>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-changes-0-6-0">Other changes<a class="anchor" aria-label="anchor" href="#other-changes-0-6-0"></a></h3>
+<ul><li>Vignettes have been updated</li>
+<li>Warnings are raised if spectral clustering does not generate a cluster solution matching the number of clusters requested</li>
+<li>Chi-squared and <code>extend_solutions</code> p-value calculation warnings are now suppressed</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.0" id="metasnf-050">metasnf 0.5.0<a class="anchor" aria-label="anchor" href="#metasnf-050"></a></h2>
 <div class="section level3">
