@@ -118,13 +118,15 @@ extend_solutions <- function(solutions_matrix,
                     current_component,
                     by = "subjectkey"
                 )
-                pval <- calc_assoc_pval(
-                    evaluation_df[, "cluster"],
-                    evaluation_df[, features[j]],
-                    "categorical",
-                    feature_types[j],
-                    cat_test = cat_test
-                )
+                suppressWarnings({
+                    pval <- calc_assoc_pval(
+                        evaluation_df[, "cluster"],
+                        evaluation_df[, features[j]],
+                        "categorical",
+                        feature_types[j],
+                        cat_test = cat_test
+                    )
+                })
                 target_col <- which(
                     paste0(current_feature, "_pval") == colnames(esm)
                 )
@@ -161,13 +163,15 @@ extend_solutions <- function(solutions_matrix,
                         current_component,
                         by = "subjectkey"
                     )
-                    pval <- calc_assoc_pval(
-                        evaluation_df[, "cluster"],
-                        evaluation_df[, features[j]],
-                        "categorical",
-                        feature_types[j],
-                        cat_test = cat_test
-                    )
+                    suppressWarnings({
+                        pval <- calc_assoc_pval(
+                            evaluation_df[, "cluster"],
+                            evaluation_df[, features[j]],
+                            "categorical",
+                            feature_types[j],
+                            cat_test = cat_test
+                        )
+                    })
                     target_col <- which(
                         paste0(current_feature, "_pval") == colnames(esm)
                     )
