@@ -15,7 +15,7 @@ articles:
   imputations: imputations.html
   label_propagation: label_propagation.html
   manhattan_plots: manhattan_plots.html
-  nmi: nmi.html
+  nmi_scores: nmi_scores.html
   parallel_processing: parallel_processing.html
   quality_measures: quality_measures.html
   settings_matrix: settings_matrix.html
@@ -23,7 +23,7 @@ articles:
   snf_schemes: snf_schemes.html
   stability_measures: stability_measures.html
   troubleshooting: troubleshooting.html
-last_built: 2024-05-27T15:01Z
+last_built: 2024-05-28T00:06Z
 urls:
   reference: https://branchlab.github.io/metasnf/reference
   article: https://branchlab.github.io/metasnf/articles
