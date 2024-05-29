@@ -1,3 +1,9 @@
+# metasnf 0.6.1
+
+## New functionality
+
+* `auto_plot()` will automatically generate bar and/or jitter plots showing how features in a data_list/target_list are distributed across a single cluster solution
+
 # metasnf 0.6.0
 
 ## New functionality
