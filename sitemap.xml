@@ -34,6 +34,9 @@
     <loc>https://branchlab.github.io/metasnf/articles/distance_metrics.html</loc>
   </url>
   <url>
+    <loc>https://branchlab.github.io/metasnf/articles/feature_plots.html</loc>
+  </url>
+  <url>
     <loc>https://branchlab.github.io/metasnf/articles/feature_weights.html</loc>
   </url>
   <url>
@@ -137,6 +140,12 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/association_heatmap.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/auto_plot.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/bar_plot.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/batch_nmi.html</loc>
@@ -308,6 +317,9 @@
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/individual.html</loc>
+  </url>
+  <url>
+    <loc>https://branchlab.github.io/metasnf/reference/jitter_plot.html</loc>
   </url>
   <url>
     <loc>https://branchlab.github.io/metasnf/reference/label_prop.html</loc>
