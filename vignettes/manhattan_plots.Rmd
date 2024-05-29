@@ -4,7 +4,7 @@ output:
     rmarkdown::html_vignette:
         toc: true
 description: >
-  Visualize how cluster solutions separate over input/out-of-model variables.
+  Visualize a summary of the association between cluster-feature and feature-feature relationships.
 vignette: >
   %\VignetteIndexEntry{Manhattan Plots}
   %\VignetteEngine{knitr::rmarkdown}

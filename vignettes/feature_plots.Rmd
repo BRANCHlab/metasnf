@@ -1,0 +1,80 @@
+---
+title: "Feature Plots"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+description: >
+  Visualize how features are distributed within a cluster solution.
+vignette: >
+  %\VignetteIndexEntry{Feature Plots}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Download a copy of the vignette to follow along here: [feature_plots.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/feature_plots.Rmd)
+
+Given a cluster solution formatted as a row of a solutions matrix (or extended solutions matrix) and a `data_list` and/or `target_list` containing features to plot, the `auto_plot()` function can automatically generate `ggplot`-based bar and jitter plots showing how that particular feature was divided across clusters.
+
+```{r}
+library(metasnf)
+
+data_list <- generate_data_list(
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(abcd_h_income, "household_income", "demographics", "continuous"),
+    list(abcd_colour, "favourite_colour", "misc", "categorical"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    list(abcd_anxiety, "anxiety", "behaviour", "ordinal"),
+    list(abcd_depress, "depressed", "behaviour", "ordinal"),
+    uid = "patient"
+)
+
+# Build space of settings to cluster over
+settings_matrix <- generate_settings_matrix(
+    data_list,
+    nrow = 2,
+    min_k = 20,
+    max_k = 50,
+    seed = 42
+)
+
+# Clustering
+solutions_matrix <- batch_snf(data_list, settings_matrix)
+
+sm_row <- solutions_matrix[1, ]
+```
+
+Note, the row you pick could come directly from a `solutions_matrix`, but could also come from an `extended_solutions_matrix` or from a representative solution picked after `get_representative_solutions()`.
+
+```{r}
+plot_list <- auto_plot(sm_row, data_list)
+
+names(plot_list)
+
+plot_list$"household_income"
+
+plot_list$"smri_vol_scs_csf"
+
+plot_list$"colour"
+```
+
+If there's something you'd like to change about the plot, you can always tack on `ggplot2` elements to build from the skeleton provided by `auto_plot`:
+
+```{r}
+plot_list$"colour" +
+    ggplot2::labs(
+        fill = "Favourite Colour",
+        x = "Cluster",
+        title = "Patient Favourite Colour by Cluster"
+    ) +
+    ggplot2::scale_fill_manual(
+        values = c(
+            "green" = "forestgreen",
+            "red" = "firebrick3",
+            "yellow" = "darkgoldenrod1"
+        )
+    )
+```

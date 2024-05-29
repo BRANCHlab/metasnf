@@ -1,12 +1,12 @@
 ---
-title: "Plotting Similarity Matrices"
+title: "Similarity Matrices"
 output:
     rmarkdown::html_vignette:
         toc: true
 description: >
   Visualize the affinity matrices produced by SNF and how they associate with other data attributes.
 vignette: >
-  %\VignetteIndexEntry{Plotting Similarity Matrices}
+  %\VignetteIndexEntry{Similarity Matrices}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
