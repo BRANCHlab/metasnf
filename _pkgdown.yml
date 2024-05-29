@@ -40,10 +40,11 @@ articles:
 
 - title: Plotting
   contents:
+  - correlation_plots
   - similarity_matrix_heatmap
   - manhattan_plots
+  - feature_plots
   - alluvial_plots
-  - correlation_plots
 
 - title: Troubleshooting
   contents:
