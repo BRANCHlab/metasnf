@@ -155,6 +155,13 @@ generate_data_list <- function(...,
     if (sort_subjects) {
         data_list <- data_list |> arrange_dl()
     }
+    ###########################################################################
+    # Reposition the subjectkey column to the first column in each dataframe
+    ###########################################################################
+    data_list <- dl_uid_first_col(data_list)
+    ###########################################################################
+    # Return output
+    ###########################################################################
     if (return_missing) {
         results <- list(
             data_list = data_list,
@@ -534,4 +541,23 @@ get_dl_subjects <- function(data_list, prefix = FALSE) {
     }
     subjects <- gsub("subject_", "", subjects)
     return(subjects)
+}
+
+#' Make the subjectkey UID columns of a data_list first
+#'
+#' @param data_list A nested list of input data from `generate_data_list()`.
+#'
+#' @export
+dl_uid_first_col <- function(data_list) {
+    data_list <- lapply(
+        data_list,
+        function(x) {
+            x$"data" <- x$"data" |>
+                dplyr::select(
+                    "subjectkey",
+                    dplyr::everything()
+                )
+            return(x)
+        }
+    )
 }

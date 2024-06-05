@@ -65,7 +65,9 @@ extend_solutions <- function(solutions_matrix,
     features <- data_list |>
         lapply(
             function(x) {
-                colnames(x[[1]])[-1]
+                x$"data" |>
+                    dplyr::select(-"subjectkey") |>
+                    colnames()
             }
         ) |>
         unlist()
