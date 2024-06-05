@@ -113,11 +113,11 @@ extend_solutions <- function(solutions_matrix,
             print(paste0("Processing row ", i, " of ", nrow(esm)))
             clustered_subs <- get_cluster_df(esm[i, ])
             for (j in seq_along(features)) {
-                current_component <- merged_df[, c(1, j + 1)]
-                current_feature <- colnames(current_component)[2]
+                current_component_df <- merged_df[, c(1, j + 1)]
+                current_feature <- colnames(current_component_df)[2]
                 evaluation_df <- dplyr::inner_join(
                     clustered_subs,
-                    current_component,
+                    current_component_df,
                     by = "subjectkey"
                 )
                 suppressWarnings({
@@ -158,11 +158,11 @@ extend_solutions <- function(solutions_matrix,
             function(i) {
                 clustered_subs <- get_cluster_df(esm[i, ])
                 for (j in seq_along(features)) {
-                    current_component <- merged_df[, c(1, j + 1)]
-                    current_feature <- colnames(current_component)[2]
+                    current_component_df <- merged_df[, c(1, j + 1)]
+                    current_feature <- colnames(current_component_df)[2]
                     evaluation_df <- dplyr::inner_join(
                         clustered_subs,
-                        current_component,
+                        current_component_df,
                         by = "subjectkey"
                     )
                     suppressWarnings({
