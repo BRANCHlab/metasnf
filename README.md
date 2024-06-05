@@ -28,7 +28,7 @@ has the best stuff!):
 devtools::install_github("BRANCHlab/metasnf")
 
 # Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v0.5.0")
+devtools::install_github("BRANCHlab/metasnf@v0.6.2")
 ```
 
 ## Quick Start
@@ -57,7 +57,9 @@ settings_matrix <- generate_settings_matrix(
     seed = 42
 )
 #> [1] "The global seed has been changed!"
+```
 
+``` r
 # This matrix has clustering solutions for each of the 5 SNF runs!
 solutions_matrix <- batch_snf(data_list, settings_matrix)
 #> [1] "Row: 1/5 | Time remaining: 1 seconds"
@@ -71,10 +73,10 @@ solutions_matrix <- batch_snf(data_list, settings_matrix)
 Check out the tutorial vignettes below to learn about how the package
 can be used:
 
-- [Simple usage of the
-  package](https://branchlab.github.io/metasnf/articles/a_simple_example.html)
-- [Complex usage of the
-  package](https://branchlab.github.io/metasnf/articles/a_complete_example.html)
+-   [Simple usage of the
+    package](https://branchlab.github.io/metasnf/articles/a_simple_example.html)
+-   [Complex usage of the
+    package](https://branchlab.github.io/metasnf/articles/a_complete_example.html)
 
 And more tutorials can be found under the “articles” section of the
 documentation home page:
@@ -114,48 +116,48 @@ the purposes of clinical subtyping.
 
 ### Example workflows
 
-- [Simple](https://branchlab.github.io/metasnf/articles/a_simple_example.html)
-- [Complex](https://branchlab.github.io/metasnf/articles/a_complete_example.html)
+-   [Simple](https://branchlab.github.io/metasnf/articles/a_simple_example.html)
+-   [Complex](https://branchlab.github.io/metasnf/articles/a_complete_example.html)
 
 ### Essentials
 
-- [Settings
-  matrix](https://branchlab.github.io/metasnf/articles/settings_matrix.html)
-- [Data
-  list](https://branchlab.github.io/metasnf/articles/data_list.html)
-- [SNF
-  schemes](https://branchlab.github.io/metasnf/articles/snf_schemes.html)
+-   [Settings
+    matrix](https://branchlab.github.io/metasnf/articles/settings_matrix.html)
+-   [Data
+    list](https://branchlab.github.io/metasnf/articles/data_list.html)
+-   [SNF
+    schemes](https://branchlab.github.io/metasnf/articles/snf_schemes.html)
 
 ### Further customization of generated solutions
 
-- [Distance
-  metrics](https://branchlab.github.io/metasnf/articles/distance_metrics.html)
-- [Clustering
-  algorithms](https://branchlab.github.io/metasnf/articles/clustering_algorithms.html)
-- [Feature
-  weighting](https://branchlab.github.io/metasnf/articles/feature_weights.html)
+-   [Distance
+    metrics](https://branchlab.github.io/metasnf/articles/distance_metrics.html)
+-   [Clustering
+    algorithms](https://branchlab.github.io/metasnf/articles/clustering_algorithms.html)
+-   [Feature
+    weighting](https://branchlab.github.io/metasnf/articles/feature_weights.html)
 
 ### Additional functionality
 
-- [Stability measures and consensus
-  clustering](https://branchlab.github.io/metasnf/articles/stability_measures.html)
-- [Removing unwanted
-  signal](https://branchlab.github.io/metasnf/articles/confounders.html)
-- [Parallel
-  processing](https://branchlab.github.io/metasnf/articles/parallel_processing.html)
-- [Label
-  propagation](https://branchlab.github.io/metasnf/articles/label_propagation.html)
+-   [Stability measures and consensus
+    clustering](https://branchlab.github.io/metasnf/articles/stability_measures.html)
+-   [Removing unwanted
+    signal](https://branchlab.github.io/metasnf/articles/confounders.html)
+-   [Parallel
+    processing](https://branchlab.github.io/metasnf/articles/parallel_processing.html)
+-   [Label
+    propagation](https://branchlab.github.io/metasnf/articles/label_propagation.html)
 
 ### Plotting
 
-- [Correlation
-  plots](https://branchlab.github.io/metasnf/articles/correlation_plots.html)
-- [Similarity matrix
-  heatmaps](https://branchlab.github.io/metasnf/articles/similarity_matrix_heatmap.html)
-- [Manhattan
-  plots](https://branchlab.github.io/metasnf/articles/manhattan_plots.html)
-- [Alluvial
-  plots](https://branchlab.github.io/metasnf/articles/alluvial_plots.html)
+-   [Correlation
+    plots](https://branchlab.github.io/metasnf/articles/correlation_plots.html)
+-   [Similarity matrix
+    heatmaps](https://branchlab.github.io/metasnf/articles/similarity_matrix_heatmap.html)
+-   [Manhattan
+    plots](https://branchlab.github.io/metasnf/articles/manhattan_plots.html)
+-   [Alluvial
+    plots](https://branchlab.github.io/metasnf/articles/alluvial_plots.html)
 
 ## References
 

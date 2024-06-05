@@ -1,3 +1,10 @@
+# metasnf 0.6.2
+
+## Bug fixes
+
+* `extend_solutions()` will no longer crash when a data_list has the UID column in non-first position.
+* `generate_data_list()` enforces the UID column to be in first position of each dataframe.
+
 # metasnf 0.6.1
 
 ## New functionality
