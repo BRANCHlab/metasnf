@@ -83,8 +83,12 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     # Quick check to make sure the train subjects are all in the full list
     if (!all(train_subjects %in% all_subjects)) {
         stop(
-            "Some of the subjects with known clusters in the",
-            "train_solutions_matrix are not present in the full_data_list."
+            "\n\nAt least one subject from the `train_solutions_matrix`",
+            "argument is missing from the `full_data_list` argument.",
+            " Please ensure that all subjects in the given solutions matrix",
+            " are present in your full data list. E.g., ensure that:",
+            "\n\nall(get_cluster_df(train_solutions_matrix)$\"subjectkey\"",
+            " %in% collapse_dl(full_data_list)$\"subjectkey\")"
         )
     }
     test_subjects <- all_subjects[!all_subjects %in% train_subjects]
