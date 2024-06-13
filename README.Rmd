@@ -9,10 +9,10 @@ linkcolor: blue
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
+    collapse = TRUE,
+    comment = "#>",
+    fig.path = "man/figures/README-",
+    out.width = "100%"
 )
 ```
 
@@ -99,14 +99,14 @@ Empirically, SNF has been demonstrated to effectively integrate highly diverse p
 * [Simple](https://branchlab.github.io/metasnf/articles/a_simple_example.html)
 * [Complex](https://branchlab.github.io/metasnf/articles/a_complete_example.html)
 
-### Essentials
+### Essential objects
 
 * [Settings matrix](https://branchlab.github.io/metasnf/articles/settings_matrix.html)
 * [Data list](https://branchlab.github.io/metasnf/articles/data_list.html)
-* [SNF schemes](https://branchlab.github.io/metasnf/articles/snf_schemes.html)
 
 ### Further customization of generated solutions
 
+* [SNF schemes](https://branchlab.github.io/metasnf/articles/snf_schemes.html)
 * [Distance metrics](https://branchlab.github.io/metasnf/articles/distance_metrics.html)
 * [Clustering algorithms](https://branchlab.github.io/metasnf/articles/clustering_algorithms.html)
 * [Feature weighting](https://branchlab.github.io/metasnf/articles/feature_weights.html)
@@ -117,6 +117,8 @@ Empirically, SNF has been demonstrated to effectively integrate highly diverse p
 * [Removing unwanted signal](https://branchlab.github.io/metasnf/articles/confounders.html)
 * [Parallel processing](https://branchlab.github.io/metasnf/articles/parallel_processing.html)
 * [Label propagation](https://branchlab.github.io/metasnf/articles/label_propagation.html)
+* [Imputations](https://branchlab.github.io/metasnf/articles/imputations.html)
+* [NMI scores](https://branchlab.github.io/metasnf/articles/nmi_scores.html)
 
 ### Plotting
 
@@ -124,6 +126,6 @@ Empirically, SNF has been demonstrated to effectively integrate highly diverse p
 * [Similarity matrix heatmaps](https://branchlab.github.io/metasnf/articles/similarity_matrix_heatmap.html)
 * [Manhattan plots](https://branchlab.github.io/metasnf/articles/manhattan_plots.html)
 * [Alluvial plots](https://branchlab.github.io/metasnf/articles/alluvial_plots.html)
-
+* [Feature plots](https://branchlab.github.io/metasnf/articles/feature_plots.html)
 
 ## References
