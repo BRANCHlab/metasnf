@@ -11,6 +11,7 @@ jitter_plot <- function(df, feature) {
     ###########################################################################
     cluster <- ""
     keycol <- ""
+    df$"cluster" <- as.factor(df$"cluster")
     df <- df |> dplyr::rename("keycol" = !!feature)
     plot <- df |>
         dplyr::select(
@@ -69,6 +70,7 @@ bar_plot <- function(df, feature) {
     keycol <- ""
     percent <- ""
     n <- ""
+    df$"cluster" <- as.factor(df$"cluster")
     df <- df |>
         dplyr::rename("keycol" = !!feature) |>
         dplyr::select(cluster, keycol) |>
