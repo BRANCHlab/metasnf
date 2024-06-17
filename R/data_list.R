@@ -160,6 +160,10 @@ generate_data_list <- function(...,
     ###########################################################################
     data_list <- dl_uid_first_col(data_list)
     ###########################################################################
+    # Name the components of the data list
+    ###########################################################################
+    names(data_list) <- summarize_dl(data_list)$"name"
+    ###########################################################################
     # Return output
     ###########################################################################
     if (return_missing) {
@@ -560,4 +564,38 @@ dl_uid_first_col <- function(data_list) {
             return(x)
         }
     )
+}
+
+#' Horizontally merge compatible data lists
+#'
+#' Join two data_lists with the same components (dataframes) but separate
+#' observations. To instead merge two data_lists that have the same
+#' observations but different components, simply use `c()`.
+#'
+#' @param data_list1 The first data_list to merge.
+#' @param data_list2 The second data_list to merge.
+#'
+#' @export
+merge_data_lists <- function(data_list1, data_list2) {
+    dl1_names <- summarize_dl(data_list1)$"name"
+    dl2_names <- summarize_dl(data_list2)$"name"
+    if (!identical(sort(dl1_names), sort(dl2_names))) {
+        stop(
+            "The two data lists must have identical components. Check",
+            " `summarize_dl()` on each data list to make sure the components",
+            " align."
+        )
+    }
+    merged_data_list <- lapply(
+        dl1_names,
+        function(x) {
+            data_list1[[x]]$"data" <- dplyr::bind_rows(
+                data_list1[[x]]$"data",
+                data_list2[[x]]$"data"
+            )
+            return(data_list1[[x]])
+        }
+    )
+    names(merged_data_list)  <- dl1_names
+    return(merged_data_list)
 }
