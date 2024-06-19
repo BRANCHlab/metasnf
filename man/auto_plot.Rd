@@ -7,6 +7,7 @@
 auto_plot(
   solutions_matrix_row = NULL,
   data_list = NULL,
+  cluster_df = NULL,
   target_list = NULL,
   return_plots = TRUE,
   save = NULL,
@@ -20,6 +21,9 @@ auto_plot(
 \item{solutions_matrix_row}{A single row of a solutions matrix.}
 
 \item{data_list}{A data_list containing data to plot.}
+
+\item{cluster_df}{Directly provide a cluster_df rather than a solutions
+matrix. Useful if plotting data from label propagated results.}
 
 \item{target_list}{A target_list containing data to plot.}
 

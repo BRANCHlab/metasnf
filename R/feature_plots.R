@@ -127,6 +127,9 @@ bar_plot <- function(df, feature) {
 #'
 #' @param data_list A data_list containing data to plot.
 #'
+#' @param cluster_df Directly provide a cluster_df rather than a solutions
+#' matrix. Useful if plotting data from label propagated results.
+#'
 #' @param target_list A target_list containing data to plot.
 #'
 #' @param return_plots If `TRUE`, the function will return a list of plots.
@@ -147,6 +150,7 @@ bar_plot <- function(df, feature) {
 #' @export
 auto_plot <- function(solutions_matrix_row = NULL,
                       data_list = NULL,
+                      cluster_df = NULL,
                       target_list = NULL,
                       return_plots = TRUE,
                       save = NULL,
@@ -154,20 +158,21 @@ auto_plot <- function(solutions_matrix_row = NULL,
                       jitter_height = 6,
                       bar_width = 6,
                       bar_height = 6) {
-    if (nrow(solutions_matrix_row) != 1) {
+    null_data_count <- is.null(solutions_matrix_row) + is.null(cluster_df)
+    if (null_data_count != 1) {
         stop(
-            "This function only plots a single solution at a time. Please ",
-            " reduce the `solutions_matrix_row` argument to a single row."
+            "This function requires cluster membership information to be",
+            " provided through exactly one of the `solutions_matrix_row` or",
+            " `cluster_df` arguments."
         )
     }
     ###########################################################################
-    # Formatting
-    ###########################################################################
-    solutions_matrix_row <- data.frame(solutions_matrix_row)
-    ###########################################################################
     # Generating the required cluster dataframe
     ###########################################################################
-    cluster_df <- get_cluster_df(solutions_matrix_row)
+    if (is.null(cluster_df)) {
+        solutions_matrix_row <- data.frame(solutions_matrix_row[1, ])
+        cluster_df <- get_cluster_df(solutions_matrix_row)
+    }
     ###########################################################################
     # Generating the variable dataframe
     ###########################################################################

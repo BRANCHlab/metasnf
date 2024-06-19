@@ -50,7 +50,10 @@ sm_row <- solutions_matrix[1, ]
 Note, the row you pick could come directly from a `solutions_matrix`, but could also come from an `extended_solutions_matrix` or from a representative solution picked after `get_representative_solutions()`.
 
 ```{r}
-plot_list <- auto_plot(sm_row, data_list)
+plot_list <- auto_plot(
+    solutions_matrix_row = sm_row,
+    data_list = data_list
+)
 
 names(plot_list)
 

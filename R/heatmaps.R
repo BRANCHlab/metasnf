@@ -1227,6 +1227,34 @@ save_heatmap <- function(heatmap,
     grDevices::dev.off()
 }
 
+#' Save a plot to a png file
+#'
+#' @param plot The heatmap object to save.
+#'
+#' @param path The path to save the heatmap to.
+#'
+#' @param width The width of the heatmap.
+#'
+#' @param height The height of the heatmap.
+#'
+#' @param res The resolution of the heatmap.
+#'
+#' @export
+save_plot <- function(plot,
+                      path,
+                      width,
+                      height,
+                      res) {
+    grDevices::png(
+        filename = path,
+        width = width,
+        height = height,
+        res = res
+    )
+    print(plot)
+    grDevices::dev.off()
+}
+
 #' Return the hierarchical clustering order of a matrix
 #'
 #' @param matrix Matrix to cluster.
