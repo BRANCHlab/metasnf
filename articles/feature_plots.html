@@ -122,7 +122,10 @@ particular feature was divided across clusters.</p>
 <code>extended_solutions_matrix</code> or from a representative solution
 picked after <code><a href="../reference/get_representative_solutions.html">get_representative_solutions()</a></code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/auto_plot.html">auto_plot</a></span><span class="op">(</span><span class="va">sm_row</span>, <span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/auto_plot.html">auto_plot</a></span><span class="op">(</span></span>
+<span>    solutions_matrix_row <span class="op">=</span> <span class="va">sm_row</span>,</span>
+<span>    data_list <span class="op">=</span> <span class="va">data_list</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Generating plot 1/35: smri_vol_scs_cbwmatterlh"</span></span>
 <span><span class="co">## [1] "Generating plot 2/35: smri_vol_scs_ltventriclelh"</span></span>
 <span><span class="co">## [1] "Generating plot 3/35: smri_vol_scs_inflatventlh"</span></span>

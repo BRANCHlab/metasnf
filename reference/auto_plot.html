@@ -64,6 +64,7 @@ return a series of bar and/or jitter plots based on feature types.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">auto_plot</span><span class="op">(</span></span>
 <span>  solutions_matrix_row <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  data_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cluster_df <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  target_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  return_plots <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  save <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -82,6 +83,11 @@ return a series of bar and/or jitter plots based on feature types.</p>
 
 <dt>data_list</dt>
 <dd><p>A data_list containing data to plot.</p></dd>
+
+
+<dt>cluster_df</dt>
+<dd><p>Directly provide a cluster_df rather than a solutions
+matrix. Useful if plotting data from label propagated results.</p></dd>
 
 
 <dt>target_list</dt>
