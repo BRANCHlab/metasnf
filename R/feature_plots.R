@@ -204,7 +204,7 @@ auto_plot <- function(solutions_matrix_row = NULL,
     plot_list <- list()
     for (i in seq_along(features)) {
         feature <- features[[i]]
-        feature_col <- full_data[, feature]
+        feature_col <- unlist(full_data[, feature])
         print(
             paste0(
                 "Generating plot ",
