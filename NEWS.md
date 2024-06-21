@@ -1,3 +1,22 @@
+# metasnf 0.6.3
+
+## Bug fixes
+
+* ensure cluster variable is treated as factor during autoplotting
+* bugfix on autoplots built from tibbles rather than dataframes
+
+## Improvements
+
+* Added clarity to `lp_solutions_matrix` error message when training set is not subset of full data list
+* `generate_data_list` list elements now are named after their components
+* added heatmap parameters to increase plotting flexibility
+
+## New functionality
+
+* added generic save_plot function and option to pass cluster_df directly into auto_plot (useful for label propagation)
+* add `merge_data_lists` functionality to horizontally merge data lists
+
+
 # metasnf 0.6.2
 
 ## Bug fixes
