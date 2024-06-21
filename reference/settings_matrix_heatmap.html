@@ -12,7 +12,7 @@ can be reordered to match prior meta clustering results."><meta name="google-sit
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,8 +64,15 @@ can be reordered to match prior meta clustering results.</p>
 <span>  remove_fixed_columns <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  show_column_names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  show_row_names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  rect_gp <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>,</span>
 <span>  colour_breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"darkseagreen"</span><span class="op">)</span></span>
+<span>  colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"darkseagreen"</span><span class="op">)</span>,</span>
+<span>  column_split_vector <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  row_split_vector <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column_split <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  row_split <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column_title <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -92,6 +99,10 @@ removed.</p></dd>
 <dd><p>Whether row names should be shown.</p></dd>
 
 
+<dt>rect_gp</dt>
+<dd><p>Cell border function for <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code>.</p></dd>
+
+
 <dt>colour_breaks</dt>
 <dd><p>Numeric vector of breaks for the legend.</p></dd>
 
@@ -99,6 +110,30 @@ removed.</p></dd>
 <dt>colours</dt>
 <dd><p>Vector of colours to use for the heatmap. Should match the
 length of colour_breaks.</p></dd>
+
+
+<dt>column_split_vector</dt>
+<dd><p>Vector of indices to split columns by.</p></dd>
+
+
+<dt>row_split_vector</dt>
+<dd><p>Vector of indices to split rows by.</p></dd>
+
+
+<dt>column_split</dt>
+<dd><p>Standard parameter of <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code>.</p></dd>
+
+
+<dt>row_split</dt>
+<dd><p>Standard parameter of <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code>.</p></dd>
+
+
+<dt>column_title</dt>
+<dd><p>Standard parameter of <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code>.</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Additional parameters passed to <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code>.</p></dd>
 
 </dl></div>
 
