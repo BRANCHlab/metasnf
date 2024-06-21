@@ -579,6 +579,8 @@ dl_uid_first_col <- function(data_list) {
 merge_data_lists <- function(data_list1, data_list2) {
     dl1_names <- summarize_dl(data_list1)$"name"
     dl2_names <- summarize_dl(data_list2)$"name"
+    names(data_list1) <- dl1_names
+    names(data_list2) <- dl2_names
     if (!identical(sort(dl1_names), sort(dl2_names))) {
         stop(
             "The two data lists must have identical components. Check",
@@ -596,6 +598,6 @@ merge_data_lists <- function(data_list1, data_list2) {
             return(data_list1[[x]])
         }
     )
-    names(merged_data_list)  <- dl1_names
+    names(merged_data_list) <- dl1_names
     return(merged_data_list)
 }
