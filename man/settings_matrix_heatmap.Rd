@@ -10,8 +10,15 @@ settings_matrix_heatmap(
   remove_fixed_columns = TRUE,
   show_column_names = TRUE,
   show_row_names = TRUE,
+  rect_gp = grid::gpar(col = "black"),
   colour_breaks = c(0, 1),
-  colours = c("black", "darkseagreen")
+  colours = c("black", "darkseagreen"),
+  column_split_vector = NULL,
+  row_split_vector = NULL,
+  column_split = NULL,
+  row_split = NULL,
+  column_title = NULL,
+  ...
 )
 }
 \arguments{
@@ -26,10 +33,24 @@ removed.}
 
 \item{show_row_names}{Whether row names should be shown.}
 
+\item{rect_gp}{Cell border function for \code{ComplexHeatmap::Heatmap}.}
+
 \item{colour_breaks}{Numeric vector of breaks for the legend.}
 
 \item{colours}{Vector of colours to use for the heatmap. Should match the
 length of colour_breaks.}
+
+\item{column_split_vector}{Vector of indices to split columns by.}
+
+\item{row_split_vector}{Vector of indices to split rows by.}
+
+\item{column_split}{Standard parameter of \code{ComplexHeatmap::Heatmap}.}
+
+\item{row_split}{Standard parameter of \code{ComplexHeatmap::Heatmap}.}
+
+\item{column_title}{Standard parameter of \code{ComplexHeatmap::Heatmap}.}
+
+\item{...}{Additional parameters passed to \code{ComplexHeatmap::Heatmap}.}
 }
 \description{
 Scales settings matrix values between 0 and 1 and plots as a heatmap. Rows

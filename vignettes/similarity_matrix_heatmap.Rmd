@@ -205,10 +205,11 @@ similarity_matrix_heatmap(
     cluster_solution = cluster_solution,
     scale_diag = "mean",
     log_graph = TRUE,
-    data = df,
+    data = merged_df,
     top_annotation = top_annotations,
     left_annotation = left_annotations
 )
+
 ```
 
 Take a look at the [ComplexHeatmap Complete Reference](https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html) to learn more about what is possible with this package.

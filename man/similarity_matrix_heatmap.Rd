@@ -28,6 +28,8 @@ similarity_matrix_heatmap(
   min_colour = NULL,
   max_colour = NULL,
   split_vector = NULL,
+  row_split = NULL,
+  column_split = NULL,
   ...
 )
 }
@@ -85,6 +87,10 @@ colours.}
 \item{max_colour}{Colour used for the highest value in the heatmap.}
 
 \item{split_vector}{A vector of partition indices.}
+
+\item{row_split}{Standard parameter of \code{ComplexHeatmap::Heatmap}.}
+
+\item{column_split}{Standard parameter of \code{ComplexHeatmap::Heatmap}.}
 
 \item{...}{Additional parameters passed into ComplexHeatmap::Heatmap.}
 }

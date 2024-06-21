@@ -9,10 +9,21 @@ pval_heatmap(
   order = NULL,
   cluster_columns = TRUE,
   cluster_rows = FALSE,
-  show_column_names = FALSE,
   show_row_names = FALSE,
-  colour_breaks = c(0, 0.5, 1),
-  colours = c("red2", "lightyellow", "slateblue4")
+  show_column_names = TRUE,
+  min_colour = "red2",
+  mid_colour = "lightyellow",
+  max_colour = "slateblue4",
+  legend_breaks = c(0, 0.5, 1),
+  col = circlize::colorRamp2(legend_breaks, c(min_colour, mid_colour, max_colour)),
+  heatmap_legend_param = list(color_bar = "continuous", title = "p-value", at = c(0, 0.5,
+    1)),
+  rect_gp = grid::gpar(col = "black"),
+  column_split_vector = NULL,
+  row_split_vector = NULL,
+  column_split = NULL,
+  row_split = NULL,
+  ...
 )
 }
 \arguments{
@@ -26,14 +37,33 @@ clustering.}
 \item{cluster_rows}{Whether rows should be sorted by hierarchical
 clustering.}
 
-\item{show_column_names}{Whether column names should be shown.}
-
 \item{show_row_names}{Whether row names should be shown.}
 
-\item{colour_breaks}{Numeric vector of breaks for the legend.}
+\item{show_column_names}{Whether column names should be shown.}
 
-\item{colours}{Vector of colours to use for the heatmap. Should match the
-length of colour_breaks.}
+\item{min_colour}{Colour used for the lowest value in the heatmap.}
+
+\item{mid_colour}{Colour used for the middle value in the heatmap.}
+
+\item{max_colour}{Colour used for the highest value in the heatmap.}
+
+\item{legend_breaks}{Numeric vector of breaks for the legend.}
+
+\item{col}{Colour function for \code{ComplexHeatmap::Heatmap()}}
+
+\item{heatmap_legend_param}{Legend function for \code{ComplexHeatmap::Heatmap()}}
+
+\item{rect_gp}{Cell border function for \code{ComplexHeatmap::Heatmap()}}
+
+\item{column_split_vector}{Vector of indices to split columns by.}
+
+\item{row_split_vector}{Vector of indices to split rows by.}
+
+\item{column_split}{Standard parameter of \code{ComplexHeatmap::Heatmap}.}
+
+\item{row_split}{Standard parameter of \code{ComplexHeatmap::Heatmap}.}
+
+\item{...}{Additional parameters passed to \code{ComplexHeatmap::Heatmap}.}
 }
 \description{
 Heatmap of p-values
