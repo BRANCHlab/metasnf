@@ -54,6 +54,10 @@
 #'
 #' @param split_vector A vector of partition indices.
 #'
+#' @param row_split Standard parameter of `ComplexHeatmap::Heatmap`.
+#'
+#' @param column_split Standard parameter of `ComplexHeatmap::Heatmap`.
+#'
 #' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
 #'
 #' @export
@@ -80,6 +84,8 @@ similarity_matrix_heatmap <- function(similarity_matrix,
                                       min_colour = NULL,
                                       max_colour = NULL,
                                       split_vector = NULL,
+                                      row_split = NULL,
+                                      column_split = NULL,
                                       ...) {
     ###########################################################################
     # Assemble any provided data
@@ -195,11 +201,20 @@ similarity_matrix_heatmap <- function(similarity_matrix,
             c(min_colour, max_colour)
         )
     }
-    if (!is.null(split_vector)) {
-        mc_labels <- label_splits(split_vector, nrow(similarity_matrix))
-        args_list$"row_split" <- mc_labels
-        args_list$"column_split" <- mc_labels
-    }
+    ###########################################################################
+    # Assign splits (if any provided)
+    ###########################################################################
+    split_results <- split_parser(
+        row_split_vector = split_vector,
+        row_split = row_split,
+        column_split_vector = split_vector,
+        column_split = column_split,
+        n_rows = nrow(similarity_matrix),
+        n_columns = ncol(similarity_matrix)
+    )
+    args_list$"row_split" <- split_results$"row_split"
+    args_list$"column_split" <- split_results$"column_split"
+    ###########################################################################
     # Plot
     args_list$"matrix" <- similarity_matrix
     args_list$"cluster_rows" <- cluster_rows
@@ -267,6 +282,7 @@ adjusted_rand_index_heatmap <- function(aris,
         log_graph = log_graph,
         scale_diag = scale_diag,
         col = col,
+        column_split = NULL,
         ...
     )
     return(heatmap)
@@ -554,10 +570,24 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #'
 #' @param show_row_names Whether row names should be shown.
 #'
+#' @param rect_gp Cell border function for `ComplexHeatmap::Heatmap`.
+#'
+#' @param column_title Standard parameter of `ComplexHeatmap::Heatmap`.
+#'
 #' @param colour_breaks Numeric vector of breaks for the legend.
 #'
 #' @param colours Vector of colours to use for the heatmap. Should match the
 #' length of colour_breaks.
+#'
+#' @param column_split_vector Vector of indices to split columns by.
+#'
+#' @param column_split Standard parameter of `ComplexHeatmap::Heatmap`.
+#'
+#' @param row_split_vector Vector of indices to split rows by.
+#'
+#' @param row_split Standard parameter of `ComplexHeatmap::Heatmap`.
+#'
+#' @param ... Additional parameters passed to `ComplexHeatmap::Heatmap`.
 #'
 #' @export
 settings_matrix_heatmap <- function(settings_matrix,
@@ -565,8 +595,15 @@ settings_matrix_heatmap <- function(settings_matrix,
                                     remove_fixed_columns = TRUE,
                                     show_column_names = TRUE,
                                     show_row_names = TRUE,
+                                    rect_gp = grid::gpar(col = "black"),
                                     colour_breaks = c(0, 1),
-                                    colours = c("black", "darkseagreen")) {
+                                    colours = c("black", "darkseagreen"),
+                                    column_split_vector = NULL,
+                                    row_split_vector = NULL,
+                                    column_split = NULL,
+                                    row_split = NULL,
+                                    column_title = NULL,
+                                    ...) {
     if (!is.null(order)) {
         settings_matrix <- settings_matrix[order, ]
     }
@@ -590,17 +627,34 @@ settings_matrix_heatmap <- function(settings_matrix,
         scaled_matrix <- scaled_matrix[, unique_values > 1]
     }
     ###########################################################################
+    # Assign splits (if any provided)
+    ###########################################################################
+    split_results <- split_parser(
+        row_split_vector = row_split_vector,
+        row_split = row_split,
+        column_split_vector = column_split_vector,
+        column_split = column_split,
+        n_rows = nrow(scaled_matrix),
+        n_columns = ncol(scaled_matrix)
+    )
+    column_split <- split_results$"column_split"
+    row_split <- split_results$"row_split"
+    ###########################################################################
     heatmap <- ComplexHeatmap::Heatmap(
         scaled_matrix,
         cluster_rows = FALSE,
         cluster_columns = FALSE,
-        rect_gp = grid::gpar(col = "black"),
+        rect_gp = rect_gp,
         col = circlize::colorRamp2(colour_breaks, colours),
         heatmap_legend_param = list(
             color_bar = "continuous",
             title = "Scaled Setting",
             at = colour_breaks
         ),
+        row_split = row_split,
+        column_split = column_split,
+        column_title = column_title,
+        ...
     )
     return(heatmap)
 }
@@ -619,22 +673,58 @@ settings_matrix_heatmap <- function(settings_matrix,
 #'
 #' @param show_column_names Whether column names should be shown.
 #'
+#' @param min_colour Colour used for the lowest value in the heatmap.
+#'
+#' @param mid_colour Colour used for the middle value in the heatmap.
+#'
+#' @param max_colour Colour used for the highest value in the heatmap.
+#'
+#' @param legend_breaks Numeric vector of breaks for the legend.
+#'
 #' @param show_row_names Whether row names should be shown.
 #'
-#' @param colour_breaks Numeric vector of breaks for the legend.
+#' @param col Colour function for `ComplexHeatmap::Heatmap()`
 #'
-#' @param colours Vector of colours to use for the heatmap. Should match the
-#' length of colour_breaks.
+#' @param heatmap_legend_param Legend function for `ComplexHeatmap::Heatmap()`
+#'
+#' @param rect_gp Cell border function for `ComplexHeatmap::Heatmap()`
+#'
+#' @param row_split_vector Vector of indices to split rows by.
+#'
+#' @param column_split_vector Vector of indices to split columns by.
+#'
+#' @param row_split Standard parameter of `ComplexHeatmap::Heatmap`.
+#'
+#' @param column_split Standard parameter of `ComplexHeatmap::Heatmap`.
+#'
+#' @param ... Additional parameters passed to `ComplexHeatmap::Heatmap`.
 #'
 #' @export
 pval_heatmap <- function(pvals,
                          order = NULL,
                          cluster_columns = TRUE,
                          cluster_rows = FALSE,
-                         show_column_names = FALSE,
                          show_row_names = FALSE,
-                         colour_breaks = c(0, 0.5, 1),
-                         colours = c("red2", "lightyellow", "slateblue4")) {
+                         show_column_names = TRUE,
+                         min_colour = "red2",
+                         mid_colour = "lightyellow",
+                         max_colour = "slateblue4",
+                         legend_breaks = c(0, 0.5, 1),
+                         col = circlize::colorRamp2(
+                             legend_breaks,
+                             c(min_colour, mid_colour, max_colour)
+                         ),
+                         heatmap_legend_param = list(
+                             color_bar = "continuous",
+                             title = "p-value",
+                             at = c(0, 0.5, 1)
+                         ),
+                         rect_gp = grid::gpar(col = "black"),
+                         column_split_vector = NULL,
+                         row_split_vector = NULL,
+                         column_split = NULL,
+                         row_split = NULL,
+                         ...) {
     if ("row_id" %in% colnames(pvals)) {
         rownames(pvals) <- pvals$"row_id"
         pvals <- pvals |>
@@ -643,18 +733,32 @@ pval_heatmap <- function(pvals,
     if (!is.null(order)) {
         pvals <- pvals[order, ]
     }
+    ###########################################################################
+    # Assign splits (if any provided)
+    ###########################################################################
+    split_results <- split_parser(
+        row_split_vector = row_split_vector,
+        row_split = row_split,
+        column_split_vector = column_split_vector,
+        column_split = column_split,
+        n_rows = nrow(pvals),
+        n_columns = ncol(pvals)
+    )
+    row_split <- split_results$"row_split"
+    column_split <- split_results$"column_split"
+    ###########################################################################
     heatmap <- ComplexHeatmap::Heatmap(
         as.matrix(pvals),
-        col = circlize::colorRamp2(colour_breaks, colours),
         cluster_columns = cluster_columns,
         cluster_rows = cluster_rows,
         show_row_names = show_row_names,
-        rect_gp = grid::gpar(col = "black"),
-        heatmap_legend_param = list(
-            color_bar = "continuous",
-            title = "p-value",
-            at = colour_breaks
-        ),
+        show_column_names = show_column_names,
+        col = col,
+        heatmap_legend_param = heatmap_legend_param,
+        rect_gp = rect_gp,
+        row_split = row_split,
+        column_split = column_split,
+        ...
     )
     return(heatmap)
 }
@@ -1284,4 +1388,52 @@ get_heatmap_order <- function(heatmap, type = "rows") {
         stop("Valid types are 'rows' and 'columns'.")
     }
     return(order)
+}
+
+#' Helper function to determine which row and columns to split on
+#'
+#' @param row_split_vector A vector of row indices to split on.
+#'
+#' @param column_split_vector A vector of column indices to split on.
+#'
+#' @param row_split Standard parameter of `ComplexHeatmap::Heatmap`.
+#'
+#' @param column_split Standard parameter of `ComplexHeatmap::Heatmap`.
+#'
+#' @param n_rows The number of rows in the data.
+#'
+#' @param n_columns The number of columns in the data.
+#'
+#' @export
+split_parser <- function(row_split_vector = NULL,
+                         column_split_vector = NULL,
+                         row_split = NULL,
+                         column_split = NULL,
+                         n_rows,
+                         n_columns) {
+    if (is.null(column_split) + is.null(column_split_vector) == 0) {
+        warning(
+            "column_split and column_split_vector arguments were both",
+            " provided. Only column_split_vector will be used to determine",
+            " plot gaps."
+        )
+    }
+    if (is.null(column_split) + is.null(column_split_vector) == 0) {
+        warning(
+            "row_split and row_split_vector arguments were both",
+            " provided. Only row_split_vector will be used to determine",
+            " plot gaps."
+        )
+    }
+    if (!is.null(row_split_vector)) {
+        row_split <- label_splits(row_split_vector, n_rows)
+    }
+    if (!is.null(column_split_vector)) {
+        column_split <- label_splits(column_split_vector, n_columns)
+    }
+    split_results <- list(
+        "row_split" = row_split,
+        "column_split" = column_split
+    )
+    return(split_results)
 }
