@@ -1,3 +1,10 @@
+# metasnf 0.6.4
+
+## Minor changes
+
+* Warning message provided when subjects are dropped during `generate_data_list()`
+* New `remove_missing` parameter for `generate_data_list` allowing subjects with incomplete data to remain in the data list
+
 # metasnf 0.6.3
 
 ## Bug fixes
