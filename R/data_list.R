@@ -23,6 +23,11 @@
 #'
 #' @param sort_subjects If TRUE, the subjects in the data_list will be sorted
 #'
+#' @param remove_missing If TRUE (default), subjects with incomplete data will
+#' be dropped from data_list creation. Setting this value to FALSE may lead to
+#' unusual and/or unstable results during SNF, clustering, p-value calculations
+#' or label propagation.
+#'
 #' @param return_missing If TRUE, function returns a list where the first
 #' element is the data_list and the second element is a vector of unique IDs
 #' of patients who were removed during the complete data filtration step.
@@ -108,6 +113,7 @@ generate_data_list <- function(...,
                                test_subjects = NULL,
                                train_subjects = NULL,
                                sort_subjects = TRUE,
+                               remove_missing = TRUE,
                                return_missing = FALSE) {
     # The object that will contain all the data
     data_list <- list()
@@ -139,18 +145,22 @@ generate_data_list <- function(...,
         )
     }
     data_list <- convert_uids(data_list, uid)
-    if (return_missing) {
-        removal_results <- data_list |> remove_dl_na(return_missing = TRUE)
-        data_list <- removal_results$"data_list" |>
-            reduce_dl_to_common() |>
-            prefix_dl_sk()
-        removed_subjects <- removal_results$"removed_subjects"
-    } else {
-        data_list <- data_list |>
-            remove_dl_na() |>
-            reduce_dl_to_common() |>
-            prefix_dl_sk()
+    ###########################################################################
+    # Handle missing subject removal
+    ###########################################################################
+    removal_results <- data_list |> remove_dl_na(return_missing = TRUE)
+    if (remove_missing) {
+        n_dropped <- length(removal_results$"removed_subjects")
+        if (n_dropped > 0) {
+            warning(n_dropped, " subject(s) dropped due to incomplete data.")
+        }
+        data_list <- removal_results$"data_list"
     }
+    ###########################################################################
+    data_list <- data_list |>
+        reduce_dl_to_common() |>
+        prefix_dl_sk()
+    ###########################################################################
     # Sort subjects alphabetically
     if (sort_subjects) {
         data_list <- data_list |> arrange_dl()
@@ -167,6 +177,7 @@ generate_data_list <- function(...,
     # Return output
     ###########################################################################
     if (return_missing) {
+        removed_subjects <- removal_results$"removed_subjects"
         results <- list(
             data_list = data_list,
             removed_subjects = removed_subjects

@@ -10,6 +10,7 @@ generate_data_list(
   test_subjects = NULL,
   train_subjects = NULL,
   sort_subjects = TRUE,
+  remove_missing = TRUE,
   return_missing = FALSE
 )
 }
@@ -27,6 +28,11 @@ a full data list for label propagation)}
 a full data list for label propagation)}
 
 \item{sort_subjects}{If TRUE, the subjects in the data_list will be sorted}
+
+\item{remove_missing}{If TRUE (default), subjects with incomplete data will
+be dropped from data_list creation. Setting this value to FALSE may lead to
+unusual and/or unstable results during SNF, clustering, p-value calculations
+or label propagation.}
 
 \item{return_missing}{If TRUE, function returns a list where the first
 element is the data_list and the second element is a vector of unique IDs
