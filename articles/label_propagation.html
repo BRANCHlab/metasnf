@@ -29,7 +29,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -130,7 +130,10 @@ the results into a simple label propagating function,
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
-<span></span>
+<span><span class="co">#&gt; Warning in generate_data_list(list(abcd_cort_t, "cort_t", "neuroimaging", : 188</span></span>
+<span><span class="co">#&gt; subject(s) dropped due to incomplete data.</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Get a vector of all the subjects</span></span>
 <span><span class="va">all_subjects</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_dl_subjects.html">get_dl_subjects</a></span><span class="op">(</span><span class="va">all_patient</span><span class="op">)</span></span>
 <span></span>
@@ -187,7 +190,7 @@ the results into a simple label propagating function,
 <span>    max_k <span class="op">=</span> <span class="fl">30</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">train_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    <span class="va">train_data_list</span>,</span>
@@ -199,7 +202,7 @@ the results into a simple label propagating function,
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Total time taken: 1 seconds."</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
 <span>    <span class="va">train_solutions_matrix</span>,</span>
@@ -210,13 +213,13 @@ the results into a simple label propagating function,
 <span><span class="co">#&gt; [1] "Processing row 3 of 5"</span></span>
 <span><span class="co">#&gt; [1] "Processing row 4 of 5"</span></span>
 <span><span class="co">#&gt; [1] "Processing row 5 of 5"</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Determining solution with the lowest minimum p-value</span></span>
 <span><span class="va">lowest_min_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span> <span class="op">==</span> <span class="va">lowest_min_pval</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">top_row</span> <span class="op">&lt;-</span> <span class="va">extended_solutions_matrix</span><span class="op">[</span><span class="fl">4</span>, <span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Propagate that solution to the subjects in the test set</span></span>
@@ -229,12 +232,15 @@ the results into a simple label propagating function,
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
-<span></span>
+<span><span class="co">#&gt; Warning in generate_data_list(list(abcd_cort_t, "cort_t", "neuroimaging", : 175</span></span>
+<span><span class="co">#&gt; subject(s) dropped due to incomplete data.</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Use the solutions matrix from the training subjects and the data list from</span></span>
 <span><span class="co"># the training and testing subjects to propagate labels to the test subjects</span></span>
 <span><span class="va">propagated_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_solutions_matrix.html">lp_solutions_matrix</a></span><span class="op">(</span><span class="va">top_row</span>, <span class="va">full_data_list</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Processing row 1 of 1..."</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 subjectkey group 4</span></span>
@@ -244,7 +250,7 @@ the results into a simple label propagating function,
 <span><span class="co">#&gt; 4 subject_NDAR_INV15FPCW4O train 1</span></span>
 <span><span class="co">#&gt; 5 subject_NDAR_INV19NB4RJK train 2</span></span>
 <span><span class="co">#&gt; 6 subject_NDAR_INV1HLGR738 train 1</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                   subjectkey group 4</span></span>
 <span><span class="co">#&gt; 95  subject_NDAR_INVJEV61XIU  test 2</span></span>
@@ -257,7 +263,7 @@ the results into a simple label propagating function,
 solutions propagate to the test set, but that would mean reusing your
 test set and removing much of the protection against overfitting
 provided by this procedure.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">propagated_labels_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_solutions_matrix.html">lp_solutions_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">extended_solutions_matrix</span>,</span>
 <span>    <span class="va">full_data_list</span></span>
@@ -267,7 +273,7 @@ provided by this procedure.</p>
 <span><span class="co">#&gt; [1] "Processing row 3 of 5..."</span></span>
 <span><span class="co">#&gt; [1] "Processing row 4 of 5..."</span></span>
 <span><span class="co">#&gt; [1] "Processing row 5 of 5..."</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 subjectkey group 1 2 3 4  5</span></span>
@@ -277,7 +283,7 @@ provided by this procedure.</p>
 <span><span class="co">#&gt; 4 subject_NDAR_INV15FPCW4O train 1 1 4 1  4</span></span>
 <span><span class="co">#&gt; 5 subject_NDAR_INV19NB4RJK train 1 1 8 2  9</span></span>
 <span><span class="co">#&gt; 6 subject_NDAR_INV1HLGR738 train 1 2 8 1  9</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                   subjectkey group 1 2 3 4 5</span></span>
 <span><span class="co">#&gt; 95  subject_NDAR_INVJEV61XIU  test 2 2 2 2 2</span></span>

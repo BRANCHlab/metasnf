@@ -24,7 +24,7 @@ categorical, or mixed)."><meta name="google-site-verification" content="Xzz1SIDq
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,6 +82,7 @@ categorical, or mixed).</p>
 <span>  test_subjects <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  train_subjects <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sort_subjects <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  remove_missing <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  return_missing <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -110,6 +111,13 @@ a full data list for label propagation)</p></dd>
 
 <dt>sort_subjects</dt>
 <dd><p>If TRUE, the subjects in the data_list will be sorted</p></dd>
+
+
+<dt>remove_missing</dt>
+<dd><p>If TRUE (default), subjects with incomplete data will
+be dropped from data_list creation. Setting this value to FALSE may lead to
+unusual and/or unstable results during SNF, clustering, p-value calculations
+or label propagation.</p></dd>
 
 
 <dt>return_missing</dt>

@@ -29,7 +29,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,9 +98,11 @@ particular feature was divided across clusters.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Build space of settings to cluster over</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in generate_data_list(list(abcd_subc_v, "subcortical_volume",</span></span>
+<span><span class="co">## "neuroimaging", : 188 subject(s) dropped due to incomplete data.</span></span></code></pre>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Build space of settings to cluster over</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    nrow <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -109,19 +111,19 @@ particular feature was divided across clusters.</p>
 <span>    seed <span class="op">=</span> <span class="fl">42</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "The global seed has been changed!"</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Clustering</span></span>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Row: 1/2 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">## [1] "Row: 2/2 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">## [1] "Total time taken: 0 seconds."</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sm_row</span> <span class="op">&lt;-</span> <span class="va">solutions_matrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span></code></pre></div>
 <p>Note, the row you pick could come directly from a
 <code>solutions_matrix</code>, but could also come from an
 <code>extended_solutions_matrix</code> or from a representative solution
 picked after <code><a href="../reference/get_representative_solutions.html">get_representative_solutions()</a></code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/auto_plot.html">auto_plot</a></span><span class="op">(</span></span>
 <span>    solutions_matrix_row <span class="op">=</span> <span class="va">sm_row</span>,</span>
 <span>    data_list <span class="op">=</span> <span class="va">data_list</span></span>
@@ -161,7 +163,7 @@ picked after <code><a href="../reference/get_representative_solutions.html">get_
 <span><span class="co">## [1] "Generating plot 33/35: pubertal_status"</span></span>
 <span><span class="co">## [1] "Generating plot 34/35: cbcl_anxiety_r"</span></span>
 <span><span class="co">## [1] "Generating plot 35/35: cbcl_depress_r"</span></span></code></pre>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">plot_list</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "smri_vol_scs_cbwmatterlh"   "smri_vol_scs_ltventriclelh"</span></span>
 <span><span class="co">##  [3] "smri_vol_scs_inflatventlh"  "smri_vol_scs_crbwmatterlh" </span></span>
@@ -181,19 +183,19 @@ picked after <code><a href="../reference/get_representative_solutions.html">get_
 <span><span class="co">## [31] "household_income"           "colour"                    </span></span>
 <span><span class="co">## [33] "pubertal_status"            "cbcl_anxiety_r"            </span></span>
 <span><span class="co">## [35] "cbcl_depress_r"</span></span></code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot_list</span><span class="op">$</span><span class="st">"household_income"</span></span></code></pre></div>
 <p><img src="feature_plots_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot_list</span><span class="op">$</span><span class="st">"smri_vol_scs_csf"</span></span></code></pre></div>
 <p><img src="feature_plots_files/figure-html/unnamed-chunk-2-2.png" width="700"></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot_list</span><span class="op">$</span><span class="st">"colour"</span></span></code></pre></div>
 <p><img src="feature_plots_files/figure-html/unnamed-chunk-2-3.png" width="700"></p>
 <p>If there’s something you’d like to change about the plot, you can
 always tack on <code>ggplot2</code> elements to build from the skeleton
 provided by <code>auto_plot</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot_list</span><span class="op">$</span><span class="st">"colour"</span> <span class="op">+</span></span>
 <span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>        fill <span class="op">=</span> <span class="st">"Favourite Colour"</span>,</span>

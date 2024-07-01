@@ -29,7 +29,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,7 +104,10 @@ weights_matrix (dataframe containing feature weights) object.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
-<span></span>
+<span><span class="co">#&gt; Warning in generate_data_list(list(abcd_h_income, "household_income",</span></span>
+<span><span class="co">#&gt; "demographics", : 139 subject(s) dropped due to incomplete data.</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                              name        type       domain length width</span></span>
 <span><span class="co">#&gt; household_income household_income     ordinal demographics    136     2</span></span>
@@ -112,7 +115,7 @@ weights_matrix (dataframe containing feature weights) object.</p>
 <span><span class="co">#&gt; favourite_colour favourite_colour categorical demographics    136     2</span></span>
 <span><span class="co">#&gt; anxiety                   anxiety     ordinal    behaviour    136     2</span></span>
 <span><span class="co">#&gt; depressed               depressed     ordinal    behaviour    136     2</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
@@ -122,7 +125,7 @@ weights_matrix (dataframe containing feature weights) object.</p>
 <span>    seed <span class="op">=</span> <span class="fl">42</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">weights_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
@@ -146,7 +149,7 @@ the number of rows in the settings_matrix.</p>
 <p>If you are just looking to broaden the space of cluster solutions you
 generate, you can use some of the built-in randomization options for the
 weights:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Random uniformly distributed values</span></span>
 <span><span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
@@ -159,7 +162,7 @@ weights:</p>
 <span><span class="co">#&gt; [3,]       0.83551451       0.9353873 0.2794196      0.4951427      0.1132382</span></span>
 <span><span class="co">#&gt; [4,]       0.59499701       0.5917005 0.7100717      0.8079317      0.2355968</span></span>
 <span><span class="co">#&gt; [5,]       0.35140389       0.5460431 0.3481677      0.5611197      0.5104740</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Random exponentially distributed values</span></span>
 <span><span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
@@ -175,7 +178,7 @@ weights:</p>
 <span><span class="co">#&gt; [5,]        0.1756311       0.5256458 1.3623835      0.1072554     0.24304379</span></span></code></pre></div>
 <p>Once you’re happy with your weights_matrix, you can pass it into
 batch_snf:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    data_list <span class="op">=</span> <span class="va">data_list</span>,</span>
 <span>    settings_matrix <span class="op">=</span> <span class="va">settings_matrix</span>,</span>

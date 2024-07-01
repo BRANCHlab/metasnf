@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -110,9 +110,11 @@ between the variables included in your analyses.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in generate_data_list(list(abcd_cort_sa_minimal, "cortical_sa", : 182</span></span>
+<span><span class="co">## subject(s) dropped due to incomplete data.</span></span></code></pre>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                              name        type       domain length width</span></span>
 <span><span class="co">## cortical_sa           cortical_sa  continuous neuroimaging     93     5</span></span>
 <span><span class="co">## household_income household_income     ordinal demographics     93     2</span></span>
@@ -121,7 +123,7 @@ between the variables included in your analyses.</p>
 <span><span class="co">## city                         city categorical demographics     93     2</span></span>
 <span><span class="co">## anxiety                   anxiety     ordinal    behaviour     93     2</span></span>
 <span><span class="co">## depressed               depressed     ordinal    behaviour     93     2</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This matrix contains all the pairwise association p-values</span></span>
 <span><span class="va">assoc_pval_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_assoc_pval_matrix.html">calc_assoc_pval_matrix</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
 <span></span>
@@ -135,7 +137,7 @@ between the variables included in your analyses.</p>
 <h2 id="heatmaps">Heatmaps<a class="anchor" aria-label="anchor" href="#heatmaps"></a>
 </h2>
 <p>Here’s what a basic heatmap looks like:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ap_heatmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assoc_pval_heatmap.html">assoc_pval_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">assoc_pval_matrix</span></span>
 <span><span class="op">)</span></span>
@@ -154,7 +156,7 @@ between the variables included in your analyses.</p>
 is really just a categorical mapping of “cbcl_depress_r”.</p>
 <p>You can draw attention to confounding variables and/or any out of
 model measures by specifying their names as shown below.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ap_heatmap2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assoc_pval_heatmap.html">assoc_pval_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">assoc_pval_matrix</span>,</span>
 <span>    confounders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -179,7 +181,7 @@ model measures by specifying their names as shown below.</p>
 <p>The ComplexHeatmap package offers functionality for splitting
 heatmaps into slices. One way to do the slices is by clustering the
 heatmap with k-means:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ap_heatmap3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assoc_pval_heatmap.html">assoc_pval_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">assoc_pval_matrix</span>,</span>
 <span>    confounders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -207,7 +209,7 @@ heatmap with k-means:</p>
 done by providing a data_list with all the variables in the
 <code>assoc_pval_matrix</code> and setting <code>split_by_domain</code>
 to <code>TRUE</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ap_heatmap4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assoc_pval_heatmap.html">assoc_pval_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">assoc_pval_matrix</span>,</span>
 <span>    confounders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
