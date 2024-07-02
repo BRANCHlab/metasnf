@@ -202,12 +202,7 @@ extend_solutions <- function(solutions_matrix,
         #######################################################################
         # Identify features present in target_list
         #######################################################################
-        target_features <- target_list |>
-            lapply(
-                function(x) {
-                    colnames(x[[1]][-1])
-                }
-            )
+        target_features <- dl_variable_summary(target_list)$"name"
         target_features <- paste0(target_features, "_pval")
         target_esm <- dplyr::select(
             esm,
