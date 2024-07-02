@@ -1,3 +1,9 @@
+# metasnf 0.6.5
+
+## Bug fix
+
+* `extend_solutions` doesn't crash on multi-feature target lists
+
 # metasnf 0.6.4
 
 ## Minor changes
