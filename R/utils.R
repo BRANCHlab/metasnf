@@ -171,6 +171,27 @@ merge_df_list <- function(df_list,
     return(merged_df)
 }
 
+#' Pull complete-data UIDs from a list of dataframes
+#'
+#' @param list_of_dfs List of dataframes.
+#'
+#' @param uid Name of column across dataframes containing UIDs
+#'
+#' @export
+get_complete_uids <- function(list_of_dfs, uid) {
+    merged_df <- merge_df_list(
+        list_of_dfs,
+        join = "inner",
+        uid = uid,
+        no_na = TRUE
+    ) 
+    complete_uids <- merged_df[, uid] |>
+        data.frame() |>
+        unlist() |>
+        as.character()
+    return(complete_uids)
+}
+
 #' Training and testing split
 #'
 #' Given a vector of subject_id and a threshold, returns a list of which members

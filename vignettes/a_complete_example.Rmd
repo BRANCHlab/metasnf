@@ -48,7 +48,7 @@ Your data should be loaded into the R environment in the following format:
 3. All dataframes should have exactly one column that uniquely identifies which patient the row has data for
 4. All data should be complete (no missing values)
 
-A future vignette will outline how metaSNF can be used to simultaneously cluster over distinct imputations of a dataset.
+If you wish to use imputation to handle missingness in your data, you can take a look at the [imputation vignette](https://branchlab.github.io/metasnf/articles/imputations.html) which outlines a basic workflow for meta clustering across multiple imputations of the same dataset.
 
 The package comes with a few mock dataframes based on real data from the Adolescent Brain Cognitive Development study:
 
@@ -113,25 +113,24 @@ lapply(abcd_data,
 
 Some of our data has missing values and not all of our dataframes have the same number of participants.
 SNF can only be run with complete data, so you'll need to either use complete case analysis (removal of observations with any missing values) or impute the missing values to proceed with the clustering.
-
 As mentioned above, `metaSNF` can be used to visualize changes in clustering results across different imputations of the data.
+
 For now, we'll just examine the simpler complete-case analysis approach by reducing our dataframes to only common and complete patients.
+This can be made easier using the `get_complete_uids` function.
 
 ```{r}
-abcd_merged_df <- merge_df_list(abcd_data, uid = "patient", no_na = TRUE)
+complete_uids <- get_complete_uids(abcd_data, uid = "patient")
 
-common_patients <- abcd_merged_df$"patient"
-
-print(length(common_patients))
+print(length(complete_uids))
 
 # Reducing dataframes to only common subjects with no missing data
-abcd_anxiety <- abcd_anxiety[abcd_anxiety$"patient" %in% common_patients, ]
-abcd_depress <- abcd_depress[abcd_depress$"patient" %in% common_patients, ]
-abcd_cort_t <- abcd_cort_t[abcd_cort_t$"patient" %in% common_patients, ]
-abcd_cort_sa <- abcd_cort_sa[abcd_cort_sa$"patient" %in% common_patients, ]
-abcd_subc_v <- abcd_subc_v[abcd_subc_v$"patient" %in% common_patients, ]
-abcd_h_income <- abcd_h_income[abcd_h_income$"patient" %in% common_patients, ]
-abcd_pubertal <- abcd_pubertal[abcd_pubertal$"patient" %in% common_patients, ]
+abcd_anxiety <- abcd_anxiety[abcd_anxiety$"patient" %in% complete_uids, ]
+abcd_depress <- abcd_depress[abcd_depress$"patient" %in% complete_uids, ]
+abcd_cort_t <- abcd_cort_t[abcd_cort_t$"patient" %in% complete_uids, ]
+abcd_cort_sa <- abcd_cort_sa[abcd_cort_sa$"patient" %in% complete_uids, ]
+abcd_subc_v <- abcd_subc_v[abcd_subc_v$"patient" %in% complete_uids, ]
+abcd_h_income <- abcd_h_income[abcd_h_income$"patient" %in% complete_uids, ]
+abcd_pubertal <- abcd_pubertal[abcd_pubertal$"patient" %in% complete_uids, ]
 ```
 
 ### Generating the data list
