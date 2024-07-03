@@ -132,10 +132,10 @@ no_default_metrics <- generate_distance_metrics_list(
         "standard_norm_euclidean" = sn_euclidean_distance
     ),
     categorical_distances = list(
-        "standard_norm_euclidean" = sn_euclidean_distance
+        "standard_norm_euclidean" = gower_distance
     ),
     mixed_distances = list(
-        "standard_norm_euclidean" = sn_euclidean_distance
+        "standard_norm_euclidean" = gower_distance
     ),
     keep_defaults = FALSE
 )
