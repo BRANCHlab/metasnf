@@ -1,3 +1,9 @@
+# metasnf 0.6.6
+
+## New functionality
+
+* `get_complete_uids` quickly pulls UIDs of observations with complete data from a list of dataframes
+
 # metasnf 0.6.5
 
 ## Bug fix
