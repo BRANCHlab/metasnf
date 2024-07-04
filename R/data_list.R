@@ -396,6 +396,7 @@ summarize_dl <- function(data_list, scope = "component") {
             domain = domains
         )
     }
+    rownames(dl_summary) <- seq_len(nrow(dl_summary))
     return(dl_summary)
 }
 
