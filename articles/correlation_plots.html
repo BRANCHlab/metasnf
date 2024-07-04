@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -115,14 +115,14 @@ between the variables included in your analyses.</p>
 <span><span class="co">## subject(s) dropped due to incomplete data.</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                              name        type       domain length width</span></span>
-<span><span class="co">## cortical_sa           cortical_sa  continuous neuroimaging     93     5</span></span>
-<span><span class="co">## household_income household_income     ordinal demographics     93     2</span></span>
-<span><span class="co">## pubertal_status   pubertal_status  continuous demographics     93     2</span></span>
-<span><span class="co">## favourite_colour favourite_colour categorical demographics     93     2</span></span>
-<span><span class="co">## city                         city categorical demographics     93     2</span></span>
-<span><span class="co">## anxiety                   anxiety     ordinal    behaviour     93     2</span></span>
-<span><span class="co">## depressed               depressed     ordinal    behaviour     93     2</span></span></code></pre>
+<pre><code><span><span class="co">##               name        type       domain length width</span></span>
+<span><span class="co">## 1      cortical_sa  continuous neuroimaging     93     5</span></span>
+<span><span class="co">## 2 household_income     ordinal demographics     93     2</span></span>
+<span><span class="co">## 3  pubertal_status  continuous demographics     93     2</span></span>
+<span><span class="co">## 4 favourite_colour categorical demographics     93     2</span></span>
+<span><span class="co">## 5             city categorical demographics     93     2</span></span>
+<span><span class="co">## 6          anxiety     ordinal    behaviour     93     2</span></span>
+<span><span class="co">## 7        depressed     ordinal    behaviour     93     2</span></span></code></pre>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This matrix contains all the pairwise association p-values</span></span>
 <span><span class="va">assoc_pval_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_assoc_pval_matrix.html">calc_assoc_pval_matrix</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>

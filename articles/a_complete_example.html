@@ -29,7 +29,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -341,18 +341,12 @@ the package.</p>
 the <code>summarize_dl</code> function:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                                        name       type       domain length</span></span>
-<span><span class="co">#&gt; cortical_thickness       cortical_thickness continuous neuroimaging     87</span></span>
-<span><span class="co">#&gt; cortical_surface_area cortical_surface_area continuous neuroimaging     87</span></span>
-<span><span class="co">#&gt; subcortical_volume       subcortical_volume continuous neuroimaging     87</span></span>
-<span><span class="co">#&gt; household_income           household_income continuous demographics     87</span></span>
-<span><span class="co">#&gt; pubertal_status             pubertal_status continuous demographics     87</span></span>
-<span><span class="co">#&gt;                       width</span></span>
-<span><span class="co">#&gt; cortical_thickness      152</span></span>
-<span><span class="co">#&gt; cortical_surface_area   152</span></span>
-<span><span class="co">#&gt; subcortical_volume       31</span></span>
-<span><span class="co">#&gt; household_income          2</span></span>
-<span><span class="co">#&gt; pubertal_status           2</span></span></code></pre></div>
+<span><span class="co">#&gt;                    name       type       domain length width</span></span>
+<span><span class="co">#&gt; 1    cortical_thickness continuous neuroimaging     87   152</span></span>
+<span><span class="co">#&gt; 2 cortical_surface_area continuous neuroimaging     87   152</span></span>
+<span><span class="co">#&gt; 3    subcortical_volume continuous neuroimaging     87    31</span></span>
+<span><span class="co">#&gt; 4      household_income continuous demographics     87     2</span></span>
+<span><span class="co">#&gt; 5       pubertal_status continuous demographics     87     2</span></span></code></pre></div>
 <p>Each input dataframe now has the same 87 subjects with complete data.
 The width refers to the number of columns in each dataframe, which
 equals 1 for the UID (subjectkey) column + the number of features in the
@@ -372,9 +366,9 @@ as the “target_list”.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">target_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                name    type    domain length width</span></span>
-<span><span class="co">#&gt; anxiety     anxiety ordinal behaviour     87     2</span></span>
-<span><span class="co">#&gt; depressed depressed ordinal behaviour     87     2</span></span></code></pre></div>
+<span><span class="co">#&gt;        name    type    domain length width</span></span>
+<span><span class="co">#&gt; 1   anxiety ordinal behaviour     87     2</span></span>
+<span><span class="co">#&gt; 2 depressed ordinal behaviour     87     2</span></span></code></pre></div>
 <p>Note that it is not necessary to make use of a partition of input and
 out-of-model measures in this way. If you’d like to have no target list
 and instead use every single variable of interest for the clustering,
@@ -1347,7 +1341,7 @@ the training/testing split for you :)</p>
 <span>    <span class="va">settings_matrix</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>

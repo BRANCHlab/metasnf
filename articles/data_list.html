@@ -29,7 +29,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -162,11 +162,11 @@ ordinal, categorical, or mixed).</p>
 <span></span>
 <span><span class="co"># Printing data_list summaries</span></span>
 <span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                              name        type   domain length width</span></span>
-<span><span class="co">## heart_rate             heart_rate  continuous clinical      3     3</span></span>
-<span><span class="co">## personality_test personality_test  continuous  surveys      3     3</span></span>
-<span><span class="co">## survey_response   survey_response     ordinal  surveys      3     3</span></span>
-<span><span class="co">## city                         city categorical location      3     2</span></span></code></pre>
+<pre><code><span><span class="co">##               name        type   domain length width</span></span>
+<span><span class="co">## 1       heart_rate  continuous clinical      3     3</span></span>
+<span><span class="co">## 2 personality_test  continuous  surveys      3     3</span></span>
+<span><span class="co">## 3  survey_response     ordinal  surveys      3     3</span></span>
+<span><span class="co">## 4             city categorical location      3     2</span></span></code></pre>
 <p>Depending on your data preprocessing, it may be more convenient to
 you to assemble the components of your data_list in an automated way and
 then provide that result to <code>generate_data_list</code>.</p>
@@ -187,9 +187,9 @@ properly formatted data_list:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">dl</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##        name       type  domain length width</span></span>
-<span><span class="co">## data1 data1 continuous domain1      3     3</span></span>
-<span><span class="co">## data2 data2 continuous domain2      3     3</span></span></code></pre>
+<pre><code><span><span class="co">##    name       type  domain length width</span></span>
+<span><span class="co">## 1 data1 continuous domain1      3     3</span></span>
+<span><span class="co">## 2 data2 continuous domain2      3     3</span></span></code></pre>
 </div>
   </main>
 </div>
