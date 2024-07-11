@@ -30,7 +30,7 @@ domain_merge(
 
 \item{mix_dist_fn}{distance metric function for mixed data}
 
-\item{weights_row}{dataframe row containing variable weights}
+\item{weights_row}{dataframe row containing feature weights}
 
 \item{k}{k hyperparameter}
 
@@ -42,6 +42,6 @@ domain_merge(
 fused_network The final fused network for clustering
 }
 \description{
-Given a data_list, returns a new data_list where all original data objects of
+Given a data_list, returns a new data_list where all data objects of
 a particlar domain have been concatenated.
 }

@@ -30,7 +30,7 @@ individual(
 
 \item{mix_dist_fn}{distance metric function for mixed data}
 
-\item{weights_row}{dataframe row containing variable weights}
+\item{weights_row}{dataframe row containing feature weights}
 
 \item{k}{k hyperparameter}
 

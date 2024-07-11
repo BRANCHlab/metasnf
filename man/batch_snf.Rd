@@ -55,11 +55,11 @@ clustering algorithms to provide cluster solutions on every iteration of
 SNF. If TRUE, parameter \code{similarity_matrix_dir} must be specified.}
 
 \item{distance_metrics_list}{An optional nested list containing which
-distance metric function should be used for the various variable types
+distance metric function should be used for the various feature types
 (continuous, discrete, ordinal, categorical, and mixed). See
 ?generate_distance_metrics_list for details on how to build this.}
 
-\item{weights_matrix}{A matrix containing variable weights to use during
+\item{weights_matrix}{A matrix containing feature weights to use during
 distance matrix calculation. See ?generate_weights_matrix for details on
 how to build this.}
 

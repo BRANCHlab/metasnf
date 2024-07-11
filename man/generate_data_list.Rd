@@ -45,7 +45,7 @@ data_list is a named and nested list containing input dataframes (data), the
 name of that input dataframe (for the user's reference), the 'domain' of
 that dataframe (the broader source of information that the input dataframe
 is capturing, determined by user's domain knowledge), and the type of
-variable stored in the dataframe (continuous, discrete, ordinal,
+feature stored in the dataframe (continuous, discrete, ordinal,
 categorical, or mixed).
 }
 \examples{

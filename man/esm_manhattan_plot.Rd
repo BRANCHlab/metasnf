@@ -2,7 +2,7 @@
 % Please edit documentation in R/manhattan_plot.R
 \name{esm_manhattan_plot}
 \alias{esm_manhattan_plot}
-\title{Manhattan plot of variable-cluster associaiton p-values}
+\title{Manhattan plot of feature-cluster associaiton p-values}
 \usage{
 esm_manhattan_plot(
   esm,
@@ -18,7 +18,7 @@ esm_manhattan_plot(
 )
 }
 \arguments{
-\item{esm}{Extended solutions matrix storing associations between variables
+\item{esm}{Extended solutions matrix storing associations between features
 and cluster assignments. See \code{?extend_solutions}.}
 
 \item{neg_log_pval_thresh}{Threshold for negative log p-values.}
@@ -41,5 +41,5 @@ and cluster assignments. See \code{?extend_solutions}.}
 Bonferroni-corrected equivalent of the p-value threshold.}
 }
 \description{
-Manhattan plot of variable-cluster associaiton p-values
+Manhattan plot of feature-cluster associaiton p-values
 }

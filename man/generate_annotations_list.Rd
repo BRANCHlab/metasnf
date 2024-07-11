@@ -22,7 +22,7 @@ generate_annotations_list(
 \item{df}{Dataframe containing all the data that is specified in the
 remaining arguments.}
 
-\item{left_bar}{Named list of strings, where the strings are variables in
+\item{left_bar}{Named list of strings, where the strings are features in
 df that should be used for a barplot annotation on the left of the plot and
 the names are the names that will be used to caption the plots and their
 legends.}
@@ -51,7 +51,7 @@ colours.}
 annotations_list A named list of all the annotations.
 }
 \description{
-Intermediate function that takes in formatted lists of variables and the
+Intermediate function that takes in formatted lists of features and the
 annotations they should be viewed through and returns annotation objects
 usable by ComplexHeatmap::Heatmap.
 }

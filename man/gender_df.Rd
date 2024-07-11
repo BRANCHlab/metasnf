@@ -10,7 +10,7 @@
 A data frame with 200 rows and 2 columns:
 \describe{
 \item{patient_id}{Random three-digit number uniquely identifying the patient}
-\item{gender_df}{Mock gene methylation variable}
+\item{gender_df}{Mock gene methylation feature}
 }
 }
 }

@@ -9,8 +9,8 @@
 
 A data frame with 200 rows and 3 columns:
 \describe{
-\item{gene_1_expression}{Mock gene methylation variable}
-\item{gene_2_expression}{Mock gene methylation variable}
+\item{gene_1_expression}{Mock gene methylation feature}
+\item{gene_2_expression}{Mock gene methylation feature}
 \item{patient_id}{Random three-digit number uniquely identifying the patient}
 }
 }

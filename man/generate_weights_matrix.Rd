@@ -2,7 +2,7 @@
 % Please edit documentation in R/weights_matrix.R
 \name{generate_weights_matrix}
 \alias{generate_weights_matrix}
-\title{Generate a matrix to store variable weights}
+\title{Generate a matrix to store feature weights}
 \usage{
 generate_weights_matrix(data_list = NULL, nrow = 1, fill = "ones")
 }
@@ -18,8 +18,8 @@ exponentially distributed random values).}
 }
 \value{
 weights_matrix A properly formatted matrix containing columns for
-all the variables that require weights and rows.
+all the features that require weights and rows.
 }
 \description{
-Generate a matrix to store variable weights
+Generate a matrix to store feature weights
 }

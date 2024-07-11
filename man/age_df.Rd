@@ -10,7 +10,7 @@
 A data frame with 200 rows and 2 columns:
 \describe{
 \item{patient_id}{Random three-digit number uniquely identifying the patient}
-\item{age}{Mock age variable}
+\item{age}{Mock age feature}
 }
 }
 }

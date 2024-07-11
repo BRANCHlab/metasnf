@@ -19,7 +19,7 @@ batch_row_closure(
 \item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{distance_metrics_list}{An optional nested list containing which
-distance metric function should be used for the various variable types
+distance metric function should be used for the various feature types
 (continuous, discrete, ordinal, categorical, and mixed). See
 ?generate_distance_metrics_list for details on how to build this.}
 
@@ -28,7 +28,7 @@ to the final fused network. See ?generate_clust_algs_list.}
 
 \item{settings_matrix}{matrix indicating parameters to iterate SNF through.}
 
-\item{weights_matrix}{A matrix containing variable weights to use during
+\item{weights_matrix}{A matrix containing feature weights to use during
 distance matrix calculation. See ?generate_weights_matrix for details on
 how to build this.}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/manhattan_plot.R
 \name{mc_manhattan_plot}
 \alias{mc_manhattan_plot}
-\title{Manhattan plot of variable-meta cluster associaiton p-values}
+\title{Manhattan plot of feature-meta cluster associaiton p-values}
 \usage{
 mc_manhattan_plot(
   rep_solution,
@@ -27,7 +27,7 @@ mc_manhattan_plot(
 
 \item{target_list}{List of dataframes containing target information.}
 
-\item{variable_order}{Order of variables to be displayed in the plot.}
+\item{variable_order}{Order of features to be displayed in the plot.}
 
 \item{neg_log_pval_thresh}{Threshold for negative log p-values.}
 
@@ -49,5 +49,5 @@ vertical lines at.}
 \description{
 Given a dataframe of representative meta cluster solutions (see
 \code{get_representative_solutions()}, returns a Manhattan plot for showing
-variable separation across all variables in provided data/target_lists.
+feature separation across all features in provided data/target_lists.
 }

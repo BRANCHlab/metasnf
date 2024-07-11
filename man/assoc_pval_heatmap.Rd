@@ -2,7 +2,7 @@
 % Please edit documentation in R/heatmaps.R
 \name{assoc_pval_heatmap}
 \alias{assoc_pval_heatmap}
-\title{Heatmap of pairwise associations between variables}
+\title{Heatmap of pairwise associations between features}
 \usage{
 assoc_pval_heatmap(
   correlation_matrix,
@@ -58,7 +58,7 @@ colours.}
 of the heatmap.}
 
 \item{split_by_domain}{The results of \code{dl_var_summar} - a dataframe that has
-the domain of every variable in the plotted data.
+the domain of every feature in the plotted data.
 columns of the correlation_matrix. Will be used to "slice" the heatmap into
 visually separated sections.}
 
@@ -72,5 +72,5 @@ heatmap cells}
 \item{...}{Additional parameters passed into ComplexHeatmap::Heatmap.}
 }
 \description{
-Heatmap of pairwise associations between variables
+Heatmap of pairwise associations between features
 }

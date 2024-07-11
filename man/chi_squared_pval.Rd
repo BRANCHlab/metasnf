@@ -7,13 +7,13 @@
 chi_squared_pval(cat_var1, cat_var2)
 }
 \arguments{
-\item{cat_var1}{A categorical variable.}
+\item{cat_var1}{A categorical feature.}
 
-\item{cat_var2}{A categorical variable.}
+\item{cat_var2}{A categorical feature.}
 }
 \value{
 pval A p-value.
 }
 \description{
-Return p-value for chi-squared test for any two variables
+Return p-value for chi-squared test for any two features
 }

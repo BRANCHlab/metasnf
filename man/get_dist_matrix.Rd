@@ -39,5 +39,5 @@ column names in df and the row contains the corresponding weights_row.}
 dist_matrix Matrix of inter-observation distances
 }
 \description{
-Given a dataframe of numerical variables, return a euclidean distance matrix.
+Given a dataframe of numerical features, return a euclidean distance matrix.
 }

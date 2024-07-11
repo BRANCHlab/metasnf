@@ -7,13 +7,13 @@
 linear_model_pval(predictor, response)
 }
 \arguments{
-\item{predictor}{A categorical or numeric variable.}
+\item{predictor}{A categorical or numeric feature.}
 
-\item{response}{A numeric variable.}
+\item{response}{A numeric feature.}
 }
 \value{
 pval A p-value.
 }
 \description{
-Return p-value of F-test for a linear model of any two variables
+Return p-value of F-test for a linear model of any two features
 }

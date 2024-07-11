@@ -59,7 +59,7 @@ off-diagonals), or "zero" (replace diagonals with 0).}
 
 \item{data}{A dataframe containing elements requested for annotation.}
 
-\item{left_bar}{Named list of strings, where the strings are variables in
+\item{left_bar}{Named list of strings, where the strings are features in
 df that should be used for a barplot annotation on the left of the plot and
 the names are the names that will be used to caption the plots and their
 legends.}

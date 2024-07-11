@@ -2,7 +2,7 @@
 % Please edit documentation in R/solutions_matrix.R
 \name{calc_assoc_pval_matrix}
 \alias{calc_assoc_pval_matrix}
-\title{Calculate p-values for all pairwise associations of variables in a data_list}
+\title{Calculate p-values for all pairwise associations of features in a data_list}
 \usage{
 calc_assoc_pval_matrix(data_list, verbose = FALSE, cat_test = "chi_squared")
 }
@@ -13,9 +13,9 @@ calc_assoc_pval_matrix(data_list, verbose = FALSE, cat_test = "chi_squared")
 calculated.}
 
 \item{cat_test}{String indicating which statistical test will be used to
-associate cluster with a categorical variable. Options are "chi_squared" for
+associate cluster with a categorical feature. Options are "chi_squared" for
 the Chi-squared test and "fisher_exact" for Fisher's exact test.}
 }
 \description{
-Calculate p-values for all pairwise associations of variables in a data_list
+Calculate p-values for all pairwise associations of features in a data_list
 }

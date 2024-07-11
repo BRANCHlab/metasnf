@@ -106,9 +106,9 @@ Or in an external dataframe:
 extra_data <- dplyr::inner_join(
     gender_df,
     diagnosis_df,
-    by = "unique_id"
+    by = "patient_id"
 ) |>
-    dplyr::mutate(subjectkey = paste0("subject_", unique_id))
+    dplyr::mutate(subjectkey = paste0("subject_", patient_id))
 
 head(extra_data)
 

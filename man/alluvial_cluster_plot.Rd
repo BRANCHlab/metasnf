@@ -2,7 +2,7 @@
 % Please edit documentation in R/alluvial_plot.R
 \name{alluvial_cluster_plot}
 \alias{alluvial_cluster_plot}
-\title{Alluvial plot of patients across cluster counts and important variables}
+\title{Alluvial plot of patients across cluster counts and important features}
 \usage{
 alluvial_cluster_plot(
   cluster_sequence,
@@ -23,17 +23,17 @@ algorithm varied over different numbers of clusters).}
 
 \item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 
-\item{data}{A dataframe that contains variables to include in the plot.}
+\item{data}{A dataframe that contains features to include in the plot.}
 
-\item{key_outcome}{The name of the variable that determines how each patient
+\item{key_outcome}{The name of the feature that determines how each patient
 stream is coloured in the alluvial plot.}
 
 \item{key_label}{Name of key outcome to be used for the plot legend.}
 
-\item{extra_outcomes}{Names of additional variables to add to the plot.}
+\item{extra_outcomes}{Names of additional features to add to the plot.}
 
 \item{title}{Title of the plot.}
 }
 \description{
-Alluvial plot of patients across cluster counts and important variables
+Alluvial plot of patients across cluster counts and important features
 }

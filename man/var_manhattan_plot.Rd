@@ -20,7 +20,7 @@ var_manhattan_plot(
 \item{data_list}{List of dataframes containing data information.}
 
 \item{key_var}{Feature for which the association p-values of all other
-variables are plotted.}
+features are plotted.}
 
 \item{neg_log_pval_thresh}{Threshold for negative log p-values.}
 

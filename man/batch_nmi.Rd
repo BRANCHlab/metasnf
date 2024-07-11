@@ -27,7 +27,7 @@ to the final fused network. See ?generate_clust_algs_list. Use the same
 value as was used in the original call to \code{batch_snf()}.}
 
 \item{distance_metrics_list}{An optional nested list containing which
-distance metric function should be used for the various variable types
+distance metric function should be used for the various feature types
 (continuous, discrete, ordinal, categorical, and mixed). Use the same value
 as was used in the original call to \code{batch_snf()}.}
 

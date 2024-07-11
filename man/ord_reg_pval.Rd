@@ -7,9 +7,9 @@
 ord_reg_pval(predictor, response)
 }
 \arguments{
-\item{predictor}{A categorical or numeric variable.}
+\item{predictor}{A categorical or numeric feature.}
 
-\item{response}{A numeric variable.}
+\item{response}{A numeric feature.}
 }
 \description{
 Returns the overall p-value of an ordinal regression on a categorical

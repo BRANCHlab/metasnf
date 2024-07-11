@@ -10,7 +10,7 @@
 A data frame with 200 rows and 2 columns:
 \describe{
 \item{patient_id}{Random three-digit number uniquely identifying the patient}
-\item{diagnosis}{Mock diagnosis variable}
+\item{diagnosis}{Mock diagnosis feature}
 }
 }
 }
@@ -21,6 +21,6 @@ This data came from the SNFtool package, with slight modifications.
 diagnosis_df
 }
 \description{
-This is the same data as \code{cancer_diagnosis_df}, with renamed variables and columns.
+This is the same data as \code{cancer_diagnosis_df}, with renamed features and columns.
 }
 \keyword{datasets}
