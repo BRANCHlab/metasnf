@@ -20,10 +20,10 @@ Rename features in a data_list
 library(metasnf)
 
 data_list <- generate_data_list(
-    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
-    list(abcd_anxiety, "anxiety", "behaviour", "ordinal"),
-    list(abcd_depress, "depressed", "behaviour", "ordinal"),
-    uid = "patient"
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
 )
 
 summarize_dl(data_list, "feature")

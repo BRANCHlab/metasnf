@@ -39,8 +39,8 @@ The process involves the following steps:
 There is a lot of room for flexibility in how steps 1 and 2 are conducted.
 SNF is not necessary at any part of the process.
 For example, step one could be done by assigning clusters in your training set manually or by a simple clustering method like k-means.
-Step two could be done just by calculating the euclidean distances across all the training and testing subjects for a small subset of variables.
-The variables used to calculate the similarities in step 2 don't necessarily need to be the same ones used to derive the cluster solution in the training set either.
+Step two could be done just by calculating the euclidean distances across all the training and testing subjects for a small subset of features.
+The features used to calculate the similarities in step 2 don't necessarily need to be the same ones used to derive the cluster solution in the training set either.
 
 All that aside, we show here a simple approach that involves assigning the clusters by a call to `batch_snf`, assembling a data list that has the training and testing set subjects, and feeding the results into a simple label propagating function, `lp_solutions_matrix`.
 
@@ -101,7 +101,7 @@ train_data_list <- generate_data_list(
     uid = "unique_id"
 )
 
-# We'll pick a solution that has good separation over our target variables
+# We'll pick a solution that has good separation over our target features
 train_target_list <- generate_data_list(
     list(train_anxiety, "anxiety", "behaviour", "ordinal"),
     list(train_depress, "depressed", "behaviour", "ordinal"),

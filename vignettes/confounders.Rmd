@@ -4,7 +4,7 @@ output:
     rmarkdown::html_vignette:
         toc: true
 description: >
-  Linearly regress out unwanted signal from variables for clustering.
+  Linearly regress out unwanted signal from features for clustering.
 vignette: >
   %\VignetteIndexEntry{Unwanted Signal}
   %\VignetteEngine{knitr::rmarkdown}
@@ -28,15 +28,15 @@ knitr::opts_chunk$set(
 
 Download a copy of the vignette to follow along here: [unwanted_signal.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/unwanted_signal.Rmd)
 
-This vignette walks through handling confounding variables and variables introducing unwanted signal using the metasnf package.
+This vignette walks through handling confounding features and features introducing unwanted signal using the metasnf package.
 
-A confounding variable is one that influences both a dependent and independent variable, making it appear as though there is a stronger association between the two than there mechanistically is.
+A confounding feature is one that influences both a dependent and independent feature, making it appear as though there is a stronger association between the two than there mechanistically is.
 
-An unwanted variable (terminology which is being defined here) is a variable that a user explicitly does not want their subtyping solution to be strongly associated with.
+An unwanted feature (terminology which is being defined here) is a feature that a user explicitly does not want their subtyping solution to be strongly associated with.
 
-## Accounting for confounding variables
+## Accounting for confounding features
 
-Simply include the confounding variable into the cluster analysis and bear in mind that the separation across clusters you see in any variable is not evidence of a causal link.
+Simply include the confounding feature into the cluster analysis and bear in mind that the separation across clusters you see in any feature is not evidence of a causal link.
 
 Consider the following scenario.
 Children raised in wealthy homes can afford to go to better schools, are likely to be raised in less stressful environments, and can afford tutoring outside of school.
@@ -44,8 +44,8 @@ Consequently, they have higher standardized test scores.
 They are also substantially more likely to live near a lake.
 If you were to cluster children according to their standardized test scores and whether or not they live near a lake, you may find one cluster that has kids who live near a lake and who have high test scores and a separate cluster that has kids who don't live near a lake and have low test scores.
 Of course, there is no causal relationship indicating that living near a lake improves your test scores, or that your test scores causally influence your proximity to lakes.
-The confounding variable is household income.
-By including household income in the model, you'll get the same clusters, but those clusters will also separate across the "confounding" variable.
+The confounding feature is household income.
+By including household income in the model, you'll get the same clusters, but those clusters will also separate across the "confounding" feature.
 
 ## Unwanted signal
 
@@ -241,7 +241,7 @@ Following this correction, you'll have a much easier identifying the clustering 
 
 ## Procedure using the metasnf package
 
-Note that you can only adjust out signal from categorical variables, the adjustment will be linear, it will only be applied to numeric (continuous, discrete, ordinal) data, and that the adjustment can lead to some major information loss (see the section below)!
+Note that you can only adjust out signal from categorical features, the adjustment will be linear, it will only be applied to numeric (continuous, discrete, ordinal) data, and that the adjustment can lead to some major information loss (see the section below)!
 
 ```{r}
 head(player_data)
@@ -304,10 +304,10 @@ merged_df2 |>
 
 ### 1. Excessive loss of signal
 
-When you remove the signal associated with a variable, you will impact every other variable to a degree that is proportional to the correlation between that variable and the unwanted one.
-Practically, any variable that is strongly correlated with your unwanted signal variable may be better off removed.
+When you remove the signal associated with a feature, you will impact every other feature to a degree that is proportional to the correlation between that feature and the unwanted one.
+Practically, any feature that is strongly correlated with your unwanted signal feature may be better off removed.
 
-Consider two variables: temperature and ice cream sales.
+Consider two features: temperature and ice cream sales.
 It just so happens that ice cream sales are purely proportional to temperature, plus some random noise.
 There is no other information that one could collect to improve their ability to predict ice cream sales.
 
@@ -320,5 +320,5 @@ The adjustment procedure is purely linear.
 
 ### 3. Inability to adjust ordinal, discrete, or categorical data
 
-Linearly adjusting categorical/factor variables is not possible.
-Attempting to adjust data that has a discrete or ordinal structure will likely not completely remove the association between the regressor variables and the variables being regressed.
+Linearly adjusting categorical/factor features is not possible.
+Attempting to adjust data that has a discrete or ordinal structure will likely not completely remove the association between the regressor features and the features being regressed.

@@ -3,16 +3,16 @@
 #' @param solutions_matrix Result of `batch_snf` storing cluster solutions and
 #' the settings that were used to generate them.
 #'
-#' @param data_list A data_list with variables to calcualte p-values for, but
+#' @param data_list A data_list with features to calcualte p-values for, but
 #' that should not be incorporated into p-value summary measure columns (i.e.,
 #' min/mean/max p-value columns).
 #'
-#' @param target_list A data_list with variables to calculate p-values for.
-#' Variables in the target list will be included during p-value summary
+#' @param target_list A data_list with features to calculate p-values for.
+#' Features in the target list will be included during p-value summary
 #' measure calculations.
 #'
 #' @param cat_test String indicating which statistical test will be used to
-#' associate cluster with a categorical variable. Options are "chi_squared" for
+#' associate cluster with a categorical feature. Options are "chi_squared" for
 #' the Chi-squared test and "fisher_exact" for Fisher's exact test.
 #'
 #' @param calculate_summaries If TRUE, the function will calculate the minimum
@@ -347,8 +347,8 @@ get_mean_pval <- function(solutions_matrix_row) {
 #' Returns the overall p-value of an ordinal regression on a categorical
 #' predictor and response vetors. If the ordinal response
 #'
-#' @param predictor A categorical or numeric variable.
-#' @param response A numeric variable.
+#' @param predictor A categorical or numeric feature.
+#' @param response A numeric feature.
 #'
 #' @export
 ord_reg_pval <- function(predictor, response) {
@@ -367,10 +367,10 @@ ord_reg_pval <- function(predictor, response) {
 
 #' Chi-squared test p-value (generic)
 #'
-#' Return p-value for chi-squared test for any two variables
+#' Return p-value for chi-squared test for any two features
 #'
-#' @param cat_var1 A categorical variable.
-#' @param cat_var2 A categorical variable.
+#' @param cat_var1 A categorical feature.
+#' @param cat_var2 A categorical feature.
 #'
 #' @return pval A p-value.
 #'
@@ -388,10 +388,10 @@ chi_squared_pval <- function(cat_var1, cat_var2) {
 
 #' Fisher exact test p-value
 #'
-#' Return p-value for Fisher exact test for any two variables
+#' Return p-value for Fisher exact test for any two features
 #'
-#' @param cat_var1 A categorical variable.
-#' @param cat_var2 A categorical variable.
+#' @param cat_var1 A categorical feature.
+#' @param cat_var2 A categorical feature.
 #'
 #' @return pval A p-value.
 #'
@@ -407,10 +407,10 @@ fisher_exact_pval <- function(cat_var1, cat_var2) {
 
 #' Linear model p-value (generic)
 #'
-#' Return p-value of F-test for a linear model of any two variables
+#' Return p-value of F-test for a linear model of any two features
 #'
-#' @param predictor A categorical or numeric variable.
-#' @param response A numeric variable.
+#' @param predictor A categorical or numeric feature.
+#' @param response A numeric feature.
 #'
 #' @return pval A p-value.
 #'
@@ -423,20 +423,20 @@ linear_model_pval <- function(predictor, response) {
     return(pval)
 }
 
-#' Calculate p-values based on variable vectors and their types
+#' Calculate p-values based on feature vectors and their types
 #'
-#' @param var1 A single vector containing a variable.
-#' @param var2 A single vector containing a variable.
+#' @param var1 A single vector containing a feature.
+#' @param var2 A single vector containing a feature.
 #' @param type1 The type of var1 (continuous, discrete, ordinal, categorical).
 #' @param type2 The type of var2 (continuous, discrete, ordinal, categorical).
 #' @param cat_test String indicating which statistical test will be used to
-#' associate cluster with a categorical variable. Options are "chi_squared" for
+#' associate cluster with a categorical feature. Options are "chi_squared" for
 #' the Chi-squared test and "fisher_exact" for Fisher's exact test.
 #'
 #' @return pval A p-value from a statistical test based on the provided types.
 #'  Currently, this will either be the F-test p-value from a linear model
-#'  if at least one variable is non-categorical, or the chi-squared test
-#'  p-value if both variables are categorical.
+#'  if at least one feature is non-categorical, or the chi-squared test
+#'  p-value if both features are categorical.
 #'
 #' @export
 calc_assoc_pval <- function(var1,
@@ -445,12 +445,12 @@ calc_assoc_pval <- function(var1,
                             type2,
                             cat_test = "chi_squared") {
     ###########################################################################
-    # Strip any list structure from the variables
+    # Strip any list structure from the features
     ###########################################################################
     var1 <- unlist(var1)
     var2 <- unlist(var2)
     ###########################################################################
-    # Double categorical variables
+    # Double categorical features
     ###########################################################################
     if (type1 == "categorical" && type2 == "categorical") {
         cat_test_fns <- list(
@@ -462,7 +462,7 @@ calc_assoc_pval <- function(var1,
         return(pval)
     }
     ###########################################################################
-    # Any ordinal variable
+    # Any ordinal feature
     ###########################################################################
     if (type1 == "ordinal") {
         if (type2 == "categorical") {
@@ -495,7 +495,7 @@ calc_assoc_pval <- function(var1,
         }
     }
     ###########################################################################
-    # One categorical variable, one numeric variable
+    # One categorical feature, one numeric feature
     ###########################################################################
     if (type1 == "categorical") {
         pval <- linear_model_pval(
@@ -512,13 +512,13 @@ calc_assoc_pval <- function(var1,
         return(pval)
     }
     ###########################################################################
-    # Two numeric variables
+    # Two numeric features
     ###########################################################################
     pval <- linear_model_pval(var1, var2)
     return(pval)
 }
 
-#' Calculate p-values for all pairwise associations of variables in a data_list
+#' Calculate p-values for all pairwise associations of features in a data_list
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
 #'
@@ -526,7 +526,7 @@ calc_assoc_pval <- function(var1,
 #'  calculated.
 #'
 #' @param cat_test String indicating which statistical test will be used to
-#' associate cluster with a categorical variable. Options are "chi_squared" for
+#' associate cluster with a categorical feature. Options are "chi_squared" for
 #' the Chi-squared test and "fisher_exact" for Fisher's exact test.
 #'
 #' @export
@@ -539,7 +539,7 @@ calc_assoc_pval_matrix <- function(data_list,
     merged_df <- collapse_dl(data_list)
     merged_df <- merged_df[, colnames(merged_df) != "subjectkey"]
     ###########################################################################
-    # Build data.frame containing the types of variables in merged_df
+    # Build data.frame containing the types of features in merged_df
     ###########################################################################
     types <- data_list |>
         lapply(
@@ -580,7 +580,7 @@ calc_assoc_pval_matrix <- function(data_list,
         metadata$"type"[classes != "numeric"] <- "categorical"
     }
     ###########################################################################
-    # Loop through all pairs of variables
+    # Loop through all pairs of features
     ###########################################################################
     pairwise_indices <- utils::combn(ncol(merged_df), 2)
     association_matrix <- matrix(
@@ -591,16 +591,16 @@ calc_assoc_pval_matrix <- function(data_list,
     colnames(association_matrix) <- colnames(merged_df)
     rownames(association_matrix) <- colnames(merged_df)
     for (col in seq_len(ncol(pairwise_indices))) {
-        ## The positions of the two variables in the merged dataframe
+        ## The positions of the two features in the merged dataframe
         ind1 <- pairwise_indices[1, col]
         ind2 <- pairwise_indices[2, col]
-        # The actual variables
+        # The actual features
         var1 <- merged_df[, ind1]
         var2 <- merged_df[, ind2]
-        # The names of the variables
+        # The names of the features
         var1_name <- colnames(merged_df)[ind1]
         var2_name <- colnames(merged_df)[ind2]
-        # Types of the variables
+        # Types of the features
         var1_type <- metadata[metadata$"name" == var1_name, "type"]
         var2_type <- metadata[metadata$"name" == var2_name, "type"]
         # Output current comparison if user specified verbose = TRUE

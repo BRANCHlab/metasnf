@@ -33,7 +33,7 @@ The mock code below happens to use the base, unimputed data twice for simplicity
 
 Separate cluster solutions are generated for the two sets of imputed data, which then have their corresponding solutions matrices stacked together and appended with an `imputation` column that indicates which imputed dataset was used to generate that particular cluster solution.
 
-Moving through the rest of the meta clustering pipeline, the influence of the imputation on meta clustering structure or on separation of other variables in the data can be easily visualized in the `adjusted_rand_index_heatmap` function through the use of `ComplexHeatmap` annotations.
+Moving through the rest of the meta clustering pipeline, the influence of the imputation on meta clustering structure or on separation of other features in the data can be easily visualized in the `adjusted_rand_index_heatmap` function through the use of `ComplexHeatmap` annotations.
 
 ```{r eval = FALSE}
 library(metasnf)
@@ -98,7 +98,7 @@ ari_mc_hm <- adjusted_rand_index_heatmap(
     split_vector = split_vec
 )
 
-# Calculate how variables are distributed across solutions
+# Calculate how features are distributed across solutions
 extended_solutions_matrix <- extend_solutions(
     solutions_matrix,
     data_list = data_list

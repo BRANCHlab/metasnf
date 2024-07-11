@@ -39,11 +39,11 @@
 #'  SNF. If TRUE, parameter `similarity_matrix_dir` must be specified.
 #'
 #' @param distance_metrics_list An optional nested list containing which
-#'  distance metric function should be used for the various variable types
+#'  distance metric function should be used for the various feature types
 #'  (continuous, discrete, ordinal, categorical, and mixed). See
 #'  ?generate_distance_metrics_list for details on how to build this.
 #'
-#' @param weights_matrix A matrix containing variable weights to use during
+#' @param weights_matrix A matrix containing feature weights to use during
 #'  distance matrix calculation. See ?generate_weights_matrix for details on
 #'  how to build this.
 #'
@@ -439,7 +439,7 @@ batch_snf <- function(data_list,
 #'
 #' @export
 drop_inputs <- function(settings_matrix, data_list) {
-    # Dataframe just of the inclusion variables
+    # Dataframe just of the inclusion features
     inc_df <- settings_matrix |>
         dplyr::select(dplyr::starts_with("inc"))
     # The subset of columns that are in 'keep' (1) mode
@@ -459,7 +459,7 @@ drop_inputs <- function(settings_matrix, data_list) {
 
 #' Calculate distance matrices
 #'
-#' Given a dataframe of numerical variables, return a euclidean distance matrix.
+#' Given a dataframe of numerical features, return a euclidean distance matrix.
 #'
 #' @param df Raw dataframe with subject IDs in column "subjectkey"
 #' @param input_type Either "numeric" (resulting in euclidean distances),
@@ -527,7 +527,7 @@ get_dist_matrix <- function(df,
 #' @param ord_dist_fn distance metric function for ordinal data
 #' @param cat_dist_fn distance metric function for categorical data
 #' @param mix_dist_fn distance metric function for mixed data
-#' @param weights_row dataframe row containing variable weights
+#' @param weights_row dataframe row containing feature weights
 #'
 #' @return fused_network The final fused network for clustering
 #'
@@ -613,7 +613,7 @@ snf_step <- function(data_list,
 #' @param ord_dist_fn distance metric function for ordinal data
 #' @param cat_dist_fn distance metric function for categorical data
 #' @param mix_dist_fn distance metric function for mixed data
-#' @param weights_row dataframe row containing variable weights
+#' @param weights_row dataframe row containing feature weights
 #'
 #' @return fused_network The final fused network for clustering
 #'
@@ -692,8 +692,8 @@ two_step_merge <- function(data_list,
 
 #' SNF scheme: Domain merge
 #'
-#' Given a data_list, returns a new data_list where all original data objects of
-#'  a particlar domain have been concatenated.
+#' Given a data_list, returns a new data_list where all data objects of
+#' a particlar domain have been concatenated.
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
 #' @param k k hyperparameter
@@ -704,7 +704,7 @@ two_step_merge <- function(data_list,
 #' @param ord_dist_fn distance metric function for ordinal data
 #' @param cat_dist_fn distance metric function for categorical data
 #' @param mix_dist_fn distance metric function for mixed data
-#' @param weights_row dataframe row containing variable weights
+#' @param weights_row dataframe row containing feature weights
 #'
 #' @return fused_network The final fused network for clustering
 #'
@@ -805,7 +805,7 @@ domain_merge <- function(data_list,
 #' @param ord_dist_fn distance metric function for ordinal data
 #' @param cat_dist_fn distance metric function for categorical data
 #' @param mix_dist_fn distance metric function for mixed data
-#' @param weights_row dataframe row containing variable weights
+#' @param weights_row dataframe row containing feature weights
 #'
 #' @return fused_network The final fused network for clustering
 #'

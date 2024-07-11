@@ -1,4 +1,4 @@
-#' Generate a matrix to store variable weights
+#' Generate a matrix to store feature weights
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
 #'
@@ -10,7 +10,7 @@
 #'  exponentially distributed random values).
 #'
 #' @return weights_matrix A properly formatted matrix containing columns for
-#'  all the variables that require weights and rows.
+#'  all the features that require weights and rows.
 #'
 #' @export
 generate_weights_matrix <- function(data_list = NULL,

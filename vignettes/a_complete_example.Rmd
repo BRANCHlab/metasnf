@@ -139,7 +139,7 @@ The `data_list` structure is a structured list of dataframes (like the one alrea
 It should only contain the input dataframes we want to directly use as inputs for the clustering.
 Out of all the data we have available to us, we may be working in a context where the anxiety and depression data are especially important outcomes, and we want to know if we can find subtypes using the rest of the data which still do a good job of separating out subjects by their anxiety and depression scores.
 
-We'll start by creating a data list that stores our input variables.
+We'll start by creating a data list that stores our input features.
 
 ```{r}
 # Note that you do not need to explicitly name every single named element
@@ -181,8 +181,8 @@ data_list <- generate_data_list(
 
 This process removes any observations that did not have complete data across all provided input dataframes.
 If you'd like to keep track of that information, you can set the "return_missing" parameter to `TRUE` and receive a list containing the data_list as well as the removed observations.
-The structure of the data list is a nested list tracking the data, the name of the dataframe, what domain (broader source of information) the data belongs to, and the type of variable stored in the dataframe.
-Options for variable type include "continuous", "discrete", "ordinal", and "categorical".
+The structure of the data list is a nested list tracking the data, the name of the dataframe, what domain (broader source of information) the data belongs to, and the type of feature stored in the dataframe.
+Options for feature type include "continuous", "discrete", "ordinal", and "categorical".
 
 The "uid" parameter is the name of the column in the dataframes that uniquely identifies each observation.
 Upon data list creation, the UID will be converted to "subjectkey" for consistency across other functions in the package.
@@ -196,9 +196,9 @@ summarize_dl(data_list)
 Each input dataframe now has the same 87 subjects with complete data.
 The width refers to the number of columns in each dataframe, which equals 1 for the UID (subjectkey) column + the number of features in the dataframe.
 
-`data_list` now stores all the variables we intend on using for the clustering.
+`data_list` now stores all the features we intend on using for the clustering.
 We're interested in knowing if any of the clustering solutions we generate can distinguish children apart based on their anxiety and depression scores.
-To do this, we'll also create a data list storing only variables that we'll use for evaluating our cluster solutions and not for the clustering itself.
+To do this, we'll also create a data list storing only features that we'll use for evaluating our cluster solutions and not for the clustering itself.
 We'll refer to this as the "target_list".
 
 ```{r}
@@ -212,7 +212,7 @@ summarize_dl(target_list)
 ```
 
 Note that it is not necessary to make use of a partition of input and out-of-model measures in this way.
-If you'd like to have no target list and instead use every single variable of interest for the clustering, you can stick to just using one data list.
+If you'd like to have no target list and instead use every single feature of interest for the clustering, you can stick to just using one data list.
 
 ## 2. Building a space of settings to cluster over
 
@@ -234,7 +234,7 @@ settings_matrix[1:5, ]
 The columns are:
 
 - `row_id`: Integer to keep track of which row is which
-- `alpha` - A hyperparameter for SNF (variable that influences the subtyping process)
+- `alpha` - A hyperparameter for SNF (feature that influences the subtyping process)
 - `k` - A hyperparameter for SNF
 - `t` - A hyperparameter for SNF
 - `snf_scheme` - the specific way in which input data gets collapsed into a final fused network (discussed further in the [SNF schemes vignette](https://branchlab.github.io/metasnf/articles/snf_schemes.html))
@@ -379,9 +379,9 @@ save_heatmap(
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/ari_mc_hm.png)
 </center>
 
-At this point, we have our meta clusters but are not yet sure of how they differ in terms of their structure across our input and out-of-model variables.
+At this point, we have our meta clusters but are not yet sure of how they differ in terms of their structure across our input and out-of-model features.
 
-We start by running the `extend_solutions` function, which will calculate p-values representing the strength of the association between cluster membership (treated as a categorical variable) and any feature present in a provided data list and/or target_list.
+We start by running the `extend_solutions` function, which will calculate p-values representing the strength of the association between cluster membership (treated as a categorical feature) and any feature present in a provided data list and/or target_list.
 
 `extend_solutions` also adds summary p-value measures (min, mean, and max) of any features present in the target list.
 
@@ -425,7 +425,7 @@ extended_solutions_matrix <- extend_solutions(
 
 The summary p-value measures can be suppressed by setting `calculate_summaries = FALSE`.
 
-This `extended_solutions_matrix` we created can be passed into the `adjusted_rand_index_heatmap` function to easily visualize the level of separation on each of our variables for each of our cluster solutions.
+This `extended_solutions_matrix` we created can be passed into the `adjusted_rand_index_heatmap` function to easily visualize the level of separation on each of our features for each of our cluster solutions.
 
 ```{r eval = FALSE}
 annotated_ari_hm <- adjusted_rand_index_heatmap(
@@ -533,7 +533,7 @@ save_heatmap(
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm2.png)
 </center>
 
-Now that we've visually delineated our meta clusters, we can get a quick summary of what sort of separation exists across our input and held out variables by taking a closer look at one representative cluster solution from each meta cluster.
+Now that we've visually delineated our meta clusters, we can get a quick summary of what sort of separation exists across our input and held out features by taking a closer look at one representative cluster solution from each meta cluster.
 
 This can be achieved by the `get_representative_solutions` function, which extracts one cluster solution per meta cluster based on having the highest average ARI with the other solutions in that meta cluster.
 
@@ -578,7 +578,7 @@ Vertical boundaries can be controlled with the `xints` parameter.
 The plot as it is is a bit unwieldy plot given how many neuroimaging ROIs are present.
 Let's take out the cortical thickness and surface area measures to make the plot a little clearer.
 
-We'll also be able to read some variable measures more clearly when we dial the number of features plotted back a bit, as well.
+We'll also be able to read some feature measures more clearly when we dial the number of features plotted back a bit, as well.
 
 ```{r eval = FALSE}
 rep_solutions_no_cort <- dplyr::select(
@@ -649,7 +649,7 @@ The purpose of re-ordering the settings matrix in this way is to see if any asso
 
 This heatmap can show you if any settings values were associated with a particular type of clustering result.
 If there are any particular important settings, you can simply add them into your adjusted rand index heatmap annotations.
-Recall that the `solutions_matrix` (and, by extension, the `extended_solutions_matrix`) is an extension of the settings matrix, so no further data manipulation is needed to add a setting variable as a heatmap annotation.
+Recall that the `solutions_matrix` (and, by extension, the `extended_solutions_matrix`) is an extension of the settings matrix, so no further data manipulation is needed to add a setting as a heatmap annotation.
 
 Give it a try with the code below:
 
@@ -777,7 +777,7 @@ Be warned, that second function is especially extremely slow.
 As the number of observations and number of solutions you're evaluating grows, these functions can get pretty slow.
 Consider only using them after eliminating solutions that you are certainly not interested in further characterizing.
 
-### 4. Evaluating separation across "target variables" of importance
+### 4. Evaluating separation across "target features" of importance
 
 If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
 
@@ -823,7 +823,7 @@ save_heatmap(
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/pval_heatmap_ordered.png)
 </center>
 
-These p-values hold no real meaning for the traditional hypothesis-testing context, but they are reasonable proxies of the magnitude of the effect size / separation of the clusters across the variables in question.
+These p-values hold no real meaning for the traditional hypothesis-testing context, but they are reasonable proxies of the magnitude of the effect size / separation of the clusters across the features in question.
 Here, they are just a tool to find clustering solutions that are well-separated according to the outcome measures you've specified.
 Finding a cluster solution like this is similar to a supervised learning approach, but where the optimization method is just random sampling.
 The risk for overfitting your data with this approach is considerable, so make sure you have some rigorous external validation before reporting your findings.

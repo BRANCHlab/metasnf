@@ -1,9 +1,9 @@
-#' Manhattan plot of variable-variable associaiton p-values
+#' Manhattan plot of feature-feature associaiton p-values
 #'
 #' @param data_list List of dataframes containing data information.
 #'
-#' @param key_var Variable for which the association p-values of all other
-#' variables are plotted.
+#' @param key_var Feature for which the association p-values of all other
+#' features are plotted.
 #'
 #' @param neg_log_pval_thresh Threshold for negative log p-values.
 #'
@@ -118,11 +118,11 @@ var_manhattan_plot <- function(data_list,
     return(plot)
 }
 
-#' Manhattan plot of variable-meta cluster associaiton p-values
+#' Manhattan plot of feature-meta cluster associaiton p-values
 #'
 #' Given a dataframe of representative meta cluster solutions (see
 #' `get_representative_solutions()`, returns a Manhattan plot for showing
-#' variable separation across all variables in provided data/target_lists.
+#' feature separation across all features in provided data/target_lists.
 #'
 #' @param rep_solution The dataframe of representative solutions from the
 #' `get_representative_solutions()` function.
@@ -131,7 +131,7 @@ var_manhattan_plot <- function(data_list,
 #'
 #' @param target_list List of dataframes containing target information.
 #'
-#' @param variable_order Order of variables to be displayed in the plot.
+#' @param variable_order Order of features to be displayed in the plot.
 #'
 #' @param neg_log_pval_thresh Threshold for negative log p-values.
 #'
@@ -264,7 +264,7 @@ mc_manhattan_plot <- function(rep_solution,
     )
     summary_data <- summary_data |> dplyr::arrange(domain)
     ###########################################################################
-    # Proper ordering of variables through factor level assignment
+    # Proper ordering of features through factor level assignment
     ###########################################################################
     if (is.null(variable_order)) {
         summary_data$"variable" <- factor(
@@ -371,9 +371,9 @@ mc_manhattan_plot <- function(rep_solution,
     return(plot)
 }
 
-#' Manhattan plot of variable-cluster associaiton p-values
+#' Manhattan plot of feature-cluster associaiton p-values
 #'
-#' @param esm Extended solutions matrix storing associations between variables
+#' @param esm Extended solutions matrix storing associations between features
 #' and cluster assignments. See `?extend_solutions`.
 #'
 #' @param neg_log_pval_thresh Threshold for negative log p-values.

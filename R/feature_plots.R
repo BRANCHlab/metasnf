@@ -174,7 +174,7 @@ auto_plot <- function(solutions_matrix_row = NULL,
         cluster_df <- get_cluster_df(solutions_matrix_row)
     }
     ###########################################################################
-    # Generating the variable dataframe
+    # Generating the feature dataframe
     ###########################################################################
     if (is.null(data_list) && is.null(target_list)) {
         stop("Please provide either `data_list` or `target_list`.")
@@ -200,7 +200,7 @@ auto_plot <- function(solutions_matrix_row = NULL,
     }
     # Identifying features to plot (first cols are cluster and subjectkey)
     features <- colnames(full_data)[3:length(colnames(full_data))]
-    # Generating plot for every variable
+    # Generating plot for every feature
     plot_list <- list()
     for (i in seq_along(features)) {
         feature <- features[[i]]

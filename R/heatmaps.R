@@ -25,7 +25,7 @@
 #'
 #' @param data A dataframe containing elements requested for annotation.
 #'
-#' @param left_bar Named list of strings, where the strings are variables in
+#' @param left_bar Named list of strings, where the strings are features in
 #'  df that should be used for a barplot annotation on the left of the plot and
 #'  the names are the names that will be used to caption the plots and their
 #'  legends.
@@ -288,7 +288,7 @@ adjusted_rand_index_heatmap <- function(aris,
     return(heatmap)
 }
 
-#' Heatmap of pairwise associations between variables
+#' Heatmap of pairwise associations between features
 #'
 #' @param correlation_matrix Matrix containing all pairwise association
 #' p-values. The recommended way to obtain this matrix is through the
@@ -324,7 +324,7 @@ adjusted_rand_index_heatmap <- function(aris,
 #' of the heatmap.
 #'
 #' @param split_by_domain The results of `dl_var_summar` - a dataframe that has
-#' the domain of every variable in the plotted data.
+#' the domain of every feature in the plotted data.
 #' columns of the correlation_matrix. Will be used to "slice" the heatmap into
 #' visually separated sections.
 #'
@@ -864,13 +864,13 @@ assemble_data <- function(data, data_list) {
 
 #' Generate annotations list
 #'
-#' Intermediate function that takes in formatted lists of variables and the
+#' Intermediate function that takes in formatted lists of features and the
 #'  annotations they should be viewed through and returns annotation objects
 #'  usable by ComplexHeatmap::Heatmap.
 #'
 #' @param df Dataframe containing all the data that is specified in the
 #'  remaining arguments.
-#' @param left_bar Named list of strings, where the strings are variables in
+#' @param left_bar Named list of strings, where the strings are features in
 #'  df that should be used for a barplot annotation on the left of the plot and
 #'  the names are the names that will be used to caption the plots and their
 #'  legends.
@@ -904,21 +904,21 @@ generate_annotations_list <- function(df,
     # Make sure dataframe is actually a dataframe and not a tibble etc.
     df <- data.frame(df)
     ###########################################################################
-    # Ensure all the variables specified are in the provided data
+    # Ensure all the features specified are in the provided data
     check_colnames <- function(annotation_list, sorted_df) {
         if (!all(annotation_list %in% colnames(sorted_df))) {
             stop(
-                "At least one variable specified for annotation is not",
+                "At least one feature specified for annotation is not",
                 " present in the provided data_list."
             )
         }
     }
     ###########################################################################
-    # Ensure every variable specified is given a name for plotting/legend
+    # Ensure every feature specified is given a name for plotting/legend
     check_listnames <- function(list) {
         if (length(list) != sum(names(list) != "", na.rm = TRUE)) {
             stop(
-                "All variables provided must in the annotation lists must be",
+                "All features provided must in the annotation lists must be",
                 " named."
             )
         }
@@ -937,7 +937,7 @@ generate_annotations_list <- function(df,
         check_listnames(top_bar)
         top_bar_names <- names(top_bar)
         #######################################################################
-        # Assign names to all the variables in the top_bar
+        # Assign names to all the features in the top_bar
         #######################################################################
         for (i in seq_along(top_bar)) {
             ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
@@ -969,7 +969,7 @@ generate_annotations_list <- function(df,
         check_listnames(top_hm)
         top_hm_names <- names(top_hm)
         #######################################################################
-        # Assign names to all the variables in the top_hm
+        # Assign names to all the features in the top_hm
         #######################################################################
         for (i in seq_along(top_hm)) {
             if (nchar(top_hm_names[[i]]) == 0) {
@@ -1024,7 +1024,7 @@ generate_annotations_list <- function(df,
         check_listnames(bottom_bar)
         bottom_bar_names <- names(bottom_bar)
         #######################################################################
-        # Assign names to all the variables in the bottom_bar
+        # Assign names to all the features in the bottom_bar
         #######################################################################
         for (i in seq_along(bottom_bar)) {
             ith_annotation <- ComplexHeatmap::HeatmapAnnotation(
@@ -1056,7 +1056,7 @@ generate_annotations_list <- function(df,
         check_listnames(bottom_hm)
         bottom_hm_names <- names(bottom_hm)
         #######################################################################
-        # Assign names to all the variables in the bottom_hm
+        # Assign names to all the features in the bottom_hm
         #######################################################################
         for (i in seq_along(bottom_hm)) {
             if (nchar(bottom_hm_names[[i]]) == 0) {
@@ -1111,7 +1111,7 @@ generate_annotations_list <- function(df,
         check_listnames(left_bar)
         left_bar_names <- names(left_bar)
         #######################################################################
-        # Assign names to all the variables in the left_bar
+        # Assign names to all the features in the left_bar
         #######################################################################
         for (i in seq_along(left_bar)) {
             ith_annotation <- ComplexHeatmap::rowAnnotation(
@@ -1143,7 +1143,7 @@ generate_annotations_list <- function(df,
         check_listnames(left_hm)
         left_hm_names <- names(left_hm)
         #######################################################################
-        # Assign names to all the variables in the left_hm
+        # Assign names to all the features in the left_hm
         #######################################################################
         for (i in seq_along(left_hm)) {
             if (nchar(left_hm_names[[i]]) == 0) {
@@ -1194,7 +1194,7 @@ generate_annotations_list <- function(df,
         check_listnames(right_bar)
         right_bar_names <- names(right_bar)
         #######################################################################
-        # Assign names to all the variables in the right_bar
+        # Assign names to all the features in the right_bar
         #######################################################################
         for (i in seq_along(right_bar)) {
             ith_annotation <- ComplexHeatmap::rowAnnotation(
@@ -1226,7 +1226,7 @@ generate_annotations_list <- function(df,
         check_listnames(right_hm)
         right_hm_names <- names(right_hm)
         #######################################################################
-        # Assign names to all the variables in the right_hm
+        # Assign names to all the features in the right_hm
         #######################################################################
         for (i in seq_along(right_hm)) {
             if (nchar(right_hm_names[[i]]) == 0) {

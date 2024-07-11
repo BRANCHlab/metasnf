@@ -17,12 +17,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Download a copy of the vignette to follow along here: [manhattan_plots.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/manhattan_plots.Rmd)
 
-Manhattan plots can be quickly visualize the relationships between variables and cluster solutions.
+Manhattan plots can be quickly visualize the relationships between features and cluster solutions.
 
 There are three main Manhattan plot variations provided in metaSNF.
 
-1. `esm_manhattan_plot` Visualize how a set of cluster solutions separate over input/out-of-model variables
-2. `mc_manhattan_plot` Visualize how representative solutions from defined meta clusters separate over input/out-of-model variables
+1. `esm_manhattan_plot` Visualize how a set of cluster solutions separate over input/out-of-model features
+2. `mc_manhattan_plot` Visualize how representative solutions from defined meta clusters separate over input/out-of-model features
 3. `var_manhattan_plot` Visualize how one raw feature associates with other raw features (similar to `assoc_pval_heatmap`)
 
 ## Data set-up
@@ -78,7 +78,7 @@ esm_manhattan <- esm_manhattan_plot(
     point_size = 3,
     jitter_width = 0.1,
     jitter_height = 0.1,
-    plot_title = "Variable-Solution Associations",
+    plot_title = "Feature-Solution Associations",
     text_size = 14,
     bonferroni_line = TRUE
 )
@@ -143,7 +143,7 @@ mc_manhattan <- mc_manhattan_plot(
     target_list = target_list,
     point_size = 3,
     text_size = 12,
-    plot_title = "Variable-Meta Cluster Associations",
+    plot_title = "Feature-Meta Cluster Associations",
     threshold = 0.05,
     neg_log_pval_thresh = 5
 )
@@ -161,9 +161,9 @@ ggplot2::ggsave(
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan_clean.png)
 </center>
 
-## Associations with a Key Variable
+## Associations with a Key Feature
 
-You can also visualize associations with a specific variable of interest rather than cluster solutions.
+You can also visualize associations with a specific feature of interest rather than cluster solutions.
 
 The only thing needed for this plot is a data_list - no clustering necessary.
 

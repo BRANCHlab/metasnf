@@ -338,8 +338,8 @@
 #' @format ## `expression_df`
 #' A data frame with 200 rows and 3 columns:
 #' \describe{
-#'     \item{gene_1_expression}{Mock gene expression variable}
-#'     \item{gene_2_expression}{Mock gene expression variable}
+#'     \item{gene_1_expression}{Mock gene expression feature}
+#'     \item{gene_2_expression}{Mock gene expression feature}
 #'     \item{patient_id}{Random three-digit number uniquely identifying the patient}
 #' }
 #' @source
@@ -351,8 +351,8 @@
 #' @format ## `methylation_df`
 #' A data frame with 200 rows and 3 columns:
 #' \describe{
-#'     \item{gene_1_expression}{Mock gene methylation variable}
-#'     \item{gene_2_expression}{Mock gene methylation variable}
+#'     \item{gene_1_expression}{Mock gene methylation feature}
+#'     \item{gene_2_expression}{Mock gene methylation feature}
 #'     \item{patient_id}{Random three-digit number uniquely identifying the patient}
 #' }
 #' @source
@@ -365,7 +365,7 @@
 #' A data frame with 200 rows and 2 columns:
 #' \describe{
 #'     \item{patient_id}{Random three-digit number uniquely identifying the patient}
-#'     \item{gender_df}{Mock gene methylation variable}
+#'     \item{gender_df}{Mock gene methylation feature}
 #' }
 #' @source
 #' This data came from the SNFtool package, with slight modifications.
@@ -373,13 +373,13 @@
 
 #' Mock diagnosis data
 #'
-#' This is the same data as `cancer_diagnosis_df`, with renamed variables and columns.
+#' This is the same data as `cancer_diagnosis_df`, with renamed features and columns.
 #'
 #' @format ## `diagnosis_df`
 #' A data frame with 200 rows and 2 columns:
 #' \describe{
 #'     \item{patient_id}{Random three-digit number uniquely identifying the patient}
-#'     \item{diagnosis}{Mock diagnosis variable}
+#'     \item{diagnosis}{Mock diagnosis feature}
 #' }
 #' @source
 #' This data came from the SNFtool package, with slight modifications.
@@ -387,13 +387,13 @@
 
 #' Mock diagnosis data
 #'
-#' This is the same data as `diagnosis_df`, with renamed variables and columns.
+#' This is the same data as `diagnosis_df`, with renamed features and columns.
 #'
 #' @format ## `cancer_diagnosis_df`
 #' A data frame with 200 rows and 2 columns:
 #' \describe{
 #'     \item{patient_id}{Random three-digit number uniquely identifying the patient}
-#'     \item{diagnosis}{Mock cancer diagnosis variable (1, 2, or 3)}
+#'     \item{diagnosis}{Mock cancer diagnosis feature (1, 2, or 3)}
 #' }
 #' @source
 #' This data came from the SNFtool package, with slight modifications.
@@ -405,7 +405,7 @@
 #' A data frame with 200 rows and 2 columns:
 #' \describe{
 #'     \item{patient_id}{Random three-digit number uniquely identifying the patient}
-#'     \item{age}{Mock age variable}
+#'     \item{age}{Mock age feature}
 #' }
 #' @source
 #' This data came from the SNFtool package, with slight modifications.

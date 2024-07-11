@@ -3,7 +3,7 @@
 #' @param data_list A nested list of input data from `generate_data_list()`.
 #'
 #' @param distance_metrics_list An optional nested list containing which
-#' distance metric function should be used for the various variable types
+#' distance metric function should be used for the various feature types
 #' (continuous, discrete, ordinal, categorical, and mixed). See
 #' ?generate_distance_metrics_list for details on how to build this.
 #'
@@ -12,7 +12,7 @@
 #'
 #' @param settings_matrix matrix indicating parameters to iterate SNF through.
 #'
-#' @param weights_matrix A matrix containing variable weights to use during
+#' @param weights_matrix A matrix containing feature weights to use during
 #'  distance matrix calculation. See ?generate_weights_matrix for details on
 #'  how to build this.
 #'
@@ -102,7 +102,7 @@ parallel_batch_snf <- function(data_list,
 #' @param data_list A nested list of input data from `generate_data_list()`.
 #'
 #' @param distance_metrics_list An optional nested list containing which
-#' distance metric function should be used for the various variable types
+#' distance metric function should be used for the various feature types
 #' (continuous, discrete, ordinal, categorical, and mixed). See
 #' ?generate_distance_metrics_list for details on how to build this.
 #'
@@ -111,7 +111,7 @@ parallel_batch_snf <- function(data_list,
 #'
 #' @param settings_matrix matrix indicating parameters to iterate SNF through.
 #'
-#' @param weights_matrix A matrix containing variable weights to use during
+#' @param weights_matrix A matrix containing feature weights to use during
 #'  distance matrix calculation. See ?generate_weights_matrix for details on
 #'  how to build this.
 #'

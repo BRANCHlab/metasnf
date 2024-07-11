@@ -44,7 +44,7 @@ The `summarize_dml()` function prints the object with a nicer format.
 summarize_dml(distance_metrics_list)
 ```
 
-These lists must always contain at least 1 distance metric for each of the 5 recognized types of variables: continuous, discrete, ordinal, categorical, and mixed (any combination of the previous four).
+These lists must always contain at least 1 distance metric for each of the 5 recognized types of features: continuous, discrete, ordinal, categorical, and mixed (any combination of the previous four).
 
 By default, continuous, discrete, and ordinal data are converted to distance matrices using simple Euclidean distance.
 Categorical and mixed data are handled using Gower's formula as implemented by the cluster package (see `?cluster::daisy`).
@@ -53,7 +53,7 @@ Categorical and mixed data are handled using Gower's formula as implemented by t
 
 To show how the distance_metrics_list is used, we'll start by extending our distance_metrics_list beyond just the default options.
 metaSNF provides a Euclidean distance function that applies standard normalization first, `sn_euclidean_distance()` (a wrapper around `SNFtool::standardNormalization` + `stats::dist`).
-Here's how we can create a custom distance_metrics_list that includes this metric for continuous and discrete variables.
+Here's how we can create a custom distance_metrics_list that includes this metric for continuous and discrete features.
 
 ```{r}
 my_distance_metrics <- generate_distance_metrics_list(
@@ -143,8 +143,8 @@ no_default_metrics <- generate_distance_metrics_list(
 summarize_dml(no_default_metrics)
 ```
 
-For this option, it is necessary to provide at least one distance metric for every variable type.
-A distance_metrics_list cannot have any of its variable types be completely empty (even if you have no data for that variable type in the first place).
+For this option, it is necessary to provide at least one distance metric for every feature type.
+A distance_metrics_list cannot have any of its feature types be completely empty (even if you have no data for that feature type in the first place).
 
 The second way is to explicitly specify which indices you want to sample from during settings_matrix generation:
 
@@ -202,7 +202,7 @@ In rows 11 to 20, continuous data will always be handled by the third continuous
 ## Supplying weights to distance metrics
 
 Some distance metric functions can accept weights.
-Usually, weights will be applied by direct scaling of specified variables.
+Usually, weights will be applied by direct scaling of specified features.
 In some cases (e.g. categorical distance metric functions), the way in which weights are applied may be somewhat less intuitive.
 The bottom of this vignette outlines the available distance metric functions grouped by whether or not they accept weights.
 You can examine the documentation of those weighted functions to learn more about how the weights you provide will be used.
@@ -292,11 +292,11 @@ The function doesn't actually need to make use of those weights if you don't wan
 By the time your data reaches a distance metric function, it (referred to as `df`) will always:
 
 1. have no UID column
-2. have at least one variable column
+2. have at least one feature column
 3. have no missing values
 4. be a data.frame (not a tibble)
 
-The variable column names won't be altered from the values they had when they were loaded into the data_list.
+The feature column names won't be altered from the values they had when they were loaded into the data_list.
 
 For example, consider the `anxiety` raw data supplied by metaSNF:
 
@@ -309,7 +309,7 @@ Here's how to make it look more like what the distance metric functions will exp
 ```{r}
 processed_anxiety <- anxiety |>
     na.omit() |> # no NAs
-    dplyr::rename("subjectkey" = "patient") |>
+    dplyr::rename("subjectkey" = "unique_id") |>
     data.frame(row.names = "subjectkey")
 
 head(processed_anxiety)
@@ -369,7 +369,7 @@ They are all capable of accepting and applying custom weights provided by a `wei
 * `sew_euclidean_distance` (Squared (excluding weights) Euclidean distance)
     * Apply *square root* of weights to dataframe, then calculate Euclidean distance, then square the results
 * `hamming_distance` (Hamming distance)
-    * Distance between patients is (1 * variable weight) summed over all variables
+    * Distance between patients is (1 * feature weight) summed over all features
 
 ## References
 

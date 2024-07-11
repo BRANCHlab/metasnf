@@ -96,13 +96,13 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
     }
     ###########################################################################
     # 2. Ensure that if the user is not using the defaults, that at least one
-    #  metric is provided for each variable type
+    #  metric is provided for each feature type
     if (!keep_defaults) {
         if (length(user_distances) < 5) {
             stop(
                 paste0(
                     "If suppressing base distance metrics, you must specify",
-                    " at least one metric for each variable type (continuous,",
+                    " at least one metric for each feature type (continuous,",
                     " discrete, ordinal, categorical, and mixed) even if you",
                     " are not intending on using that type."
                 )

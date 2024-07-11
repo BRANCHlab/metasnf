@@ -112,7 +112,7 @@ true_label <- c(matrix(1, 100, 1), matrix(2, 100, 1))
 
 ### 4. Generate similarity matrices for each data source
 
-We consider the two gene expression variables in *Data1* to contain information from one broader gene expression source and the two methylation variables in *Data2* to contain information from a broader methylation source.
+We consider the two gene expression features in *Data1* to contain information from one broader gene expression source and the two methylation features in *Data2* to contain information from a broader methylation source.
 
 The next step is to determine, **for each of the sources we have**, how similar all of our patients are to each other.
 
@@ -173,7 +173,7 @@ library(metasnf)
 ### 2. Store the data in a *data_list*
 
 All the data we're working with will get stored in a single object called the `data_list`.
-The `data_list` is made by passing in each dataframe into the `generate_data_list` function, alongside information about the name of the dataframe, the broader source (referred to in this package as a "domain") of information that dataframe comes from, and the type of variables that are stored inside that dataframe (can be continuous, discrete, ordinal, categorical, or mixed).
+The `data_list` is made by passing in each dataframe into the `generate_data_list` function, alongside information about the name of the dataframe, the broader source (referred to in this package as a "domain") of information that dataframe comes from, and the type of features that are stored inside that dataframe (can be continuous, discrete, ordinal, categorical, or mixed).
 
 The `data_list` generation process also requires you to specify which column contains information about the ID of the patients.
 In this case, that information isn't there, so we'll have to add it ourselves.
@@ -207,7 +207,7 @@ The first entries are all lists which contains the following elements:
 1. The actual dataframe
 2. A name for the dataframe (string)
 3. A name for the *domain* of information the dataframe is representative of (string)
-4. The type of variable stored in the dataframe (options are continuous, discrete, ordinal, categorical, and mixed)
+4. The type of feature stored in the dataframe (options are continuous, discrete, ordinal, categorical, and mixed)
 
 Finally, there's an argument for the `uid` (the column name that currently uniquely identifies all the subjects in your data).
 

@@ -12,7 +12,7 @@
 #' value as was used in the original call to `batch_snf()`.
 #'
 #' @param distance_metrics_list An optional nested list containing which
-#' distance metric function should be used for the various variable types
+#' distance metric function should be used for the various feature types
 #' (continuous, discrete, ordinal, categorical, and mixed). Use the same value
 #' as was used in the original call to `batch_snf()`.
 #'
@@ -113,7 +113,7 @@ batch_nmi <- function(data_list,
             this_inclusion <- this_settings_matrix[, inc_this_data_type]
             if (!ignore_inclusions && this_inclusion == 0) {
                 ###############################################################
-                # If variable is dropped and inc not ignored, the NMI is NA
+                # If feature is dropped and inc not ignored, the NMI is NA
                 ###############################################################
                 feature_nmis <- c(feature_nmis, NA)
             } else {

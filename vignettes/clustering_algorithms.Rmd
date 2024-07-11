@@ -90,7 +90,7 @@ ggplot2::ggsave(
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/clust_esm_manhattan.png)
 </center>
 
-The Manhattan plot shows the p-values (y-axis) of the associations between our target variables (x-axis) and each cluster solution we calculated (colour) for each row of the settings matrix.
+The Manhattan plot shows the p-values (y-axis) of the associations between our target features (x-axis) and each cluster solution we calculated (colour) for each row of the settings matrix.
 
 The information about the clustering used is tucked away in the settings matrix:
 

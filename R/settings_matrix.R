@@ -702,7 +702,7 @@ random_removal <- function(columns,
                            max_removed_inputs,
                            dropout_dist = "exponential") {
     ###########################################################################
-    # 1. Define variables used by all dropout_dist values
+    # 1. Define features used by all dropout_dist values
     ###########################################################################
     # vector containing names of the input dataframes that may be dropped
     inclusion_columns <- columns[startsWith(columns, "inc")]

@@ -6,7 +6,7 @@
 #' name of that input dataframe (for the user's reference), the 'domain' of
 #' that dataframe (the broader source of information that the input dataframe
 #' is capturing, determined by user's domain knowledge), and the type of
-#' variable stored in the dataframe (continuous, discrete, ordinal,
+#' feature stored in the dataframe (continuous, discrete, ordinal,
 #' categorical, or mixed).
 #'
 #' @param ... Any number of list formatted as (df, "df_name", "df_domain",

@@ -1,15 +1,15 @@
-#' Alluvial plot of patients across cluster counts and important variables
+#' Alluvial plot of patients across cluster counts and important features
 #'
 #' @param cluster_sequence A list of clustering algorithms (typically, the same
 #'  algorithm varied over different numbers of clusters).
 #' @param similarity_matrix A similarity matrix.
 #' @param data_list A nested list of input data from `generate_data_list()`.
-#' @param data A dataframe that contains variables to include in the plot.
-#' @param key_outcome The name of the variable that determines how each patient
+#' @param data A dataframe that contains features to include in the plot.
+#' @param key_outcome The name of the feature that determines how each patient
 #'  stream is coloured in the alluvial plot.
 #' @param key_label Name of key outcome to be used for the plot legend.
 #' @param title Title of the plot.
-#' @param extra_outcomes Names of additional variables to add to the plot.
+#' @param extra_outcomes Names of additional features to add to the plot.
 #'
 #' @export
 alluvial_cluster_plot <- function(cluster_sequence,
@@ -41,7 +41,7 @@ alluvial_cluster_plot <- function(cluster_sequence,
         alluvial_df <- cbind(alluvial_df, solution_col)
     }
     ###########################################################################
-    # Isolate variable of interest
+    # Isolate feature of interest
     ###########################################################################
     data <- assemble_data(data = data, data_list = data_list)
     outcome_df_cols <- c("subjectkey", key_outcome, extra_outcomes)

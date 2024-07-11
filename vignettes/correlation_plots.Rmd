@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Download a copy of the vignette to follow along here: [correlation_plots.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/correlation_plots.Rmd)
 
-In this vignette, we go through how you can visualize associations between the variables included in your analyses.
+In this vignette, we go through how you can visualize associations between the features included in your analyses.
 
 ## Data set-up
 
@@ -27,7 +27,7 @@ library(metasnf)
 # We'll just use the first few columns for this demo
 cort_sa_minimal <- cort_sa[, 1:5]
 
-# And one more mock categorical variable for demonstration purposes
+# And one more mock categorical feature for demonstration purposes
 city <- fav_colour
 city$"city" <- sample(
     c("toronto", "montreal", "vancouver"),
@@ -37,12 +37,12 @@ city$"city" <- sample(
 city <- city |> dplyr::select(-"colour")
 
 # Make sure to throw in all the data you're interested in visualizing for this
-# data_list, including out-of-model measures and confounding variables.
+# data_list, including out-of-model measures and confounding features.
 data_list <- generate_data_list(
     list(cort_sa_minimal, "cortical_sa", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "ordinal"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
-    list(colour, "favourite_colour", "demographics", "categorical"),
+    list(fav_colour, "favourite_colour", "demographics", "categorical"),
     list(city, "city", "demographics", "categorical"),
     list(anxiety, "anxiety", "behaviour", "ordinal"),
     list(depress, "depressed", "behaviour", "ordinal"),
@@ -79,9 +79,9 @@ save_heatmap(
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/assoc_pval_heatmap.png)
 </center>
 
-Most of this data was generated randomly, but the "colour" variable is really just a categorical mapping of "cbcl_depress_r".
+Most of this data was generated randomly, but the "colour" feature is really just a categorical mapping of "cbcl_depress_r".
 
-You can draw attention to confounding variables and/or any out of model measures by specifying their names as shown below.
+You can draw attention to confounding features and/or any out of model measures by specifying their names as shown below.
 
 ```{r eval = FALSE}
 ap_heatmap2 <- assoc_pval_heatmap(
@@ -138,8 +138,8 @@ save_heatmap(
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/assoc_pval_heatmap3.png)
 </center>
 
-Another way to divide the heatmap is by variable domain.
-This can be done by providing a data_list with all the variables in the `assoc_pval_matrix` and setting `split_by_domain` to `TRUE`.
+Another way to divide the heatmap is by feature domain.
+This can be done by providing a data_list with all the features in the `assoc_pval_matrix` and setting `split_by_domain` to `TRUE`.
 
 ```{r eval = FALSE}
 ap_heatmap4 <- assoc_pval_heatmap(

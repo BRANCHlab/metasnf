@@ -2,7 +2,7 @@
 % Please edit documentation in R/manhattan_plot.R
 \name{var_manhattan_plot}
 \alias{var_manhattan_plot}
-\title{Manhattan plot of variable-variable associaiton p-values}
+\title{Manhattan plot of feature-feature associaiton p-values}
 \usage{
 var_manhattan_plot(
   data_list,
@@ -19,7 +19,7 @@ var_manhattan_plot(
 \arguments{
 \item{data_list}{List of dataframes containing data information.}
 
-\item{key_var}{Variable for which the association p-values of all other
+\item{key_var}{Feature for which the association p-values of all other
 variables are plotted.}
 
 \item{neg_log_pval_thresh}{Threshold for negative log p-values.}
@@ -38,5 +38,5 @@ variables are plotted.}
 Bonferroni-corrected equivalent of the p-value threshold.}
 }
 \description{
-Manhattan plot of variable-variable associaiton p-values
+Manhattan plot of feature-feature associaiton p-values
 }
