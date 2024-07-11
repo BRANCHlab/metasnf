@@ -119,3 +119,25 @@ abcd_h_income <- abcd_income
 abcd_h_income <- abcd_h_income[!is.na(abcd_h_income$"patient"), ]
 
 usethis::use_data(abcd_h_income, overwrite = TRUE)
+###############################################################################
+# 2024-07-11 Replacing "patient" uid to simply "unique_id"
+
+library(metasnf)
+
+subc_v <- abcd_subc_v |> dplyr::rename("unique_id" = "patient")
+cort_t <- abcd_cort_t |> dplyr::rename("unique_id" = "patient")
+cort_sa <- abcd_cort_sa |> dplyr::rename("unique_id" = "patient")
+income <- abcd_h_income |> dplyr::rename("unique_id" = "patient")
+pubertal <- abcd_pubertal |> dplyr::rename("unique_id" = "patient")
+depress <- abcd_depress |> dplyr::rename("unique_id" = "patient")
+anxiety <- abcd_anxiety |> dplyr::rename("unique_id" = "patient")
+fav_colour <- abcd_colour |> dplyr::rename("unique_id" = "patient")
+
+usethis::use_data(subc_v, overwrite = TRUE)
+usethis::use_data(cort_t, overwrite = TRUE)
+usethis::use_data(cort_sa, overwrite = TRUE)
+usethis::use_data(income, overwrite = TRUE)
+usethis::use_data(pubertal, overwrite = TRUE)
+usethis::use_data(depress, overwrite = TRUE)
+usethis::use_data(anxiety, overwrite = TRUE)
+usethis::use_data(fav_colour, overwrite = TRUE)
