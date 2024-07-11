@@ -1,510 +1,180 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://branchlab.github.io/metasnf/404.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/a_complete_example.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/a_simple_example.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/alluvial_plots.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/clustering_algorithms.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/confounders.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/correlation_plots.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/data_list.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/distance_metrics.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/feature_plots.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/feature_weights.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/getting_started.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/imputations.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/label_propagation.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/manhattan_plots.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/nmi_scores.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/parallel_processing.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/quality_measures.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/settings_matrix.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/similarity_matrix_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/snf_schemes.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/stability_measures.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/articles/troubleshooting.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/index.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/abcd_anxiety.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/abcd_colour.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/abcd_cort_sa.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/abcd_cort_t.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/abcd_depress.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/abcd_h_income.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/abcd_income.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/abcd_pubertal.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/abcd_subc_v.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/add_columns.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/add_settings_matrix_rows.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/adjusted_rand_index_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/age_df.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/alluvial_cluster_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/arrange_dl.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/assemble_data.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/assoc_pval_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/association_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/auto_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/bar_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/batch_nmi.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/batch_row_closure.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/batch_snf.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/batch_snf_time_remaining.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/calc_aris.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/calc_assoc_pval.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/calc_assoc_pval_matrix.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/calculate_associations.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/calculate_db_indices.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/calculate_dunn_indices.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/calculate_silhouettes.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/cancer_diagnosis_df.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/cell_significance_fn.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/char_to_fac.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/check_similarity_matrices.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/chi_squared_pval.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/cocluster_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/collapse_dl.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/colour_scale.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/convert_uids.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/diagnosis_df.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/dl_uid_first_col.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/dl_variable_summary.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/domain_merge.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/domains.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/drop_inputs.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/esm_manhattan_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/euclidean_distance.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/expression_df.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/extend_solutions.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/fisher_exact_pval.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/format_weights_row.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/fraction_clustered_together.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/gender_df.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/generate_annotations_list.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/generate_clust_algs_list.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/generate_cocluster_data.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/generate_data_list.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/generate_distance_metrics_list.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/generate_settings_matrix.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/generate_target_list.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/generate_weights_matrix.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_cluster_df.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_cluster_pval.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_cluster_solutions.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_clusters.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_complete_uids.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_dist_matrix.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_dl_subjects.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_heatmap_order.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_matrix_order.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_mean_pval.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_min_pval.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_pvals.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/get_representative_solutions.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/gower_distance.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/hamming_distance.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/individual.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/jitter_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/label_prop.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/label_splits.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/linear_adjust.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/linear_model_pval.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/list_remove.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/lp_solutions_matrix.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/manhattan_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/mc_manhattan_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/merge_data_lists.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/merge_df_list.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/methylation_df.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/no_subs.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/numcol_to_numeric.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/ord_reg_pval.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/parallel_batch_snf.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/pooled_cocluster_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/prefix_dl_sk.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/pval_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/random_removal.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/reduce_dl_to_common.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/remove_dl_na.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/rename_dl.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/reorder_dl_subs.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/resample.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/save_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/save_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/scale_diagonals.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/settings_matrix_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/sew_euclidean_distance.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/shiny_annotator.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/similarity_matrix_heatmap.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/similarity_matrix_path.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/siw_euclidean_distance.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/sn_euclidean_distance.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/snf_step.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_eigen.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_eigen_classic.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_eight.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_five.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_four.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_nine.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_rot.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_rot_classic.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_seven.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_six.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_ten.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_three.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/spectral_two.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/split_parser.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/subs.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/subsample_data_list.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/subsample_pairwise_aris.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/summarize_clust_algs_list.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/summarize_dl.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/summarize_dml.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/summarize_pvals.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/summarize_target_list.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/train_test_assign.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/two_step_merge.html</loc>
-  </url>
-  <url>
-    <loc>https://branchlab.github.io/metasnf/reference/var_manhattan_plot.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://branchlab.github.io/metasnf/404.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/LICENSE-text.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/LICENSE.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/a_complete_example.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/a_simple_example.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/alluvial_plots.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/clustering_algorithms.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/confounders.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/correlation_plots.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/data_list.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/distance_metrics.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/feature_plots.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/feature_weights.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/getting_started.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/imputations.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/index.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/label_propagation.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/manhattan_plots.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/nmi_scores.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/parallel_processing.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/quality_measures.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/settings_matrix.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/similarity_matrix_heatmap.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/snf_schemes.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/stability_measures.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/articles/troubleshooting.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/authors.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/index.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/news/index.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/abcd_anxiety.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/abcd_colour.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/abcd_cort_sa.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/abcd_cort_t.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/abcd_depress.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/abcd_h_income.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/abcd_income.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/abcd_pubertal.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/abcd_subc_v.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/add_columns.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/add_settings_matrix_rows.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/adjusted_rand_index_heatmap.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/age_df.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/alluvial_cluster_plot.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/anxiety.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/arrange_dl.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/assemble_data.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/assoc_pval_heatmap.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/association_heatmap.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/auto_plot.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/bar_plot.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/batch_nmi.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/batch_row_closure.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/batch_snf.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/batch_snf_time_remaining.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/calc_aris.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/calc_assoc_pval.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/calc_assoc_pval_matrix.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/calculate_associations.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/calculate_db_indices.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/calculate_dunn_indices.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/calculate_silhouettes.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/cancer_diagnosis_df.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/cell_significance_fn.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/char_to_fac.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/check_similarity_matrices.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/chi_squared_pval.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/cocluster_heatmap.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/collapse_dl.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/colour_scale.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/convert_uids.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/cort_sa.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/cort_t.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/depress.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/diagnosis_df.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/dl_uid_first_col.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/dl_variable_summary.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/domain_merge.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/domains.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/drop_inputs.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/esm_manhattan_plot.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/euclidean_distance.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/expression_df.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/extend_solutions.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/fav_colour.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/fisher_exact_pval.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/format_weights_row.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/fraction_clustered_together.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/gender_df.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/generate_annotations_list.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/generate_clust_algs_list.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/generate_cocluster_data.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/generate_data_list.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/generate_distance_metrics_list.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/generate_settings_matrix.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/generate_target_list.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/generate_weights_matrix.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_cluster_df.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_cluster_pval.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_cluster_solutions.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_clusters.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_complete_uids.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_dist_matrix.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_dl_subjects.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_heatmap_order.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_matrix_order.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_mean_pval.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_min_pval.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_pvals.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/get_representative_solutions.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/gower_distance.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/hamming_distance.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/income.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/index.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/individual.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/jitter_plot.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/label_prop.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/label_splits.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/linear_adjust.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/linear_model_pval.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/list_remove.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/lp_solutions_matrix.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/manhattan_plot.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/mc_manhattan_plot.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/merge_data_lists.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/merge_df_list.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/methylation_df.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/no_subs.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/numcol_to_numeric.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/ord_reg_pval.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/parallel_batch_snf.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/pooled_cocluster_heatmap.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/prefix_dl_sk.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/pubertal.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/pval_heatmap.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/random_removal.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/reduce_dl_to_common.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/remove_dl_na.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/rename_dl.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/reorder_dl_subs.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/resample.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/save_heatmap.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/save_plot.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/scale_diagonals.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/settings_matrix_heatmap.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/sew_euclidean_distance.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/shiny_annotator.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/similarity_matrix_heatmap.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/similarity_matrix_path.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/siw_euclidean_distance.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/sn_euclidean_distance.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/snf_step.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_eigen.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_eigen_classic.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_eight.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_five.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_four.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_nine.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_rot.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_rot_classic.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_seven.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_six.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_ten.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_three.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/spectral_two.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/split_parser.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/subc_v.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/subs.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/subsample_data_list.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/subsample_pairwise_aris.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/summarize_clust_algs_list.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/summarize_dl.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/summarize_dml.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/summarize_pvals.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/summarize_target_list.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/train_test_assign.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/two_step_merge.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/var_manhattan_plot.html</loc></url>
 </urlset>
+
