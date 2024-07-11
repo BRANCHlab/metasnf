@@ -1,3 +1,10 @@
+# metasnf 0.6.7
+
+## Minor changes
+
+* More consistent usage of "feature" over "variable" across documentation.
+* New mock ABCD dataframes - like the old ones, but without the "abcd_" prefix and with a more accurate "unique_id" UID column rather than "patient"
+
 # metasnf 0.6.6
 
 ## New functionality
