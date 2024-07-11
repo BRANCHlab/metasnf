@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Download a copy of the vignette to follow along here: [alluvial_plots.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/alluvial_plots.Rmd)
 
-Alluvial plots can be generated to visualize how changing the number of clusters influences the distribution of patients according to one (or a few) variables of interest.
+Alluvial plots can be generated to visualize how changing the number of clusters influences the distribution of observations according to one (or a few) variables of interest.
 
 First, some data setup just as was done in the previous vignettes.
 
@@ -50,7 +50,7 @@ data_list <- generate_data_list(
         domain = "clinical",
         type = "categorical"
     ),
-    uid = "patient_id"
+    uid = "unique_id"
 )
 
 settings_matrix <- generate_settings_matrix(
@@ -106,9 +106,9 @@ Or in an external dataframe:
 extra_data <- dplyr::inner_join(
     gender_df,
     diagnosis_df,
-    by = "patient_id"
+    by = "unique_id"
 ) |>
-    dplyr::mutate(subjectkey = paste0("subject_", patient_id))
+    dplyr::mutate(subjectkey = paste0("subject_", unique_id))
 
 head(extra_data)
 

@@ -26,7 +26,7 @@ Download a copy of the vignette to follow along here: [clustering_algorithms.Rmd
 
 ## Clustering Algorithms
 
-SNF produces a single similarity matrix that is meant to describe how similar all the initial patients (or participants, or instances) are to each other across all the provided input features.
+SNF produces a single similarity matrix that is meant to describe how similar all the observations are to each other across all the provided input features.
 Dividing that similarity matrix into subtypes requires can be done using clustering algorithms.
 Within the metasnf package, clustering is done by default using the spectral clustering algorithm (as implemented by the original SNFtool package).
 The code below goes over what the default clustering looks like.
@@ -40,12 +40,12 @@ library(metasnf)
 # Start by making a data list containing all our dataframes to more easily
 # identify subjects without missing data
 full_data_list <- generate_data_list(
-    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-    list(abcd_h_income, "household_income", "demographics", "continuous"),
-    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
-    list(abcd_anxiety, "anxiety", "behaviour", "ordinal"),
-    list(abcd_depress, "depressed", "behaviour", "ordinal"),
-    uid = "patient"
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
 )
 
 # Partition into a data and target list (optional)

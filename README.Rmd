@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 ## Brief Overview
 
 *metasnf* is a package that facilitates usage of the meta clustering paradigm described in [@caruanaMeta2006] with the similarity network fusion (SNF) data integration procedure developed in [@wangSimilarity2014].
-The package offers a comprehensive suite of tools to assist users in transforming raw patient data into patient subtypes, decision making in the subtyping process, and visualization along the way with a strong emphasis on context-specific utility and principled validation of results.
+The package offers a comprehensive suite of tools to assist users in transforming multi-modal tabular data into cluster solutions, decision making in the clustering process, and visualization along the way with a strong emphasis on context-specific utility and principled validation of results.
 
 ## Installation
 
@@ -36,12 +36,12 @@ We recommend installing the latest development version of the package (it has th
 devtools::install_github("BRANCHlab/metasnf")
 
 # Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v0.6.2")
+devtools::install_github("BRANCHlab/metasnf@v0.6.5")
 ```
 
 ## Quick Start
 
-An extremely minimal usage of the package looks something like this:
+Minimal usage of the package looks like this:
 
 ```{r}
 # Load the package

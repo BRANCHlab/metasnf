@@ -298,21 +298,21 @@ By the time your data reaches a distance metric function, it (referred to as `df
 
 The variable column names won't be altered from the values they had when they were loaded into the data_list.
 
-For example, consider the `abcd_anxiety` raw data supplied by metaSNF:
+For example, consider the `anxiety` raw data supplied by metaSNF:
 
 ```{r}
-head(abcd_anxiety)
+head(anxiety)
 ```
 
 Here's how to make it look more like what the distance metric functions will expect to see:
 
 ```{r}
-processed_abcd_anxiety <- abcd_anxiety |>
+processed_anxiety <- anxiety |>
     na.omit() |> # no NAs
     dplyr::rename("subjectkey" = "patient") |>
     data.frame(row.names = "subjectkey")
 
-head(processed_abcd_anxiety)
+head(processed_anxiety)
 ```
 
 If we want to have a distance metric that calculates Euclidean distance, but also scales the resulting matrix down such that the biggest allowed distance is a 1, it would look like this:
@@ -335,7 +335,7 @@ If that specific situation ever happens, there's probably something quite wrong 
 Once you're happy that you distance function is working as you'd like it to:
 
 ```{r}
-my_scaled_euclidean(processed_abcd_anxiety)[1:5, 1:5]
+my_scaled_euclidean(processed_anxiety)[1:5, 1:5]
 ```
 
 You can load it into a custom distance_metrics_list:

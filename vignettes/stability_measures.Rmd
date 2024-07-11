@@ -55,7 +55,7 @@ data_list <- generate_data_list(
         domain = "demographics",
         type = "discrete"
     ),
-    uid = "patient_id"
+    uid = "unique_id"
 )
 
 # Generate settings_matrix
@@ -73,17 +73,17 @@ As an added part of the data set-up, we'll also calculate some subsamples of the
 data_list_subsamples <- subsample_data_list(
     data_list,
     n_subsamples = 3, # calculate 30 subsamples
-    subsample_fraction = 0.8 # for each subsample, use random 80% of patients
+    subsample_fraction = 0.8 # for each subsample, use random 80% of obs
 )
 ```
 
 `data_list_subsamples` contains a list of 3 variations of the full data_list.
-Each variation only has a random 80% of the original patients.
+Each variation only has a random 80% of the original observations.
 
 
 ## Pairwise Adjusted Rand Indices Across Subsamples
 
-`pairwise_aris` is a dataframe that contains the mean and standard deviation of the pairwise adjusted Rand indices between patients for each row of the settings matrix.
+`pairwise_aris` is a dataframe that contains the mean and standard deviation of the pairwise adjusted Rand indices between observations for each row of the settings matrix.
 
 ```{r eval = FALSE}
 pairwise_aris <- subsample_pairwise_aris(
@@ -94,7 +94,7 @@ pairwise_aris <- subsample_pairwise_aris(
 
 ## Persistence of Co-Clustering Across Subsamples
 
-The `fraction_clustered_together` function calculates for every pair of patients that clustered together in the full sample, how often they continued to cluster together in data subsamples.
+The `fraction_clustered_together` function calculates for every pair of observations that clustered together in the full sample, how often they continued to cluster together in data subsamples.
 
 ```{r eval = FALSE}
 # Run SNF and clustering
@@ -114,7 +114,7 @@ fraction_together <- fraction_clustered_together(
 
 You can visualize co-clustering across the resamples *for a single row of the settings matrix* using the `generate_cocluster_data` and `cocluster_heatmap` functions.
 
-`cocluster_heatmap` will only work if every pair of patients were part of the same subsampled data at least 1 time.
+`cocluster_heatmap` will only work if every pair of observations were part of the same subsampled data at least 1 time.
 You'll see a descriptive warning if this didn't end up happening in your own data_list_subsamples.
 This can most easily be resolved by increasing the number of subsamples you examine or the subsample fraction.
 
@@ -122,7 +122,7 @@ This can most easily be resolved by increasing the number of subsamples you exam
 data_list_subsamples <- subsample_data_list(
     data_list,
     n_subsamples = 30, # calculate 30 subsamples
-    subsample_fraction = 0.8 # for each subsample, use random 80% of patients
+    subsample_fraction = 0.8 # for each subsample, use random 80% of obs
 )
 
 cocluster_data <- generate_cocluster_data(
@@ -134,10 +134,10 @@ cocluster_data <- generate_cocluster_data(
 
 `cocluster_data` a list with two matrices:
 
-* `same_solution`: A patient x patient matrix where each cell is the number
-  of subsamples that contained both of those patients
-* `same_cluster`: A patient x patient matrix where each cell is the number
-  of subsamples where those patients were clustered together
+* `same_solution`: A pairwise observation matrix where each cell is the number
+  of subsamples that contained both of those observations
+* `same_cluster`: A pairwise observation matrix where each cell is the number
+  of subsamples where those observations were clustered together
 
 ```{r eval = FALSE}
 same_cluster <- cocluster_data$"same_cluster"
@@ -154,17 +154,17 @@ hm <- cocluster_heatmap(cocluster_data)
 hm
 ```
 
-You can pull out the patient order of the heatmap as follows:
+You can pull out the observation order of the heatmap as follows:
 
 ```{r eval = FALSE}
 hm <- ComplexHeatmap::draw(hm)
 order <- ComplexHeatmap::row_order(hm)
 ```
 
-`order` can now be applied to the data in the data_list to get the same patient order as shown in the heatmap:
+`order` can now be applied to the data in the data_list to get the same observation order as shown in the heatmap:
 
 ```{r eval = FALSE}
-# The order of patients as they appear in the heatmap
+# The order of observations as they appear in the heatmap
 data_list[[1]]$"data"[order, "subjectkey"]
 ```
 

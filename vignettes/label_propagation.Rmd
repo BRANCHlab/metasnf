@@ -32,9 +32,9 @@ These unlabeled observations could be a held out test set from your original sam
 
 The process involves the following steps:
 
-1. Assign clusters to some group of patients
-2. Calculate all the pairwise similarities amongst all the already clustered and to-be-labeled patients
-3. Run the label propagation algorithm to predict cluster membership in the to-be-labeled patients
+1. Assign clusters to some group of observations
+2. Calculate all the pairwise similarities amongst all the already clustered and to-be-labeled observations
+3. Run the label propagation algorithm to predict cluster membership in the to-be-labeled observations
 
 There is a lot of room for flexibility in how steps 1 and 2 are conducted.
 SNF is not necessary at any part of the process.
@@ -49,19 +49,19 @@ library(metasnf)
 
 # Start by making a data list containing all our dataframes to more easily
 # identify subjects without missing data
-all_patient <- generate_data_list(
-    list(abcd_cort_t, "cort_t", "neuroimaging", "continuous"),
-    list(abcd_cort_sa, "cort_sa", "neuroimaging", "continuous"),
-    list(abcd_subc_v, "subc_v", "neuroimaging", "continuous"),
-    list(abcd_h_income, "household_income", "demographics", "continuous"),
-    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
-    list(abcd_anxiety, "anxiety", "behaviour", "ordinal"),
-    list(abcd_depress, "depressed", "behaviour", "ordinal"),
-    uid = "patient"
+all_subjects <- generate_data_list(
+    list(cort_t, "cort_t", "neuroimaging", "continuous"),
+    list(cort_sa, "cort_sa", "neuroimaging", "continuous"),
+    list(subc_v, "subc_v", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
 )
 
 # Get a vector of all the subjects
-all_subjects <- get_dl_subjects(all_patient)
+all_subjects <- get_dl_subjects(all_subjects)
 
 # Dataframe assigning 80% of subjects to train and 20% to test
 train_test_split <- train_test_assign(
@@ -74,38 +74,38 @@ train_subs <- train_test_split$"train"
 test_subs <- train_test_split$"test"
 
 # Partition a training set
-train_abcd_cort_t <- abcd_cort_t[abcd_cort_t$"patient" %in% train_subs, ]
-train_abcd_cort_sa <- abcd_cort_sa[abcd_cort_sa$"patient" %in% train_subs, ]
-train_abcd_subc_v <- abcd_subc_v[abcd_subc_v$"patient" %in% train_subs, ]
-train_abcd_h_income <- abcd_h_income[abcd_h_income$"patient" %in% train_subs, ]
-train_abcd_pubertal <- abcd_pubertal[abcd_pubertal$"patient" %in% train_subs, ]
-train_abcd_anxiety <- abcd_anxiety[abcd_anxiety$"patient" %in% train_subs, ]
-train_abcd_depress <- abcd_depress[abcd_depress$"patient" %in% train_subs, ]
+train_cort_t <- cort_t[cort_t$"unique_id" %in% train_subs, ]
+train_cort_sa <- cort_sa[cort_sa$"unique_id" %in% train_subs, ]
+train_subc_v <- subc_v[subc_v$"unique_id" %in% train_subs, ]
+train_income <- income[income$"unique_id" %in% train_subs, ]
+train_pubertal <- pubertal[pubertal$"unique_id" %in% train_subs, ]
+train_anxiety <- anxiety[anxiety$"unique_id" %in% train_subs, ]
+train_depress <- depress[depress$"unique_id" %in% train_subs, ]
 
 # Partition a test set
-test_abcd_cort_t <- abcd_cort_t[abcd_cort_t$"patient" %in% test_subs, ]
-test_abcd_cort_sa <- abcd_cort_sa[abcd_cort_sa$"patient" %in% test_subs, ]
-test_abcd_subc_v <- abcd_subc_v[abcd_subc_v$"patient" %in% test_subs, ]
-test_abcd_h_income <- abcd_h_income[abcd_h_income$"patient" %in% test_subs, ]
-test_abcd_pubertal <- abcd_pubertal[abcd_pubertal$"patient" %in% test_subs, ]
-test_abcd_anxiety <- abcd_anxiety[abcd_anxiety$"patient" %in% test_subs, ]
-test_abcd_depress <- abcd_depress[abcd_depress$"patient" %in% test_subs, ]
+test_cort_t <- cort_t[cort_t$"unique_id" %in% test_subs, ]
+test_cort_sa <- cort_sa[cort_sa$"unique_id" %in% test_subs, ]
+test_subc_v <- subc_v[subc_v$"unique_id" %in% test_subs, ]
+test_income <- income[income$"unique_id" %in% test_subs, ]
+test_pubertal <- pubertal[pubertal$"unique_id" %in% test_subs, ]
+test_anxiety <- anxiety[anxiety$"unique_id" %in% test_subs, ]
+test_depress <- depress[depress$"unique_id" %in% test_subs, ]
 
 # Find cluster solutions in the training set
 train_data_list <- generate_data_list(
-    list(train_abcd_cort_t, "cort_t", "neuroimaging", "continuous"),
-    list(train_abcd_cort_sa, "cortical_sa", "neuroimaging", "continuous"),
-    list(train_abcd_subc_v, "subc_v", "neuroimaging", "continuous"),
-    list(train_abcd_h_income, "household_income", "demographics", "continuous"),
-    list(train_abcd_pubertal, "pubertal_status", "demographics", "continuous"),
-    uid = "patient"
+    list(train_cort_t, "cort_t", "neuroimaging", "continuous"),
+    list(train_cort_sa, "cortical_sa", "neuroimaging", "continuous"),
+    list(train_subc_v, "subc_v", "neuroimaging", "continuous"),
+    list(train_income, "household_income", "demographics", "continuous"),
+    list(train_pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
 )
 
 # We'll pick a solution that has good separation over our target variables
 train_target_list <- generate_data_list(
-    list(train_abcd_anxiety, "anxiety", "behaviour", "ordinal"),
-    list(train_abcd_depress, "depressed", "behaviour", "ordinal"),
-    uid = "patient"
+    list(train_anxiety, "anxiety", "behaviour", "ordinal"),
+    list(train_depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
 )
 
 settings_matrix <- generate_settings_matrix(
@@ -134,12 +134,12 @@ top_row <- extended_solutions_matrix[4, ]
 # Propagate that solution to the subjects in the test set
 # data list below has both training and testing subjects
 full_data_list <- generate_data_list(
-    list(abcd_cort_t, "cort_t", "neuroimaging", "continuous"),
-    list(abcd_cort_sa, "cort_sa", "neuroimaging", "continuous"),
-    list(abcd_subc_v, "subc_v", "neuroimaging", "continuous"),
-    list(abcd_h_income, "household_income", "demographics", "continuous"),
-    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
-    uid = "patient"
+    list(cort_t, "cort_t", "neuroimaging", "continuous"),
+    list(cort_sa, "cort_sa", "neuroimaging", "continuous"),
+    list(subc_v, "subc_v", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
 )
 
 # Use the solutions matrix from the training subjects and the data list from

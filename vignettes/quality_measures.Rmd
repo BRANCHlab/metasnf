@@ -34,12 +34,12 @@ library(metasnf)
 
 # generate data_list
 data_list <- generate_data_list(
-    list(abcd_cort_t, "cort_t", "neuroimaging", "continuous"),
-    list(abcd_cort_sa, "cort_sa", "neuroimaging", "continuous"),
-    list(abcd_subc_v, "subc_v", "neuroimaging", "continuous"),
-    list(abcd_income, "income", "demographics", "continuous"),
-    list(abcd_pubertal, "pubertal", "demographics", "continuous"),
-    uid = "patient"
+    list(cort_t, "cort_t", "neuroimaging", "continuous"),
+    list(cort_sa, "cort_sa", "neuroimaging", "continuous"),
+    list(subc_v, "subc_v", "neuroimaging", "continuous"),
+    list(income, "income", "demographics", "continuous"),
+    list(pubertal, "pubertal", "demographics", "continuous"),
+    uid = "unique_id"
 )
 
 # build settings_matrix

@@ -40,22 +40,22 @@ library(metasnf)
 
 # First imputed dataset
 data_list_imp1 <- generate_data_list(
-    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-    list(abcd_h_income, "household_income", "demographics", "continuous"),
-    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
-    list(abcd_anxiety, "anxiety", "behaviour", "ordinal"),
-    list(abcd_depress, "depressed", "behaviour", "ordinal"),
-    uid = "patient"
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
 )
 
 # Second imputed dataset
 data_list_imp2 <- generate_data_list(
-    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-    list(abcd_h_income, "household_income", "demographics", "continuous"),
-    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
-    list(abcd_anxiety, "anxiety", "behaviour", "ordinal"),
-    list(abcd_depress, "depressed", "behaviour", "ordinal"),
-    uid = "patient"
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
 )
 
 settings_matrix <- generate_settings_matrix(

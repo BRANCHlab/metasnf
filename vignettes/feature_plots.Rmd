@@ -23,13 +23,13 @@ Given a cluster solution formatted as a row of a solutions matrix (or extended s
 library(metasnf)
 
 data_list <- generate_data_list(
-    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-    list(abcd_h_income, "household_income", "demographics", "continuous"),
-    list(abcd_colour, "favourite_colour", "misc", "categorical"),
-    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
-    list(abcd_anxiety, "anxiety", "behaviour", "ordinal"),
-    list(abcd_depress, "depressed", "behaviour", "ordinal"),
-    uid = "patient"
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(fav_colour, "favourite_colour", "misc", "categorical"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
 )
 
 # Build space of settings to cluster over
@@ -71,7 +71,7 @@ plot_list$"colour" +
     ggplot2::labs(
         fill = "Favourite Colour",
         x = "Cluster",
-        title = "Patient Favourite Colour by Cluster"
+        title = "Favourite Colour by Cluster"
     ) +
     ggplot2::scale_fill_manual(
         values = c(
