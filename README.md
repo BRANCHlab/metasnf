@@ -12,9 +12,9 @@
 paradigm described in ([Caruana et al. 2006](#ref-caruanaMeta2006)) with
 the similarity network fusion (SNF) data integration procedure developed
 in ([Wang et al. 2014](#ref-wangSimilarity2014)). The package offers a
-comprehensive suite of tools to assist users in transforming raw patient
-data into patient subtypes, decision making in the subtyping process,
-and visualization along the way with a strong emphasis on
+comprehensive suite of tools to assist users in transforming multi-modal
+tabular data into cluster solutions, decision making in the clustering
+process, and visualization along the way with a strong emphasis on
 context-specific utility and principled validation of results.
 
 ## Installation
@@ -28,12 +28,12 @@ has the best stuff!):
 devtools::install_github("BRANCHlab/metasnf")
 
 # Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v0.6.5")
+devtools::install_github("BRANCHlab/metasnf@v0.6.7")
 ```
 
 ## Quick Start
 
-An extremely minimal usage of the package looks something like this:
+Minimal usage of the package looks like this:
 
 ``` r
 # Load the package
@@ -48,6 +48,8 @@ data_list <- generate_data_list(
     list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
     uid = "patient"
 )
+#> Warning in generate_data_list(list(abcd_cort_t, "cortical_thickness",
+#> "neuroimaging", : 200 subject(s) dropped due to incomplete data.
 
 # Specifying 5 different sets of settings for SNF
 settings_matrix <- generate_settings_matrix(
@@ -57,15 +59,12 @@ settings_matrix <- generate_settings_matrix(
     seed = 42
 )
 #> [1] "The global seed has been changed!"
-```
-
-``` r
 
 # This matrix has clustering solutions for each of the 5 SNF runs!
 solutions_matrix <- batch_snf(data_list, settings_matrix)
 #> [1] "Row: 1/5 | Time remaining: 1 seconds"
-#> [1] "Row: 2/5 | Time remaining: 1 seconds"
-#> [1] "Row: 3/5 | Time remaining: 1 seconds"
+#> [1] "Row: 2/5 | Time remaining: 0 seconds"
+#> [1] "Row: 3/5 | Time remaining: 0 seconds"
 #> [1] "Row: 4/5 | Time remaining: 0 seconds"
 #> [1] "Row: 5/5 | Time remaining: 0 seconds"
 #> [1] "Total time taken: 1 seconds."
