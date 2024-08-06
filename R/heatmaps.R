@@ -1363,10 +1363,20 @@ save_plot <- function(plot,
 #'
 #' @param matrix Matrix to cluster.
 #'
+#' @param dist_method Distance method to apply to the matrix. Argument is
+#' directly passed into stats::dist. Options include "euclidean", "maximum",
+#' "manhattan", "canberra", "binary", or "minkowski".
+#'
+#' @param hclust_method Which agglomerative method to be passed into
+#' stats::hclust. Options include "ward.D", "ward.D2", "single", "complete",
+#' "average", "mcquitty", "median", or "centroid".
+#'
 #' @export
-get_matrix_order <- function(matrix) {
-    distance_matrix <- stats::dist(matrix, method = "euclidean")
-    hclust_result <- stats::hclust(distance_matrix, method = "complete")
+get_matrix_order <- function(matrix,
+                             dist_method = "euclidean",
+                             hclust_method = "complete") {
+    distance_matrix <- stats::dist(matrix, method = dist_method)
+    hclust_result <- stats::hclust(distance_matrix, method = hclust_method)
     order <- hclust_result$order
     return(order)
 }

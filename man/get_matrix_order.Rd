@@ -4,10 +4,18 @@
 \alias{get_matrix_order}
 \title{Return the hierarchical clustering order of a matrix}
 \usage{
-get_matrix_order(matrix)
+get_matrix_order(matrix, dist_method = "euclidean", hclust_method = "complete")
 }
 \arguments{
 \item{matrix}{Matrix to cluster.}
+
+\item{dist_method}{Distance method to apply to the matrix. Argument is
+directly passed into stats::dist. Options include "euclidean", "maximum",
+"manhattan", "canberra", "binary", or "minkowski".}
+
+\item{hclust_method}{Which agglomerative method to be passed into
+stats::hclust. Options include "ward.D", "ward.D2", "single", "complete",
+"average", "mcquitty", "median", or "centroid".}
 }
 \description{
 Return the hierarchical clustering order of a matrix
