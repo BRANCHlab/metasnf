@@ -62,7 +62,7 @@ settings_matrix <- generate_settings_matrix(
 
 # This matrix has clustering solutions for each of the 5 SNF runs!
 solutions_matrix <- batch_snf(data_list, settings_matrix)
-#> [1] "Row: 1/5 | Time remaining: 1 seconds"
+#> [1] "Row: 1/5 | Time remaining: 0 seconds"
 #> [1] "Row: 2/5 | Time remaining: 0 seconds"
 #> [1] "Row: 3/5 | Time remaining: 0 seconds"
 #> [1] "Row: 4/5 | Time remaining: 0 seconds"
