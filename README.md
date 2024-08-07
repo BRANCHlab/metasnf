@@ -28,7 +28,7 @@ has the best stuff!):
 devtools::install_github("BRANCHlab/metasnf")
 
 # Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v0.6.7")
+devtools::install_github("BRANCHlab/metasnf@v0.6.8")
 ```
 
 ## Quick Start

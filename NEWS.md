@@ -1,3 +1,9 @@
+# metasnf 0.6.8
+
+## New functionality
+
+* `get_matrix_order` has arguments allowing users to control which distance metric and agglomerative hierarchical clustering methods are used to sort matrices
+
 # metasnf 0.6.7
 
 ## Minor changes
