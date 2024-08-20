@@ -11,7 +11,7 @@ feature separation across all features in provided data/target_lists."><meta nam
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@ feature separation across all features in provided data/target_lists.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mc_manhattan_plot</span><span class="op">(</span></span>
-<span>  <span class="va">rep_solution</span>,</span>
+<span>  <span class="va">extended_solutions_matrix</span>,</span>
 <span>  data_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  target_list <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable_order <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -72,9 +72,10 @@ feature separation across all features in provided data/target_lists.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-rep-solution">rep_solution<a class="anchor" aria-label="anchor" href="#arg-rep-solution"></a></dt>
-<dd><p>The dataframe of representative solutions from the
-<code><a href="get_representative_solutions.html">get_representative_solutions()</a></code> function.</p></dd>
+<dl><dt id="arg-extended-solutions-matrix">extended_solutions_matrix<a class="anchor" aria-label="anchor" href="#arg-extended-solutions-matrix"></a></dt>
+<dd><p>A solutions_matrix that contains "_pval"
+columns containing the values to be plotted. This object is the output of
+<code><a href="extend_solutions.html">extend_solutions()</a></code>.</p></dd>
 
 
 <dt id="arg-data-list">data_list<a class="anchor" aria-label="anchor" href="#arg-data-list"></a></dt>
@@ -128,7 +129,7 @@ vertical lines at.</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Prashanth Velayudhan, Nicholas Chan, Xiaoqiao Xu, Prajkta Kallurkar, Madeline Couse, Julia Smith, Maria T Secara, Nick Denson, Stephanie H Ameis, Ana Patricia Balbon, Adam Taback, Brian Cox, Shihao Ma, Anna Goldenberg, Bo Wang, Linda T Hiraki, Anne L Wheeler, Jasbir Dhaliwal, Colin Hawco, Lauren Erdman.</p>
+  <p>Developed by Prashanth Velayudhan, Xiaoqiao Xu, Prajkta Kallurkar, Ana Patricia Balbon, Maria T Secara, Adam Taback, Denise Sabac, Nicholas Chan, Shihao Ma, Anna Goldenberg, Bo Wang, Daniel Felsky, Stephanie H Ameis, Brian Cox, Colin Hawco, Lauren Erdman, Anne L Wheeler.</p>
 </div>
 
 <div class="pkgdown-footer-right">

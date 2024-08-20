@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,6 +124,8 @@ over what the default clustering looks like.</p>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; Warning in clust_alg(fused_network): Spectral clustering provided a solution of</span></span>
+<span><span class="co">#&gt; size 9 when the number requested based on the rotation cost heuristic was 10.</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>
@@ -199,7 +201,7 @@ provide <code>batch_snf</code> with a custom
 <span><span class="co">#&gt; $spectral_eigen</span></span>
 <span><span class="co">#&gt; function (similarity_matrix) </span></span>
 <span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     estimated_n &lt;- SNFtool::estimateNumberOfClustersGivenGraph(W = similarity_matrix, </span></span>
+<span><span class="co">#&gt;     estimated_n &lt;- estimate_nclust_given_graph(W = similarity_matrix, </span></span>
 <span><span class="co">#&gt;         NUMC = 2:10)</span></span>
 <span><span class="co">#&gt;     number_of_clusters &lt;- estimated_n$`Eigen-gap best`</span></span>
 <span><span class="co">#&gt;     solution &lt;- SNFtool::spectralClustering(similarity_matrix, </span></span>
@@ -212,13 +214,13 @@ provide <code>batch_snf</code> with a custom
 <span><span class="co">#&gt;     }</span></span>
 <span><span class="co">#&gt;     return(solution_data)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x564aded50778&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x560e5bd51598&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $spectral_rot</span></span>
 <span><span class="co">#&gt; function (similarity_matrix) </span></span>
 <span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     estimated_n &lt;- SNFtool::estimateNumberOfClustersGivenGraph(W = similarity_matrix, </span></span>
+<span><span class="co">#&gt;     estimated_n &lt;- estimate_nclust_given_graph(W = similarity_matrix, </span></span>
 <span><span class="co">#&gt;         NUMC = 2:10)</span></span>
 <span><span class="co">#&gt;     number_of_clusters &lt;- estimated_n$`Rotation cost best`</span></span>
 <span><span class="co">#&gt;     solution &lt;- SNFtool::spectralClustering(similarity_matrix, </span></span>
@@ -231,7 +233,7 @@ provide <code>batch_snf</code> with a custom
 <span><span class="co">#&gt;     }</span></span>
 <span><span class="co">#&gt;     return(solution_data)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x564aded52890&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x560e5bd53800&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span>
 <span></span>
 <span><span class="co"># A prettier format:</span></span>
@@ -554,7 +556,7 @@ may vary!</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Prashanth Velayudhan, Nicholas Chan, Xiaoqiao Xu, Prajkta Kallurkar, Madeline Couse, Julia Smith, Maria T Secara, Nick Denson, Stephanie H Ameis, Ana Patricia Balbon, Adam Taback, Brian Cox, Shihao Ma, Anna Goldenberg, Bo Wang, Linda T Hiraki, Anne L Wheeler, Jasbir Dhaliwal, Colin Hawco, Lauren Erdman.</p>
+  <p>Developed by Prashanth Velayudhan, Xiaoqiao Xu, Prajkta Kallurkar, Ana Patricia Balbon, Maria T Secara, Adam Taback, Denise Sabac, Nicholas Chan, Shihao Ma, Anna Goldenberg, Bo Wang, Daniel Felsky, Stephanie H Ameis, Brian Cox, Colin Hawco, Lauren Erdman, Anne L Wheeler.</p>
 </div>
 
 <div class="pkgdown-footer-right">

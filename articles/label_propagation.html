@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -207,7 +207,7 @@ the results into a simple label propagating function,
 <span><span class="co"># Determining solution with the lowest minimum p-value</span></span>
 <span><span class="va">lowest_min_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">$</span><span class="st">"min_pval"</span> <span class="op">==</span> <span class="va">lowest_min_pval</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1</span></span>
+<span><span class="co">#&gt; [1] 5</span></span>
 <span><span class="va">top_row</span> <span class="op">&lt;-</span> <span class="va">extended_solutions_matrix</span><span class="op">[</span><span class="fl">4</span>, <span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Propagate that solution to the subjects in the test set</span></span>
@@ -260,28 +260,28 @@ provided by this procedure.</p>
 <span><span class="co">#&gt; [1] "Processing row 5 of 5..."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                 subjectkey group 1 2 3 4  5</span></span>
-<span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 train 1 1 5 1 10</span></span>
-<span><span class="co">#&gt; 2 subject_NDAR_INV0J4PYA5F train 2 1 5 1  3</span></span>
-<span><span class="co">#&gt; 3 subject_NDAR_INV10OMKVLE train 1 1 3 2  5</span></span>
-<span><span class="co">#&gt; 4 subject_NDAR_INV15FPCW4O train 1 1 4 1  4</span></span>
-<span><span class="co">#&gt; 5 subject_NDAR_INV19NB4RJK train 1 1 8 2  9</span></span>
-<span><span class="co">#&gt; 6 subject_NDAR_INV1HLGR738 train 1 2 8 1  9</span></span>
+<span><span class="co">#&gt;                 subjectkey group 1 2 3 4 5</span></span>
+<span><span class="co">#&gt; 1 subject_NDAR_INV0567T2Y9 train 1 1 6 1 3</span></span>
+<span><span class="co">#&gt; 2 subject_NDAR_INV0J4PYA5F train 2 1 6 1 2</span></span>
+<span><span class="co">#&gt; 3 subject_NDAR_INV10OMKVLE train 1 1 5 2 4</span></span>
+<span><span class="co">#&gt; 4 subject_NDAR_INV15FPCW4O train 1 1 2 1 6</span></span>
+<span><span class="co">#&gt; 5 subject_NDAR_INV19NB4RJK train 1 1 3 2 5</span></span>
+<span><span class="co">#&gt; 6 subject_NDAR_INV1HLGR738 train 1 2 3 1 5</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                   subjectkey group 1 2 3 4 5</span></span>
-<span><span class="co">#&gt; 95  subject_NDAR_INVJEV61XIU  test 2 2 2 2 2</span></span>
-<span><span class="co">#&gt; 96  subject_NDAR_INVJR3S271G  test 1 1 4 2 4</span></span>
+<span><span class="co">#&gt; 95  subject_NDAR_INVJEV61XIU  test 2 2 2 2 7</span></span>
+<span><span class="co">#&gt; 96  subject_NDAR_INVJR3S271G  test 1 1 2 2 6</span></span>
 <span><span class="co">#&gt; 97  subject_NDAR_INVK9ULDQA2  test 1 1 1 1 1</span></span>
-<span><span class="co">#&gt; 98  subject_NDAR_INVKYH529RD  test 1 1 7 1 7</span></span>
-<span><span class="co">#&gt; 99  subject_NDAR_INVL045Z1TY  test 1 2 6 2 8</span></span>
-<span><span class="co">#&gt; 100 subject_NDAR_INVLDQH8ATK  test 1 1 6 1 8</span></span></code></pre></div>
+<span><span class="co">#&gt; 98  subject_NDAR_INVKYH529RD  test 1 1 6 1 2</span></span>
+<span><span class="co">#&gt; 99  subject_NDAR_INVL045Z1TY  test 1 2 4 2 3</span></span>
+<span><span class="co">#&gt; 100 subject_NDAR_INVLDQH8ATK  test 1 1 4 1 3</span></span></code></pre></div>
   </main>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Prashanth Velayudhan, Nicholas Chan, Xiaoqiao Xu, Prajkta Kallurkar, Madeline Couse, Julia Smith, Maria T Secara, Nick Denson, Stephanie H Ameis, Ana Patricia Balbon, Adam Taback, Brian Cox, Shihao Ma, Anna Goldenberg, Bo Wang, Linda T Hiraki, Anne L Wheeler, Jasbir Dhaliwal, Colin Hawco, Lauren Erdman.</p>
+  <p>Developed by Prashanth Velayudhan, Xiaoqiao Xu, Prajkta Kallurkar, Ana Patricia Balbon, Maria T Secara, Adam Taback, Denise Sabac, Nicholas Chan, Shihao Ma, Anna Goldenberg, Bo Wang, Daniel Felsky, Stephanie H Ameis, Brian Cox, Colin Hawco, Lauren Erdman, Anne L Wheeler.</p>
 </div>
 
 <div class="pkgdown-footer-right">

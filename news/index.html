@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,21 @@
 
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.7.0" id="metasnf-070">metasnf 0.7.0<a class="anchor" aria-label="anchor" href="#metasnf-070"></a></h2>
+<div class="section level3">
+<h3 id="minor-changes-0-7-0">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-7-0"></a></h3>
+<ul><li>warnings provided when generating a data list with duplicate feature names</li>
+<li>warnings provided when using <code><a href="../reference/mc_manhattan_plot.html">mc_manhattan_plot()</a></code> with a data list containing duplicate feature names</li>
+<li>
+<code><a href="../reference/mc_manhattan_plot.html">mc_manhattan_plot()</a></code> parameter <code>rep_solution</code> replaced with more accurate name <code>extended_solutions_matrix</code> (solutions matrix with _pval columns)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fix-0-7-0">Bug fix<a class="anchor" aria-label="anchor" href="#bug-fix-0-7-0"></a></h3>
+<ul><li>
+<code><a href="https://rdrr.io/pkg/SNFtool/man/estimateNumberOfClustersGivenGraph.html" class="external-link">SNFtool::estimateNumberOfClustersGivenGraph()</a></code> could occasionally error out on the basis of calculating eigenvectors (eigengap heuristic) for a Laplacian with floating point values that were too small. Adapted function <code><a href="../reference/estimate_nclust_given_graph.html">estimate_nclust_given_graph()</a></code> slightly scales up Laplacian to reduce the risk of encountering this error (presumably without any change to resulting cluster number estimate)</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.8" id="metasnf-068">metasnf 0.6.8<a class="anchor" aria-label="anchor" href="#metasnf-068"></a></h2>
 <div class="section level3">
@@ -317,7 +332,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Prashanth Velayudhan, Nicholas Chan, Xiaoqiao Xu, Prajkta Kallurkar, Madeline Couse, Julia Smith, Maria T Secara, Nick Denson, Stephanie H Ameis, Ana Patricia Balbon, Adam Taback, Brian Cox, Shihao Ma, Anna Goldenberg, Bo Wang, Linda T Hiraki, Anne L Wheeler, Jasbir Dhaliwal, Colin Hawco, Lauren Erdman.</p>
+  <p>Developed by Prashanth Velayudhan, Xiaoqiao Xu, Prajkta Kallurkar, Ana Patricia Balbon, Maria T Secara, Adam Taback, Denise Sabac, Nicholas Chan, Shihao Ma, Anna Goldenberg, Bo Wang, Daniel Felsky, Stephanie H Ameis, Brian Cox, Colin Hawco, Lauren Erdman, Anne L Wheeler.</p>
 </div>
 
 <div class="pkgdown-footer-right">
