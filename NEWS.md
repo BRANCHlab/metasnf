@@ -1,3 +1,15 @@
+# metasnf 0.7.0
+
+## Minor changes
+
+* warnings provided when generating a data list with duplicate feature names
+* warnings provided when using `mc_manhattan_plot()` with a data list containing duplicate feature names
+* `mc_manhattan_plot()` parameter `rep_solution` replaced with more accurate name `extended_solutions_matrix` (solutions matrix with _pval columns)
+
+## Bug fix
+
+* `SNFtool::estimateNumberOfClustersGivenGraph()` could occasionally error out on the basis of calculating eigenvectors (eigengap heuristic) for a Laplacian with floating point values that were too small. Adapted function `estimate_nclust_given_graph()` slightly scales up Laplacian to reduce the risk of encountering this error (presumably without any change to resulting cluster number estimate)
+
 # metasnf 0.6.8
 
 ## New functionality

@@ -1,6 +1,6 @@
 Package: metasnf
 Title: Meta Clustering with Similarity Network Fusion
-Version: 0.6.8
+Version: 0.7.0
 Authors@R:
     c(
         person(
