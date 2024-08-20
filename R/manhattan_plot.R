@@ -124,8 +124,9 @@ var_manhattan_plot <- function(data_list,
 #' `get_representative_solutions()`, returns a Manhattan plot for showing
 #' feature separation across all features in provided data/target_lists.
 #'
-#' @param rep_solution The dataframe of representative solutions from the
-#' `get_representative_solutions()` function.
+#' @param extended_solutions_matrix A solutions_matrix that contains "_pval"
+#' columns containing the values to be plotted. This object is the output of
+#' `extend_solutions()`.
 #'
 #' @param data_list List of dataframes containing data information.
 #'
@@ -151,7 +152,7 @@ var_manhattan_plot <- function(data_list,
 #' @param domain_colours Named vector of colours for domains.
 #'
 #' @export
-mc_manhattan_plot <- function(rep_solution,
+mc_manhattan_plot <- function(extended_solutions_matrix,
                               data_list = NULL,
                               target_list = NULL,
                               variable_order = NULL,
@@ -176,30 +177,40 @@ mc_manhattan_plot <- function(rep_solution,
     domain <- ""
     neg_log_pval <- ""
     ###########################################################################
-    # Formatting rep_solution as dataframe
+    # Formatting extended_solutions_matrix as dataframe
     ###########################################################################
-    rep_solution <- data.frame(rep_solution)
+    extended_solutions_matrix <- data.frame(extended_solutions_matrix)
     ###########################################################################
     # Select row_id, label, and p-value related columns only
     ###########################################################################
-    if (!"label" %in% colnames(rep_solution)) {
-        rep_solution$"label" <- rep_solution$"row_id"
+    if (!"label" %in% colnames(extended_solutions_matrix)) {
+        extended_solutions_matrix$"label" <- extended_solutions_matrix$"row_id"
     }
-    rep_solution <- rep_solution |>
+    extended_solutions_matrix <- extended_solutions_matrix |>
         dplyr::select(
             "row_id",
             "label",
             dplyr::ends_with("_pval")
         )
-    rep_solution <- dplyr::select(
-        rep_solution,
+    if (ncol(extended_solutions_matrix) == 2) {
+        stop(
+            "extended_solutions_matrix is missing p-value columns. Did you",
+            " provide an unextended solutions matrix instead?"
+        )
+    }
+    extended_solutions_matrix <- dplyr::select(
+        extended_solutions_matrix,
         -dplyr::contains(c("min_pval", "mean_pval", "max_pval"))
     )
     ###########################################################################
     # Convert row_id and label to factors
     ###########################################################################
-    rep_solution$"row_id" <- factor(rep_solution$"row_id")
-    rep_solution$"label" <- factor(rep_solution$"label")
+    extended_solutions_matrix$"row_id" <- factor(
+        extended_solutions_matrix$"row_id"
+    )
+    extended_solutions_matrix$"label" <- factor(
+        extended_solutions_matrix$"label"
+    )
     ###########################################################################
     # Re-assign names to the data list and target list
     ###########################################################################
@@ -221,9 +232,9 @@ mc_manhattan_plot <- function(rep_solution,
     ###########################################################################
     # Columns that end with _pval are truncated by neg_log_pval_thresh
     ###########################################################################
-    var_cols_idx <- endsWith(colnames(rep_solution), "_pval")
-    var_cols <- colnames(rep_solution)[var_cols_idx]
-    cutoff_var_cols <- rep_solution[, var_cols] |>
+    var_cols_idx <- endsWith(colnames(extended_solutions_matrix), "_pval")
+    var_cols <- colnames(extended_solutions_matrix)[var_cols_idx]
+    cutoff_var_cols <- extended_solutions_matrix[, var_cols] |>
         apply(
             MARGIN = 2,
             FUN = function(x) {
@@ -242,8 +253,8 @@ mc_manhattan_plot <- function(rep_solution,
     if (dim(cutoff_var_cols)[2] == 1) {
         cutoff_var_cols <- t(cutoff_var_cols)
     }
-    rep_solution[, var_cols] <- cutoff_var_cols
-    summary_data <- rep_solution |>
+    extended_solutions_matrix[, var_cols] <- cutoff_var_cols
+    summary_data <- extended_solutions_matrix |>
         tidyr::pivot_longer(
             !(c("row_id", "label")),
             names_to = "variable",

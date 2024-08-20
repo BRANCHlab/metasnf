@@ -170,6 +170,10 @@ generate_data_list <- function(...,
     ###########################################################################
     data_list <- dl_uid_first_col(data_list)
     ###########################################################################
+    # Ensure there are no duplicate feature names
+    ###########################################################################
+    dl_has_duplicates(data_list)
+    ###########################################################################
     # Name the components of the data list
     ###########################################################################
     names(data_list) <- summarize_dl(data_list)$"name"
@@ -612,4 +616,28 @@ merge_data_lists <- function(data_list1, data_list2) {
     )
     names(merged_data_list) <- dl1_names
     return(merged_data_list)
+}
+
+#' Check if data list contains any duplicate functions
+#'
+#' @param data_list A nested list of input data from `generate_data_list()`.
+#'
+#' @export
+dl_has_duplicates <- function(data_list) {
+    features <- data_list |> lapply(
+        function(x) {
+            return(colnames(x$"data")[-1])
+        }
+    ) |>
+        unlist() |>
+        as.character()
+    duplicates <- unique(features[duplicated(features)])
+    if (length(duplicates) > 0) {
+        warning(
+            "Generated data_list has duplicate feature names, which can",
+            " cause problems with downstream analyses.\n\n",
+            "Duplicate feature names: \n",
+            paste0(1:length(duplicates), ". ", duplicates, "\n")
+        )
+    }
 }

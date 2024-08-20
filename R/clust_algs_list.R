@@ -110,7 +110,7 @@ summarize_clust_algs_list <- function(clust_algs_list) {
 #'
 #' @export
 spectral_eigen <- function(similarity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(
+    estimated_n <- estimate_nclust_given_graph(
         W = similarity_matrix,
         NUMC = 2:10
     )
@@ -143,7 +143,7 @@ spectral_eigen <- function(similarity_matrix) {
 #'
 #' @export
 spectral_rot <- function(similarity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(
+    estimated_n <- estimate_nclust_given_graph(
         W = similarity_matrix,
         NUMC = 2:10
     )
@@ -177,7 +177,7 @@ spectral_rot <- function(similarity_matrix) {
 #'
 #' @export
 spectral_eigen_classic <- function(similarity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(
+    estimated_n <- estimate_nclust_given_graph(
         W = similarity_matrix,
         NUMC = 2:5
     )
@@ -201,7 +201,7 @@ spectral_eigen_classic <- function(similarity_matrix) {
 #'
 #' @export
 spectral_rot_classic <- function(similarity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(
+    estimated_n <- estimate_nclust_given_graph(
         W = similarity_matrix,
         NUMC = 2:5
     )

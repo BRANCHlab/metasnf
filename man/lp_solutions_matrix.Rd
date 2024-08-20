@@ -7,7 +7,6 @@
 lp_solutions_matrix(
   train_solutions_matrix,
   full_data_list,
-  clust_algs_list = NULL,
   distance_metrics_list = NULL,
   weights_matrix = NULL
 )
@@ -21,9 +20,6 @@ for label propagation.}
 
 \item{full_data_list}{A data_list containing subjects from both the training
 and testing sets.}
-
-\item{clust_algs_list}{If a custom clustering algorithm list was used during
-the original batch_snf call, include that clust_algs_list here as well.}
 
 \item{distance_metrics_list}{Like above - the distance_metrics_list (if any)
 that was used for the original batch_snf call.}

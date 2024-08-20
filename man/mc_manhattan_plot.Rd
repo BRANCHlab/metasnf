@@ -5,7 +5,7 @@
 \title{Manhattan plot of feature-meta cluster associaiton p-values}
 \usage{
 mc_manhattan_plot(
-  rep_solution,
+  extended_solutions_matrix,
   data_list = NULL,
   target_list = NULL,
   variable_order = NULL,
@@ -20,8 +20,9 @@ mc_manhattan_plot(
 )
 }
 \arguments{
-\item{rep_solution}{The dataframe of representative solutions from the
-\code{get_representative_solutions()} function.}
+\item{extended_solutions_matrix}{A solutions_matrix that contains "_pval"
+columns containing the values to be plotted. This object is the output of
+\code{extend_solutions()}.}
 
 \item{data_list}{List of dataframes containing data information.}
 
