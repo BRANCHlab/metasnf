@@ -36,6 +36,23 @@ extend_solutions <- function(solutions_matrix,
                              min_pval = 1e-10,
                              processes = 1) {
     ###########################################################################
+    # Remove nclust = 1 solutions
+    ###########################################################################
+    single_cluster_solutions <- apply(
+        get_cluster_solutions(solutions_matrix)[, -1],
+        2,
+        function(x) length(unique(x)) == 1
+    ) |>
+        as.logical() |>
+        which()
+    if (length(single_cluster_solutions) > 0) {
+        warning(
+            "Single-cluster solution rows removed: ",
+            single_cluster_solutions
+        )
+        solutions_matrix <- solutions_matrix[-c(single_cluster_solutions), ]
+    }
+    ###########################################################################
     # If data_list and target_list exist, merge them as data_list.
     ###########################################################################
     data_list <- c(data_list, target_list)

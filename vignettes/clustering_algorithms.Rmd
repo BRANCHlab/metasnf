@@ -191,32 +191,57 @@ Any clustering algorithm can be used as long as you can write a function for it 
     * The first item (named "solution") is a single N-dimensional vector of numbers corresponding to the observations in the similarity matrix
     * The second item (named "nclust") is a single integer indicating the number of clusters that the algorithm is supposed to have generated
 
-That second point seems redundant in that it could be calculated by simply running `length(unique(solution))`, but it's useful to keep track of it separately for troubleshooting purposes.
+Note that the number of clusters parameter fed into `SNFtool::spectralClustering` doesn't always return a solution containing that many clusters.
+For example, an affinity matrix where every observation is identical to all other observations could not yield more than a 1 cluster solution, regardless of how many clusters were requested.
 
-Note that the function should *not* take number of clusters as an argument - if you want to explore the same clustering algorithm with a varying number of clusters, you'll need to provide a separate function for each number of clusters you're interested in.
+Also note that the function should *not* take number of clusters as an argument - if you want to explore the same clustering algorithm with a varying number of clusters, you'll need to provide a separate function for each number of clusters you're interested in.
 
 The source code for the two default functions are shown below:
 
 ```{r eval = FALSE}
 # Default clustering algorithm #1
 spectral_eigen <- function(similarity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(
-        similarity_matrix
+    estimated_n <- estimate_nclust_given_graph(
+        W = similarity_matrix,
+        NUMC = 2:10
     )
-    number_of_clusters <- estimated_n$`Eigen-gap best`
+    nclust_estimate <- estimated_n$`Eigen-gap best`
     solution <- SNFtool::spectralClustering(
         similarity_matrix,
-        number_of_clusters
+        nclust_estimate
     )
-    return(list("solution" = solution, "nclust" = number_of_clusters))
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (nclust_estimate != nclust) {
+        warning(
+            "Spectral clustering provided a solution of size ", nclust,
+            " when the number requested based on the eigen-gap heuristic",
+            " was ", nclust_estimate, "."
+        )
+    }
+    return(solution_data)
 }
 
 # Default clustering algorithm #2
 spectral_rot <- function(similarity_matrix) {
-    estimated_n <- SNFtool::estimateNumberOfClustersGivenGraph(similarity_matrix)
-    number_of_clusters <- estimated_n$`Rotation cost best`
-    solution <- SNFtool::spectralClustering(similarity_matrix, number_of_clusters)
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
+    estimated_n <- estimate_nclust_given_graph(
+        W = similarity_matrix,
+        NUMC = 2:10
+    )
+    nclust_estimate <- estimated_n$`Rotation cost best`
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        nclust_estimate
+    )
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (nclust_estimate != length(unique(solution))) {
+        warning(
+            "Spectral clustering provided a solution of size ", nclust,
+            " when the number requested based on the rotation cost heuristic",
+            " was ", nclust_estimate, "."
+        )
+    }
     return(solution_data)
 }
 ```

@@ -114,18 +114,18 @@ spectral_eigen <- function(similarity_matrix) {
         W = similarity_matrix,
         NUMC = 2:10
     )
-    number_of_clusters <- estimated_n$`Eigen-gap best`
+    nclust_estimate <- estimated_n$`Eigen-gap best`
     solution <- SNFtool::spectralClustering(
         similarity_matrix,
-        number_of_clusters
+        nclust_estimate
     )
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    if (number_of_clusters != length(unique(solution))) {
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (nclust_estimate != nclust) {
         warning(
-            "Spectral clustering provided a solution of size ",
-            length(unique(solution)),
+            "Spectral clustering provided a solution of size ", nclust,
             " when the number requested based on the eigen-gap heuristic",
-            " was ", number_of_clusters, "."
+            " was ", nclust_estimate, "."
         )
     }
     return(solution_data)
@@ -147,18 +147,18 @@ spectral_rot <- function(similarity_matrix) {
         W = similarity_matrix,
         NUMC = 2:10
     )
-    number_of_clusters <- estimated_n$`Rotation cost best`
+    nclust_estimate <- estimated_n$`Rotation cost best`
     solution <- SNFtool::spectralClustering(
         similarity_matrix,
-        number_of_clusters
+        nclust_estimate
     )
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    if (number_of_clusters != length(unique(solution))) {
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (nclust_estimate != length(unique(solution))) {
         warning(
-            "Spectral clustering provided a solution of size ",
-            length(unique(solution)),
+            "Spectral clustering provided a solution of size ", nclust,
             " when the number requested based on the rotation cost heuristic",
-            " was ", number_of_clusters, "."
+            " was ", nclust_estimate, "."
         )
     }
     return(solution_data)
@@ -181,12 +181,21 @@ spectral_eigen_classic <- function(similarity_matrix) {
         W = similarity_matrix,
         NUMC = 2:5
     )
-    number_of_clusters <- estimated_n$`Eigen-gap best`
+    nclust_estimate <- estimated_n$`Eigen-gap best`
     solution <- SNFtool::spectralClustering(
         similarity_matrix,
-        number_of_clusters
+        nclust_estimate
     )
-    return(list("solution" = solution, "nclust" = number_of_clusters))
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (nclust_estimate != nclust) {
+        warning(
+            "Spectral clustering provided a solution of size ", nclust,
+            " when the number requested based on the rotation cost heuristic",
+            " was ", nclust_estimate, "."
+        )
+    }
+    return(solution_data)
 }
 
 #' Clustering algorithm: Spectral clustering with rotation cost heuristic
@@ -205,18 +214,18 @@ spectral_rot_classic <- function(similarity_matrix) {
         W = similarity_matrix,
         NUMC = 2:5
     )
-    number_of_clusters <- estimated_n$`Rotation cost best`
+    nclust_estimate <- estimated_n$`Rotation cost best`
     solution <- SNFtool::spectralClustering(
         similarity_matrix,
-        number_of_clusters
+        nclust_estimate
     )
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    if (number_of_clusters != length(unique(solution))) {
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (nclust_estimate != nclust) {
         warning(
-            "Spectral clustering provided a solution of size ",
-            length(unique(solution)),
+            "Spectral clustering provided a solution of size ", nclust,
             " when the number requested based on the rotation cost heuristic",
-            " was ", number_of_clusters, "."
+            " was ", nclust_estimate, "."
         )
     }
     return(solution_data)
@@ -238,13 +247,12 @@ spectral_two <- function(similarity_matrix) {
         similarity_matrix,
         number_of_clusters
     )
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    if (number_of_clusters != length(unique(solution))) {
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (number_of_clusters != nclust) {
         warning(
-            "Spectral clustering provided a solution of size ",
-            length(unique(solution)),
-            " when the number requested based on the eigen-gap heuristic",
-            " was 2."
+            "Spectral clustering provided a solution of size ", nclust,
+            " when the number requested was 2."
         )
     }
     return(solution_data)
@@ -266,13 +274,12 @@ spectral_three <- function(similarity_matrix) {
         similarity_matrix,
         number_of_clusters
     )
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    if (number_of_clusters != length(unique(solution))) {
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (number_of_clusters != nclust) {
         warning(
-            "Spectral clustering provided a solution of size ",
-            length(unique(solution)),
-            " when the number requested based on the eigen-gap heuristic",
-            " was 3."
+            "Spectral clustering provided a solution of size ", nclust,
+            " when the number requested was 3."
         )
     }
     return(solution_data)
@@ -294,13 +301,12 @@ spectral_four <- function(similarity_matrix) {
         similarity_matrix,
         number_of_clusters
     )
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    if (number_of_clusters != length(unique(solution))) {
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (number_of_clusters != nclust) {
         warning(
-            "Spectral clustering provided a solution of size ",
-            length(unique(solution)),
-            " when the number requested based on the eigen-gap heuristic",
-            " was 4."
+            "Spectral clustering provided a solution of size ", nclust,
+            " when the number requested was 4."
         )
     }
     return(solution_data)
@@ -322,13 +328,12 @@ spectral_five <- function(similarity_matrix) {
         similarity_matrix,
         number_of_clusters
     )
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    if (number_of_clusters != length(unique(solution))) {
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (number_of_clusters != nclust) {
         warning(
-            "Spectral clustering provided a solution of size ",
-            length(unique(solution)),
-            " when the number requested based on the eigen-gap heuristic",
-            " was 5."
+            "Spectral clustering provided a solution of size ", nclust,
+            " when the number requested was 5."
         )
     }
     return(solution_data)
@@ -350,13 +355,12 @@ spectral_six <- function(similarity_matrix) {
         similarity_matrix,
         number_of_clusters
     )
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    if (number_of_clusters != length(unique(solution))) {
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (number_of_clusters != nclust) {
         warning(
-            "Spectral clustering provided a solution of size ",
-            length(unique(solution)),
-            " when the number requested based on the eigen-gap heuristic",
-            " was 6."
+            "Spectral clustering provided a solution of size ", nclust,
+            " when the number requested was 6."
         )
     }
     return(solution_data)
@@ -378,13 +382,12 @@ spectral_seven <- function(similarity_matrix) {
         similarity_matrix,
         number_of_clusters
     )
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    if (number_of_clusters != length(unique(solution))) {
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (number_of_clusters != nclust) {
         warning(
-            "Spectral clustering provided a solution of size ",
-            length(unique(solution)),
-            " when the number requested based on the eigen-gap heuristic",
-            " was 7."
+            "Spectral clustering provided a solution of size ", nclust,
+            " when the number requested was 7."
         )
     }
     return(solution_data)
@@ -406,13 +409,12 @@ spectral_eight <- function(similarity_matrix) {
         similarity_matrix,
         number_of_clusters
     )
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    if (number_of_clusters != length(unique(solution))) {
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (number_of_clusters != nclust) {
         warning(
-            "Spectral clustering provided a solution of size ",
-            length(unique(solution)),
-            " when the number requested based on the eigen-gap heuristic",
-            " was 8."
+            "Spectral clustering provided a solution of size ", nclust,
+            " when the number requested was 8."
         )
     }
     return(solution_data)
@@ -434,13 +436,12 @@ spectral_nine <- function(similarity_matrix) {
         similarity_matrix,
         number_of_clusters
     )
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    if (number_of_clusters != length(unique(solution))) {
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (number_of_clusters != nclust) {
         warning(
-            "Spectral clustering provided a solution of size ",
-            length(unique(solution)),
-            " when the number requested based on the eigen-gap heuristic",
-            " was 9."
+            "Spectral clustering provided a solution of size ", nclust,
+            " when the number requested was 9."
         )
     }
     return(solution_data)
@@ -457,18 +458,17 @@ spectral_nine <- function(similarity_matrix) {
 #'
 #' @export
 spectral_ten <- function(similarity_matrix) {
-    number_of_clusters <- 9
+    number_of_clusters <- 10
     solution <- SNFtool::spectralClustering(
         similarity_matrix,
         number_of_clusters
     )
-    solution_data <- list("solution" = solution, "nclust" = number_of_clusters)
-    if (number_of_clusters != length(unique(solution))) {
+    nclust <- length(unique(solution))
+    solution_data <- list("solution" = solution, "nclust" = nclust)
+    if (number_of_clusters != nclust) {
         warning(
-            "Spectral clustering provided a solution of size ",
-            length(unique(solution)),
-            " when the number requested based on the eigen-gap heuristic",
-            " was 10."
+            "Spectral clustering provided a solution of size ", nclust,
+            " when the number requested was 10."
         )
     }
     return(solution_data)
