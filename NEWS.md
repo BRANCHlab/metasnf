@@ -1,3 +1,9 @@
+# metasnf 0.7.1
+
+## Possible breaking changes
+
+* Occasionally, spectral clustering results may yield an n-cluster solution where n differed from the number of clusters requested as a parameter in the spectral clustering function itself. Now, the spectral clustering functions provided in metasnf have been updated to report the actual number of clusters in the generated solution, rather than the number of clusters that was requested
+
 # metasnf 0.7.0
 
 ## Minor changes
