@@ -39,7 +39,7 @@ extend_solutions <- function(solutions_matrix,
     # Remove nclust = 1 solutions
     ###########################################################################
     single_cluster_solutions <- apply(
-        get_cluster_solutions(solutions_matrix)[, -1],
+        get_cluster_solutions(solutions_matrix)[, -1, drop = FALSE],
         2,
         function(x) length(unique(x)) == 1
     ) |>
