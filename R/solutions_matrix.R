@@ -377,9 +377,24 @@ ord_reg_pval <- function(predictor, response) {
     # Otherwise, run regular ordinal regression
     response <- as.ordered(response)
     null_model <- MASS::polr(response ~ 1)
-    full_model <- MASS::polr(response ~ predictor)
-    pval <- stats::anova(null_model, full_model)$"Pr(Chi)"[2]
-    return(pval)
+    result <- tryCatch({
+        full_model <- MASS::polr(response ~ predictor)
+        pval <- stats::anova(null_model, full_model)$"Pr(Chi)"[2]
+        return(pval)
+    },
+    error = function(e) {
+        if (grepl("suitable starting values failed", e$message)) {
+            message(
+                "Ordinal regression failed due to MASS:polr error: ",
+                "'attempt to find suitable starting values failed'. p-value",
+                " calculated by linear regression instead."
+            )
+            return(linear_model_pval(predictor, response))
+        } else {
+            print(paste("Error during ordinal regression: ", e$message))
+            return(NA)
+        }
+    })
 }
 
 #' Chi-squared test p-value (generic)
