@@ -91,7 +91,8 @@ bar_plot <- function(df, feature) {
         ) +
         ggplot2::geom_bar(
             stat = "identity",
-            position = ggplot2::position_stack()
+            position = ggplot2::position_stack(),
+            show.legend = TRUE
         ) +
         ggplot2::geom_text(
             ggplot2::aes(
