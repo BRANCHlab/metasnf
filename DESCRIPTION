@@ -17,7 +17,6 @@ Authors@R:
         person("Denise", "Sabac", role = c("aut")),
         person("Nicholas", "Chan", role = c("aut")),
         person("Shihao", "Ma", role = c("aut")),
-        person("Anna", "Goldenberg", role = c("aut")),
         person("Bo", "Wang", role = c("aut")),
         person("Daniel", "Felsky", role = c("aut")),
         person("Stephanie H", "Ameis", role = c("aut")),
