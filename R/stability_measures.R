@@ -136,7 +136,7 @@ subsample_pairwise_aris <- function(data_list_subsamples, settings_matrix) {
     for (row in seq_len(ncol(subsample_solutions[[1]]) - 1)) {
         print(
             paste0(
-                "Calculating pairwise ARIs for subsample ",
+                "Calculating pairwise ARIs for row ",
                 row, "/", nrow(settings_matrix), "..."
             )
         )
