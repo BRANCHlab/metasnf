@@ -22,23 +22,8 @@
 #' @export
 generate_cocluster_data <- function(data_list,
                                     data_list_subsamples,
+                                    subsample_solutions,
                                     settings_matrix_row) {
-    ###########################################################################
-    # A list of all the cluster solutions obtained from each subsample
-    ###########################################################################
-    subsample_solutions <- lapply(
-        seq_along(data_list_subsamples),
-        function(x) {
-            solutions_matrix <- batch_snf(
-                data_list = data_list_subsamples[[x]],
-                settings_matrix_row,
-                quiet = TRUE
-            )
-            cluster_solution <- get_cluster_solutions(solutions_matrix)
-            colnames(cluster_solution) <- c("subjectkey", "cluster")
-            return(cluster_solution)
-        }
-    )
     ###########################################################################
     # Generate main matrix storing cocluster information
     ###########################################################################
