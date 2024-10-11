@@ -33,6 +33,7 @@ estimate_nclust_given_graph <- function(W, NUMC = 2:10) {
     eigs <- eigen(L)
     eigs_order <- sort(eigs$values, index.return=T)$ix
     eigs$values <- eigs$values[eigs_order]
+    eigs$values <- eigs$values / 100
     eigs$vectors <- eigs$vectors[, eigs_order]
     eigengap <- abs(diff(eigs$values))
     quality <- list()
