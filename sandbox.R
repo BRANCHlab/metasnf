@@ -99,14 +99,28 @@ ggsave(
     height = 5
 )
 
+set.seed(42)
 cc_hm <- cocluster_heatmap(
     cocluster_dfs[[1]],
     data_list = data_list,
     top_hm = list(
         "Income" = "household_income",
         "Pubertal Status" = "pubertal_status"
+    ),
+    annotation_colours = list(
+        "Pubertal Status" = colour_scale(
+            c(1, 4),
+            min_colour = "black",
+            max_colour = "purple"
+        ),
+        "Income" = colour_scale(
+            c(1, 3),
+            min_colour = "black",
+            max_colour = "red"
+        )
     )
 )
+cc_hm
 
 save_heatmap(
     heatmap = cc_hm,
@@ -115,5 +129,4 @@ save_heatmap(
     height = 500,
     res = 100
 )
-
 ```

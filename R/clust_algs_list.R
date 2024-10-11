@@ -121,13 +121,6 @@ spectral_eigen <- function(similarity_matrix) {
     )
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
-    if (nclust_estimate != nclust) {
-        warning(
-            "Spectral clustering provided a solution of size ", nclust,
-            " when the number requested based on the eigen-gap heuristic",
-            " was ", nclust_estimate, "."
-        )
-    }
     return(solution_data)
 }
 
@@ -154,13 +147,6 @@ spectral_rot <- function(similarity_matrix) {
     )
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
-    if (nclust_estimate != length(unique(solution))) {
-        warning(
-            "Spectral clustering provided a solution of size ", nclust,
-            " when the number requested based on the rotation cost heuristic",
-            " was ", nclust_estimate, "."
-        )
-    }
     return(solution_data)
 }
 
@@ -188,20 +174,13 @@ spectral_eigen_classic <- function(similarity_matrix) {
     )
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
-    if (nclust_estimate != nclust) {
-        warning(
-            "Spectral clustering provided a solution of size ", nclust,
-            " when the number requested based on the rotation cost heuristic",
-            " was ", nclust_estimate, "."
-        )
-    }
     return(solution_data)
 }
 
 #' Clustering algorithm: Spectral clustering with rotation cost heuristic
 #'
 #' Applies spectral clustering to similarity matrix. Number of clusters is based
-#'  on the rotation cost heuristic.
+#' on the rotation cost heuristic.
 #'
 #' @param similarity_matrix A similarity matrix
 #'
@@ -221,13 +200,6 @@ spectral_rot_classic <- function(similarity_matrix) {
     )
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
-    if (nclust_estimate != nclust) {
-        warning(
-            "Spectral clustering provided a solution of size ", nclust,
-            " when the number requested based on the rotation cost heuristic",
-            " was ", nclust_estimate, "."
-        )
-    }
     return(solution_data)
 }
 

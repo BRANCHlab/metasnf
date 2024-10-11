@@ -26,169 +26,140 @@ Download a copy of the vignette to follow along here: [stability_measures.Rmd](h
 
 In this vignette, we will highlight the main stability measure options in the metasnf package.
 
-Do brace yourself: stability measures scale SNF computation time by the number of settings matrix rows *times* the number of resamples of the data you use.
-Consider trying these functions on scaled down versions of your data or on just a couple of rows of the settings_matrix to get a sense of how long these functions may take to complete on your full dataset.
-The code below isn't actually evaluated in this document (all documentation is re-rendered on every commit, and this vignette simply takes too much time during development), but descriptions of the outputs are provided and you should feel free to try the functions yourself.
-
 ## Data set-up
 
 ```{r eval = FALSE}
 library(metasnf)
 
-# Generate data_list
 data_list <- generate_data_list(
-    list(
-        data = gender_df,
-        name = "gender",
-        domain = "demographics",
-        type = "categorical"
-    ),
-    list(
-        data = diagnosis_df,
-        name = "diagnosis",
-        domain = "clinical",
-        type = "categorical"
-    ),
-    list(
-        data = age_df,
-        name = "age",
-        domain = "demographics",
-        type = "discrete"
-    ),
+    list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(cort_sa, "cortical_area", "neuroimaging", "continuous"),
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
     uid = "unique_id"
 )
 
-# Generate settings_matrix
 settings_matrix <- generate_settings_matrix(
     data_list,
-    nrow = 3,
+    nrow = 4,
     max_k = 40,
     seed = 42
 )
+
+# Cluster solutions made using the full data
+solutions_matrix <- batch_snf(data_list, settings_matrix)
 ```
 
-As an added part of the data set-up, we'll also calculate some subsamples of the data_list.
+To begin start calculating resampling-based stability measures, we'll build subsamples of the data list using the `subsample_data_list` function.
 
 ```{r eval = FALSE}
 data_list_subsamples <- subsample_data_list(
     data_list,
-    n_subsamples = 3, # calculate 30 subsamples
-    subsample_fraction = 0.8 # for each subsample, use random 80% of obs
+    n_subsamples = 100,
+    subsample_fraction = 0.85
 )
 ```
 
-`data_list_subsamples` contains a list of 3 variations of the full data_list.
-Each variation only has a random 80% of the original observations.
-
-
-## Pairwise Adjusted Rand Indices Across Subsamples
-
-`pairwise_aris` is a dataframe that contains the mean and standard deviation of the pairwise adjusted Rand indices between observations for each row of the settings matrix.
+`data_list_subsamples` contains a list of 100 subsamples of the full data list.
+Each variation only has a random 85% of the original observations.
 
 ```{r eval = FALSE}
+batch_subsample_results <- batch_snf_subsamples(
+    data_list_subsamples,
+    settings_matrix
+)
+```
+
+By default, the function returns a one-element list: `cluster_solutions`, which is itself a list of cluster solution data frames corresponding to each of the provided data list subsamples.
+Setting the parameters `return_similarity_matrices`  and `return_solutions_matrices` to `TRUE` will turn the result of the function to a three-element list containing the corresponding solutions matrices and final fused similarity matrices of those cluster solutions, should you require these objects for your own stability calculations.
+
+The function `subsample_pairwise_aris` can then be used to calculate the ARIs between cluster solutions across the subsamples.
+
+```{r eval = FALSE}
+subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
 pairwise_aris <- subsample_pairwise_aris(
-    data_list_subsamples,
-    settings_matrix
+    subsample_cluster_solutions,
+    return_raw_aris = TRUE
 )
 ```
 
-## Persistence of Co-Clustering Across Subsamples
-
-The `fraction_clustered_together` function calculates for every pair of observations that clustered together in the full sample, how often they continued to cluster together in data subsamples.
+`pairwise_aris` is a list containing a summary data frame of the ARIs between subsamples for each row of the original settings matrix, as well as another list of all the generated inter-subsample ARIs as a result of setting `return_raw_aris` to `TRUE`.
+The raw inter-subsample ARIs corresponding to a particualr settings matrix row can be visualized with a heatmap:
 
 ```{r eval = FALSE}
-# Run SNF and clustering
-solutions_matrix <- batch_snf(
-    data_list,
-    settings_matrix
+ComplexHeatmap::Heatmap(
+    raw_aris[[1]],
+    heatmap_legend_param = list(
+        color_bar = "continuous",
+        title = "Inter-Subsample\nARI",
+        at = c(0, 0.5, 1)
+    ),
+    show_column_names = FALSE,
+    show_row_names = FALSE
 )
+```
 
-fraction_together <- fraction_clustered_together(
-    data_list_subsamples,
-    settings_matrix,
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/ss_ari_hm.png){width=700px}
+</center>
+
+To calculate information about how often each pair of observations clustered together across the subsamples, we can use the `calculate_coclustering` function:
+
+```{r eval = FALSE}
+coclustering_results <- calculate_coclustering(
+    subsample_cluster_solutions,
     solutions_matrix
 )
 ```
 
-## Co-clustering Heatmaps
+Note that the runtime of this function scales quadratically with the number of observations and linearly with the number of subsamples.
+The output of `calculate_coclustering` is a list containing the following components:
+ - `cocluster_dfs`: A list of data frames, one per cluster solution, that shows the number of times that every pair of subjects in the original cluster solution occurred in the same subsample, the number of times that every pair clustered together in a subsample, and the corresponding fraction of times that every pair clustered together in a subsample.
+ - `cocluster_ss_mats`: The number of times every pair of subjects occurred in the same subsample, formatted as a pairwise matrix.
+ - `cocluster_sc_mats`: The number of times every pair of subjects occurred in the same cluster, formatted as a pairwise matrix.
+ - `cocluster_cf_mats`: The fraction of times every pair of subjects occurred in the same cluster, formatted as a pairwise matrix.
+ - `cocluster_summary`: Among pairs of subjects that clustered together in the original cluster solution, the mean fraction those pairs remained clustered together across the subsample-derived solutions. This information is formatted as a data frame with one row per cluster solution.
 
-You can visualize co-clustering across the resamples *for a single row of the settings matrix* using the `generate_cocluster_data` and `cocluster_heatmap` functions.
-
-`cocluster_heatmap` will only work if every pair of observations were part of the same subsampled data at least 1 time.
-You'll see a descriptive warning if this didn't end up happening in your own data_list_subsamples.
-This can most easily be resolved by increasing the number of subsamples you examine or the subsample fraction.
+The `cocluster_dfs` component can be used to visualize co-clustering across subsamples as a density plot:
 
 ```{r eval = FALSE}
-data_list_subsamples <- subsample_data_list(
-    data_list,
-    n_subsamples = 30, # calculate 30 subsamples
-    subsample_fraction = 0.8 # for each subsample, use random 80% of obs
-)
+# Distribution of co-clustering among originally co-clustered pairs across
+# subsamples
+cocluster_density(cocluster_dfs[[1]])
+```
 
-cocluster_data <- generate_cocluster_data(
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/cocluster_density.png){width=700px}
+</center>
+
+Or as a heatmap:
+
+```{r eval = FALSE}
+# Fraction of co-clustering between observations, grouped by original
+# cluster membership
+cocluster_heatmap(
+    cocluster_dfs[[1]],
     data_list = data_list,
-    data_list_subsamples = data_list_subsamples,
-    settings_matrix_row = settings_matrix[1, ]
-)
-```
-
-`cocluster_data` a list with two matrices:
-
-* `same_solution`: A pairwise observation matrix where each cell is the number
-  of subsamples that contained both of those observations
-* `same_cluster`: A pairwise observation matrix where each cell is the number
-  of subsamples where those observations were clustered together
-
-```{r eval = FALSE}
-same_cluster <- cocluster_data$"same_cluster"
-same_solution <- cocluster_data$"same_solution"
-
-cocluster_matrix <- same_cluster / same_solution
-```
-
-This matrix is automatically calculated and plotted in the `cocluster_heatmap` function.
-
-```{r eval = FALSE}
-hm <- cocluster_heatmap(cocluster_data)
-
-hm
-```
-
-You can pull out the observation order of the heatmap as follows:
-
-```{r eval = FALSE}
-hm <- ComplexHeatmap::draw(hm)
-order <- ComplexHeatmap::row_order(hm)
-```
-
-`order` can now be applied to the data in the data_list to get the same observation order as shown in the heatmap:
-
-```{r eval = FALSE}
-# The order of observations as they appear in the heatmap
-data_list[[1]]$"data"[order, "subjectkey"]
-```
-
-By default, `generate_cocluster_data` only operates on a single row of the settings matrix and essentially just summarizes the data across the resamplings.
-You can also pool together the results from several rows using the `pooled_cocluster_heatmap` function as follows.
-
-```{r eval = FALSE}
-cocluster_data_2 <- generate_cocluster_data(
-    full_data_list = data_list,
-    data_list_subsamples,
-    settings_matrix[2, ]
-)
-
-cocluster_data_3 <- generate_cocluster_data(
-    full_data_list = data_list,
-    data_list_subsamples,
-    settings_matrix[3, ]
-)
-
-pooled_cocluster_heatmap(
-    cocluster_list = list(
-        cocluster_data,
-        cocluster_data_2,
-        cocluster_data_3
+    top_hm = list(
+        "Income" = "household_income",
+        "Pubertal Status" = "pubertal_status"
+    ),
+    annotation_colours = list(
+        "Pubertal Status" = colour_scale(
+            c(1, 4),
+            min_colour = "black",
+            max_colour = "purple"
+        ),
+        "Income" = colour_scale(
+            c(0, 4),
+            min_colour = "black",
+            max_colour = "red"
+        )
     )
 )
 ```
+
+<center>
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/cc_hm.png){width=700px}
+</center>
