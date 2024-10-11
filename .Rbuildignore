@@ -18,3 +18,4 @@ patch_update.R
 patch_update.sh
 media
 ^shiny$
+Session.vim
