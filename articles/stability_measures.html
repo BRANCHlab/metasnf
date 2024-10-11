@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,188 +79,160 @@ div.aside { background-color:#fff2e6; }
 <p>Download a copy of the vignette to follow along here: <a href="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/stability_measures.Rmd" class="external-link">stability_measures.Rmd</a></p>
 <p>In this vignette, we will highlight the main stability measure
 options in the metasnf package.</p>
-<p>Do brace yourself: stability measures scale SNF computation time by
-the number of settings matrix rows <em>times</em> the number of
-resamples of the data you use. Consider trying these functions on scaled
-down versions of your data or on just a couple of rows of the
-settings_matrix to get a sense of how long these functions may take to
-complete on your full dataset. The code below isn’t actually evaluated
-in this document (all documentation is re-rendered on every commit, and
-this vignette simply takes too much time during development), but
-descriptions of the outputs are provided and you should feel free to try
-the functions yourself.</p>
 <div class="section level2">
 <h2 id="data-set-up">Data set-up<a class="anchor" aria-label="anchor" href="#data-set-up"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Generate data_list</span></span>
 <span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        data <span class="op">=</span> <span class="va">gender_df</span>,</span>
-<span>        name <span class="op">=</span> <span class="st">"gender"</span>,</span>
-<span>        domain <span class="op">=</span> <span class="st">"demographics"</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"categorical"</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        data <span class="op">=</span> <span class="va">diagnosis_df</span>,</span>
-<span>        name <span class="op">=</span> <span class="st">"diagnosis"</span>,</span>
-<span>        domain <span class="op">=</span> <span class="st">"clinical"</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"categorical"</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        data <span class="op">=</span> <span class="va">age_df</span>,</span>
-<span>        name <span class="op">=</span> <span class="st">"age"</span>,</span>
-<span>        domain <span class="op">=</span> <span class="st">"demographics"</span>,</span>
-<span>        type <span class="op">=</span> <span class="st">"discrete"</span></span>
-<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cort_sa</span>, <span class="st">"cortical_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Generate settings_matrix</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    nrow <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">40</span>,</span>
 <span>    seed <span class="op">=</span> <span class="fl">42</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>As an added part of the data set-up, we’ll also calculate some
-subsamples of the data_list.</p>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Cluster solutions made using the full data</span></span>
+<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span></code></pre></div>
+<p>To begin start calculating resampling-based stability measures, we’ll
+build subsamples of the data list using the
+<code>subsample_data_list</code> function.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_list_subsamples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsample_data_list.html">subsample_data_list</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
-<span>    n_subsamples <span class="op">=</span> <span class="fl">3</span>, <span class="co"># calculate 30 subsamples</span></span>
-<span>    subsample_fraction <span class="op">=</span> <span class="fl">0.8</span> <span class="co"># for each subsample, use random 80% of obs</span></span>
+<span>    n_subsamples <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>    subsample_fraction <span class="op">=</span> <span class="fl">0.85</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><code>data_list_subsamples</code> contains a list of 3 variations of
-the full data_list. Each variation only has a random 80% of the original
-observations.</p>
-</div>
-<div class="section level2">
-<h2 id="pairwise-adjusted-rand-indices-across-subsamples">Pairwise Adjusted Rand Indices Across Subsamples<a class="anchor" aria-label="anchor" href="#pairwise-adjusted-rand-indices-across-subsamples"></a>
-</h2>
-<p><code>pairwise_aris</code> is a dataframe that contains the mean and
-standard deviation of the pairwise adjusted Rand indices between
-observations for each row of the settings matrix.</p>
+<p><code>data_list_subsamples</code> contains a list of 100 subsamples
+of the full data list. Each variation only has a random 85% of the
+original observations.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pairwise_aris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsample_pairwise_aris.html">subsample_pairwise_aris</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">batch_subsample_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf_subsamples.html">batch_snf_subsamples</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list_subsamples</span>,</span>
 <span>    <span class="va">settings_matrix</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="persistence-of-co-clustering-across-subsamples">Persistence of Co-Clustering Across Subsamples<a class="anchor" aria-label="anchor" href="#persistence-of-co-clustering-across-subsamples"></a>
-</h2>
-<p>The <code>fraction_clustered_together</code> function calculates for
-every pair of observations that clustered together in the full sample,
-how often they continued to cluster together in data subsamples.</p>
+<p>By default, the function returns a one-element list:
+<code>cluster_solutions</code>, which is itself a list of cluster
+solution data frames corresponding to each of the provided data list
+subsamples. Setting the parameters
+<code>return_similarity_matrices</code> and
+<code>return_solutions_matrices</code> to <code>TRUE</code> will turn
+the result of the function to a three-element list containing the
+corresponding solutions matrices and final fused similarity matrices of
+those cluster solutions, should you require these objects for your own
+stability calculations.</p>
+<p>The function <code>subsample_pairwise_aris</code> can then be used to
+calculate the ARIs between cluster solutions across the subsamples.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Run SNF and clustering</span></span>
-<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    <span class="va">settings_matrix</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">fraction_together</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fraction_clustered_together.html">fraction_clustered_together</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list_subsamples</span>,</span>
-<span>    <span class="va">settings_matrix</span>,</span>
+<code class="sourceCode R"><span><span class="va">subsample_cluster_solutions</span> <span class="op">&lt;-</span> <span class="va">batch_subsample_results</span><span class="op">[[</span><span class="st">"cluster_solutions"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">pairwise_aris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsample_pairwise_aris.html">subsample_pairwise_aris</a></span><span class="op">(</span></span>
+<span>    <span class="va">subsample_cluster_solutions</span>,</span>
+<span>    return_raw_aris <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><code>pairwise_aris</code> is a list containing a summary data frame
+of the ARIs between subsamples for each row of the original settings
+matrix, as well as another list of all the generated inter-subsample
+ARIs as a result of setting <code>return_raw_aris</code> to
+<code>TRUE</code>. The raw inter-subsample ARIs corresponding to a
+particualr settings matrix row can be visualized with a heatmap:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span></span>
+<span>    <span class="va">raw_aris</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>    heatmap_legend_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        color_bar <span class="op">=</span> <span class="st">"continuous"</span>,</span>
+<span>        title <span class="op">=</span> <span class="st">"Inter-Subsample\nARI"</span>,</span>
+<span>        at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    show_column_names <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    show_row_names <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<center>
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/ss_ari_hm.png" width="700">
+</center>
+<p>To calculate information about how often each pair of observations
+clustered together across the subsamples, we can use the
+<code>calculate_coclustering</code> function:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">coclustering_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_coclustering.html">calculate_coclustering</a></span><span class="op">(</span></span>
+<span>    <span class="va">subsample_cluster_solutions</span>,</span>
 <span>    <span class="va">solutions_matrix</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="co-clustering-heatmaps">Co-clustering Heatmaps<a class="anchor" aria-label="anchor" href="#co-clustering-heatmaps"></a>
-</h2>
-<p>You can visualize co-clustering across the resamples <em>for a single
-row of the settings matrix</em> using the
-<code>generate_cocluster_data</code> and <code>cocluster_heatmap</code>
-functions.</p>
-<p><code>cocluster_heatmap</code> will only work if every pair of
-observations were part of the same subsampled data at least 1 time.
-You’ll see a descriptive warning if this didn’t end up happening in your
-own data_list_subsamples. This can most easily be resolved by increasing
-the number of subsamples you examine or the subsample fraction.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_list_subsamples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsample_data_list.html">subsample_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    n_subsamples <span class="op">=</span> <span class="fl">30</span>, <span class="co"># calculate 30 subsamples</span></span>
-<span>    subsample_fraction <span class="op">=</span> <span class="fl">0.8</span> <span class="co"># for each subsample, use random 80% of obs</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">cocluster_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_cocluster_data.html">generate_cocluster_data</a></span><span class="op">(</span></span>
-<span>    data_list <span class="op">=</span> <span class="va">data_list</span>,</span>
-<span>    data_list_subsamples <span class="op">=</span> <span class="va">data_list_subsamples</span>,</span>
-<span>    settings_matrix_row <span class="op">=</span> <span class="va">settings_matrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><code>cocluster_data</code> a list with two matrices:</p>
-<ul>
-<li>
-<code>same_solution</code>: A pairwise observation matrix where each
-cell is the number of subsamples that contained both of those
-observations</li>
-<li>
-<code>same_cluster</code>: A pairwise observation matrix where each
-cell is the number of subsamples where those observations were clustered
-together</li>
-</ul>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">same_cluster</span> <span class="op">&lt;-</span> <span class="va">cocluster_data</span><span class="op">$</span><span class="st">"same_cluster"</span></span>
-<span><span class="va">same_solution</span> <span class="op">&lt;-</span> <span class="va">cocluster_data</span><span class="op">$</span><span class="st">"same_solution"</span></span>
-<span></span>
-<span><span class="va">cocluster_matrix</span> <span class="op">&lt;-</span> <span class="va">same_cluster</span> <span class="op">/</span> <span class="va">same_solution</span></span></code></pre></div>
-<p>This matrix is automatically calculated and plotted in the
-<code>cocluster_heatmap</code> function.</p>
+<p>Note that the runtime of this function scales quadratically with the
+number of observations and linearly with the number of subsamples. The
+output of <code>calculate_coclustering</code> is a list containing the
+following components: - <code>cocluster_dfs</code>: A list of data
+frames, one per cluster solution, that shows the number of times that
+every pair of subjects in the original cluster solution occurred in the
+same subsample, the number of times that every pair clustered together
+in a subsample, and the corresponding fraction of times that every pair
+clustered together in a subsample. - <code>cocluster_ss_mats</code>: The
+number of times every pair of subjects occurred in the same subsample,
+formatted as a pairwise matrix. - <code>cocluster_sc_mats</code>: The
+number of times every pair of subjects occurred in the same cluster,
+formatted as a pairwise matrix. - <code>cocluster_cf_mats</code>: The
+fraction of times every pair of subjects occurred in the same cluster,
+formatted as a pairwise matrix. - <code>cocluster_summary</code>: Among
+pairs of subjects that clustered together in the original cluster
+solution, the mean fraction those pairs remained clustered together
+across the subsample-derived solutions. This information is formatted as
+a data frame with one row per cluster solution.</p>
+<p>The <code>cocluster_dfs</code> component can be used to visualize
+co-clustering across subsamples as a density plot:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cocluster_heatmap.html">cocluster_heatmap</a></span><span class="op">(</span><span class="va">cocluster_data</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">hm</span></span></code></pre></div>
-<p>You can pull out the observation order of the heatmap as follows:</p>
+<code class="sourceCode R"><span><span class="co"># Distribution of co-clustering among originally co-clustered pairs across</span></span>
+<span><span class="co"># subsamples</span></span>
+<span><span class="fu"><a href="../reference/cocluster_density.html">cocluster_density</a></span><span class="op">(</span><span class="va">cocluster_dfs</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<center>
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/cocluster_density.png" width="700">
+</center>
+<p>Or as a heatmap:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hm</span> <span class="op">&lt;-</span> <span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/draw-dispatch.html" class="external-link">draw</a></span><span class="op">(</span><span class="va">hm</span><span class="op">)</span></span>
-<span><span class="va">order</span> <span class="op">&lt;-</span> <span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/row_order-dispatch.html" class="external-link">row_order</a></span><span class="op">(</span><span class="va">hm</span><span class="op">)</span></span></code></pre></div>
-<p><code>order</code> can now be applied to the data in the data_list to
-get the same observation order as shown in the heatmap:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># The order of observations as they appear in the heatmap</span></span>
-<span><span class="va">data_list</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="st">"data"</span><span class="op">[</span><span class="va">order</span>, <span class="st">"subjectkey"</span><span class="op">]</span></span></code></pre></div>
-<p>By default, <code>generate_cocluster_data</code> only operates on a
-single row of the settings matrix and essentially just summarizes the
-data across the resamplings. You can also pool together the results from
-several rows using the <code>pooled_cocluster_heatmap</code> function as
-follows.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cocluster_data_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_cocluster_data.html">generate_cocluster_data</a></span><span class="op">(</span></span>
-<span>    full_data_list <span class="op">=</span> <span class="va">data_list</span>,</span>
-<span>    <span class="va">data_list_subsamples</span>,</span>
-<span>    <span class="va">settings_matrix</span><span class="op">[</span><span class="fl">2</span>, <span class="op">]</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">cocluster_data_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_cocluster_data.html">generate_cocluster_data</a></span><span class="op">(</span></span>
-<span>    full_data_list <span class="op">=</span> <span class="va">data_list</span>,</span>
-<span>    <span class="va">data_list_subsamples</span>,</span>
-<span>    <span class="va">settings_matrix</span><span class="op">[</span><span class="fl">3</span>, <span class="op">]</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/pooled_cocluster_heatmap.html">pooled_cocluster_heatmap</a></span><span class="op">(</span></span>
-<span>    cocluster_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="va">cocluster_data</span>,</span>
-<span>        <span class="va">cocluster_data_2</span>,</span>
-<span>        <span class="va">cocluster_data_3</span></span>
+<code class="sourceCode R"><span><span class="co"># Fraction of co-clustering between observations, grouped by original</span></span>
+<span><span class="co"># cluster membership</span></span>
+<span><span class="fu"><a href="../reference/cocluster_heatmap.html">cocluster_heatmap</a></span><span class="op">(</span></span>
+<span>    <span class="va">cocluster_dfs</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>    data_list <span class="op">=</span> <span class="va">data_list</span>,</span>
+<span>    top_hm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        <span class="st">"Income"</span> <span class="op">=</span> <span class="st">"household_income"</span>,</span>
+<span>        <span class="st">"Pubertal Status"</span> <span class="op">=</span> <span class="st">"pubertal_status"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    annotation_colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        <span class="st">"Pubertal Status"</span> <span class="op">=</span> <span class="fu"><a href="../reference/colour_scale.html">colour_scale</a></span><span class="op">(</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span>,</span>
+<span>            min_colour <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>            max_colour <span class="op">=</span> <span class="st">"purple"</span></span>
+<span>        <span class="op">)</span>,</span>
+<span>        <span class="st">"Income"</span> <span class="op">=</span> <span class="fu"><a href="../reference/colour_scale.html">colour_scale</a></span><span class="op">(</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span><span class="op">)</span>,</span>
+<span>            min_colour <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>            max_colour <span class="op">=</span> <span class="st">"red"</span></span>
+<span>        <span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<center>
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/cc_hm.png" width="700">
+</center>
 </div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
-    </nav></aside>
+  </main>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Prashanth Velayudhan, Xiaoqiao Xu, Prajkta Kallurkar, Ana Patricia Balbon, Maria T Secara, Adam Taback, Denise Sabac, Nicholas Chan, Shihao Ma, Anna Goldenberg, Bo Wang, Daniel Felsky, Stephanie H Ameis, Brian Cox, Colin Hawco, Lauren Erdman, Anne L Wheeler.</p>
+  <p>Developed by Prashanth Velayudhan, Xiaoqiao Xu, Prajkta Kallurkar, Ana Patricia Balbon, Maria T Secara, Adam Taback, Denise Sabac, Nicholas Chan, Shihao Ma, Bo Wang, Daniel Felsky, Stephanie H Ameis, Brian Cox, Colin Hawco, Lauren Erdman, Anne L Wheeler.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
