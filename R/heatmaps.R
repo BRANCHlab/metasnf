@@ -3,13 +3,13 @@
 #' @param similarity_matrix A similarity matrix
 #'
 #' @param order Vector of numbers to reorder the similarity matrix (and data
-#'  if provided). Overwrites ordering specified by cluster_solution param.
+#' if provided). Overwrites ordering specified by cluster_solution param.
 #'
 #' @param cluster_solution Vector containing cluster assignments.
 #'
 #' @param scale_diag Method of rescaling matrix diagonals. Can be "none"
-#'  (don't change diagonals), "mean" (replace diagonals with average value of
-#'  off-diagonals), or "zero" (replace diagonals with 0).
+#' (don't change diagonals), "mean" (replace diagonals with average value of
+#' off-diagonals), or "zero" (replace diagonals with 0).
 #'
 #' @param log_graph If TRUE, log transforms the graph.
 #'
@@ -26,12 +26,12 @@
 #' @param data A dataframe containing elements requested for annotation.
 #'
 #' @param left_bar Named list of strings, where the strings are features in
-#'  df that should be used for a barplot annotation on the left of the plot and
-#'  the names are the names that will be used to caption the plots and their
-#'  legends.
+#' df that should be used for a barplot annotation on the left of the plot and
+#' the names are the names that will be used to caption the plots and their
+#' legends.
 #'
 #' @param left_hm Like left_bar, but with a heatmap annotation instead of a
-#'  barplot annotation.
+#' barplot annotation.
 #'
 #' @param right_bar See left_bar.
 #'
@@ -90,46 +90,23 @@ similarity_matrix_heatmap <- function(similarity_matrix,
     ###########################################################################
     # Assemble any provided data
     ###########################################################################
-    if (!is.null(data_list)) {
-        merged_df <- collapse_dl(data_list)
-    }
-    if (is.null(data)) {
-        if (!is.null(data_list)) {
-            # User didn't provide data, but did provide data list, so just use
-            #  that.
-            data <- merged_df
-        }
-    } else {
-        if (!is.null(data_list)) {
-            # User provided both the data and the data_list, so merge them
-            data <- dplyr::inner_join(data, merged_df, by = "subjectkey")
-        }
-    }
+    data <- assemble_data(data, data_list)
     ###########################################################################
     # Ensure that annotations aren't being requested when data isn't given
     ###########################################################################
-    annotation_requests <- list(
-        left_bar,
-        right_bar,
-        top_bar,
-        bottom_bar,
-        left_hm,
-        right_hm,
-        top_hm,
-        bottom_hm
+    check_dataless_annotations(
+        list(
+            left_bar,
+            right_bar,
+            top_bar,
+            bottom_bar,
+            left_hm,
+            right_hm,
+            top_hm,
+            bottom_hm
+        ),
+        data
     )
-    any_null_annotations <- lapply(annotation_requests, is.null) |>
-        unlist() |>
-        any()
-    if (!any_null_annotations) {
-        if (is.null(data)) {
-            stop(
-                "You must provide data, either through a data_list or a",
-                " dataframe passed in with the 'data' parameter to use",
-                " annotations."
-            )
-        }
-    }
     ###########################################################################
     # Sort the matrix and any other provided data
     ###########################################################################
@@ -160,15 +137,18 @@ similarity_matrix_heatmap <- function(similarity_matrix,
     } else {
         title <- "Similarity"
     }
+    ###########################################################################
     # Re-scale diagonals
     similarity_matrix <- scale_diagonals(
         similarity_matrix,
         method = scale_diag
     )
+    ###########################################################################
     # Assign breaks in the legend
     minimum <- min(similarity_matrix) |> signif(2)
     maximum <- max(similarity_matrix) |> signif(2)
     middle <- mean(c(minimum, maximum)) |> signif(2)
+    ###########################################################################
     # Generate annotations
     annotations_list <- generate_annotations_list(
         df = data,
@@ -195,6 +175,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
     if (is.null(args_list$"bottom_annotation")) {
         args_list$"bottom_annotation" <- annotations_list$"bottom_annotations"
     }
+    ###########################################################################
     if (!is.null(min_colour) && !is.null(max_colour)) {
         args_list$"col" <- circlize::colorRamp2(
             c(min(similarity_matrix), max(similarity_matrix)),
@@ -215,7 +196,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
     args_list$"row_split" <- split_results$"row_split"
     args_list$"column_split" <- split_results$"column_split"
     ###########################################################################
-    # Plot
+    # Build plot
     args_list$"matrix" <- similarity_matrix
     args_list$"cluster_rows" <- cluster_rows
     args_list$"cluster_columns" <- cluster_columns
@@ -859,7 +840,7 @@ assemble_data <- function(data, data_list) {
             data <- dplyr::inner_join(data, merged_df, by = "subjectkey")
         }
     }
-    return(data)
+    return(data.frame(data))
 }
 
 #' Generate annotations list
@@ -1446,4 +1427,25 @@ split_parser <- function(row_split_vector = NULL,
         "column_split" = column_split
     )
     return(split_results)
+}
+
+#' Helper function to stop annotation building when no data was provided
+#'
+#' @param data A dataframe with data to build annotations
+#' @param annotation_requests A list of requested annotations
+#'
+#' @export
+check_dataless_annotations <- function(annotation_requests, data) {
+    any_null_annotations <- lapply(annotation_requests, is.null) |>
+        unlist() |>
+        any()
+    if (!any_null_annotations) {
+        if (is.null(data)) {
+            stop(
+                "You must provide data, either through a data_list or a",
+                " dataframe passed in with the 'data' parameter to use",
+                " annotations."
+            )
+        }
+    }
 }
