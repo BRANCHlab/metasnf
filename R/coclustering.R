@@ -1,168 +1,720 @@
-#' Calculate patient co-clustering across subsamples
+#' Create subsamples of a data_list
 #'
-#' Given a full data_list, subsamples of that data_list, and a row of a
-#' settings matrix that outlines how the data should be clustered, calculates
-#' across all subsamples the number of times that any pair of patients were in
-#' the same subsample as well as the number of times they were in the same
-#' cluster. These two pieces of information are stored as matrices that can
-#' be supplied to the cocluster_heatmap and pooled_cocluster_heatmap functions.
+#' Given a data list, return a list of smaller data lists that are generated
+#' through random sampling (without replacement).
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
-#' @param data_list_subsamples A list of subsampled forms of the data_list
-#' (see ?subsample_data_list).
-#' @param settings_matrix_row A single row of the settings matrix to calculate
-#' co-clustering data for.
 #'
-#' @return cocluster_data A named list containing two matrices:
-#' * "same_solution": A patient x patient matrix where each cell is the number
-#'   of subsamples that contained both of those patients
-#' * "same_cluster": A patient x patient matrix where each cell is the number
-#'   of subsamples where those patients were clustered together
+#' @param n_subsamples Number of subsamples to create.
+#'
+#' @param subsample_fraction Percentage of patients to include per subsample.
+#'
+#' @param n_subjects Number of patients to include per subsample.
 #'
 #' @export
-generate_cocluster_data <- function(data_list,
-                                    data_list_subsamples,
-                                    subsample_solutions,
-                                    settings_matrix_row) {
-    ###########################################################################
-    # Generate main matrix storing cocluster information
-    ###########################################################################
-    subjects <- data_list[[1]]$"data"$"subjectkey"
-    same_solution <- matrix(0, length(subjects), length(subjects))
-    colnames(same_solution) <- subjects
-    rownames(same_solution) <- subjects
-    same_cluster <- same_solution # another empty matrix of the same size
-    ###########################################################################
-    # Loop through all subject pairs and update the matrices
-    ###########################################################################
-    subject_pairs <- utils::combn(subjects, 2) # each column is a pair
-    subsample_index <- 0
-    for (s in subsample_solutions) {
-        subsample_index <- subsample_index + 1
-        print(
+subsample_data_list <- function(data_list,
+                                n_subsamples,
+                                subsample_fraction = NULL,
+                                n_subjects = NULL) {
+    # Make sure that only one parameter was used to specify how many subjects
+    #  to keep in each subsample
+    both_null <- is.null(subsample_fraction) & is.null(n_subjects)
+    neither_null <- !is.null(subsample_fraction) & !is.null(n_subjects)
+    if (both_null | neither_null) {
+        stop(
             paste0(
-                "Processing subsample ", subsample_index, "/",
-                length(subsample_solutions), " ..."
+                "Either the subsample_fraction parameter (fraction of",
+                " subjects) or n_subjects (number of subjects) must be",
+                " provided. Not both (or neither)."
             )
         )
-        for (col in seq_len(ncol(subject_pairs))) {
-            sub1 <- subject_pairs[1, col]
-            sub2 <- subject_pairs[2, col]
-            sub1_cluster <- s[s$"subjectkey" == sub1, "cluster"]
-            sub2_cluster <- s[s$"subjectkey" == sub2, "cluster"]
-            both_subs_in_s <- length(sub1_cluster) + length(sub2_cluster) == 2
-            # If both subjects are in this subsample, add to their same
-            # solution count.
-            if (both_subs_in_s) {
-                same_solution[sub1, sub2] <- same_solution[sub1, sub2] + 1
-                same_solution[sub2, sub1] <- same_solution[sub2, sub1] + 1
-                # If both subjects have the same cluster in this subsample, add
-                # to their same cluster count.
-                if (sub1_cluster == sub2_cluster) {
-                    same_cluster[sub1, sub2] <- same_cluster[sub1, sub2] + 1
-                    same_cluster[sub2, sub1] <- same_cluster[sub2, sub1] + 1
+    }
+    # Calculate number of subjects to keep if fraction parameter was used
+    all_subjects <- data_list[[1]]$"data"$"subjectkey"
+    # Ensure n_subjects is within 0 and the total number of subjects
+    if (!is.null(n_subjects)) {
+        if (n_subjects < 0 | n_subjects > length(all_subjects)) {
+            stop(
+                paste0(
+                    "n_subjects must be between 0 and the total number of",
+                    " subjects."
+                )
+            )
+        } else if (as.integer(n_subjects) != n_subjects) {
+            stop(
+                "n_subjects must be an integer."
+            )
+        }
+    }
+    # Ensure sample fraction is a real fraction
+    if (!is.null(subsample_fraction)) {
+        if (subsample_fraction > 1 | subsample_fraction < 0) {
+            stop(
+                "subsample_fraction must be between 0 and 1."
+            )
+        } else {
+            n_subjects <- round(subsample_fraction * length(all_subjects))
+        }
+    }
+    subject_subsamples <- lapply(
+        rep(n_subjects, n_subsamples),
+        function(x) {
+            return(sample(all_subjects, x))
+        }
+    )
+    data_list_subsamples <- subject_subsamples |> lapply(
+        function(subsample) {
+            length(subsample)
+            dl_subsample <- data_list |> lapply(
+                function(x) {
+                    chosen_rows <- x$"data"$"subjectkey" %in% subsample
+                    x$"data" <- x$"data"[chosen_rows, ]
+                    return(x)
+                }
+            )
+        }
+    )
+    subsample_names <- paste0("subsample_", 1:n_subsamples)
+    names(data_list_subsamples) <- subsample_names
+    return(data_list_subsamples)
+}
+
+#' Run SNF clustering pipeline on a list of subsampled data lists.
+#'
+#' @param data_list_subsamples A list of subsampled data lists. This object is
+#' generated by the function `batch_snf_subsamples()`.
+#'
+#' @param settings_matrix A settings matrix defining the parameters of the SNF
+#' pipelines to be applied to the subsampled data lists.
+#'
+#' @param processes See ?batch_snf.
+#'
+#' @param return_similarity_matrices See ?batch_snf.
+#'
+#' @param clust_algs_list See ?batch_snf.
+#'
+#' @param suppress_clustering See ?batch_snf.
+#'
+#' @param distance_metrics_list See ?batch_snf.
+#'
+#' @param weights_matrix See ?batch_snf.
+#'
+#' @param automatic_standard_normalize See ?batch_snf.
+#'
+#' @param return_solutions_matrices If TRUE, includes the solutions matrices
+#' corresponding to each subsample in the output.
+#'
+#' @export
+batch_snf_subsamples <- function(data_list_subsamples,
+                                 settings_matrix,
+                                 processes = 1,
+                                 return_similarity_matrices = FALSE,
+                                 clust_algs_list = NULL,
+                                 suppress_clustering = FALSE,
+                                 distance_metrics_list = NULL,
+                                 weights_matrix = NULL,
+                                 automatic_standard_normalize = FALSE,
+                                 return_solutions_matrices = FALSE) {
+    # Initialize variables that may get added to end result
+    solutions_matrix <- NULL
+    similarity_matrices <- NULL
+    cluster_solutions <- NULL
+    ###########################################################################
+    # Generate a new cluster_solutions dataframe for every data_list subsample
+    ###########################################################################
+    subsample_clusters <- list()
+    subsample_solutions_matrices <- list()
+    subsample_similarity_matrices <- list()
+    for (s in seq_along(data_list_subsamples)) {
+        print(
+            paste0(
+                "Clustering subsample ", s, "/", length(data_list_subsamples),
+                "..."
+            )
+        )
+        invisible(
+            batch_snf_results <- batch_snf(
+                data_list = data_list_subsamples[[s]],
+                settings_matrix = settings_matrix,
+                processes = processes,
+                return_similarity_matrices = return_similarity_matrices,
+                clust_algs_list = clust_algs_list,
+                suppress_clustering = suppress_clustering,
+                distance_metrics_list = distance_metrics_list,
+                weights_matrix = weights_matrix,
+                automatic_standard_normalize = automatic_standard_normalize,
+                quiet = TRUE
+            )
+        )
+        if (inherits(batch_snf_results, "list")) {
+            solutions_matrix <- batch_snf_results$"solutions_matrix"
+            similarity_matrices <- batch_snf_results$"similarity_matrices"
+        } else {
+            solutions_matrix <- batch_snf_results 
+        }
+        # Partioning results
+        cluster_solutions <- get_cluster_solutions(solutions_matrix)
+        # Appending results to list
+        index <- length(subsample_clusters) + 1
+        subsample_clusters[[index]] <- cluster_solutions
+        if (return_solutions_matrices) {
+            subsample_solutions_matrices[[index]] <- solutions_matrix
+        }
+        subsample_similarity_matrices[[index]] <- similarity_matrices
+    }
+    subsample_ids <- paste0("subsample_", seq_along(data_list_subsamples))
+    results <- list(
+        "cluster_solutions" = subsample_clusters,
+        "solutions_matrices" = subsample_solutions_matrices,
+        "similarity_matrices" = subsample_similarity_matrices
+    )
+    # Remove empty lists
+    results <- results[unlist(lapply(results, function(x) length(x) != 0))]
+    results <- lapply(
+        results,
+        function(x) {
+            names(x) <- subsample_ids
+            return(x)
+        }
+    )
+    return(results)
+}
+
+#' Calculate pairwise adjusted Rand indices across subsamples of data
+#'
+#' @param subsample_solutions A list of containing cluster solutions from 
+#' distinct subsamples of the data. This object is generated by the function
+#' `batch_snf_subsamples()`.
+#'
+#' @param return_raw_aris Whether the ARI matrix used to calculate the average
+#' ARI across subsamples should be returned.
+#'
+#' @return If return_raw_aris is FALSE, this function will return 
+#'
+#' @export
+subsample_pairwise_aris <- function(subsample_solutions,
+                                    return_raw_aris = FALSE) {
+    ###########################################################################
+    # If number of subsamples is less than 3, warn that SD can't be calculated
+    ###########################################################################
+    if (length(subsample_solutions) < 3) {
+        warning(
+            "Fewer than 3 subsamples have been provided. Standard",
+            " deviation of the pairwise ARIs for each settings matrix row",
+            " will not be computed."
+        )
+    }
+    ###########################################################################
+    # Skeleton to store the mean and sd of ARIs for each solution
+    ###########################################################################
+    pairwise_ari_df <- data.frame(
+        "row" = integer(),
+        "mean_ari" = double(),
+        "ari_sd" = double()
+    )
+    # All the pairwise combinations of subsamples
+    pairwise_indices <- utils::combn(length(subsample_solutions), 2)
+    subsample_ari_mats <- list()
+    ###########################################################################
+    # Loop over all the rows of the solutions_matrix
+    ###########################################################################
+    nrows <- ncol(subsample_solutions[[1]]) - 1
+    for (row in seq_len(nrows)) {
+        subsample_ari_mat <- matrix(
+            nrow = length(subsample_solutions),
+            ncol = length(subsample_solutions)
+        )
+        colnames(subsample_ari_mat) <- paste0(
+            "subsample_",
+            seq_len(length(subsample_solutions))
+        )
+        rownames(subsample_ari_mat) <- paste0(
+            "subsample_",
+            seq_len(length(subsample_solutions))
+        )
+        print(
+            paste0(
+                "Calculating pairwise ARIs for row ",
+                row, "/", nrows, "..."
+            )
+        )
+        row_adjusted_rand_indices <- vector()
+        # Loop over all pairs of subsamples for that row
+        for (col in seq_len(ncol(pairwise_indices))) {
+            # v1 and v2 are indices of two distinct subsamples
+            v1 <- pairwise_indices[1, col]
+            v2 <- pairwise_indices[2, col]
+            subsample_a <- subsample_solutions[[v1]]
+            subsample_b <- subsample_solutions[[v2]]
+            # keep column 1 (subjectkey) and column 1 + row
+            #  (the solution corresponding to that row)
+            solution_a <- subsample_a[, c(1, row + 1)]
+            solution_b <- subsample_b[, c(1, row + 1)]
+            # remove any subjects who weren't a part of both subsamples
+            common_df <- dplyr::inner_join(
+                solution_a,
+                solution_b,
+                by = "subjectkey"
+            )
+            # The first column of common_df contains the subjectkey values. The
+            #  2nd and 3rd columns store the two sets of cluster solutions.
+            ari <- mclust::adjustedRandIndex(common_df[, 2], common_df[, 3])
+            subsample_ari_mat[v1, v2] <- ari
+            subsample_ari_mat[v2, v1] <- ari
+            row_adjusted_rand_indices <- c(row_adjusted_rand_indices, ari)
+        }
+        row_df <- data.frame(
+            "row" = row,
+            "mean_ari" = mean(row_adjusted_rand_indices),
+            "ari_sd" = stats::sd(row_adjusted_rand_indices)
+        )
+        pairwise_ari_df <- rbind(pairwise_ari_df, row_df)
+        diag(subsample_ari_mat) <- 1
+        if (return_raw_aris) {
+            idx <- length(subsample_ari_mats) + 1
+            subsample_ari_mats[[idx]] <- subsample_ari_mat
+        }
+    }
+    if (return_raw_aris) {
+        names(subsample_ari_mats) <- paste0("row_", seq_len(nrows))
+        results <- list(
+            "ari_summary" = pairwise_ari_df,
+            "raw_aris" = subsample_ari_mats
+        )
+    } else {
+        results <- pairwise_ari_df
+    }
+    return(results)
+}
+
+#' Density plot coclustering stability across subsampled data.
+#'
+#' This function creates a density plot that shows, for all pairs of
+#' observations that originally clustered together, the distribution of the
+#' the fractions that those pairs clustered together across subsampled data.
+#'
+#' @param cocluster_df A dataframe containing coclustering data for a single
+#' cluster solution. This object is generated by the `calculate_coclustering`
+#' function.
+#'
+#' @export
+cocluster_density <- function(cocluster_df) {
+    ###########################################################################
+    # dplyr warning handling
+    sub_1_clust <- ""
+    sub_2_clust <- ""
+    cocluster_frac <- ""
+    scaled <- ""
+    ###########################################################################
+    cocluster_df$"sub_1_clust" <- factor(cocluster_df$"sub_1_clust")
+    cocluster_df <- cocluster_df |>
+        dplyr::filter(sub_1_clust == sub_2_clust)
+    # Coverage check
+    n_missing <- sum(is.na(cocluster_df$"cocluster_frac"))
+    if (n_missing > 0) {
+        cocluster_df <- stats::na.omit(cocluster_df)
+        warning(
+            paste0(
+                n_missing, " out of ", nrow(cocluster_df), " pairs of",
+                " observations that were originally clustered together were",
+                " never a part of the same subsampled data list. To avoid",
+                " this warning, increase the value of the",
+                " `subsample_fraction` or",
+                " `n_subsamples` arguments when calling",
+                " `subsample_data_list()`."
+            )
+        )
+    }
+    dist_plot <- cocluster_df |>
+        ggplot2::ggplot(
+            ggplot2::aes(
+                x = cocluster_frac,
+                colour = sub_1_clust
+            )
+        ) +
+        ggplot2::labs( x = "Co-clustering Fraction",
+            y = "Density",
+            colour = "Cluster"
+        ) +
+        ggplot2::xlim(0, 1) +
+        ggplot2::geom_density() +
+        ggplot2::theme_bw()
+    return(dist_plot)
+}
+
+#' Heatmap of observation co-clustering across resampled data.
+#'
+#' Create a heatmap that shows the distribution of observation co-clustering
+#' across resampled data.
+#'
+#' @param cocluster_df A dataframe containing coclustering data for a single
+#' cluster solution. This object is generated by the `calculate_coclustering`
+#' function.
+#'
+#' @param cluster_rows Argument passed to `ComplexHeatmap::Heatmap()`.
+#'
+#' @param cluster_columns Argument passed to `ComplexHeatmap::Heatmap()`.
+#'
+#' @param show_row_names Argument passed to `ComplexHeatmap::Heatmap()`.
+#'
+#' @param show_column_names Argument passed to `ComplexHeatmap::Heatmap()`.
+#'
+#' @param data_list See ?similarity_matrix_heatmap.
+#'
+#' @param data See ?similarity_matrix_heatmap.
+#'
+#' @param left_bar See ?similarity_matrix_heatmap.
+#'
+#' @param right_bar See ?similarity_matrix_heatmap.
+#'
+#' @param top_bar See ?similarity_matrix_heatmap.
+#'
+#' @param bottom_bar See ?similarity_matrix_heatmap.
+#'
+#' @param left_hm See ?similarity_matrix_heatmap.
+#'
+#' @param right_hm See ?similarity_matrix_heatmap.
+#'
+#' @param top_hm See ?similarity_matrix_heatmap.
+#'
+#' @param bottom_hm See ?similarity_matrix_heatmap.
+#'
+#' @param annotation_colours See ?similarity_matrix_heatmap.
+#'
+#' @param min_colour See ?similarity_matrix_heatmap.
+#'
+#' @param max_colour See ?similarity_matrix_heatmap.
+#'
+#' @param ... Arguments passed to `ComplexHeatmap::Heatmap()`.
+#'
+#' @export
+cocluster_heatmap <- function(cocluster_df, 
+                              cluster_rows = TRUE,
+                              cluster_columns = TRUE,
+                              show_row_names = FALSE,
+                              show_column_names = FALSE,
+                              data_list = NULL,
+                              data = NULL,
+                              left_bar = NULL,
+                              right_bar = NULL,
+                              top_bar = NULL,
+                              bottom_bar = NULL,
+                              left_hm = NULL,
+                              right_hm = NULL,
+                              top_hm = NULL,
+                              bottom_hm = NULL,
+                              annotation_colours = NULL,
+                              min_colour = NULL,
+                              max_colour = NULL,
+                              ...) {
+    ###########################################################################
+    # dplyr warning handling
+    cluster <- ""
+    sub_1 <- ""
+    sub_1_clust <- ""
+    sub_2 <- ""
+    sub_2_clust <- ""
+    subjectkey <- ""
+    ###########################################################################
+    # Assemble any provided data
+    data <- assemble_data(data = data, data_list = data_list)
+    ###########################################################################
+    # Ensure that annotations aren't being requested when data isn't given
+    check_dataless_annotations(
+        list(
+            left_bar,
+            right_bar,
+            top_bar,
+            bottom_bar,
+            left_hm,
+            right_hm,
+            top_hm,
+            bottom_hm
+        ),
+        data
+    )
+    ###########################################################################
+    # Coverage check
+    coclustering_coverage_check(cocluster_df, action = "stop")
+    ###########################################################################
+    # Reconstructing the original cluster solution
+    cluster_solution_s1 <- dplyr::select(cocluster_df, sub_1, sub_1_clust)
+    cluster_solution_s2 <- dplyr::select(cocluster_df, sub_2, sub_2_clust)
+    colnames(cluster_solution_s1) <- c("subjectkey", "cluster")
+    colnames(cluster_solution_s2) <- c("subjectkey", "cluster")
+    cluster_solution <- rbind(
+        cluster_solution_s1,
+        cluster_solution_s2
+    ) |>
+        dplyr::distinct() |>
+        dplyr::arrange(cluster, subjectkey)
+    if (!is.null(data_list)) {
+        cluster_solution <- dplyr::left_join(
+            cluster_solution,
+            collapse_dl(data_list),
+            by = "subjectkey"
+        )
+    }
+    nsubs <- nrow(cluster_solution)
+    # Building skeleton matrices to store same-solution and same-cluster
+    # tallies
+    cocluster_mat <- matrix(ncol = nsubs, nrow = nsubs)
+    diag(cocluster_mat) <- 1
+    colnames(cocluster_mat) <- cluster_solution$"subjectkey"
+    rownames(cocluster_mat) <- cluster_solution$"subjectkey"
+    # Loop through the coclustering dataframe and populate the matrices
+    for (i in seq_len(nrow(cocluster_df))) {
+        row <- cocluster_df[i, ]
+        s1 <- row$"sub_1"
+        s2 <- row$"sub_2"
+        cocluster_mat[s1, s2]  <- row$"cocluster_frac"
+        cocluster_mat[s2, s1]  <- row$"cocluster_frac"
+    }
+    ###########################################################################
+    # Generate annotations
+    rownames(data) <- data$"subjectkey"
+    data <- data[colnames(cocluster_mat), ]
+    annotations_list <- generate_annotations_list(
+        df = data,
+        left_hm = left_hm,
+        right_hm = right_hm,
+        top_hm = top_hm,
+        bottom_hm = bottom_hm,
+        left_bar = left_bar,
+        right_bar = right_bar,
+        top_bar = top_bar,
+        bottom_bar = bottom_bar,
+        annotation_colours = annotation_colours
+    )
+    args_list <- list(...)
+    if (is.null(args_list$"top_annotation")) {
+        args_list$"top_annotation" <- annotations_list$"top_annotations"
+    }
+    if (is.null(args_list$"left_annotation")) {
+        args_list$"left_annotation" <- annotations_list$"left_annotations"
+    }
+    if (is.null(args_list$"right_annotation")) {
+        args_list$"right_annotation" <- annotations_list$"right_annotations"
+    }
+    if (is.null(args_list$"bottom_annotation")) {
+        args_list$"bottom_annotation" <- annotations_list$"bottom_annotations"
+    }
+    ###########################################################################
+    heatmap <- ComplexHeatmap::Heatmap(
+        cocluster_mat,
+        show_row_names = show_row_names,
+        show_column_names = show_column_names,
+        cluster_rows = cluster_rows,
+        cluster_columns = cluster_columns,
+        row_split = cluster_solution$"cluster",
+        column_split = cluster_solution$"cluster",
+        heatmap_legend_param = list(
+            color_bar = "continuous",
+            title = "Co-clustering\nFraction",
+            at = c(0, 0.5, 1)
+        ),
+        col = circlize::colorRamp2(
+            c(0, 0.5, 1),
+            c("#019067", "gray", "#b5400e")
+        ),
+        top_annotation = annotations_list$"top_annotation",
+        ...
+    )
+    return(heatmap)
+}
+
+#' Calculate coclustering data.
+#'
+#' @param subsample_solutions A list of containing cluster solutions from 
+#' distinct subsamples of the data. This object is generated by the function
+#' `batch_snf_subsamples()`. These solutions should correspond to the ones in
+#' the solutions matrix.
+#'
+#' @param solutions_matrix A solutions matrix. This object is generated by the
+#' function `batch_snf()`. The solutions in the solutions matrix should
+#' correspond to those in the subsample solutions.
+#'
+#' @return A list containing the following components:
+#' - cocluster_dfs: A list of dataframes, one per cluster solution, that shows
+#'   the number of times that every pair of subjects in the original cluster 
+#'   solution occurred in the same subsample, the number of times that every
+#'   pair clustered together in a subsample, and the corresponding fraction
+#'   of times that every pair clustered together in a subsample.
+#' - cocluster_ss_mats: The number of times every pair of subjects occurred
+#'   in the same subsample, formatted as a pairwise matrix.
+#' - cocluster_sc_mats: The number of times every pair of subjects occurred
+#'   in the same cluster, formatted as a pairwise matrix. 
+#' - cocluster_cf_mats: The fraction of times every pair of subjects occurred
+#'   in the same cluster, formatted as a pairwise matrix.
+#' - cocluster_summary: Specifically among pairs of subjects that clustered
+#'   together in the original full cluster solution, what fraction of those
+#'   pairs remained clustered together throughout the subsample solutions. This
+#'   information is formatted as a dataframe with one row per cluster solution.
+#'
+#' @export
+calculate_coclustering <- function(subsample_solutions, solutions_matrix) {
+    ###########################################################################
+    # dplyr warning handling
+    cluster <- ""
+    sub_1_clust <- ""
+    sub_2_clust <- ""
+    subjectkey <- ""
+    same_cluster <- ""
+    same_solution <- ""
+    cocluster_frac <- ""
+    ###########################################################################
+    # Data frame that will store summary data
+    cocluster_frac_df <- data.frame()
+    # List that will optionally track raw coclustering data
+    cocluster_dfs <- list()
+    cocluster_ss_mats <- list()
+    cocluster_sc_mats <- list()
+    cocluster_cf_mats <- list()
+    # Data frame containing the cluster solutions from the full data_list
+    cluster_solutions <- get_cluster_solutions(solutions_matrix)
+    subjects <- cluster_solutions$"subjectkey"
+    nsubs <- length(subjects)
+    cocluster_mat <- matrix(0, ncol = nsubs, nrow = nsubs)
+    diag(cocluster_mat) <- length(subsample_solutions)
+    colnames(cocluster_mat) <- subjects
+    rownames(cocluster_mat) <- subjects
+    # Looping over all cluster solutions
+    for (idx in seq_len(nrow(solutions_matrix))) {
+        # Print current solution for monitoring progress
+        print(paste0("Processing solution ", idx, "/", nrow(solutions_matrix)))
+        cluster_solution <- cluster_solutions[, c(1, idx + 1)]
+        colnames(cluster_solution) <- c("subjectkey", "cluster")
+        # Dataframe storing all pairs of subjects in the full solution
+        cocluster_df <- data.frame(t(utils::combn(subjects, 2)))
+        colnames(cocluster_df) <- c("sub_1", "sub_2")
+        cocluster_df <- dplyr::left_join(
+            cocluster_df,
+            cluster_solution,
+            dplyr::join_by(sub_1 == subjectkey)
+        )
+        cocluster_df <- dplyr::left_join(
+            cocluster_df,
+            cluster_solution,
+            dplyr::join_by(sub_2 == subjectkey)
+        )
+        colnames(cocluster_df) <- c(
+            "sub_1", "sub_2", "sub_1_clust", "sub_2_clust"
+        )
+        cocluster_df$"same_solution" <- 0
+        cocluster_df$"same_cluster" <- 0
+        # Matrix templates
+        cocluster_ss_mat <- cocluster_mat
+        cocluster_sc_mat <- cocluster_mat
+        cocluster_cf_mat <- cocluster_mat
+        # Optionally initialize raw data matrices
+        # Iteration through all the clustered pairs
+        for (row in seq_len(nrow(cocluster_df))) {
+            # Iteration through all the solutions of subsampled data
+            for (sub_ind in seq_len(length(subsample_solutions))) {
+                subsample <- subsample_solutions[[sub_ind]]
+                subsample_subjects <- subsample$"subjectkey"
+                # df with subjectkey and only the current cluster solution
+                current_ss <- subsample[, c(1, idx + 1)]
+                colnames(current_ss) <- c("subjectkey", "cluster")
+                rownames(current_ss) <- current_ss$"subjectkey"
+                sub_1 <- cocluster_df[row, "sub_1"]
+                sub_2 <- cocluster_df[row, "sub_2"]
+                ss_has_sub_1 <- sub_1 %in% current_ss$"subjectkey"
+                ss_has_sub_2 <- sub_2 %in% current_ss$"subjectkey"
+                if (ss_has_sub_1 & ss_has_sub_2) {
+                    cocluster_df[row, "same_solution"] <- cocluster_df[row, "same_solution"] + 1
+                    cocluster_ss_mat[sub_1, sub_2] <- cocluster_ss_mat[sub_1, sub_2] + 1
+                    cocluster_ss_mat[sub_2, sub_1] <- cocluster_ss_mat[sub_1, sub_2] + 1
+                    ss_sub_1_c <- current_ss[sub_1, "cluster"]
+                    ss_sub_2_c <- current_ss[sub_2, "cluster"]
+                    if (ss_sub_1_c == ss_sub_2_c) {
+                        cocluster_df[row, "same_cluster"] <- cocluster_df[row, "same_cluster"] + 1
+                        cocluster_sc_mat[sub_1, sub_2] <- cocluster_sc_mat[sub_1, sub_2] + 1
+                        cocluster_sc_mat[sub_2, sub_1] <- cocluster_sc_mat[sub_1, sub_2] + 1
+                    }
                 }
             }
         }
+        cocluster_df <- cocluster_df |>
+            dplyr::mutate(cocluster_frac = same_cluster / same_solution)
+        cocluster_cf_mat <- cocluster_sc_mat / cocluster_ss_mat
+        avg_cocluster_frac <- cocluster_df |>
+            dplyr::filter(sub_1_clust == sub_2_clust) |>
+            dplyr::select(cocluster_frac) |>
+            unlist() |>
+            mean(na.rm = TRUE)
+        cocluster_frac_df <- rbind(
+            cocluster_frac_df,
+            data.frame(
+                "row" = idx,
+                "avg_cocluster_frac" = avg_cocluster_frac
+            )
+        )
+        idx <- length(cocluster_dfs) + 1
+        cocluster_dfs[[idx]] <- cocluster_df
+        cocluster_ss_mats[[idx]] <- cocluster_ss_mat
+        cocluster_sc_mats[[idx]] <- cocluster_sc_mat
+        cocluster_cf_mats[[idx]] <- cocluster_cf_mat
     }
-    diag(same_solution) <- 1
-    diag(same_cluster) <- 1
-    cocluster_data <- list(
-        "same_solution" = same_solution,
-        "same_cluster" = same_cluster
-    )
-    if (min(same_solution) == 0) {
-        pairs <- sum(same_solution == 0)
+    incomplete_coverage <- sum(cocluster_df$"same_solution" == 0)
+    if (incomplete_coverage > 0) {
         warning(
-            " There were: ", pairs, " pairs of subjects who were never in",
-            " the same resampled data set. To avoid this warning, use a",
-            " higher value of subsample_fraction or a higher value of",
-            " n_subsamples when calling subsample_data_list."
+            paste0(
+                incomplete_coverage,
+                " out of ", nrow(cocluster_df), " originally",
+                " co-clustered pairs of observations did not appear in",
+                " any of the data list subsamples together. Estimates",
+                " of co-clustering quality may be skewed as a result.",
+                " Consider increasing the value of the",
+                " `subsample_fraction` or",
+                " `n_subsamples` arguments when calling",
+                " `subsample_data_list()`."
+            )
         )
     }
-    return(cocluster_data)
-}
-
-#' Heatmap of patient co-clustering across resampled data
-#'
-#' Uses the output of generate_cocluster_data (see ?generate_cocluster_data)
-#' and returns a well-formatted ComplexHeatmap for visualizing clustering
-#' structure across resamplings of the data.
-#'
-#' @param cocluster_data A named list containing two matrices:
-#' * "same_solution": A patient x patient matrix where each cell is the number
-#'   of subsamples that contained both of those patients
-#' * "same_cluster": A patient x patient matrix where each cell is the number
-#'   of subsamples where those patients were clustered together
-#'
-#' @export
-cocluster_heatmap <- function(cocluster_data) {
-    same_solution <- cocluster_data$"same_solution"
-    same_cluster <- cocluster_data$"same_cluster"
-    if (min(same_solution) == 0) {
-        stop(
-            "This plot can only be generated if all subject pairs have been",
-            "a part of the same solution at least one time. Please increase",
-            "the number of subsamples or subsample fraction used when using",
-            "the subsample_data_list function."
-        )
-    }
-    cocluster_matrix <- same_cluster / same_solution
-    heatmap <- ComplexHeatmap::Heatmap(
-        matrix = cocluster_matrix,
-        show_row_names = FALSE,
-        show_column_names = FALSE,
-        col = circlize::colorRamp2(
-            c(0, 1),
-            c("deepskyblue", "red3")
-        ),
-        heatmap_legend_param = list(title = "Co-Cluster Fraction")
+    names(cocluster_dfs) <- paste0("row_", length(cocluster_dfs))
+    results <- list(
+        "cocluster_dfs" = cocluster_dfs,
+        "cocluster_ss_mats" = cocluster_ss_mats,
+        "cocluster_sc_mats" = cocluster_sc_mats,
+        "cocluster_cf_mats" = cocluster_cf_mats,
+        "cocluster_summary" = cocluster_frac_df
     )
-    return(heatmap)
+    return(results)
 }
 
-#' Plot a co-clustering heatmap across multiple settings_matrix rows
+#' Coclustering coverage check
 #'
-#' Generate a heatmap using data from multiple cocluster_data objects. See
-#' ?generate_cocluster_data for more information. The resulting heatmap shows
-#' how often two patients clustered together off of several resamplings of the
-#' data.
+#' Check if coclustered data has at least one subsample in which every pair
+#' of subjects were a part of simultaneously.
 #'
-#' @param cocluster_list A list of cocluster_data objects (from
-#' ?generate_cocluster_data) to pool together for the heatmap.
+#' @param cocluster_df Dataframe containing coclustering data.
+#'
+#' @param action Control if parent function should warn or stop.
 #'
 #' @export
-pooled_cocluster_heatmap <- function(cocluster_list) {
-    cosolution <- NULL
-    cocluster <- NULL
-    for (cocluster_data in cocluster_list) {
-        if (is.null(cosolution)) {
-            cosolution <- cocluster_data$"same_solution"
-            cocluster <- cocluster_data$"same_cluster"
-        } else {
-            if (min(cocluster_data$"same_solution") == 0) {
-                stop(
-                    "This plot can only be generated if all subject pairs",
-                    "have been a part of the same solution at least one time.",
-                    "Please increase the number of subsamples or subsample",
-                    "fraction used when using the subsample_data_list",
-                    "function."
-                )
-            }
-            cosolution <- cosolution + cocluster_data$"same_solution"
-            cocluster <- cocluster + cocluster_data$"same_cluster"
+coclustering_coverage_check <- function(cocluster_df, action = "warn") {
+    missing_coclustering <- sum(cocluster_df$"same_solution" == 0)
+    if (missing_coclustering > 0) {
+        if (action == "warn") {
+            warning(
+                missing_coclustering, " out of ", nrow(cocluster_df),
+                " pairs of observations did not appear in",
+                " any of the data list subsamples together.",
+                " To avoid this warning",
+                " try increasing the value of the `subsample_fraction` or",
+                " `n_subsamples` when calling `subsample_data_list()`."
+            )
+        } else if (action == "stop") {
+            stop(
+                missing_coclustering, " out of ", nrow(cocluster_df),
+                " pairs of observations did not appear in",
+                " any of the data list subsamples together. This function",
+                " requires all pairs of subjects to have occurred",
+                " in at least 1 subsampled cluster solution.",
+                " Try increasing the value of the `subsample_fraction` or",
+                " `n_subsamples` when calling `subsample_data_list()`."
+            )
         }
     }
-    cocluster_matrix <- cocluster / cosolution
-    heatmap <- ComplexHeatmap::Heatmap(
-        matrix = cocluster_matrix,
-        show_row_names = FALSE,
-        show_column_names = FALSE,
-        col = circlize::colorRamp2(
-            c(0, 1),
-            c("deepskyblue", "red3")
-        ),
-        heatmap_legend_param = list(title = "Pooled Co-Cluster Fraction")
-    )
-    return(heatmap)
 }
