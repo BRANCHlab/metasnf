@@ -69,3 +69,28 @@ association_heatmap <- function(...) {
         " `assoc_pval_heatmap` instead."
     )
 }
+
+#' (DEPRECATED) Average fraction of clustering together
+#'
+#' @param ... Function arguments
+#'
+#' @export
+fraction_clustered_together <- function(...) {
+    message(
+        "`fraction_clustered_together` has been deprecated. Please use",
+        " `assoc_pval_heatmap` instead."
+    )
+}
+
+#' (DEPRECATED) Coclustering heatmap
+#'
+#' @param ... Function arguments
+#'
+#' @export
+pooled_cocluster_heatmap <- function(...) {
+    message(
+        "`pooled_cocluster_heatmap` has been deprecated. Please use",
+        " `cocluster_heatmap` instead."
+    )
+}
+
