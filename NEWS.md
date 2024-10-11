@@ -1,3 +1,13 @@
+# metasnf 0.7.2
+
+## Bug fix
+
+* Function `estimate_nclust_given_graph()` occasionally yielded incorrect number of cluster estimates as a result of improper scaling in metasnf v0.7.0. The scaling should be corrected now.
+
+## Breaking changes
+
+* Considerable changes have been made to the co-clustering workflow, including new heatmap and density plot.
+
 # metasnf 0.7.1
 
 ## Possible breaking changes
