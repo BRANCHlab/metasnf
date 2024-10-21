@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,10 +93,10 @@ package, including:</p>
 <li>Cluster solution validation</li>
 </ol>
 <div class="section level2">
-<h2 id="setting-up-the-data">1. Setting up the data<a class="anchor" aria-label="anchor" href="#setting-up-the-data"></a>
+<h2 id="data-set-up">Data Set-up<a class="anchor" aria-label="anchor" href="#data-set-up"></a>
 </h2>
 <div class="section level3">
-<h3 id="load-the-library-and-data-into-the-r-environment">Load the library and data into the R environment<a class="anchor" aria-label="anchor" href="#load-the-library-and-data-into-the-r-environment"></a>
+<h3 id="pre-processing">Pre-processing<a class="anchor" aria-label="anchor" href="#pre-processing"></a>
 </h3>
 <p>Your data should be loaded into the R environment in the following
 format:</p>
@@ -363,7 +363,7 @@ can stick to just using one data list.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="building-a-space-of-settings-to-cluster-over">2. Building a space of settings to cluster over<a class="anchor" aria-label="anchor" href="#building-a-space-of-settings-to-cluster-over"></a>
+<h2 id="defining-sets-of-hyperparameters-to-use-for-snf-and-clustering">Defining sets of hyperparameters to use for SNF and clustering<a class="anchor" aria-label="anchor" href="#defining-sets-of-hyperparameters-to-use-for-snf-and-clustering"></a>
 </h2>
 <p>The <code>settings_matrix</code> stores all the information about the
 settings we’d like to use for each of our SNF runs. Calling the
@@ -371,14 +371,13 @@ settings we’d like to use for each of our SNF runs. Calling the
 of rows will automatically build a randomly populated
 <code>settings_matrix</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
+<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    nrow <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    min_k <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>    max_k <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>    seed <span class="op">=</span> <span class="fl">42</span></span>
+<span>    max_k <span class="op">=</span> <span class="fl">50</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span>
 <span></span>
 <span><span class="va">settings_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span></span>
 <span><span class="co">#&gt;   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
@@ -454,7 +453,7 @@ to an already existing dataframe using the
 vignette).</p>
 </div>
 <div class="section level2">
-<h2 id="running-snf">3. Running SNF<a class="anchor" aria-label="anchor" href="#running-snf"></a>
+<h2 id="running-snf-and-clustering">Running SNF and clustering<a class="anchor" aria-label="anchor" href="#running-snf-and-clustering"></a>
 </h2>
 <p>The <code>batch_snf</code> function integrates the data in the
 <code>data_list</code> using each of the sets of settings contained in
@@ -470,7 +469,7 @@ cluster each subject was assigned for the corresponding
 <span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
@@ -526,7 +525,7 @@ processing vignette</a> for more information.</p>
 <span><span class="co">#&gt; 6 subject_NDAR_INV1HLGR738 4 2 9 1 7 2 3 2 2  1  8  6  2  2  1  6  3  2  2  2</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="identifying-and-visualizing-meta-clusters">4. Identifying and visualizing meta clusters<a class="anchor" aria-label="anchor" href="#identifying-and-visualizing-meta-clusters"></a>
+<h2 id="identifying-and-visualizing-meta-clusters">Identifying and visualizing meta clusters<a class="anchor" aria-label="anchor" href="#identifying-and-visualizing-meta-clusters"></a>
 </h2>
 <p>Now that we have access to 20 different clustering solutions, we’ll
 need to find some way to pick an optimal one to move forward with for
@@ -606,7 +605,7 @@ function (a wrapper around functionality from the
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/shiny_annotator.html">shiny_annotator</a></span><span class="op">(</span><span class="va">ari_hm</span><span class="op">)</span></span></code></pre></div>
 <center>
-<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/meta_cluster_shiny.png">
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/meta_cluster_shiny_l.png">
 </center>
 <p>A demonstration of the shiny app can be seen here: <a href="https://pvelayudhan.shinyapps.io/shiny/" class="external-link">Meta Cluster
 Identification</a></p>
@@ -637,6 +636,14 @@ results looking something like this:</p>
 <p>At this point, we have our meta clusters but are not yet sure of how
 they differ in terms of their structure across our input and
 out-of-model features.</p>
+</div>
+<div class="section level2">
+<h2 id="characterizing-cluster-solutions">Characterizing cluster solutions<a class="anchor" aria-label="anchor" href="#characterizing-cluster-solutions"></a>
+</h2>
+<div class="section level3">
+<h3 id="calculating-associations-between-cluster-solutions-and-initial-data">Calculating associations between cluster solutions and initial
+data<a class="anchor" aria-label="anchor" href="#calculating-associations-between-cluster-solutions-and-initial-data"></a>
+</h3>
 <p>We start by running the <code>extend_solutions</code> function, which
 will calculate p-values representing the strength of the association
 between cluster membership (treated as a categorical feature) and any
@@ -728,6 +735,10 @@ measures.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The summary p-value measures can be suppressed by setting
 <code>calculate_summaries = FALSE</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="visualizing-feature-associations-with-meta-clustering-results">Visualizing feature associations with meta clustering results<a class="anchor" aria-label="anchor" href="#visualizing-feature-associations-with-meta-clustering-results"></a>
+</h3>
 <p>This <code>extended_solutions_matrix</code> we created can be passed
 into the <code>adjusted_rand_index_heatmap</code> function to easily
 visualize the level of separation on each of our features for each of
@@ -773,7 +784,7 @@ our cluster solutions.</p>
 <span>    res <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <center>
-<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm.png">
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm_l.png">
 </center>
 <p>The <code>adjusted_rand_index_heatmap</code> function wraps around a
 more generic <code>similarity_matrix_heatmap</code> function in this
@@ -835,8 +846,13 @@ together, you could easily add that in as another annotation:</p>
 <span>    res <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <center>
-<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm2.png">
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm2_l.png">
 </center>
+</div>
+<div class="section level3">
+<h3 id="characterizing-individual-solutions-representative-of-each-meta-cluster">Characterizing individual solutions representative of each meta
+cluster<a class="anchor" aria-label="anchor" href="#characterizing-individual-solutions-representative-of-each-meta-cluster"></a>
+</h3>
 <p>Now that we’ve visually delineated our meta clusters, we can get a
 quick summary of what sort of separation exists across our input and
 held out features by taking a closer look at one representative cluster
@@ -864,8 +880,6 @@ cluster.</p>
 <span>    neg_log_pval_thresh <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mc_manhattan</span></span>
-<span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
 <span>    <span class="st">"mc_manhattan.png"</span>,</span>
 <span>    <span class="va">mc_manhattan</span>,</span>
@@ -873,16 +887,9 @@ cluster.</p>
 <span>    width <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>    dpi <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<center>
-<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan.png">
-</center>
 <p><code>neg_log_pval_thresh</code> sets a threshold for the negative
 log of the p-values to be displayed. At a value of 5, any p-value that
 is smaller than 1e-5 will be truncated to 1e-5.</p>
-<p>Note that the Manhattan plot automatically uses a vertical line to
-separate features in the data_list argument from those in the
-target_list. Vertical boundaries can be controlled with the
-<code>xints</code> parameter.</p>
 <p>The plot as it is is a bit unwieldy plot given how many neuroimaging
 ROIs are present. Let’s take out the cortical thickness and surface area
 measures to make the plot a little clearer.</p>
@@ -917,11 +924,16 @@ dial the number of features plotted back a bit, as well.</p>
 <span>    dpi <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <center>
-<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan2.png">
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan2_l.png">
 </center>
-<center>
-<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm2.png">
-</center>
+<p>Note that the Manhattan plot automatically uses a vertical line to
+separate features in the data_list argument from those in the
+target_list. Vertical boundaries can be controlled with the
+<code>xints</code> parameter.</p>
+</div>
+<div class="section level3">
+<h3 id="relating-results-to-metasnf-hyperparameters">Relating results to metasnf hyperparameters<a class="anchor" aria-label="anchor" href="#relating-results-to-metasnf-hyperparameters"></a>
+</h3>
 <p>If you see something interesting in your heatmap, you may be curious
 to know how that corresponds to the settings that were in your settings
 matrix.</p>
@@ -949,14 +961,13 @@ through the <code>settings_matrix_heatmap</code> function.</p>
 <p>This heatmap rescales all the columns in the settings_matrix to have
 a maximum value of 1. The purpose of re-ordering the settings matrix in
 this way is to see if any associations exist between certain settings
-values and pairwise cluster solution similarities.</p>
-<p>This heatmap can show you if any settings values were associated with
-a particular type of clustering result. If there are any particular
-important settings, you can simply add them into your adjusted rand
-index heatmap annotations. Recall that the <code>solutions_matrix</code>
-(and, by extension, the <code>extended_solutions_matrix</code>) is an
-extension of the settings matrix, so no further data manipulation is
-needed to add a setting as a heatmap annotation.</p>
+values and pairwise cluster solution similarities. If there are any
+particular important settings, you can simply add them into your
+adjusted rand index heatmap annotations. Recall that the
+<code>solutions_matrix</code> (and, by extension, the
+<code>extended_solutions_matrix</code>) is an extension of the settings
+matrix, so no further data manipulation is needed to add a setting as a
+heatmap annotation.</p>
 <p>Give it a try with the code below:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">annotated_ari_hm3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjusted_rand_index_heatmap.html">adjusted_rand_index_heatmap</a></span><span class="op">(</span></span>
@@ -992,8 +1003,9 @@ needed to add a setting as a heatmap annotation.</p>
 <span>        <span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</div>
 <div class="section level3">
-<h3 id="quality-measures">2. Quality measures<a class="anchor" aria-label="anchor" href="#quality-measures"></a>
+<h3 id="quality-measures">Quality measures<a class="anchor" aria-label="anchor" href="#quality-measures"></a>
 </h3>
 <p>Quality metrics are another useful heuristic for the goodness of a
 cluster that don’t require any contextualization of results in the
@@ -1015,7 +1027,7 @@ parameter:</p>
 <span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
@@ -1072,9 +1084,9 @@ documentation</a></li>
 </ol>
 </div>
 <div class="section level3">
-<h3 id="stability-measures">3. Stability measures<a class="anchor" aria-label="anchor" href="#stability-measures"></a>
+<h3 id="stability-measures">Stability measures<a class="anchor" aria-label="anchor" href="#stability-measures"></a>
 </h3>
-<p>metaSNF offers tools to evaluate two different measures of
+<p>metasnf offers tools to evaluate two different measures of
 stability:</p>
 <ol style="list-style-type: decimal">
 <li>Pairwise adjusted Rand indices (across resamplings of the
@@ -1084,36 +1096,11 @@ according to the adjusted Rand index?)</li>
 that observations who clustered together in the full results clustered
 together in resampled results?)</li>
 </ol>
-<p>To calculate either of these, you’ll need to first generate
-subsamples of the data_list.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_list_subsamples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsample_data_list.html">subsample_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    n_subsamples <span class="op">=</span> <span class="fl">30</span>, <span class="co"># calculate 30 subsamples</span></span>
-<span>    subsample_fraction <span class="op">=</span> <span class="fl">0.8</span> <span class="co"># for each subsample, use random 80% of observations</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><code>data_list_subsamples</code> is a list that now contains 30
-smaller subsamples of the original data_list.</p>
-<p>Then the stability calculations:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pairwise_aris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsample_pairwise_aris.html">subsample_pairwise_aris</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list_subsamples</span>,</span>
-<span>    <span class="va">settings_matrix</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">fraction_together</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fraction_clustered_together.html">fraction_clustered_together</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list_subsamples</span>,</span>
-<span>    <span class="va">settings_matrix</span>,</span>
-<span>    <span class="va">solutions_matrix</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>Be warned, that second function is especially extremely slow. As the
-number of observations and number of solutions you’re evaluating grows,
-these functions can get pretty slow. Consider only using them after
-eliminating solutions that you are certainly not interested in further
-characterizing.</p>
+<p>You can learn more about running stability calculations in the <a href="https://branchlab.github.io/metasnf/articles/stability_measures.html">stability
+and coclustering vignette</a>.</p>
 </div>
 <div class="section level3">
-<h3 id="evaluating-separation-across-target-features-of-importance">4. Evaluating separation across “target features” of importance<a class="anchor" aria-label="anchor" href="#evaluating-separation-across-target-features-of-importance"></a>
+<h3 id="evaluating-separation-across-target-features-of-importance">Evaluating separation across “target features” of importance<a class="anchor" aria-label="anchor" href="#evaluating-separation-across-target-features-of-importance"></a>
 </h3>
 <p>If you can specify a metric or objective function that may tell you
 how useful a clustering solution will be for your purposes in advance,
@@ -1130,7 +1117,7 @@ from each other with the <code>uid</code> parameter.</p>
 <p>We will next extend our <code>solutions_matrix</code> with p-values
 from regressing the <code>target_list</code> features onto our generated
 clusters.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">target_list</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Processing row 1 of 20"</span></span>
 <span><span class="co">#&gt; [1] "Processing row 2 of 20"</span></span>
@@ -1199,7 +1186,7 @@ clusters.</p>
 <span><span class="co">#&gt; 5           0.2256718           0.7895325 0.2256718 0.5076021 0.7895325</span></span>
 <span><span class="co">#&gt; 6           0.2566391           0.1324778 0.1324778 0.1945585 0.2566391</span></span></code></pre></div>
 <p>If you just want the p-values:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">target_pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pvals.html">get_pvals</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">target_pvals</span><span class="op">)</span></span>
@@ -1211,7 +1198,7 @@ clusters.</p>
 <span><span class="co">#&gt; 5      5           0.2256718           0.7895325 0.2256718 0.5076021 0.7895325</span></span>
 <span><span class="co">#&gt; 6      6           0.2566391           0.1324778 0.1324778 0.1945585 0.2566391</span></span></code></pre></div>
 <p>There is a heatmap for visualizing this too:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pval_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pval_heatmap.html">pval_heatmap</a></span><span class="op">(</span><span class="va">target_pvals</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/save_heatmap.html">save_heatmap</a></span><span class="op">(</span></span>
@@ -1249,7 +1236,7 @@ seemed to have worked.</p>
 beginning, with label propagation to validate our findings.</p>
 <p>The <code>metasnf</code> package comes equipped with a function to do
 the training/testing split for you :)</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># All the subjects present in all dataframes with no NAs</span></span>
 <span><span class="va">all_subjects</span> <span class="op">&lt;-</span> <span class="va">data_list</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="st">"data"</span><span class="op">$</span><span class="st">"subjectkey"</span></span>
 <span></span>
@@ -1309,14 +1296,13 @@ the training/testing split for you :)</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Find a clustering solution in your training data</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">train_data_list</span>,</span>
 <span>    nrow <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>    seed <span class="op">=</span> <span class="fl">42</span>,</span>
 <span>    min_k <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">30</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span>
 <span></span>
 <span><span class="va">train_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    <span class="va">train_data_list</span>,</span>
@@ -1422,7 +1408,7 @@ the training/testing split for you :)</p>
 solutions propagate to the test set, but that would mean reusing your
 test set and removing the protection against overfitting conferred by
 this procedure.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">propagated_labels_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_solutions_matrix.html">lp_solutions_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">extended_solutions_matrix</span>,</span>
 <span>    <span class="va">full_data_list</span></span>

@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,13 +113,12 @@ over what the default clustering looks like.</p>
 <span><span class="va">target_list</span> <span class="op">&lt;-</span> <span class="va">full_data_list</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Specifying 5 different sets of settings for SNF</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    nrow <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>    max_k <span class="op">=</span> <span class="fl">40</span>,</span>
-<span>    seed <span class="op">=</span> <span class="fl">42</span></span>
+<span>    max_k <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span>
 <span></span>
 <span><span class="co"># This matrix has clustering solutions for each of the 5 SNF runs!</span></span>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
@@ -155,7 +154,7 @@ over what the default clustering looks like.</p>
 <span>    dpi <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <center>
-<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/clust_esm_manhattan.png">
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/clust_esm_manhattan_l.png">
 </center>
 <p>The Manhattan plot shows the p-values (y-axis) of the associations
 between our target features (x-axis) and each cluster solution we
@@ -209,7 +208,7 @@ provide <code>batch_snf</code> with a custom
 <span><span class="co">#&gt;     solution_data &lt;- list(solution = solution, nclust = nclust)</span></span>
 <span><span class="co">#&gt;     return(solution_data)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x560cde204b60&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55b97f53a5c0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $spectral_rot</span></span>
@@ -224,7 +223,7 @@ provide <code>batch_snf</code> with a custom
 <span><span class="co">#&gt;     solution_data &lt;- list(solution = solution, nclust = nclust)</span></span>
 <span><span class="co">#&gt;     return(solution_data)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x560cde207298&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55b97f538ec8&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span>
 <span></span>
 <span><span class="co"># A prettier format:</span></span>
@@ -274,14 +273,13 @@ generation:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Specifying 5 different sets of settings for SNF</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    nrow <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">40</span>,</span>
-<span>    seed <span class="op">=</span> <span class="fl">42</span>,</span>
 <span>    clustering_algorithms <span class="op">=</span> <span class="va">clust_algs_list</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span>
 <span></span>
 <span><span class="va">settings_matrix</span><span class="op">$</span><span class="st">"clust_alg"</span></span>
 <span><span class="co">#&gt;  [1] 3 1 1 5 2 2 4 1 3 3</span></span></code></pre></div>
@@ -494,12 +492,11 @@ value.</p>
 <span>    uid <span class="op">=</span> <span class="st">"patient_id"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>    seed <span class="op">=</span> <span class="fl">42</span></span>
+<span>    nrow <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "The global seed has been changed!"</span></span>
 <span></span>
 <span><span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>

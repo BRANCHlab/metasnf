@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,22 +112,21 @@ vignettes.</p>
 <span>    uid <span class="op">=</span> <span class="st">"patient_id"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    nrow <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    max_k <span class="op">=</span> <span class="fl">40</span>,</span>
-<span>    seed <span class="op">=</span> <span class="fl">42</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "The global seed has been changed!"</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    max_k <span class="op">=</span> <span class="fl">40</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    <span class="va">settings_matrix</span>,</span>
 <span>    return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Row: 1/1 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">## [1] "Total time taken: 1 seconds."</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<span><span class="co">## [1] "Total time taken: 0 seconds."</span></span></code></pre>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
 <span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span></span>
 <span></span>
@@ -139,7 +138,7 @@ range of the number of clusters you’d like to visualize. The example
 below uses <code>spectral_two</code> to <code>spectral_six</code>, which
 are spectral clustering functions covering 2 clusters to 6 clusters
 respectively.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Spectral clustering functions ranging from 2 to 6 clusters</span></span>
 <span><span class="va">cluster_sequence</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="va">spectral_two</span>,</span>
@@ -149,7 +148,7 @@ respectively.</p>
 <p>Then, we can either generate an alluvial plot covering our similarity
 matrix over these clustering algorithms for data in a
 <code>data_list</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/alluvial_cluster_plot.html">alluvial_cluster_plot</a></span><span class="op">(</span></span>
 <span>    cluster_sequence <span class="op">=</span> <span class="va">cluster_sequence</span>,</span>
 <span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>
@@ -161,7 +160,7 @@ matrix over these clustering algorithms for data in a
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="alluvial_plots_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 <p>Or in an external dataframe:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">extra_data</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">gender_df</span>,</span>
 <span>    <span class="va">diagnosis_df</span>,</span>
@@ -177,7 +176,7 @@ matrix over these clustering algorithms for data in a
 <span><span class="co">## 4        173 female       no asthma subject_173</span></span>
 <span><span class="co">## 5        327 female definite asthma subject_327</span></span>
 <span><span class="co">## 6        245 female definite asthma subject_245</span></span></code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/alluvial_cluster_plot.html">alluvial_cluster_plot</a></span><span class="op">(</span></span>
 <span>    cluster_sequence <span class="op">=</span> <span class="va">cluster_sequence</span>,</span>
 <span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>

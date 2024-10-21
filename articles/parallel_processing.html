@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,11 +104,11 @@ help speed things up quite a lot.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Specifying 5 different sets of settings for SNF</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    nrow <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>    max_k <span class="op">=</span> <span class="fl">40</span>,</span>
-<span>    seed <span class="op">=</span> <span class="fl">42</span></span>
+<span>    max_k <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
@@ -151,144 +151,6 @@ many metasnf will think you have access to), use the
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://parallelly.futureverse.org/reference/availableCores.html" class="external-link">availableCores</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="benchmarks">Benchmarks<a class="anchor" aria-label="anchor" href="#benchmarks"></a>
-</h2>
-<p>Results below show some benchmarking done on the following two
-systems:</p>
-<ol style="list-style-type: decimal">
-<li>A data node on the SickKids HPC (“hpc”)
-<ul>
-<li>Intel Xeon E312xx (SandyBridge, IBRS update)</li>
-<li>24 cores</li>
-<li>129 GB RAM</li>
-</ul>
-</li>
-<li>A home computer (“local”)
-<ul>
-<li>Intel(R) Core(TM) i5-4460 CPU @ 3.20GHz</li>
-<li>4 cores</li>
-<li>16.7 GB RAM</li>
-</ul>
-</li>
-</ol>
-<div class="section level3">
-<h3 id="code">Code<a class="anchor" aria-label="anchor" href="#code"></a>
-</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Setting up the data</span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">time_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>    snf_rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    processes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    user_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    system_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    elapsed_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Code for HPC</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">nproc</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">24</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">rows</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">12</span>, <span class="fl">24</span>, <span class="fl">48</span>, <span class="fl">96</span>, <span class="fl">240</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>            <span class="va">data_list</span>,</span>
-<span>            nrow <span class="op">=</span> <span class="va">rows</span>,</span>
-<span>            max_k <span class="op">=</span> <span class="fl">40</span>,</span>
-<span>            seed <span class="op">=</span> <span class="fl">42</span></span>
-<span>        <span class="op">)</span></span>
-<span>        <span class="va">start</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>        <span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>            <span class="va">data_list</span>,</span>
-<span>            <span class="va">settings_matrix</span>,</span>
-<span>            processes <span class="op">=</span> <span class="va">nproc</span></span>
-<span>        <span class="op">)</span></span>
-<span>        <span class="va">end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>        <span class="va">time</span> <span class="op">&lt;-</span> <span class="va">end</span> <span class="op">-</span> <span class="va">start</span></span>
-<span>        <span class="va">time_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
-<span>            <span class="va">time_data</span>,</span>
-<span>            <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>                snf_rows <span class="op">=</span> <span class="va">rows</span>,</span>
-<span>                processes <span class="op">=</span> <span class="va">nproc</span>,</span>
-<span>                user_time <span class="op">=</span> <span class="va">time</span><span class="op">[</span><span class="st">"user.self"</span><span class="op">]</span> <span class="op">+</span> <span class="va">time</span><span class="op">[</span><span class="st">"user.child"</span><span class="op">]</span>,</span>
-<span>                sys_time <span class="op">=</span> <span class="va">time</span><span class="op">[</span><span class="st">"sys.self"</span><span class="op">]</span> <span class="op">+</span> <span class="va">time</span><span class="op">[</span><span class="st">"sys.child"</span><span class="op">]</span>,</span>
-<span>                elapsed_time <span class="op">=</span> <span class="va">time</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span></span>
-<span>            <span class="op">)</span></span>
-<span>        <span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="co"># Code for local</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">nproc</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">rows</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">12</span>, <span class="fl">24</span>, <span class="fl">48</span>, <span class="fl">96</span>, <span class="fl">240</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>            <span class="va">data_list</span>,</span>
-<span>            nrow <span class="op">=</span> <span class="va">rows</span>,</span>
-<span>            max_k <span class="op">=</span> <span class="fl">40</span>,</span>
-<span>            seed <span class="op">=</span> <span class="fl">42</span></span>
-<span>        <span class="op">)</span></span>
-<span>        <span class="va">start</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>        <span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>            <span class="va">data_list</span>,</span>
-<span>            <span class="va">settings_matrix</span>,</span>
-<span>            processes <span class="op">=</span> <span class="va">nproc</span></span>
-<span>        <span class="op">)</span></span>
-<span>        <span class="va">end</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/proc.time.html" class="external-link">proc.time</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>        <span class="va">time</span> <span class="op">&lt;-</span> <span class="va">end</span> <span class="op">-</span> <span class="va">start</span></span>
-<span>        <span class="va">time_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
-<span>            <span class="va">time_data</span>,</span>
-<span>            <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>                snf_rows <span class="op">=</span> <span class="va">rows</span>,</span>
-<span>                processes <span class="op">=</span> <span class="va">nproc</span>,</span>
-<span>                user_time <span class="op">=</span> <span class="va">time</span><span class="op">[</span><span class="st">"user.self"</span><span class="op">]</span> <span class="op">+</span> <span class="va">time</span><span class="op">[</span><span class="st">"user.child"</span><span class="op">]</span>,</span>
-<span>                sys_time <span class="op">=</span> <span class="va">time</span><span class="op">[</span><span class="st">"sys.self"</span><span class="op">]</span> <span class="op">+</span> <span class="va">time</span><span class="op">[</span><span class="st">"sys.child"</span><span class="op">]</span>,</span>
-<span>                elapsed_time <span class="op">=</span> <span class="va">time</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span></span>
-<span>            <span class="op">)</span></span>
-<span>        <span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
-</h3>
-<center>
-<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/local_parallel_profiling.png" width="700">
-</center>
-<p>The local machine has access to 4 cores and scales quite well in
-parallel on the toy data.</p>
-<p></p>
-<center>
-<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/hpc_parallel_profiling.png" width="700">
-</center>
-<p>24 cores were requested - quite a massive difference in time
-taken!</p>
-<p></p>
-<center>
-<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/parallel_profiling.png" width="700">
-</center>
-<p>This figure zooms in on the performances at both locations.</p>
-<p>Some notable observations:</p>
-<ol style="list-style-type: decimal">
-<li>Single-threaded HPC (red circles) was slower than the
-single-threaded local machine (red triangles)</li>
-<li>Up until 100 rows of SNF, max-process local machine (green
-triangles) was faster than max process HPC (blue circles)</li>
-</ol>
-<p>The point being, neither a super computer cluster nor parallel
-processing will necessarily improve your run times under all
-circumstances. But if you’re plowing through big datasets with and
-running lots of SNF, the parallelization will probably be very
-helpful.</p>
-</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

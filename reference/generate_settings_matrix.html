@@ -79,7 +79,7 @@ name (as found in dl_summary(data_list)$"name") of each dataframe. When
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -191,8 +191,9 @@ name (as found in dl_summary(data_list)$"name") of each dataframe. When
 
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
-<dd><p>set a seed for the random matrix generation. Setting this value
-will change the seed of the global environment.</p></dd>
+<dd><p>(DEPRECATED) set the global seed. To ensure reproducible
+settings matrices are generated, manually call <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> prior to
+settings matrix generation instead of using this parameter.</p></dd>
 
 
 <dt id="arg-nrows">nrows<a class="anchor" aria-label="anchor" href="#arg-nrows"></a></dt>

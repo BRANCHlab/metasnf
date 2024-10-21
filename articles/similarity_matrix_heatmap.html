@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,15 +121,14 @@ other patient attributes.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Generate settings_matrix</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    nrow <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    max_k <span class="op">=</span> <span class="fl">40</span>,</span>
-<span>    seed <span class="op">=</span> <span class="fl">42</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "The global seed has been changed!"</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Run SNF and clustering</span></span>
+<span>    max_k <span class="op">=</span> <span class="fl">40</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Run SNF and clustering</span></span>
 <span><span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    <span class="va">settings_matrix</span>,</span>
@@ -137,7 +136,7 @@ other patient attributes.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Row: 1/1 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">## [1] "Total time taken: 0 seconds."</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
 <span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span></span>
 <span></span>
@@ -153,7 +152,7 @@ other patient attributes.</p>
 <p><code>similarity_matrix_heatmap</code> is a wrapper for
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code>, but with some convenient default
 transformations and parameters for viewing a similarity matrix.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">similarity_matrix_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/similarity_matrix_heatmap.html">similarity_matrix_heatmap</a></span><span class="op">(</span></span>
 <span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>
 <span>    cluster_solution <span class="op">=</span> <span class="va">cluster_solution</span>,</span>
@@ -192,7 +191,7 @@ barplot annotations directly through a provided dataframe or data_list
 (or both).</p>
 <p>In the example below, we make use of data supplied through a
 data_list.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">annotated_sm_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/similarity_matrix_heatmap.html">similarity_matrix_heatmap</a></span><span class="op">(</span></span>
 <span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>
 <span>    cluster_solution <span class="op">=</span> <span class="va">cluster_solution</span>,</span>
@@ -237,7 +236,7 @@ data_list.</p>
 R colours that you can browse by calling <code><a href="https://rdrr.io/r/grDevices/colors.html" class="external-link">colours()</a></code>.</p>
 <p>For reference, the code below shows how you would achieve these
 annotations using standard <code>ComplexHeatmap</code> syntax.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">merged_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/collapse_dl.html">collapse_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
 <span><span class="va">order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">cluster_solution</span>, index.return <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="st">"ix"</span></span>
 <span><span class="va">merged_df</span> <span class="op">&lt;-</span> <span class="va">merged_df</span><span class="op">[</span><span class="va">order</span>, <span class="op">]</span></span>
