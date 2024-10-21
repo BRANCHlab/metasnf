@@ -1,12 +1,12 @@
 ---
-title: "Unwanted Signal"
+title: "Confounders"
 output:
     rmarkdown::html_vignette:
         toc: true
 description: >
   Linearly regress out unwanted signal from features for clustering.
 vignette: >
-  %\VignetteIndexEntry{Unwanted Signal}
+  %\VignetteIndexEntry{Confounders}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-Download a copy of the vignette to follow along here: [unwanted_signal.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/unwanted_signal.Rmd)
+Download a copy of the vignette to follow along here: [confounders.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/confounders.Rmd)
 
 This vignette walks through handling confounding features and features introducing unwanted signal using the metasnf package.
 

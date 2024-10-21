@@ -276,7 +276,7 @@ dim(similarity_matrices[[1]])
 ### Example of non-automated clustering: DBSCAN
 
 Let's say we wanted to cluster our similarity matrices with DBSCAN rather than with spectral clustering.
-Start by taking a look at the documentation for running the DBSCAN function from the dbscan R package [https://cran.r-project.org/web/packages/dbscan/dbscan.pdf](https://cran.r-project.org/web/packages/dbscan/dbscan.pdf):
+Start by taking a look at the documentation for running the DBSCAN function from the dbscan R package [https://cran.r-project.org/package=dbscan](https://cran.r-project.org/package=dbscan):
 
 DBSCAN is about as challenging as custom clustering can get, as the suggested process for specifying the number of clusters is recommended to involve human intervention and the function itself operates on dissimilarity (distance) matrices rather than similarity matrices.
 

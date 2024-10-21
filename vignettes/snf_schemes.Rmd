@@ -66,4 +66,4 @@ This approach can lead to the greatest information loss during the distance matr
 ## Custom SNF schemes
 
 There is no simple interface to add custom SNF schemes at this time.
-If there is a different scheme you would like to use, feel free to submit a suggestion in the package's [issues page](https://github.com/BRANCHlab/metasnf/issues) or to try poking around with the [snf scheme source code](https://github.com/BRANCHlab/metasnf/blob/main/R/snf_schemes.R) yourself!
+If there is a different scheme you would like to use, feel free to submit a suggestion in the package's [issues page](https://github.com/BRANCHlab/metasnf/issues).
