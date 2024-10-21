@@ -239,7 +239,7 @@ all the data.</p>
 have the same number of participants. SNF can only be run with complete
 data, so you’ll need to either use complete case analysis (removal of
 observations with any missing values) or impute the missing values to
-proceed with the clustering. As mentioned above, <code>metaSNF</code>
+proceed with the clustering. As mentioned above, <code>metasnf</code>
 can be used to visualize changes in clustering results across different
 imputations of the data.</p>
 <p>For now, we’ll just examine the simpler complete-case analysis
@@ -465,7 +465,7 @@ cluster each subject was assigned for the corresponding
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
@@ -588,7 +588,7 @@ Complete-linkage, Euclidean-distance based hierarchical clustering is
 being applied to these solutions to obtain the row ordering. This is
 also the default approach used by the <code>ComplexHeatmap</code>
 package, the backbone of all heatmap functions in
-<code>metaSNF</code>.</p>
+<code>metasnf</code>.</p>
 <p>This heatmap is integral to understanding what meta clusters exist in
 your data (given the space of parameters you explored in the settings
 matrix). We will later see how to further customize this heatmap to add
@@ -795,7 +795,7 @@ This also makes the documentation for the <code>ComplexHeatmap</code>
 package one of the best places to learn more about what can be done for
 these heatmaps.</p>
 <p>The data for the annotations don’t necessarily need to come from
-functions in metaSNF either. If you wanted to, for example, highlight
+functions in metasnf either. If you wanted to, for example, highlight
 the solutions where two very specific observations happened to cluster
 together, you could easily add that in as another annotation:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
@@ -1009,7 +1009,7 @@ heatmap annotation.</p>
 </h3>
 <p>Quality metrics are another useful heuristic for the goodness of a
 cluster that don’t require any contextualization of results in the
-domain they may be used in. metaSNF enables measures of silhouette
+domain they may be used in. metasnf enables measures of silhouette
 scores, Dunn indices, and Davies-Bouldin indices. To calculate these
 values, we’ll need not only the cluster results but also the final fused
 network (the similarity matrices produced by SNF) that the clusters came
@@ -1026,14 +1026,14 @@ parameter:</p>
 <span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 1 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 2 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 13/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 14/20 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 15/20 | Time remaining: 1 seconds"</span></span>
@@ -1309,7 +1309,7 @@ the training/testing split for you :)</p>
 <span>    <span class="va">settings_matrix</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 0 seconds"</span></span>
+<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 1 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
 <span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>
