@@ -36,8 +36,9 @@ generate_settings_matrix(
 \arguments{
 \item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 
-\item{seed}{set a seed for the random matrix generation. Setting this value
-will change the seed of the global environment.}
+\item{seed}{(DEPRECATED) set the global seed. To ensure reproducible
+settings matrices are generated, manually call \code{set.seed()} prior to
+settings matrix generation instead of using this parameter.}
 
 \item{nrows}{Number of rows to generate for the settings matrix.}
 

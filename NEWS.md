@@ -1,3 +1,15 @@
+# metasnf 1.0.0
+
+Last update before CRAN submission.
+
+## Breaking changes
+
+* Changing seed during settings matrix generation has been deprecated. Please manually call `set.seed` prior to `generate_settings_matrix` instead.
+
+## Other
+
+* Package size reduced by downscaling vignette images
+
 # metasnf 0.7.2
 
 ## Bug fix

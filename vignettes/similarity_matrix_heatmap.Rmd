@@ -60,11 +60,11 @@ data_list <- generate_data_list(
 )
 
 # Generate settings_matrix
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 1,
-    max_k = 40,
-    seed = 42
+    max_k = 40
 )
 
 # Run SNF and clustering

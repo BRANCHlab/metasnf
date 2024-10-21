@@ -40,8 +40,9 @@
 #'
 #' @param nrows Number of rows to generate for the settings matrix.
 #'
-#' @param seed set a seed for the random matrix generation. Setting this value
-#' will change the seed of the global environment.
+#' @param seed (DEPRECATED) set the global seed. To ensure reproducible
+#' settings matrices are generated, manually call `set.seed()` prior to
+#' settings matrix generation instead of using this parameter.
 #'
 #' @param min_removed_inputs The smallest number of input dataframes that may be
 #' randomly removed. By default, 0.
@@ -544,8 +545,10 @@ add_settings_matrix_rows <- function(settings_matrix,
     # 5. Set the random seed (if provided)
     ###########################################################################
     if (!is.null(seed)) {
-        set.seed(seed)
-        print("The global seed has been changed!")
+        stop(
+            "Adjusting the global seed through this function is deprecated.",
+            " Please call `set.seed()` manually instead."
+        )
     }
     ###########################################################################
     # 6. Begin the loop that will generate new random settings_matrix rows

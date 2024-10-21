@@ -17,11 +17,11 @@ test_that("function and parallel equivalent run and give equal results", {
         uid = "patient"
     )
     # Specifying 5 different sets of settings for SNF
+    set.seed(42)
     settings_matrix <- generate_settings_matrix(
         data_list,
         nrow = 3,
-        max_k = 40,
-        seed = 42
+        max_k = 40
     )
     # This matrix has clustering solutions for each of the 5 SNF runs!
     solutions_matrix <- batch_snf(data_list, settings_matrix)

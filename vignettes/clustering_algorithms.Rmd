@@ -53,11 +53,11 @@ data_list <- full_data_list[1:3]
 target_list <- full_data_list[4:5]
 
 # Specifying 5 different sets of settings for SNF
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 5,
-    max_k = 40,
-    seed = 42
+    max_k = 40
 )
 
 # This matrix has clustering solutions for each of the 5 SNF runs!
@@ -161,11 +161,11 @@ clust_algs_list <- generate_clust_algs_list(
 )
 
 # Specifying 5 different sets of settings for SNF
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 10,
     max_k = 40,
-    seed = 42,
     clustering_algorithms = clust_algs_list
 )
 
@@ -337,10 +337,10 @@ data_list <- generate_data_list(
     uid = "patient_id"
 )
 
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
-    nrow = 5,
-    seed = 42
+    nrow = 5
 )
 
 batch_snf_results <- batch_snf(

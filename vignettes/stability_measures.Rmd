@@ -40,11 +40,11 @@ data_list <- generate_data_list(
     uid = "unique_id"
 )
 
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 4,
-    max_k = 40,
-    seed = 42
+    max_k = 40
 )
 
 # Cluster solutions made using the full data

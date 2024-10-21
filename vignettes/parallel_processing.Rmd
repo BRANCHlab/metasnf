@@ -51,11 +51,11 @@ data_list <- generate_data_list(
 )
 
 # Specifying 5 different sets of settings for SNF
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 10,
-    max_k = 40,
-    seed = 42
+    max_k = 40
 )
 
 solutions_matrix <- batch_snf(
@@ -100,133 +100,3 @@ library(future)
 
 availableCores()
 ```
-
-## Benchmarks
-
-Results below show some benchmarking done on the following two systems:
-
-1. A data node on the SickKids HPC ("hpc")
-    - Intel Xeon E312xx (SandyBridge, IBRS update)
-    - 24 cores
-    - 129 GB RAM
-2. A home computer ("local")
-    - Intel(R) Core(TM) i5-4460 CPU @ 3.20GHz
-    - 4 cores
-    - 16.7 GB RAM
-
-### Code
-
-```{r eval = FALSE}
-library(metasnf)
-
-# Setting up the data
-data_list <- generate_data_list(
-    list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
-    list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
-    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-    list(income, "household_income", "demographics", "continuous"),
-    list(pubertal, "pubertal_status", "demographics", "continuous"),
-    uid = "unique_id"
-)
-
-time_data <- data.frame(
-    snf_rows = as.numeric(),
-    processes = as.numeric(),
-    user_time = as.numeric(),
-    system_time = as.numeric(),
-    elapsed_time = as.numeric()
-)
-
-# Code for HPC
-for (nproc in c(1, 24)) {
-    for (rows in c(1, 12, 24, 48, 96, 240)) {
-        settings_matrix <- generate_settings_matrix(
-            data_list,
-            nrow = rows,
-            max_k = 40,
-            seed = 42
-        )
-        start <- proc.time()
-        solutions_matrix <- batch_snf(
-            data_list,
-            settings_matrix,
-            processes = nproc
-        )
-        end <- proc.time()
-        time <- end - start
-        time_data <- rbind(
-            time_data,
-            data.frame(
-                snf_rows = rows,
-                processes = nproc,
-                user_time = time["user.self"] + time["user.child"],
-                sys_time = time["sys.self"] + time["sys.child"],
-                elapsed_time = time["elapsed"]
-            )
-        )
-    }
-}
-
-# Code for local
-for (nproc in c(1, 4)) {
-    for (rows in c(1, 12, 24, 48, 96, 240)) {
-        settings_matrix <- generate_settings_matrix(
-            data_list,
-            nrow = rows,
-            max_k = 40,
-            seed = 42
-        )
-        start <- proc.time()
-        solutions_matrix <- batch_snf(
-            data_list,
-            settings_matrix,
-            processes = nproc
-        )
-        end <- proc.time()
-        time <- end - start
-        time_data <- rbind(
-            time_data,
-            data.frame(
-                snf_rows = rows,
-                processes = nproc,
-                user_time = time["user.self"] + time["user.child"],
-                sys_time = time["sys.self"] + time["sys.child"],
-                elapsed_time = time["elapsed"]
-            )
-        )
-    }
-}
-
-```
-
-### Results
-
-<center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/local_parallel_profiling_l.png){width=700px}
-</center>
-
-The local machine has access to 4 cores and scales quite well in parallel on the toy data.
-
-</br>
-
-<center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/hpc_parallel_profiling_l.png){width=700px}
-</center>
-
-24 cores were requested - quite a massive difference in time taken!
-
-</br>
-
-<center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/parallel_profiling_l.png){width=700px}
-</center>
-
-This figure zooms in on the performances at both locations.
-
-Some notable observations:
-
-1. Single-threaded HPC (red circles) was slower than the single-threaded local machine (red triangles)
-2. Up until 100 rows of SNF, max-process local machine (green triangles) was faster than max process HPC (blue circles)
-
-The point being, neither a super computer cluster nor parallel processing will necessarily improve your run times under all circumstances.
-But if you're plowing through big datasets with and running lots of SNF, the parallelization will probably be very helpful.

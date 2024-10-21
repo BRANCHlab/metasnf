@@ -36,7 +36,7 @@ We recommend installing the latest development version of the package (it has th
 devtools::install_github("BRANCHlab/metasnf")
 
 # Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v0.7.2")
+devtools::install_github("BRANCHlab/metasnf@v1.0.0")
 ```
 
 ## Quick Start
@@ -58,11 +58,11 @@ data_list <- generate_data_list(
 )
 
 # Specifying 5 different sets of settings for SNF
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 5,
-    max_k = 40,
-    seed = 42
+    max_k = 40
 )
 
 # This matrix has clustering solutions for each of the 5 SNF runs!

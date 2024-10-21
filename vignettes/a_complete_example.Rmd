@@ -220,12 +220,12 @@ The `settings_matrix` stores all the information about the settings we'd like to
 Calling the `generate_settings_matrix` function with a specified number of rows will automatically build a randomly populated `settings_matrix`.
 
 ```{r}
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 20,
     min_k = 20,
-    max_k = 50,
-    seed = 42
+    max_k = 50
 )
 
 settings_matrix[1:5, ]
@@ -866,10 +866,10 @@ train_target_list <- generate_data_list(
 )
 
 # Find a clustering solution in your training data
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     train_data_list,
     nrow = 5,
-    seed = 42,
     min_k = 10,
     max_k = 30
 )

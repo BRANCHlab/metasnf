@@ -108,10 +108,10 @@ train_target_list <- generate_data_list(
     uid = "unique_id"
 )
 
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     train_data_list,
     nrow = 5,
-    seed = 42,
     min_k = 10,
     max_k = 30
 )

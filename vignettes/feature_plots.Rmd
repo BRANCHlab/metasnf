@@ -33,12 +33,12 @@ data_list <- generate_data_list(
 )
 
 # Build space of settings to cluster over
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 2,
     min_k = 20,
-    max_k = 50,
-    seed = 42
+    max_k = 50
 )
 
 # Clustering

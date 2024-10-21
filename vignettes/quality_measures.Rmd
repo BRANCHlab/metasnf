@@ -43,10 +43,10 @@ data_list <- generate_data_list(
 )
 
 # build settings_matrix
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
-    nrow = 15,
-    seed = 42
+    nrow = 15
 )
 
 # collect similarity matrices and solutions matrix from batch_snf

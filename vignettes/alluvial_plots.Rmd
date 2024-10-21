@@ -53,11 +53,11 @@ data_list <- generate_data_list(
     uid = "patient_id"
 )
 
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 1,
-    max_k = 40,
-    seed = 42
+    max_k = 40
 )
 
 batch_snf_results <- batch_snf(

@@ -45,12 +45,12 @@ data_list <- generate_data_list(
 
 summarize_dl(data_list)
 
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 20,
     min_k = 20,
-    max_k = 50,
-    seed = 42
+    max_k = 50
 )
 
 weights_matrix <- generate_weights_matrix(

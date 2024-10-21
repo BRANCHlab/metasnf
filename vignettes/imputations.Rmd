@@ -58,12 +58,12 @@ data_list_imp2 <- generate_data_list(
     uid = "unique_id"
 )
 
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
-    data_list,
+    data_list_imp1,
     nrow = 10,
     min_k = 20,
-    max_k = 50,
-    seed = 42
+    max_k = 50
 )
 
 # Generation of 20 cluster solutions
