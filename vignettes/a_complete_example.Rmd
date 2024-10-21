@@ -573,15 +573,8 @@ ggplot2::ggsave(
 )
 ```
 
-<center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan_l.png)
-</center>
-
 `neg_log_pval_thresh` sets a threshold for the negative log of the p-values to be displayed.
 At a value of 5, any p-value that is smaller than 1e-5 will be truncated to 1e-5.
-
-Note that the Manhattan plot automatically uses a vertical line to separate features in the data_list argument from those in the target_list.
-Vertical boundaries can be controlled with the `xints` parameter.
 
 The plot as it is is a bit unwieldy plot given how many neuroimaging ROIs are present.
 Let's take out the cortical thickness and surface area measures to make the plot a little clearer.
@@ -621,6 +614,9 @@ ggplot2::ggsave(
 <center>
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan2_l.png)
 </center>
+
+Note that the Manhattan plot automatically uses a vertical line to separate features in the data_list argument from those in the target_list.
+Vertical boundaries can be controlled with the `xints` parameter.
 
 ### Relating results to metasnf hyperparameters
 
