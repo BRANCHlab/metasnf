@@ -4,9 +4,9 @@ Version: 0.7.2
 Authors@R:
     c(
         person(
-            "Prashanth",
+            "Prashanth S",
             "Velayudhan",
-            email = "prashanth.velayudhan@sickkids.ca",
+            email = "psvelayu@gmail.com",
             role = c("aut", "cre")
         ),
         person("Xiaoqiao", "Xu", role = c("aut")),
@@ -68,4 +68,5 @@ Depends:
     R (>= 4.1.0)
 LazyData: true
 VignetteBuilder: knitr
-URL: https://branchlab.github.io/metasnf/
+URL: https://branchlab.github.io/metasnf/, https://github.com/BRANCHlab/metasnf/
+BugReports: https://github.com/BRANCHlab/metasnf/issues

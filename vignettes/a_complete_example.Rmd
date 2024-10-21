@@ -321,8 +321,8 @@ ari_hm <- adjusted_rand_index_heatmap(
 save_heatmap(
     heatmap = ari_hm,
     path = "./adjusted_rand_index_heatmap.png",
-    width = 550,
-    height = 500,
+    width = 330,
+    height = 300,
     res = 100
 )
 ```
@@ -369,8 +369,8 @@ ari_mc_hm <- adjusted_rand_index_heatmap(
 save_heatmap(
     heatmap = ari_mc_hm,
     path = "./ari_mc_hm.png",
-    width = 550,
-    height = 500,
+    width = 330,
+    height = 300,
     res = 100
 )
 ```
@@ -556,11 +556,14 @@ mc_manhattan <- mc_manhattan_plot(
     neg_log_pval_thresh = 5
 )
 
-ggsave(
+mc_manhattan
+
+ggplot2::ggsave(
     "mc_manhattan.png",
     mc_manhattan,
-    height = 6,
-    width = 12
+    height = 4,
+    width = 8,
+    dpi = 100
 )
 
 ```
@@ -601,11 +604,12 @@ mc_manhattan2 <- mc_manhattan_plot(
 )
 mc_manhattan2
 
-ggsave(
+ggplot2::ggsave(
     "mc_manhattan2.png",
     mc_manhattan2,
     height = 8,
-    width = 12
+    width = 12,
+    dpi = 100
 )
 ```
 

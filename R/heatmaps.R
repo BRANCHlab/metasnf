@@ -87,6 +87,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
                                       row_split = NULL,
                                       column_split = NULL,
                                       ...) {
+    check_hm_dependencies()
     ###########################################################################
     # Assemble any provided data
     ###########################################################################
@@ -335,6 +336,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
                                significance_stars = TRUE,
                                slice_font_size = 8,
                                ...) {
+    check_hm_dependencies()
     ###########################################################################
     # Format data
     ###########################################################################
@@ -1449,3 +1451,29 @@ check_dataless_annotations <- function(annotation_requests, data) {
         }
     }
 }
+
+
+#' Check for ComplexHeatmap and circlize dependencies
+#'
+#' @export
+check_hm_dependencies <- function() {
+    if (!requireNamespace("ComplexHeatmap", quietly = TRUE)) {
+        stop(
+            "Package \"ComplexHeatmap\" is required to use this function.",
+            " The package is available on BioConductor:",
+            " https://bioconductor.org/packages/",
+            "release/bioc/html/ComplexHeatmap.html",
+            call. = FALSE
+        )
+    }
+    if (!requireNamespace("circlize", quietly = TRUE)) {
+        stop(
+            "Package \"circlize\" is required to use this function.",
+            " The package is available on CRAN:",
+            " `install.packages(\"circlize\")`.",
+            call. = FALSE
+        )
+    }
+}
+
+
