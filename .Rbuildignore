@@ -19,3 +19,4 @@ patch_update.sh
 media
 ^shiny$
 Session.vim
+*.tar.gz

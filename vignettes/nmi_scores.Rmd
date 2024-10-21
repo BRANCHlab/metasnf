@@ -29,7 +29,7 @@ The premise of this approach is that if a feature was very important, clustering
 
 In the original `SNFtool` implementation of calculating NMI scores, the cluster solution based on the individual feature being assessed was restricted to necessarily being generated using squared Euclidean distance, a K hyperparameter value of 20, an alpha hyperparameter value of 0.5, and spectral clustering with the number of clusters based on the best eigen-gap value of possible solutions spanning from 2 to 5 clusters.
 
-In contrast, the `metaSNF` implementation leverages all the architectural details and hyperparameters supplied in the original `settings_matrix` and `batch_snf()` call to make the solo-feature to all-feature solutions as comparable as possible.
+In contrast, the `metasnf` implementation leverages all the architectural details and hyperparameters supplied in the original `settings_matrix` and `batch_snf()` call to make the solo-feature to all-feature solutions as comparable as possible.
 
 The chunk below outlines how the primary NMI calculating function, `batch_nmi()`, can be used.
 

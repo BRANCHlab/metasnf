@@ -113,7 +113,7 @@ lapply(data,
 
 Some of our data has missing values and not all of our dataframes have the same number of participants.
 SNF can only be run with complete data, so you'll need to either use complete case analysis (removal of observations with any missing values) or impute the missing values to proceed with the clustering.
-As mentioned above, `metaSNF` can be used to visualize changes in clustering results across different imputations of the data.
+As mentioned above, `metasnf` can be used to visualize changes in clustering results across different imputations of the data.
 
 For now, we'll just examine the simpler complete-case analysis approach by reducing our dataframes to only common and complete observations.
 This can be made easier using the `get_complete_uids` function.
@@ -334,7 +334,7 @@ save_heatmap(
 The clustering solutions are along the rows and columns of the above figure, and the cells at the intersection between two solutions show how similar (big ARI) those solutions are to each other.
 The diagonals should always be red, representing the maximum value of 1, as they show the similarity between any clustering solution and itself.
 Complete-linkage, Euclidean-distance based hierarchical clustering is being applied to these solutions to obtain the row ordering.
-This is also the default approach used by the `ComplexHeatmap` package, the backbone of all heatmap functions in `metaSNF`.
+This is also the default approach used by the `ComplexHeatmap` package, the backbone of all heatmap functions in `metasnf`.
 
 This heatmap is integral to understanding what meta clusters exist in your data (given the space of parameters you explored in the settings matrix).
 We will later see how to further customize this heatmap to add in rich information about how each plotted cluster solution differs on various measures of quality, different clustering settings, and different levels of separation on input and out-of-model measures.
@@ -483,7 +483,7 @@ The `adjusted_rand_index_heatmap` function wraps around a more generic `similari
 Consequently, anything that can be done in the `ComplexHeatmap` package can be done here.
 This also makes the documentation for the `ComplexHeatmap` package one of the best places to learn more about what can be done for these heatmaps.
 
-The data for the annotations don't necessarily need to come from functions in metaSNF either.
+The data for the annotations don't necessarily need to come from functions in metasnf either.
 If you wanted to, for example, highlight the solutions where two very specific observations happened to cluster together, you could easily add that in as another annotation:
 
 ```{r eval = FALSE}
@@ -690,7 +690,7 @@ annotated_ari_hm3 <- adjusted_rand_index_heatmap(
 ### Quality measures
 
 Quality metrics are another useful heuristic for the goodness of a cluster that don't require any contextualization of results in the domain they may be used in.
-metaSNF enables measures of silhouette scores, Dunn indices, and Davies-Bouldin indices.
+metasnf enables measures of silhouette scores, Dunn indices, and Davies-Bouldin indices.
 To calculate these values, we'll need not only the cluster results but also the final fused network (the similarity matrices produced by SNF) that the clusters came from.
 These similarity matrices can be collected from the `batch_snf` using the `return_similarity_matrices` parameter:
 

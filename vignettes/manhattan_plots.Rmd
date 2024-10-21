@@ -19,7 +19,7 @@ Download a copy of the vignette to follow along here: [manhattan_plots.Rmd](http
 
 Manhattan plots can be quickly visualize the relationships between features and cluster solutions.
 
-There are three main Manhattan plot variations provided in metaSNF.
+There are three main Manhattan plot variations provided in metasnf.
 
 1. `esm_manhattan_plot` Visualize how a set of cluster solutions separate over input/out-of-model features
 2. `mc_manhattan_plot` Visualize how representative solutions from defined meta clusters separate over input/out-of-model features

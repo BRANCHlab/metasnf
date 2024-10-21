@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 
 Download a copy of the vignette to follow along here: [label_propagation.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/label_propagation.Rmd)
 
-In this vignette, we will walk through label propagation in the metaSNF package.
+In this vignette, we will walk through label propagation in the metasnf package.
 Code from this vignette is largely taken from the end of the [less simple example vignette](https://branchlab.github.io/metasnf/articles/a_complete_example.html).
 
 The label propagation procedure can be used to predict cluster membership for new, unlabeled observations based on their similarity to previously labeled observations.

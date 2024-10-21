@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 
 Download a copy of the vignette to follow along here: [a_simple_example.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/a_simple_example.Rmd)
 
-In this vignette, we will show how metaSNF can be used for a very simple SNF workflow.
+In this vignette, we will show how metasnf can be used for a very simple SNF workflow.
 
 This simple workflow is the example of SNF provided in the original *SNFtool* package.
 You can find the example by loading the *SNFtool* package and then viewing the documentation for the main SNF function by running `?SNF`.
@@ -159,10 +159,10 @@ Sure enough, we are able to obtain the correct cluster label for all patients.
 all(true_label == assigned_clusters)
 ```
 
-## The same example using metaSNF
+## The same example using metasnf
 
-The purpose of metaSNF is primarily to aid users explore a wide possible range of solutions.
-Recreating the example provided with the original `SNF` function will be an extremely restricted usage of the package, but will reveal, broadly, how metaSNF works.
+The purpose of metasnf is primarily to aid users explore a wide possible range of solutions.
+Recreating the example provided with the original `SNF` function will be an extremely restricted usage of the package, but will reveal, broadly, how metasnf works.
 
 ### 1. Load the package
 
