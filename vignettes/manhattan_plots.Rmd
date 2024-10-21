@@ -93,7 +93,7 @@ ggplot2::ggsave(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/esm_manhattan.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/esm_manhattan_l.png)
 </center>
 
 A bit of an unwieldy plot if you try looking at too many solutions at a time, but it can be handy if you intend on just examining a few cluster solutions.
@@ -158,7 +158,7 @@ ggplot2::ggsave(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan_clean.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan_clean_l.png)
 </center>
 
 ## Associations with a Key Feature
@@ -186,5 +186,5 @@ ggplot2::ggsave(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/var_manhattan.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/var_manhattan_l.png)
 </center>

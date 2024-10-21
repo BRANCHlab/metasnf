@@ -101,7 +101,7 @@ ComplexHeatmap::Heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/ss_ari_hm.png){width=700px}
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/ss_ari_hm_l.png){width=700px}
 </center>
 
 To calculate information about how often each pair of observations clustered together across the subsamples, we can use the `calculate_coclustering` function:
@@ -130,7 +130,7 @@ cocluster_density(cocluster_dfs[[1]])
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/cocluster_density.png){width=700px}
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/cocluster_density_l.png){width=700px}
 </center>
 
 Or as a heatmap:
@@ -161,5 +161,5 @@ cocluster_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/cc_hm.png){width=700px}
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/cc_hm_l.png){width=700px}
 </center>

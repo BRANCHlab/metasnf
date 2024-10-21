@@ -76,7 +76,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/assoc_pval_heatmap.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/assoc_pval_heatmap_l.png)
 </center>
 
 Most of this data was generated randomly, but the "colour" feature is really just a categorical mapping of "cbcl_depress_r".
@@ -105,7 +105,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/assoc_pval_heatmap2.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/assoc_pval_heatmap2_l.png)
 </center>
 
 The ComplexHeatmap package offers functionality for splitting heatmaps into slices.
@@ -135,7 +135,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/assoc_pval_heatmap3.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/assoc_pval_heatmap3_l.png)
 </center>
 
 Another way to divide the heatmap is by feature domain.
@@ -165,5 +165,5 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/assoc_pval_heatmap4.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/assoc_pval_heatmap4_l.png)
 </center>

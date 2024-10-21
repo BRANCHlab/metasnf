@@ -80,7 +80,7 @@ gene_expression_hm
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/gene_expression_heatmap.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/gene_expression_heatmap_l.png)
 </center>
 
 ```{r eval = FALSE}

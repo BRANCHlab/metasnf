@@ -348,7 +348,7 @@ shiny_annotator(ari_hm)
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/meta_cluster_shiny.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/meta_cluster_shiny_l.png)
 </center>
 
 A demonstration of the shiny app can be seen here: [Meta Cluster Identification](https://pvelayudhan.shinyapps.io/shiny/)
@@ -476,7 +476,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm_l.png)
 </center>
 
 The `adjusted_rand_index_heatmap` function wraps around a more generic `similarity_matrix_heatmap` function in this package, which itself is a wrapper around `ComplexHeatmap::Heatmap()`.
@@ -536,7 +536,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm2.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm2_l.png)
 </center>
 
 ### Characterizing individual solutions representative of each meta cluster
@@ -574,7 +574,7 @@ ggplot2::ggsave(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan_l.png)
 </center>
 
 `neg_log_pval_thresh` sets a threshold for the negative log of the p-values to be displayed.
@@ -619,7 +619,7 @@ ggplot2::ggsave(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan2.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan2_l.png)
 </center>
 
 ### Relating results to metasnf hyperparameters
