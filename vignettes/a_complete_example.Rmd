@@ -37,9 +37,9 @@ This vignette walks through how the core functionality of this package, includin
 7. Cluster solution characterization
 9. Cluster solution validation
 
-## 1. Setting up the data
+## Data Set-up
 
-### Load the library and data into the R environment
+### Pre-processing
 
 Your data should be loaded into the R environment in the following format:
 
@@ -214,7 +214,7 @@ summarize_dl(target_list)
 Note that it is not necessary to make use of a partition of input and out-of-model measures in this way.
 If you'd like to have no target list and instead use every single feature of interest for the clustering, you can stick to just using one data list.
 
-## 2. Building a space of settings to cluster over
+## Defining sets of hyperparameters to use for SNF and clustering
 
 The `settings_matrix` stores all the information about the settings we'd like to use for each of our SNF runs.
 Calling the `generate_settings_matrix` function with a specified number of rows will automatically build a randomly populated `settings_matrix`.
@@ -254,7 +254,7 @@ While we end up with a random set of settings here, there is nothing wrong with 
 For example, if you wanted to know how much of a difference one input dataframe made, you could ensure that half of the rows included this input dataframe and the other half didn't.
 You can also add random rows to an already existing dataframe using the `add_settings_matrix_rows` function (further discussed in the vignette).
 
-## 3. Running SNF
+## Running SNF and clustering
 
 The `batch_snf` function integrates the data in the `data_list` using each of the sets of settings contained in the `settings_matrix`.
 The resulting structure is an `solutions_matrix` which is an extension of the `settings_matrix` that contains columns specifying which cluster each subject was assigned for the corresponding `settings_matrix` row.
@@ -281,7 +281,7 @@ cluster_solutions <- get_cluster_solutions(solutions_matrix)
 head(cluster_solutions)
 ```
 
-## 4. Identifying and visualizing meta clusters
+## Identifying and visualizing meta clusters
 
 Now that we have access to 20 different clustering solutions, we'll need to find some way to pick an optimal one to move forward with for additional characterization.
 In this case, plotting or running stats manually on each of the solutions might be a reasonable way to determine which ones we like the most.
@@ -381,6 +381,10 @@ save_heatmap(
 
 At this point, we have our meta clusters but are not yet sure of how they differ in terms of their structure across our input and out-of-model features.
 
+## Characterizing cluster solutions
+
+### Calculating associations between cluster solutions and initial data
+
 We start by running the `extend_solutions` function, which will calculate p-values representing the strength of the association between cluster membership (treated as a categorical feature) and any feature present in a provided data list and/or target_list.
 
 `extend_solutions` also adds summary p-value measures (min, mean, and max) of any features present in the target list.
@@ -424,6 +428,8 @@ extended_solutions_matrix <- extend_solutions(
 ```
 
 The summary p-value measures can be suppressed by setting `calculate_summaries = FALSE`.
+
+### Visualizing feature associations with meta clustering results
 
 This `extended_solutions_matrix` we created can be passed into the `adjusted_rand_index_heatmap` function to easily visualize the level of separation on each of our features for each of our cluster solutions.
 
@@ -533,6 +539,8 @@ save_heatmap(
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm2.png)
 </center>
 
+### Characterizing individual solutions representative of each meta cluster
+
 Now that we've visually delineated our meta clusters, we can get a quick summary of what sort of separation exists across our input and held out features by taking a closer look at one representative cluster solution from each meta cluster.
 
 This can be achieved by the `get_representative_solutions` function, which extracts one cluster solution per meta cluster based on having the highest average ARI with the other solutions in that meta cluster.
@@ -556,8 +564,6 @@ mc_manhattan <- mc_manhattan_plot(
     neg_log_pval_thresh = 5
 )
 
-mc_manhattan
-
 ggplot2::ggsave(
     "mc_manhattan.png",
     mc_manhattan,
@@ -565,7 +571,6 @@ ggplot2::ggsave(
     width = 8,
     dpi = 100
 )
-
 ```
 
 <center>
@@ -617,12 +622,7 @@ ggplot2::ggsave(
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan2.png)
 </center>
 
-
-
-
-<center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm2.png)
-</center>
+### Relating results to metasnf hyperparameters
 
 If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your settings matrix.
 
@@ -650,8 +650,6 @@ save_heatmap(
 
 This heatmap rescales all the columns in the settings_matrix to have a maximum value of 1.
 The purpose of re-ordering the settings matrix in this way is to see if any associations exist between certain settings values and pairwise cluster solution similarities.
-
-This heatmap can show you if any settings values were associated with a particular type of clustering result.
 If there are any particular important settings, you can simply add them into your adjusted rand index heatmap annotations.
 Recall that the `solutions_matrix` (and, by extension, the `extended_solutions_matrix`) is an extension of the settings matrix, so no further data manipulation is needed to add a setting as a heatmap annotation.
 
@@ -693,7 +691,7 @@ annotated_ari_hm3 <- adjusted_rand_index_heatmap(
 )
 ```
 
-### 2. Quality measures
+### Quality measures
 
 Quality metrics are another useful heuristic for the goodness of a cluster that don't require any contextualization of results in the domain they may be used in.
 metaSNF enables measures of silhouette scores, Dunn indices, and Davies-Bouldin indices.
@@ -743,45 +741,17 @@ The original documentation on these functions can be helpful for interpreting an
 3. [`clv::clv.Davies.Bouldin` documentation](https://www.rdocumentation.org/packages/clv/versions/0.3-2.1/topics/clv.Davies.Bouldin)
 
 
-### 3. Stability measures
+### Stability measures
 
-metaSNF offers tools to evaluate two different measures of stability:
+metasnf offers tools to evaluate two different measures of stability:
 
 1. Pairwise adjusted Rand indices (across resamplings of the clustering, on average, how similar was every pair of solutions according to the adjusted Rand index?)
 2. Fraction clustered together (what is the average fraction of times that observations who clustered together in the full results clustered together in resampled results?)
 
-To calculate either of these, you'll need to first generate subsamples of the data_list.
+You can learn more about running stability calculations in the [stability and coclustering vignette](https://branchlab.github.io/metasnf/articles/stability_measures.html).
 
-```{r eval = FALSE}
-data_list_subsamples <- subsample_data_list(
-    data_list,
-    n_subsamples = 30, # calculate 30 subsamples
-    subsample_fraction = 0.8 # for each subsample, use random 80% of observations
-)
-```
 
-`data_list_subsamples` is a list that now contains 30 smaller subsamples of the original data_list.
-
-Then the stability calculations:
-
-```{r eval = FALSE}
-pairwise_aris <- subsample_pairwise_aris(
-    data_list_subsamples,
-    settings_matrix
-)
-
-fraction_together <- fraction_clustered_together(
-    data_list_subsamples,
-    settings_matrix,
-    solutions_matrix
-)
-```
-
-Be warned, that second function is especially extremely slow.
-As the number of observations and number of solutions you're evaluating grows, these functions can get pretty slow.
-Consider only using them after eliminating solutions that you are certainly not interested in further characterizing.
-
-### 4. Evaluating separation across "target features" of importance
+### Evaluating separation across "target features" of importance
 
 If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
 
