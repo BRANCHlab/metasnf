@@ -1,3 +1,8 @@
+# metasnf 1.1.0
+
+* Verbose parameter added to printing functions. By default set to FALSE.
+* CRAN compliant @return values in documentation.
+
 # metasnf 1.0.0
 
 Last update before CRAN submission.
