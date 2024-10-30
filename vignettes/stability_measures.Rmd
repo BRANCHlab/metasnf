@@ -124,8 +124,8 @@ The output of `calculate_coclustering` is a list containing the following compon
 The `cocluster_dfs` component can be used to visualize co-clustering across subsamples as a density plot:
 
 ```{r eval = FALSE}
-# Distribution of co-clustering among originally co-clustered pairs across
-# subsamples
+cocluster_dfs <- coclustering_results$"cocluster_dfs"
+
 cocluster_density(cocluster_dfs[[1]])
 ```
 
