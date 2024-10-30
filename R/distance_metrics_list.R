@@ -237,39 +237,13 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
 #'
 #' @param distance_metrics_list A distance_metrics_list.
 #'
+#' @return "data.frame"-class object summarizing items in a distance metrics
+#' list.
+#'
 #' @export
 summarize_dml <- function(distance_metrics_list) {
-    # continuous
-    if (length(names(distance_metrics_list$"continuous_distances")) > 0) {
-        cat("\nContinuous distances:")
-        cont_names <- distance_metrics_list$"continuous_distances" |> names()
-        paste0("\n", seq_along(cont_names), ". ", cont_names) |> cat()
-    }
-    # discrete
-    if (length(names(distance_metrics_list$"discrete_distances")) > 0) {
-        cat("\n\nDiscrete distances:")
-        disc_names <- distance_metrics_list$"discrete_distances" |> names()
-        paste0("\n", seq_along(disc_names), ". ", disc_names) |> cat()
-    }
-    # ordinal
-    if (length(names(distance_metrics_list$"ordinal_distances")) > 0) {
-        cat("\n\nOrdinal distances:")
-        ord_names <- distance_metrics_list$"ordinal_distances" |> names()
-        paste0("\n", seq_along(ord_names), ". ", ord_names) |> cat()
-    }
-    # categorical
-    if (length(names(distance_metrics_list$"categorical_distances")) > 0) {
-        cat("\n\nCategorical distances:")
-        cat_names <- distance_metrics_list$"categorical_distances" |> names()
-        paste0("\n", seq_along(cat_names), ". ", cat_names) |> cat()
-    }
-    # mixed
-    if (length(names(distance_metrics_list$"mixed_distances")) > 0) {
-        cat("\n\nMixed distances:")
-        mixed_names <- distance_metrics_list$"mixed_distances" |> names()
-        paste0("\n", seq_along(mixed_names), ". ", mixed_names) |> cat()
-    }
-    cat("\n")
+    dml_summary <- lapply(distance_metrics_list, names)
+    return(dml_summary)
 }
 
 #' Distance metric: Euclidean distance
@@ -386,8 +360,6 @@ hamming_distance <- function(df, weights_row) {
                 function(j) {
                     apply_condition <- df[i, ] != df[j, ]
                     apply_condition <- as.numeric(apply_condition)
-                    print(apply_condition)
-                    print(weights)
                     return(apply_condition %*% weights)
                 }
             )

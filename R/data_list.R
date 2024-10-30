@@ -32,6 +32,11 @@
 #' element is the data_list and the second element is a vector of unique IDs
 #' of patients who were removed during the complete data filtration step.
 #'
+#' @return A nested "list" class object. Each list component contains a 4-item
+#' list of a data frame, the user-assigned name of the data frame, the
+#' user-assigned domain of the data frame, and the user-labeled type of the
+#' data frame.
+#'
 #' @export
 #' @examples
 #' heart_rate_df <- data.frame(
@@ -212,7 +217,7 @@ convert_uids <- function(data_list, uid = NULL) {
     if ("subjectkey" %in% d1_cols) {
         # If subjectkey exists and is a UID, leave the data_list alone
         if (length(unique(d1$"subjectkey")) == length(d1$"subjectkey")) {
-            print("Existing `subjectkey` column will be treated as UID.")
+            message("Existing `subjectkey` column will be treated as UID.")
             return(data_list)
         } else {
             # If subjectkey exists and is not a UID, raise error
@@ -366,6 +371,9 @@ arrange_dl <- function(data_list) {
 #' - "component" (default): One row per component (dataframe) in the data_list.
 #' - "feature": One row for each feature in the data_list.
 #'
+#' @return "data.frame"-class object summarizing all components (or features if
+#' scope == "component").
+#'
 #' @export
 summarize_dl <- function(data_list, scope = "component") {
     if (scope == "component") {
@@ -420,6 +428,8 @@ domains <- function(data_list) {
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
 #'
+#' @return A "data.frame"-formatted version of the provided data list.
+#'
 #' @export
 collapse_dl <- function(data_list) {
     data_only <- data_list |> lapply(
@@ -473,6 +483,8 @@ dl_variable_summary <- function(data_list) {
 #' @param ordered_subjects A vector of the subjectkey values in the data_list
 #' in the desired order of the sorted data_list.
 #'
+#' @return A data list ("list"-class object) with reordered observations.
+#'
 #' @export
 reorder_dl_subs <- function(data_list, ordered_subjects) {
     data_list <- data_list |>
@@ -492,6 +504,8 @@ reorder_dl_subs <- function(data_list, ordered_subjects) {
 #'
 #' @param name_mapping A named vector where the values are the features to be
 #' renamed and the names are the new names for those features.
+#'
+#' @return A data list ("list"-class object) with adjusted feature names.
 #'
 #' @export
 #' @examples
@@ -552,6 +566,8 @@ rename_dl <- function(data_list, name_mapping) {
 #' @param prefix If TRUE, preserves the "subject_" prefix added to UIDs when
 #' creating a data_list.
 #'
+#' @return A character vector of the UID labels contained in a data list.
+#'
 #' @export
 get_dl_subjects <- function(data_list, prefix = FALSE) {
     dl_df <- collapse_dl(data_list)
@@ -566,6 +582,9 @@ get_dl_subjects <- function(data_list, prefix = FALSE) {
 #' Make the subjectkey UID columns of a data_list first
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
+#'
+#' @return A data list ("list"-class object) in which each data-subcomponent
+#' has "subjectkey" positioned as its first column.
 #'
 #' @export
 dl_uid_first_col <- function(data_list) {
@@ -589,7 +608,11 @@ dl_uid_first_col <- function(data_list) {
 #' observations but different components, simply use `c()`.
 #'
 #' @param data_list1 The first data_list to merge.
+#'
 #' @param data_list2 The second data_list to merge.
+#'
+#' @return A data list ("list"-class object) containing the observations of
+#' both provided data lists.
 #'
 #' @export
 merge_data_lists <- function(data_list1, data_list2) {
@@ -618,9 +641,12 @@ merge_data_lists <- function(data_list1, data_list2) {
     return(merged_data_list)
 }
 
-#' Check if data list contains any duplicate functions
+#' Check if data list contains any duplicate features
 #'
 #' @param data_list A nested list of input data from `generate_data_list()`.
+#'
+#' @return Doesn't return any value. Raises warning if there are features
+#' with duplicate names in a generated data list.
 #'
 #' @export
 dl_has_duplicates <- function(data_list) {
@@ -635,9 +661,7 @@ dl_has_duplicates <- function(data_list) {
     if (length(duplicates) > 0) {
         warning(
             "Generated data_list has duplicate feature names, which can",
-            " cause problems with downstream analyses.\n\n",
-            "Duplicate feature names: \n",
-            paste0(1:length(duplicates), ". ", duplicates, "\n")
+            " cause problems with downstream analyses."
         )
     }
 }

@@ -4,6 +4,9 @@
 #'
 #' @param feature The feature to plot.
 #'
+#' @return A jitter+violin plot (class "gg", "ggplot") showing the
+#' distribution of a feature across clusters.
+#'
 #' @export
 jitter_plot <- function(df, feature) {
     ###########################################################################
@@ -60,6 +63,9 @@ jitter_plot <- function(df, feature) {
 #' @param df A data.frame containing cluster column and the feature to plot.
 #'
 #' @param feature The feature to plot.
+#'
+#' @return A bar plot (class "gg", "ggplot") showing the distribution of a
+#' feature across clusters.
 #'
 #' @export
 bar_plot <- function(df, feature) {
@@ -148,6 +154,14 @@ bar_plot <- function(df, feature) {
 #'
 #' @param bar_height Height of bar plots if save is specified.
 #'
+#' @param verbose If TRUE, print progress to console.
+#'
+#' @return By default, returns a list of plots (class "gg", "ggplot") with
+#' one plot for every feature in the provided data list and/or target list.
+#' If `return_plots` is FALSE, will instead return a single "data.frame"
+#' object containing every provided feature for every observation in long
+#' format.
+#'
 #' @export
 auto_plot <- function(solutions_matrix_row = NULL,
                       data_list = NULL,
@@ -158,7 +172,8 @@ auto_plot <- function(solutions_matrix_row = NULL,
                       jitter_width = 6,
                       jitter_height = 6,
                       bar_width = 6,
-                      bar_height = 6) {
+                      bar_height = 6,
+                      verbose = FALSE) {
     null_data_count <- is.null(solutions_matrix_row) + is.null(cluster_df)
     if (null_data_count != 1) {
         stop(
@@ -206,13 +221,15 @@ auto_plot <- function(solutions_matrix_row = NULL,
     for (i in seq_along(features)) {
         feature <- features[[i]]
         feature_col <- unlist(full_data[, feature])
-        print(
-            paste0(
-                "Generating plot ",
-                i, "/", length(features), ": ",
-                feature
+        if (verbose) {
+            print(
+                paste0(
+                    "Generating plot ",
+                    i, "/", length(features), ": ",
+                    feature
+                )
             )
-        )
+        }
         if (is.numeric(feature_col) && length(unique(feature_col)) > 2) {
             plot <- jitter_plot(full_data, feature)
             h <- jitter_height
