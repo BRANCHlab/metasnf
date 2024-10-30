@@ -1,15 +1,25 @@
 #' Alluvial plot of patients across cluster counts and important features
 #'
 #' @param cluster_sequence A list of clustering algorithms (typically, the same
-#'  algorithm varied over different numbers of clusters).
+#' algorithm varied over different numbers of clusters).
+#'
 #' @param similarity_matrix A similarity matrix.
+#'
 #' @param data_list A nested list of input data from `generate_data_list()`.
+#'
 #' @param data A dataframe that contains features to include in the plot.
+#'
 #' @param key_outcome The name of the feature that determines how each patient
-#'  stream is coloured in the alluvial plot.
+#' stream is coloured in the alluvial plot.
+#'
 #' @param key_label Name of key outcome to be used for the plot legend.
+#'
 #' @param title Title of the plot.
+#'
 #' @param extra_outcomes Names of additional features to add to the plot.
+#'
+#' @return An alluvial plot (class "gg" and "ggplot") showing distribution of
+#' a feature across varying number cluster solutions.
 #'
 #' @export
 alluvial_cluster_plot <- function(cluster_sequence,
@@ -116,5 +126,3 @@ alluvial_cluster_plot <- function(cluster_sequence,
         )
     return(plot)
 }
-
-

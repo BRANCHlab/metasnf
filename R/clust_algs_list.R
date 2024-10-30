@@ -1,18 +1,19 @@
 #' Generate a list of custom clustering algorithms
 #'
 #' This function can be used to specify custom clustering algorithms to apply
-#'  to the final similarity matrices produced by each run of the batch_snf
-#'  function.
+#' to the final similarity matrices produced by each run of the batch_snf
+#' function.
 #'
 #' @param ... An arbitrary number of named clustering functions (see examples
-#'  below)
-#' @param disable_base If TRUE, do not prepend the base clustering algorithms
-#'  (spectral_eigen and spectral_rot, which apply spectral clustering and use
-#'  the eigen-gap and rotation cost heuristics respectively for determining
-#'  the number of clusters in the graph.
+#' below)
 #'
-#' @return clust_algs_list A well-formatted list of clustering algorithms that
-#'  can be passed into the batch_snf and generate_settings_list functions.
+#' @param disable_base If TRUE, do not prepend the base clustering algorithms
+#' (spectral_eigen and spectral_rot, which apply spectral clustering and use
+#' the eigen-gap and rotation cost heuristics respectively for determining
+#' the number of clusters in the graph.
+#'
+#' @return A list of clustering algorithm functions that can
+#' be passed into the batch_snf and generate_settings_list functions.
 #'
 #' @examples
 #' # Using just the base clustering algorithms --------------------------------
@@ -85,9 +86,8 @@ generate_clust_algs_list <- function(..., disable_base = FALSE) {
 #'
 #' @param clust_algs_list A clust_algs_list object
 #'
-#' @return summary_df Dataframe containing the name of each algorithm and the
-#'  number of each algorithm (the value in the settings_matrix that will be
-#'  used to access that algorithm)
+#' @return summary_df "data.frame" class object containing the name and index
+#' of each clustering algorithm in te provided `clust_algs_list`.
 #'
 #' @export
 summarize_clust_algs_list <- function(clust_algs_list) {
@@ -101,12 +101,12 @@ summarize_clust_algs_list <- function(clust_algs_list) {
 #' Clustering algorithm: Spectral clustering with eigen-gap heuristic
 #'
 #' Applies spectral clustering to similarity matrix. Number of clusters is based
-#'  on the eigen-gap heuristic.
+#' on the eigen-gap heuristic.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_eigen <- function(similarity_matrix) {
@@ -129,10 +129,10 @@ spectral_eigen <- function(similarity_matrix) {
 #' Applies spectral clustering to similarity matrix. Number of clusters is based
 #'  on the rotation cost heuristic.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_rot <- function(similarity_matrix) {
@@ -158,8 +158,8 @@ spectral_rot <- function(similarity_matrix) {
 #'
 #' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_eigen_classic <- function(similarity_matrix) {
@@ -182,10 +182,10 @@ spectral_eigen_classic <- function(similarity_matrix) {
 #' Applies spectral clustering to similarity matrix. Number of clusters is based
 #' on the rotation cost heuristic.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_rot_classic <- function(similarity_matrix) {
@@ -207,10 +207,10 @@ spectral_rot_classic <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks two clusters.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_two <- function(similarity_matrix) {
@@ -234,10 +234,10 @@ spectral_two <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks three clusters.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_three <- function(similarity_matrix) {
@@ -261,10 +261,10 @@ spectral_three <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks four clusters.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_four <- function(similarity_matrix) {
@@ -288,10 +288,10 @@ spectral_four <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks five clusters.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_five <- function(similarity_matrix) {
@@ -315,10 +315,10 @@ spectral_five <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks six clusters.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_six <- function(similarity_matrix) {
@@ -342,10 +342,10 @@ spectral_six <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks seven clusters.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_seven <- function(similarity_matrix) {
@@ -369,10 +369,10 @@ spectral_seven <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks eight clusters.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_eight <- function(similarity_matrix) {
@@ -396,10 +396,10 @@ spectral_eight <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks nine clusters.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_nine <- function(similarity_matrix) {
@@ -423,10 +423,10 @@ spectral_nine <- function(similarity_matrix) {
 #'
 #' Applies spectral clustering to similarity matrix. Seeks ten clusters.
 #'
-#' @param similarity_matrix A similarity matrix
+#' @param similarity_matrix A similarity matrix.
 #'
-#' @return solution_data A list storing cluster assignments and the number of
-#' clusters.
+#' @return solution_data A list storing cluster assignments ("solution") and
+#' the number of clusters ("nclust").
 #'
 #' @export
 spectral_ten <- function(similarity_matrix) {

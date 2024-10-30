@@ -9,9 +9,10 @@
 #'
 #' @param solutions_matrix A solutions_matrix.
 #'
-#' @return cluster_solutions A dataframe where each row is an observation and
-#' each column (apart from the subjectkey column) indicates the cluster that
-#' observation was assigned to for the corresponding solutions matrix row.
+#' @return cluster_solutions A "data.frame" object where each row is an
+#' observation and each column (apart from the subjectkey column) indicates
+#' the cluster that observation was assigned to for the corresponding
+#' solutions matrix row.
 #'
 #' @export
 get_cluster_solutions <- function(solutions_matrix) {
@@ -76,9 +77,9 @@ get_cluster_df <- function(solutions_matrix_row) {
 #' solutions matrix with any number of rows and returns a dataframe indicating
 #' the cluster assignments for each of those rows.
 #'
-#' @param solutions_matrix_row Output matrix row
+#' @param solutions_matrix_row Output matrix row.
 #'
-#' @return clusters list of assigned clusters
+#' @return clusters Vector of assigned clusters.
 #'
 #' @export
 get_clusters <- function(solutions_matrix_row) {
