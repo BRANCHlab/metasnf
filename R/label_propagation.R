@@ -61,6 +61,8 @@ label_prop <- function(full_fused_network, clusters) {
 #'
 #' @param weights_matrix Like above.
 #'
+#' @param verbose If TRUE, print progress to console.
+#'
 #' @return labeled_df a dataframe containing a column for subjectkeys,
 #' a column for whether the subject was in the train (original) or test (held
 #' out) set, and one column per row of the solutions matrix indicating the
@@ -70,7 +72,8 @@ label_prop <- function(full_fused_network, clusters) {
 lp_solutions_matrix <- function(train_solutions_matrix,
                                 full_data_list,
                                 distance_metrics_list = NULL,
-                                weights_matrix = NULL) {
+                                weights_matrix = NULL,
+                                verbose = FALSE) {
     ###########################################################################
     # 1. Reorder data_list subjects
     ###########################################################################
@@ -127,12 +130,14 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     ## 3-3. SNF one row at a time
     ###########################################################################
     for (i in seq_len(nrow(train_solutions_matrix))) {
-        print(
-            paste0(
-                "Processing row ", i, " of ",
-                nrow(train_solutions_matrix), "..."
+        if (verbose) {
+            print(
+                paste0(
+                    "Processing row ", i, " of ",
+                    nrow(train_solutions_matrix), "..."
+                )
             )
-        )
+        }
         current_row <- train_solutions_matrix[i, ]
         sig <- paste0(current_row$"row_id")
         reduced_dl <- drop_inputs(current_row, full_data_list)

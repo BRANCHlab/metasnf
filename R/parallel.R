@@ -23,8 +23,9 @@
 #' @param similarity_matrix_dir If specified, this directory will be used to
 #'  save all generated similarity matrices.
 #'
-#'
 #' @param processes Number of parallel processes used when executing SNF.
+#'
+#' @return The same values as ?batch_snf().
 #'
 #' @export
 parallel_batch_snf <- function(data_list,
@@ -35,8 +36,6 @@ parallel_batch_snf <- function(data_list,
                                similarity_matrix_dir,
                                return_similarity_matrices,
                                processes) {
-    print(paste0("Utilizing ", processes, " processes."))
-    start <- proc.time()
     future::plan(future::multisession, workers = processes)
     ############################################################################
     settings_and_weights_df <- cbind(settings_matrix, weights_matrix)
@@ -77,22 +76,10 @@ parallel_batch_snf <- function(data_list,
             "solutions_matrix" = solutions_matrix,
             "similarity_matrices" = similarity_matrices
         )
-        total_time <- (proc.time() - start)[["elapsed"]]
-        print(
-            paste0(
-                "Total time taken: ", total_time, " seconds."
-            )
-        )
         return(batch_snf_results)
     } else {
         solutions_matrix <- do.call("rbind", batch_snf_results)
         solutions_matrix <- numcol_to_numeric(solutions_matrix)
-        total_time <- (proc.time() - start)[["elapsed"]]
-        print(
-            paste0(
-                "Total time taken: ", total_time, " seconds."
-            )
-        )
         return(solutions_matrix)
     }
 }
@@ -123,6 +110,9 @@ parallel_batch_snf <- function(data_list,
 #'  save all generated similarity matrices.
 #'
 #' @param prog Progressr function to update parallel processing progress
+#'
+#' @return A "function" class object used to run `batch_snf` in lapply-form
+#' for parallel processing.
 #'
 #' @export
 batch_row_closure <- function(data_list,

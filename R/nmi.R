@@ -26,6 +26,13 @@
 #' solutions matrix and calculate NMIs for all features. If FALSE, will give
 #' NAs for features that were dropped on a given settings_matrix row.
 #'
+#' @param verbose If TRUE, print progress to console.
+#'
+#' @return A "data.frame" class object containing one row for every feature
+#' in the provided data list and one column for every solution in the provided
+#' solutions matrix. Populated values show the calculated NMI score for each
+#' feature-solution combination.
+#'
 #' @export
 batch_nmi <- function(data_list,
                       solutions_matrix,
@@ -33,7 +40,8 @@ batch_nmi <- function(data_list,
                       distance_metrics_list = NULL,
                       automatic_standard_normalize = FALSE,
                       transpose = TRUE,
-                      ignore_inclusions = TRUE) {
+                      ignore_inclusions = TRUE,
+                      verbose = FALSE) {
     ###########################################################################
     # Dataframe storing all the features in the data list
     ###########################################################################
@@ -66,12 +74,14 @@ batch_nmi <- function(data_list,
     ###########################################################################
     for (i in seq_along(features)) {
         feature <- features[i]
-        print(
-            paste0(
-                "Calculating NMIs for ",
-                feature, " (feature ", i, "/", length(features), ")..."
+        if (verbose) {
+            print(
+                paste0(
+                    "Calculating NMIs for ",
+                    feature, " (feature ", i, "/", length(features), ")..."
+                )
             )
-        )
+        }
         #######################################################################
         # Reduced data list containing only the current feature
         #######################################################################

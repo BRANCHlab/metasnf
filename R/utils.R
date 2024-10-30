@@ -162,8 +162,7 @@ merge_df_list <- function(df_list,
             by = uid
         )
     } else {
-        print("Invalid join type specified. Options are 'inner' and 'full'.")
-        return(NULL)
+        stop("Invalid join type specified. Options are 'inner' and 'full'.")
     }
     if (no_na) {
         merged_df <- stats::na.omit(merged_df)
@@ -176,6 +175,9 @@ merge_df_list <- function(df_list,
 #' @param list_of_dfs List of dataframes.
 #'
 #' @param uid Name of column across dataframes containing UIDs
+#'
+#' @return A character vector of the UIDs of observations that have complete
+#' data across the provided list of dataframes.
 #'
 #' @export
 get_complete_uids <- function(list_of_dfs, uid) {
@@ -228,6 +230,9 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
 #' @param ... Any number of components to remove from the list object, passed as
 #' strings
 #'
+#' @return A "list"-class object in which any specified elements have been
+#' removed.
+#'
 #' @export
 list_remove <- function(list_object, ...) {
     to_remove <- list(...)
@@ -244,39 +249,6 @@ list_remove <- function(list_object, ...) {
     }
     pruned_list <- list_object[!list_names %in% to_remove]
     return(pruned_list)
-}
-
-#' Time remaining until batch_snf completion
-#'
-#' @param seconds_per_row Integer in seconds of time taken for most recent SNF
-#'  'run
-#' @param rows_remaining Number of rows left to complete in the settings matrix
-#' @param row Current row in the settings matrix
-#' @param remaining_seconds_vector Vector storing up to the 10 most recent
-#'  row completion times
-#'
-#' @return remaining_seconds_vector Updated remaining_seconds_vector
-#'
-#' @export
-batch_snf_time_remaining <- function(seconds_per_row,
-                                     rows_remaining,
-                                     row,
-                                     remaining_seconds_vector) {
-    remaining_seconds_vector <- c(remaining_seconds_vector, seconds_per_row)
-    if (length(remaining_seconds_vector) > 10) {
-        remaining_seconds_vector <-
-            remaining_seconds_vector[2:length(remaining_seconds_vector)]
-    }
-    remaining_seconds <- round(
-        mean(remaining_seconds_vector) * rows_remaining, 0
-    )
-    print(
-        paste0(
-            "Row: ", row, "/", (row + rows_remaining), " | ",
-            "Time remaining: ", remaining_seconds, " seconds"
-        )
-    )
-    return(remaining_seconds_vector)
 }
 
 #' Generate a complete path and filename to store an similarity matrix
@@ -307,7 +279,10 @@ similarity_matrix_path <- function(similarity_matrix_dir, i) {
 #'  value instead of a random value from 1 to x.
 #'
 #' @param x Vector or single value to sample from
+#'
 #' @param ... Remaining arguments for base::sample function
+#'
+#' @return Numeric vector result of running base::sample.
 #'
 #' @export
 resample <- function(x, ...) {
@@ -348,14 +323,17 @@ check_similarity_matrices <- function(similarity_matrices) {
 #' Adjust the diagonals of a matrix
 #'
 #' Adjust the diagonals of a matrix to reduce contrast with off-diagonals
-#'  during plotting.
+#' during plotting.
 #'
 #' @param matrix Matrix to rescale.
+#'
 #' @param method Method of rescaling. Can be:
 #' * "mean" (replace diagonals with average value of off-diagonals)
 #' * "zero" (replace diagonals with 0)
 #' * "min" (replace diagonals with min value of off-diagonals)
 #' * "max" (replace diagonals with max value of off-diagonals)
+#'
+#' @return A "matrix" class object with rescaled diagonals.
 #'
 #' @export
 scale_diagonals <- function(matrix, method = "mean") {
@@ -387,6 +365,9 @@ scale_diagonals <- function(matrix, method = "mean") {
 #' @param min_colour Minimum colour value.
 #'
 #' @param max_colour Maximum colour value.
+#'
+#' @return A "function" class object that can build a circlize-style colour
+#' ramp.
 #'
 #' @export
 colour_scale <- function(data, min_colour, max_colour) {

@@ -668,12 +668,12 @@ add_settings_matrix_rows <- function(settings_matrix,
         }
         # Limit how many times a new row ended up already existing
         if (num_retries > retry_limit) {
-            break
+           stop(
+                "Matrix building failed to converge. To keep adding rows, try",
+                " raising the retry_limit parameter or specifying a larger",
+                " range of tunable parameters."
+            )
         }
-    }
-    if (num_retries > retry_limit) {
-       print("Matrix building failed.")
-       print("To keep adding rows, try raising the retry_limit parameter.")
     }
     row.names(settings_matrix) <- NULL
     return(settings_matrix)

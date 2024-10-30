@@ -11,6 +11,9 @@
 #' @param NUMC Range of cluster counts to consider among when picking best
 #' number of clusters.
 #'
+#' @return A list containing the top two eigengap and rotation-cost estimates
+#' for the number of clusters in a given similarity matrix.
+#'
 #' @export
 estimate_nclust_given_graph <- function(W, NUMC = 2:10) {
     # Symmetrize
@@ -75,6 +78,8 @@ estimate_nclust_given_graph <- function(W, NUMC = 2:10) {
 #'
 #' @param eigenvectors Matrix of eigenvectors.
 #'
+#' @return "Matrix" class object, intermediate product in spectral clustering.
+#'
 #' @export
 discretisation <- function(eigenvectors) {
     normalize <- function(x) x / sqrt(sum(x^2))
@@ -115,6 +120,9 @@ discretisation <- function(eigenvectors) {
 #' estimation.
 #'
 #' @param eigenvector Matrix of eigenvectors
+#'
+#' @return "Matrix" class object discretizing provided eigenvector to values 0
+#' or 1.
 #'
 #' @export
 discretisation_evec_data <- function(eigenvector) {

@@ -20,6 +20,9 @@
 #' @param bonferroni_line If TRUE, plots a dashed black line at the
 #' Bonferroni-corrected equivalent of the p-value threshold.
 #'
+#' @return A Manhattan plot (class "gg", "ggplot") showing the association
+#' p-values of features against one key feature in a data list.
+#'
 #' @export
 var_manhattan_plot <- function(data_list,
                                key_var,
@@ -150,6 +153,10 @@ var_manhattan_plot <- function(data_list,
 #' @param hide_x_labels If TRUE, hides x-axis labels.
 #'
 #' @param domain_colours Named vector of colours for domains.
+#'
+#' @return A Manhattan plot (class "gg", "ggplot") showing the association
+#' p-values of features against each solution in the provided solutions matrix,
+#' stratified by meta cluster label.
 #'
 #' @export
 mc_manhattan_plot <- function(extended_solutions_matrix,
@@ -382,7 +389,7 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
     return(plot)
 }
 
-#' Manhattan plot of feature-cluster associaiton p-values
+#' Manhattan plot of feature-cluster association p-values
 #'
 #' @param esm Extended solutions matrix storing associations between features
 #' and cluster assignments. See `?extend_solutions`.
@@ -405,6 +412,9 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
 #'
 #' @param bonferroni_line If TRUE, plots a dashed black line at the
 #'  Bonferroni-corrected equivalent of the p-value threshold.
+#'
+#' @return A Manhattan plot (class "gg", "ggplot") showing the association
+#' p-values of features against each solution in the provided solutions matrix.
 #'
 #' @export
 esm_manhattan_plot <- function(esm,

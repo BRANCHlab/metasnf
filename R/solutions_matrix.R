@@ -27,6 +27,8 @@
 #' @return extended_solutions_matrix an extended solutions matrix that contains
 #'  p-value columns for each outcome in the provided target_list
 #'
+#' @param verbose If TRUE, print progress to console.
+#'
 #' @export
 extend_solutions <- function(solutions_matrix,
                              target_list = NULL,
@@ -34,7 +36,8 @@ extend_solutions <- function(solutions_matrix,
                              cat_test = "chi_squared",
                              calculate_summaries = TRUE,
                              min_pval = 1e-10,
-                             processes = 1) {
+                             processes = 1,
+                             verbose = FALSE) {
     ###########################################################################
     # Remove nclust = 1 solutions
     ###########################################################################
@@ -127,7 +130,9 @@ extend_solutions <- function(solutions_matrix,
     if (processes == 1) {
         # Iterate across rows of the solutions matrix
         for (i in seq_len(nrow(esm))) {
-            print(paste0("Processing row ", i, " of ", nrow(esm)))
+            if (verbose) {
+                print(paste0("Processing row ", i, " of ", nrow(esm)))
+            }
             clustered_subs <- get_cluster_df(esm[i, ])
             for (j in seq_along(features)) {
                 current_component_df <- merged_df[, c(1, j + 1)]
@@ -160,10 +165,10 @@ extend_solutions <- function(solutions_matrix,
         if (processes == "max") {
             processes <- max_cores
         } else if (processes > max_cores) {
-            print(
+            warning(
                 paste0(
                     "Requested processes exceed available cores.",
-                    " Defaulting to the max avaiilable (", max_cores, ")."
+                    " Defaulting to the max available (", max_cores, ")."
                 )
             )
             processes <- max_cores
@@ -249,6 +254,9 @@ extend_solutions <- function(solutions_matrix,
 #'
 #' @param keep_summaries If FALSE, will remove the mean, min, and max p-value.
 #'
+#' @return A "data.frame" class object Of only the p-value related columns
+#' of the provided extended_solutions_matrix.
+#'
 #' @export
 get_pvals <- function(extended_solutions_matrix,
                       negative_log = FALSE,
@@ -282,6 +290,9 @@ get_pvals <- function(extended_solutions_matrix,
 #' Summarize p-value columns of an extended solutions matrix
 #'
 #' @param extended_solutions_matrix Result of `extend_solutions`
+#'
+#' @return The provided extended solutions matrix along with columns for
+#' the min, mean, and maximum across p-values for each row.
 #'
 #' @export
 summarize_pvals <- function(extended_solutions_matrix) {
@@ -365,7 +376,10 @@ get_mean_pval <- function(solutions_matrix_row) {
 #' predictor and response vetors. If the ordinal response
 #'
 #' @param predictor A categorical or numeric feature.
+#'
 #' @param response A numeric feature.
+#'
+#' @return pval A p-value (class "numeric").
 #'
 #' @export
 ord_reg_pval <- function(predictor, response) {
@@ -384,14 +398,14 @@ ord_reg_pval <- function(predictor, response) {
     },
     error = function(e) {
         if (grepl("suitable starting values failed", e$message)) {
-            message(
-                "Ordinal regression failed due to MASS:polr error: ",
-                "'attempt to find suitable starting values failed'. p-value",
+            warning(
+                "Ordinal regression failed due to MASS:polr error:",
+                " 'attempt to find suitable starting values failed'. p-value",
                 " calculated by linear regression instead."
             )
             return(linear_model_pval(predictor, response))
         } else {
-            print(paste("Error during ordinal regression: ", e$message))
+            warning(paste("Error during ordinal regression: ", e$message))
             return(NA)
         }
     })
@@ -404,7 +418,7 @@ ord_reg_pval <- function(predictor, response) {
 #' @param cat_var1 A categorical feature.
 #' @param cat_var2 A categorical feature.
 #'
-#' @return pval A p-value.
+#' @return pval A p-value (class "numeric").
 #'
 #' @export
 chi_squared_pval <- function(cat_var1, cat_var2) {
@@ -425,7 +439,7 @@ chi_squared_pval <- function(cat_var1, cat_var2) {
 #' @param cat_var1 A categorical feature.
 #' @param cat_var2 A categorical feature.
 #'
-#' @return pval A p-value.
+#' @return pval A p-value (class "numeric").
 #'
 #' @export
 fisher_exact_pval <- function(cat_var1, cat_var2) {
@@ -444,7 +458,7 @@ fisher_exact_pval <- function(cat_var1, cat_var2) {
 #' @param predictor A categorical or numeric feature.
 #' @param response A numeric feature.
 #'
-#' @return pval A p-value.
+#' @return pval A p-value (class "numeric").
 #'
 #' @export
 linear_model_pval <- function(predictor, response) {
@@ -560,6 +574,9 @@ calc_assoc_pval <- function(var1,
 #' @param cat_test String indicating which statistical test will be used to
 #' associate cluster with a categorical feature. Options are "chi_squared" for
 #' the Chi-squared test and "fisher_exact" for Fisher's exact test.
+#'
+#' @return A "matrix" class object containing pairwise association p-values
+#' between the features in the provided data list.
 #'
 #' @export
 calc_assoc_pval_matrix <- function(data_list,

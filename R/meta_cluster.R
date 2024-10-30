@@ -16,11 +16,14 @@
 #'  * `max`: All available cores will be used.
 #' Note that no progress indicator is available during multi-core processing.
 #'
+#' @param verbose If TRUE, print progress to console.
+#'
 #' @return om_aris ARIs between clustering solutions of an solutions matrix
 #'
 #' @export
 calc_aris <- function(solutions_matrix,
-                      processes = 1) {
+                      processes = 1,
+                      verbose = FALSE) {
     ###########################################################################
     # Prepare dataframe containing 1 cluster solution per row
     ###########################################################################
@@ -39,9 +42,11 @@ calc_aris <- function(solutions_matrix,
     ###########################################################################
     if (processes == 1) {
         for (col in seq_len(ncol(pairwise_indices))) {
-            if (col %% 100 == 0) {
-                progress <- 100 * col / ncol(pairwise_indices)
-                cat("\r", progress, "% completed...", sep = "")
+            if (verbose) {
+                if (col %% 100 == 0) {
+                    progress <- 100 * col / ncol(pairwise_indices)
+                    print(paste0(progress, "% completed..."))
+                }
             }
             v1 <- pairwise_indices[1, col]
             v2 <- pairwise_indices[2, col]
@@ -54,20 +59,19 @@ calc_aris <- function(solutions_matrix,
         }
         colnames(aris) <- solutions_matrix$"row_id"
         rownames(aris) <- solutions_matrix$"row_id"
-        cat("\r")
-        cat("\n")
-        cat("\r", "Done.", sep = "")
-        cat("\n")
+        if (verbose) {
+            print("100% completed.")
+        }
         return(aris)
     } else {
         max_cores <- future::availableCores()
         if (processes == "max") {
             processes <- max_cores
         } else if (processes > max_cores) {
-            print(
+            warning(
                 paste0(
                     "Requested processes exceed available cores.",
-                    " Defaulting to the max avaiilable (", max_cores, ")."
+                    " Defaulting to the max available (", max_cores, ")."
                 )
             )
             processes <- max_cores
@@ -121,6 +125,9 @@ calc_aris <- function(solutions_matrix,
 #' trying to select a solution that meets a certain condition, such as only
 #' picking from the 4 cluster solutions within a meta cluster. An example
 #' valid function could be `fn <- function(x) x[x$"nclust" == 4, ]`.
+#'
+#' @return A "data.frame" class object corresponding to a subset of the
+#' provided solutions matrix in which only one row is present per meta cluster.
 #'
 #' @export
 get_representative_solutions <- function(aris,
