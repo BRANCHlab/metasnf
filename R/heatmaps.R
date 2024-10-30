@@ -60,6 +60,9 @@
 #'
 #' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
 #'
+#' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
+#' that displays the similarities between observations in the provided matrix.
+#'
 #' @export
 similarity_matrix_heatmap <- function(similarity_matrix,
                                       order = NULL,
@@ -242,6 +245,10 @@ similarity_matrix_heatmap <- function(similarity_matrix,
 #' @param ... Additional parameters passed to `similarity_matrix_heatmap()`,
 #' the function that this function wraps.
 #'
+#' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
+#' that displays the pairwise adjusted Rand indices (similarities) between
+#' the cluster solutions of the provided solutions matrix.
+#'
 #' @export
 adjusted_rand_index_heatmap <- function(aris,
                                         order = NULL,
@@ -318,6 +325,10 @@ adjusted_rand_index_heatmap <- function(aris,
 #' @param slice_font_size Font size for domain separating labels.
 #'
 #' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
+#'
+#' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
+#' that displays the pairwise associations between features from the provided
+#' correlation_matrix.
 #'
 #' @export
 assoc_pval_heatmap <- function(correlation_matrix,
@@ -572,6 +583,9 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #'
 #' @param ... Additional parameters passed to `ComplexHeatmap::Heatmap`.
 #'
+#' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
+#' that displays the scaled values of the provided settings matrix.
+#'
 #' @export
 settings_matrix_heatmap <- function(settings_matrix,
                                     order = NULL,
@@ -682,6 +696,9 @@ settings_matrix_heatmap <- function(settings_matrix,
 #'
 #' @param ... Additional parameters passed to `ComplexHeatmap::Heatmap`.
 #'
+#' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
+#' that displays the provided p-values.
+#'
 #' @export
 pval_heatmap <- function(pvals,
                          order = NULL,
@@ -749,6 +766,8 @@ pval_heatmap <- function(pvals,
 #' Launch shiny app to identify meta cluster boundaries
 #'
 #' @param ari_heatmap Heatmap of ARIs to divide into meta clusters.
+#'
+#' @return Does not return any value. Launches interactive shiny applet.
 #'
 #' @export
 shiny_annotator <- function(ari_heatmap) {
@@ -824,7 +843,11 @@ cell_significance_fn <- function(data) {
 #' Collapse a dataframe and/or a data_list into a single dataframe
 #'
 #' @param data A dataframe.
+#'
 #' @param data_list A nested list of input data from `generate_data_list()`.
+#'
+#' @return A class "data.frame" object containing all the features of the
+#' provided data frame and/or data list.
 #'
 #' @export
 assemble_data <- function(data, data_list) {
@@ -1270,7 +1293,14 @@ generate_annotations_list <- function(df,
 #' Convert a vector of partition indices into meta cluster labels
 #'
 #' @param split_vector A vector of partition indices.
+#'
 #' @param nrow The number of rows in the data being partitioned.
+#'
+#' @return A character vector that expands the split_vector into an nrow-length
+#' sequence of ascending letters of the alphabet. If the split vector is
+#' c(3, 6) and the number of rows is 8, the result will be a vector of two
+#' "A"s (up to the first index, 3), three "B"s (up to the second index, 6),
+#' and three "C"s (up to and including the last index, 8).
 #'
 #' @export
 label_splits <- function(split_vector, nrow) {
@@ -1298,6 +1328,8 @@ label_splits <- function(split_vector, nrow) {
 #'
 #' @param res The resolution of the heatmap.
 #'
+#' @return Does not return any value. Saves heatmap to file.
+#'
 #' @export
 save_heatmap <- function(heatmap,
                          path,
@@ -1310,35 +1342,7 @@ save_heatmap <- function(heatmap,
         height = height,
         res = res
     )
-    print(heatmap)
-    grDevices::dev.off()
-}
-
-#' Save a plot to a png file
-#'
-#' @param plot The heatmap object to save.
-#'
-#' @param path The path to save the heatmap to.
-#'
-#' @param width The width of the heatmap.
-#'
-#' @param height The height of the heatmap.
-#'
-#' @param res The resolution of the heatmap.
-#'
-#' @export
-save_plot <- function(plot,
-                      path,
-                      width,
-                      height,
-                      res) {
-    grDevices::png(
-        filename = path,
-        width = width,
-        height = height,
-        res = res
-    )
-    print(plot)
+    ComplexHeatmap::draw(heatmap)
     grDevices::dev.off()
 }
 
@@ -1353,6 +1357,9 @@ save_plot <- function(plot,
 #' @param hclust_method Which agglomerative method to be passed into
 #' stats::hclust. Options include "ward.D", "ward.D2", "single", "complete",
 #' "average", "mcquitty", "median", or "centroid".
+#'
+#' @return A numeric vector of the ordering derivied by the specified
+#' hierarchical clustering method applied to the provided matrix.
 #'
 #' @export
 get_matrix_order <- function(matrix,
@@ -1369,6 +1376,9 @@ get_matrix_order <- function(matrix,
 #' @param heatmap A heatmap object to collect ordering from.
 #'
 #' @param type The type of ordering to return. Either "rows" or "columns".
+#'
+#' @return A numeric vector of the ordering used within the provided
+#' ComplexHeatmap "Heatmap" object.
 #'
 #' @export
 get_heatmap_order <- function(heatmap, type = "rows") {
@@ -1396,6 +1406,9 @@ get_heatmap_order <- function(heatmap, type = "rows") {
 #' @param n_rows The number of rows in the data.
 #'
 #' @param n_columns The number of columns in the data.
+#'
+#' @return "list"-class object containing row_split and column_split character
+#' vectors to pass into ComplexHeatmap::Heatmap.
 #'
 #' @export
 split_parser <- function(row_split_vector = NULL,
@@ -1436,6 +1449,9 @@ split_parser <- function(row_split_vector = NULL,
 #' @param data A dataframe with data to build annotations
 #' @param annotation_requests A list of requested annotations
 #'
+#' @return Does not return any value. This function just raises an error when
+#' annotations are requested without any provided data for a heatmap.
+#'
 #' @export
 check_dataless_annotations <- function(annotation_requests, data) {
     any_null_annotations <- lapply(annotation_requests, is.null) |>
@@ -1452,8 +1468,10 @@ check_dataless_annotations <- function(annotation_requests, data) {
     }
 }
 
-
 #' Check for ComplexHeatmap and circlize dependencies
+#'
+#' @return Does not return any value. This function just checks that the
+#' ComplexHeatmap and circlize packages are installed.
 #'
 #' @export
 check_hm_dependencies <- function() {
