@@ -138,7 +138,7 @@ batch_nmi <- function(data_list,
                     clust_algs_list = clust_algs_list,
                     distance_metrics_list = distance_metrics_list,
                     automatic_standard_normalize = asn,
-                    quiet = TRUE
+                    verbose = FALSE
                 )
                 ###############################################################
                 # Inner join to ensure consistent subject order
