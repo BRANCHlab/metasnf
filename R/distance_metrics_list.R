@@ -257,7 +257,7 @@ summarize_dml <- function(distance_metrics_list) {
 #' @export
 euclidean_distance <- function(df, weights_row) {
     weights <- diag(weights_row, nrow = length(weights_row))
-    weighted_df <- df %*% weights
+    weighted_df <- as.matrix(df) %*% weights
     distance_matrix <- weighted_df |>
         stats::dist(method = "euclidean") |>
         as.matrix()
@@ -292,7 +292,7 @@ gower_distance <- function(df, weights_row) {
 sn_euclidean_distance <- function(df, weights_row) {
     df <- SNFtool::standardNormalization(df)
     weights <- diag(weights_row, nrow = length(weights_row))
-    weighted_df <- df %*% weights
+    weighted_df <- as.matrix(df) %*% weights
     distance_matrix <- weighted_df |>
         stats::dist(method = "euclidean") |>
         as.matrix()
@@ -310,7 +310,7 @@ sn_euclidean_distance <- function(df, weights_row) {
 #' @export
 siw_euclidean_distance <- function(df, weights_row) {
     weights <- diag(weights_row, nrow = length(weights_row))
-    weighted_df <- df %*% weights
+    weighted_df <- as.matrix(df) %*% weights
     distance_matrix <- weighted_df |>
         stats::dist(method = "euclidean") |>
         as.matrix()
@@ -330,8 +330,7 @@ siw_euclidean_distance <- function(df, weights_row) {
 sew_euclidean_distance <- function(df, weights_row) {
     weights <- diag(weights_row, nrow = length(weights_row))
     weights <- sqrt(weights)
-    weighted_df <- df %*% weights
-    # fix this
+    weighted_df <- as.matrix(df) %*% weights
     distance_matrix <- weighted_df |>
         stats::dist(method = "euclidean") |>
         as.matrix()
