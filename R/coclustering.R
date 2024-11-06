@@ -162,7 +162,7 @@ batch_snf_subsamples <- function(data_list_subsamples,
                 distance_metrics_list = distance_metrics_list,
                 weights_matrix = weights_matrix,
                 automatic_standard_normalize = automatic_standard_normalize,
-                quiet = TRUE
+                verbose = FALSE
             )
         )
         if (inherits(batch_snf_results, "list")) {
