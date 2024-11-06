@@ -28,7 +28,7 @@ has the best stuff!):
 devtools::install_github("BRANCHlab/metasnf")
 
 # Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v1.0.0")
+devtools::install_github("BRANCHlab/metasnf@v1.1.1")
 ```
 
 ## Quick Start
@@ -61,12 +61,6 @@ settings_matrix <- generate_settings_matrix(
 
 # This matrix has clustering solutions for each of the 5 SNF runs!
 solutions_matrix <- batch_snf(data_list, settings_matrix)
-#> [1] "Row: 1/5 | Time remaining: 0 seconds"
-#> [1] "Row: 2/5 | Time remaining: 0 seconds"
-#> [1] "Row: 3/5 | Time remaining: 0 seconds"
-#> [1] "Row: 4/5 | Time remaining: 0 seconds"
-#> [1] "Row: 5/5 | Time remaining: 0 seconds"
-#> [1] "Total time taken: 1 seconds."
 ```
 
 Check out the tutorial vignettes below to learn about how the package
