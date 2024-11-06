@@ -9,7 +9,7 @@ inputs"><meta name="google-site-verification" content="Xzz1SIDqvPwru_mXKCXAkX2pN
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,15 +50,15 @@ inputs</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">drop_inputs</span><span class="op">(</span><span class="va">settings_matrix</span>, <span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">drop_inputs</span><span class="op">(</span><span class="va">settings_matrix_row</span>, <span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-settings-matrix">settings_matrix<a class="anchor" aria-label="anchor" href="#arg-settings-matrix"></a></dt>
-<dd><p>matrix indicating parameters to iterate SNF through</p></dd>
+<dl><dt id="arg-settings-matrix-row">settings_matrix_row<a class="anchor" aria-label="anchor" href="#arg-settings-matrix-row"></a></dt>
+<dd><p>Row of a settings matrix.</p></dd>
 
 
 <dt id="arg-data-list">data_list<a class="anchor" aria-label="anchor" href="#arg-data-list"></a></dt>
@@ -67,7 +67,8 @@ inputs</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>selected_data_list</p>
+    <p>A data list (class "list") in which any component with a
+corresponding 0 value in the provided settings matrix row has been removed.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -464,27 +464,6 @@ cluster each subject was assigned for the corresponding
 <code>settings_matrix</code> row.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 13/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 14/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 15/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 16/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 17/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span></span>
 <span><span class="co">#&gt;  [1] "row_id"                    "alpha"                    </span></span>
@@ -548,9 +527,7 @@ cluster can be done to efficiently identify the top choice.</p>
 similar the solutions are to each other, thereby allowing us to find
 clusters of cluster solutions.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">solutions_matrix_aris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_aris.html">calc_aris</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 52.63158% completed...</span></span>
-<span><span class="co">#&gt; Done.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">solutions_matrix_aris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_aris.html">calc_aris</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span></span></code></pre></div>
 <p>We can visualize the resulting inter-cluster similarities with a
 heatmap. First, call <code>get_matrix_order</code> to get a hierarchical
 clustering-based ordering of the rows in the adjusted rand indices.</p>
@@ -656,26 +633,6 @@ feature present in a provided data list and/or target_list.</p>
 <span>    <span class="va">solutions_matrix</span>,</span>
 <span>    target_list <span class="op">=</span> <span class="va">target_list</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Processing row 1 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 2 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 3 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 4 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 5 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 6 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 7 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 8 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 9 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 10 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 11 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 12 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 13 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 14 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 15 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 16 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 17 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 18 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 19 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 20 of 20"</span></span>
 <span></span>
 <span><span class="co"># What columns have been added?</span></span>
 <span><span class="va">old_cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span></span>
@@ -696,27 +653,7 @@ feature present in a provided data list and/or target_list.</p>
 <span>    <span class="va">solutions_matrix</span>,</span>
 <span>    data_list <span class="op">=</span> <span class="va">data_list</span>,</span>
 <span>    target_list <span class="op">=</span> <span class="va">target_list</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Processing row 1 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 2 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 3 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 4 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 5 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 6 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 7 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 8 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 9 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 10 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 11 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 12 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 13 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 14 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 15 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 16 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 17 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 18 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 19 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 20 of 20"</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Functionally, the only difference between the <code>data_list</code>
 and <code>target_list</code> arguments are that the
 <code>target_list</code> features will also be a part of those summary
@@ -1022,27 +959,6 @@ parameter:</p>
 <span>    <span class="va">settings_matrix</span>,</span>
 <span>    return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 13/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 14/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 15/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 16/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 17/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
 <span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span></span></code></pre></div>
@@ -1119,26 +1035,6 @@ from regressing the <code>target_list</code> features onto our generated
 clusters.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span><span class="va">solutions_matrix</span>, <span class="va">target_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Processing row 1 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 2 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 3 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 4 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 5 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 6 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 7 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 8 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 9 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 10 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 11 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 12 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 13 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 14 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 15 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 16 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 17 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 18 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 19 of 20"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 20 of 20"</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">extended_solutions_matrix</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span></span>
 <span><span class="co">#&gt;  [1] "row_id"                    "alpha"                    </span></span>
@@ -1308,22 +1204,11 @@ the training/testing split for you :)</p>
 <span>    <span class="va">train_data_list</span>,</span>
 <span>    <span class="va">settings_matrix</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/5 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/5 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/5 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/5 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/5 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 1 seconds."</span></span>
 <span></span>
 <span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
 <span>    <span class="va">train_solutions_matrix</span>,</span>
 <span>    <span class="va">train_target_list</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Processing row 1 of 5"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 2 of 5"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 3 of 5"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 4 of 5"</span></span>
-<span><span class="co">#&gt; [1] "Processing row 5 of 5"</span></span>
 <span></span>
 <span><span class="va">extended_solutions_matrix</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "row_id"                   "alpha"                   </span></span>
@@ -1386,7 +1271,6 @@ the training/testing split for you :)</p>
 <span><span class="co"># Use the solutions matrix from the training subjects and the data list from</span></span>
 <span><span class="co"># the training and testing subjects to propagate labels to the test subjects</span></span>
 <span><span class="va">propagated_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lp_solutions_matrix.html">lp_solutions_matrix</a></span><span class="op">(</span><span class="va">top_row</span>, <span class="va">full_data_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Processing row 1 of 1..."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 subjectkey group 4</span></span>
@@ -1413,11 +1297,6 @@ this procedure.</p>
 <span>    <span class="va">extended_solutions_matrix</span>,</span>
 <span>    <span class="va">full_data_list</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Processing row 1 of 5..."</span></span>
-<span><span class="co">#&gt; [1] "Processing row 2 of 5..."</span></span>
-<span><span class="co">#&gt; [1] "Processing row 3 of 5..."</span></span>
-<span><span class="co">#&gt; [1] "Processing row 4 of 5..."</span></span>
-<span><span class="co">#&gt; [1] "Processing row 5 of 5..."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                 subjectkey group 1 2 3 4  5</span></span>

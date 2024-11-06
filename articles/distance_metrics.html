@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,21 +98,20 @@ be messy. The <code><a href="../reference/summarize_dml.html">summarize_dml()</a
 with a nicer format.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/summarize_dml.html">summarize_dml</a></span><span class="op">(</span><span class="va">distance_metrics_list</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $continuous_distances</span></span>
+<span><span class="co">#&gt; [1] "euclidean_distance"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Continuous distances:</span></span>
-<span><span class="co">#&gt; 1. euclidean_distance</span></span>
+<span><span class="co">#&gt; $discrete_distances</span></span>
+<span><span class="co">#&gt; [1] "euclidean_distance"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Discrete distances:</span></span>
-<span><span class="co">#&gt; 1. euclidean_distance</span></span>
+<span><span class="co">#&gt; $ordinal_distances</span></span>
+<span><span class="co">#&gt; [1] "euclidean_distance"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Ordinal distances:</span></span>
-<span><span class="co">#&gt; 1. euclidean_distance</span></span>
+<span><span class="co">#&gt; $categorical_distances</span></span>
+<span><span class="co">#&gt; [1] "gower_distance"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Categorical distances:</span></span>
-<span><span class="co">#&gt; 1. gower_distance</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Mixed distances:</span></span>
-<span><span class="co">#&gt; 1. gower_distance</span></span></code></pre></div>
+<span><span class="co">#&gt; $mixed_distances</span></span>
+<span><span class="co">#&gt; [1] "gower_distance"</span></span></code></pre></div>
 <p>These lists must always contain at least 1 distance metric for each
 of the 5 recognized types of features: continuous, discrete, ordinal,
 categorical, and mixed (any combination of the previous four).</p>
@@ -143,23 +142,20 @@ discrete features.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/summarize_dml.html">summarize_dml</a></span><span class="op">(</span><span class="va">my_distance_metrics</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $continuous_distances</span></span>
+<span><span class="co">#&gt; [1] "euclidean_distance"      "standard_norm_euclidean"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Continuous distances:</span></span>
-<span><span class="co">#&gt; 1. euclidean_distance </span></span>
-<span><span class="co">#&gt; 2. standard_norm_euclidean</span></span>
+<span><span class="co">#&gt; $discrete_distances</span></span>
+<span><span class="co">#&gt; [1] "euclidean_distance"      "standard_norm_euclidean"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Discrete distances:</span></span>
-<span><span class="co">#&gt; 1. euclidean_distance </span></span>
-<span><span class="co">#&gt; 2. standard_norm_euclidean</span></span>
+<span><span class="co">#&gt; $ordinal_distances</span></span>
+<span><span class="co">#&gt; [1] "euclidean_distance"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Ordinal distances:</span></span>
-<span><span class="co">#&gt; 1. euclidean_distance</span></span>
+<span><span class="co">#&gt; $categorical_distances</span></span>
+<span><span class="co">#&gt; [1] "gower_distance"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Categorical distances:</span></span>
-<span><span class="co">#&gt; 1. gower_distance</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Mixed distances:</span></span>
-<span><span class="co">#&gt; 1. gower_distance</span></span></code></pre></div>
+<span><span class="co">#&gt; $mixed_distances</span></span>
+<span><span class="co">#&gt; [1] "gower_distance"</span></span></code></pre></div>
 <p>Now, during settings_matrix generation, we can provide our
 distance_metrics_list to ensure our new distance metrics will be used on
 some of our SNF runs.</p>
@@ -245,21 +241,20 @@ don’t want to ever use them.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/summarize_dml.html">summarize_dml</a></span><span class="op">(</span><span class="va">no_default_metrics</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $continuous_distances</span></span>
+<span><span class="co">#&gt; [1] "standard_norm_euclidean"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Continuous distances:</span></span>
-<span><span class="co">#&gt; 1. standard_norm_euclidean</span></span>
+<span><span class="co">#&gt; $discrete_distances</span></span>
+<span><span class="co">#&gt; [1] "standard_norm_euclidean"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Discrete distances:</span></span>
-<span><span class="co">#&gt; 1. standard_norm_euclidean</span></span>
+<span><span class="co">#&gt; $ordinal_distances</span></span>
+<span><span class="co">#&gt; [1] "standard_norm_euclidean"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Ordinal distances:</span></span>
-<span><span class="co">#&gt; 1. standard_norm_euclidean</span></span>
+<span><span class="co">#&gt; $categorical_distances</span></span>
+<span><span class="co">#&gt; [1] "standard_norm_euclidean"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Categorical distances:</span></span>
-<span><span class="co">#&gt; 1. standard_norm_euclidean</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Mixed distances:</span></span>
-<span><span class="co">#&gt; 1. standard_norm_euclidean</span></span></code></pre></div>
+<span><span class="co">#&gt; $mixed_distances</span></span>
+<span><span class="co">#&gt; [1] "standard_norm_euclidean"</span></span></code></pre></div>
 <p>For this option, it is necessary to provide at least one distance
 metric for every feature type. A distance_metrics_list cannot have any
 of its feature types be completely empty (even if you have no data for
@@ -279,25 +274,22 @@ sample from during settings_matrix generation:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/summarize_dml.html">summarize_dml</a></span><span class="op">(</span><span class="va">my_distance_metrics</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $continuous_distances</span></span>
+<span><span class="co">#&gt; [1] "euclidean_distance"      "standard_norm_euclidean"</span></span>
+<span><span class="co">#&gt; [3] "some_other_metric"      </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Continuous distances:</span></span>
-<span><span class="co">#&gt; 1. euclidean_distance </span></span>
-<span><span class="co">#&gt; 2. standard_norm_euclidean </span></span>
-<span><span class="co">#&gt; 3. some_other_metric</span></span>
+<span><span class="co">#&gt; $discrete_distances</span></span>
+<span><span class="co">#&gt; [1] "euclidean_distance"      "standard_norm_euclidean"</span></span>
+<span><span class="co">#&gt; [3] "some_other_metric"      </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Discrete distances:</span></span>
-<span><span class="co">#&gt; 1. euclidean_distance </span></span>
-<span><span class="co">#&gt; 2. standard_norm_euclidean </span></span>
-<span><span class="co">#&gt; 3. some_other_metric</span></span>
+<span><span class="co">#&gt; $ordinal_distances</span></span>
+<span><span class="co">#&gt; [1] "euclidean_distance"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Ordinal distances:</span></span>
-<span><span class="co">#&gt; 1. euclidean_distance</span></span>
+<span><span class="co">#&gt; $categorical_distances</span></span>
+<span><span class="co">#&gt; [1] "gower_distance"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Categorical distances:</span></span>
-<span><span class="co">#&gt; 1. gower_distance</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Mixed distances:</span></span>
-<span><span class="co">#&gt; 1. gower_distance</span></span>
+<span><span class="co">#&gt; $mixed_distances</span></span>
+<span><span class="co">#&gt; [1] "gower_distance"</span></span>
 <span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
@@ -436,34 +428,12 @@ rows in your settings matrix.</p>
 <span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span>,</span>
 <span>    weights_matrix <span class="op">=</span> <span class="va">weights_matrix</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/10 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/10 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/10 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/10 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/10 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 6/10 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 7/10 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/10 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 9/10 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 10/10 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="va">solutions_matrix_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
 <span>    <span class="va">settings_matrix</span>,</span>
 <span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/10 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/10 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/10 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/10 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/10 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 6/10 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 7/10 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/10 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 9/10 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 10/10 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span></span>
 <span>    <span class="va">solutions_matrix_1</span>,</span>
@@ -501,12 +471,12 @@ the essential aspects of a well-formated distance function.</p>
 <code class="sourceCode R"><span><span class="va">euclidean_distance</span></span>
 <span><span class="co">#&gt; function (df, weights_row) </span></span>
 <span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     weights &lt;- format_weights_row(weights_row)</span></span>
+<span><span class="co">#&gt;     weights &lt;- diag(weights_row, nrow = length(weights_row))</span></span>
 <span><span class="co">#&gt;     weighted_df &lt;- as.matrix(df) %*% weights</span></span>
 <span><span class="co">#&gt;     distance_matrix &lt;- as.matrix(stats::dist(weighted_df, method = "euclidean"))</span></span>
 <span><span class="co">#&gt;     return(distance_matrix)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55926753c378&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x562c8c6eca88&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
 <p>The function should accept two arguments: <code>df</code> and
 <code>weights_row</code>, and only give one output,

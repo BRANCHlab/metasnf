@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,33 +121,10 @@ the solo-feature to all-feature solutions as comparable as possible.</p>
 <span></span>
 <span><span class="co"># Generation of 20 cluster solutions</span></span>
 <span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Row: 1/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 2/20 | Time remaining: 4 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 3/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 4/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 5/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 6/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 7/20 | Time remaining: 3 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 8/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 9/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 10/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 11/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 12/20 | Time remaining: 2 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 13/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 14/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 15/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 16/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 17/20 | Time remaining: 1 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 18/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 19/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Row: 20/20 | Time remaining: 0 seconds"</span></span>
-<span><span class="co">#&gt; [1] "Total time taken: 4 seconds."</span></span>
 <span></span>
 <span><span class="co"># Let's just calculate NMIs of the anxiety and depression data types for the</span></span>
 <span><span class="co"># first 5 cluster solutions to save time:</span></span>
 <span><span class="va">feature_nmis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_nmi.html">batch_nmi</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="va">solutions_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Calculating NMIs for cbcl_anxiety_r (feature 1/2)..."</span></span>
-<span><span class="co">#&gt; [1] "Calculating NMIs for cbcl_depress_r (feature 2/2)..."</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">feature_nmis</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          feature   row_id_1  row_id_2  row_id_3  row_id_4  row_id_5</span></span>
