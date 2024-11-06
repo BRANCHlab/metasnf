@@ -12,6 +12,9 @@ reorder_dl_subs(data_list, ordered_subjects)
 \item{ordered_subjects}{A vector of the subjectkey values in the data_list
 in the desired order of the sorted data_list.}
 }
+\value{
+A data list ("list"-class object) with reordered observations.
+}
 \description{
 Reorder the subjects in a data_list
 }

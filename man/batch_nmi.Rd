@@ -11,7 +11,8 @@ batch_nmi(
   distance_metrics_list = NULL,
   automatic_standard_normalize = FALSE,
   transpose = TRUE,
-  ignore_inclusions = TRUE
+  ignore_inclusions = TRUE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -40,6 +41,14 @@ the same value as was used in the original call to \code{batch_snf()}.}
 \item{ignore_inclusions}{If TRUE, will ignore the inclusion columns in the
 solutions matrix and calculate NMIs for all features. If FALSE, will give
 NAs for features that were dropped on a given settings_matrix row.}
+
+\item{verbose}{If TRUE, print progress to console.}
+}
+\value{
+A "data.frame" class object containing one row for every feature
+in the provided data list and one column for every solution in the provided
+solutions matrix. Populated values show the calculated NMI score for each
+feature-solution combination.
 }
 \description{
 Calculate feature NMIs for a data_list and a derived solutions_matrix

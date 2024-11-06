@@ -7,10 +7,10 @@
 get_clusters(solutions_matrix_row)
 }
 \arguments{
-\item{solutions_matrix_row}{Output matrix row}
+\item{solutions_matrix_row}{Output matrix row.}
 }
 \value{
-clusters list of assigned clusters
+clusters Vector of assigned clusters.
 }
 \description{
 This function takes in a single row of a solutions matrix and returns a

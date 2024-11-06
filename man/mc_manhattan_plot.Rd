@@ -47,6 +47,11 @@ vertical lines at.}
 
 \item{domain_colours}{Named vector of colours for domains.}
 }
+\value{
+A Manhattan plot (class "gg", "ggplot") showing the association
+p-values of features against each solution in the provided solutions matrix,
+stratified by meta cluster label.
+}
 \description{
 Given a dataframe of representative meta cluster solutions (see
 \code{get_representative_solutions()}, returns a Manhattan plot for showing

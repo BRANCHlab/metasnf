@@ -16,6 +16,10 @@ calculated.}
 associate cluster with a categorical feature. Options are "chi_squared" for
 the Chi-squared test and "fisher_exact" for Fisher's exact test.}
 }
+\value{
+A "matrix" class object containing pairwise association p-values
+between the features in the provided data list.
+}
 \description{
 Calculate p-values for all pairwise associations of features in a data_list
 }

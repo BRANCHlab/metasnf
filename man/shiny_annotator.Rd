@@ -9,6 +9,9 @@ shiny_annotator(ari_heatmap)
 \arguments{
 \item{ari_heatmap}{Heatmap of ARIs to divide into meta clusters.}
 }
+\value{
+Does not return any value. Launches interactive shiny applet.
+}
 \description{
 Launch shiny app to identify meta cluster boundaries
 }

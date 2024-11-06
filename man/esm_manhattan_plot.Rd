@@ -2,7 +2,7 @@
 % Please edit documentation in R/manhattan_plot.R
 \name{esm_manhattan_plot}
 \alias{esm_manhattan_plot}
-\title{Manhattan plot of feature-cluster associaiton p-values}
+\title{Manhattan plot of feature-cluster association p-values}
 \usage{
 esm_manhattan_plot(
   esm,
@@ -40,6 +40,10 @@ and cluster assignments. See \code{?extend_solutions}.}
 \item{bonferroni_line}{If TRUE, plots a dashed black line at the
 Bonferroni-corrected equivalent of the p-value threshold.}
 }
+\value{
+A Manhattan plot (class "gg", "ggplot") showing the association
+p-values of features against each solution in the provided solutions matrix.
+}
 \description{
-Manhattan plot of feature-cluster associaiton p-values
+Manhattan plot of feature-cluster association p-values
 }

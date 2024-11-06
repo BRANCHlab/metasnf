@@ -52,6 +52,10 @@ length of colour_breaks.}
 
 \item{...}{Additional parameters passed to \code{ComplexHeatmap::Heatmap}.}
 }
+\value{
+Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
+that displays the scaled values of the provided settings matrix.
+}
 \description{
 Scales settings matrix values between 0 and 1 and plots as a heatmap. Rows
 can be reordered to match prior meta clustering results.

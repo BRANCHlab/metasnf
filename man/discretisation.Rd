@@ -9,6 +9,9 @@ discretisation(eigenvectors)
 \arguments{
 \item{eigenvectors}{Matrix of eigenvectors.}
 }
+\value{
+"Matrix" class object, intermediate product in spectral clustering.
+}
 \description{
 Internal function taken from \code{SNFtool} to use for number of cluster
 estimation.

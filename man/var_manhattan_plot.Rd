@@ -37,6 +37,10 @@ features are plotted.}
 \item{bonferroni_line}{If TRUE, plots a dashed black line at the
 Bonferroni-corrected equivalent of the p-value threshold.}
 }
+\value{
+A Manhattan plot (class "gg", "ggplot") showing the association
+p-values of features against one key feature in a data list.
+}
 \description{
 Manhattan plot of feature-feature associaiton p-values
 }

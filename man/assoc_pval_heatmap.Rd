@@ -71,6 +71,11 @@ heatmap cells}
 
 \item{...}{Additional parameters passed into ComplexHeatmap::Heatmap.}
 }
+\value{
+Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
+that displays the pairwise associations between features from the provided
+correlation_matrix.
+}
 \description{
 Heatmap of pairwise associations between features
 }

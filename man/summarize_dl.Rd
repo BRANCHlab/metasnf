@@ -15,6 +15,10 @@ summarize_dl(data_list, scope = "component")
 \item "feature": One row for each feature in the data_list.
 }}
 }
+\value{
+"data.frame"-class object summarizing all components (or features if
+scope == "component").
+}
 \description{
 Summarize a data list
 }

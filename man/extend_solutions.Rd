@@ -11,7 +11,8 @@ extend_solutions(
   cat_test = "chi_squared",
   calculate_summaries = TRUE,
   min_pval = 1e-10,
-  processes = 1
+  processes = 1,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ replaced with this value.}
 
 \item{processes}{The number of processes to use for parallelization.
 Progress is only reported for sequential processing (processes = 1).}
+
+\item{verbose}{If TRUE, print progress to console.}
 }
 \value{
 extended_solutions_matrix an extended solutions matrix that contains

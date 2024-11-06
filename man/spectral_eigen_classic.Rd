@@ -10,8 +10,8 @@ spectral_eigen_classic(similarity_matrix)
 \item{similarity_matrix}{A similarity matrix.}
 }
 \value{
-solution_data A list storing cluster assignments and the number of
-clusters.
+solution_data A list storing cluster assignments ("solution") and
+the number of clusters ("nclust").
 }
 \description{
 Applies spectral clustering to similarity matrix. Number of clusters is based

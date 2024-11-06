@@ -16,8 +16,8 @@ the eigen-gap and rotation cost heuristics respectively for determining
 the number of clusters in the graph.}
 }
 \value{
-clust_algs_list A well-formatted list of clustering algorithms that
-can be passed into the batch_snf and generate_settings_list functions.
+A list of clustering algorithm functions that can
+be passed into the batch_snf and generate_settings_list functions.
 }
 \description{
 This function can be used to specify custom clustering algorithms to apply

@@ -1,3 +1,6 @@
+# metasnf 1.1.1
+* inclusion column bugfixes from 1.1.0
+
 # metasnf 1.1.0
 
 * Verbose parameter added to printing functions. By default set to FALSE.

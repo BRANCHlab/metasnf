@@ -13,6 +13,10 @@ colour_scale(data, min_colour, max_colour)
 
 \item{max_colour}{Maximum colour value.}
 }
+\value{
+A "function" class object that can build a circlize-style colour
+ramp.
+}
 \description{
 Given a numeric vector and min and max colour values, return a colour ramp
 that assigns a colour to each element in the vector. This function is a

@@ -94,6 +94,10 @@ colours.}
 
 \item{...}{Additional parameters passed into ComplexHeatmap::Heatmap.}
 }
+\value{
+Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
+that displays the similarities between observations in the provided matrix.
+}
 \description{
 Plot heatmap of similarity matrix
 }

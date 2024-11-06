@@ -11,6 +11,12 @@ coclustering_coverage_check(cocluster_df, action = "warn")
 
 \item{action}{Control if parent function should warn or stop.}
 }
+\value{
+This function does not return any value. It checks a \code{cocluster_df}
+for complete coverage (all pairs occur in the same solution at least once).
+Will raise a warning or error if coverage is incomplete depending on the
+value of the action parameter.
+}
 \description{
 Check if coclustered data has at least one subsample in which every pair
 of subjects were a part of simultaneously.

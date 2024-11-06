@@ -34,6 +34,10 @@ stream is coloured in the alluvial plot.}
 
 \item{title}{Title of the plot.}
 }
+\value{
+An alluvial plot (class "gg" and "ggplot") showing distribution of
+a feature across varying number cluster solutions.
+}
 \description{
 Alluvial plot of patients across cluster counts and important features
 }

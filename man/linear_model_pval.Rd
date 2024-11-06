@@ -12,7 +12,7 @@ linear_model_pval(predictor, response)
 \item{response}{A numeric feature.}
 }
 \value{
-pval A p-value.
+pval A p-value (class "numeric").
 }
 \description{
 Return p-value of F-test for a linear model of any two features

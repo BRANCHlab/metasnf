@@ -9,6 +9,10 @@ dl_uid_first_col(data_list)
 \arguments{
 \item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 }
+\value{
+A data list ("list"-class object) in which each data-subcomponent
+has "subjectkey" positioned as its first column.
+}
 \description{
 Make the subjectkey UID columns of a data_list first
 }

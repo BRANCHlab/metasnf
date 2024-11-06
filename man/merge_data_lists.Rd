@@ -11,6 +11,10 @@ merge_data_lists(data_list1, data_list2)
 
 \item{data_list2}{The second data_list to merge.}
 }
+\value{
+A data list ("list"-class object) containing the observations of
+both provided data lists.
+}
 \description{
 Join two data_lists with the same components (dataframes) but separate
 observations. To instead merge two data_lists that have the same

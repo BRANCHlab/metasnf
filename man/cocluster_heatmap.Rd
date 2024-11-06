@@ -67,6 +67,10 @@ function.}
 
 \item{...}{Arguments passed to \code{ComplexHeatmap::Heatmap()}.}
 }
+\value{
+Heatmap (class "Heatmap" from ComplexHeatmap) object showing the
+distribution of observation co-clustering across resampled data.
+}
 \description{
 Create a heatmap that shows the distribution of observation co-clustering
 across resampled data.

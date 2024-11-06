@@ -12,6 +12,10 @@ estimate_nclust_given_graph(W, NUMC = 2:10)
 \item{NUMC}{Range of cluster counts to consider among when picking best
 number of clusters.}
 }
+\value{
+A list containing the top two eigengap and rotation-cost estimates
+for the number of clusters in a given similarity matrix.
+}
 \description{
 Calculate eigengap and rotation-cost estimates of the number of clusters
 to use when clustering a similarity matrix. This function was adapted

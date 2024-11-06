@@ -17,6 +17,9 @@ save_heatmap(heatmap, path, width = 480, height = 480, res = 100)
 
 \item{res}{The resolution of the heatmap.}
 }
+\value{
+Does not return any value. Saves heatmap to file.
+}
 \description{
 Save a heatmap object to a file
 }

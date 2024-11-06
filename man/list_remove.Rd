@@ -12,6 +12,10 @@ list_remove(list_object, ...)
 \item{...}{Any number of components to remove from the list object, passed as
 strings}
 }
+\value{
+A "list"-class object in which any specified elements have been
+removed.
+}
 \description{
 Removes specified elements from a provided data_list
 }

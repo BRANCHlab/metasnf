@@ -20,6 +20,11 @@ subsample_data_list(
 
 \item{n_subjects}{Number of patients to include per subsample.}
 }
+\value{
+A "list" class object containing \code{n_subsamples} number of
+data lists. Each of those data lists contains a random \code{subsample_fraction}
+fraction of the observations of the provided data list.
+}
 \description{
 Given a data list, return a list of smaller data lists that are generated
 through random sampling (without replacement).

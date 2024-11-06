@@ -14,7 +14,8 @@ batch_snf_subsamples(
   distance_metrics_list = NULL,
   weights_matrix = NULL,
   automatic_standard_normalize = FALSE,
-  return_solutions_matrices = FALSE
+  return_solutions_matrices = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -40,6 +41,18 @@ pipelines to be applied to the subsampled data lists.}
 
 \item{return_solutions_matrices}{If TRUE, includes the solutions matrices
 corresponding to each subsample in the output.}
+
+\item{verbose}{If TRUE, print time remaining estimates to console.}
+}
+\value{
+By default, returns a one-element list: \code{cluster_solutions}, which
+is itself a list of cluster solution data frames corresponding to each of
+the provided data list subsamples. Setting the parameters
+\code{return_similarity_matrices}  and \code{return_solutions_matrices} to \code{TRUE}
+will turn the result of the function to a three-element list containing the
+corresponding solutions matrices and final fused similarity matrices of
+those cluster solutions, should you require these objects for your own
+stability calculations.
 }
 \description{
 Run SNF clustering pipeline on a list of subsampled data lists.

@@ -14,7 +14,8 @@ auto_plot(
   jitter_width = 6,
   jitter_height = 6,
   bar_width = 6,
-  bar_height = 6
+  bar_height = 6,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -41,6 +42,15 @@ will be used to prefix plot names.}
 \item{bar_width}{Width of bar plots if save is specified.}
 
 \item{bar_height}{Height of bar plots if save is specified.}
+
+\item{verbose}{If TRUE, print progress to console.}
+}
+\value{
+By default, returns a list of plots (class "gg", "ggplot") with
+one plot for every feature in the provided data list and/or target list.
+If \code{return_plots} is FALSE, will instead return a single "data.frame"
+object containing every provided feature for every observation in long
+format.
 }
 \description{
 Given a single row of a solutions matrix and data provided through

@@ -19,6 +19,10 @@ p-values.}
 
 \item{keep_summaries}{If FALSE, will remove the mean, min, and max p-value.}
 }
+\value{
+A "data.frame" class object Of only the p-value related columns
+of the provided extended_solutions_matrix.
+}
 \description{
 This function can be used to neatly format the p-values associated with an
 extended solutions matrix. It can also calculate the negative logs of those

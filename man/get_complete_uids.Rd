@@ -11,6 +11,10 @@ get_complete_uids(list_of_dfs, uid)
 
 \item{uid}{Name of column across dataframes containing UIDs}
 }
+\value{
+A character vector of the UIDs of observations that have complete
+data across the provided list of dataframes.
+}
 \description{
 Pull complete-data UIDs from a list of dataframes
 }

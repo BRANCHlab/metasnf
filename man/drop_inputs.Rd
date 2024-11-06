@@ -4,15 +4,16 @@
 \alias{drop_inputs}
 \title{Execute inclusion}
 \usage{
-drop_inputs(settings_matrix, data_list)
+drop_inputs(settings_matrix_row, data_list)
 }
 \arguments{
-\item{settings_matrix}{matrix indicating parameters to iterate SNF through}
+\item{settings_matrix_row}{Row of a settings matrix.}
 
 \item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 }
 \value{
-selected_data_list
+A data list (class "list") in which any component with a
+corresponding 0 value in the provided settings matrix row has been removed.
 }
 \description{
 Given a data list and a settings matrix row, returns a data list of selected

@@ -10,9 +10,10 @@ get_cluster_solutions(solutions_matrix)
 \item{solutions_matrix}{A solutions_matrix.}
 }
 \value{
-cluster_solutions A dataframe where each row is an observation and
-each column (apart from the subjectkey column) indicates the cluster that
-observation was assigned to for the corresponding solutions matrix row.
+cluster_solutions A "data.frame" object where each row is an
+observation and each column (apart from the subjectkey column) indicates
+the cluster that observation was assigned to for the corresponding
+solutions matrix row.
 }
 \description{
 This function takes in a solutions matrix and returns a dataframe containing

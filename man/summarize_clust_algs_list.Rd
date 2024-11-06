@@ -10,9 +10,8 @@ summarize_clust_algs_list(clust_algs_list)
 \item{clust_algs_list}{A clust_algs_list object}
 }
 \value{
-summary_df Dataframe containing the name of each algorithm and the
-number of each algorithm (the value in the settings_matrix that will be
-used to access that algorithm)
+summary_df "data.frame" class object containing the name and index
+of each clustering algorithm in te provided \code{clust_algs_list}.
 }
 \description{
 Summarize a clust_algs_list object

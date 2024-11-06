@@ -4,7 +4,7 @@
 \alias{calc_aris}
 \title{Meta-cluster calculations}
 \usage{
-calc_aris(solutions_matrix, processes = 1)
+calc_aris(solutions_matrix, processes = 1, verbose = FALSE)
 }
 \arguments{
 \item{solutions_matrix}{solutions_matrix containing cluster solutions to
@@ -21,6 +21,8 @@ cores will be used.
 \item \code{max}: All available cores will be used.
 Note that no progress indicator is available during multi-core processing.
 }}
+
+\item{verbose}{If TRUE, print progress to console.}
 }
 \value{
 om_aris ARIs between clustering solutions of an solutions matrix

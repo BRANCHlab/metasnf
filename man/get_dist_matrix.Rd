@@ -36,7 +36,7 @@ gower distances)}
 column names in df and the row contains the corresponding weights_row.}
 }
 \value{
-dist_matrix Matrix of inter-observation distances
+dist_matrix Matrix of inter-observation distances.
 }
 \description{
 Given a dataframe of numerical features, return a euclidean distance matrix.

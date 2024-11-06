@@ -12,7 +12,7 @@ chi_squared_pval(cat_var1, cat_var2)
 \item{cat_var2}{A categorical feature.}
 }
 \value{
-pval A p-value.
+pval A p-value (class "numeric").
 }
 \description{
 Return p-value for chi-squared test for any two features

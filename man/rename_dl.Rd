@@ -12,6 +12,9 @@ rename_dl(data_list, name_mapping)
 \item{name_mapping}{A named vector where the values are the features to be
 renamed and the names are the new names for those features.}
 }
+\value{
+A data list ("list"-class object) with adjusted feature names.
+}
 \description{
 Rename features in a data_list
 }

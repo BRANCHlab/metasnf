@@ -9,6 +9,10 @@ summarize_pvals(extended_solutions_matrix)
 \arguments{
 \item{extended_solutions_matrix}{Result of \code{extend_solutions}}
 }
+\value{
+The provided extended solutions matrix along with columns for
+the min, mean, and maximum across p-values for each row.
+}
 \description{
 Summarize p-value columns of an extended solutions matrix
 }

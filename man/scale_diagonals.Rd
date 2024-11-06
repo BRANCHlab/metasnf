@@ -17,6 +17,9 @@ scale_diagonals(matrix, method = "mean")
 \item "max" (replace diagonals with max value of off-diagonals)
 }}
 }
+\value{
+A "matrix" class object with rescaled diagonals.
+}
 \description{
 Adjust the diagonals of a matrix to reduce contrast with off-diagonals
 during plotting.

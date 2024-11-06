@@ -41,6 +41,11 @@ off-diagonals), or "zero" (replace diagonals with 0).}
 \item{...}{Additional parameters passed to \code{similarity_matrix_heatmap()},
 the function that this function wraps.}
 }
+\value{
+Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
+that displays the pairwise adjusted Rand indices (similarities) between
+the cluster solutions of the provided solutions matrix.
+}
 \description{
 Heatmap of pairwise adjusted rand indices between solutions
 }

@@ -11,6 +11,9 @@ resample(x, ...)
 
 \item{...}{Remaining arguments for base::sample function}
 }
+\value{
+Numeric vector result of running base::sample.
+}
 \description{
 Like sample, but when given a single value x, returns back that single
 value instead of a random value from 1 to x.

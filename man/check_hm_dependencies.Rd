@@ -6,6 +6,10 @@
 \usage{
 check_hm_dependencies()
 }
+\value{
+Does not return any value. This function just checks that the
+ComplexHeatmap and circlize packages are installed.
+}
 \description{
 Check for ComplexHeatmap and circlize dependencies
 }

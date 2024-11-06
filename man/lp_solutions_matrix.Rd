@@ -8,7 +8,8 @@ lp_solutions_matrix(
   train_solutions_matrix,
   full_data_list,
   distance_metrics_list = NULL,
-  weights_matrix = NULL
+  weights_matrix = NULL,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ and testing sets.}
 that was used for the original batch_snf call.}
 
 \item{weights_matrix}{Like above.}
+
+\item{verbose}{If TRUE, print progress to console.}
 }
 \value{
 labeled_df a dataframe containing a column for subjectkeys,

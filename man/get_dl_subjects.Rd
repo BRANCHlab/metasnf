@@ -12,6 +12,9 @@ get_dl_subjects(data_list, prefix = FALSE)
 \item{prefix}{If TRUE, preserves the "subject_" prefix added to UIDs when
 creating a data_list.}
 }
+\value{
+A character vector of the UID labels contained in a data list.
+}
 \description{
 Extract subjects from a data_list
 }

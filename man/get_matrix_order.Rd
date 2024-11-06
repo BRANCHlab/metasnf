@@ -17,6 +17,10 @@ directly passed into stats::dist. Options include "euclidean", "maximum",
 stats::hclust. Options include "ward.D", "ward.D2", "single", "complete",
 "average", "mcquitty", "median", or "centroid".}
 }
+\value{
+A numeric vector of the ordering derivied by the specified
+hierarchical clustering method applied to the provided matrix.
+}
 \description{
 Return the hierarchical clustering order of a matrix
 }

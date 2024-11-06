@@ -38,6 +38,12 @@ or label propagation.}
 element is the data_list and the second element is a vector of unique IDs
 of patients who were removed during the complete data filtration step.}
 }
+\value{
+A nested "list" class object. Each list component contains a 4-item
+list of a data frame, the user-assigned name of the data frame, the
+user-assigned domain of the data frame, and the user-labeled type of the
+data frame.
+}
 \description{
 This function generates the major data object that will be processed when
 iterating through the each SNF pipeline defined in the settings_matrix. The

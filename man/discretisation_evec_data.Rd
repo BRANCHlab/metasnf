@@ -9,6 +9,10 @@ discretisation_evec_data(eigenvector)
 \arguments{
 \item{eigenvector}{Matrix of eigenvectors}
 }
+\value{
+"Matrix" class object discretizing provided eigenvector to values 0
+or 1.
+}
 \description{
 Internal function taken from \code{SNFtool} to use for number of cluster
 estimation.

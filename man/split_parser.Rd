@@ -26,6 +26,10 @@ split_parser(
 
 \item{n_columns}{The number of columns in the data.}
 }
+\value{
+"list"-class object containing row_split and column_split character
+vectors to pass into ComplexHeatmap::Heatmap.
+}
 \description{
 Helper function to determine which row and columns to split on
 }

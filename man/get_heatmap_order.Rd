@@ -11,6 +11,10 @@ get_heatmap_order(heatmap, type = "rows")
 
 \item{type}{The type of ordering to return. Either "rows" or "columns".}
 }
+\value{
+A numeric vector of the ordering used within the provided
+ComplexHeatmap "Heatmap" object.
+}
 \description{
 Return the row or column ordering present in a heatmap
 }

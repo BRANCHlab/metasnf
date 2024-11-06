@@ -41,6 +41,9 @@ of similarity matrices for each row in the solutions_matrix. Default FALSE.}
 
 \item{processes}{Number of parallel processes used when executing SNF.}
 }
+\value{
+The same values as ?batch_snf().
+}
 \description{
 Parallel processing form of batch_snf
 }

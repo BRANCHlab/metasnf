@@ -41,6 +41,10 @@ of similarity matrices for each row in the solutions_matrix. Default FALSE.}
 
 \item{prog}{Progressr function to update parallel processing progress}
 }
+\value{
+A "function" class object used to run \code{batch_snf} in lapply-form
+for parallel processing.
+}
 \description{
 Generate closure function to run batch_snf in an apply-friendly format
 }

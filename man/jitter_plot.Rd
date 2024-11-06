@@ -11,6 +11,10 @@ jitter_plot(df, feature)
 
 \item{feature}{The feature to plot.}
 }
+\value{
+A jitter+violin plot (class "gg", "ggplot") showing the
+distribution of a feature across clusters.
+}
 \description{
 Jitter plot separating a feature by cluster
 }

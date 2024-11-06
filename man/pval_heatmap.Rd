@@ -65,6 +65,10 @@ clustering.}
 
 \item{...}{Additional parameters passed to \code{ComplexHeatmap::Heatmap}.}
 }
+\value{
+Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
+that displays the provided p-values.
+}
 \description{
 Heatmap of p-values
 }

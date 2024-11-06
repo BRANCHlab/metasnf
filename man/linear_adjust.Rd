@@ -14,6 +14,11 @@ have their mean differences removed in the first data_list.}
 
 \item{sig_digs}{Number of significant digits to round the residuals to.}
 }
+\value{
+A data list ("list") in which each data component has been converted
+to contain residuals off of the linear model built against the features in
+the unwanted_signal_list.
+}
 \description{
 Given a data_list to correct and another data_list of categorical features
 to linearly adjust for, corrects the first data_list based on the residuals

@@ -9,6 +9,10 @@ summarize_dml(distance_metrics_list)
 \arguments{
 \item{distance_metrics_list}{A distance_metrics_list.}
 }
+\value{
+"data.frame"-class object summarizing items in a distance metrics
+list.
+}
 \description{
 Summarize metrics contained in a distance_metrics_list
 }

@@ -11,6 +11,10 @@ assemble_data(data, data_list)
 
 \item{data_list}{A nested list of input data from \code{generate_data_list()}.}
 }
+\value{
+A class "data.frame" object containing all the features of the
+provided data frame and/or data list.
+}
 \description{
 Collapse a dataframe and/or a data_list into a single dataframe
 }
