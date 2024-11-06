@@ -436,7 +436,7 @@ batch_snf <- function(data_list,
 #' @export
 drop_inputs <- function(settings_matrix_row, data_list) {
     # Dataframe just of the inclusion features
-    inc_df <- settings_matrix |>
+    inc_df <- settings_matrix_row |>
         dplyr::select(dplyr::starts_with("inc"))
     # The subset of columns that are in 'keep' (1) mode
     keepcols <- colnames(inc_df)[inc_df[1, ] == 1]
