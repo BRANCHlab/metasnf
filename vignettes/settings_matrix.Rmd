@@ -184,20 +184,20 @@ settings_matrix <- generate_settings_matrix(
 
 Rather than varying everything equally all at once, you may be interested in looking at "chunks" of solution spaces that are based on distinct settings matrices.
 
-For example, you may want to look at 100 solutions generated with k = 50 and look at another 100 solutions generated with k = 80.
-You can absolutely build two separate settings matrices, but you can also build up a single matrix in parts using the `add_settings_matrix_rows` function:
+For example, you may want to look at 50 solutions generated with k = 50 and look at another 50 solutions generated with k = 80.
+You can build two separate settings matrices and concatenate them, but you can also build up a single matrix in parts using the `add_settings_matrix_rows` function:
 
 ```{r}
-
+set.seed(42)
 settings_matrix <- generate_settings_matrix(
     data_list,
-    nrow = 50,
+    nrow = 25,
     k_values = 50
 )
 
 settings_matrix <- add_settings_matrix_rows(
     settings_matrix,
-    nrow = 50,
+    nrow = 25,
     k_values = 80
 )
 
