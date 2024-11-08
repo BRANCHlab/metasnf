@@ -19,16 +19,21 @@ context-specific utility and principled validation of results.
 
 ## Installation
 
-You will need R version 4.1.0 or higher to install this package. We
-recommend installing the latest development version of the package (it
-has the best stuff!):
+You will need R version 4.1.0 or higher to install this package.
+`metasnf` can be installed from CRAN:
 
 ``` r
-# Always get the latest version
+install.packages("metasnf")
+```
+
+Development versions can be installed from GitHub:
+
+``` r
+# Latest development version
 devtools::install_github("BRANCHlab/metasnf")
 
 # Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v1.1.1")
+devtools::install_github("BRANCHlab/metasnf@v1.1.2")
 ```
 
 ## Quick Start

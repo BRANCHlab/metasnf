@@ -1,3 +1,7 @@
+# metasnf 1.1.2
+
+* update settings matrix vignette to avoid convergence error on some seeds
+
 # metasnf 1.1.1
 * inclusion column bugfixes from 1.1.0
 

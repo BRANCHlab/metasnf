@@ -29,14 +29,20 @@ The package offers a comprehensive suite of tools to assist users in transformin
 ## Installation
 
 You will need R version 4.1.0 or higher to install this package.
-We recommend installing the latest development version of the package (it has the best stuff!):
+`metasnf` can be installed from CRAN:
 
 ```{r eval = FALSE}
-# Always get the latest version
+install.packages("metasnf")
+```
+
+Development versions can be installed from GitHub:
+
+```{r eval = FALSE}
+# Latest development version
 devtools::install_github("BRANCHlab/metasnf")
 
 # Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v1.1.1")
+devtools::install_github("BRANCHlab/metasnf@v1.1.2")
 ```
 
 ## Quick Start
