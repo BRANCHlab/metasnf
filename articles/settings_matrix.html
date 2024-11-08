@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -405,32 +405,31 @@ parameters and keeping everything else fixed:</p>
 <p>Rather than varying everything equally all at once, you may be
 interested in looking at “chunks” of solution spaces that are based on
 distinct settings matrices.</p>
-<p>For example, you may want to look at 100 solutions generated with k =
-50 and look at another 100 solutions generated with k = 80. You can
-absolutely build two separate settings matrices, but you can also build
-up a single matrix in parts using the
+<p>For example, you may want to look at 50 solutions generated with k =
+50 and look at another 50 solutions generated with k = 80. You can build
+two separate settings matrices and concatenate them, but you can also
+build up a single matrix in parts using the
 <code>add_settings_matrix_rows</code> function:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
+<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
 <span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>    nrow <span class="op">=</span> <span class="fl">25</span>,</span>
 <span>    k_values <span class="op">=</span> <span class="fl">50</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_settings_matrix_rows.html">add_settings_matrix_rows</a></span><span class="op">(</span></span>
 <span>    <span class="va">settings_matrix</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>    nrow <span class="op">=</span> <span class="fl">25</span>,</span>
 <span>    k_values <span class="op">=</span> <span class="fl">80</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">settings_matrix</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 100  16</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 50 16</span></span></code></pre>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">settings_matrix</span><span class="op">$</span><span class="st">"k"</span></span></code></pre></div>
-<pre><code><span><span class="co">##   [1] 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50</span></span>
-<span><span class="co">##  [26] 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50</span></span>
-<span><span class="co">##  [51] 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80</span></span>
-<span><span class="co">##  [76] 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80</span></span></code></pre>
+<pre><code><span><span class="co">##  [1] 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50</span></span>
+<span><span class="co">## [26] 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80 80</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="manual-adjustments">Manual adjustments<a class="anchor" aria-label="anchor" href="#manual-adjustments"></a>
