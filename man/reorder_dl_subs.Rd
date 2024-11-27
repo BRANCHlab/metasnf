@@ -4,10 +4,10 @@
 \alias{reorder_dl_subs}
 \title{Reorder the subjects in a data_list}
 \usage{
-reorder_dl_subs(data_list, ordered_subjects)
+reorder_dl_subs(dl, ordered_subjects)
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{ordered_subjects}{A vector of the subjectkey values in the data_list
 in the desired order of the sorted data_list.}

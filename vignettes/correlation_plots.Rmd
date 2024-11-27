@@ -151,7 +151,7 @@ ap_heatmap4 <- assoc_pval_heatmap(
     out_of_models = list(
         "City" = "city"
     ),
-    data_list = data_list,
+    dl = data_list,
     split_by_domain = TRUE
 )
 

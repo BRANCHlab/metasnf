@@ -4,17 +4,17 @@
 \alias{remove_dl_na}
 \title{Remove NAs from a data_list object}
 \usage{
-remove_dl_na(data_list, return_missing = FALSE)
+remove_dl_na(dl, return_missing = FALSE)
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{return_missing}{If TRUE, function returns a list where the first
 element is the data_list and the second element is a vector of unique IDs
 of patients who were removed during the complete data filtration step.}
 }
 \value{
-data_list A data_list without NAs
+dl A data_list without NAs
 }
 \description{
 Remove NAs from a data_list object

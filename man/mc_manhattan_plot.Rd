@@ -6,8 +6,8 @@
 \usage{
 mc_manhattan_plot(
   extended_solutions_matrix,
-  data_list = NULL,
-  target_list = NULL,
+  dl = NULL,
+  tl = NULL,
   variable_order = NULL,
   neg_log_pval_thresh = 5,
   threshold = NULL,
@@ -24,9 +24,9 @@ mc_manhattan_plot(
 columns containing the values to be plotted. This object is the output of
 \code{extend_solutions()}.}
 
-\item{data_list}{List of dataframes containing data information.}
+\item{dl}{List of dataframes containing data information.}
 
-\item{target_list}{List of dataframes containing target information.}
+\item{tl}{List of dataframes containing target information.}
 
 \item{variable_order}{Order of features to be displayed in the plot.}
 

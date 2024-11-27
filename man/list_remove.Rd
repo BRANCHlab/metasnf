@@ -4,10 +4,10 @@
 \alias{list_remove}
 \title{Remove items from a data_list}
 \usage{
-list_remove(list_object, ...)
+list_remove(dl, ...)
 }
 \arguments{
-\item{list_object}{The data_list containing components to be removed}
+\item{dl}{The data_list containing components to be removed}
 
 \item{...}{Any number of components to remove from the list object, passed as
 strings}

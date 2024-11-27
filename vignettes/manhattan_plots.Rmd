@@ -62,8 +62,8 @@ solutions_matrix <- batch_snf(data_list, settings_matrix)
 # Calculate p-values between cluster solutions and features
 extended_solutions_matrix <- extend_solutions(
     solutions_matrix,
-    data_list = data_list,
-    target_list = target_list,
+    dl = data_list,
+    tl = target_list,
     min_pval = 1e-10 # p-values below 1e-10 will be thresholded to 1e-10
 )
 ```
@@ -139,8 +139,8 @@ rep_solutions <- get_representative_solutions(
 
 mc_manhattan <- mc_manhattan_plot(
     rep_solutions,
-    data_list = data_list,
-    target_list = target_list,
+    dl = data_list,
+    tl = target_list,
     point_size = 3,
     text_size = 12,
     plot_title = "Feature-Meta Cluster Associations",

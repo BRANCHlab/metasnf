@@ -4,13 +4,13 @@
 \alias{prefix_dl_sk}
 \title{Add "subject_" prefix to all UID values in subjectkey column}
 \usage{
-prefix_dl_sk(data_list)
+prefix_dl_sk(dl)
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 }
 \value{
-data_list A data_list without NAs
+dl A data list with UIDs prefixed with the string "subject_"
 }
 \description{
 Add "subject_" prefix to all UID values in subjectkey column

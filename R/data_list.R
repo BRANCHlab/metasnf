@@ -63,7 +63,7 @@
 #' )
 #'
 #' # Explicitly (Name each nested list element):
-#' data_list <- generate_data_list(
+#' dl <- generate_data_list(
 #'     list(
 #'         data = heart_rate_df,
 #'         name = "heart_rate",
@@ -92,7 +92,7 @@
 #' )
 #'
 #' # Compact loading
-#' data_list <- generate_data_list(
+#' dl <- generate_data_list(
 #'     list(heart_rate_df, "heart_rate", "clinical", "continuous"),
 #'     list(personality_test_df, "personality_test", "surveys", "continuous"),
 #'     list(survey_response_df, "survey_response", "surveys", "ordinal"),
@@ -101,7 +101,7 @@
 #' )
 #'
 #' # Printing data_list summaries
-#' summarize_dl(data_list)
+#' summarize_dl(dl)
 #'
 #' # Alternative loading: providing a single list of lists
 #' list_of_lists <- list(
@@ -120,28 +120,28 @@ generate_data_list <- function(...,
                                sort_subjects = TRUE,
                                remove_missing = TRUE,
                                return_missing = FALSE) {
-    # The object that will contain all the data
-    data_list <- list()
+    # Initialize data list
+    dl <- list()
     # The loaded data
     loaded_data <- list(...)
     for (item in loaded_data) {
         if (methods::is(item[[1]], "data.frame")) {
             # A standard loaded data item (a 4-component list)
-            data_list <- append(data_list, list(item))
+            dl <- append(dl, list(item))
         } else if (methods::is(item[[1]], "list")) {
             # A bulk loaded data item (list of 4-component lists)
-            data_list <- append(data_list, item)
+            dl <- append(dl, item)
         }
     }
     # Assign names to the nested list elements
-    named_entries <- data_list |> lapply(
+    named_entries <- dl |> lapply(
         function(x) {
             return(sum(names(x) == ""))
         }
     )
     if (all(named_entries == 0)) {
-        data_list_names <- c("data", "name", "domain", "type")
-        data_list <- lapply(data_list, stats::setNames, data_list_names)
+        dl_names <- c("data", "name", "domain", "type")
+        dl <- lapply(dl, stats::setNames, dl_names)
     } else if (!(all(named_entries == 4))) {
         stop(
             "Please either specify names (i.e., data = ..., name = ...,",
@@ -149,51 +149,49 @@ generate_data_list <- function(...,
             " of them."
         )
     }
-    data_list <- convert_uids(data_list, uid)
+    dl <- convert_uids(dl, uid)
     ###########################################################################
     # Handle missing subject removal
-    ###########################################################################
-    removal_results <- data_list |> remove_dl_na(return_missing = TRUE)
+    removal_results <- dl |> remove_dl_na(return_missing = TRUE)
     if (remove_missing) {
         n_dropped <- length(removal_results$"removed_subjects")
         if (n_dropped > 0) {
             warning(n_dropped, " subject(s) dropped due to incomplete data.")
         }
-        data_list <- removal_results$"data_list"
+        dl <- removal_results$"dl"
     }
     ###########################################################################
-    data_list <- data_list |>
+    dl <- dl |>
         reduce_dl_to_common() |>
         prefix_dl_sk()
     ###########################################################################
     # Sort subjects alphabetically
     if (sort_subjects) {
-        data_list <- data_list |> arrange_dl()
+        dl <- dl |> arrange_dl()
     }
     ###########################################################################
     # Reposition the subjectkey column to the first column in each dataframe
-    ###########################################################################
-    data_list <- dl_uid_first_col(data_list)
+    dl <- dl_uid_first_col(dl)
     ###########################################################################
     # Ensure there are no duplicate feature names
-    ###########################################################################
-    dl_has_duplicates(data_list)
+    dl_has_duplicates(dl)
     ###########################################################################
     # Name the components of the data list
+    names(dl) <- summarize_dl(dl)$"name"
     ###########################################################################
-    names(data_list) <- summarize_dl(data_list)$"name"
+    # Class management
+    class(dl) <- c("data_list", "list")
     ###########################################################################
     # Return output
-    ###########################################################################
     if (return_missing) {
         removed_subjects <- removal_results$"removed_subjects"
         results <- list(
-            data_list = data_list,
+            dl = dl,
             removed_subjects = removed_subjects
         )
         return(results)
     } else {
-        return(data_list)
+        return(dl)
     }
 }
 
@@ -202,23 +200,23 @@ generate_data_list <- function(...,
 #' Column name "subjectkey" is reserved for the unique identifier of subjects.
 #'  This function ensures all dataframes have their UID set as "subjectkey".
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param uid (string) the name of the uid column currently used data
 #'
 #' @return dl_renamed_id data list with 'subjectkey' as UID
 #'
 #' @export
-convert_uids <- function(data_list, uid = NULL) {
+convert_uids <- function(dl, uid = NULL) {
     # Column names of the first dataframe
-    d1 <- data_list[[1]]$"data"
+    d1 <- dl[[1]]$"data"
     d1_cols  <- colnames(d1)
     # Check to see if subjectkey is already present in the first dataframe
     if ("subjectkey" %in% d1_cols) {
         # If subjectkey exists and is a UID, leave the data_list alone
         if (length(unique(d1$"subjectkey")) == length(d1$"subjectkey")) {
             message("Existing `subjectkey` column will be treated as UID.")
-            return(data_list)
+            return(dl)
         } else {
             # If subjectkey exists and is not a UID, raise error
             stop(paste0(
@@ -245,7 +243,7 @@ convert_uids <- function(data_list, uid = NULL) {
         ))
     }
     # Convert the user specified original UID to 'subjectkey'
-    dl_renamed_id <- lapply(data_list,
+    dl_renamed_id <- lapply(dl,
         function(x) {
             colnames(x$"data")[colnames(x$"data") == uid] <- "subjectkey"
             x
@@ -256,18 +254,18 @@ convert_uids <- function(data_list, uid = NULL) {
 
 #' Remove NAs from a data_list object
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param return_missing If TRUE, function returns a list where the first
 #'  element is the data_list and the second element is a vector of unique IDs
 #'  of patients who were removed during the complete data filtration step.
 #'
-#' @return data_list A data_list without NAs
+#' @return dl A data_list without NAs
 #'
 #' @export
-remove_dl_na <- function(data_list, return_missing = FALSE) {
+remove_dl_na <- function(dl, return_missing = FALSE) {
     dl_no_nas <- lapply(
-        data_list,
+        dl,
         function(x) {
             x[[1]] <- stats::na.omit(x[[1]])
             return(x)
@@ -275,7 +273,7 @@ remove_dl_na <- function(data_list, return_missing = FALSE) {
     )
     # Return both the data list and missing patients based on return_missing
     if (return_missing) {
-        all_data <- data_list |> lapply(
+        all_data <- dl |> lapply(
             function(x) {
                 x$"data"
             }
@@ -287,7 +285,7 @@ remove_dl_na <- function(data_list, return_missing = FALSE) {
         complete_indices <- all_subjects %in% complete_subjects
         removed_subjects <- all_subjects[!complete_indices]
         results <- list(
-            data_list = dl_no_nas,
+            dl = dl_no_nas,
             removed_subjects = removed_subjects
         )
         return(results)
@@ -298,14 +296,14 @@ remove_dl_na <- function(data_list, return_missing = FALSE) {
 
 #' Add "subject_" prefix to all UID values in subjectkey column
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
-#' @return data_list A data_list without NAs
+#' @return dl A data list with UIDs prefixed with the string "subject_"
 #'
 #' @export
-prefix_dl_sk <- function(data_list) {
+prefix_dl_sk <- function(dl) {
     dl_prefixed <- lapply(
-        data_list,
+        dl,
         function(x) {
             x[[1]]$"subjectkey" <- paste0("subject_", x[[1]]$"subjectkey")
             return(x)
@@ -319,14 +317,14 @@ prefix_dl_sk <- function(data_list) {
 #' Given a `data_list` object, reduce each nested dataframe to contain only the
 #'  set of subjects that are shared by all nested dataframes
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
-#' @return reduced_data_list The data_list object subsetted only to subjectssnf
+#' @return reduced_dl The data_list object subsetted only to subjectssnf
 #'  shared across all nested dataframes
 #' @export
-reduce_dl_to_common <- function(data_list) {
-    subjects <- lapply(data_list, function(x) x[[1]]$"subjectkey")
-    data_objects <- lapply(data_list, function(x) x[[1]])
+reduce_dl_to_common <- function(dl) {
+    subjects <- lapply(dl, function(x) x[[1]]$"subjectkey")
+    data_objects <- lapply(dl, function(x) x[[1]])
     common_subjects <- Reduce(intersect, subjects)
     filtered_data_objects <- data_objects |>
         lapply(
@@ -334,38 +332,38 @@ reduce_dl_to_common <- function(data_list) {
                 dplyr::filter(x, x$"subjectkey" %in% common_subjects)
             }
         )
-    reduced_data_list <- data_list
-    for (i in seq_along(data_list)) {
-        reduced_data_list[[i]][[1]] <- filtered_data_objects[[i]]
+    reduced_dl <- dl
+    for (i in seq_along(dl)) {
+        reduced_dl[[i]][[1]] <- filtered_data_objects[[i]]
     }
-    return(reduced_data_list)
+    return(reduced_dl)
 }
 
 #' Given a data_list object, sort data elements by subjectkey
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
-#' @return arranged_data_list The arranged data_list object
+#' @return arranged_dl The arranged data_list object
 #'
 #' @export
-arrange_dl <- function(data_list) {
-    data_objects <- lapply(data_list, function(x) x[[1]])
+arrange_dl <- function(dl) {
+    data_objects <- lapply(dl, function(x) x[[1]])
     arranged_data_objects <- data_objects |>
         lapply(
             function(x) {
                 dplyr::arrange(x, x$"subjectkey")
             }
         )
-    arranged_data_list <- data_list
-    for (i in seq_along(data_list)) {
-        arranged_data_list[[i]][[1]] <- arranged_data_objects[[i]]
+    arranged_dl <- dl
+    for (i in seq_along(dl)) {
+        arranged_dl[[i]][[1]] <- arranged_data_objects[[i]]
     }
-    return(arranged_data_list)
+    return(arranged_dl)
 }
 
 #' Summarize a data list
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param scope The level of detail for the summary. Options are:
 #' - "component" (default): One row per component (dataframe) in the data_list.
@@ -375,26 +373,26 @@ arrange_dl <- function(data_list) {
 #' scope == "component").
 #'
 #' @export
-summarize_dl <- function(data_list, scope = "component") {
+summarize_dl <- function(dl, scope = "component") {
     if (scope == "component") {
         dl_summary <- data.frame(
-            name = unlist(lapply(data_list, function(x) x$"name")),
-            type = unlist(lapply(data_list, function(x) x$"type")),
-            domain = unlist(domains(data_list)),
-            length = unlist(lapply(data_list, function(x) dim(x$"data")[1])),
-            width = unlist(lapply(data_list, function(x) dim(x$"data")[2]))
+            name = unlist(lapply(dl, function(x) x$"name")),
+            type = unlist(lapply(dl, function(x) x$"type")),
+            domain = unlist(domains(dl)),
+            length = unlist(lapply(dl, function(x) dim(x$"data")[1])),
+            width = unlist(lapply(dl, function(x) dim(x$"data")[2]))
         )
     } else if (scope == "feature") {
-        dl_df <- collapse_dl(data_list)
+        dl_df <- collapse_dl(dl)
         dl_df <- dl_df[, colnames(dl_df) != "subjectkey"]
-        types <- data_list |>
+        types <- dl |>
             lapply(
                 function(x) {
                     rep(x$"type", ncol(x$"data") - 1)
                 }
             ) |>
             unlist()
-        domains <- data_list |>
+        domains <- dl |>
             lapply(
                 function(x) {
                     rep(x$"domain", ncol(x$"data") - 1)
@@ -414,25 +412,25 @@ summarize_dl <- function(data_list, scope = "component") {
 
 #' Domains
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @return domain_list list of domains
 #'
 #' @export
-domains <- function(data_list) {
-    domain_list <- lapply(data_list, function(x) x$"domain")
+domains <- function(dl) {
+    domain_list <- lapply(dl, function(x) x$"domain")
     return(domain_list)
 }
 
-#' Collapse a data_list into a single dataframe
+#' Collapse a dl into a single dataframe
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @return A "data.frame"-formatted version of the provided data list.
 #'
 #' @export
-collapse_dl <- function(data_list) {
-    data_only <- data_list |> lapply(
+collapse_dl <- function(dl) {
+    data_only <- dl |> lapply(
         function(x) {
             return(x$"data")
         }
@@ -443,28 +441,28 @@ collapse_dl <- function(data_list) {
 
 #' Variable-level summary of a data_list
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @return variable_level_summary A dataframe containing the name, type, and
-#' domain of every variable in a data_list.
+#' domain of every variable in a data list.
 #'
 #' @export
-dl_variable_summary <- function(data_list) {
-    types <- data_list |>
+dl_variable_summary <- function(dl) {
+    types <- dl |>
         lapply(
             function(x) {
                 rep(x$"type", ncol(x$"data") - 1)
             }
         ) |>
         unlist()
-    domains <- data_list |>
+    domains <- dl |>
         lapply(
             function(x) {
                 rep(x$"domain", ncol(x$"data") - 1)
             }
         ) |>
         unlist()
-    merged_df <- data_list |>
+    merged_df <- dl |>
         collapse_dl() |>
         data.frame()
     var_names <- colnames(merged_df[, colnames(merged_df) != "subjectkey"])
@@ -478,7 +476,7 @@ dl_variable_summary <- function(data_list) {
 
 #' Reorder the subjects in a data_list
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param ordered_subjects A vector of the subjectkey values in the data_list
 #' in the desired order of the sorted data_list.
@@ -486,8 +484,8 @@ dl_variable_summary <- function(data_list) {
 #' @return A data list ("list"-class object) with reordered observations.
 #'
 #' @export
-reorder_dl_subs <- function(data_list, ordered_subjects) {
-    data_list <- data_list |>
+reorder_dl_subs <- function(dl, ordered_subjects) {
+    dl <- dl |>
         lapply(
             function(x) {
                 index <- match(x$"data"$"subjectkey", ordered_subjects)
@@ -495,12 +493,12 @@ reorder_dl_subs <- function(data_list, ordered_subjects) {
                 return(x)
             }
         )
-    return(data_list)
+    return(dl)
 }
 
 #' Rename features in a data_list
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param name_mapping A named vector where the values are the features to be
 #' renamed and the names are the new names for those features.
@@ -512,33 +510,33 @@ reorder_dl_subs <- function(data_list, ordered_subjects) {
 #'
 #' library(metasnf)
 #'
-#' data_list <- generate_data_list(
+#' dl <- generate_data_list(
 #'     list(pubertal, "pubertal_status", "demographics", "continuous"),
 #'     list(anxiety, "anxiety", "behaviour", "ordinal"),
 #'     list(depress, "depressed", "behaviour", "ordinal"),
 #'     uid = "unique_id"
 #' )
 #'
-#' summarize_dl(data_list, "feature")
+#' summarize_dl(dl, "feature")
 #'
 #' name_changes <- c(
 #'     "anxiety_score" = "cbcl_anxiety_r",
 #'     "depression_score" = "cbcl_depress_r"
 #' )
 #'
-#' data_list <- rename_dl(data_list, name_changes)
+#' dl <- rename_dl(dl, name_changes)
 #'
-#' summarize_dl(data_list, "feature")
-rename_dl <- function(data_list, name_mapping) {
-    dl_features <- summarize_dl(data_list, "feature")$"name"
+#' summarize_dl(dl, "feature")
+rename_dl <- function(dl, name_mapping) {
+    dl_features <- summarize_dl(dl, "feature")$"name"
     mismatches <- which(!name_mapping %in% dl_features)
     if (length(mismatches) > 0) {
         warning(
             "The following feature names were not found in the provided",
-            " data_list: ", name_mapping[mismatches]
+            " dl: ", name_mapping[mismatches]
         )
     }
-    data_list <- data_list |> lapply(
+    dl <- dl |> lapply(
         function(x) {
             old_colnames <- colnames(x$"data")
             new_colnames <- old_colnames |> lapply(
@@ -556,12 +554,12 @@ rename_dl <- function(data_list, name_mapping) {
             return(x)
         }
     )
-    return(data_list)
+    return(dl)
 }
 
 #' Extract subjects from a data_list
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param prefix If TRUE, preserves the "subject_" prefix added to UIDs when
 #' creating a data_list.
@@ -569,8 +567,8 @@ rename_dl <- function(data_list, name_mapping) {
 #' @return A character vector of the UID labels contained in a data list.
 #'
 #' @export
-get_dl_subjects <- function(data_list, prefix = FALSE) {
-    dl_df <- collapse_dl(data_list)
+get_dl_subjects <- function(dl, prefix = FALSE) {
+    dl_df <- collapse_dl(dl)
     subjects <- dl_df$"subjectkey"
     if (prefix) {
         return(subjects)
@@ -581,15 +579,15 @@ get_dl_subjects <- function(data_list, prefix = FALSE) {
 
 #' Make the subjectkey UID columns of a data_list first
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @return A data list ("list"-class object) in which each data-subcomponent
 #' has "subjectkey" positioned as its first column.
 #'
 #' @export
-dl_uid_first_col <- function(data_list) {
-    data_list <- lapply(
-        data_list,
+dl_uid_first_col <- function(dl) {
+    dl <- lapply(
+        dl,
         function(x) {
             x$"data" <- x$"data" |>
                 dplyr::select(
@@ -607,20 +605,20 @@ dl_uid_first_col <- function(data_list) {
 #' observations. To instead merge two data_lists that have the same
 #' observations but different components, simply use `c()`.
 #'
-#' @param data_list1 The first data_list to merge.
+#' @param dl_1 The first data_list to merge.
 #'
-#' @param data_list2 The second data_list to merge.
+#' @param dl_2 The second data_list to merge.
 #'
 #' @return A data list ("list"-class object) containing the observations of
 #' both provided data lists.
 #'
 #' @export
-merge_data_lists <- function(data_list1, data_list2) {
-    dl1_names <- summarize_dl(data_list1)$"name"
-    dl2_names <- summarize_dl(data_list2)$"name"
-    names(data_list1) <- dl1_names
-    names(data_list2) <- dl2_names
-    if (!identical(sort(dl1_names), sort(dl2_names))) {
+merge_dls <- function(dl_1, dl_2) {
+    dl_1_names <- summarize_dl(dl_1)$"name"
+    dl_2_names <- summarize_dl(dl_2)$"name"
+    names(dl_1) <- dl_1_names
+    names(dl_2) <- dl_2_names
+    if (!identical(sort(dl_1_names), sort(dl_2_names))) {
         stop(
             "The two data lists must have identical components. Check",
             " `summarize_dl()` on each data list to make sure the components",
@@ -628,29 +626,29 @@ merge_data_lists <- function(data_list1, data_list2) {
         )
     }
     merged_data_list <- lapply(
-        dl1_names,
+        dl_1_names,
         function(x) {
-            data_list1[[x]]$"data" <- dplyr::bind_rows(
-                data_list1[[x]]$"data",
-                data_list2[[x]]$"data"
+            dl_1[[x]]$"data" <- dplyr::bind_rows(
+                dl_1[[x]]$"data",
+                dl_2[[x]]$"data"
             )
-            return(data_list1[[x]])
+            return(dl_1[[x]])
         }
     )
-    names(merged_data_list) <- dl1_names
+    names(merged_data_list) <- dl_1_names
     return(merged_data_list)
 }
 
 #' Check if data list contains any duplicate features
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @return Doesn't return any value. Raises warning if there are features
 #' with duplicate names in a generated data list.
 #'
 #' @export
-dl_has_duplicates <- function(data_list) {
-    features <- data_list |> lapply(
+dl_has_duplicates <- function(dl) {
+    features <- dl |> lapply(
         function(x) {
             return(colnames(x$"data")[-1])
         }
@@ -660,7 +658,7 @@ dl_has_duplicates <- function(data_list) {
     duplicates <- unique(features[duplicated(features)])
     if (length(duplicates) > 0) {
         warning(
-            "Generated data_list has duplicate feature names, which can",
+            "Generated data list has duplicate feature names, which can",
             " cause problems with downstream analyses."
         )
     }

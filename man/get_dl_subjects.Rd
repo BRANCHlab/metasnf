@@ -4,10 +4,10 @@
 \alias{get_dl_subjects}
 \title{Extract subjects from a data_list}
 \usage{
-get_dl_subjects(data_list, prefix = FALSE)
+get_dl_subjects(dl, prefix = FALSE)
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{prefix}{If TRUE, preserves the "subject_" prefix added to UIDs when
 creating a data_list.}

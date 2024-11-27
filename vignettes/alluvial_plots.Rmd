@@ -92,7 +92,7 @@ Then, we can either generate an alluvial plot covering our similarity matrix ove
 alluvial_cluster_plot(
     cluster_sequence = cluster_sequence,
     similarity_matrix = similarity_matrix,
-    data_list = data_list,
+    dl = data_list,
     key_outcome = "gender", # the name of the feature of interest
     key_label = "Gender", # how the feature of interest should be displayed
     extra_outcomes = "diagnosis", # more features to plot but not colour by

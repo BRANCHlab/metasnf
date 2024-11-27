@@ -129,7 +129,7 @@ annotated_sm_hm <- similarity_matrix_heatmap(
     cluster_solution = cluster_solution,
     scale_diag = "mean",
     log_graph = TRUE,
-    data_list = data_list,
+    dl = data_list,
     left_hm = list(
         "Diagnosis" = "diagnosis"
     ),

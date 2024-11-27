@@ -4,10 +4,10 @@
 \alias{summarize_dl}
 \title{Summarize a data list}
 \usage{
-summarize_dl(data_list, scope = "component")
+summarize_dl(dl, scope = "component")
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{scope}{The level of detail for the summary. Options are:
 \itemize{

@@ -140,7 +140,7 @@ Or as a heatmap:
 # cluster membership
 cocluster_heatmap(
     cocluster_dfs[[1]],
-    data_list = data_list,
+    dl = data_list,
     top_hm = list(
         "Income" = "household_income",
         "Pubertal Status" = "pubertal_status"

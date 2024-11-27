@@ -4,10 +4,10 @@
 \alias{linear_adjust}
 \title{Linearly correct data_list by features with unwanted signal}
 \usage{
-linear_adjust(data_list, unwanted_signal_list, sig_digs = NULL)
+linear_adjust(dl, unwanted_signal_list, sig_digs = NULL)
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{unwanted_signal_list}{A data_list of categorical features that should
 have their mean differences removed in the first data_list.}

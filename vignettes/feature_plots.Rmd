@@ -52,7 +52,7 @@ Note, the row you pick could come directly from a `solutions_matrix`, but could 
 ```{r}
 plot_list <- auto_plot(
     solutions_matrix_row = sm_row,
-    data_list = data_list
+    dl = data_list
 )
 
 names(plot_list)

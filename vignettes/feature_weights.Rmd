@@ -89,7 +89,7 @@ Once you're happy with your weights_matrix, you can pass it into batch_snf:
 
 ```{r eval = FALSE}
 batch_snf(
-    data_list = data_list,
+    dl = data_list,
     settings_matrix = settings_matrix,
     weights_matrix = weights_matrix
 )

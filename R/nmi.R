@@ -1,6 +1,6 @@
 #' Calculate feature NMIs for a data_list and a derived solutions_matrix
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #' Use the same value as was used in the original call to `batch_snf()`.
 #'
 #' @param solutions_matrix Result of `batch_snf` storing cluster solutions and
@@ -34,7 +34,7 @@
 #' feature-solution combination.
 #'
 #' @export
-batch_nmi <- function(data_list,
+batch_nmi <- function(dl,
                       solutions_matrix,
                       clust_algs_list = NULL,
                       distance_metrics_list = NULL,
@@ -45,7 +45,7 @@ batch_nmi <- function(data_list,
     ###########################################################################
     # Dataframe storing all the features in the data list
     ###########################################################################
-    dl_df <- collapse_dl(data_list)
+    dl_df <- collapse_dl(dl)
     ###########################################################################
     # Extracting features in the data list
     ###########################################################################
@@ -86,7 +86,7 @@ batch_nmi <- function(data_list,
         # Reduced data list containing only the current feature
         #######################################################################
         feature_dl <- lapply(
-            data_list,
+            dl,
             function(component) {
                 if (feature %in% colnames(component$"data")) {
                     component$"data" <- component$"data" |>
@@ -133,7 +133,7 @@ batch_nmi <- function(data_list,
                 # Aliasing to avoiding excess column length
                 asn <- automatic_standard_normalize
                 this_solutions_matrix <- batch_snf(
-                    data_list = feature_dl,
+                    dl = feature_dl,
                     settings_matrix = this_settings_matrix,
                     clust_algs_list = clust_algs_list,
                     distance_metrics_list = distance_metrics_list,

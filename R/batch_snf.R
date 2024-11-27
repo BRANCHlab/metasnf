@@ -5,7 +5,7 @@
 #' (see ?generate_data_list), run repeated complete SNF pipelines to generate
 #' a broad space of post-SNF cluster solutions.
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param settings_matrix A data.frame where each row completely defines an SNF
 #' pipeline transforming individual input dataframes into a final cluster
@@ -71,7 +71,7 @@
 #' in the output.
 #'
 #' @export
-batch_snf <- function(data_list,
+batch_snf <- function(dl,
                       settings_matrix,
                       processes = 1,
                       return_similarity_matrices = FALSE,
@@ -121,7 +121,7 @@ batch_snf <- function(data_list,
     # settings matrix using the add_settings_matrix_rows function with an
     # invalid k (a function that doesn't require users to supply the data).
     max_k <- max(settings_matrix$"k")
-    n_patients <- unique(summarize_dl(data_list)$"length")
+    n_patients <- unique(summarize_dl(dl)$"length")
     # Ensure that the maximum k value doesn't exceed the number of subjects
     if (max_k >= n_patients) {
         stop(
@@ -195,7 +195,7 @@ batch_snf <- function(data_list,
     ###########################################################################
     if (is.null(weights_matrix)) {
         weights_matrix <- generate_weights_matrix(
-            data_list,
+            dl,
             nrow = nrow(settings_matrix)
         )
     } else {
@@ -225,7 +225,7 @@ batch_snf <- function(data_list,
         # Use all available cores
         if (processes == "max") {
             solutions_matrix <- parallel_batch_snf(
-                data_list = data_list,
+                dl = dl,
                 distance_metrics_list = distance_metrics_list,
                 clust_algs_list = clust_algs_list,
                 settings_matrix = settings_matrix,
@@ -248,7 +248,7 @@ batch_snf <- function(data_list,
                 processes <- available_cores
             }
             solutions_matrix <- parallel_batch_snf(
-                data_list = data_list,
+                dl = dl,
                 distance_metrics_list = distance_metrics_list,
                 clust_algs_list = clust_algs_list,
                 settings_matrix = settings_matrix,
@@ -291,7 +291,7 @@ batch_snf <- function(data_list,
     if (!suppress_clustering) {
         solutions_matrix <- add_columns(
             df = settings_matrix,
-            newcols = data_list[[1]]$"data"$"subjectkey", # one col/patient
+            newcols = dl[[1]]$"data"$"subjectkey", # one col/patient
             fill = 0 # populate the new column with 0s by default
         )
         # 5b. solutions_matrix gets one new column to store the cluster that
@@ -315,7 +315,7 @@ batch_snf <- function(data_list,
         start_time <- Sys.time() # used to estimate time to completion
         settings_matrix_row <- settings_matrix[i, ]
         weights_row <- weights_matrix[i, , drop = FALSE]
-        current_data_list <- drop_inputs(settings_matrix_row, data_list)
+        current_dl <- drop_inputs(settings_matrix_row, dl)
         # Apply the current row's SNF scheme
         current_snf_scheme <- dplyr::case_when(
             settings_matrix_row$"snf_scheme" == 1 ~ "individual",
@@ -337,7 +337,7 @@ batch_snf <- function(data_list,
         mix_dist_fn <- distance_metrics_list$"mixed_distance"[[mix_dist]]
         # Run SNF
         fused_network <- snf_step(
-            current_data_list,
+            current_dl,
             current_snf_scheme,
             k = k,
             alpha = alpha,
@@ -428,27 +428,27 @@ batch_snf <- function(data_list,
 #' inputs
 #'
 #' @param settings_matrix_row Row of a settings matrix.
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @return A data list (class "list") in which any component with a
 #' corresponding 0 value in the provided settings matrix row has been removed.
 #'
 #' @export
-drop_inputs <- function(settings_matrix_row, data_list) {
+drop_inputs <- function(settings_matrix_row, dl) {
     # Dataframe just of the inclusion features
     inc_df <- settings_matrix_row |>
         dplyr::select(dplyr::starts_with("inc"))
     # The subset of columns that are in 'keep' (1) mode
     keepcols <- colnames(inc_df)[inc_df[1, ] == 1]
     # The list of data_list elements that are to be selected
-    in_keeps_list <- lapply(data_list,
+    in_keeps_list <- lapply(dl,
         function(x) {
             paste0("inc_", x$"name") %in% keepcols
         }
     ) # Converting to a logical type to do the selection
     in_keeps_log <- c(unlist(in_keeps_list))
     # The selection
-    selected_dl <- data_list[in_keeps_log]
+    selected_dl <- dl[in_keeps_log]
     reduced_selected_dl <- reduce_dl_to_common(selected_dl)
     return(reduced_selected_dl)
 }
@@ -520,7 +520,7 @@ get_dist_matrix <- function(df,
 
 #' Convert a data list to a similarity matrix through a variety of SNF schemes
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param scheme Which SNF system to use to achieve the final fused network.
 #'
@@ -546,7 +546,7 @@ get_dist_matrix <- function(df,
 #' generated by SNF.
 #'
 #' @export
-snf_step <- function(data_list,
+snf_step <- function(dl,
                      scheme,
                      k = 20,
                      alpha = 0.5,
@@ -567,7 +567,7 @@ snf_step <- function(data_list,
     # The twostep scheme
     if (scheme %in% c("individual", 1)) {
         fused_network <- individual(
-            data_list,
+            dl,
             cont_dist_fn = cont_dist_fn,
             disc_dist_fn = disc_dist_fn,
             ord_dist_fn = ord_dist_fn,
@@ -580,7 +580,7 @@ snf_step <- function(data_list,
         )
     } else if (scheme %in% c("domain", 2)) {
         fused_network <- domain_merge(
-            data_list,
+            dl,
             cont_dist_fn = cont_dist_fn,
             disc_dist_fn = disc_dist_fn,
             ord_dist_fn = ord_dist_fn,
@@ -593,7 +593,7 @@ snf_step <- function(data_list,
         )
     } else if (scheme %in% c("twostep", 3)) {
         fused_network <- two_step_merge(
-            data_list,
+            dl,
             k = k,
             alpha = alpha,
             t = t,
@@ -618,7 +618,7 @@ snf_step <- function(data_list,
 #' Individual dataframes into individual similarity matrices into one fused
 #' network per domain into one final fused network.
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param k k hyperparameter.
 #'
@@ -642,7 +642,7 @@ snf_step <- function(data_list,
 #' generated by SNF.
 #'
 #' @export
-two_step_merge <- function(data_list,
+two_step_merge <- function(dl,
                            k = 20,
                            alpha = 0.5,
                            t = 20,
@@ -653,7 +653,7 @@ two_step_merge <- function(data_list,
                            mix_dist_fn,
                            weights_row) {
     dist_list <- lapply(
-        data_list,
+        dl,
         function(x) {
             get_dist_matrix(
                 df = x$"data",
@@ -673,7 +673,7 @@ two_step_merge <- function(data_list,
             SNFtool::affinityMatrix(x, K = k, sigma = alpha)
         }
     )
-    similarity_list <- data_list
+    similarity_list <- dl
     for (i in seq_along(similarity_list)) {
         similarity_list[[i]]$"data" <- sim_list[[i]]
     }
@@ -719,7 +719,7 @@ two_step_merge <- function(data_list,
 #' Given a data_list, returns a new data_list where all data objects of
 #' a particlar domain have been concatenated.
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param k k hyperparameter.
 #'
@@ -743,7 +743,7 @@ two_step_merge <- function(data_list,
 #' generated by SNF.
 #'
 #' @export
-domain_merge <- function(data_list,
+domain_merge <- function(dl,
                          cont_dist_fn,
                          disc_dist_fn,
                          ord_dist_fn,
@@ -755,10 +755,10 @@ domain_merge <- function(data_list,
                          t) {
     # list to store all the possible values
     merged_dl <- list()
-    for (i in seq_along(data_list)) {
-        current_domain <- data_list[[i]]$"domain"
-        current_data <- data_list[[i]]$"data"
-        current_type <- data_list[[i]]$"type"
+    for (i in seq_along(dl)) {
+        current_domain <- dl[[i]]$"domain"
+        current_data <- dl[[i]]$"data"
+        current_type <- dl[[i]]$"type"
         merged_dl_domains <- summarize_dl(merged_dl)$"domain" |> unique()
         if (current_domain %in% merged_dl_domains) {
             # the index of the new data_list that already has the domain of the
@@ -780,7 +780,7 @@ domain_merge <- function(data_list,
             merged_dl[[existing_pos]]$"data" <- new_data
             merged_dl[[existing_pos]]$"type" <- new_type
         } else {
-            merged_dl[[length(merged_dl) + 1]] <- data_list[[i]]
+            merged_dl[[length(merged_dl) + 1]] <- dl[[i]]
         }
     }
     merged_dl <- merged_dl |>
@@ -830,7 +830,7 @@ domain_merge <- function(data_list,
 #' The "vanilla" scheme - does distance matrix conversions of each input
 #' dataframe in a list and
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param k k hyperparameter.
 #'
@@ -854,7 +854,7 @@ domain_merge <- function(data_list,
 #' generated by SNF.
 #'
 #' @export
-individual <- function(data_list,
+individual <- function(dl,
                        cont_dist_fn,
                        disc_dist_fn,
                        ord_dist_fn,
@@ -865,7 +865,7 @@ individual <- function(data_list,
                        alpha,
                        t) {
     dist_list <- lapply(
-        data_list,
+        dl,
         function(x) {
             get_dist_matrix(
                 df = x$"data",

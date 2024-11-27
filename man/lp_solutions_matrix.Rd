@@ -6,7 +6,7 @@
 \usage{
 lp_solutions_matrix(
   train_solutions_matrix,
-  full_data_list,
+  full_dl,
   distance_metrics_list = NULL,
   weights_matrix = NULL,
   verbose = FALSE
@@ -19,7 +19,7 @@ top or top few meaningful chosen clustering solutions. It is advisable to
 use only a small subset of rows from the original training solutions_matrix
 for label propagation.}
 
-\item{full_data_list}{A data_list containing subjects from both the training
+\item{full_dl}{A data_list containing subjects from both the training
 and testing sets.}
 
 \item{distance_metrics_list}{Like above - the distance_metrics_list (if any)

@@ -101,7 +101,7 @@ ari_mc_hm <- adjusted_rand_index_heatmap(
 # Calculate how features are distributed across solutions
 extended_solutions_matrix <- extend_solutions(
     solutions_matrix,
-    data_list = data_list
+    dl = data_list
 )
 
 # Visualize influence of imputation on meta clustering results

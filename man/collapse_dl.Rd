@@ -2,16 +2,16 @@
 % Please edit documentation in R/data_list.R
 \name{collapse_dl}
 \alias{collapse_dl}
-\title{Collapse a data_list into a single dataframe}
+\title{Collapse a dl into a single dataframe}
 \usage{
-collapse_dl(data_list)
+collapse_dl(dl)
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 }
 \value{
 A "data.frame"-formatted version of the provided data list.
 }
 \description{
-Collapse a data_list into a single dataframe
+Collapse a dl into a single dataframe
 }

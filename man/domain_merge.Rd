@@ -5,7 +5,7 @@
 \title{SNF scheme: Domain merge}
 \usage{
 domain_merge(
-  data_list,
+  dl,
   cont_dist_fn,
   disc_dist_fn,
   ord_dist_fn,
@@ -18,7 +18,7 @@ domain_merge(
 )
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{cont_dist_fn}{distance metric function for continuous data.}
 

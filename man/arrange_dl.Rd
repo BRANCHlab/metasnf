@@ -4,13 +4,13 @@
 \alias{arrange_dl}
 \title{Given a data_list object, sort data elements by subjectkey}
 \usage{
-arrange_dl(data_list)
+arrange_dl(dl)
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 }
 \value{
-arranged_data_list The arranged data_list object
+arranged_dl The arranged data_list object
 }
 \description{
 Given a data_list object, sort data elements by subjectkey

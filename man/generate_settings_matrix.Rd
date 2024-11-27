@@ -5,11 +5,11 @@
 \title{Build a settings matrix}
 \usage{
 generate_settings_matrix(
-  data_list,
+  dl,
   seed = NULL,
   nrows = 0,
   min_removed_inputs = 0,
-  max_removed_inputs = length(data_list) - 1,
+  max_removed_inputs = length(dl) - 1,
   dropout_dist = "exponential",
   min_alpha = NULL,
   max_alpha = NULL,
@@ -34,7 +34,7 @@ generate_settings_matrix(
 )
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{seed}{(DEPRECATED) set the global seed. To ensure reproducible
 settings matrices are generated, manually call \code{set.seed()} prior to

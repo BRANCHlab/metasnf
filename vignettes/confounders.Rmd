@@ -165,7 +165,7 @@ data_list <- generate_data_list(
 )
 
 settings_matrix <- generate_settings_matrix(
-    data_list = data_list,
+    dl = data_list,
     nrow = 1,
     possible_snf_schemes = 1,
     k_values = 20,

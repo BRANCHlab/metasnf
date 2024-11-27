@@ -6,9 +6,9 @@
 \usage{
 auto_plot(
   solutions_matrix_row = NULL,
-  data_list = NULL,
+  dl = NULL,
   cluster_df = NULL,
-  target_list = NULL,
+  tl = NULL,
   return_plots = TRUE,
   save = NULL,
   jitter_width = 6,
@@ -21,12 +21,12 @@ auto_plot(
 \arguments{
 \item{solutions_matrix_row}{A single row of a solutions matrix.}
 
-\item{data_list}{A data_list containing data to plot.}
+\item{dl}{A data_list containing data to plot.}
 
 \item{cluster_df}{Directly provide a cluster_df rather than a solutions
 matrix. Useful if plotting data from label propagated results.}
 
-\item{target_list}{A target_list containing data to plot.}
+\item{tl}{A target_list containing data to plot.}
 
 \item{return_plots}{If \code{TRUE}, the function will return a list of plots.
 If FALSE, the function will instead return the full data frame used for
@@ -54,6 +54,6 @@ format.
 }
 \description{
 Given a single row of a solutions matrix and data provided through
-\code{data_list} and/or \code{target_list} arguments, this function will
+\code{dl} and/or \code{tl} arguments, this function will
 return a series of bar and/or jitter plots based on feature types.
 }

@@ -5,7 +5,7 @@
 \title{Two step SNF}
 \usage{
 two_step_merge(
-  data_list,
+  dl,
   k = 20,
   alpha = 0.5,
   t = 20,
@@ -18,7 +18,7 @@ two_step_merge(
 )
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{k}{k hyperparameter.}
 

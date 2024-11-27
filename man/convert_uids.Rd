@@ -4,10 +4,10 @@
 \alias{convert_uids}
 \title{Convert unique identifiers of data_list to 'subjectkey'}
 \usage{
-convert_uids(data_list, uid = NULL)
+convert_uids(dl, uid = NULL)
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{uid}{(string) the name of the uid column currently used data}
 }

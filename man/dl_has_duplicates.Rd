@@ -4,10 +4,10 @@
 \alias{dl_has_duplicates}
 \title{Check if data list contains any duplicate features}
 \usage{
-dl_has_duplicates(data_list)
+dl_has_duplicates(dl)
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 }
 \value{
 Doesn't return any value. Raises warning if there are features

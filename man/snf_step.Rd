@@ -5,7 +5,7 @@
 \title{Convert a data list to a similarity matrix through a variety of SNF schemes}
 \usage{
 snf_step(
-  data_list,
+  dl,
   scheme,
   k = 20,
   alpha = 0.5,
@@ -19,7 +19,7 @@ snf_step(
 )
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{scheme}{Which SNF system to use to achieve the final fused network.}
 

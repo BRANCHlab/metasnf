@@ -5,7 +5,7 @@
 #' of the linear model relating the numeric features in the first data_list
 #' to the unwanted signal features in the second data list.
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param unwanted_signal_list A data_list of categorical features that should
 #' have their mean differences removed in the first data_list.
@@ -17,14 +17,14 @@
 #' the unwanted_signal_list.
 #'
 #' @export
-linear_adjust <- function(data_list, unwanted_signal_list, sig_digs = NULL) {
+linear_adjust <- function(dl, unwanted_signal_list, sig_digs = NULL) {
     ###########################################################################
     # 1. Check to ensure the patients match
     ###########################################################################
-    dl_df <- collapse_dl(data_list)
+    dl_df <- collapse_dl(dl)
     usl_df <- collapse_dl(unwanted_signal_list)
     if (!identical(dl_df$"subjectkey", usl_df$"subjectkey")) {
-        stop("data_list and unwanted_signal_list do not contain same patients")
+        stop("dl and unwanted_signal_list do not contain same patients")
     }
     ###########################################################################
     # 2. Adjustment
@@ -36,7 +36,7 @@ linear_adjust <- function(data_list, unwanted_signal_list, sig_digs = NULL) {
     rhs <- paste0(unwanted_vars, collapse = " + ")
     # Outer lapply operates on each component of the data_list
     numeric_vectors <- c("continuous", "discrete", "numeric", "ordinal")
-    adjusted_data_list <- data_list |> lapply(
+    adjusted_dl <- dl |> lapply(
         function(x) {
             if (x$"type" %in% numeric_vectors) {
                 non_sub_cols <- colnames(x$"data") != "subjectkey"
@@ -56,5 +56,5 @@ linear_adjust <- function(data_list, unwanted_signal_list, sig_digs = NULL) {
             return(x)
         }
     )
-    return(adjusted_data_list)
+    return(adjusted_dl)
 }

@@ -21,7 +21,7 @@
 #'
 #' @param show_column_names Parameter for ComplexHeatmap::Heatmap.
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param data A dataframe containing elements requested for annotation.
 #'
@@ -73,7 +73,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
                                       cluster_columns = FALSE,
                                       show_row_names = FALSE,
                                       show_column_names = FALSE,
-                                      data_list = NULL,
+                                      dl = NULL,
                                       data = NULL,
                                       left_bar = NULL,
                                       right_bar = NULL,
@@ -94,7 +94,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
     ###########################################################################
     # Assemble any provided data
     ###########################################################################
-    data <- assemble_data(data, data_list)
+    data <- assemble_data(data, dl)
     ###########################################################################
     # Ensure that annotations aren't being requested when data isn't given
     ###########################################################################
@@ -317,7 +317,7 @@ adjusted_rand_index_heatmap <- function(aris,
 #' columns of the correlation_matrix. Will be used to "slice" the heatmap into
 #' visually separated sections.
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param significance_stars If TRUE (default), plots significance stars on
 #' heatmap cells
@@ -343,7 +343,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
                                annotation_colours = NULL,
                                labels_colour = NULL,
                                split_by_domain = FALSE,
-                               data_list = NULL,
+                               dl = NULL,
                                significance_stars = TRUE,
                                slice_font_size = 8,
                                ...) {
@@ -467,12 +467,12 @@ assoc_pval_heatmap <- function(correlation_matrix,
         args_list$"cell_fun" <- cell_significance_fn(correlation_matrix)
     }
     if (split_by_domain) {
-        if (is.null(data_list)) {
+        if (is.null(dl)) {
             stop(
                 "You must provide a data_list to split the heatmap by domain."
             )
         }
-        dl_var_summary <- dl_variable_summary(data_list)
+        dl_var_summary <- dl_variable_summary(dl)
         keep_vars <- dl_var_summary$"name" %in% colnames(correlation_matrix)
         dl_var_summary <- dl_var_summary[keep_vars, ]
         args_list$"cluster_rows" <- FALSE
@@ -844,24 +844,24 @@ cell_significance_fn <- function(data) {
 #'
 #' @param data A dataframe.
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @return A class "data.frame" object containing all the features of the
 #' provided data frame and/or data list.
 #'
 #' @export
-assemble_data <- function(data, data_list) {
-    if (!is.null(data_list)) {
-        merged_df <- collapse_dl(data_list)
+assemble_data <- function(data, dl) {
+    if (!is.null(dl)) {
+        merged_df <- collapse_dl(dl)
     }
     if (is.null(data)) {
-        if (!is.null(data_list)) {
+        if (!is.null(dl)) {
             # User didn't provide data, but did provide data list
             data <- merged_df
         }
     } else {
-        if (!is.null(data_list)) {
-            # User provided both the data and the data_list, so merge them
+        if (!is.null(dl)) {
+            # User provided both the data and the data list, so merge them
             data <- dplyr::inner_join(data, merged_df, by = "subjectkey")
         }
     }

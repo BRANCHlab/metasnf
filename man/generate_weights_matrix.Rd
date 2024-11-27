@@ -4,10 +4,10 @@
 \alias{generate_weights_matrix}
 \title{Generate a matrix to store feature weights}
 \usage{
-generate_weights_matrix(data_list = NULL, nrow = 1, fill = "ones")
+generate_weights_matrix(dl = NULL, nrow = 1, fill = "ones")
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{nrow}{Number of rows to generate the template weights matrix for.}
 

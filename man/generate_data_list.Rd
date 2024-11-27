@@ -79,7 +79,7 @@ city_df <- data.frame(
 )
 
 # Explicitly (Name each nested list element):
-data_list <- generate_data_list(
+dl <- generate_data_list(
     list(
         data = heart_rate_df,
         name = "heart_rate",
@@ -108,7 +108,7 @@ data_list <- generate_data_list(
 )
 
 # Compact loading
-data_list <- generate_data_list(
+dl <- generate_data_list(
     list(heart_rate_df, "heart_rate", "clinical", "continuous"),
     list(personality_test_df, "personality_test", "surveys", "continuous"),
     list(survey_response_df, "survey_response", "surveys", "ordinal"),
@@ -117,7 +117,7 @@ data_list <- generate_data_list(
 )
 
 # Printing data_list summaries
-summarize_dl(data_list)
+summarize_dl(dl)
 
 # Alternative loading: providing a single list of lists
 list_of_lists <- list(

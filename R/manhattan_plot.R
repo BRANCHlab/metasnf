@@ -1,6 +1,6 @@
 #' Manhattan plot of feature-feature associaiton p-values
 #'
-#' @param data_list List of dataframes containing data information.
+#' @param dl List of dataframes containing data information.
 #'
 #' @param key_var Feature for which the association p-values of all other
 #' features are plotted.
@@ -24,7 +24,7 @@
 #' p-values of features against one key feature in a data list.
 #'
 #' @export
-var_manhattan_plot <- function(data_list,
+var_manhattan_plot <- function(dl,
                                key_var,
                                neg_log_pval_thresh = 5,
                                threshold = NULL,
@@ -33,7 +33,7 @@ var_manhattan_plot <- function(data_list,
                                plot_title = NULL,
                                hide_x_labels = FALSE,
                                bonferroni_line = FALSE) {
-    pval_matrix <- calc_assoc_pval_matrix(data_list)
+    pval_matrix <- calc_assoc_pval_matrix(dl)
     ###########################################################################
     # Suppress warnings related to non-standard evaluation
     ###########################################################################
@@ -57,7 +57,7 @@ var_manhattan_plot <- function(data_list,
     )
     summary_data <- dplyr::inner_join(
         pval_df,
-        dl_variable_summary(data_list),
+        dl_variable_summary(dl),
         by = dplyr::join_by("variable" == "name")
     )
     summary_data <- dplyr::arrange(summary_data, domain)
@@ -131,9 +131,9 @@ var_manhattan_plot <- function(data_list,
 #' columns containing the values to be plotted. This object is the output of
 #' `extend_solutions()`.
 #'
-#' @param data_list List of dataframes containing data information.
+#' @param dl List of dataframes containing data information.
 #'
-#' @param target_list List of dataframes containing target information.
+#' @param tl List of dataframes containing target information.
 #'
 #' @param variable_order Order of features to be displayed in the plot.
 #'
@@ -160,8 +160,8 @@ var_manhattan_plot <- function(data_list,
 #'
 #' @export
 mc_manhattan_plot <- function(extended_solutions_matrix,
-                              data_list = NULL,
-                              target_list = NULL,
+                              dl = NULL,
+                              tl = NULL,
                               variable_order = NULL,
                               neg_log_pval_thresh = 5,
                               threshold = NULL,
@@ -174,7 +174,7 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
     ###########################################################################
     # Ensure one of data_list or target_list is not NULL
     ###########################################################################
-    if (is.null(data_list) && is.null(target_list)) {
+    if (is.null(dl) && is.null(tl)) {
         stop("At least one of data_list or target_list must be provided.")
     }
     ###########################################################################
@@ -221,20 +221,20 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
     ###########################################################################
     # Re-assign names to the data list and target list
     ###########################################################################
-    if (!is.null(target_list)) {
-        data_list_renamed <- data_list |> lapply(
+    if (!is.null(tl)) {
+        dl_renamed <- dl |> lapply(
             function(x) {
                 x$"domain" <- paste0("I-", x$"domain")
                 return(x)
             }
         )
-        target_list_renamed <- target_list |> lapply(
+        tl_renamed <- tl |> lapply(
             function(x) {
                 x$"domain" <- paste0("O-", x$"domain")
                 return(x)
             }
         )
-        data_list <- c(data_list_renamed, target_list_renamed)
+        dl <- c(dl_renamed, tl_renamed)
     }
     ###########################################################################
     # Columns that end with _pval are truncated by neg_log_pval_thresh
@@ -272,7 +272,7 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
     ###########################################################################
     # Merge the summmary plot with domain information from the data_list
     ###########################################################################
-    dl_metadata <- summarize_dl(data_list, "feature") |> dplyr::select(-"type")
+    dl_metadata <- summarize_dl(dl, "feature") |> dplyr::select(-"type")
     summary_data <- merge(
         summary_data,
         dl_metadata,
@@ -366,7 +366,7 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
     n_vars <- length(unique(summary_data$"variable"))
     target_rows <- startsWith(summary_data$"domain", "O")
     n_outcomes <- length(unique(summary_data[target_rows, "variable"]))
-    if (is.null(xints) && !is.null(data_list) && !is.null(target_list)) {
+    if (is.null(xints) && !is.null(dl) && !is.null(tl)) {
         plot <- plot + ggplot2::geom_vline(
             xintercept = n_vars - n_outcomes + 0.5
         )

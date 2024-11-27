@@ -3,11 +3,11 @@
 #' @param solutions_matrix Result of `batch_snf` storing cluster solutions and
 #' the settings that were used to generate them.
 #'
-#' @param data_list A data_list with features to calcualte p-values for, but
+#' @param dl A data_list with features to calcualte p-values for, but
 #' that should not be incorporated into p-value summary measure columns (i.e.,
 #' min/mean/max p-value columns).
 #'
-#' @param target_list A data_list with features to calculate p-values for.
+#' @param tl A data_list with features to calculate p-values for.
 #' Features in the target list will be included during p-value summary
 #' measure calculations.
 #'
@@ -31,8 +31,8 @@
 #'
 #' @export
 extend_solutions <- function(solutions_matrix,
-                             target_list = NULL,
-                             data_list = NULL,
+                             tl = NULL,
+                             dl = NULL,
                              cat_test = "chi_squared",
                              calculate_summaries = TRUE,
                              min_pval = 1e-10,
@@ -56,23 +56,23 @@ extend_solutions <- function(solutions_matrix,
         solutions_matrix <- solutions_matrix[-c(single_cluster_solutions), ]
     }
     ###########################################################################
-    # If data_list and target_list exist, merge them as data_list.
+    # If dl and tl exist, merge them as data_list.
     ###########################################################################
-    data_list <- c(data_list, target_list)
+    dl <- c(dl, tl)
     ###########################################################################
-    # If target_list not given but calculate_summaries is TRUE, give a warning.
+    # If tl not given but calculate_summaries is TRUE, give a warning.
     ###########################################################################
-    if (is.null(target_list) && calculate_summaries) {
+    if (is.null(tl) && calculate_summaries) {
         warning(
             "Calculate summaries only applies to target_list features, but",
             " target_list parameter was not specified."
         )
     }
     ###########################################################################
-    # Check to see if the data_list and solutions_matrix have matching subjects
+    # Check to see if the dl and solutions_matrix have matching subjects
     ###########################################################################
     solution_subs <- colnames(subs(solutions_matrix))[-1]
-    target_subs <- target_list[[1]]$"data"$"subjectkey"
+    target_subs <- tl[[1]]$"data"$"subjectkey"
     if (!identical(solution_subs, target_subs)) {
         stop(
             "Subjects in data_list/target_list do not match those in",
@@ -82,7 +82,7 @@ extend_solutions <- function(solutions_matrix,
     ###########################################################################
     # Calculate vector of all feature names
     ###########################################################################
-    features <- data_list |>
+    features <- dl |>
         lapply(
             function(x) {
                 x$"data" |>
@@ -94,7 +94,7 @@ extend_solutions <- function(solutions_matrix,
     ###########################################################################
     # Calculate vector of all feature types
     ###########################################################################
-    feature_types <- data_list |>
+    feature_types <- dl |>
         lapply(
             function(x) {
                 n_features <- ncol(x$"data") - 1
@@ -117,7 +117,7 @@ extend_solutions <- function(solutions_matrix,
     ###########################################################################
     # Single DF to contain all features to calculate p-values for
     ###########################################################################
-    merged_df <- data_list |>
+    merged_df <- dl |>
         lapply(
             function(x) {
                 x[[1]]
@@ -224,7 +224,7 @@ extend_solutions <- function(solutions_matrix,
         #######################################################################
         # Identify features present in target_list
         #######################################################################
-        target_features <- dl_variable_summary(target_list)$"name"
+        target_features <- dl_variable_summary(tl)$"name"
         target_features <- paste0(target_features, "_pval")
         target_esm <- dplyr::select(
             esm,
@@ -566,7 +566,7 @@ calc_assoc_pval <- function(var1,
 
 #' Calculate p-values for all pairwise associations of features in a data_list
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param verbose If TRUE, prints new line everytime a p-value is being
 #'  calculated.
@@ -579,25 +579,25 @@ calc_assoc_pval <- function(var1,
 #' between the features in the provided data list.
 #'
 #' @export
-calc_assoc_pval_matrix <- function(data_list,
+calc_assoc_pval_matrix <- function(dl,
                                    verbose = FALSE,
                                    cat_test = "chi_squared") {
     ###########################################################################
     # Build a single data.frame that contains all data
     ###########################################################################
-    merged_df <- collapse_dl(data_list)
+    merged_df <- collapse_dl(dl)
     merged_df <- merged_df[, colnames(merged_df) != "subjectkey"]
     ###########################################################################
     # Build data.frame containing the types of features in merged_df
     ###########################################################################
-    types <- data_list |>
+    types <- dl |>
         lapply(
             function(x) {
                 rep(x$"type", ncol(x$"data") - 1)
             }
         ) |>
         unlist()
-    domains <- data_list |>
+    domains <- dl |>
         lapply(
             function(x) {
                 rep(x$"domain", ncol(x$"data") - 1)
@@ -613,7 +613,7 @@ calc_assoc_pval_matrix <- function(data_list,
     ###########################################################################
     # Ensure that 'mixed' data type is not being used
     ###########################################################################
-    dl_summary <- summarize_dl(data_list)
+    dl_summary <- summarize_dl(dl)
     if (any(dl_summary$"type" == "mixed")) {
         warning(
             "When using the 'mixed' data type in the 'calculate_associations'",

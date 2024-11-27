@@ -36,7 +36,7 @@
 #'   0, that dataframe will be excluded from that run of the SNF pipeline. When
 #'   1, that dataframe will be included.
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param nrows Number of rows to generate for the settings matrix.
 #'
@@ -147,12 +147,12 @@
 #' @return settings_matrix A settings matrix
 #'
 #' @export
-generate_settings_matrix <- function(data_list,
+generate_settings_matrix <- function(dl,
                                      seed = NULL,
                                      nrows = 0,
                                      min_removed_inputs = 0,
                                      max_removed_inputs = length(
-                                         data_list
+                                         dl
                                      ) - 1,
                                      dropout_dist = "exponential",
                                      min_alpha = NULL,
@@ -187,7 +187,7 @@ generate_settings_matrix <- function(data_list,
         "ord_dist",
         "cat_dist",
         "mix_dist",
-        paste0("inc_", summarize_dl(data_list)$"name")
+        paste0("inc_", summarize_dl(dl)$"name")
     )
     settings_matrix_base <- as.data.frame(
         matrix(

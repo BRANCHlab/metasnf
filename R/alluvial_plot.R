@@ -5,7 +5,7 @@
 #'
 #' @param similarity_matrix A similarity matrix.
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param data A dataframe that contains features to include in the plot.
 #'
@@ -24,7 +24,7 @@
 #' @export
 alluvial_cluster_plot <- function(cluster_sequence,
                                   similarity_matrix,
-                                  data_list = NULL,
+                                  dl = NULL,
                                   data = NULL,
                                   key_outcome,
                                   key_label = key_outcome,
@@ -53,7 +53,7 @@ alluvial_cluster_plot <- function(cluster_sequence,
     ###########################################################################
     # Isolate feature of interest
     ###########################################################################
-    data <- assemble_data(data = data, data_list = data_list)
+    data <- assemble_data(data = data, dl = dl)
     outcome_df_cols <- c("subjectkey", key_outcome, extra_outcomes)
     outcome_df <- data[, colnames(data) %in% outcome_df_cols]
     alluvial_df <- dplyr::inner_join(

@@ -6,8 +6,8 @@
 \usage{
 extend_solutions(
   solutions_matrix,
-  target_list = NULL,
-  data_list = NULL,
+  tl = NULL,
+  dl = NULL,
   cat_test = "chi_squared",
   calculate_summaries = TRUE,
   min_pval = 1e-10,
@@ -19,11 +19,11 @@ extend_solutions(
 \item{solutions_matrix}{Result of \code{batch_snf} storing cluster solutions and
 the settings that were used to generate them.}
 
-\item{target_list}{A data_list with features to calculate p-values for.
+\item{tl}{A data_list with features to calculate p-values for.
 Features in the target list will be included during p-value summary
 measure calculations.}
 
-\item{data_list}{A data_list with features to calcualte p-values for, but
+\item{dl}{A data_list with features to calcualte p-values for, but
 that should not be incorporated into p-value summary measure columns (i.e.,
 min/mean/max p-value columns).}
 

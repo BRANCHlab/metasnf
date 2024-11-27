@@ -53,7 +53,7 @@ label_prop <- function(full_fused_network, clusters) {
 #' use only a small subset of rows from the original training solutions_matrix
 #' for label propagation.
 #'
-#' @param full_data_list A data_list containing subjects from both the training
+#' @param full_dl A data_list containing subjects from both the training
 #' and testing sets.
 #'
 #' @param distance_metrics_list Like above - the distance_metrics_list (if any)
@@ -70,7 +70,7 @@ label_prop <- function(full_fused_network, clusters) {
 #'
 #' @export
 lp_solutions_matrix <- function(train_solutions_matrix,
-                                full_data_list,
+                                full_dl,
                                 distance_metrics_list = NULL,
                                 weights_matrix = NULL,
                                 verbose = FALSE) {
@@ -78,21 +78,21 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     # 1. Reorder data_list subjects
     ###########################################################################
     train_subjects <- colnames(subs(train_solutions_matrix))[-1]
-    all_subjects <- full_data_list[[1]][[1]]$"subjectkey"
+    all_subjects <- full_dl[[1]][[1]]$"subjectkey"
     # Quick check to make sure the train subjects are all in the full list
     if (!all(train_subjects %in% all_subjects)) {
         stop(
             "\n\nAt least one subject from the `train_solutions_matrix`",
-            "argument is missing from the `full_data_list` argument.",
+            "argument is missing from the `full_dl` argument.",
             " Please ensure that all subjects in the given solutions matrix",
             " are present in your full data list. E.g., ensure that:",
             "\n\nall(get_cluster_df(train_solutions_matrix)$\"subjectkey\"",
-            " %in% collapse_dl(full_data_list)$\"subjectkey\")"
+            " %in% collapse_dl(full_dl)$\"subjectkey\")"
         )
     }
     test_subjects <- all_subjects[!all_subjects %in% train_subjects]
     lp_ordered_subjects <- c(train_subjects, test_subjects)
-    full_data_list <- reorder_dl_subs(full_data_list, lp_ordered_subjects)
+    full_dl <- reorder_dl_subs(full_dl, lp_ordered_subjects)
     ###########################################################################
     # 2. Prepare vectors containing the names of the train and test subjects
     ###########################################################################
@@ -113,7 +113,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     ###########################################################################
     if (is.null(weights_matrix)) {
         weights_matrix <- generate_weights_matrix(
-            full_data_list,
+            full_dl,
             nrow = nrow(train_solutions_matrix)
         )
     } else {
@@ -140,7 +140,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
         }
         current_row <- train_solutions_matrix[i, ]
         sig <- paste0(current_row$"row_id")
-        reduced_dl <- drop_inputs(current_row, full_data_list)
+        reduced_dl <- drop_inputs(current_row, full_dl)
         scheme <- current_row$"snf_scheme"
         k <- current_row$"k"
         alpha <- current_row$"alpha"

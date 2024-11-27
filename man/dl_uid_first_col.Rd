@@ -4,10 +4,10 @@
 \alias{dl_uid_first_col}
 \title{Make the subjectkey UID columns of a data_list first}
 \usage{
-dl_uid_first_col(data_list)
+dl_uid_first_col(dl)
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 }
 \value{
 A data list ("list"-class object) in which each data-subcomponent

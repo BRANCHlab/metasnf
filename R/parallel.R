@@ -1,6 +1,6 @@
 #' Parallel processing form of batch_snf
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param distance_metrics_list An optional nested list containing which
 #' distance metric function should be used for the various feature types
@@ -28,7 +28,7 @@
 #' @return The same values as ?batch_snf().
 #'
 #' @export
-parallel_batch_snf <- function(data_list,
+parallel_batch_snf <- function(dl,
                                distance_metrics_list,
                                clust_algs_list,
                                settings_matrix,
@@ -41,7 +41,7 @@ parallel_batch_snf <- function(data_list,
     settings_and_weights_df <- cbind(settings_matrix, weights_matrix)
     prog <- progressr::progressor(steps = nrow(settings_and_weights_df))
     batch_row_function <- batch_row_closure(
-        data_list = data_list,
+        dl = dl,
         distance_metrics_list = distance_metrics_list,
         clust_algs_list = clust_algs_list,
         settings_matrix = settings_matrix,
@@ -86,7 +86,7 @@ parallel_batch_snf <- function(data_list,
 
 #' Generate closure function to run batch_snf in an apply-friendly format
 #'
-#' @param data_list A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param distance_metrics_list An optional nested list containing which
 #' distance metric function should be used for the various feature types
@@ -115,7 +115,7 @@ parallel_batch_snf <- function(data_list,
 #' for parallel processing.
 #'
 #' @export
-batch_row_closure <- function(data_list,
+batch_row_closure <- function(dl,
                               distance_metrics_list,
                               clust_algs_list,
                               settings_matrix,
@@ -132,7 +132,7 @@ batch_row_closure <- function(data_list,
             settings_and_weights_row_df[, settings_matrix_names]
         weights_row <- settings_and_weights_row_df[, weights_matrix_names]
         # Reduce data list
-        current_data_list <- drop_inputs(settings_matrix_row, data_list)
+        current_dl <- drop_inputs(settings_matrix_row, dl)
         # Extract parameters for snf_step
         current_snf_scheme <- dplyr::case_when(
             settings_matrix_row$"snf_scheme" == 1 ~ "individual",
@@ -154,7 +154,7 @@ batch_row_closure <- function(data_list,
         mix_dist_fn <- distance_metrics_list$"mixed_distance"[[mix_dist]]
         # Integrate data
         fused_network <- snf_step(
-            current_data_list,
+            current_dl,
             current_snf_scheme,
             k = k,
             alpha = alpha,

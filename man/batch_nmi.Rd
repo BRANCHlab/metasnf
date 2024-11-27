@@ -5,7 +5,7 @@
 \title{Calculate feature NMIs for a data_list and a derived solutions_matrix}
 \usage{
 batch_nmi(
-  data_list,
+  dl,
   solutions_matrix,
   clust_algs_list = NULL,
   distance_metrics_list = NULL,
@@ -16,7 +16,7 @@ batch_nmi(
 )
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.
+\item{dl}{A nested list of input data from \code{generate_data_list()}.
 Use the same value as was used in the original call to \code{batch_snf()}.}
 
 \item{solutions_matrix}{Result of \code{batch_snf} storing cluster solutions and

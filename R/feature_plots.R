@@ -127,17 +127,17 @@ bar_plot <- function(df, feature) {
 #' Automatically plot features across clusters
 #'
 #' Given a single row of a solutions matrix and data provided through
-#' `data_list` and/or `target_list` arguments, this function will
+#' `dl` and/or `tl` arguments, this function will
 #' return a series of bar and/or jitter plots based on feature types.
 #'
 #' @param solutions_matrix_row A single row of a solutions matrix.
 #'
-#' @param data_list A data_list containing data to plot.
+#' @param dl A data_list containing data to plot.
 #'
 #' @param cluster_df Directly provide a cluster_df rather than a solutions
 #' matrix. Useful if plotting data from label propagated results.
 #'
-#' @param target_list A target_list containing data to plot.
+#' @param tl A target_list containing data to plot.
 #'
 #' @param return_plots If `TRUE`, the function will return a list of plots.
 #' If FALSE, the function will instead return the full data frame used for
@@ -164,9 +164,9 @@ bar_plot <- function(df, feature) {
 #'
 #' @export
 auto_plot <- function(solutions_matrix_row = NULL,
-                      data_list = NULL,
+                      dl = NULL,
                       cluster_df = NULL,
-                      target_list = NULL,
+                      tl = NULL,
                       return_plots = TRUE,
                       save = NULL,
                       jitter_width = 6,
@@ -192,10 +192,10 @@ auto_plot <- function(solutions_matrix_row = NULL,
     ###########################################################################
     # Generating the feature dataframe
     ###########################################################################
-    if (is.null(data_list) && is.null(target_list)) {
-        stop("Please provide either `data_list` or `target_list`.")
+    if (is.null(dl) && is.null(tl)) {
+        stop("Please provide either `dl` or `tl`.")
     }
-    dl_df <- metasnf::collapse_dl(c(data_list, target_list))
+    dl_df <- metasnf::collapse_dl(c(dl, tl))
     ###########################################################################
     # Ensure solutions_matrix and dl_df have the same subjectkey column
     ###########################################################################

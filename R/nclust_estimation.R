@@ -30,13 +30,13 @@ estimate_nclust_given_graph <- function(W, NUMC = 2:10) {
     # SNFtool::estimateClustersGivenGraph. The scaling reduces the risk of
     # generating zero-valued eigenvectors as a result of floating point
     # errors.
-    L <- Di %*% L %*% Di * 10000
+    L <- Di %*% L %*% Di * 1e7
     ###########################################################################
     # compute the eigenvectors corresponding to the k smallest
     eigs <- eigen(L)
     eigs_order <- sort(eigs$values, index.return=T)$ix
     eigs$values <- eigs$values[eigs_order]
-    eigs$values <- eigs$values / 10000
+    eigs$values <- eigs$values / 1e7
     eigs$vectors <- eigs$vectors[, eigs_order]
     eigengap <- abs(diff(eigs$values))
     quality <- list()

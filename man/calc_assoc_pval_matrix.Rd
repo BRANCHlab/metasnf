@@ -4,10 +4,10 @@
 \alias{calc_assoc_pval_matrix}
 \title{Calculate p-values for all pairwise associations of features in a data_list}
 \usage{
-calc_assoc_pval_matrix(data_list, verbose = FALSE, cat_test = "chi_squared")
+calc_assoc_pval_matrix(dl, verbose = FALSE, cat_test = "chi_squared")
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 
 \item{verbose}{If TRUE, prints new line everytime a p-value is being
 calculated.}

@@ -4,12 +4,12 @@
 \alias{assemble_data}
 \title{Collapse a dataframe and/or a data_list into a single dataframe}
 \usage{
-assemble_data(data, data_list)
+assemble_data(data, dl)
 }
 \arguments{
 \item{data}{A dataframe.}
 
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{generate_data_list()}.}
 }
 \value{
 A class "data.frame" object containing all the features of the

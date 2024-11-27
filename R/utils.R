@@ -225,7 +225,7 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
 #'
 #' Removes specified elements from a provided data_list
 #'
-#' @param list_object The data_list containing components to be removed
+#' @param dl The data_list containing components to be removed
 #'
 #' @param ... Any number of components to remove from the list object, passed as
 #' strings
@@ -234,10 +234,10 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
 #' removed.
 #'
 #' @export
-list_remove <- function(list_object, ...) {
+list_remove <- function(dl, ...) {
     to_remove <- list(...)
-    # Check to make sure all items to remove are components in list_object
-    list_names <- summarize_dl(list_object)$"name"
+    # Check to make sure all items to remove are components in dl
+    list_names <- summarize_dl(dl)$"name"
     invalid_names <- to_remove[!to_remove %in% list_names]
     if (length(invalid_names) > 0) {
         warning(
@@ -247,7 +247,7 @@ list_remove <- function(list_object, ...) {
             )
         )
     }
-    pruned_list <- list_object[!list_names %in% to_remove]
+    pruned_list <- dl[!list_names %in% to_remove]
     return(pruned_list)
 }
 
