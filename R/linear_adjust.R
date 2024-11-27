@@ -1,14 +1,14 @@
-#' Linearly correct data_list by features with unwanted signal
+#' Linearly correct data list by features with unwanted signal
 #'
-#' Given a data_list to correct and another data_list of categorical features
-#' to linearly adjust for, corrects the first data_list based on the residuals
-#' of the linear model relating the numeric features in the first data_list
+#' Given a data list to correct and another data list of categorical features
+#' to linearly adjust for, corrects the first data list based on the residuals
+#' of the linear model relating the numeric features in the first data list
 #' to the unwanted signal features in the second data list.
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
-#' @param unwanted_signal_list A data_list of categorical features that should
-#' have their mean differences removed in the first data_list.
+#' @param unwanted_signal_list A data list of categorical features that should
+#' have their mean differences removed in the first data list.
 #'
 #' @param sig_digs Number of significant digits to round the residuals to.
 #'
@@ -34,7 +34,7 @@ linear_adjust <- function(dl, unwanted_signal_list, sig_digs = NULL) {
     unwanted_vars <- colnames(usl_df)[colnames(usl_df) != "subjectkey"]
     # The right hand side of the linear model formula
     rhs <- paste0(unwanted_vars, collapse = " + ")
-    # Outer lapply operates on each component of the data_list
+    # Outer lapply operates on each component of the data list
     numeric_vectors <- c("continuous", "discrete", "numeric", "ordinal")
     adjusted_dl <- dl |> lapply(
         function(x) {

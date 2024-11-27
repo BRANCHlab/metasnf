@@ -125,7 +125,7 @@ var_manhattan_plot <- function(dl,
 #'
 #' Given a dataframe of representative meta cluster solutions (see
 #' `get_representative_solutions()`, returns a Manhattan plot for showing
-#' feature separation across all features in provided data/target_lists.
+#' feature separation across all features in provided data/target lists.
 #'
 #' @param extended_solutions_matrix A solutions_matrix that contains "_pval"
 #' columns containing the values to be plotted. This object is the output of
@@ -172,10 +172,10 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
                               hide_x_labels = FALSE,
                               domain_colours = NULL) {
     ###########################################################################
-    # Ensure one of data_list or target_list is not NULL
+    # Ensure one of data list or target list is not NULL
     ###########################################################################
     if (is.null(dl) && is.null(tl)) {
-        stop("At least one of data_list or target_list must be provided.")
+        stop("At least one of `dl` or `tl` must be provided.")
     }
     ###########################################################################
     # Suppress warnings related to non-standard evaluation
@@ -270,7 +270,7 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
         data.frame()
     summary_data$"variable" <- sub("_pval$", "", summary_data$"variable")
     ###########################################################################
-    # Merge the summmary plot with domain information from the data_list
+    # Merge the summmary plot with domain information from the data list
     ###########################################################################
     dl_metadata <- summarize_dl(dl, "feature") |> dplyr::select(-"type")
     summary_data <- merge(

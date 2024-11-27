@@ -1,4 +1,4 @@
-#' Calculate feature NMIs for a data_list and a derived solutions_matrix
+#' Calculate feature NMIs for a data list and a derived solutions_matrix
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #' Use the same value as was used in the original call to `batch_snf()`.
@@ -26,7 +26,7 @@
 #' solutions matrix and calculate NMIs for all features. If FALSE, will give
 #' NAs for features that were dropped on a given settings_matrix row.
 #'
-#' @param verbose If TRUE, print progress to console.
+#' @param verbose If TRUE, output progress to console.
 #'
 #' @return A "data.frame" class object containing one row for every feature
 #' in the provided data list and one column for every solution in the provided
@@ -75,11 +75,10 @@ batch_nmi <- function(dl,
     for (i in seq_along(features)) {
         feature <- features[i]
         if (verbose) {
-            print(
-                paste0(
-                    "Calculating NMIs for ",
-                    feature, " (feature ", i, "/", length(features), ")..."
-                )
+            cat(
+                "Calculating NMIs for ",
+                feature, " (feature ", i, "/", length(features), ")...\n",
+                sep = ""
             )
         }
         #######################################################################

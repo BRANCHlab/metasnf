@@ -469,7 +469,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
     if (split_by_domain) {
         if (is.null(dl)) {
             stop(
-                "You must provide a data_list to split the heatmap by domain."
+                "You must provide a data list to split the heatmap by domain."
             )
         }
         dl_var_summary <- dl_variable_summary(dl)
@@ -840,7 +840,7 @@ cell_significance_fn <- function(data) {
     return(cell_fn)
 }
 
-#' Collapse a dataframe and/or a data_list into a single dataframe
+#' Collapse a dataframe and/or a data list into a single dataframe
 #'
 #' @param data A dataframe.
 #'
@@ -915,7 +915,7 @@ generate_annotations_list <- function(df,
         if (!all(annotation_list %in% colnames(sorted_df))) {
             stop(
                 "At least one feature specified for annotation is not",
-                " present in the provided data_list."
+                " present in the provided data list."
             )
         }
     }
@@ -1460,7 +1460,7 @@ check_dataless_annotations <- function(annotation_requests, data) {
     if (!any_null_annotations) {
         if (is.null(data)) {
             stop(
-                "You must provide data, either through a data_list or a",
+                "You must provide data, either through a data list or a",
                 " dataframe passed in with the 'data' parameter to use",
                 " annotations."
             )

@@ -1,7 +1,7 @@
 #' Run variations of SNF.
 #'
 #' This is the core function of the metasnf package. Using the information
-#' stored in a settings_matrix (see ?generate_settings_matrix) and a data_list
+#' stored in a settings_matrix (see ?generate_settings_matrix) and a data list
 #' (see ?generate_data_list), run repeated complete SNF pipelines to generate
 #' a broad space of post-SNF cluster solutions.
 #'
@@ -20,7 +20,7 @@
 #'  * `2` or higher: Parallel processing will use the
 #'    `future.apply::future_apply` to distribute the SNF iterations across
 #'    the specified number of CPU cores. If higher than the number of
-#'    available cores, a warning will be printed and the maximum number of
+#'    available cores, a warning will be raised and the maximum number of
 #'    cores will be used.
 #'  * `max`: All available cores will be used.
 #'
@@ -57,7 +57,7 @@
 #' https://branchlab.github.io/metasnf/articles/distance_metrics.html to learn
 #' more.
 #'
-#' @param verbose If TRUE, print time remaining estimates to console.
+#' @param verbose If TRUE, output time remaining estimates to console.
 #'
 #' @return By default, returns a solutions matrix (class "data.frame"), a 
 #' a data frame containing one row for every row of the provided settings
@@ -115,7 +115,7 @@ batch_snf <- function(dl,
         )
     }
     # If there is a value of the k hyperparameter that exceeds the number
-    # of patients in the data_list, SNFtool::affinityMatrix cannot run. This
+    # of patients in the data list, SNFtool::affinityMatrix cannot run. This
     # check can't go in the generate_settings_matrix function in case the user
     # creater their base settings_matrix with a valid k, then extended their
     # settings matrix using the add_settings_matrix_rows function with an
@@ -379,10 +379,13 @@ batch_snf <- function(dl,
             solutions_matrix[i, "nclust"] <- nclust
         }
         #######################################################################
-        # 12. Print progress
+        # 12. Output progress
         #######################################################################
         if (verbose) {
-            print(paste0("Processing row: ", i, "/", nrow(settings_matrix)))
+            cat(
+                "Processing row: ", i, "/", nrow(settings_matrix), "\n",
+                sep = ""
+            )
         }
     }
     ###########################################################################
@@ -440,7 +443,7 @@ drop_inputs <- function(settings_matrix_row, dl) {
         dplyr::select(dplyr::starts_with("inc"))
     # The subset of columns that are in 'keep' (1) mode
     keepcols <- colnames(inc_df)[inc_df[1, ] == 1]
-    # The list of data_list elements that are to be selected
+    # The list of data list elements that are to be selected
     in_keeps_list <- lapply(dl,
         function(x) {
             paste0("inc_", x$"name") %in% keepcols
@@ -716,7 +719,7 @@ two_step_merge <- function(dl,
 
 #' SNF scheme: Domain merge
 #'
-#' Given a data_list, returns a new data_list where all data objects of
+#' Given a data list, returns a new data list where all data objects of
 #' a particlar domain have been concatenated.
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
@@ -761,8 +764,8 @@ domain_merge <- function(dl,
         current_type <- dl[[i]]$"type"
         merged_dl_domains <- summarize_dl(merged_dl)$"domain" |> unique()
         if (current_domain %in% merged_dl_domains) {
-            # the index of the new data_list that already has the domain of the
-            #  ith component of the original data_list
+            # the index of the new data list that already has the domain of the
+            #  ith component of the original data list
             existing_pos <- which(merged_dl_domains == current_domain)
             existing_component <- merged_dl[[existing_pos]]
             existing_data <- existing_component$"data"
@@ -790,7 +793,7 @@ domain_merge <- function(dl,
                 return(x)
             }
         )
-    # now that we have the merged data_list, complete the conversion to
+    # now that we have the merged data list, complete the conversion to
     #  distance and similarity matrices
     dist_list <- lapply(merged_dl,
         function(x) {

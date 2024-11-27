@@ -86,8 +86,7 @@ char_to_fac <- function(df) {
 
 #' Select all columns of a dataframe not starting with the 'subject_' prefix.
 #'
-#' Removes the 'subject_' prefixed columns from a dataframe. Useful for printing
-#'  solutions_matrix structures to the console.
+#' Removes the 'subject_' prefixed columns from a dataframe.
 #'
 #' @param df A dataframe
 #'
@@ -221,11 +220,11 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
     return(assigned_subs)
 }
 
-#' Remove items from a data_list
+#' Remove items from a data list
 #'
-#' Removes specified elements from a provided data_list
+#' Removes specified elements from a provided data list
 #'
-#' @param dl The data_list containing components to be removed
+#' @param dl The data list containing components to be removed
 #'
 #' @param ... Any number of components to remove from the list object, passed as
 #' strings

@@ -11,12 +11,12 @@
 #'  * `2` or higher: Parallel processing will use the
 #'    `future.apply::future_apply` to distribute the calculations across
 #'    the specified number of CPU cores. If higher than the number of
-#'    available cores, a warning will be printed and the maximum number of
+#'    available cores, a warning will be raised and the maximum number of
 #'    cores will be used.
 #'  * `max`: All available cores will be used.
 #' Note that no progress indicator is available during multi-core processing.
 #'
-#' @param verbose If TRUE, print progress to console.
+#' @param verbose If TRUE, output progress to console.
 #'
 #' @return om_aris ARIs between clustering solutions of an solutions matrix
 #'
@@ -45,7 +45,7 @@ calc_aris <- function(solutions_matrix,
             if (verbose) {
                 if (col %% 100 == 0) {
                     progress <- 100 * col / ncol(pairwise_indices)
-                    print(paste0(progress, "% completed..."))
+                    cat(progress, "% completed...\n", sep = "")
                 }
             }
             v1 <- pairwise_indices[1, col]
@@ -60,7 +60,7 @@ calc_aris <- function(solutions_matrix,
         colnames(aris) <- solutions_matrix$"row_id"
         rownames(aris) <- solutions_matrix$"row_id"
         if (verbose) {
-            print("100% completed.")
+            cat("100% completed.\n")
         }
         return(aris)
     } else {

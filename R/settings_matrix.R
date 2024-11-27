@@ -2,7 +2,7 @@
 #'
 #' The settings_matrix is a dataframe whose rows completely specify the
 #' hyperparameters and decisions required to transform individual input
-#' dataframes (found in a data_list, see ?generate_data_list) into a single
+#' dataframes (found in a data list, see ?generate_data_list) into a single
 #' similarity matrix through SNF. The format of the settings matrix is as
 #' follows:
 #' * A column named "row_id": This column is used to keep
@@ -29,10 +29,10 @@
 #' * A column named "cat_dist": Like above, but for categorical dataframes.
 #' * A column named "mixed_dist": Like above, but for mixed-type (e.g.,
 #'   both categorical and discrete) dataframes.
-#' * One column for every input dataframe in the corresponding data_list which
+#' * One column for every input dataframe in the corresponding data list which
 #'   can either have the value of 0 or 1. The name of the column should be
 #'   formatted as "inc_[]" where the square brackets are replaced with the
-#'   name (as found in dl_summary(data_list)$"name") of each dataframe. When
+#'   name (as found in dl_summary(dl)$"name") of each dataframe. When
 #'   0, that dataframe will be excluded from that run of the SNF pipeline. When
 #'   1, that dataframe will be included.
 #'
@@ -49,7 +49,7 @@
 #'
 #' @param max_removed_inputs The largest number of input dataframes that may be
 #' randomly removed. By default, this is 1 less than all the provided input
-#' dataframes in the data_list.
+#' dataframes in the data list.
 #'
 #' @param dropout_dist Parameter controlling how the random removal of input
 #' dataframes should occur. Can be "none" (no input dataframes are randomly
@@ -242,7 +242,7 @@ generate_settings_matrix <- function(dl,
 #'
 #' @param max_removed_inputs The largest number of input dataframes that may be
 #'  randomly removed. By default, this is 1 less than all the provided input
-#'  dataframes in the data_list.
+#'  dataframes in the data list.
 #'
 #' @param dropout_dist Parameter controlling how the random removal of input
 #'  dataframes should occur. Can be "none" (no input dataframes are randomly
@@ -737,7 +737,7 @@ random_removal <- function(columns,
         stop(
             paste0(
                 "The number of removed elements must be between 0 and the",
-                " total number of elements in the data_list (", num_cols, ")."
+                " total number of elements in the data list (", num_cols, ")."
             )
         )
     }

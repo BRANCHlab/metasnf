@@ -25,7 +25,7 @@ city_df <- data.frame(
 
 
 # Compact loading
-data_list <- generate_data_list(
+dl <- generate_data_list(
     list(heart_rate_df, "heart_rate", "clinical", "continuous"),
     list(personality_test_df, "personality_test", "surveys", "continuous"),
     list(survey_response_df, "survey_response", "surveys", "ordinal"),
@@ -33,11 +33,13 @@ data_list <- generate_data_list(
     uid = "patient_id"
 )
 
+
+class(data_list)
+
 data_list <- generate_data_list(
     list(city_df, "city", "location", "categorical"),
     uid = "patient_id"
 )
-
 
 long_df <- data.frame(
     patient_id = as.character(1:100),

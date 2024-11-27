@@ -1,4 +1,4 @@
-#' Create subsamples of a data_list
+#' Create subsamples of a data list
 #'
 #' Given a data list, return a list of smaller data lists that are generated
 #' through random sampling (without replacement).
@@ -108,7 +108,7 @@ subsample_dl <- function(dl,
 #' @param return_solutions_matrices If TRUE, includes the solutions matrices
 #' corresponding to each subsample in the output.
 #'
-#' @param verbose If TRUE, print time remaining estimates to console.
+#' @param verbose If TRUE, output time remaining estimates to console.
 #'
 #' @return By default, returns a one-element list: `cluster_solutions`, which
 #' is itself a list of cluster solution data frames corresponding to each of
@@ -136,19 +136,16 @@ batch_snf_subsamples <- function(dl_subsamples,
     similarity_matrices <- NULL
     cluster_solutions <- NULL
     ###########################################################################
-    # Generate a new cluster_solutions dataframe for every data_list subsample
+    # Generate a new cluster_solutions dataframe for every data list subsample
     ###########################################################################
     subsample_clusters <- list()
     subsample_solutions_matrices <- list()
     subsample_similarity_matrices <- list()
     for (s in seq_along(dl_subsamples)) {
         if (verbose) {
-            print(
-                paste0(
-                    "Clustering subsample ", s, "/",
-                    length(dl_subsamples),
-                    "..."
-                )
+            cat(
+                "Clustering subsample ", s, "/", length(dl_subsamples),
+                "...\n", sep = ""
             )
         }
         invisible(
@@ -208,7 +205,7 @@ batch_snf_subsamples <- function(dl_subsamples,
 #' @param return_raw_aris Whether the ARI matrix used to calculate the average
 #' ARI across subsamples should be returned.
 #'
-#' @param verbose If TRUE, print time remaining estimates to console.
+#' @param verbose If TRUE, output time remaining estimates to console.
 #'
 #' @return If return_raw_aris is FALSE, this function will return
 #'
@@ -255,11 +252,9 @@ subsample_pairwise_aris <- function(subsample_solutions,
             seq_len(length(subsample_solutions))
         )
         if (verbose) {
-            print(
-                paste0(
-                    "Calculating pairwise ARIs for row ",
-                    row, "/", nrows, "..."
-                )
+            cat(
+                "Calculating pairwise ARIs for row ", row, "/", nrows,
+                "...\n", sep = ""
             )
         }
         row_adjusted_rand_indices <- vector()
@@ -564,7 +559,7 @@ cocluster_heatmap <- function(cocluster_df,
 #' function `batch_snf()`. The solutions in the solutions matrix should
 #' correspond to those in the subsample solutions.
 #'
-#' @param verbose If TRUE, print time remaining estimates to console.
+#' @param verbose If TRUE, output time remaining estimates to console.
 #'
 #' @return A list containing the following components:
 #' - cocluster_dfs: A list of dataframes, one per cluster solution, that shows
@@ -604,7 +599,7 @@ calculate_coclustering <- function(subsample_solutions,
     cocluster_ss_mats <- list()
     cocluster_sc_mats <- list()
     cocluster_cf_mats <- list()
-    # Data frame containing the cluster solutions from the full data_list
+    # Data frame containing the cluster solutions from the full data list
     cluster_solutions <- get_cluster_solutions(solutions_matrix)
     subjects <- cluster_solutions$"subjectkey"
     nsubs <- length(subjects)
@@ -614,12 +609,11 @@ calculate_coclustering <- function(subsample_solutions,
     rownames(cocluster_mat) <- subjects
     # Looping over all cluster solutions
     for (idx in seq_len(nrow(solutions_matrix))) {
-        # Print current solution for monitoring progress
+        # Output current solution for monitoring progress
         if (verbose) {
-            print(
-                paste0(
-                    "Processing solution ", idx, "/", nrow(solutions_matrix)
-                )
+            cat(
+                "Processing solution ", idx, "/", nrow(solutions_matrix), "\n",
+                sep = ""
             )
         }
         cluster_solution <- cluster_solutions[, c(1, idx + 1)]

@@ -3,11 +3,11 @@
 #' @param solutions_matrix Result of `batch_snf` storing cluster solutions and
 #' the settings that were used to generate them.
 #'
-#' @param dl A data_list with features to calcualte p-values for, but
+#' @param dl A data list with features to calcualte p-values for, but
 #' that should not be incorporated into p-value summary measure columns (i.e.,
 #' min/mean/max p-value columns).
 #'
-#' @param tl A data_list with features to calculate p-values for.
+#' @param tl A data list with features to calculate p-values for.
 #' Features in the target list will be included during p-value summary
 #' measure calculations.
 #'
@@ -25,9 +25,9 @@
 #' Progress is only reported for sequential processing (processes = 1).
 #'
 #' @return extended_solutions_matrix an extended solutions matrix that contains
-#'  p-value columns for each outcome in the provided target_list
+#'  p-value columns for each outcome in the provided target list
 #'
-#' @param verbose If TRUE, print progress to console.
+#' @param verbose If TRUE, output progress to console.
 #'
 #' @export
 extend_solutions <- function(solutions_matrix,
@@ -56,7 +56,7 @@ extend_solutions <- function(solutions_matrix,
         solutions_matrix <- solutions_matrix[-c(single_cluster_solutions), ]
     }
     ###########################################################################
-    # If dl and tl exist, merge them as data_list.
+    # If data list and target list both exist, merge them
     ###########################################################################
     dl <- c(dl, tl)
     ###########################################################################
@@ -64,8 +64,8 @@ extend_solutions <- function(solutions_matrix,
     ###########################################################################
     if (is.null(tl) && calculate_summaries) {
         warning(
-            "Calculate summaries only applies to target_list features, but",
-            " target_list parameter was not specified."
+            "Calculate summaries only applies to target list features, but",
+            " target list parameter was not specified."
         )
     }
     ###########################################################################
@@ -75,7 +75,7 @@ extend_solutions <- function(solutions_matrix,
     target_subs <- tl[[1]]$"data"$"subjectkey"
     if (!identical(solution_subs, target_subs)) {
         stop(
-            "Subjects in data_list/target_list do not match those in",
+            "Subjects in data list/target list do not match those in",
             " solutions_matrix."
         )
     }
@@ -131,7 +131,7 @@ extend_solutions <- function(solutions_matrix,
         # Iterate across rows of the solutions matrix
         for (i in seq_len(nrow(esm))) {
             if (verbose) {
-                print(paste0("Processing row ", i, " of ", nrow(esm)))
+                cat("Processing row ", i, " of ", nrow(esm), "\n", sep = "")
             }
             clustered_subs <- get_cluster_df(esm[i, ])
             for (j in seq_along(features)) {
@@ -222,7 +222,7 @@ extend_solutions <- function(solutions_matrix,
     }
     if (calculate_summaries) {
         #######################################################################
-        # Identify features present in target_list
+        # Identify features present in target list
         #######################################################################
         target_features <- dl_variable_summary(tl)$"name"
         target_features <- paste0(target_features, "_pval")
@@ -564,12 +564,11 @@ calc_assoc_pval <- function(var1,
     return(pval)
 }
 
-#' Calculate p-values for all pairwise associations of features in a data_list
+#' Calculate p-values for all pairwise associations of features in a data list
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
-#' @param verbose If TRUE, prints new line everytime a p-value is being
-#'  calculated.
+#' @param verbose If TRUE, output progress to the console.
 #'
 #' @param cat_test String indicating which statistical test will be used to
 #' associate cluster with a categorical feature. Options are "chi_squared" for
@@ -654,12 +653,10 @@ calc_assoc_pval_matrix <- function(dl,
         var2_type <- metadata[metadata$"name" == var2_name, "type"]
         # Output current comparison if user specified verbose = TRUE
         if (verbose) {
-            print(
-                paste0(
-                    "Calculating ", var1_name, " (", var1_type, ") vs.",
-                    " ", var2_name, " (", var2_type, ")..."
-                ),
-                quote = FALSE
+            cat(
+                "Calculating ", var1_name, " (", var1_type, ") vs.",
+                " ", var2_name, " (", var2_type, ")...\n",
+                sep = ""
             )
         }
         #######################################################################

@@ -132,12 +132,12 @@ bar_plot <- function(df, feature) {
 #'
 #' @param solutions_matrix_row A single row of a solutions matrix.
 #'
-#' @param dl A data_list containing data to plot.
+#' @param dl A data list containing data to plot.
 #'
 #' @param cluster_df Directly provide a cluster_df rather than a solutions
 #' matrix. Useful if plotting data from label propagated results.
 #'
-#' @param tl A target_list containing data to plot.
+#' @param tl A target list containing data to plot.
 #'
 #' @param return_plots If `TRUE`, the function will return a list of plots.
 #' If FALSE, the function will instead return the full data frame used for
@@ -154,7 +154,7 @@ bar_plot <- function(df, feature) {
 #'
 #' @param bar_height Height of bar plots if save is specified.
 #'
-#' @param verbose If TRUE, print progress to console.
+#' @param verbose If TRUE, output progress to console.
 #'
 #' @return By default, returns a list of plots (class "gg", "ggplot") with
 #' one plot for every feature in the provided data list and/or target list.
@@ -222,12 +222,10 @@ auto_plot <- function(solutions_matrix_row = NULL,
         feature <- features[[i]]
         feature_col <- unlist(full_data[, feature])
         if (verbose) {
-            print(
-                paste0(
-                    "Generating plot ",
-                    i, "/", length(features), ": ",
-                    feature
-                )
+            cat(
+                "Generating plot ",
+                i, "/", length(features), ": ",
+                feature, "\n", sep = ""
             )
         }
         if (is.numeric(feature_col) && length(unique(feature_col)) > 2) {

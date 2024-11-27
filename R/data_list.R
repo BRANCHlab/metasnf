@@ -1,8 +1,24 @@
-#' Generate a data_list
+#' Developer constructor for data_list
+#' 
+#' @keywords internal
+#' @param x A list to be converted into a `data_list` object. Default is an empty list.
+#' @return A `data_list` object, which is a list with the class "data_list".
+new_data_list <- function(x = list()) {
+    stopifnot(is.list(x))
+    dl <- structure(x, class = "data_list")
+    return(dl)
+}
+
+# Validator function
+validate_data_list <- function(x) {
+    return(TRUE)
+}
+
+#' Generate a data list
 #'
 #' This function generates the major data object that will be processed when
 #' iterating through the each SNF pipeline defined in the settings_matrix. The
-#' data_list is a named and nested list containing input dataframes (data), the
+#' data list is a named and nested list containing input dataframes (data), the
 #' name of that input dataframe (for the user's reference), the 'domain' of
 #' that dataframe (the broader source of information that the input dataframe
 #' is capturing, determined by user's domain knowledge), and the type of
@@ -21,16 +37,7 @@
 #' @param test_subjects character vector of test subjects (useful if building
 #' a full data list for label propagation)
 #'
-#' @param sort_subjects If TRUE, the subjects in the data_list will be sorted
-#'
-#' @param remove_missing If TRUE (default), subjects with incomplete data will
-#' be dropped from data_list creation. Setting this value to FALSE may lead to
-#' unusual and/or unstable results during SNF, clustering, p-value calculations
-#' or label propagation.
-#'
-#' @param return_missing If TRUE, function returns a list where the first
-#' element is the data_list and the second element is a vector of unique IDs
-#' of patients who were removed during the complete data filtration step.
+#' @param sort_subjects If TRUE, the subjects in the data list will be sorted
 #'
 #' @return A nested "list" class object. Each list component contains a 4-item
 #' list of a data frame, the user-assigned name of the data frame, the
@@ -100,7 +107,7 @@
 #'     uid = "patient_id"
 #' )
 #'
-#' # Printing data_list summaries
+#' # Printing data list summaries
 #' summarize_dl(dl)
 #'
 #' # Alternative loading: providing a single list of lists
@@ -113,13 +120,11 @@
 #'     list_of_lists,
 #'     uid = "patient_id"
 #' )
-generate_data_list <- function(...,
-                               uid = NULL,
-                               test_subjects = NULL,
-                               train_subjects = NULL,
-                               sort_subjects = TRUE,
-                               remove_missing = TRUE,
-                               return_missing = FALSE) {
+data_list <- function(...,
+                      uid = NULL,
+                      test_subjects = NULL,
+                      train_subjects = NULL,
+                      sort_subjects = TRUE) {
     # Initialize data list
     dl <- list()
     # The loaded data
@@ -150,16 +155,8 @@ generate_data_list <- function(...,
         )
     }
     dl <- convert_uids(dl, uid)
-    ###########################################################################
     # Handle missing subject removal
     removal_results <- dl |> remove_dl_na(return_missing = TRUE)
-    if (remove_missing) {
-        n_dropped <- length(removal_results$"removed_subjects")
-        if (n_dropped > 0) {
-            warning(n_dropped, " subject(s) dropped due to incomplete data.")
-        }
-        dl <- removal_results$"dl"
-    }
     ###########################################################################
     dl <- dl |>
         reduce_dl_to_common() |>
@@ -180,22 +177,12 @@ generate_data_list <- function(...,
     names(dl) <- summarize_dl(dl)$"name"
     ###########################################################################
     # Class management
-    class(dl) <- c("data_list", "list")
-    ###########################################################################
-    # Return output
-    if (return_missing) {
-        removed_subjects <- removal_results$"removed_subjects"
-        results <- list(
-            dl = dl,
-            removed_subjects = removed_subjects
-        )
-        return(results)
-    } else {
-        return(dl)
-    }
+    validated <- validate_data_list(elements)
+    dl <- new_data_list(validated)
+    return(dl)
 }
 
-#' Convert unique identifiers of data_list to 'subjectkey'
+#' Convert unique identifiers of data list to 'subjectkey'
 #'
 #' Column name "subjectkey" is reserved for the unique identifier of subjects.
 #'  This function ensures all dataframes have their UID set as "subjectkey".
@@ -213,7 +200,7 @@ convert_uids <- function(dl, uid = NULL) {
     d1_cols  <- colnames(d1)
     # Check to see if subjectkey is already present in the first dataframe
     if ("subjectkey" %in% d1_cols) {
-        # If subjectkey exists and is a UID, leave the data_list alone
+        # If subjectkey exists and is a UID, leave the data list alone
         if (length(unique(d1$"subjectkey")) == length(d1$"subjectkey")) {
             message("Existing `subjectkey` column will be treated as UID.")
             return(dl)
@@ -221,7 +208,7 @@ convert_uids <- function(dl, uid = NULL) {
             # If subjectkey exists and is not a UID, raise error
             stop(paste0(
                 "Column `subjectkey` exists, but it is not a unique ID.",
-                " Please regenerate this data_list after renaming",
+                " Please regenerate this data list after renaming",
                 " the subjectkey column or converting it to a UID column."
             ))
         }
@@ -235,7 +222,7 @@ convert_uids <- function(dl, uid = NULL) {
             " be converted to 'subjectkey' for the remaining metasnf analyses."
         ))
     }
-    # Check to ensure that the user specified UID exists in the data_list
+    # Check to ensure that the user specified UID exists in the data list
     if (!uid %in% d1_cols) {
         stop(paste0(
             "The specified original UID (", uid, ") is not present in",
@@ -252,15 +239,15 @@ convert_uids <- function(dl, uid = NULL) {
     return(dl_renamed_id)
 }
 
-#' Remove NAs from a data_list object
+#' Remove NAs from a data list object
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param return_missing If TRUE, function returns a list where the first
-#'  element is the data_list and the second element is a vector of unique IDs
+#'  element is the data list and the second element is a vector of unique IDs
 #'  of patients who were removed during the complete data filtration step.
 #'
-#' @return dl A data_list without NAs
+#' @return dl A data list without NAs
 #'
 #' @export
 remove_dl_na <- function(dl, return_missing = FALSE) {
@@ -312,14 +299,14 @@ prefix_dl_sk <- function(dl) {
     return(dl_prefixed)
 }
 
-#' Reduce data_list to common subjects
+#' Reduce data list to common subjects
 #'
 #' Given a `data_list` object, reduce each nested dataframe to contain only the
 #'  set of subjects that are shared by all nested dataframes
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
-#' @return reduced_dl The data_list object subsetted only to subjectssnf
+#' @return reduced_dl The data list object subsetted only to subjectssnf
 #'  shared across all nested dataframes
 #' @export
 reduce_dl_to_common <- function(dl) {
@@ -339,11 +326,11 @@ reduce_dl_to_common <- function(dl) {
     return(reduced_dl)
 }
 
-#' Given a data_list object, sort data elements by subjectkey
+#' Given a data list object, sort data elements by subjectkey
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
-#' @return arranged_dl The arranged data_list object
+#' @return arranged_dl The arranged data list object
 #'
 #' @export
 arrange_dl <- function(dl) {
@@ -366,8 +353,8 @@ arrange_dl <- function(dl) {
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param scope The level of detail for the summary. Options are:
-#' - "component" (default): One row per component (dataframe) in the data_list.
-#' - "feature": One row for each feature in the data_list.
+#' - "component" (default): One row per component (dataframe) in the data list.
+#' - "feature": One row for each feature in the data list.
 #'
 #' @return "data.frame"-class object summarizing all components (or features if
 #' scope == "component").
@@ -439,7 +426,7 @@ collapse_dl <- function(dl) {
     return(merged_df)
 }
 
-#' Variable-level summary of a data_list
+#' Variable-level summary of a data list
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
@@ -474,12 +461,12 @@ dl_variable_summary <- function(dl) {
     return(variable_level_summary)
 }
 
-#' Reorder the subjects in a data_list
+#' Reorder the subjects in a data list
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
-#' @param ordered_subjects A vector of the subjectkey values in the data_list
-#' in the desired order of the sorted data_list.
+#' @param ordered_subjects A vector of the subjectkey values in the data list
+#' in the desired order of the sorted data list.
 #'
 #' @return A data list ("list"-class object) with reordered observations.
 #'
@@ -496,7 +483,7 @@ reorder_dl_subs <- function(dl, ordered_subjects) {
     return(dl)
 }
 
-#' Rename features in a data_list
+#' Rename features in a data list
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
@@ -557,12 +544,12 @@ rename_dl <- function(dl, name_mapping) {
     return(dl)
 }
 
-#' Extract subjects from a data_list
+#' Extract subjects from a data list
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param prefix If TRUE, preserves the "subject_" prefix added to UIDs when
-#' creating a data_list.
+#' creating a data list.
 #'
 #' @return A character vector of the UID labels contained in a data list.
 #'
@@ -577,7 +564,7 @@ get_dl_subjects <- function(dl, prefix = FALSE) {
     return(subjects)
 }
 
-#' Make the subjectkey UID columns of a data_list first
+#' Make the subjectkey UID columns of a data list first
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
@@ -601,13 +588,13 @@ dl_uid_first_col <- function(dl) {
 
 #' Horizontally merge compatible data lists
 #'
-#' Join two data_lists with the same components (dataframes) but separate
-#' observations. To instead merge two data_lists that have the same
+#' Join two data lists with the same components (dataframes) but separate
+#' observations. To instead merge two data lists that have the same
 #' observations but different components, simply use `c()`.
 #'
-#' @param dl_1 The first data_list to merge.
+#' @param dl_1 The first data list to merge.
 #'
-#' @param dl_2 The second data_list to merge.
+#' @param dl_2 The second data list to merge.
 #'
 #' @return A data list ("list"-class object) containing the observations of
 #' both provided data lists.

@@ -53,7 +53,7 @@ label_prop <- function(full_fused_network, clusters) {
 #' use only a small subset of rows from the original training solutions_matrix
 #' for label propagation.
 #'
-#' @param full_dl A data_list containing subjects from both the training
+#' @param full_dl A data list containing subjects from both the training
 #' and testing sets.
 #'
 #' @param distance_metrics_list Like above - the distance_metrics_list (if any)
@@ -61,7 +61,7 @@ label_prop <- function(full_fused_network, clusters) {
 #'
 #' @param weights_matrix Like above.
 #'
-#' @param verbose If TRUE, print progress to console.
+#' @param verbose If TRUE, output progress to console.
 #'
 #' @return labeled_df a dataframe containing a column for subjectkeys,
 #' a column for whether the subject was in the train (original) or test (held
@@ -75,7 +75,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
                                 weights_matrix = NULL,
                                 verbose = FALSE) {
     ###########################################################################
-    # 1. Reorder data_list subjects
+    # 1. Reorder data list subjects
     ###########################################################################
     train_subjects <- colnames(subs(train_solutions_matrix))[-1]
     all_subjects <- full_dl[[1]][[1]]$"subjectkey"
@@ -131,11 +131,10 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     ###########################################################################
     for (i in seq_len(nrow(train_solutions_matrix))) {
         if (verbose) {
-            print(
-                paste0(
-                    "Processing row ", i, " of ",
-                    nrow(train_solutions_matrix), "..."
-                )
+            cat(
+                "Processing row ", i, " of ",
+                nrow(train_solutions_matrix), "...\n",
+                sep = ""
             )
         }
         current_row <- train_solutions_matrix[i, ]
