@@ -14,11 +14,11 @@
 #' * A column named "t": Like above, but for the t (number of iterations)
 #'   hyperparameter.
 #' * A column named "clust_alg": Specification of which clustering algorithm
-#'   will be applied to the final similarity matrix to identify patient
-#'   subtypes. By default, this column can take on the integer values 1 or 2,
-#'   which correspond to spectral clustering where the number of clusters is
-#'   determined by the eigen-gap or rotation cost heuristic respectively. You
-#'   can learn more about this parameter here:
+#'   will be applied to the final similarity matrix. By default, this
+#'   column can take on the integer values 1 or 2, which correspond to
+#'   spectral clustering where the number of clusters is determined by the
+#'   eigen-gap or rotation cost heuristic respectively. You can learn more
+#'   about this parameter here:
 #'   https://branchlab.github.io/metasnf/articles/clustering_algorithms.html.
 #' * A column named "cont_dist": Specification of which distance metric will be
 #'   used for dataframes of purely continuous data. You can learn about this
