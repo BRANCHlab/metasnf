@@ -7,7 +7,7 @@
 domains(dl)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
 domain_list list of domains

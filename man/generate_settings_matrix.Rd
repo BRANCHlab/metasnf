@@ -34,7 +34,7 @@ generate_settings_matrix(
 )
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{seed}{(DEPRECATED) set the global seed. To ensure reproducible
 settings matrices are generated, manually call \code{set.seed()} prior to
@@ -47,7 +47,7 @@ randomly removed. By default, 0.}
 
 \item{max_removed_inputs}{The largest number of input dataframes that may be
 randomly removed. By default, this is 1 less than all the provided input
-dataframes in the data_list.}
+dataframes in the data list.}
 
 \item{dropout_dist}{Parameter controlling how the random removal of input
 dataframes should occur. Can be "none" (no input dataframes are randomly
@@ -148,7 +148,7 @@ settings_matrix A settings matrix
 \description{
 The settings_matrix is a dataframe whose rows completely specify the
 hyperparameters and decisions required to transform individual input
-dataframes (found in a data_list, see ?generate_data_list) into a single
+dataframes (found in a data list, see ?data_list) into a single
 similarity matrix through SNF. The format of the settings matrix is as
 follows:
 \itemize{
@@ -161,11 +161,11 @@ hyperparameter.
 \item A column named "t": Like above, but for the t (number of iterations)
 hyperparameter.
 \item A column named "clust_alg": Specification of which clustering algorithm
-will be applied to the final similarity matrix to identify patient
-subtypes. By default, this column can take on the integer values 1 or 2,
-which correspond to spectral clustering where the number of clusters is
-determined by the eigen-gap or rotation cost heuristic respectively. You
-can learn more about this parameter here:
+will be applied to the final similarity matrix. By default, this
+column can take on the integer values 1 or 2, which correspond to
+spectral clustering where the number of clusters is determined by the
+eigen-gap or rotation cost heuristic respectively. You can learn more
+about this parameter here:
 https://branchlab.github.io/metasnf/articles/clustering_algorithms.html.
 \item A column named "cont_dist": Specification of which distance metric will be
 used for dataframes of purely continuous data. You can learn about this
@@ -176,10 +176,10 @@ https://branchlab.github.io/metasnf/articles/distance_metrics.html
 \item A column named "cat_dist": Like above, but for categorical dataframes.
 \item A column named "mixed_dist": Like above, but for mixed-type (e.g.,
 both categorical and discrete) dataframes.
-\item One column for every input dataframe in the corresponding data_list which
+\item One column for every input dataframe in the corresponding data list which
 can either have the value of 0 or 1. The name of the column should be
 formatted as "inc_[]" where the square brackets are replaced with the
-name (as found in dl_summary(data_list)$"name") of each dataframe. When
+name (as found in dl_summary(dl)$"name") of each dataframe. When
 0, that dataframe will be excluded from that run of the SNF pipeline. When
 1, that dataframe will be included.
 }

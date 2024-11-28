@@ -15,7 +15,7 @@ test_that("return a correctly formatted settings_matrix", {
         var3 = c(900, 1990, 373),
         var4 = c(509, 2209, 83)
     )
-    data_list <- generate_data_list(
+    data_list <- data_list(
         list(
             data = heart_rate_df,
             name = "heart_rate",

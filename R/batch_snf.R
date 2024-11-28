@@ -2,10 +2,10 @@
 #'
 #' This is the core function of the metasnf package. Using the information
 #' stored in a settings_matrix (see ?generate_settings_matrix) and a data list
-#' (see ?generate_data_list), run repeated complete SNF pipelines to generate
+#' (see ?data_list), run repeated complete SNF pipelines to generate
 #' a broad space of post-SNF cluster solutions.
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param settings_matrix A data.frame where each row completely defines an SNF
 #' pipeline transforming individual input dataframes into a final cluster
@@ -277,7 +277,7 @@ batch_snf <- function(dl,
     #  - alpha (AKA sigma or eta): value of similarity matrix hyperparameter
     #  - k: value of similarity matrix hyperparameter
     #  - T: Number of iterations of SNF
-    #  - subject_* (1 column per patient): cluster membership of that patient
+    #  - uid_* (1 column per patient): cluster membership of that patient
     #    for that row. Only included when run_clustering = TRUE.
     #  - nclust (1 column): number of clusters in the cluster solution in that
     #    row. Only included when run_clustering = TRUE.
@@ -291,7 +291,7 @@ batch_snf <- function(dl,
     if (!suppress_clustering) {
         solutions_matrix <- add_columns(
             df = settings_matrix,
-            newcols = dl[[1]]$"data"$"subjectkey", # one col/patient
+            newcols = dl[[1]]$"data"$"uid", # one col/patient
             fill = 0 # populate the new column with 0s by default
         )
         # 5b. solutions_matrix gets one new column to store the cluster that
@@ -431,7 +431,7 @@ batch_snf <- function(dl,
 #' inputs
 #'
 #' @param settings_matrix_row Row of a settings matrix.
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @return A data list (class "list") in which any component with a
 #' corresponding 0 value in the provided settings matrix row has been removed.
@@ -460,7 +460,7 @@ drop_inputs <- function(settings_matrix_row, dl) {
 #'
 #' Given a dataframe of numerical features, return a euclidean distance matrix.
 #'
-#' @param df Raw dataframe with subject IDs in column "subjectkey"
+#' @param df Raw dataframe with subject IDs in column "uid"
 #'
 #' @param input_type Either "numeric" (resulting in euclidean distances),
 #' "categorical" (resulting in binary distances), or "mixed" (resulting in
@@ -491,7 +491,7 @@ get_dist_matrix <- function(df,
                             mix_dist_fn,
                             weights_row) {
     # Move subject keys into dataframe rownames
-    df <- data.frame(df, row.names = "subjectkey")
+    df <- data.frame(df, row.names = "uid")
     # Trim down of the full weights row
     weights_row_trim <-
         weights_row[, colnames(weights_row) %in% colnames(df), drop = FALSE]
@@ -523,7 +523,7 @@ get_dist_matrix <- function(df,
 
 #' Convert a data list to a similarity matrix through a variety of SNF schemes
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param scheme Which SNF system to use to achieve the final fused network.
 #'
@@ -621,7 +621,7 @@ snf_step <- function(dl,
 #' Individual dataframes into individual similarity matrices into one fused
 #' network per domain into one final fused network.
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param k k hyperparameter.
 #'
@@ -722,7 +722,7 @@ two_step_merge <- function(dl,
 #' Given a data list, returns a new data list where all data objects of
 #' a particlar domain have been concatenated.
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param k k hyperparameter.
 #'
@@ -773,7 +773,7 @@ domain_merge <- function(dl,
             new_data <- dplyr::inner_join(
                 existing_data,
                 current_data,
-                by = "subjectkey"
+                by = "uid"
             )
             if (current_type == existing_type) {
                 new_type <- existing_type
@@ -833,7 +833,7 @@ domain_merge <- function(dl,
 #' The "vanilla" scheme - does distance matrix conversions of each input
 #' dataframe in a list and
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param k k hyperparameter.
 #'

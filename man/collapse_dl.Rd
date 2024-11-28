@@ -7,7 +7,7 @@
 collapse_dl(dl)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
 A "data.frame"-formatted version of the provided data list.

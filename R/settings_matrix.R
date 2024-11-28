@@ -2,7 +2,7 @@
 #'
 #' The settings_matrix is a dataframe whose rows completely specify the
 #' hyperparameters and decisions required to transform individual input
-#' dataframes (found in a data list, see ?generate_data_list) into a single
+#' dataframes (found in a data list, see ?data_list) into a single
 #' similarity matrix through SNF. The format of the settings matrix is as
 #' follows:
 #' * A column named "row_id": This column is used to keep
@@ -36,7 +36,7 @@
 #'   0, that dataframe will be excluded from that run of the SNF pipeline. When
 #'   1, that dataframe will be included.
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param nrows Number of rows to generate for the settings matrix.
 #'

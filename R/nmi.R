@@ -1,6 +1,6 @@
 #' Calculate feature NMIs for a data list and a derived solutions_matrix
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #' Use the same value as was used in the original call to `batch_snf()`.
 #'
 #' @param solutions_matrix Result of `batch_snf` storing cluster solutions and
@@ -92,7 +92,7 @@ batch_nmi <- function(dl,
                         dplyr::select(
                             dplyr::all_of(
                                 c(
-                                    "subjectkey",
+                                    "uid",
                                     feature
                                 )
                             )
@@ -144,11 +144,11 @@ batch_nmi <- function(dl,
                 ###############################################################
                 solo_solution <- get_cluster_df(this_solutions_matrix)
                 full_solution <- get_cluster_df(solutions_matrix[j, ])
-                colnames(solo_solution) <- c("subjectkey", "solo_cluster")
+                colnames(solo_solution) <- c("uid", "solo_cluster")
                 joint_solution <- dplyr::inner_join(
                     solo_solution,
                     full_solution,
-                    by = "subjectkey"
+                    by = "uid"
                 )
                 ###############################################################
                 # Calculate NMI

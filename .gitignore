@@ -6,3 +6,4 @@ shared-code
 *.html
 Session.vim
 build*
+sandbox.R

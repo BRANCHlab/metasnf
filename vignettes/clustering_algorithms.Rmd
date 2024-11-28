@@ -39,7 +39,7 @@ library(metasnf)
 
 # Start by making a data list containing all our dataframes to more easily
 # identify subjects without missing data
-full_data_list <- generate_data_list(
+full_data_list <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -321,7 +321,7 @@ Whichever matrix values had the maximum similarity will now have a distance of 0
 library(dbscan)
 library(ggplot2)
 
-data_list <- generate_data_list(
+data_list <- data_list(
     list(
         data = expression_df,
         name = "genes_1_and_2_exp",

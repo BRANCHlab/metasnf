@@ -16,7 +16,7 @@ the solutions matrix.}
 function \code{batch_snf()}. The solutions in the solutions matrix should
 correspond to those in the subsample solutions.}
 
-\item{verbose}{If TRUE, print time remaining estimates to console.}
+\item{verbose}{If TRUE, output time remaining estimates to console.}
 }
 \value{
 A list containing the following components:

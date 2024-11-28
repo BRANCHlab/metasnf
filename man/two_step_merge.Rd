@@ -18,7 +18,7 @@ two_step_merge(
 )
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{k}{k hyperparameter.}
 

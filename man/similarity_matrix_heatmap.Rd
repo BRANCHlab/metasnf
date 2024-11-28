@@ -55,7 +55,7 @@ off-diagonals), or "zero" (replace diagonals with 0).}
 
 \item{show_column_names}{Parameter for ComplexHeatmap::Heatmap.}
 
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{data}{A dataframe containing elements requested for annotation.}
 

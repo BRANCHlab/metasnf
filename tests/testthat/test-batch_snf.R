@@ -8,7 +8,7 @@ test_that("function and parallel equivalent run and give equal results", {
     # Load the package
     library(metasnf)
     # Setting up the data
-    data_list <- generate_data_list(
+    data_list <- data_list(
         list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
         list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
         list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -32,3 +32,4 @@ test_that("function and parallel equivalent run and give equal results", {
     )
     expect_equal(solutions_matrix, solutions_matrix_parallel)
 })
+

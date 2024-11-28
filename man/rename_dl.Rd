@@ -2,12 +2,12 @@
 % Please edit documentation in R/data_list.R
 \name{rename_dl}
 \alias{rename_dl}
-\title{Rename features in a data_list}
+\title{Rename features in a data list}
 \usage{
 rename_dl(dl, name_mapping)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{name_mapping}{A named vector where the values are the features to be
 renamed and the names are the new names for those features.}
@@ -16,13 +16,13 @@ renamed and the names are the new names for those features.}
 A data list ("list"-class object) with adjusted feature names.
 }
 \description{
-Rename features in a data_list
+Rename features in a data list
 }
 \examples{
 
 library(metasnf)
 
-dl <- generate_data_list(
+dl <- data_list(
     list(pubertal, "pubertal_status", "demographics", "continuous"),
     list(anxiety, "anxiety", "behaviour", "ordinal"),
     list(depress, "depressed", "behaviour", "ordinal"),

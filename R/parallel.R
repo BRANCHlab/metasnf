@@ -1,6 +1,6 @@
 #' Parallel processing form of batch_snf
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param distance_metrics_list An optional nested list containing which
 #' distance metric function should be used for the various feature types
@@ -86,7 +86,7 @@ parallel_batch_snf <- function(dl,
 
 #' Generate closure function to run batch_snf in an apply-friendly format
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param distance_metrics_list An optional nested list containing which
 #' distance metric function should be used for the various feature types

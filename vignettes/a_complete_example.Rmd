@@ -144,7 +144,7 @@ We'll start by creating a data list that stores our input features.
 ```{r}
 # Note that you do not need to explicitly name every single named element
 # (data = ..., name = ..., etc.)
-data_list <- generate_data_list(
+data_list <- data_list(
     list(
         data = cort_t,
         name = "cortical_thickness",
@@ -185,7 +185,7 @@ The structure of the data list is a nested list tracking the data, the name of t
 Options for feature type include "continuous", "discrete", "ordinal", and "categorical".
 
 The "uid" parameter is the name of the column in the dataframes that uniquely identifies each observation.
-Upon data list creation, the UID will be converted to "subjectkey" for consistency across other functions in the package.
+Upon data list creation, the UID will be converted to "uid" for consistency across other functions in the package.
 
 We can get a summary of our constructed `data_list` with the `summarize_dl` function:
 
@@ -194,7 +194,7 @@ summarize_dl(data_list)
 ```
 
 Each input dataframe now has the same 87 subjects with complete data.
-The width refers to the number of columns in each dataframe, which equals 1 for the UID (subjectkey) column + the number of features in the dataframe.
+The width refers to the number of columns in each dataframe, which equals 1 for the UID (uid) column + the number of features in the dataframe.
 
 `data_list` now stores all the features we intend on using for the clustering.
 We're interested in knowing if any of the clustering solutions we generate can distinguish children apart based on their anxiety and depression scores.
@@ -202,7 +202,7 @@ To do this, we'll also create a data list storing only features that we'll use f
 We'll refer to this as the "target_list".
 
 ```{r}
-target_list <- generate_data_list(
+target_list <- data_list(
     list(anxiety, "anxiety", "behaviour", "ordinal"),
     list(depress, "depressed", "behaviour", "ordinal"),
     uid = "unique_id"
@@ -490,7 +490,7 @@ If you wanted to, for example, highlight the solutions where two very specific o
 extended_solutions_matrix2 <- extended_solutions_matrix |>
     dplyr::mutate(
         key_subjects_cluster_together = dplyr::case_when(
-            subject_NDAR_INVLF3TNDUZ == subject_NDAR_INVLDQH8ATK ~ TRUE,
+            uid_NDAR_INVLF3TNDUZ == uid_NDAR_INVLDQH8ATK ~ TRUE,
             TRUE ~ FALSE
         )
     )
@@ -808,10 +808,10 @@ The `metasnf` package comes equipped with a function to do the training/testing 
 
 ```{r}
 # All the subjects present in all dataframes with no NAs
-all_subjects <- data_list[[1]]$"data"$"subjectkey"
+all_subjects <- data_list[[1]]$"data"$"uid"
 
-# Remove the "subject_" prefix to allow merges with the original data
-all_subjects <- gsub("subject_", "", all_subjects)
+# Remove the "uid_" prefix to allow merges with the original data
+all_subjects <- gsub("uid_", "", all_subjects)
 
 # Dataframe assigning 80% of subjects to train and 20% to test
 assigned_splits <- train_test_assign(train_frac = 0.8, subjects = all_subjects)
@@ -839,7 +839,7 @@ test_anxiety <- anxiety[anxiety$"unique_id" %in% test_subs, ]
 test_depress <- depress[depress$"unique_id" %in% test_subs, ]
 
 # A data list with just training subjects
-train_data_list <- generate_data_list(
+train_data_list <- data_list(
     list(train_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(train_cort_sa, "cortical_sa", "neuroimaging", "continuous"),
     list(train_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -849,7 +849,7 @@ train_data_list <- generate_data_list(
 )
 
 # A data list with training and testing subjects
-full_data_list <- generate_data_list(
+full_data_list <- data_list(
     list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -859,7 +859,7 @@ full_data_list <- generate_data_list(
 )
 
 # Construct the target lists
-train_target_list <- generate_data_list(
+train_target_list <- data_list(
     list(train_anxiety, "anxiety", "behaviour", "ordinal"),
     list(train_depress, "depressed", "behaviour", "ordinal"),
     uid = "unique_id"

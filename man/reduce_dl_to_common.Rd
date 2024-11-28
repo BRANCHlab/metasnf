@@ -2,18 +2,18 @@
 % Please edit documentation in R/data_list.R
 \name{reduce_dl_to_common}
 \alias{reduce_dl_to_common}
-\title{Reduce data_list to common subjects}
+\title{Reduce data list to common uids}
 \usage{
 reduce_dl_to_common(dl)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
-reduced_dl The data_list object subsetted only to subjectssnf
+reduced_dl The data list object subsetted only to uidssnf
 shared across all nested dataframes
 }
 \description{
 Given a \code{data_list} object, reduce each nested dataframe to contain only the
-set of subjects that are shared by all nested dataframes
+set of uids that are shared by all nested dataframes
 }

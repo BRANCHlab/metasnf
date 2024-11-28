@@ -2,16 +2,16 @@
 % Please edit documentation in R/data_list.R
 \name{arrange_dl}
 \alias{arrange_dl}
-\title{Given a data_list object, sort data elements by subjectkey}
+\title{Given a data list object, sort data elements by uid}
 \usage{
 arrange_dl(dl)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
-arranged_dl The arranged data_list object
+arranged_dl The arranged data list object
 }
 \description{
-Given a data_list object, sort data elements by subjectkey
+Given a data list object, sort data elements by uid
 }

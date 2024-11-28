@@ -44,7 +44,7 @@ calculate_silhouettes <- function(solutions_matrix, similarity_matrices) {
     #  values.
     cluster_solutions_df <- get_cluster_solutions(solutions_matrix)
     # cluster_solutions is a list of... cluster solutions. Each element in the
-    #  list is a column from cluster_solutions_df, excluding the subjectkey
+    #  list is a column from cluster_solutions_df, excluding the uid
     #  column.
     cluster_solutions <- sapply(
         cluster_solutions_df[, -1],
@@ -121,7 +121,7 @@ calculate_dunn_indices <- function(solutions_matrix, similarity_matrices) {
     #  values.
     cluster_solutions_df <- get_cluster_solutions(solutions_matrix)
     # cluster_solutions is a list of... cluster solutions. Each element in the
-    #  list is a column from cluster_solutions_df, excluding the subjectkey
+    #  list is a column from cluster_solutions_df, excluding the uid
     #  column.
     cluster_solutions <- sapply(
         cluster_solutions_df[, -1],
@@ -217,7 +217,7 @@ calculate_db_indices <- function(solutions_matrix, similarity_matrices) {
     #  values.
     cluster_solutions_df <- get_cluster_solutions(solutions_matrix)
     # cluster_solutions is a list of... cluster solutions. Each element in the
-    #  list is a column from cluster_solutions_df, excluding the subjectkey
+    #  list is a column from cluster_solutions_df, excluding the uid
     #  column.
     cluster_solutions <- sapply(
         cluster_solutions_df[, -1],

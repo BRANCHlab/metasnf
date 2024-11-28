@@ -1,4 +1,4 @@
-#' Developer constructor for data_list
+#' Developer constructor for data_list class object
 #' 
 #' @keywords internal
 #' 
@@ -9,6 +9,20 @@ new_data_list <- function(x) {
     stopifnot(is.list(x))
     stopifnot(is.list(x[[1]]))
     dl <- structure(x, class = "data_list")
+    return(dl)
+}
+
+#' Validator for data_list class object
+#' 
+#' @keywords internal
+#' 
+#' @param dl An unvalidated `list`-class object to be checked for compliance
+#' with `data_list` class object formatting constraints.
+#' 
+#' @return If the input has a valid structure for a `data_list` class object, 
+#' returns the input unchanged. Otherwise, raises an error.
+validate_data_list <- function(dl) {
+    stopifnot(TRUE)
     return(dl)
 }
 
@@ -73,7 +87,7 @@ new_data_list <- function(x) {
 #' )
 #'
 #' # Explicitly (Name each nested list element):
-#' dl <- generate_data_list(
+#' dl <- data_list(
 #'     list(
 #'         data = heart_rate_df,
 #'         name = "heart_rate",
@@ -102,7 +116,7 @@ new_data_list <- function(x) {
 #' )
 #'
 #' # Compact loading
-#' dl <- generate_data_list(
+#' dl <- data_list(
 #'     list(heart_rate_df, "heart_rate", "clinical", "continuous"),
 #'     list(personality_test_df, "personality_test", "surveys", "continuous"),
 #'     list(survey_response_df, "survey_response", "surveys", "ordinal"),
@@ -119,7 +133,7 @@ new_data_list <- function(x) {
 #'     list(personality_test_df, "data2", "domain2", "continuous")
 #' )
 #'
-#' dl <- generate_data_list(
+#' dl <- data_list(
 #'     list_of_lists,
 #'     uid = "patient_id"
 #' )
@@ -169,9 +183,9 @@ data_list <- function(...,
     }
     dl <- convert_uids(dl, uid)
     # Handle missing subject removal
-    removal_results <- dl |> remove_dl_na(return_missing = TRUE)
     ###########################################################################
     dl <- dl |>
+        remove_dl_na() |>
         reduce_dl_to_common() |>
         prefix_dl_sk()
     ###########################################################################
@@ -190,8 +204,8 @@ data_list <- function(...,
     names(dl) <- summarize_dl(dl)$"name"
     ###########################################################################
     # Class management
-    validated <- validate_data_list(elements)
-    dl <- new_data_list(validated)
+    dl <- validate_data_list(dl)
+    dl <- new_data_list(dl)
     return(dl)
 }
 
@@ -200,7 +214,7 @@ data_list <- function(...,
 #' Column name "uid" is reserved for the unique identifier of observations.
 #' This function ensures all dataframes have their UID set as "uid".
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param uid (string) the name of the uid column currently used data
 #'
@@ -253,16 +267,12 @@ convert_uids <- function(dl, uid = NULL) {
 
 #' Remove NAs from a data list object
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
-#'
-#' @param return_missing If TRUE, function returns a list where the first
-#'  element is the data list and the second element is a vector of unique IDs
-#'  of patients who were removed during the complete data filtration step.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @return dl A data list without NAs
 #'
 #' @export
-remove_dl_na <- function(dl, return_missing = FALSE) {
+remove_dl_na <- function(dl) {
     dl_no_nas <- lapply(
         dl,
         function(x) {
@@ -270,32 +280,12 @@ remove_dl_na <- function(dl, return_missing = FALSE) {
             return(x)
         }
     )
-    # Return both the data list and missing patients based on return_missing
-    if (return_missing) {
-        all_data <- dl |> lapply(
-            function(x) {
-                x$"data"
-            }
-        ) |>
-            merge_df_list(join = "full")
-        all_uids <- all_data$"uid"
-        complete_data <- stats::na.omit(all_data)
-        complete_uids <- complete_data$"uid"
-        complete_indices <- all_uids %in% complete_uids
-        removed_uids <- all_uids[!complete_indices]
-        results <- list(
-            dl = dl_no_nas,
-            removed_uids = removed_uids
-        )
-        return(results)
-    } else {
-        return(dl_no_nas)
-    }
+    return(dl_no_nas)
 }
 
 #' Add "uid_" prefix to all UID values in uid column
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @return dl A data list with UIDs prefixed with the string "uid_"
 #'
@@ -316,7 +306,7 @@ prefix_dl_sk <- function(dl) {
 #' Given a `data_list` object, reduce each nested dataframe to contain only the
 #'  set of uids that are shared by all nested dataframes
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @return reduced_dl The data list object subsetted only to uidssnf
 #'  shared across all nested dataframes
@@ -340,7 +330,7 @@ reduce_dl_to_common <- function(dl) {
 
 #' Given a data list object, sort data elements by uid
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @return arranged_dl The arranged data list object
 #'
@@ -362,7 +352,7 @@ arrange_dl <- function(dl) {
 
 #' Summarize a data list
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param scope The level of detail for the summary. Options are:
 #' - "component" (default): One row per component (dataframe) in the data list.
@@ -411,7 +401,7 @@ summarize_dl <- function(dl, scope = "component") {
 
 #' Domains
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @return domain_list list of domains
 #'
@@ -423,7 +413,7 @@ domains <- function(dl) {
 
 #' Collapse a dl into a single dataframe
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @return A "data.frame"-formatted version of the provided data list.
 #'
@@ -440,7 +430,7 @@ collapse_dl <- function(dl) {
 
 #' Variable-level summary of a data list
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @return variable_level_summary A dataframe containing the name, type, and
 #' domain of every variable in a data list.
@@ -475,7 +465,7 @@ dl_variable_summary <- function(dl) {
 
 #' Reorder the uids in a data list
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param ordered_uids A vector of the uid values in the data list
 #' in the desired order of the sorted data list.
@@ -497,7 +487,7 @@ reorder_dl_subs <- function(dl, ordered_uids) {
 
 #' Rename features in a data list
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param name_mapping A named vector where the values are the features to be
 #' renamed and the names are the new names for those features.
@@ -509,7 +499,7 @@ reorder_dl_subs <- function(dl, ordered_uids) {
 #'
 #' library(metasnf)
 #'
-#' dl <- generate_data_list(
+#' dl <- data_list(
 #'     list(pubertal, "pubertal_status", "demographics", "continuous"),
 #'     list(anxiety, "anxiety", "behaviour", "ordinal"),
 #'     list(depress, "depressed", "behaviour", "ordinal"),
@@ -558,7 +548,7 @@ rename_dl <- function(dl, name_mapping) {
 
 #' Extract uids from a data list
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param prefix If TRUE, preserves the "uid_" prefix added to UIDs when
 #' creating a data list.
@@ -578,7 +568,7 @@ get_dl_uids <- function(dl, prefix = FALSE) {
 
 #' Make the uid UID columns of a data list first
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @return A data list ("list"-class object) in which each data-subcomponent
 #' has "uid" positioned as its first column.
@@ -640,7 +630,7 @@ merge_dls <- function(dl_1, dl_2) {
 
 #' Check if data list contains any duplicate features
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @return Doesn't return any value. Raises warning if there are features
 #' with duplicate names in a generated data list.

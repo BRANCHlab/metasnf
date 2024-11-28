@@ -19,7 +19,7 @@ snf_step(
 )
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{scheme}{Which SNF system to use to achieve the final fused network.}
 

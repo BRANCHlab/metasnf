@@ -2,17 +2,17 @@
 % Please edit documentation in R/data_list.R
 \name{dl_uid_first_col}
 \alias{dl_uid_first_col}
-\title{Make the subjectkey UID columns of a data_list first}
+\title{Make the uid UID columns of a data list first}
 \usage{
 dl_uid_first_col(dl)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
 A data list ("list"-class object) in which each data-subcomponent
-has "subjectkey" positioned as its first column.
+has "uid" positioned as its first column.
 }
 \description{
-Make the subjectkey UID columns of a data_list first
+Make the uid UID columns of a data list first
 }

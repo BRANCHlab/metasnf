@@ -2,20 +2,16 @@
 % Please edit documentation in R/data_list.R
 \name{remove_dl_na}
 \alias{remove_dl_na}
-\title{Remove NAs from a data_list object}
+\title{Remove NAs from a data list object}
 \usage{
-remove_dl_na(dl, return_missing = FALSE)
+remove_dl_na(dl)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
-
-\item{return_missing}{If TRUE, function returns a list where the first
-element is the data_list and the second element is a vector of unique IDs
-of patients who were removed during the complete data filtration step.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
-dl A data_list without NAs
+dl A data list without NAs
 }
 \description{
-Remove NAs from a data_list object
+Remove NAs from a data list object
 }

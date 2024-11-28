@@ -1,5 +1,5 @@
 ###############################################################################
-# generate_data_list()
+# data_list()
 ###############################################################################
 test_that("return a correctly formatted data_list", {
     heart_rate_df <- data.frame(
@@ -12,7 +12,7 @@ test_that("return a correctly formatted data_list", {
         var3 = c(900, 1990, 373),
         var4 = c(509, 2209, 83)
     )
-    data_list <- generate_data_list(
+    data_list <- data_list(
         list(
             data = heart_rate_df,
             name = "heart_rate",
@@ -53,10 +53,10 @@ test_that("return a correctly formatted data_list", {
 })
 
 test_that("errors on partial specification of component names", {
-    subjectkey <- LETTERS
-    df <- data.frame(subjectkey, a = seq_along(LETTERS))
+    uid <- LETTERS
+    df <- data.frame(uid, a = seq_along(LETTERS))
     expect_error(
-        data_list <- generate_data_list(
+        data_list <- data_list(
             list(df, "name", "domain", type = "discrete")
         ),
         "for all of the elements or for none of them"

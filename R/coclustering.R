@@ -3,7 +3,7 @@
 #' Given a data list, return a list of smaller data lists that are generated
 #' through random sampling (without replacement).
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param n_subsamples Number of subsamples to create.
 #'
@@ -34,7 +34,7 @@ subsample_dl <- function(dl,
         )
     }
     # Calculate number of subjects to keep if fraction parameter was used
-    all_subjects <- dl[[1]]$"data"$"subjectkey"
+    all_subjects <- dl[[1]]$"data"$"uid"
     # Ensure n_subjects is within 0 and the total number of subjects
     if (!is.null(n_subjects)) {
         if (n_subjects < 0 | n_subjects > length(all_subjects)) {
@@ -60,18 +60,18 @@ subsample_dl <- function(dl,
             n_subjects <- round(subsample_fraction * length(all_subjects))
         }
     }
-    subject_subsamples <- lapply(
+    uid_subsamples <- lapply(
         rep(n_subjects, n_subsamples),
         function(x) {
             return(sample(all_subjects, x))
         }
     )
-    dl_subsamples <- subject_subsamples |> lapply(
+    dl_subsamples <- uid_subsamples |> lapply(
         function(subsample) {
             length(subsample)
             dl_subsample <- dl |> lapply(
                 function(x) {
-                    chosen_rows <- x$"data"$"subjectkey" %in% subsample
+                    chosen_rows <- x$"data"$"uid" %in% subsample
                     x$"data" <- x$"data"[chosen_rows, ]
                     return(x)
                 }
@@ -265,7 +265,7 @@ subsample_pairwise_aris <- function(subsample_solutions,
             v2 <- pairwise_indices[2, col]
             subsample_a <- subsample_solutions[[v1]]
             subsample_b <- subsample_solutions[[v2]]
-            # keep column 1 (subjectkey) and column 1 + row
+            # keep column 1 (uid) and column 1 + row
             #  (the solution corresponding to that row)
             solution_a <- subsample_a[, c(1, row + 1)]
             solution_b <- subsample_b[, c(1, row + 1)]
@@ -273,9 +273,9 @@ subsample_pairwise_aris <- function(subsample_solutions,
             common_df <- dplyr::inner_join(
                 solution_a,
                 solution_b,
-                by = "subjectkey"
+                by = "uid"
             )
-            # The first column of common_df contains the subjectkey values. The
+            # The first column of common_df contains the uid values. The
             #  2nd and 3rd columns store the two sets of cluster solutions.
             ari <- mclust::adjustedRandIndex(common_df[, 2], common_df[, 3])
             subsample_ari_mat[v1, v2] <- ari
@@ -439,7 +439,7 @@ cocluster_heatmap <- function(cocluster_df,
     sub_1_clust <- ""
     sub_2 <- ""
     sub_2_clust <- ""
-    subjectkey <- ""
+    uid <- ""
     ###########################################################################
     # Assemble any provided data
     data <- assemble_data(data = data, dl = dl)
@@ -465,19 +465,19 @@ cocluster_heatmap <- function(cocluster_df,
     # Reconstructing the original cluster solution
     cluster_solution_s1 <- dplyr::select(cocluster_df, sub_1, sub_1_clust)
     cluster_solution_s2 <- dplyr::select(cocluster_df, sub_2, sub_2_clust)
-    colnames(cluster_solution_s1) <- c("subjectkey", "cluster")
-    colnames(cluster_solution_s2) <- c("subjectkey", "cluster")
+    colnames(cluster_solution_s1) <- c("uid", "cluster")
+    colnames(cluster_solution_s2) <- c("uid", "cluster")
     cluster_solution <- rbind(
         cluster_solution_s1,
         cluster_solution_s2
     ) |>
         dplyr::distinct() |>
-        dplyr::arrange(cluster, subjectkey)
+        dplyr::arrange(cluster, uid)
     if (!is.null(dl)) {
         cluster_solution <- dplyr::left_join(
             cluster_solution,
             collapse_dl(dl),
-            by = "subjectkey"
+            by = "uid"
         )
     }
     nsubs <- nrow(cluster_solution)
@@ -485,8 +485,8 @@ cocluster_heatmap <- function(cocluster_df,
     # tallies
     cocluster_mat <- matrix(ncol = nsubs, nrow = nsubs)
     diag(cocluster_mat) <- 1
-    colnames(cocluster_mat) <- cluster_solution$"subjectkey"
-    rownames(cocluster_mat) <- cluster_solution$"subjectkey"
+    colnames(cocluster_mat) <- cluster_solution$"uid"
+    rownames(cocluster_mat) <- cluster_solution$"uid"
     # Loop through the coclustering dataframe and populate the matrices
     for (i in seq_len(nrow(cocluster_df))) {
         row <- cocluster_df[i, ]
@@ -497,7 +497,7 @@ cocluster_heatmap <- function(cocluster_df,
     }
     ###########################################################################
     # Generate annotations
-    rownames(data) <- data$"subjectkey"
+    rownames(data) <- data$"uid"
     data <- data[colnames(cocluster_mat), ]
     annotations_list <- generate_annotations_list(
         df = data,
@@ -587,7 +587,7 @@ calculate_coclustering <- function(subsample_solutions,
     cluster <- ""
     sub_1_clust <- ""
     sub_2_clust <- ""
-    subjectkey <- ""
+    uid <- ""
     same_cluster <- ""
     same_solution <- ""
     cocluster_frac <- ""
@@ -601,7 +601,7 @@ calculate_coclustering <- function(subsample_solutions,
     cocluster_cf_mats <- list()
     # Data frame containing the cluster solutions from the full data list
     cluster_solutions <- get_cluster_solutions(solutions_matrix)
-    subjects <- cluster_solutions$"subjectkey"
+    subjects <- cluster_solutions$"uid"
     nsubs <- length(subjects)
     cocluster_mat <- matrix(0, ncol = nsubs, nrow = nsubs)
     diag(cocluster_mat) <- length(subsample_solutions)
@@ -617,19 +617,19 @@ calculate_coclustering <- function(subsample_solutions,
             )
         }
         cluster_solution <- cluster_solutions[, c(1, idx + 1)]
-        colnames(cluster_solution) <- c("subjectkey", "cluster")
+        colnames(cluster_solution) <- c("uid", "cluster")
         # Dataframe storing all pairs of subjects in the full solution
         cocluster_df <- data.frame(t(utils::combn(subjects, 2)))
         colnames(cocluster_df) <- c("sub_1", "sub_2")
         cocluster_df <- dplyr::left_join(
             cocluster_df,
             cluster_solution,
-            dplyr::join_by(sub_1 == subjectkey)
+            dplyr::join_by(sub_1 == uid)
         )
         cocluster_df <- dplyr::left_join(
             cocluster_df,
             cluster_solution,
-            dplyr::join_by(sub_2 == subjectkey)
+            dplyr::join_by(sub_2 == uid)
         )
         colnames(cocluster_df) <- c(
             "sub_1", "sub_2", "sub_1_clust", "sub_2_clust"
@@ -646,15 +646,15 @@ calculate_coclustering <- function(subsample_solutions,
             # Iteration through all the solutions of subsampled data
             for (sub_ind in seq_len(length(subsample_solutions))) {
                 subsample <- subsample_solutions[[sub_ind]]
-                subsample_subjects <- subsample$"subjectkey"
-                # df with subjectkey and only the current cluster solution
+                subsample_subjects <- subsample$"uid"
+                # df with uid and only the current cluster solution
                 current_ss <- subsample[, c(1, idx + 1)]
-                colnames(current_ss) <- c("subjectkey", "cluster")
-                rownames(current_ss) <- current_ss$"subjectkey"
+                colnames(current_ss) <- c("uid", "cluster")
+                rownames(current_ss) <- current_ss$"uid"
                 sub_1 <- cocluster_df[row, "sub_1"]
                 sub_2 <- cocluster_df[row, "sub_2"]
-                ss_has_sub_1 <- sub_1 %in% current_ss$"subjectkey"
-                ss_has_sub_2 <- sub_2 %in% current_ss$"subjectkey"
+                ss_has_sub_1 <- sub_1 %in% current_ss$"uid"
+                ss_has_sub_2 <- sub_2 %in% current_ss$"uid"
                 if (ss_has_sub_1 & ss_has_sub_2) {
                     cocluster_df[row, "same_solution"] <- cocluster_df[row, "same_solution"] + 1
                     cocluster_ss_mat[sub_1, sub_2] <- cocluster_ss_mat[sub_1, sub_2] + 1

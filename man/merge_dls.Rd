@@ -7,16 +7,16 @@
 merge_dls(dl_1, dl_2)
 }
 \arguments{
-\item{dl_1}{The first data_list to merge.}
+\item{dl_1}{The first data list to merge.}
 
-\item{dl_2}{The second data_list to merge.}
+\item{dl_2}{The second data list to merge.}
 }
 \value{
 A data list ("list"-class object) containing the observations of
 both provided data lists.
 }
 \description{
-Join two data_lists with the same components (dataframes) but separate
-observations. To instead merge two data_lists that have the same
+Join two data lists with the same components (dataframes) but separate
+observations. To instead merge two data lists that have the same
 observations but different components, simply use \code{c()}.
 }

@@ -84,9 +84,9 @@ char_to_fac <- function(df) {
     return(df)
 }
 
-#' Select all columns of a dataframe not starting with the 'subject_' prefix.
+#' Select all columns of a dataframe not starting with the 'uid_' prefix.
 #'
-#' Removes the 'subject_' prefixed columns from a dataframe.
+#' Removes the 'uid_' prefixed columns from a dataframe.
 #'
 #' @param df A dataframe
 #'
@@ -100,23 +100,23 @@ no_subs <- function(df) {
     df_no_subs <- df |>
         dplyr::select(
             "row_id",
-            !(dplyr::starts_with("subject_"))
+            !(dplyr::starts_with("uid_"))
         )
     if (identical(df, df_no_subs)) {
-        warning("Provided dataframe had no 'subject_' columns to remove.")
+        warning("Provided dataframe had no 'uid_' columns to remove.")
     }
     return(df_no_subs)
 }
 
 #' Select all columns of a dataframe starting with a given string prefix.
 #'
-#' Removes the columns that are not prefixed with 'subject_' prefixed columns
+#' Removes the columns that are not prefixed with 'uid_' prefixed columns
 #'  from a dataframe. Useful intermediate step for extracting subject UIDs from
 #'  an solutions_matrix structure.
 #'
 #' @param df Dataframe
 #'
-#' @return df_subs Dataframe with only 'subject_' prefixed columns
+#' @return df_subs Dataframe with only 'uid_' prefixed columns
 #'
 #' @export
 subs <- function(df) {
@@ -125,10 +125,10 @@ subs <- function(df) {
     }
     df_subs <- df |> dplyr::select(
         "row_id",
-        dplyr::starts_with("subject_")
+        dplyr::starts_with("uid_")
     )
     if (identical(df, df_subs)) {
-        warning("Provided dataframe had no non-'subject_' columns to remove.")
+        warning("Provided dataframe had no non-'uid_' columns to remove.")
     }
     return(df_subs)
 }
@@ -139,7 +139,7 @@ subs <- function(df) {
 #'
 #' @param join String indicating if join should be "inner" or "full"
 #'
-#' @param uid Column name to join on. Default is "subjectkey"
+#' @param uid Column name to join on. Default is "uid"
 #'
 #' @param no_na Whether to remove NA values from the merged dataframe
 #'
@@ -148,7 +148,7 @@ subs <- function(df) {
 #' @export
 merge_df_list <- function(df_list,
                           join = "inner",
-                          uid = "subjectkey",
+                          uid = "uid",
                           no_na = FALSE) {
     if (join == "inner") {
         merged_df <- df_list |> purrr::reduce(
@@ -195,7 +195,7 @@ get_complete_uids <- function(list_of_dfs, uid) {
 
 #' Training and testing split
 #'
-#' Given a vector of subject_id and a threshold, returns a list of which members
+#' Given a vector of uid_id and a threshold, returns a list of which members
 #'  should be in the training set and which should be in the testing set. The
 #'  function relies on whether or not the absolute value of the Jenkins's
 #'  one_at_a_time hash function exceeds the maximum possible value
@@ -205,7 +205,7 @@ get_complete_uids <- function(list_of_dfs, uid) {
 #' @param subjects The available subjects for distribution
 #' @param seed Seed used for Jenkins's one_at_a_time hash function
 #'
-#' @return split a named list containing the training and testing subject_ids
+#' @return split a named list containing the training and testing uid_ids
 #'
 #' @export
 train_test_assign <- function(train_frac, subjects, seed = 42) {

@@ -21,12 +21,12 @@ auto_plot(
 \arguments{
 \item{solutions_matrix_row}{A single row of a solutions matrix.}
 
-\item{dl}{A data_list containing data to plot.}
+\item{dl}{A data list containing data to plot.}
 
 \item{cluster_df}{Directly provide a cluster_df rather than a solutions
 matrix. Useful if plotting data from label propagated results.}
 
-\item{tl}{A target_list containing data to plot.}
+\item{tl}{A target list containing data to plot.}
 
 \item{return_plots}{If \code{TRUE}, the function will return a list of plots.
 If FALSE, the function will instead return the full data frame used for
@@ -43,7 +43,7 @@ will be used to prefix plot names.}
 
 \item{bar_height}{Height of bar plots if save is specified.}
 
-\item{verbose}{If TRUE, print progress to console.}
+\item{verbose}{If TRUE, output progress to console.}
 }
 \value{
 By default, returns a list of plots (class "gg", "ggplot") with

@@ -7,7 +7,7 @@
 dl_has_duplicates(dl)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
 Doesn't return any value. Raises warning if there are features

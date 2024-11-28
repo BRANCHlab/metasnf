@@ -106,14 +106,14 @@ test_that(
 
 # no_subs ######################################################################
 test_that(
-    "ensure that columns starting with subject_ are removed from a dataframe",
+    "ensure that columns starting with uid_ are removed from a dataframe",
     {
         df1 <- data.frame(
             row_id = c(1, 2, 3),
             A = c(1, 2, 3),
             B = c(1, 2, 3),
-            subject_1 = c(1, 2, 3),
-            subject_2 = c(1, 2, 3)
+            uid_1 = c(1, 2, 3),
+            uid_2 = c(1, 2, 3)
         )
         df2 <- data.frame(
             row_id = c(1, 2, 3),
@@ -128,7 +128,7 @@ test_that(
 )
 
 test_that(
-    "ensure that dataframes without any 'subject_' columns raise a warning",
+    "ensure that dataframes without any 'uid_' columns raise a warning",
     {
         df <- data.frame(
             row_id = c(1, 2, 3),
@@ -137,7 +137,7 @@ test_that(
         )
         expect_warning(
             no_subs(df),
-            regexp = "no 'subject_'"
+            regexp = "no 'uid_'"
         )
     }
 )
@@ -145,19 +145,19 @@ test_that(
 
 # subs ######################################################################
 test_that(
-    "ensure columns not starting with subject_ are removed from a dataframe",
+    "ensure columns not starting with uid_ are removed from a dataframe",
     {
         df1 <- data.frame(
             row_id = c(1, 2, 3),
             A = c(1, 2, 3),
             B = c(1, 2, 3),
-            subject_1 = c(1, 2, 3),
-            subject_2 = c(1, 2, 3)
+            uid_1 = c(1, 2, 3),
+            uid_2 = c(1, 2, 3)
         )
         df2 <- data.frame(
             row_id = c(1, 2, 3),
-            subject_1 = c(1, 2, 3),
-            subject_2 = c(1, 2, 3)
+            uid_1 = c(1, 2, 3),
+            uid_2 = c(1, 2, 3)
         )
         expect_equal(
             subs(df1),
@@ -172,8 +172,8 @@ test_that(
         df <- data.frame(
             A = c(1, 2, 3),
             B = c(1, 2, 3),
-            subject_1 = c(1, 2, 3),
-            subject_2 = c(1, 2, 3)
+            uid_1 = c(1, 2, 3),
+            uid_2 = c(1, 2, 3)
         )
         expect_error(
             subs(df),
@@ -183,16 +183,16 @@ test_that(
 )
 
 test_that(
-    "ensure that dataframes with only 'subject_' columns raise a warning",
+    "ensure that dataframes with only 'uid_' columns raise a warning",
     {
         df <- data.frame(
             row_id = c(1, 2, 3),
-            subject_A = c(1, 2, 3),
-            subject_B = c(1, 2, 3)
+            uid_A = c(1, 2, 3),
+            uid_B = c(1, 2, 3)
         )
         expect_warning(
             subs(df),
-            regexp = "no non-'subject_'"
+            regexp = "no non-'uid_'"
         )
     }
 )
@@ -203,15 +203,15 @@ test_that(
     "ensure that two dataframes can be inner joined properly",
     {
         df1 <- data.frame(
-            subjectkey = c("a", "b", "c"),
+            uid = c("a", "b", "c"),
             var1 = c(1, 2, 3)
         )
         df2 <- data.frame(
-            subjectkey = c("a", "b"),
+            uid = c("a", "b"),
             var2 = c(4, 5)
         )
         df3 <- data.frame(
-            subjectkey = c("a", "b"),
+            uid = c("a", "b"),
             var1 = c(1, 2),
             var2 = c(4, 5)
         )
@@ -226,15 +226,15 @@ test_that(
     "ensure that two dataframes can be full joined properly",
     {
         df1 <- data.frame(
-            subjectkey = c("a", "b", "c"),
+            uid = c("a", "b", "c"),
             var1 = c(1, 2, 3)
         )
         df2 <- data.frame(
-            subjectkey = c("a", "b"),
+            uid = c("a", "b"),
             var2 = c(4, 5)
         )
         df3 <- data.frame(
-            subjectkey = c("a", "b", "c"),
+            uid = c("a", "b", "c"),
             var1 = c(1, 2, 3),
             var2 = c(4, 5, NA)
         )

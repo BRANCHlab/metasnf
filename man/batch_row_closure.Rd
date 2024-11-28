@@ -16,7 +16,7 @@ batch_row_closure(
 )
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{distance_metrics_list}{An optional nested list containing which
 distance metric function should be used for the various feature types

@@ -49,7 +49,7 @@ library(metasnf)
 
 # Start by making a data list containing all our dataframes to more easily
 # identify subjects without missing data
-all_subjects <- generate_data_list(
+all_subjects <- data_list(
     list(cort_t, "cort_t", "neuroimaging", "continuous"),
     list(cort_sa, "cort_sa", "neuroimaging", "continuous"),
     list(subc_v, "subc_v", "neuroimaging", "continuous"),
@@ -61,7 +61,7 @@ all_subjects <- generate_data_list(
 )
 
 # Get a vector of all the subjects
-all_subjects <- get_dl_subjects(all_subjects)
+all_subjects <- get_dl_uids(all_subjects)
 
 # Dataframe assigning 80% of subjects to train and 20% to test
 train_test_split <- train_test_assign(
@@ -92,7 +92,7 @@ test_anxiety <- anxiety[anxiety$"unique_id" %in% test_subs, ]
 test_depress <- depress[depress$"unique_id" %in% test_subs, ]
 
 # Find cluster solutions in the training set
-train_data_list <- generate_data_list(
+train_data_list <- data_list(
     list(train_cort_t, "cort_t", "neuroimaging", "continuous"),
     list(train_cort_sa, "cortical_sa", "neuroimaging", "continuous"),
     list(train_subc_v, "subc_v", "neuroimaging", "continuous"),
@@ -102,7 +102,7 @@ train_data_list <- generate_data_list(
 )
 
 # We'll pick a solution that has good separation over our target features
-train_target_list <- generate_data_list(
+train_target_list <- data_list(
     list(train_anxiety, "anxiety", "behaviour", "ordinal"),
     list(train_depress, "depressed", "behaviour", "ordinal"),
     uid = "unique_id"
@@ -133,7 +133,7 @@ top_row <- extended_solutions_matrix[4, ]
 
 # Propagate that solution to the subjects in the test set
 # data list below has both training and testing subjects
-full_data_list <- generate_data_list(
+full_data_list <- data_list(
     list(cort_t, "cort_t", "neuroimaging", "continuous"),
     list(cort_sa, "cort_sa", "neuroimaging", "continuous"),
     list(subc_v, "subc_v", "neuroimaging", "continuous"),

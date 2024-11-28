@@ -19,7 +19,7 @@ batch_snf(
 )
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{settings_matrix}{A data.frame where each row completely defines an SNF
 pipeline transforming individual input dataframes into a final cluster
@@ -35,7 +35,7 @@ not make use of multiple CPU cores, but will show a progress bar.
 \item \code{2} or higher: Parallel processing will use the
 \code{future.apply::future_apply} to distribute the SNF iterations across
 the specified number of CPU cores. If higher than the number of
-available cores, a warning will be printed and the maximum number of
+available cores, a warning will be raised and the maximum number of
 cores will be used.
 \item \code{max}: All available cores will be used.
 }}
@@ -73,7 +73,7 @@ that apply standard normalization. See
 https://branchlab.github.io/metasnf/articles/distance_metrics.html to learn
 more.}
 
-\item{verbose}{If TRUE, print time remaining estimates to console.}
+\item{verbose}{If TRUE, output time remaining estimates to console.}
 }
 \value{
 By default, returns a solutions matrix (class "data.frame"), a
@@ -89,7 +89,7 @@ in the output.
 }
 \description{
 This is the core function of the metasnf package. Using the information
-stored in a settings_matrix (see ?generate_settings_matrix) and a data_list
-(see ?generate_data_list), run repeated complete SNF pipelines to generate
+stored in a settings_matrix (see ?generate_settings_matrix) and a data list
+(see ?data_list), run repeated complete SNF pipelines to generate
 a broad space of post-SNF cluster solutions.
 }

@@ -2,16 +2,16 @@
 % Please edit documentation in R/data_list.R
 \name{prefix_dl_sk}
 \alias{prefix_dl_sk}
-\title{Add "subject_" prefix to all UID values in subjectkey column}
+\title{Add "uid_" prefix to all UID values in uid column}
 \usage{
 prefix_dl_sk(dl)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
-dl A data list with UIDs prefixed with the string "subject_"
+dl A data list with UIDs prefixed with the string "uid_"
 }
 \description{
-Add "subject_" prefix to all UID values in subjectkey column
+Add "uid_" prefix to all UID values in uid column
 }

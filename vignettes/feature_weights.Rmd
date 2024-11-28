@@ -34,7 +34,7 @@ library(metasnf)
 
 # Make sure to throw in all the data you're interested in visualizing for this
 # data_list, including out-of-model measures and confounding features.
-data_list <- generate_data_list(
+data_list <- data_list(
     list(income, "household_income", "demographics", "ordinal"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
     list(fav_colour, "favourite_colour", "demographics", "categorical"),

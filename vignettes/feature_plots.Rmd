@@ -22,7 +22,7 @@ Given a cluster solution formatted as a row of a solutions matrix (or extended s
 ```{r}
 library(metasnf)
 
-data_list <- generate_data_list(
+data_list <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(fav_colour, "favourite_colour", "misc", "categorical"),

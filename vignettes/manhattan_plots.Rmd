@@ -34,7 +34,7 @@ library(metasnf)
 
 # Start by making a data list containing all our dataframes to more easily
 # identify subjects without missing data
-full_data_list <- generate_data_list(
+full_data_list <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),

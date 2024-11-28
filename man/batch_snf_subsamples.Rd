@@ -42,7 +42,7 @@ pipelines to be applied to the subsampled data lists.}
 \item{return_solutions_matrices}{If TRUE, includes the solutions matrices
 corresponding to each subsample in the output.}
 
-\item{verbose}{If TRUE, print time remaining estimates to console.}
+\item{verbose}{If TRUE, output time remaining estimates to console.}
 }
 \value{
 By default, returns a one-element list: \code{cluster_solutions}, which

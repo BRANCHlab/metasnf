@@ -39,7 +39,7 @@ Moving through the rest of the meta clustering pipeline, the influence of the im
 library(metasnf)
 
 # First imputed dataset
-data_list_imp1 <- generate_data_list(
+data_list_imp1 <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -49,7 +49,7 @@ data_list_imp1 <- generate_data_list(
 )
 
 # Second imputed dataset
-data_list_imp2 <- generate_data_list(
+data_list_imp2 <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),

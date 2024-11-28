@@ -2,7 +2,7 @@
 % Please edit documentation in R/nmi.R
 \name{batch_nmi}
 \alias{batch_nmi}
-\title{Calculate feature NMIs for a data_list and a derived solutions_matrix}
+\title{Calculate feature NMIs for a data list and a derived solutions_matrix}
 \usage{
 batch_nmi(
   dl,
@@ -16,7 +16,7 @@ batch_nmi(
 )
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.
+\item{dl}{A nested list of input data from \code{data_list()}.
 Use the same value as was used in the original call to \code{batch_snf()}.}
 
 \item{solutions_matrix}{Result of \code{batch_snf} storing cluster solutions and
@@ -42,7 +42,7 @@ the same value as was used in the original call to \code{batch_snf()}.}
 solutions matrix and calculate NMIs for all features. If FALSE, will give
 NAs for features that were dropped on a given settings_matrix row.}
 
-\item{verbose}{If TRUE, print progress to console.}
+\item{verbose}{If TRUE, output progress to console.}
 }
 \value{
 A "data.frame" class object containing one row for every feature
@@ -51,5 +51,5 @@ solutions matrix. Populated values show the calculated NMI score for each
 feature-solution combination.
 }
 \description{
-Calculate feature NMIs for a data_list and a derived solutions_matrix
+Calculate feature NMIs for a data list and a derived solutions_matrix
 }

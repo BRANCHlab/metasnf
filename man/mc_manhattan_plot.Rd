@@ -55,5 +55,5 @@ stratified by meta cluster label.
 \description{
 Given a dataframe of representative meta cluster solutions (see
 \code{get_representative_solutions()}, returns a Manhattan plot for showing
-feature separation across all features in provided data/target_lists.
+feature separation across all features in provided data/target lists.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{no_subs}
 \alias{no_subs}
-\title{Select all columns of a dataframe not starting with the 'subject_' prefix.}
+\title{Select all columns of a dataframe not starting with the 'uid_' prefix.}
 \usage{
 no_subs(df)
 }
@@ -13,6 +13,5 @@ no_subs(df)
 df_no_subs Dataframe without subjects
 }
 \description{
-Removes the 'subject_' prefixed columns from a dataframe. Useful for printing
-solutions_matrix structures to the console.
+Removes the 'uid_' prefixed columns from a dataframe.
 }

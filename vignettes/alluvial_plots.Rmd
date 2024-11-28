@@ -25,7 +25,7 @@ First, some data setup just as was done in the previous vignettes.
 library(metasnf)
 
 # Generate data_list
-data_list <- generate_data_list(
+data_list <- data_list(
     list(
         data = expression_df,
         name = "genes_1_and_2_exp",
@@ -108,7 +108,7 @@ extra_data <- dplyr::inner_join(
     diagnosis_df,
     by = "patient_id"
 ) |>
-    dplyr::mutate(subjectkey = paste0("subject_", patient_id))
+    dplyr::mutate(uid = paste0("uid_", patient_id))
 
 head(extra_data)
 

@@ -63,7 +63,7 @@ label_prop <- function(full_fused_network, clusters) {
 #'
 #' @param verbose If TRUE, output progress to console.
 #'
-#' @return labeled_df a dataframe containing a column for subjectkeys,
+#' @return labeled_df a dataframe containing a column for uids,
 #' a column for whether the subject was in the train (original) or test (held
 #' out) set, and one column per row of the solutions matrix indicating the
 #' original and propagated clusters.
@@ -78,7 +78,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     # 1. Reorder data list subjects
     ###########################################################################
     train_subjects <- colnames(subs(train_solutions_matrix))[-1]
-    all_subjects <- full_dl[[1]][[1]]$"subjectkey"
+    all_subjects <- full_dl[[1]][[1]]$"uid"
     # Quick check to make sure the train subjects are all in the full list
     if (!all(train_subjects %in% all_subjects)) {
         stop(
@@ -86,8 +86,8 @@ lp_solutions_matrix <- function(train_solutions_matrix,
             "argument is missing from the `full_dl` argument.",
             " Please ensure that all subjects in the given solutions matrix",
             " are present in your full data list. E.g., ensure that:",
-            "\n\nall(get_cluster_df(train_solutions_matrix)$\"subjectkey\"",
-            " %in% collapse_dl(full_dl)$\"subjectkey\")"
+            "\n\nall(get_cluster_df(train_solutions_matrix)$\"uid\"",
+            " %in% collapse_dl(full_dl)$\"uid\")"
         )
     }
     test_subjects <- all_subjects[!all_subjects %in% train_subjects]
@@ -182,7 +182,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
         propagated_labels <- label_prop(full_fused_network, clusters)
         if (i == 1) {
             labeled_df <- data.frame(
-                subjectkey = c(train_subjects, test_subjects),
+                uid = c(train_subjects, test_subjects),
                 group = group_vec,
                 cluster = propagated_labels
             )
@@ -191,7 +191,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
             colnames(labeled_df) <- names
         } else {
             current_df <- data.frame(
-                subjectkey = c(train_subjects, test_subjects),
+                uid = c(train_subjects, test_subjects),
                 group = group_vec,
                 cluster = propagated_labels
             )
@@ -201,7 +201,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
             labeled_df <- dplyr::inner_join(
                 labeled_df,
                 current_df,
-                by = c("subjectkey", "group")
+                by = c("uid", "group")
             )
         }
     }

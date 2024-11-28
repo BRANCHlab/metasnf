@@ -38,7 +38,7 @@ city <- city |> dplyr::select(-"colour")
 
 # Make sure to throw in all the data you're interested in visualizing for this
 # data_list, including out-of-model measures and confounding features.
-data_list <- generate_data_list(
+data_list <- data_list(
     list(cort_sa_minimal, "cortical_sa", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "ordinal"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),

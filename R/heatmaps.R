@@ -21,7 +21,7 @@
 #'
 #' @param show_column_names Parameter for ComplexHeatmap::Heatmap.
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param data A dataframe containing elements requested for annotation.
 #'
@@ -317,7 +317,7 @@ adjusted_rand_index_heatmap <- function(aris,
 #' columns of the correlation_matrix. Will be used to "slice" the heatmap into
 #' visually separated sections.
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param significance_stars If TRUE (default), plots significance stars on
 #' heatmap cells
@@ -844,7 +844,7 @@ cell_significance_fn <- function(data) {
 #'
 #' @param data A dataframe.
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @return A class "data.frame" object containing all the features of the
 #' provided data frame and/or data list.
@@ -862,7 +862,7 @@ assemble_data <- function(data, dl) {
     } else {
         if (!is.null(dl)) {
             # User provided both the data and the data list, so merge them
-            data <- dplyr::inner_join(data, merged_df, by = "subjectkey")
+            data <- dplyr::inner_join(data, merged_df, by = "uid")
         }
     }
     return(data.frame(data))

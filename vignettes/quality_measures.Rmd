@@ -33,7 +33,7 @@ To use these functions, you will need to have the `clv` package installed.
 library(metasnf)
 
 # generate data_list
-data_list <- generate_data_list(
+data_list <- data_list(
     list(cort_t, "cort_t", "neuroimaging", "continuous"),
     list(cort_sa, "cort_sa", "neuroimaging", "continuous"),
     list(subc_v, "subc_v", "neuroimaging", "continuous"),

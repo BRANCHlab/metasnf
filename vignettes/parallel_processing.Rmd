@@ -41,7 +41,7 @@ However, if you have access to multiple cores and each integration you are runni
 library(metasnf)
 
 # Setting up the data
-data_list <- generate_data_list(
+data_list <- data_list(
     list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),

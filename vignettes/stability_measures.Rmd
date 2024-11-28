@@ -31,7 +31,7 @@ In this vignette, we will highlight the main stability measure options in the me
 ```{r eval = FALSE}
 library(metasnf)
 
-data_list <- generate_data_list(
+data_list <- data_list(
     list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(cort_sa, "cortical_area", "neuroimaging", "continuous"),
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),

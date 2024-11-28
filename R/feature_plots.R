@@ -197,24 +197,24 @@ auto_plot <- function(solutions_matrix_row = NULL,
     }
     dl_df <- metasnf::collapse_dl(c(dl, tl))
     ###########################################################################
-    # Ensure solutions_matrix and dl_df have the same subjectkey column
+    # Ensure solutions_matrix and dl_df have the same uid column
     ###########################################################################
-    solutions_matrix_subjects <- sort(cluster_df$"subjectkey")
-    dl_subjects <- sort(dl_df$"subjectkey")
+    solutions_matrix_subjects <- sort(cluster_df$"uid")
+    dl_subjects <- sort(dl_df$"uid")
     if (!identical(solutions_matrix_subjects, dl_subjects)) {
         stop(
-            "The subjectkeys in the solutions_matrix and DL do not match."
+            "The uids in the solutions_matrix and DL do not match."
         )
     }
     ###########################################################################
     # Merge cluster solution and dl_df to get full data for plotting
     ###########################################################################
-    full_data <- dplyr::inner_join(cluster_df, dl_df, by = "subjectkey")
+    full_data <- dplyr::inner_join(cluster_df, dl_df, by = "uid")
     full_data$"cluster" <- factor(full_data$"cluster")
     if (return_plots == FALSE) {
         return(full_data)
     }
-    # Identifying features to plot (first cols are cluster and subjectkey)
+    # Identifying features to plot (first cols are cluster and uid)
     features <- colnames(full_data)[3:length(colnames(full_data))]
     # Generating plot for every feature
     plot_list <- list()

@@ -5,7 +5,7 @@
 #' of the linear model relating the numeric features in the first data list
 #' to the unwanted signal features in the second data list.
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param unwanted_signal_list A data list of categorical features that should
 #' have their mean differences removed in the first data list.
@@ -23,15 +23,15 @@ linear_adjust <- function(dl, unwanted_signal_list, sig_digs = NULL) {
     ###########################################################################
     dl_df <- collapse_dl(dl)
     usl_df <- collapse_dl(unwanted_signal_list)
-    if (!identical(dl_df$"subjectkey", usl_df$"subjectkey")) {
+    if (!identical(dl_df$"uid", usl_df$"uid")) {
         stop("dl and unwanted_signal_list do not contain same patients")
     }
     ###########################################################################
     # 2. Adjustment
     ###########################################################################
     # Dataframe containing the features to adjust and to adjust by
-    full_df <- dplyr::inner_join(dl_df, usl_df, by = "subjectkey")
-    unwanted_vars <- colnames(usl_df)[colnames(usl_df) != "subjectkey"]
+    full_df <- dplyr::inner_join(dl_df, usl_df, by = "uid")
+    unwanted_vars <- colnames(usl_df)[colnames(usl_df) != "uid"]
     # The right hand side of the linear model formula
     rhs <- paste0(unwanted_vars, collapse = " + ")
     # Outer lapply operates on each component of the data list
@@ -39,7 +39,7 @@ linear_adjust <- function(dl, unwanted_signal_list, sig_digs = NULL) {
     adjusted_dl <- dl |> lapply(
         function(x) {
             if (x$"type" %in% numeric_vectors) {
-                non_sub_cols <- colnames(x$"data") != "subjectkey"
+                non_sub_cols <- colnames(x$"data") != "uid"
                 columns <- colnames(x$"data")[non_sub_cols]
                 # Inner loop adjusts the numeric columns with their residuals
                 # one at a time.

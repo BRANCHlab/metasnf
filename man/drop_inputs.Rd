@@ -9,7 +9,7 @@ drop_inputs(settings_matrix_row, dl)
 \arguments{
 \item{settings_matrix_row}{Row of a settings matrix.}
 
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
 A data list (class "list") in which any component with a

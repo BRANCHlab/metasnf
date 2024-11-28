@@ -19,7 +19,7 @@ top or top few meaningful chosen clustering solutions. It is advisable to
 use only a small subset of rows from the original training solutions_matrix
 for label propagation.}
 
-\item{full_dl}{A data_list containing subjects from both the training
+\item{full_dl}{A data list containing subjects from both the training
 and testing sets.}
 
 \item{distance_metrics_list}{Like above - the distance_metrics_list (if any)
@@ -27,10 +27,10 @@ that was used for the original batch_snf call.}
 
 \item{weights_matrix}{Like above.}
 
-\item{verbose}{If TRUE, print progress to console.}
+\item{verbose}{If TRUE, output progress to console.}
 }
 \value{
-labeled_df a dataframe containing a column for subjectkeys,
+labeled_df a dataframe containing a column for uids,
 a column for whether the subject was in the train (original) or test (held
 out) set, and one column per row of the solutions matrix indicating the
 original and propagated clusters.

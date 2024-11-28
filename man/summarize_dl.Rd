@@ -7,12 +7,12 @@
 summarize_dl(dl, scope = "component")
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{scope}{The level of detail for the summary. Options are:
 \itemize{
-\item "component" (default): One row per component (dataframe) in the data_list.
-\item "feature": One row for each feature in the data_list.
+\item "component" (default): One row per component (dataframe) in the data list.
+\item "feature": One row for each feature in the data list.
 }}
 }
 \value{

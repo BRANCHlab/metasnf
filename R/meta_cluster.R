@@ -27,7 +27,7 @@ calc_aris <- function(solutions_matrix,
     ###########################################################################
     # Prepare dataframe containing 1 cluster solution per row
     ###########################################################################
-    # Row id and subjectkey columns
+    # Row id and uid columns
     subjects <- subs(solutions_matrix)
     # Only subject label cols
     subjects_no_id <- as.matrix(subjects[, 2:length(subjects)])

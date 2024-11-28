@@ -41,7 +41,7 @@ mock_ssphy01 <- ssphy01 |> generate_mock_data(n = 3000, seed = 46)
 
 
 # These two need to align for the pubertal status function to work
-mock_ssphy01$"subjectkey" <- mock_ssphp01$"subjectkey"
+mock_ssphy01$"uid" <- mock_ssphp01$"uid"
 mock_ssphy01$"sex" <- mock_ssphp01$"sex"
 
 ## Household income
@@ -67,29 +67,29 @@ abcd_anxiety <- get_cbcl_anxiety(mock_abcd_cbcls01, t = 0)
 abcd_depress <- abcd_depress[1:275, ]
 abcd_anxiety <- abcd_anxiety[1:275, ]
 
-# Matching the subjectkeys ====================================================
-(abcd_subc_v$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_subc_v)])
+# Matching the uids ====================================================
+(abcd_subc_v$"uid" <- abcd_pubertal$"uid"[1:nrow(abcd_subc_v)])
 
-(abcd_cort_t$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_cort_t)])
+(abcd_cort_t$"uid" <- abcd_pubertal$"uid"[1:nrow(abcd_cort_t)])
 
-(abcd_cort_sa$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_cort_sa)])
+(abcd_cort_sa$"uid" <- abcd_pubertal$"uid"[1:nrow(abcd_cort_sa)])
 
-(abcd_income$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_income)])
+(abcd_income$"uid" <- abcd_pubertal$"uid"[1:nrow(abcd_income)])
 
-(abcd_pubertal$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_pubertal)])
+(abcd_pubertal$"uid" <- abcd_pubertal$"uid"[1:nrow(abcd_pubertal)])
 
-(abcd_depress$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_depress)])
+(abcd_depress$"uid" <- abcd_pubertal$"uid"[1:nrow(abcd_depress)])
 
-(abcd_anxiety$"subjectkey" <- abcd_pubertal$"subjectkey"[1:nrow(abcd_anxiety)])
+(abcd_anxiety$"uid" <- abcd_pubertal$"uid"[1:nrow(abcd_anxiety)])
 
-# Mimicking data that does not have "subjectkey" as the initial UID
-abcd_subc_v <- abcd_subc_v |> dplyr::rename("patient" = "subjectkey")
-abcd_cort_t <- abcd_cort_t |> dplyr::rename("patient" = "subjectkey")
-abcd_cort_sa <- abcd_cort_sa |> dplyr::rename("patient" = "subjectkey")
-abcd_income <- abcd_income |> dplyr::rename("patient" = "subjectkey")
-abcd_pubertal <- abcd_pubertal |> dplyr::rename("patient" = "subjectkey")
-abcd_depress <- abcd_depress |> dplyr::rename("patient" = "subjectkey")
-abcd_anxiety <- abcd_anxiety |> dplyr::rename("patient" = "subjectkey")
+# Mimicking data that does not have "uid" as the initial UID
+abcd_subc_v <- abcd_subc_v |> dplyr::rename("patient" = "uid")
+abcd_cort_t <- abcd_cort_t |> dplyr::rename("patient" = "uid")
+abcd_cort_sa <- abcd_cort_sa |> dplyr::rename("patient" = "uid")
+abcd_income <- abcd_income |> dplyr::rename("patient" = "uid")
+abcd_pubertal <- abcd_pubertal |> dplyr::rename("patient" = "uid")
+abcd_depress <- abcd_depress |> dplyr::rename("patient" = "uid")
+abcd_anxiety <- abcd_anxiety |> dplyr::rename("patient" = "uid")
 
 # Creating an example of categorical data
 abcd_colour <- abcd_depress |>
@@ -112,7 +112,7 @@ usethis::use_data(abcd_anxiety, overwrite = TRUE)
 usethis::use_data(abcd_colour, overwrite = TRUE)
 
 ################################################################################
-# 2023-10-31 Removing NAs from the subjectkey column of abcd_income
+# 2023-10-31 Removing NAs from the uid column of abcd_income
 library(metasnf)
 
 abcd_h_income <- abcd_income

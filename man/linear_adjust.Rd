@@ -2,15 +2,15 @@
 % Please edit documentation in R/linear_adjust.R
 \name{linear_adjust}
 \alias{linear_adjust}
-\title{Linearly correct data_list by features with unwanted signal}
+\title{Linearly correct data list by features with unwanted signal}
 \usage{
 linear_adjust(dl, unwanted_signal_list, sig_digs = NULL)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{unwanted_signal_list}{A data_list of categorical features that should
-have their mean differences removed in the first data_list.}
+\item{unwanted_signal_list}{A data list of categorical features that should
+have their mean differences removed in the first data list.}
 
 \item{sig_digs}{Number of significant digits to round the residuals to.}
 }
@@ -20,8 +20,8 @@ to contain residuals off of the linear model built against the features in
 the unwanted_signal_list.
 }
 \description{
-Given a data_list to correct and another data_list of categorical features
-to linearly adjust for, corrects the first data_list based on the residuals
-of the linear model relating the numeric features in the first data_list
+Given a data list to correct and another data list of categorical features
+to linearly adjust for, corrects the first data list based on the residuals
+of the linear model relating the numeric features in the first data list
 to the unwanted signal features in the second data list.
 }

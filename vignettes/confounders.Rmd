@@ -154,7 +154,7 @@ set.seed(42)
 
 metasnf_data <- player_data |> dplyr::select("id", "assists", "blocks")
 
-data_list <- generate_data_list(
+data_list <- data_list(
     list(
         data = metasnf_data,
         name = "player_data",
@@ -176,7 +176,7 @@ solutions_matrix <- batch_snf(data_list, settings_matrix)
 
 cluster_solutions_df <- get_cluster_solutions(solutions_matrix) |>
     dplyr::rename(
-        "id" = "subjectkey",
+        "id" = "uid",
         "cluster" = `1`
     )
 
@@ -185,7 +185,7 @@ head(cluster_solutions_df)
 cluster_solutions_df$"cluster" <- factor(cluster_solutions_df$"cluster")
 
 # matching the subject names
-metasnf_data$"id" <- paste0("subject_", metasnf_data$"id")
+metasnf_data$"id" <- paste0("uid_", metasnf_data$"id")
 
 # merging back the original data
 metasnf_data <- dplyr::inner_join(metasnf_data, cluster_solutions_df, by = "id")
@@ -246,7 +246,7 @@ Note that you can only adjust out signal from categorical features, the adjustme
 ```{r}
 head(player_data)
 
-dl <- generate_data_list(
+dl <- data_list(
     list(
         data = player_data[, c("id", "blocks", "assists")],
         name = "player_data",
@@ -257,7 +257,7 @@ dl <- generate_data_list(
 )
 
 # Correction list for just the level
-unwanted_signal_list1 <- generate_data_list(
+unwanted_signal_list1 <- data_list(
     list(
         data = player_data[, c("id", "level")],
         name = "player_level",
@@ -268,7 +268,7 @@ unwanted_signal_list1 <- generate_data_list(
 )
 
 # Correction list for both player level and position
-unwanted_signal_list2 <- generate_data_list(
+unwanted_signal_list2 <- data_list(
     list(
         data = player_data[, c("id", "level", "position")],
         name = "player_level",

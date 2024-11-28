@@ -173,7 +173,7 @@ library(metasnf)
 ### 2. Store the data in a *data_list*
 
 All the data we're working with will get stored in a single object called the `data_list`.
-The `data_list` is made by passing in each dataframe into the `generate_data_list` function, alongside information about the name of the dataframe, the broader source (referred to in this package as a "domain") of information that dataframe comes from, and the type of features that are stored inside that dataframe (can be continuous, discrete, ordinal, categorical, or mixed).
+The `data_list` is made by passing in each dataframe into the `data_list` function, alongside information about the name of the dataframe, the broader source (referred to in this package as a "domain") of information that dataframe comes from, and the type of features that are stored inside that dataframe (can be continuous, discrete, ordinal, categorical, or mixed).
 
 The `data_list` generation process also requires you to specify which column contains information about the ID of the patients.
 In this case, that information isn't there, so we'll have to add it ourselves.
@@ -184,7 +184,7 @@ The added IDs span from 101 onwards (rather than from 1 onwards) purely for conv
 Data1$"patient_id" <- 101:(nrow(Data1) + 100)
 Data2$"patient_id" <- 101:(nrow(Data2) + 100)
 
-data_list <- generate_data_list(
+data_list <- data_list(
     list(
         data = Data1,
         name = "genes_1_and_2_exp",
@@ -213,11 +213,11 @@ Finally, there's an argument for the `uid` (the column name that currently uniqu
 
 Behind the scenes, this function is building a nested list that keeps track of all this information, but it is also:
 
-- Converting the UID of the data into "subjectkey"
+- Converting the UID of the data into "uid"
 - Removing all observations that contain any NAs
 - Removing all subjects who are not present in all input dataframes
 - Arranging the subjects in all the dataframe by their UID
-- Prefixing the UID values with the string "subject_" to help with cluster result characterization
+- Prefixing the UID values with the string "uid_" to help with cluster result characterization
 
 Any rows containing NAs are removed.
 If you don't want a bunch of your data to get removed because there are a few NAs sprinkled around here and there, consider using [imputation](https://en.wikipedia.org/wiki/Imputation_(statistics)).
@@ -228,7 +228,7 @@ As long as you provide the objects within each list in the correct order (data, 
 
 ```{r eval = FALSE}
 # Compactly:
-data_list <- generate_data_list(
+data_list <- data_list(
     list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
     list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
     uid = "patient_id"

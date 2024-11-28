@@ -16,7 +16,7 @@ get_dist_matrix(
 )
 }
 \arguments{
-\item{df}{Raw dataframe with subject IDs in column "subjectkey"}
+\item{df}{Raw dataframe with subject IDs in column "uid"}
 
 \item{input_type}{Either "numeric" (resulting in euclidean distances),
 "categorical" (resulting in binary distances), or "mixed" (resulting in

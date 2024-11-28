@@ -81,7 +81,7 @@ data(Data2)
 Data1$"patient_id" <- 101:(nrow(Data1) + 100) # nolint
 Data2$"patient_id" <- 101:(nrow(Data2) + 100) # nolint
 
-data_list <- generate_data_list(
+data_list <- data_list(
     list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
     list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
     uid = "patient_id"
@@ -309,8 +309,8 @@ Here's how to make it look more like what the distance metric functions will exp
 ```{r}
 processed_anxiety <- anxiety |>
     na.omit() |> # no NAs
-    dplyr::rename("subjectkey" = "unique_id") |>
-    data.frame(row.names = "subjectkey")
+    dplyr::rename("uid" = "unique_id") |>
+    data.frame(row.names = "uid")
 
 head(processed_anxiety)
 ```

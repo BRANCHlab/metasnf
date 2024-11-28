@@ -36,7 +36,7 @@ The chunk below outlines how the primary NMI calculating function, `batch_nmi()`
 ```{r}
 library(metasnf)
 
-data_list <- generate_data_list(
+data_list <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),

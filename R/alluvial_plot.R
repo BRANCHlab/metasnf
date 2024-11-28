@@ -5,7 +5,7 @@
 #'
 #' @param similarity_matrix A similarity matrix.
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param data A dataframe that contains features to include in the plot.
 #'
@@ -41,7 +41,7 @@ alluvial_cluster_plot <- function(cluster_sequence,
     ###########################################################################
     # Calculate the cluster solutions for each cluster algorithm provided
     ###########################################################################
-    alluvial_df <- data.frame(subjectkey = colnames(similarity_matrix))
+    alluvial_df <- data.frame(uid = colnames(similarity_matrix))
     for (algorithm in cluster_sequence) {
         cluster_output <- algorithm(similarity_matrix)
         solution <- cluster_output$"solution"
@@ -54,15 +54,15 @@ alluvial_cluster_plot <- function(cluster_sequence,
     # Isolate feature of interest
     ###########################################################################
     data <- assemble_data(data = data, dl = dl)
-    outcome_df_cols <- c("subjectkey", key_outcome, extra_outcomes)
+    outcome_df_cols <- c("uid", key_outcome, extra_outcomes)
     outcome_df <- data[, colnames(data) %in% outcome_df_cols]
     alluvial_df <- dplyr::inner_join(
         alluvial_df,
         outcome_df,
-        by = "subjectkey"
+        by = "uid"
     )
     alluvial_df <- alluvial_df |>
-        dplyr::select(-dplyr::contains("subjectkey")) |>
+        dplyr::select(-dplyr::contains("uid")) |>
         dplyr::group_by(dplyr::across(0:(ncol(alluvial_df) - 1))) |>
         dplyr::summarize("frequency" = dplyr::n(), .groups = "keep") |>
         data.frame()

@@ -7,7 +7,7 @@
 generate_weights_matrix(dl = NULL, nrow = 1, fill = "ones")
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{nrow}{Number of rows to generate the template weights matrix for.}
 

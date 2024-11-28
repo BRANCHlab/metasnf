@@ -1,6 +1,6 @@
 #' Generate a matrix to store feature weights
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param nrow Number of rows to generate the template weights matrix for.
 #'
@@ -19,7 +19,7 @@ generate_weights_matrix <- function(dl = NULL,
     matrix_colnames <- dl |>
         lapply(
             function(x) {
-                colnames(x$"data")[colnames(x$"data") != "subjectkey"]
+                colnames(x$"data")[colnames(x$"data") != "uid"]
             }
         ) |>
         unlist()

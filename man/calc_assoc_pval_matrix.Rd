@@ -2,15 +2,14 @@
 % Please edit documentation in R/solutions_matrix.R
 \name{calc_assoc_pval_matrix}
 \alias{calc_assoc_pval_matrix}
-\title{Calculate p-values for all pairwise associations of features in a data_list}
+\title{Calculate p-values for all pairwise associations of features in a data list}
 \usage{
 calc_assoc_pval_matrix(dl, verbose = FALSE, cat_test = "chi_squared")
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{verbose}{If TRUE, prints new line everytime a p-value is being
-calculated.}
+\item{verbose}{If TRUE, output progress to the console.}
 
 \item{cat_test}{String indicating which statistical test will be used to
 associate cluster with a categorical feature. Options are "chi_squared" for
@@ -21,5 +20,5 @@ A "matrix" class object containing pairwise association p-values
 between the features in the provided data list.
 }
 \description{
-Calculate p-values for all pairwise associations of features in a data_list
+Calculate p-values for all pairwise associations of features in a data list
 }

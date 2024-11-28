@@ -19,11 +19,11 @@ extend_solutions(
 \item{solutions_matrix}{Result of \code{batch_snf} storing cluster solutions and
 the settings that were used to generate them.}
 
-\item{tl}{A data_list with features to calculate p-values for.
+\item{tl}{A data list with features to calculate p-values for.
 Features in the target list will be included during p-value summary
 measure calculations.}
 
-\item{dl}{A data_list with features to calcualte p-values for, but
+\item{dl}{A data list with features to calcualte p-values for, but
 that should not be incorporated into p-value summary measure columns (i.e.,
 min/mean/max p-value columns).}
 
@@ -40,11 +40,11 @@ replaced with this value.}
 \item{processes}{The number of processes to use for parallelization.
 Progress is only reported for sequential processing (processes = 1).}
 
-\item{verbose}{If TRUE, print progress to console.}
+\item{verbose}{If TRUE, output progress to console.}
 }
 \value{
 extended_solutions_matrix an extended solutions matrix that contains
-p-value columns for each outcome in the provided target_list
+p-value columns for each outcome in the provided target list
 }
 \description{
 Extend an solutions matrix to include outcome evaluations

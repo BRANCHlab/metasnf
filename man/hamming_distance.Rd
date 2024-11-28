@@ -7,7 +7,7 @@
 hamming_distance(df, weights_row)
 }
 \arguments{
-\item{df}{Dataframe containing one subjectkey column in the first column and
+\item{df}{Dataframe containing one uid column in the first column and
 at least 1 categorical data column. All feature data should be categorical.}
 
 \item{weights_row}{Single-row dataframe where the column names contain the

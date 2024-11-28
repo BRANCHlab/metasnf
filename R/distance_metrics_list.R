@@ -340,7 +340,7 @@ sew_euclidean_distance <- function(df, weights_row) {
 
 #' Distance metric: Hamming distance
 #'
-#' @param df Dataframe containing one subjectkey column in the first column and
+#' @param df Dataframe containing one uid column in the first column and
 #'  at least 1 categorical data column. All feature data should be categorical.
 #' @param weights_row Single-row dataframe where the column names contain the
 #'  column names in df and the row contains the corresponding weights.

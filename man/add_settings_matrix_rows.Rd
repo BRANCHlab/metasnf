@@ -46,7 +46,7 @@ randomly removed. By default, 0.}
 
 \item{max_removed_inputs}{The largest number of input dataframes that may be
 randomly removed. By default, this is 1 less than all the provided input
-dataframes in the data_list.}
+dataframes in the data list.}
 
 \item{dropout_dist}{Parameter controlling how the random removal of input
 dataframes should occur. Can be "none" (no input dataframes are randomly

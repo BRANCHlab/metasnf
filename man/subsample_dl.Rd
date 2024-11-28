@@ -2,12 +2,12 @@
 % Please edit documentation in R/coclustering.R
 \name{subsample_dl}
 \alias{subsample_dl}
-\title{Create subsamples of a data_list}
+\title{Create subsamples of a data list}
 \usage{
 subsample_dl(dl, n_subsamples, subsample_fraction = NULL, n_subjects = NULL)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{n_subsamples}{Number of subsamples to create.}
 

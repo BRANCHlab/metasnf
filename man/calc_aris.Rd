@@ -16,13 +16,13 @@ calculate pairwise ARIs for.}
 \item \code{2} or higher: Parallel processing will use the
 \code{future.apply::future_apply} to distribute the calculations across
 the specified number of CPU cores. If higher than the number of
-available cores, a warning will be printed and the maximum number of
+available cores, a warning will be raised and the maximum number of
 cores will be used.
 \item \code{max}: All available cores will be used.
 Note that no progress indicator is available during multi-core processing.
 }}
 
-\item{verbose}{If TRUE, print progress to console.}
+\item{verbose}{If TRUE, output progress to console.}
 }
 \value{
 om_aris ARIs between clustering solutions of an solutions matrix

@@ -72,7 +72,7 @@ extend_solutions <- function(solutions_matrix,
     # Check to see if the dl and solutions_matrix have matching subjects
     ###########################################################################
     solution_subs <- colnames(subs(solutions_matrix))[-1]
-    target_subs <- tl[[1]]$"data"$"subjectkey"
+    target_subs <- tl[[1]]$"data"$"uid"
     if (!identical(solution_subs, target_subs)) {
         stop(
             "Subjects in data list/target list do not match those in",
@@ -86,7 +86,7 @@ extend_solutions <- function(solutions_matrix,
         lapply(
             function(x) {
                 x$"data" |>
-                    dplyr::select(-"subjectkey") |>
+                    dplyr::select(-"uid") |>
                     colnames()
             }
         ) |>
@@ -140,7 +140,7 @@ extend_solutions <- function(solutions_matrix,
                 evaluation_df <- dplyr::inner_join(
                     clustered_subs,
                     current_component_df,
-                    by = "subjectkey"
+                    by = "uid"
                 )
                 suppressWarnings({
                     pval <- calc_assoc_pval(
@@ -185,7 +185,7 @@ extend_solutions <- function(solutions_matrix,
                     evaluation_df <- dplyr::inner_join(
                         clustered_subs,
                         current_component_df,
-                        by = "subjectkey"
+                        by = "uid"
                     )
                     suppressWarnings({
                         pval <- calc_assoc_pval(
@@ -566,7 +566,7 @@ calc_assoc_pval <- function(var1,
 
 #' Calculate p-values for all pairwise associations of features in a data list
 #'
-#' @param dl A nested list of input data from `generate_data_list()`.
+#' @param dl A nested list of input data from `data_list()`.
 #'
 #' @param verbose If TRUE, output progress to the console.
 #'
@@ -585,7 +585,7 @@ calc_assoc_pval_matrix <- function(dl,
     # Build a single data.frame that contains all data
     ###########################################################################
     merged_df <- collapse_dl(dl)
-    merged_df <- merged_df[, colnames(merged_df) != "subjectkey"]
+    merged_df <- merged_df[, colnames(merged_df) != "uid"]
     ###########################################################################
     # Build data.frame containing the types of features in merged_df
     ###########################################################################
@@ -603,7 +603,7 @@ calc_assoc_pval_matrix <- function(dl,
             }
         ) |>
         unlist()
-    var_names <- colnames(merged_df[, colnames(merged_df) != "subjectkey"])
+    var_names <- colnames(merged_df[, colnames(merged_df) != "uid"])
     metadata <- data.frame(
         name = var_names,
         type = types,
