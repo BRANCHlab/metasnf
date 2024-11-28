@@ -1,23 +1,26 @@
 #' Developer constructor for data_list
 #' 
 #' @keywords internal
-#' @param x A list to be converted into a `data_list` object. Default is an empty list.
-#' @return A `data_list` object, which is a list with the class "data_list".
-new_data_list <- function(x = list()) {
+#' 
+#' @param x A nested list to be converted into a `data_list` object.
+#' 
+#' @return A `data_list` object, which is a nested list with class `data_list`.
+new_data_list <- function(x) {
     stopifnot(is.list(x))
+    stopifnot(is.list(x[[1]]))
     dl <- structure(x, class = "data_list")
     return(dl)
 }
 
-# Validator function
-validate_data_list <- function(x) {
-    return(TRUE)
-}
-
-#' Generate a data list
+#' Build a data list
 #'
-#' This function generates the major data object that will be processed when
-#' iterating through the each SNF pipeline defined in the settings_matrix. The
+#' `data_list()` constructs a data list object with the classes 'data_list' and
+#' `list`. This object is the primary way in which features to be used along
+#' the metasnf clustering pipeline are stored. The data list is fundamentally
+#' a 2-level nested list object where each inner list contains a data frame
+#' (referenced as "data types" in the original similarity network fusion
+#' article) and associated metadata for that data frame.
+#' 
 #' data list is a named and nested list containing input dataframes (data), the
 #' name of that input dataframe (for the user's reference), the 'domain' of
 #' that dataframe (the broader source of information that the input dataframe
@@ -31,13 +34,13 @@ validate_data_list <- function(x) {
 #'
 #' @param uid (string) the name of the uid column currently used data
 #'
-#' @param train_subjects character vector of train subjects (useful if building
+#' @param train_uids character vector of train uids (useful if building
 #' a full data list for label propagation)
 #'
-#' @param test_subjects character vector of test subjects (useful if building
+#' @param test_uids character vector of test uids (useful if building
 #' a full data list for label propagation)
 #'
-#' @param sort_subjects If TRUE, the subjects in the data list will be sorted
+#' @param sort_uids If TRUE, the uids in the data list will be sorted
 #'
 #' @return A nested "list" class object. Each list component contains a 4-item
 #' list of a data frame, the user-assigned name of the data frame, the
@@ -122,20 +125,30 @@ validate_data_list <- function(x) {
 #' )
 data_list <- function(...,
                       uid = NULL,
-                      test_subjects = NULL,
-                      train_subjects = NULL,
-                      sort_subjects = TRUE) {
+                      test_uids = NULL,
+                      train_uids = NULL,
+                      sort_uids = TRUE) {
     # Initialize data list
     dl <- list()
-    # The loaded data
+    # Handle programmatic list-based loading
     loaded_data <- list(...)
     for (item in loaded_data) {
-        if (methods::is(item[[1]], "data.frame")) {
-            # A standard loaded data item (a 4-component list)
+        standard_loaded <- methods::is(item[[1]], "data.frame")
+        list_loaded <- methods::is(item[[1]], "list")
+        if (standard_loaded) {
             dl <- append(dl, list(item))
-        } else if (methods::is(item[[1]], "list")) {
-            # A bulk loaded data item (list of 4-component lists)
+        } else if (list_loaded) {
             dl <- append(dl, item)
+        } else {
+            stop(
+                "Data must be formatted as either any number of lists each",
+                " containing data (`data.frame`), name of data (`character`),",
+                " domain of data (`character`), and type of data (`character`",
+                " in c(\"continuous\", \"discrete\", \"ordinal\",",
+                " \"categorical\", \"mixed\")) or as a single list of lists",
+                " that each adhere to that format. See `?data_list` for more",
+                " examples of valid inputs to this function."
+            )
         }
     }
     # Assign names to the nested list elements
@@ -162,12 +175,12 @@ data_list <- function(...,
         reduce_dl_to_common() |>
         prefix_dl_sk()
     ###########################################################################
-    # Sort subjects alphabetically
-    if (sort_subjects) {
+    # Sort uids alphabetically
+    if (sort_uids) {
         dl <- dl |> arrange_dl()
     }
     ###########################################################################
-    # Reposition the subjectkey column to the first column in each dataframe
+    # Reposition the uid column to the first column in each dataframe
     dl <- dl_uid_first_col(dl)
     ###########################################################################
     # Ensure there are no duplicate feature names
@@ -182,44 +195,43 @@ data_list <- function(...,
     return(dl)
 }
 
-#' Convert unique identifiers of data list to 'subjectkey'
+#' Convert unique identifiers of data list to "uid"
 #'
-#' Column name "subjectkey" is reserved for the unique identifier of subjects.
-#'  This function ensures all dataframes have their UID set as "subjectkey".
+#' Column name "uid" is reserved for the unique identifier of observations.
+#' This function ensures all dataframes have their UID set as "uid".
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @param uid (string) the name of the uid column currently used data
 #'
-#' @return dl_renamed_id data list with 'subjectkey' as UID
+#' @return dl_renamed_id data list with "uid" as UID
 #'
 #' @export
 convert_uids <- function(dl, uid = NULL) {
     # Column names of the first dataframe
     d1 <- dl[[1]]$"data"
     d1_cols  <- colnames(d1)
-    # Check to see if subjectkey is already present in the first dataframe
-    if ("subjectkey" %in% d1_cols) {
-        # If subjectkey exists and is a UID, leave the data list alone
-        if (length(unique(d1$"subjectkey")) == length(d1$"subjectkey")) {
-            message("Existing `subjectkey` column will be treated as UID.")
+    # Check to see if uid is already present in the first dataframe
+    if ("uid" %in% d1_cols) {
+        # If uid exists and is a UID, leave the data list alone
+        if (length(unique(d1$"uid")) == length(d1$"uid")) {
             return(dl)
         } else {
-            # If subjectkey exists and is not a UID, raise error
-            stop(paste0(
-                "Column `subjectkey` exists, but it is not a unique ID.",
+            # If uid exists and is not a UID, raise error
+            stop(
+                "Column `uid` exists, but it is not a unique ID.",
                 " Please regenerate this data list after renaming",
-                " the subjectkey column or converting it to a UID column."
-            ))
+                " the uid column or converting it to a UID column."
+            )
         }
     }
-    # This if only executes if subjectkey doesn't exist as a column, but also
+    # This if only executes if uid doesn't exist as a column, but also
     #  there was no uid specified.
     if (is.null(uid)) {
         stop(paste0(
             "Please specify parameter 'uid' with the name of the column",
             " currently used as each row's unique identifier. This row will",
-            " be converted to 'subjectkey' for the remaining metasnf analyses."
+            " be converted to 'uid' for the remaining metasnf analyses."
         ))
     }
     # Check to ensure that the user specified UID exists in the data list
@@ -229,10 +241,10 @@ convert_uids <- function(dl, uid = NULL) {
             " this data list. Are you sure you spelled it correctly?"
         ))
     }
-    # Convert the user specified original UID to 'subjectkey'
+    # Convert the user specified original UID to 'uid'
     dl_renamed_id <- lapply(dl,
         function(x) {
-            colnames(x$"data")[colnames(x$"data") == uid] <- "subjectkey"
+            colnames(x$"data")[colnames(x$"data") == uid] <- "uid"
             x
         }
     )
@@ -266,14 +278,14 @@ remove_dl_na <- function(dl, return_missing = FALSE) {
             }
         ) |>
             merge_df_list(join = "full")
-        all_subjects <- all_data$"subjectkey"
+        all_uids <- all_data$"uid"
         complete_data <- stats::na.omit(all_data)
-        complete_subjects <- complete_data$"subjectkey"
-        complete_indices <- all_subjects %in% complete_subjects
-        removed_subjects <- all_subjects[!complete_indices]
+        complete_uids <- complete_data$"uid"
+        complete_indices <- all_uids %in% complete_uids
+        removed_uids <- all_uids[!complete_indices]
         results <- list(
             dl = dl_no_nas,
-            removed_subjects = removed_subjects
+            removed_uids = removed_uids
         )
         return(results)
     } else {
@@ -281,42 +293,42 @@ remove_dl_na <- function(dl, return_missing = FALSE) {
     }
 }
 
-#' Add "subject_" prefix to all UID values in subjectkey column
+#' Add "uid_" prefix to all UID values in uid column
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
-#' @return dl A data list with UIDs prefixed with the string "subject_"
+#' @return dl A data list with UIDs prefixed with the string "uid_"
 #'
 #' @export
 prefix_dl_sk <- function(dl) {
     dl_prefixed <- lapply(
         dl,
         function(x) {
-            x[[1]]$"subjectkey" <- paste0("subject_", x[[1]]$"subjectkey")
+            x[[1]]$"uid" <- paste0("uid_", x[[1]]$"uid")
             return(x)
         }
     )
     return(dl_prefixed)
 }
 
-#' Reduce data list to common subjects
+#' Reduce data list to common uids
 #'
 #' Given a `data_list` object, reduce each nested dataframe to contain only the
-#'  set of subjects that are shared by all nested dataframes
+#'  set of uids that are shared by all nested dataframes
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
-#' @return reduced_dl The data list object subsetted only to subjectssnf
+#' @return reduced_dl The data list object subsetted only to uidssnf
 #'  shared across all nested dataframes
 #' @export
 reduce_dl_to_common <- function(dl) {
-    subjects <- lapply(dl, function(x) x[[1]]$"subjectkey")
+    uids <- lapply(dl, function(x) x[[1]]$"uid")
     data_objects <- lapply(dl, function(x) x[[1]])
-    common_subjects <- Reduce(intersect, subjects)
+    common_uids <- Reduce(intersect, uids)
     filtered_data_objects <- data_objects |>
         lapply(
             function(x) {
-                dplyr::filter(x, x$"subjectkey" %in% common_subjects)
+                dplyr::filter(x, x$"uid" %in% common_uids)
             }
         )
     reduced_dl <- dl
@@ -326,7 +338,7 @@ reduce_dl_to_common <- function(dl) {
     return(reduced_dl)
 }
 
-#' Given a data list object, sort data elements by subjectkey
+#' Given a data list object, sort data elements by uid
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
@@ -338,7 +350,7 @@ arrange_dl <- function(dl) {
     arranged_data_objects <- data_objects |>
         lapply(
             function(x) {
-                dplyr::arrange(x, x$"subjectkey")
+                dplyr::arrange(x, x$"uid")
             }
         )
     arranged_dl <- dl
@@ -371,7 +383,7 @@ summarize_dl <- function(dl, scope = "component") {
         )
     } else if (scope == "feature") {
         dl_df <- collapse_dl(dl)
-        dl_df <- dl_df[, colnames(dl_df) != "subjectkey"]
+        dl_df <- dl_df[, colnames(dl_df) != "uid"]
         types <- dl |>
             lapply(
                 function(x) {
@@ -386,7 +398,7 @@ summarize_dl <- function(dl, scope = "component") {
                 }
             ) |>
             unlist()
-        var_names <- colnames(dl_df[, colnames(dl_df) != "subjectkey"])
+        var_names <- colnames(dl_df[, colnames(dl_df) != "uid"])
         dl_summary <- data.frame(
             name = var_names,
             type = types,
@@ -452,7 +464,7 @@ dl_variable_summary <- function(dl) {
     merged_df <- dl |>
         collapse_dl() |>
         data.frame()
-    var_names <- colnames(merged_df[, colnames(merged_df) != "subjectkey"])
+    var_names <- colnames(merged_df[, colnames(merged_df) != "uid"])
     variable_level_summary <- data.frame(
         name = var_names,
         type = types,
@@ -461,21 +473,21 @@ dl_variable_summary <- function(dl) {
     return(variable_level_summary)
 }
 
-#' Reorder the subjects in a data list
+#' Reorder the uids in a data list
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
-#' @param ordered_subjects A vector of the subjectkey values in the data list
+#' @param ordered_uids A vector of the uid values in the data list
 #' in the desired order of the sorted data list.
 #'
 #' @return A data list ("list"-class object) with reordered observations.
 #'
 #' @export
-reorder_dl_subs <- function(dl, ordered_subjects) {
+reorder_dl_subs <- function(dl, ordered_uids) {
     dl <- dl |>
         lapply(
             function(x) {
-                index <- match(x$"data"$"subjectkey", ordered_subjects)
+                index <- match(x$"data"$"uid", ordered_uids)
                 x$"data" <- x$"data"[order(index), ]
                 return(x)
             }
@@ -544,32 +556,32 @@ rename_dl <- function(dl, name_mapping) {
     return(dl)
 }
 
-#' Extract subjects from a data list
+#' Extract uids from a data list
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
-#' @param prefix If TRUE, preserves the "subject_" prefix added to UIDs when
+#' @param prefix If TRUE, preserves the "uid_" prefix added to UIDs when
 #' creating a data list.
 #'
 #' @return A character vector of the UID labels contained in a data list.
 #'
 #' @export
-get_dl_subjects <- function(dl, prefix = FALSE) {
+get_dl_uids <- function(dl, prefix = FALSE) {
     dl_df <- collapse_dl(dl)
-    subjects <- dl_df$"subjectkey"
+    uids <- dl_df$"uid"
     if (prefix) {
-        return(subjects)
+        return(uids)
     }
-    subjects <- gsub("subject_", "", subjects)
-    return(subjects)
+    uids <- gsub("uid_", "", uids)
+    return(uids)
 }
 
-#' Make the subjectkey UID columns of a data list first
+#' Make the uid UID columns of a data list first
 #'
 #' @param dl A nested list of input data from `generate_data_list()`.
 #'
 #' @return A data list ("list"-class object) in which each data-subcomponent
-#' has "subjectkey" positioned as its first column.
+#' has "uid" positioned as its first column.
 #'
 #' @export
 dl_uid_first_col <- function(dl) {
@@ -578,7 +590,7 @@ dl_uid_first_col <- function(dl) {
         function(x) {
             x$"data" <- x$"data" |>
                 dplyr::select(
-                    "subjectkey",
+                    "uid",
                     dplyr::everything()
                 )
             return(x)
