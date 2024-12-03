@@ -652,3 +652,15 @@ dl_has_duplicates <- function(dl) {
         )
     }
 }
+
+#' Test if the object is a data list
+#'
+#' Given an object, returns `TRUE` if that object inherits from the `data_list`
+#' class.
+#'
+#' @param x An object.
+#' @return `TRUE` if the object inherits from the `data_list` class.
+#' @export
+is_data_list <- function(x) {
+    inherits(x, "data_list")
+}
