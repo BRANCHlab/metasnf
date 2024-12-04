@@ -1,9 +1,7 @@
-#' Developer constructor for data_list class object
+#' Constructor for data_list class object
 #' 
 #' @keywords internal
-#' 
 #' @param x A nested list to be converted into a `data_list` object.
-#' 
 #' @return A `data_list` object, which is a nested list with class `data_list`.
 new_data_list <- function(x) {
     stopifnot(is.list(x))
@@ -15,14 +13,13 @@ new_data_list <- function(x) {
 #' Validator for data_list class object
 #' 
 #' @keywords internal
-#' 
 #' @param dl An unvalidated `list`-class object to be checked for compliance
-#' with `data_list` class object formatting constraints.
-#' 
+#'  with `data_list` class object formatting constraints.
 #' @return If the input has a valid structure for a `data_list` class object, 
-#' returns the input unchanged. Otherwise, raises an error.
+#'  returns the input unchanged. Otherwise, raises an error.
 validate_data_list <- function(dl) {
     stopifnot(TRUE)
+    check_dl_duplicate_features(dl)
     return(dl)
 }
 
@@ -43,24 +40,18 @@ validate_data_list <- function(dl) {
 #' categorical, or mixed).
 #'
 #' @param ... Any number of list formatted as (df, "df_name", "df_domain",
-#' "df_type") OR any number of lists of lists formatted as (df, "df_name",
-#' "df_domain", "df_type")
-#'
+#'  "df_type") OR any number of lists of lists formatted as (df, "df_name",
+#'  "df_domain", "df_type")
 #' @param uid (string) the name of the uid column currently used data
-#'
 #' @param train_uids character vector of train uids (useful if building
-#' a full data list for label propagation)
-#'
+#'  a full data list for label propagation)
 #' @param test_uids character vector of test uids (useful if building
-#' a full data list for label propagation)
-#'
+#'  a full data list for label propagation)
 #' @param sort_uids If TRUE, the uids in the data list will be sorted
-#'
 #' @return A nested "list" class object. Each list component contains a 4-item
-#' list of a data frame, the user-assigned name of the data frame, the
-#' user-assigned domain of the data frame, and the user-labeled type of the
-#' data frame.
-#'
+#'  list of a data frame, the user-assigned name of the data frame, the
+#'  user-assigned domain of the data frame, and the user-labeled type of the
+#'  data frame.
 #' @export
 #' @examples
 #' heart_rate_df <- data.frame(
@@ -196,9 +187,7 @@ data_list <- function(...,
     ###########################################################################
     # Reposition the uid column to the first column in each dataframe
     dl <- dl_uid_first_col(dl)
-    ###########################################################################
     # Ensure there are no duplicate feature names
-    dl_has_duplicates(dl)
     ###########################################################################
     # Name the components of the data list
     names(dl) <- summarize_dl(dl)$"name"
@@ -630,13 +619,12 @@ merge_dls <- function(dl_1, dl_2) {
 
 #' Check if data list contains any duplicate features
 #'
+#' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @return Doesn't return any value. Raises warning if there are features
-#' with duplicate names in a generated data list.
-#'
+#'  with duplicate names in a generated data list.
 #' @export
-dl_has_duplicates <- function(dl) {
+check_dl_duplicate_features <- function(dl) {
     features <- dl |> lapply(
         function(x) {
             return(colnames(x$"data")[-1])
@@ -646,9 +634,12 @@ dl_has_duplicates <- function(dl) {
         as.character()
     duplicates <- unique(features[duplicated(features)])
     if (length(duplicates) > 0) {
-        warning(
-            "Generated data list has duplicate feature names, which can",
-            " cause problems with downstream analyses."
+        cli::cli_abort(
+            message = c(
+                x = "Provided data cannot contain duplicate features."
+            ),
+            # The 2 ensures that the error is associated with `data_list()`.
+            .envir = rlang::caller_env(2)
         )
     }
 }

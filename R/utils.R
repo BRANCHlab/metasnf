@@ -1,51 +1,27 @@
 #' Add columns to a dataframe
 #'
-#' Add new columns to a dataframe by providing a character vector of column
-#'  names (param `newcols`) and a value to occupy each row of the new columns
-#'  (param `fill`, NA by default).
+#' Add new columns to a dataframe by specifying their names and a value to
+#' initialize them with.
 #'
-#' @param df The dataframe to extend
-#' @param newcols The vector containing new column names
-#' @param fill The values of the elements of the newly added columns. NA by
-#'  default.
-#'
-#' @return extended_df The dataframe containing the added columns
-#'
+#' @keywords internal
+#' @param df The dataframe to extend.
+#' @param cols The vector containing new column names.
+#' @param value The values stored in the newly added columns. NA by default.
+#' @return A data frame containing with the same columns as the `df` argument
+#'  as well as the new columns specified in the `cols` argument.
 #' @export
-add_columns <- function(df, newcols, fill = NA) {
-    # ensure that `fill` is not NULL
-    if (is.null(fill)) {
-        stop("The `fill` parameter must be non-null. Consider NA or \"\".")
-    }
-    # ensure `newcols` is a character vector
-    if (!identical(newcols, as.character(newcols))) {
-        warning(
-            "`newcols` parameter should be a character vector."
-        )
-        newcols <- as.character(newcols)
-    }
-    # generate blank dataframe with the colnames in `newcols`
-    newcol_df <- data.frame(t(data.frame(newcols)))
-    colnames(newcol_df) <- newcol_df[1, ]
-    # populate blank dataframe with fill value
-    newcol_df[1, ] <- fill
-    # expand original dataframe with `newcol_df`
-    extended_df <- dplyr::cross_join(
-        df,
-        newcol_df,
-    )
-    return(extended_df)
+add_columns <- function(df, cols, value = NA) {
+    df[cols] <- value
+    return(df)
 }
 
-#' Convert dataframe columns to numeric type
+#' Convert columns of a data frame to numeric type (if possible)
 #'
 #' Converts all columns in a dataframe that can be converted to numeric type to
-#'  numeric type.
+#' numeric type.
 #'
 #' @param df A dataframe
-#'
 #' @return df The dataframe with all possible columns converted to type numeric
-#'
 #' @export
 numcol_to_numeric <- function(df) {
     df[] <- lapply(df,

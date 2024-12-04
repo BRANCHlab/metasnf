@@ -393,7 +393,7 @@ We start by running the `extend_solutions` function, which will calculate p-valu
 # Only looking at our out-of-model p-values
 extended_solutions_matrix <- extend_solutions(
     solutions_matrix,
-    tl = target_list
+    target_dl = target_list
 )
 
 # What columns have been added?
@@ -407,7 +407,7 @@ head(extended_solutions_matrix[, new_cols])
 extended_solutions_matrix <- extend_solutions(
     solutions_matrix,
     dl = data_list,
-    tl = target_list
+    target_dl = target_list
 )
 ```
 
@@ -423,7 +423,7 @@ extended_solutions_matrix <- extend_solutions(
 # Also would work, but now every feature would be part of the summaries
 extended_solutions_matrix <- extend_solutions(
     solutions_matrix,
-    tl = c(data_list, target_list)
+    target_dl = c(data_list, target_list)
 )
 ```
 
@@ -556,7 +556,7 @@ rep_solutions <- get_representative_solutions(
 mc_manhattan <- mc_manhattan_plot(
     rep_solutions,
     dl = data_list,
-    tl = target_list,
+    target_dl = target_list,
     hide_x_labels = TRUE,
     point_size = 2,
     text_size = 12,
@@ -590,7 +590,7 @@ rep_solutions_no_cort <- dplyr::select(
 mc_manhattan2 <- mc_manhattan_plot(
     rep_solutions_no_cort,
     dl = data_list,
-    tl = target_list,
+    target_dl = target_list,
     point_size = 4,
     threshold = 0.01,
     text_size = 12,

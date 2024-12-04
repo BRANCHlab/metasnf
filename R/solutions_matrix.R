@@ -3,16 +3,16 @@
 #' @param solutions_matrix Result of `batch_snf` storing cluster solutions and
 #' the settings that were used to generate them.
 #'
+#' @param target_dl A data list with features to calculate p-values for.
+#' Features in the target list will be included during p-value summary
+#' measure calculations.
+#'
 #' @param dl A data list with features to calcualte p-values for, but
 #' that should not be incorporated into p-value summary measure columns (i.e.,
 #' min/mean/max p-value columns).
 #'
-#' @param tl A data list with features to calculate p-values for.
-#' Features in the target list will be included during p-value summary
-#' measure calculations.
-#'
 #' @param cat_test String indicating which statistical test will be used to
-#' associate cluster with a categorical feature. Options are "chi_squared" for
+# associate cluster with a categorical feature. Options are "chi_squared" for
 #' the Chi-squared test and "fisher_exact" for Fisher's exact test.
 #'
 #' @param calculate_summaries If TRUE, the function will calculate the minimum
@@ -31,7 +31,7 @@
 #'
 #' @export
 extend_solutions <- function(solutions_matrix,
-                             tl = NULL,
+                             target_dl = NULL,
                              dl = NULL,
                              cat_test = "chi_squared",
                              calculate_summaries = TRUE,
@@ -58,11 +58,11 @@ extend_solutions <- function(solutions_matrix,
     ###########################################################################
     # If data list and target list both exist, merge them
     ###########################################################################
-    dl <- c(dl, tl)
+    dl <- c(dl, target_dl)
     ###########################################################################
     # If tl not given but calculate_summaries is TRUE, give a warning.
     ###########################################################################
-    if (is.null(tl) && calculate_summaries) {
+    if (is.null(target_dl) && calculate_summaries) {
         warning(
             "Calculate summaries only applies to target list features, but",
             " target list parameter was not specified."
@@ -72,7 +72,7 @@ extend_solutions <- function(solutions_matrix,
     # Check to see if the dl and solutions_matrix have matching subjects
     ###########################################################################
     solution_subs <- colnames(subs(solutions_matrix))[-1]
-    target_subs <- tl[[1]]$"data"$"uid"
+    target_subs <- target_dl[[1]]$"data"$"uid"
     if (!identical(solution_subs, target_subs)) {
         stop(
             "Subjects in data list/target list do not match those in",
@@ -112,7 +112,7 @@ extend_solutions <- function(solutions_matrix,
         data.frame() |>
         add_columns(
             paste0(features, "_pval"),
-            fill = NA
+            value = NA
         )
     ###########################################################################
     # Single DF to contain all features to calculate p-values for
@@ -224,7 +224,7 @@ extend_solutions <- function(solutions_matrix,
         #######################################################################
         # Identify features present in target list
         #######################################################################
-        target_features <- dl_variable_summary(tl)$"name"
+        target_features <- dl_variable_summary(target_dl)$"name"
         target_features <- paste0(target_features, "_pval")
         target_esm <- dplyr::select(
             esm,

@@ -282,24 +282,20 @@ batch_snf <- function(dl,
     #  - nclust (1 column): number of clusters in the cluster solution in that
     #    row. Only included when run_clustering = TRUE.
     ###########################################################################
-    # `add_columns` extends a dataframe `df` with a column or vector of columns
-    #  whose names are provided in the `newcols` parameter. The values in the
-    #  newly added columns are specified in the `fill` parameter.
-    ###########################################################################
     # 5a. solutions_matrix begins as the settings_matrix extended with one new
     #  column for every subjects.
     if (!suppress_clustering) {
         solutions_matrix <- add_columns(
             df = settings_matrix,
-            newcols = dl[[1]]$"data"$"uid", # one col/patient
-            fill = 0 # populate the new column with 0s by default
+            cols = dl[[1]]$"data"$"uid", # one col/patient
+            value = 0 # populate the new column with 0s by default
         )
         # 5b. solutions_matrix gets one new column to store the cluster that
         # each subject was assigned to.
         solutions_matrix <- add_columns(
             df = settings_matrix,
-            newcols = "nclust",
-            fill = 0
+            cols = "nclust",
+            value = 0
         )
     }
     ###########################################################################

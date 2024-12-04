@@ -7,3 +7,4 @@ shared-code
 Session.vim
 build*
 sandbox.R
+utest.R
