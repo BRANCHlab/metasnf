@@ -1,56 +1,19 @@
-#' Constructor for data_list class object
-#' 
-#' @keywords internal
-#' @param x A nested list to be converted into a `data_list` object.
-#' @return A `data_list` object, which is a nested list with class `data_list`.
-new_data_list <- function(x) {
-    stopifnot(is.list(x))
-    stopifnot(is.list(x[[1]]))
-    dl <- structure(x, class = "data_list")
-    return(dl)
-}
-
-#' Validator for data_list class object
-#' 
-#' @keywords internal
-#' @param dl An unvalidated `list`-class object to be checked for compliance
-#'  with `data_list` class object formatting constraints.
-#' @return If the input has a valid structure for a `data_list` class object, 
-#'  returns the input unchanged. Otherwise, raises an error.
-validate_data_list <- function(dl) {
-    stopifnot(TRUE)
-    check_dl_duplicate_features(dl)
-    return(dl)
-}
-
 #' Build a data list
 #'
-#' `data_list()` constructs a data list object with the classes 'data_list' and
-#' `list`. This object is the primary way in which features to be used along
-#' the metasnf clustering pipeline are stored. The data list is fundamentally
-#' a 2-level nested list object where each inner list contains a data frame
-#' (referenced as "data types" in the original similarity network fusion
-#' article) and associated metadata for that data frame.
-#' 
-#' data list is a named and nested list containing input dataframes (data), the
-#' name of that input dataframe (for the user's reference), the 'domain' of
-#' that dataframe (the broader source of information that the input dataframe
-#' is capturing, determined by user's domain knowledge), and the type of
-#' feature stored in the dataframe (continuous, discrete, ordinal,
-#' categorical, or mixed).
+#' `data_list()` constructs a data list object which inherits from classes
+#' `data_list` and `list`. This object is the primary way in which features to
+#' be used along the metasnf clustering pipeline are stored. The data list is
+#' fundamentally a 2-level nested list object where each inner list contains a
+#' data frame and associated metadata for that data frame. The metadata
+#' includes the name of the dataframe, the 'domain' of that dataframe (the
+#' broader source of information that the input dataframe is capturing,
+#' determined by user's domain knowledge), and the type of feature stored in
+#' the dataframe (continuous, discrete, ordinal, categorical, or mixed).
 #'
-#' @param ... Any number of list formatted as (df, "df_name", "df_domain",
-#'  "df_type") OR any number of lists of lists formatted as (df, "df_name",
-#'  "df_domain", "df_type")
-#' @param uid (string) the name of the uid column currently used data
-#' @param train_uids character vector of train uids (useful if building
-#'  a full data list for label propagation)
-#' @param test_uids character vector of test uids (useful if building
-#'  a full data list for label propagation)
-#' @param sort_uids If TRUE, the uids in the data list will be sorted
-#' @return A nested "list" class object. Each list component contains a 4-item
-#'  list of a data frame, the user-assigned name of the data frame, the
-#'  user-assigned domain of the data frame, and the user-labeled type of the
+#' @param ... Any number of lists formatted as (df, "df_name", "df_domain",
+#'  "df_type") and/or any number of lists of lists formatted as (df, "df_name",
+#'  "df_domain", "df_type").
+#' @param uid (character) the name of the uid column currently used data.
 #'  data frame.
 #' @export
 #' @examples
@@ -129,14 +92,12 @@ validate_data_list <- function(dl) {
 #'     uid = "patient_id"
 #' )
 data_list <- function(...,
-                      uid = NULL,
-                      test_uids = NULL,
-                      train_uids = NULL,
-                      sort_uids = TRUE) {
+                      uid) {
     # Initialize data list
     dl <- list()
     # Handle programmatic list-based loading
     loaded_data <- list(...)
+    check_dl_empty_input(loaded_data)
     for (item in loaded_data) {
         standard_loaded <- methods::is(item[[1]], "data.frame")
         list_loaded <- methods::is(item[[1]], "list")
@@ -145,14 +106,13 @@ data_list <- function(...,
         } else if (list_loaded) {
             dl <- append(dl, item)
         } else {
-            stop(
-                "Data must be formatted as either any number of lists each",
-                " containing data (`data.frame`), name of data (`character`),",
-                " domain of data (`character`), and type of data (`character`",
-                " in c(\"continuous\", \"discrete\", \"ordinal\",",
-                " \"categorical\", \"mixed\")) or as a single list of lists",
-                " that each adhere to that format. See `?data_list` for more",
-                " examples of valid inputs to this function."
+            cli::cli_abort(
+                message = c(
+                    x = paste0(
+                        "Invalid data loading format. See `?data_list` for",
+                        " examples on proper data formatting."
+                    )
+                )
             )
         }
     }
@@ -166,32 +126,26 @@ data_list <- function(...,
         dl_names <- c("data", "name", "domain", "type")
         dl <- lapply(dl, stats::setNames, dl_names)
     } else if (!(all(named_entries == 4))) {
-        stop(
-            "Please either specify names (i.e., data = ..., name = ...,",
-            " domain = ..., type = ...) for all of the elements or for none",
-            " of them."
+        cli::cli_abort(
+            message = c(
+                x = paste0(
+                    "Please either specify names (i.e., data = ...,",
+                    " name = ..., domain = ..., type = ...) for all of the",
+                    " elements or for none of them."
+                )
+            )
         )
     }
-    dl <- convert_uids(dl, uid)
-    # Handle missing subject removal
-    ###########################################################################
+    # Additional formatting
     dl <- dl |>
-        remove_dl_na() |>
-        reduce_dl_to_common() |>
-        prefix_dl_sk()
-    ###########################################################################
-    # Sort uids alphabetically
-    if (sort_uids) {
-        dl <- dl |> arrange_dl()
-    }
-    ###########################################################################
-    # Reposition the uid column to the first column in each dataframe
-    dl <- dl_uid_first_col(dl)
-    # Ensure there are no duplicate feature names
-    ###########################################################################
+        remove_dl_na() |> # remove NAs
+        convert_uids(uid) |> # Convert data frame UID column to "uid"
+        reduce_dl_to_common() |> # only keep common subjects
+        prefix_dl_uid() |> # append "uid_" to the literal UID values
+        arrange_dl() |> # sort observations in contained data frames by UID
+        dl_uid_first_col() # position "uid" column at start of each data frame
     # Name the components of the data list
     names(dl) <- summarize_dl(dl)$"name"
-    ###########################################################################
     # Class management
     dl <- validate_data_list(dl)
     dl <- new_data_list(dl)
@@ -203,64 +157,50 @@ data_list <- function(...,
 #' Column name "uid" is reserved for the unique identifier of observations.
 #' This function ensures all dataframes have their UID set as "uid".
 #'
-#' @param dl A nested list of input data from `data_list()`.
-#'
+#' @keywords internal
+#' @param dl A nested list to be converted into a `data_list` object.
 #' @param uid (string) the name of the uid column currently used data
-#'
-#' @return dl_renamed_id data list with "uid" as UID
-#'
-#' @export
-convert_uids <- function(dl, uid = NULL) {
-    # Column names of the first dataframe
-    d1 <- dl[[1]]$"data"
-    d1_cols  <- colnames(d1)
-    # Check to see if uid is already present in the first dataframe
-    if ("uid" %in% d1_cols) {
-        # If uid exists and is a UID, leave the data list alone
-        if (length(unique(d1$"uid")) == length(d1$"uid")) {
-            return(dl)
-        } else {
-            # If uid exists and is not a UID, raise error
-            stop(
-                "Column `uid` exists, but it is not a unique ID.",
-                " Please regenerate this data list after renaming",
-                " the uid column or converting it to a UID column."
-            )
-        }
-    }
-    # This if only executes if uid doesn't exist as a column, but also
-    #  there was no uid specified.
-    if (is.null(uid)) {
-        stop(paste0(
-            "Please specify parameter 'uid' with the name of the column",
-            " currently used as each row's unique identifier. This row will",
-            " be converted to 'uid' for the remaining metasnf analyses."
-        ))
-    }
-    # Check to ensure that the user specified UID exists in the data list
-    if (!uid %in% d1_cols) {
-        stop(paste0(
-            "The specified original UID (", uid, ") is not present in",
-            " this data list. Are you sure you spelled it correctly?"
-        ))
-    }
-    # Convert the user specified original UID to 'uid'
-    dl_renamed_id <- lapply(dl,
+#' @return dl The provided nested list with "uid" as UID.
+convert_uids <- function(dl, uid) {
+    dl <- lapply(dl,
         function(x) {
+            # Stop if UID isn't in the data frame
+            if (!uid %in% colnames(x$"data")) {
+                cli::cli_abort(
+                    message = c(
+                        x = paste0(
+                            "UID column \"{uid}\" is not present in all data",
+                            " frames."
+                        )
+                    ),
+                    .envir = rlang::caller_env(3)
+                )
+            }
             colnames(x$"data")[colnames(x$"data") == uid] <- "uid"
-            x
+            # Stop if UID isn't actually unique
+            if (length(x$"data"$"uid") != length(unique(x$"data"$"uid"))) {
+                cli::cli_abort(
+                    message = c(
+                        x = paste0(
+                            "Column \"{uid}\" does not uniquely ID",
+                            " all observations in at least one provided",
+                            " data frame."
+                        )
+                    ),
+                    .envir = rlang::caller_env(2)
+                )
+            }
+            return(x)
         }
     )
-    return(dl_renamed_id)
+    return(dl)
 }
 
 #' Remove NAs from a data list object
 #'
+#' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @return dl A data list without NAs
-#'
-#' @export
 remove_dl_na <- function(dl) {
     dl_no_nas <- lapply(
         dl,
@@ -279,7 +219,7 @@ remove_dl_na <- function(dl) {
 #' @return dl A data list with UIDs prefixed with the string "uid_"
 #'
 #' @export
-prefix_dl_sk <- function(dl) {
+prefix_dl_uid <- function(dl) {
     dl_prefixed <- lapply(
         dl,
         function(x) {
@@ -317,13 +257,12 @@ reduce_dl_to_common <- function(dl) {
     return(reduced_dl)
 }
 
-#' Given a data list object, sort data elements by uid
+#' Sort data frames in a data list by their unique ID values.
 #'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @return arranged_dl The arranged data list object
-#'
-#' @export
+#' @keywords internal
+#' @param dl A data list-like object.
+#' @return arranged_dl The data list-like object with all data frames sorted
+#'  by uid.
 arrange_dl <- function(dl) {
     data_objects <- lapply(dl, function(x) x[[1]])
     arranged_data_objects <- data_objects |>
@@ -617,15 +556,51 @@ merge_dls <- function(dl_1, dl_2) {
     return(merged_data_list)
 }
 
+#' Test if the object is a data list
+#'
+#' Given an object, returns `TRUE` if that object inherits from the `data_list`
+#' class.
+#'
+#' @param x An object.
+#' @return `TRUE` if the object inherits from the `data_list` class.
+#' @export
+is_data_list <- function(x) {
+    inherits(x, "data_list")
+}
+
+#' Constructor for data_list class object
+#' 
+#' @keywords internal
+#' @param x A nested list to be converted into a `data_list` object.
+#' @return A `data_list` object, which is a nested list with class `data_list`.
+new_data_list <- function(x) {
+    stopifnot(is.list(x))
+    stopifnot(is.list(x[[1]]))
+    dl <- structure(x, class = "data_list")
+    return(dl)
+}
+
+#' Validator for data_list class object
+#' 
+#' @keywords internal
+#' @param dl An unvalidated `list`-class object to be checked for compliance
+#'  with `data_list` class object formatting constraints.
+#' @return If the input has a valid structure for a `data_list` class object, 
+#'  returns the input unchanged. Otherwise, raises an error.
+validate_data_list <- function(dl) {
+    check_dl_duplicate_features(dl)
+    return(dl)
+}
+
 #' Check if data list contains any duplicate features
 #'
 #' @keywords internal
-#' @param dl A nested list of input data from `data_list()`.
+#' @param x A nested list of input data from `data_list()`.
 #' @return Doesn't return any value. Raises warning if there are features
 #'  with duplicate names in a generated data list.
 #' @export
-check_dl_duplicate_features <- function(dl) {
-    features <- dl |> lapply(
+check_dl_duplicate_features <- function(x) {
+    features <- x |> lapply(
         function(x) {
             return(colnames(x$"data")[-1])
         }
@@ -638,20 +613,89 @@ check_dl_duplicate_features <- function(dl) {
             message = c(
                 x = "Provided data cannot contain duplicate features."
             ),
-            # The 2 ensures that the error is associated with `data_list()`.
             .envir = rlang::caller_env(2)
         )
     }
 }
 
-#' Test if the object is a data list
+#' Error if empty input provided during data list initalization
 #'
-#' Given an object, returns `TRUE` if that object inherits from the `data_list`
-#' class.
+#' @keywords internal
+#' @param data_list_input Input data provided for data list initialization.
+#' @return Raises an error if data_list_input has 0 length.
+check_dl_empty_input <- function(data_list_input) {
+    if (length(data_list_input) == 0) {
+        cli::cli_abort(
+            message = c(
+                x = paste0(
+                    "Data list initialization requires at least one input.",
+                    " See `?data_list` for more examples."
+                )
+            ),
+            .envir = rlang::caller_env(1)
+        )
+    }
+}
+
+#' Error if data list-like structure has invalid feature types
 #'
-#' @param x An object.
-#' @return `TRUE` if the object inherits from the `data_list` class.
+#' @keywords internal
+#' @param x Object (list) in the process of being converted to a data list.
+#' @return Raises an error if the loaded types are not among continuous,
+#'  discrete, ordinal, categorical, or mixed.
+check_dl_types <- function(x) {
+    return(TRUE)
+}
+
+#' Lapply-like function for data list objects
+#'
+#' This function enables manipulating a `data_list` class object with lapply
+#' syntax without removing that object's `data_list` class attribute. The
+#' function will only preserve this attribute if the result of the apply call
+#' has a valid data list structure.
+#'
+#' @param X A `data_list` class object.
+#' @param FUN The function to be applied to each data list component.
+#' @param ... Optional arguments to `FUN`.
+#' @return If FUN applied to each component of X yields a valid data list, a
+#'  data list. Otherwise, a list.
 #' @export
-is_data_list <- function(x) {
-    inherits(x, "data_list")
+#' @examples
+#' # Convert all UID values to lowercase
+#' dl <- data_list(
+#'     list(abcd_income, "income", "demographics", "discrete"),
+#'     list(abcd_colour, "colour", "likes", "categorical"),
+#'     uid = "patient"
+#' )
+#' 
+#' dl_lower <- dlapply(
+#'     dl,
+#'     function(x) {
+#'         x$"data"$"uid" <- tolower(x$"data"$"uid")
+#'         return(x)
+#'     }
+#' )
+dlapply <- function(X, FUN, ...) {
+    UseMethod("dlapply")
+}
+
+#' @export
+dlapply.data_list <- function(X, FUN, ...) {
+    result <- base::lapply(X, FUN, ...)
+    validation <- tryCatch(
+        {
+            result <- validate_data_list(result)
+            class(result) <- "data_list"
+            result
+        },
+        error = function(e) {
+            cli::cli_warn(
+                message = c(
+                    "!" = "Result could not be assigned class `data_list`."
+                )
+            )
+            result
+        }
+    )
+    return(validation)
 }
