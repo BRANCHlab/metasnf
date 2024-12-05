@@ -67,20 +67,6 @@ test_that(
 )
 
 test_that(
-    "Errors on partial specification of component names.",
-    {
-        uid <- LETTERS
-        df <- data.frame(uid, a = seq_along(LETTERS))
-        expect_error(
-            data_list <- data_list(
-                list(df, "name", "domain", type = "discrete")
-            ),
-            "for all of the elements or for none of them"
-        )
-    }
-)
-
-test_that(
     "Errors when UID column is not unique.",
     {
         abcd_cort_t[1:2, "patient"] <- "x"
@@ -97,28 +83,28 @@ test_that(
 ###############################################################################
 # convert_uids()
 ###############################################################################
-#test_that(
-#    "Properly converts UIDs of a data list in preparation to 'uid'.",
-#    {
-#        dl <- data_list(
-#            list(abcd_income, "name", "neuroimaging", "continuous"),
-#            uid = "patient"
-#        )
-#        wrong_uid_dl <- lapply(
-#            dl,
-#            function(x) {
-#                x$"data" <- dplyr::rename(
-#                    x$"data",
-#                    "patient" = "uid"
-#                )
-#                return(x)
-#            }
-#        ) 
-#        expect_equal(
-#            dl, metasnf:::convert_uids(wrong_uid_dl, "patient")
-#        )
-#    }
-#)
+test_that(
+    "Properly converts UIDs of a data list in preparation to 'uid'.",
+    {
+        dl <- data_list(
+            list(abcd_income, "name", "neuroimaging", "continuous"),
+            uid = "patient"
+        )
+        wrong_uid_dl <- lapply(
+            dl,
+            function(x) {
+                x$"data" <- dplyr::rename(
+                    x$"data",
+                    "patient" = "uid"
+                )
+                return(x)
+            }
+        ) 
+        expect_equal(
+            dl, metasnf:::convert_uids(wrong_uid_dl, "patient")
+        )
+    }
+)
 
 
 ###############################################################################

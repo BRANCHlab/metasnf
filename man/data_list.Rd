@@ -15,7 +15,7 @@ data_list(..., uid)
 data frame.}
 }
 \description{
-\code{data_list()} constructs an data list object which inherits from classes
+\code{data_list()} constructs a data list object which inherits from classes
 \code{data_list} and \code{list}. This object is the primary way in which features to
 be used along the metasnf clustering pipeline are stored. The data list is
 fundamentally a 2-level nested list object where each inner list contains a

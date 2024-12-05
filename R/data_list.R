@@ -196,28 +196,31 @@ convert_uids <- function(dl, uid) {
     return(dl)
 }
 
-#' Remove NAs from a data list object
+#' Remove NA values from a data list-like list object
+#'
+#' Helper function during `data_list` class initialization. Applies
+#' '`stats::na.omit()` to the data frames named "data" within a nested list.
 #'
 #' @keywords internal
-#' @param dl A nested list of input data from `data_list()`.
-#' @return dl A data list without NAs
-remove_dl_na <- function(dl) {
-    dl_no_nas <- lapply(
-        dl,
+#' @param dll A data list-like `list` class object. Should contain at least one
+#'  nested list with a data frame named "data".
+#' @return dll The provided data list-like object with missing observations
+#'  removed.
+remove_dll_na <- function(dll) {
+    dll <- lapply(
+        dll,
         function(x) {
-            x[[1]] <- stats::na.omit(x[[1]])
+            x$"data" <- stats::na.omit(x$"data")
             return(x)
         }
     )
-    return(dl_no_nas)
+    return(dll)
 }
 
 #' Add "uid_" prefix to all UID values in uid column
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @return dl A data list with UIDs prefixed with the string "uid_"
-#'
 #' @export
 prefix_dl_uid <- function(dl) {
     dl_prefixed <- lapply(
@@ -589,7 +592,179 @@ new_data_list <- function(x) {
 #'  returns the input unchanged. Otherwise, raises an error.
 validate_data_list <- function(dl) {
     check_dl_duplicate_features(dl)
+    check_dl_inherits_list(dl)
+    check_dl_four_subitems(dl)
+    check_dl_subitem_names(dl)
+    check_dl_subitem_classes(dl)
+    check_dl_uid(dl)
+    check_dl_types(dl)
     return(dl)
+}
+
+#' Check if UID columns in a nested list have valid structure for a data list
+#'
+#' @keywords internal
+#' @param dl A data list or data list-like list object to be checked.
+#' @return Raises an error if the UID columns do not have a valid structure.
+#' @export
+check_dl_uid <- function(dl) {
+    uids <- lapply(
+        dl,
+        function(x) {
+            x$"data"$"uid"
+        }
+    )
+    first_uids <- uids[[1]]
+    all_uids_match <- lapply(
+        uids,
+        function(x) {
+            identical(first_uids, x)
+        }
+    ) |>
+        unlist() |>
+        all()
+    at_least_one_uid <- length(first_uids) > 0
+    unique_uid <- length(first_uids) == length(unique(first_uids))
+    uid_vals_sw_uid <- all(startsWith(first_uids, "uid_"))
+    valid_uids <- all(
+        c(
+            all_uids_match,
+            at_least_one_uid,
+            unique_uid,
+            uid_vals_sw_uid
+        )
+    )
+    if (!valid_uids) {
+        cli::cli_abort(
+            message = c(
+                x = paste0(
+                    "All data frames must contain identical `uid` columns",
+                    " that uniquely identify all observations."
+                )
+            ),
+            .envir = rlang::caller_env(2)
+        )
+    }
+}
+
+#' Check if UID columns in a nested list have valid structure for a data list
+#'
+#' @keywords internal
+#' @param dl A data list or data list-like list object to be checked.
+#' @return Raises an error if the UID columns do not have a valid structure.
+#' @export
+check_dl_subitem_classes <- function(dl) {
+    correct_subitem_classes <- lapply(
+        dl,
+        function(x) {
+            all(
+                c(
+                    is.data.frame(x$"data"),
+                    is.character(x$"name"),
+                    is.character(x$"domain"),
+                    is.character(x$"type")
+                )
+            )
+        }
+    ) |>
+        unlist() |>
+        all()
+    if (!correct_subitem_classes) {
+        cli::cli_abort(
+            message = c(
+                x = paste0(
+                    "Each data list component must be a 4-item list",
+                    " containing data (data.frame), name (character),",
+                    " domain (character), and type (character)."
+                )
+            ),
+            .envir = rlang::caller_env(2)
+        )
+    }
+}
+
+check_dl_subitem_names <- function(dl) {
+    correct_names <- lapply(
+        dl,
+        function(x) {
+            identical(names(x), c("data", "name", "domain", "type"))
+        }
+    ) |> 
+        unlist() |>
+        all()
+    if (!correct_names) {
+        cli::cli_abort(
+            message = c(
+                x = paste0(
+                    "Each data list component must be a 4-item list",
+                    " containing data (data.frame), name (character),",
+                    " domain (character), and type (character)."
+                )
+            ),
+            .envir = rlang::caller_env(2)
+        )
+    }
+}
+
+check_dl_four_subitems <- function(dl) {
+    if (!all(unlist(lapply(dl, length) == 4))) {
+        cli::cli_abort(
+            message = c(
+                x = paste0(
+                    "Each data list component must be a 4-item list",
+                    " containing data (data.frame), name (character),",
+                    " domain (character), and type (character)."
+                )
+            ),
+            .envir = rlang::caller_env(2)
+        )
+    }
+}
+
+check_dl_inherits_list <- function(dl) {
+    if (!is.list(dl)) {
+        cli::cli_abort(
+            message = c(
+                x = "Data list must inherit from class `list`."
+            ),
+            .envir = rlang::caller_env(2)
+        )
+    }
+}
+
+#' Error if data list-like structure has invalid feature types
+#'
+#' @keywords internal
+#' @param x Object (list) in the process of being converted to a data list.
+#' @return Raises an error if the loaded types are not among continuous,
+#'  discrete, ordinal, categorical, or mixed.
+check_dl_types <- function(x) {
+    valid_dl_types <- lapply(
+        dl,
+        function(x) {
+            x$"type" %in% c(
+                "continuous", 
+                "discrete",
+                "ordinal",
+                "categorical",
+                "mixed"
+            )
+        }
+    ) |>
+        unlist() |>
+        all()
+    if (valid_dl_types) {
+        cli::cli_abort(
+            message = c(
+                "!" = "Invalid type specified.",
+                x = paste0(
+                    "Valid component types include continuous, discrete,",
+                    " ordinal, categorical, and mixed."
+                )
+            ),
+            .envir = rlang::caller_env(2)
+        )
+    }
 }
 
 #' Check if data list contains any duplicate features
@@ -635,16 +810,6 @@ check_dl_empty_input <- function(data_list_input) {
             .envir = rlang::caller_env(1)
         )
     }
-}
-
-#' Error if data list-like structure has invalid feature types
-#'
-#' @keywords internal
-#' @param x Object (list) in the process of being converted to a data list.
-#' @return Raises an error if the loaded types are not among continuous,
-#'  discrete, ordinal, categorical, or mixed.
-check_dl_types <- function(x) {
-    return(TRUE)
 }
 
 #' Lapply-like function for data list objects
