@@ -4,17 +4,18 @@
 \alias{convert_uids}
 \title{Convert unique identifiers of data list to "uid"}
 \usage{
-convert_uids(dl, uid = NULL)
+convert_uids(dl, uid)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{data_list()}.}
+\item{dl}{A nested list to be converted into a \code{data_list} object.}
 
 \item{uid}{(string) the name of the uid column currently used data}
 }
 \value{
-dl_renamed_id data list with "uid" as UID
+dl The provided nested list with "uid" as UID.
 }
 \description{
 Column name "uid" is reserved for the unique identifier of observations.
 This function ensures all dataframes have their UID set as "uid".
 }
+\keyword{internal}

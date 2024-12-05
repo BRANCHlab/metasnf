@@ -1,7 +1,7 @@
 ###############################################################################
 # data_list()
 ###############################################################################
-test_that("return a correctly formatted data_list", {
+test_that("Return a correctly formatted data_list.", {
     heart_rate_df <- data.frame(
         patient_id = c("1", "2", "3"),
         var1 = c(0.04, 0.1, 0.3),
@@ -52,13 +52,83 @@ test_that("return a correctly formatted data_list", {
     )
 })
 
-test_that("errors on partial specification of component names", {
-    uid <- LETTERS
-    df <- data.frame(uid, a = seq_along(LETTERS))
-    expect_error(
-        data_list <- data_list(
-            list(df, "name", "domain", type = "discrete")
-        ),
-        "for all of the elements or for none of them"
-    )
-})
+test_that(
+    "Errors on partial specification of component names.",
+    {
+        uid <- LETTERS
+        df <- data.frame(uid, a = seq_along(LETTERS))
+        expect_error(
+            data_list <- data_list(
+                list(df, "name", "domain", type = "discrete")
+            ),
+            "for all of the elements or for none of them"
+        )
+    }
+)
+
+test_that(
+    "Errors on partial specification of component names.",
+    {
+        uid <- LETTERS
+        df <- data.frame(uid, a = seq_along(LETTERS))
+        expect_error(
+            data_list <- data_list(
+                list(df, "name", "domain", type = "discrete")
+            ),
+            "for all of the elements or for none of them"
+        )
+    }
+)
+
+test_that(
+    "Errors when UID column is not unique.",
+    {
+        abcd_cort_t[1:2, "patient"] <- "x"
+        expect_error(
+            dl <- data_list(
+                list(abcd_cort_t, "name", "domain", "continuous"),
+                uid = "patient"
+            ),
+            "does not uniquely ID all observations"
+        )
+    }
+)
+
+###############################################################################
+# convert_uids()
+###############################################################################
+#test_that(
+#    "Properly converts UIDs of a data list in preparation to 'uid'.",
+#    {
+#        dl <- data_list(
+#            list(abcd_income, "name", "neuroimaging", "continuous"),
+#            uid = "patient"
+#        )
+#        wrong_uid_dl <- lapply(
+#            dl,
+#            function(x) {
+#                x$"data" <- dplyr::rename(
+#                    x$"data",
+#                    "patient" = "uid"
+#                )
+#                return(x)
+#            }
+#        ) 
+#        expect_equal(
+#            dl, metasnf:::convert_uids(wrong_uid_dl, "patient")
+#        )
+#    }
+#)
+
+
+###############################################################################
+# new_data_list()
+###############################################################################
+test_that(
+    "Developer constructor for a data list.",
+    {
+        expect_true(
+            inherits(metasnf:::new_data_list(list(list())), "data_list")
+        )
+    }
+)

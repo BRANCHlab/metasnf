@@ -2,16 +2,18 @@
 % Please edit documentation in R/data_list.R
 \name{arrange_dl}
 \alias{arrange_dl}
-\title{Given a data list object, sort data elements by uid}
+\title{Sort data frames in a data list by their unique ID values.}
 \usage{
 arrange_dl(dl)
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{data_list()}.}
+\item{dl}{A data list-like object.}
 }
 \value{
-arranged_dl The arranged data list object
+arranged_dl The data list-like object with all data frames sorted
+by uid.
 }
 \description{
-Given a data list object, sort data elements by uid
+Sort data frames in a data list by their unique ID values.
 }
+\keyword{internal}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{numcol_to_numeric}
 \alias{numcol_to_numeric}
-\title{Convert dataframe columns to numeric type}
+\title{Convert columns of a data frame to numeric type (if possible)}
 \usage{
 numcol_to_numeric(df)
 }

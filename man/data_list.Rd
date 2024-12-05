@@ -4,50 +4,26 @@
 \alias{data_list}
 \title{Build a data list}
 \usage{
-data_list(
-  ...,
-  uid = NULL,
-  test_uids = NULL,
-  train_uids = NULL,
-  sort_uids = TRUE
-)
+data_list(..., uid)
 }
 \arguments{
-\item{...}{Any number of list formatted as (df, "df_name", "df_domain",
-"df_type") OR any number of lists of lists formatted as (df, "df_name",
-"df_domain", "df_type")}
+\item{...}{Any number of lists formatted as (df, "df_name", "df_domain",
+"df_type") and/or any number of lists of lists formatted as (df, "df_name",
+"df_domain", "df_type").}
 
-\item{uid}{(string) the name of the uid column currently used data}
-
-\item{test_uids}{character vector of test uids (useful if building
-a full data list for label propagation)}
-
-\item{train_uids}{character vector of train uids (useful if building
-a full data list for label propagation)}
-
-\item{sort_uids}{If TRUE, the uids in the data list will be sorted}
-}
-\value{
-A nested "list" class object. Each list component contains a 4-item
-list of a data frame, the user-assigned name of the data frame, the
-user-assigned domain of the data frame, and the user-labeled type of the
-data frame.
+\item{uid}{(character) the name of the uid column currently used data.
+data frame.}
 }
 \description{
-\code{data_list()} constructs a data list object with the classes 'data_list' and
-\code{list}. This object is the primary way in which features to be used along
-the metasnf clustering pipeline are stored. The data list is fundamentally
-a 2-level nested list object where each inner list contains a data frame
-(referenced as "data types" in the original similarity network fusion
-article) and associated metadata for that data frame.
-}
-\details{
-data list is a named and nested list containing input dataframes (data), the
-name of that input dataframe (for the user's reference), the 'domain' of
-that dataframe (the broader source of information that the input dataframe
-is capturing, determined by user's domain knowledge), and the type of
-feature stored in the dataframe (continuous, discrete, ordinal,
-categorical, or mixed).
+\code{data_list()} constructs an data list object which inherits from classes
+\code{data_list} and \code{list}. This object is the primary way in which features to
+be used along the metasnf clustering pipeline are stored. The data list is
+fundamentally a 2-level nested list object where each inner list contains a
+data frame and associated metadata for that data frame. The metadata
+includes the name of the dataframe, the 'domain' of that dataframe (the
+broader source of information that the input dataframe is capturing,
+determined by user's domain knowledge), and the type of feature stored in
+the dataframe (continuous, discrete, ordinal, categorical, or mixed).
 }
 \examples{
 heart_rate_df <- data.frame(

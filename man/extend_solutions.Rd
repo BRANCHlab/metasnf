@@ -23,8 +23,11 @@ the settings that were used to generate them.}
 Features in the target list will be included during p-value summary
 measure calculations.}
 
+\item{dl}{A data list with features to calcualte p-values for, but
+that should not be incorporated into p-value summary measure columns (i.e.,
+min/mean/max p-value columns).}
+
 \item{cat_test}{String indicating which statistical test will be used to
-associate cluster with a categorical feature. Options are "chi_squared" for
 the Chi-squared test and "fisher_exact" for Fisher's exact test.}
 
 \item{calculate_summaries}{If TRUE, the function will calculate the minimum
@@ -37,10 +40,6 @@ replaced with this value.}
 Progress is only reported for sequential processing (processes = 1).}
 
 \item{verbose}{If TRUE, output progress to console.}
-
-\item{input_dl}{A data list with features to calcualte p-values for, but
-that should not be incorporated into p-value summary measure columns (i.e.,
-min/mean/max p-value columns).}
 }
 \value{
 extended_solutions_matrix an extended solutions matrix that contains

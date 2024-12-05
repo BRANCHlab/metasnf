@@ -15,3 +15,4 @@ dl A data list without NAs
 \description{
 Remove NAs from a data list object
 }
+\keyword{internal}
