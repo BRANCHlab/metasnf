@@ -117,10 +117,10 @@
         - [ ] coclustering_coverage_check.Rd
         - [ ] collapse_dl.Rd
         - [ ] colour_scale.Rd
-        - [ ] convert_uids.Rd
+        - [-] convert_uids.Rd
         - [ ] cort_sa.Rd
         - [ ] cort_t.Rd
-        - [ ] data_list.Rd
+        - [x] data_list.Rd
         - [ ] depress.Rd
         - [ ] diagnosis_df.Rd
         - [ ] discretisation.Rd
