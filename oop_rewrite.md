@@ -1,0 +1,234 @@
+# To-do list JSS OOP rewrite (happening on branch "oop")
+
+- [ ] jss specific
+    - [ ] (manuscript specific): overview and summary of implemented methodology (SNF & meta clustering)
+    - [ ] (manuscript specific): overview and summary of software design / main functions
+    - [x] replace high level `print` with low level `cat`
+    - [ ] typo "mixed_dist" inconsistent with "mix_dist" in settings matrix
+    - [ ] settings matrix snf_scheme column is undocumented?
+    - [ ] provide code examples (@examples roxygen tag) for every complex function, especially batch_snf
+    - [ ] p-values should follow unipolar colour palette
+    - [ ] only run shiny_annotator() `if (interactive())`
+    - [ ] add benchmarking code for figure 19
+    - [ ] strip "save_heatmap" calls in vignettes and instead make a mention of how to use it
+- [ ] general
+    - [ ] replace stops/warnings with cli_abort / cli_warn
+    - [ ] replace "subjectkey" and "subject" phrasing with more generic "uid" and "observation"
+    - [ ] typo checking
+    - [ ] more explicit documentation (nothing like, param settings_matrix A settings matrix)
+- [ ] testing (complete coverage may be overkill?)
+- [ ] data list
+    - [x] define class
+    - [ ] ensure class is used consistently throughout functionality
+    - [ ] convert all dl-related functions to S3 methods (if applicable)
+    - [ ] define `print.data_list`: printing a data list only shows head/tibble head of each df sub-item
+    - [x] finish validator
+    - [ ] establish attributes:
+        - [ ] "components" which refer to the individual components of the dl
+        - [ ] "observations" which captures the number of observations of the dl
+        - [ ] "features" which captures the features in the dl
+        - [ ] "domains" which captures the domains in the dl
+        - [ ] "types" which captures the types present in the dl?
+    - [x] strip "removed_subjects" functionality of constructor to its own function
+        - [x] Remove removed_subjects functionality from constructor
+    - [ ] name changes for data_list and target_list throughout documentation and functionality
+        - [ ] constructor and class are data_list
+        - [ ] parameters are dl and target_dl
+        - [ ] variables are more specifically named (e.g., demographic_dl)
+        - [ ] documentation is data list
+- [ ] settings_matrix
+    - [ ] replace with name "settings_df" to be more transparent
+    - [ ] define class
+    - [ ] define user/dev constructor
+    - [ ] define validator
+    - [ ] ensure class is used consistently throughout functionality
+    - [ ] convert all dl-related functions to S3 methods (if applicable)
+- [ ] solutions_matrix (inherits settings_matrix)
+    - [ ] replace with name "solutions_df" to be more transparent
+    - [ ] define class
+    - [ ] define user/dev constructor
+    - [ ] define validator
+    - [ ] ensure class is used consistently throughout functionality
+    - [ ] convert all dl-related functions to S3 methods (if applicable)
+- [ ] extended_solutions_matrix (inherits settings_matrix, solutions_matrix)
+    - [ ] replace with name "extended_solutions_df" to be more transparent
+    - [ ] define class
+    - [ ] define user/dev constructor
+    - [ ] define validator
+    - [ ] ensure class is used consistently throughout functionality
+    - [ ] convert all dl-related functions to S3 methods (if applicable)
+- [ ] distance_metrics_list
+    - [ ] define class
+    - [ ] define user/dev constructor
+    - [ ] define validator
+    - [ ] ensure class is used consistently throughout functionality
+    - [ ] convert all dl-related functions to S3 methods (if applicable)
+- [ ] clust_algs_list
+    - [ ] define class
+    - [ ] define user/dev constructor
+    - [ ] define validator
+    - [ ] ensure class is used consistently throughout functionality
+    - [ ] convert all dl-related functions to S3 methods (if applicable)
+- [ ] weights_matrix (the only object named matrix that is actually a matrix)
+    - [ ] define class
+    - [ ] define user/dev constructor
+    - [ ] define validator
+    - [ ] ensure class is used consistently throughout functionality
+    - [ ] convert all dl-related functions to S3 methods (if applicable)
+- [ ] function review
+    - [ ] internal:
+        - [ ] arrange_dll.Rd
+    - [ ] exported:
+        - [ ] add_columns.Rd
+        - [ ] add_settings_matrix_rows.Rd
+        - [ ] adjusted_rand_index_heatmap.Rd
+        - [ ] age_df.Rd
+        - [ ] alluvial_cluster_plot.Rd
+        - [ ] anxiety.Rd
+        - [ ] assemble_data.Rd
+        - [ ] assoc_pval_heatmap.Rd
+        - [ ] auto_plot.Rd
+        - [ ] bar_plot.Rd
+        - [ ] batch_nmi.Rd
+        - [ ] batch_row_closure.Rd
+        - [ ] batch_snf.Rd
+        - [ ] batch_snf_subsamples.Rd
+        - [ ] calc_aris.Rd
+        - [ ] calc_assoc_pval.Rd
+        - [ ] calc_assoc_pval_matrix.Rd
+        - [ ] calculate_coclustering.Rd
+        - [ ] calculate_db_indices.Rd
+        - [ ] calculate_dunn_indices.Rd
+        - [ ] calculate_silhouettes.Rd
+        - [ ] cancer_diagnosis_df.Rd
+        - [ ] cell_significance_fn.Rd
+        - [ ] char_to_fac.Rd
+        - [ ] check_dataless_annotations.Rd
+        - [ ] check_dl_duplicate_features.Rd
+        - [ ] check_dl_empty_input.Rd
+        - [ ] check_dl_subitem_classes.Rd
+        - [ ] check_dl_types.Rd
+        - [ ] check_dl_uid.Rd
+        - [ ] check_hm_dependencies.Rd
+        - [ ] check_similarity_matrices.Rd
+        - [ ] chi_squared_pval.Rd
+        - [ ] cocluster_density.Rd
+        - [ ] cocluster_heatmap.Rd
+        - [ ] coclustering_coverage_check.Rd
+        - [ ] collapse_dl.Rd
+        - [ ] colour_scale.Rd
+        - [ ] convert_uids.Rd
+        - [ ] cort_sa.Rd
+        - [ ] cort_t.Rd
+        - [ ] data_list.Rd
+        - [ ] depress.Rd
+        - [ ] diagnosis_df.Rd
+        - [ ] discretisation.Rd
+        - [ ] discretisation_evec_data.Rd
+        - [ ] dl_uid_first_col.Rd
+        - [ ] dl_variable_summary.Rd
+        - [ ] dlapply.Rd
+        - [ ] domain_merge.Rd
+        - [ ] domains.Rd
+        - [ ] drop_inputs.Rd
+        - [ ] esm_manhattan_plot.Rd
+        - [ ] estimate_nclust_given_graph.Rd
+        - [ ] euclidean_distance.Rd
+        - [ ] expression_df.Rd
+        - [ ] extend_solutions.Rd
+        - [ ] fav_colour.Rd
+        - [ ] fisher_exact_pval.Rd
+        - [ ] gender_df.Rd
+        - [ ] generate_annotations_list.Rd
+        - [ ] generate_clust_algs_list.Rd
+        - [ ] generate_distance_metrics_list.Rd
+        - [ ] generate_settings_matrix.Rd
+        - [ ] generate_weights_matrix.Rd
+        - [ ] get_cluster_df.Rd
+        - [ ] get_cluster_solutions.Rd
+        - [ ] get_clusters.Rd
+        - [ ] get_complete_uids.Rd
+        - [ ] get_dist_matrix.Rd
+        - [ ] get_dl_uids.Rd
+        - [ ] get_heatmap_order.Rd
+        - [ ] get_matrix_order.Rd
+        - [ ] get_mean_pval.Rd
+        - [ ] get_min_pval.Rd
+        - [ ] get_pvals.Rd
+        - [ ] get_representative_solutions.Rd
+        - [ ] gower_distance.Rd
+        - [ ] hamming_distance.Rd
+        - [ ] income.Rd
+        - [ ] individual.Rd
+        - [ ] is_data_list.Rd
+        - [ ] jitter_plot.Rd
+        - [ ] label_prop.Rd
+        - [ ] label_splits.Rd
+        - [ ] linear_adjust.Rd
+        - [ ] linear_model_pval.Rd
+        - [ ] list_remove.Rd
+        - [ ] lp_solutions_matrix.Rd
+        - [ ] mc_manhattan_plot.Rd
+        - [ ] merge_df_list.Rd
+        - [ ] merge_dls.Rd
+        - [ ] methylation_df.Rd
+        - [ ] new_data_list.Rd
+        - [ ] no_subs.Rd
+        - [ ] numcol_to_numeric.Rd
+        - [ ] ord_reg_pval.Rd
+        - [ ] parallel_batch_snf.Rd
+        - [ ] prefix_dl_uid.Rd
+        - [ ] pubertal.Rd
+        - [ ] pval_heatmap.Rd
+        - [ ] random_removal.Rd
+        - [ ] reduce_dl_to_common.Rd
+        - [ ] remove_dll_na.Rd
+        - [ ] rename_dl.Rd
+        - [ ] reorder_dl_subs.Rd
+        - [ ] resample.Rd
+        - [ ] save_heatmap.Rd
+        - [ ] scale_diagonals.Rd
+        - [ ] settings_matrix_heatmap.Rd
+        - [ ] sew_euclidean_distance.Rd
+        - [ ] shiny_annotator.Rd
+        - [ ] similarity_matrix_heatmap.Rd
+        - [ ] similarity_matrix_path.Rd
+        - [ ] siw_euclidean_distance.Rd
+        - [ ] sn_euclidean_distance.Rd
+        - [ ] snf_step.Rd
+        - [ ] spectral_eigen.Rd
+        - [ ] spectral_eigen_classic.Rd
+        - [ ] spectral_eight.Rd
+        - [ ] spectral_five.Rd
+        - [ ] spectral_four.Rd
+        - [ ] spectral_nine.Rd
+        - [ ] spectral_rot.Rd
+        - [ ] spectral_rot_classic.Rd
+        - [ ] spectral_seven.Rd
+        - [ ] spectral_six.Rd
+        - [ ] spectral_ten.Rd
+        - [ ] spectral_three.Rd
+        - [ ] spectral_two.Rd
+        - [ ] split_parser.Rd
+        - [ ] subc_v.Rd
+        - [ ] subs.Rd
+        - [ ] subsample_dl.Rd
+        - [ ] subsample_pairwise_aris.Rd
+        - [ ] summarize_clust_algs_list.Rd
+        - [ ] summarize_dl.Rd
+        - [ ] summarize_dml.Rd
+        - [ ] summarize_pvals.Rd
+        - [ ] train_test_assign.Rd
+        - [ ] two_step_merge.Rd
+        - [ ] validate_data_list.Rd
+        - [ ] var_manhattan_plot.Rd
+- [ ] data 
+    - [ ] abcd_anxiety.Rd
+    - [ ] abcd_colour.Rd
+    - [ ] abcd_cort_sa.Rd
+    - [ ] abcd_cort_t.Rd
+    - [ ] abcd_depress.Rd
+    - [ ] abcd_h_income.Rd
+    - [ ] abcd_income.Rd
+    - [ ] abcd_pubertal.Rd
+    - [ ] abcd_subc_v.Rd

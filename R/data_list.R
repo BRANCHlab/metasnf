@@ -93,18 +93,18 @@
 #' )
 data_list <- function(...,
                       uid) {
-    # Initialize data list
-    dl <- list()
+    # Initialize data list-like list object
+    dll <- list()
     # Handle programmatic list-based loading
     loaded_data <- list(...)
-    check_dl_empty_input(loaded_data)
+    check_dll_empty_input(loaded_data)
     for (item in loaded_data) {
         standard_loaded <- methods::is(item[[1]], "data.frame")
         list_loaded <- methods::is(item[[1]], "list")
         if (standard_loaded) {
-            dl <- append(dl, list(item))
+            dll <- append(dll, list(item))
         } else if (list_loaded) {
-            dl <- append(dl, item)
+            dll <- append(dll, item)
         } else {
             cli::cli_abort(
                 message = c(
@@ -117,14 +117,14 @@ data_list <- function(...,
         }
     }
     # Assign names to the nested list elements
-    named_entries <- dl |> lapply(
+    named_entries <- dll |> lapply(
         function(x) {
             return(sum(names(x) == ""))
         }
     )
     if (all(named_entries == 0)) {
-        dl_names <- c("data", "name", "domain", "type")
-        dl <- lapply(dl, stats::setNames, dl_names)
+        dll_names <- c("data", "name", "domain", "type")
+        dll <- lapply(dll, stats::setNames, dll_names)
     } else if (!(all(named_entries == 4))) {
         cli::cli_abort(
             message = c(
@@ -137,18 +137,18 @@ data_list <- function(...,
         )
     }
     # Additional formatting
-    dl <- dl |>
-        remove_dl_na() |> # remove NAs
+    dll <- dll |>
+        remove_dll_na() |> # remove NAs
         convert_uids(uid) |> # Convert data frame UID column to "uid"
-        reduce_dl_to_common() |> # only keep common subjects
-        prefix_dl_uid() |> # append "uid_" to the literal UID values
-        arrange_dl() |> # sort observations in contained data frames by UID
-        dl_uid_first_col() # position "uid" column at start of each data frame
+        reduce_dll_to_common() |> # only keep common subjects
+        prefix_dll_uid() |> # append "uid_" to the literal UID values
+        arrange_dll() |> # sort observations in contained data frames by UID
+        dll_uid_first_col() # position "uid" column at start of each data frame
     # Name the components of the data list
-    names(dl) <- summarize_dl(dl)$"name"
+    names(dll) <- summarize_dll(dll)$"name"
     # Class management
-    dl <- validate_data_list(dl)
-    dl <- new_data_list(dl)
+    dll <- validate_data_list(dll)
+    dl <- new_data_list(dll)
     return(dl)
 }
 
@@ -158,11 +158,11 @@ data_list <- function(...,
 #' This function ensures all dataframes have their UID set as "uid".
 #'
 #' @keywords internal
-#' @param dl A nested list to be converted into a `data_list` object.
+#' @param dll A data list-like `list` class object.
 #' @param uid (string) the name of the uid column currently used data
-#' @return dl The provided nested list with "uid" as UID.
-convert_uids <- function(dl, uid) {
-    dl <- lapply(dl,
+#' @return dll The provided nested list with "uid" as UID.
+convert_uids <- function(dll, uid) {
+    dll <- lapply(dll,
         function(x) {
             # Stop if UID isn't in the data frame
             if (!uid %in% colnames(x$"data")) {
@@ -193,17 +193,16 @@ convert_uids <- function(dl, uid) {
             return(x)
         }
     )
-    return(dl)
+    return(dll)
 }
 
 #' Remove NA values from a data list-like list object
 #'
 #' Helper function during `data_list` class initialization. Applies
-#' '`stats::na.omit()` to the data frames named "data" within a nested list.
+#' `stats::na.omit()` to the data frames named "data" within a nested list.
 #'
 #' @keywords internal
-#' @param dll A data list-like `list` class object. Should contain at least one
-#'  nested list with a data frame named "data".
+#' @param dll A data list-like `list` class object.
 #' @return dll The provided data list-like object with missing observations
 #'  removed.
 remove_dll_na <- function(dll) {
@@ -219,33 +218,32 @@ remove_dll_na <- function(dll) {
 
 #' Add "uid_" prefix to all UID values in uid column
 #'
-#' @param dl A nested list of input data from `data_list()`.
+#' @keywords internal
+#' @param dll A data list-like `list` class object.
 #' @return dl A data list with UIDs prefixed with the string "uid_"
-#' @export
-prefix_dl_uid <- function(dl) {
-    dl_prefixed <- lapply(
-        dl,
+prefix_dll_uid <- function(dll) {
+    dll_prefixed <- lapply(
+        dll,
         function(x) {
             x[[1]]$"uid" <- paste0("uid_", x[[1]]$"uid")
             return(x)
         }
     )
-    return(dl_prefixed)
+    return(dll_prefixed)
 }
 
-#' Reduce data list to common uids
+#' Reduce data list-like object to common observations
 #'
-#' Given a `data_list` object, reduce each nested dataframe to contain only the
-#'  set of uids that are shared by all nested dataframes
+#' Given a data list-like list object, reduce each nested dataframe to contain
+#' only the set of UIDs that are shared by all nested dataframes.
 #'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @return reduced_dl The data list object subsetted only to uidssnf
-#'  shared across all nested dataframes
-#' @export
-reduce_dl_to_common <- function(dl) {
-    uids <- lapply(dl, function(x) x[[1]]$"uid")
-    data_objects <- lapply(dl, function(x) x[[1]])
+#' @keywords internal
+#' @param dll A data list-like `list` class object.
+#' @return reduced_dl The data list object subsetted only to uids shared across
+#'  all nested dataframes.
+reduce_dll_to_common <- function(dll) {
+    uids <- lapply(dll, function(x) x[[1]]$"uid")
+    data_objects <- lapply(dll, function(x) x[[1]])
     common_uids <- Reduce(intersect, uids)
     filtered_data_objects <- data_objects |>
         lapply(
@@ -253,32 +251,32 @@ reduce_dl_to_common <- function(dl) {
                 dplyr::filter(x, x$"uid" %in% common_uids)
             }
         )
-    reduced_dl <- dl
-    for (i in seq_along(dl)) {
-        reduced_dl[[i]][[1]] <- filtered_data_objects[[i]]
+    reduced_dll <- dll
+    for (i in seq_along(dll)) {
+        reduced_dll[[i]][[1]] <- filtered_data_objects[[i]]
     }
-    return(reduced_dl)
+    return(reduced_dll)
 }
 
 #' Sort data frames in a data list by their unique ID values.
 #'
 #' @keywords internal
-#' @param dl A data list-like object.
+#' @param dll A data list-like `list` class object.
 #' @return arranged_dl The data list-like object with all data frames sorted
 #'  by uid.
-arrange_dl <- function(dl) {
-    data_objects <- lapply(dl, function(x) x[[1]])
+arrange_dll <- function(dll) {
+    data_objects <- lapply(dll, function(x) x[[1]])
     arranged_data_objects <- data_objects |>
         lapply(
             function(x) {
                 dplyr::arrange(x, x$"uid")
             }
         )
-    arranged_dl <- dl
-    for (i in seq_along(dl)) {
-        arranged_dl[[i]][[1]] <- arranged_data_objects[[i]]
+    arranged_dll <- dll
+    for (i in seq_along(dll)) {
+        arranged_dll[[i]][[1]] <- arranged_data_objects[[i]]
     }
-    return(arranged_dl)
+    return(arranged_dll)
 }
 
 #' Summarize a data list
@@ -499,15 +497,13 @@ get_dl_uids <- function(dl, prefix = FALSE) {
 
 #' Make the uid UID columns of a data list first
 #'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @return A data list ("list"-class object) in which each data-subcomponent
-#' has "uid" positioned as its first column.
-#'
-#' @export
-dl_uid_first_col <- function(dl) {
-    dl <- lapply(
-        dl,
+#' @keywords internal
+#' @param dll A data list-like `list` class object.
+#' @return The object with "uid" positioned as the first of each data frame
+#'  column.
+dll_uid_first_col <- function(dll) {
+    dll <- lapply(
+        dll,
         function(x) {
             x$"data" <- x$"data" |>
                 dplyr::select(
@@ -526,12 +522,9 @@ dl_uid_first_col <- function(dl) {
 #' observations but different components, simply use `c()`.
 #'
 #' @param dl_1 The first data list to merge.
-#'
 #' @param dl_2 The second data list to merge.
-#'
 #' @return A data list ("list"-class object) containing the observations of
-#' both provided data lists.
-#'
+#'  both provided data lists.
 #' @export
 merge_dls <- function(dl_1, dl_2) {
     dl_1_names <- summarize_dl(dl_1)$"name"
@@ -574,7 +567,7 @@ is_data_list <- function(x) {
 #' Constructor for data_list class object
 #' 
 #' @keywords internal
-#' @param x A nested list to be converted into a `data_list` object.
+#' @param dll A data list-like `list` class object.
 #' @return A `data_list` object, which is a nested list with class `data_list`.
 new_data_list <- function(x) {
     stopifnot(is.list(x))
@@ -735,12 +728,12 @@ check_dl_inherits_list <- function(dl) {
 #' Error if data list-like structure has invalid feature types
 #'
 #' @keywords internal
-#' @param x Object (list) in the process of being converted to a data list.
+#' @param dll A data list-like `list` class object.
 #' @return Raises an error if the loaded types are not among continuous,
 #'  discrete, ordinal, categorical, or mixed.
-check_dl_types <- function(x) {
-    valid_dl_types <- lapply(
-        dl,
+check_dll_types <- function(dll) {
+    valid_dll_types <- lapply(
+        dll,
         function(x) {
             x$"type" %in% c(
                 "continuous", 
@@ -753,7 +746,7 @@ check_dl_types <- function(x) {
     ) |>
         unlist() |>
         all()
-    if (valid_dl_types) {
+    if (valid_dll_types) {
         cli::cli_abort(
             message = c(
                 "!" = "Invalid type specified.",
