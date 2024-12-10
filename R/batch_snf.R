@@ -102,15 +102,14 @@ batch_snf <- function(dl,
     no_similarity_matrices <-
         is.null(similarity_matrix_dir) & !return_similarity_matrices
     if (no_similarity_matrices && suppress_clustering) {
-        stop(
-            paste0(
-                "batch_snf has been called with the suppress_clustering",
-                " parameter set to TRUE (no clustering will occur), no path",
-                " provided in the similarity_matrix_dir parameter for storing",
-                " matrices, and return_similarity_matrices set to FALSE so",
-                " that similarity matrices are not being returned. With this",
-                " combination of settings, the batch_snf function yields no",
-                " meaningful output."
+        cli::cli_abort(
+            message = c(
+                x = paste0(
+                    "Setting `suppress_clustering` to `TRUE`,",
+                    " `similarity_matrix_dir` to `NULL`,",
+                    " and return_similarity_matrices to `FALSE` yields",
+                    " no meaningful output."
+                )
             )
         )
     }
@@ -124,13 +123,13 @@ batch_snf <- function(dl,
     n_patients <- unique(summarize_dl(dl)$"length")
     # Ensure that the maximum k value doesn't exceed the number of subjects
     if (max_k >= n_patients) {
-        stop(
-            paste0(
-                "The highest value of k in your settings_matrix exceeds the",
-                " number of patients in your data. Please provide another",
-                " settings_matrix while ensuring the maximum k value",
-                " (currently ", max_k, ") is less than the number of patients",
-                " in the data: ", n_patients, "."
+        cli::cli_abort(
+            message = c(
+                x = paste0(
+                    "The highest value of k in the settings_matrix ({max_k}) ",
+                    "cannot exceed the number of observations in the data lis",
+                    "t ({n_patients})."
+                )
             )
         )
     }

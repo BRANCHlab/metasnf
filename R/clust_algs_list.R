@@ -55,10 +55,12 @@ generate_clust_algs_list <- function(..., disable_base = FALSE) {
     # Ensure that user has provided a name for the algorithm
     if (length(user_algs_list) > 0) {
         if (min(nchar(names(user_algs_list))) == 0) {
-            stop(
-                paste0(
-                    "Please specify a name for every supplied algorithm. See",
-                    " ?generate_clust_algs_list for examples."
+            cli::cli_abort(
+                message = c(
+                    x = paste0(
+                        "Please specify a name for every supplied algorithm.",
+                        " See ?generate_clust_algs_list for examples."
+                    )
                 )
             )
         }
@@ -69,9 +71,13 @@ generate_clust_algs_list <- function(..., disable_base = FALSE) {
     )
     if (disable_base) {
         if (is.null(user_algs_list)) {
-            stop(
-                "disable_base is TRUE but no algorithms provided. There is",
-                "nothing to make a list of!"
+            cli::cli_abort(
+                message = c(
+                    x = paste0(
+                        "disable_base is TRUE but no algorithms provided.",
+                        " There is nothing to make a list of!"
+                    )
+                )
             )
         } else {
             clust_algs_list <- user_algs_list

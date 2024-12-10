@@ -549,11 +549,9 @@ merge_dls <- function(dl_1, dl_2) {
     names(dl_1) <- dl_1_names
     names(dl_2) <- dl_2_names
     if (!identical(sort(dl_1_names), sort(dl_2_names))) {
-        stop(
-            "The two data lists must have identical components. Check",
-            " `summarize_dl()` on each data list to make sure the components",
-            " align."
-        )
+            
+
+            "The two data lists must have identical components. Check `summarize_dl()` on each data list to make sure the components align."
     }
     merged_data_list <- lapply(
         dl_1_names,
