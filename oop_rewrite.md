@@ -8,7 +8,7 @@
     - [x] settings matrix snf_scheme column is undocumented?
     - [ ] provide code examples (@examples roxygen tag) for every complex function, especially batch_snf
     - [ ] p-values should follow unipolar colour palette
-    - [ ] only run shiny_annotator() `if (interactive())`
+    - [x] only run shiny_annotator() `if (interactive())`
     - [ ] add benchmarking code for figure 19
     - [ ] strip "save_heatmap" calls in vignettes and instead make a mention of how to use it
 - [ ] general

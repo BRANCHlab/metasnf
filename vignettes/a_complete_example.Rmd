@@ -344,6 +344,7 @@ The indices of our meta cluster boundaries can be passed into the `adjusted_rand
 You can determine this vector through trial and error or by using the `shiny_annotator` function (a wrapper around functionality from the `InteractiveComplexHeatmap` package).
 
 ```{r eval = FALSE}
+shiny_annotator(ari_hm)
 ```
 
 <center>

@@ -766,26 +766,30 @@ pval_heatmap <- function(pvals,
 #' Launch shiny app to identify meta cluster boundaries
 #'
 #' @param ari_heatmap Heatmap of ARIs to divide into meta clusters.
-#'
 #' @return Does not return any value. Launches interactive shiny applet.
-#'
 #' @export
 shiny_annotator <- function(ari_heatmap) {
-    drawn_heatmap <- ComplexHeatmap::draw(ari_heatmap)
-    InteractiveComplexHeatmap::htShiny(
-        drawn_heatmap,
-        response = "click",
-        title = "Meta Cluster Identification",
-        description = paste0(
-            "Click on the heatmap to identify the indices of the meta cluster",
-            " boundaries. You can recreate the similarity matrix heatmap",
-            " passing these values as the `split_vector` argument to have the",
-            " meta clusters visually separated and labeled. For example,",
-            " if the boundaries of the meta clusters were at row/column",
-            " indices 150, 300, and 313, use the argument",
-            " `split_vector = c(150, 300, 313) when recreating the heatmap."
+    if (interactive()) {
+        drawn_heatmap <- ComplexHeatmap::draw(ari_heatmap)
+        InteractiveComplexHeatmap::htShiny(
+            drawn_heatmap,
+            response = "click",
+            title = "Meta Cluster Identification",
+            description = paste0(
+                "Click on the heatmap to identify the indices of the meta cluster",
+                " boundaries. You can recreate the similarity matrix heatmap",
+                " passing these values as the `split_vector` argument to have the",
+                " meta clusters visually separated and labeled. For example,",
+                " if the boundaries of the meta clusters were at row/column",
+                " indices 150, 300, and 313, use the argument",
+                " `split_vector = c(150, 300, 313) when recreating the heatmap."
+            )
         )
-    )
+    } else {
+        cli::cli_alert_warning(
+            "Ignoring `shiny_annotator()` call in non-interactive session."
+        )
+    }
 }
 
 #' Place significance stars on ComplexHeatmap cells.
