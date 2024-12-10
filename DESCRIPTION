@@ -50,6 +50,7 @@ Imports:
     rlang,
     SNFtool,
     stats,
+    tibble,
     tidyr,
     utils
 Suggests:

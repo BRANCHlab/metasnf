@@ -138,6 +138,7 @@ data_list <- function(...,
     }
     # Additional formatting
     dll <- dll |>
+        ensure_dll_dataframe() |> # format the "data" subitem as a data frame
         remove_dll_na() |> # remove NAs
         convert_uids(uid) |> # Convert data frame UID column to "uid"
         reduce_dll_to_common() |> # only keep common subjects
@@ -150,6 +151,22 @@ data_list <- function(...,
     dll <- validate_data_list(dll)
     dl <- new_data_list(dll)
     return(dl)
+}
+
+#' Ensure the data subitem of each component is a `data.frame` class object
+#'
+#' @keywords internal
+#' @param dll A data list-like `list` class object.
+#' @return The provided dll with the data subitem of each component as a 
+#'  data frame.
+ensure_dll_dataframe <- function(dll) {
+    lapply(
+        dll,
+        function(x) {
+            x$"data" <- data.frame(x$"data")
+            return(x)
+        }
+    )
 }
 
 #' Convert unique identifiers of data list to "uid"
@@ -573,6 +590,9 @@ new_data_list <- function(dll) {
     stopifnot(is.list(dll))
     stopifnot(is.list(dll[[1]]))
     dl <- structure(dll, class = "data_list")
+    attr(dl, "uids") <- dl[[1]]$"data"$"uid"
+    #attr(dl, "uids") <- dll[[1]]$"data"$"uid"
+    #attr(dl, "observations") <- length(attributes(dl)$"uids")
     return(dl)
 }
 
@@ -872,4 +892,74 @@ dlapply.data_list <- function(X, FUN, ...) {
         }
     )
     return(validation)
+}
+
+#' Print method for class `data_list`
+#'
+#' Custom formatted print for data list objects that outputs information about
+#' the contained observations and components to the console.
+#'
+#' @param x A `data_list` class object.
+#' @param ... Other arguments passed to `print` (not used in this function)
+#' @return Function prints to console but does not return any value.
+#' @export
+print.data_list <- function(x, ...) {
+    uids <- attributes(x)$"uids"
+    components <- length(x)
+    cli::cli_rule(left = cli::col_yellow("Observations (n = {length(uids)})"))
+    if (length(uids) > 6) {
+        cat(
+            uids[1:3], "...", uids[(length(uids) - 3):length(uids)],
+            sep = "\n"
+        )
+    } else {
+        cat(uids, sep = "\n")
+    }
+    cli::cli_rule(
+        left = cli::col_yellow(
+            "Components (c = {length(x)},",
+            " p = {sum(unlist(lapply(x, function(x) (ncol(x$data) - 1))))})"
+        )
+    )
+    # Iterate over data list components
+    for (i in seq_along(x)) {
+        # Send metadata to console
+        component <- x[[i]]
+        cat(
+            cli::col_green("[", i, "] ", component$"name"),
+            cli::col_grey(
+                " <domain: ", component$"domain",
+                ", type: ", component$"type",
+                ", p = ", ncol(component$"data") - 1,
+                ">"
+            ),
+            "\n",
+            sep = ""
+        )
+        # Capture tibble formatted data for additional manipulations
+        data_out <- component$"data" |>
+            tibble::tibble() |>
+            dplyr::select(-"uid") |>
+            utils::head(n = 5L) |>
+            print() |> 
+            utils::capture.output()
+        # Separate data from comments (additional columns, tibble class)
+        data_main <- data_out[!sapply(data_out, function(x) grepl("^#", x))]
+        data_extra <- data_out[sapply(data_out, function(x) grepl("^#", x))]
+        # Strip unnecessary first two characters
+        data_main <- gsub("^.{2}", "", data_main)
+        cat(
+            cli::col_magenta(data_main[1]), # column names
+            data_main[-c(1, 2)], # data
+            sep = "\n"
+        )
+        if (length(data_extra) > 1) {
+            data_extra <- gsub("# ", "", data_extra[2]) # remove hashes
+            data_extra <- gsub(":.*", ".", data_extra) # remove extra col list
+            cat(cli::col_blue(data_extra), sep = "\n")
+        }
+        if (i < length(x)) {
+            cat("\n")
+        }
+    }
 }
