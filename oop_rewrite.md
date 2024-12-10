@@ -5,7 +5,7 @@
     - [ ] (manuscript specific): overview and summary of software design / main functions
     - [x] replace high level `print` with low level `cat`
     - [x] typo "mixed_dist" inconsistent with "mix_dist" in settings matrix
-    - [ ] settings matrix snf_scheme column is undocumented?
+    - [x] settings matrix snf_scheme column is undocumented?
     - [ ] provide code examples (@examples roxygen tag) for every complex function, especially batch_snf
     - [ ] p-values should follow unipolar colour palette
     - [ ] only run shiny_annotator() `if (interactive())`
