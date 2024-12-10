@@ -27,7 +27,7 @@
 #' * A column named "disc_dist": Like above, but for discrete dataframes.
 #' * A column named "ord_dist": Like above, but for ordinal dataframes.
 #' * A column named "cat_dist": Like above, but for categorical dataframes.
-#' * A column named "mixed_dist": Like above, but for mixed-type (e.g.,
+#' * A column named "mix_dist": Like above, but for mixed-type (e.g.,
 #'   both categorical and discrete) dataframes.
 #' * One column for every input dataframe in the corresponding data list which
 #'   can either have the value of 0 or 1. The name of the column should be

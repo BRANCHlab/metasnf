@@ -4,7 +4,7 @@
     - [ ] (manuscript specific): overview and summary of implemented methodology (SNF & meta clustering)
     - [ ] (manuscript specific): overview and summary of software design / main functions
     - [x] replace high level `print` with low level `cat`
-    - [ ] typo "mixed_dist" inconsistent with "mix_dist" in settings matrix
+    - [x] typo "mixed_dist" inconsistent with "mix_dist" in settings matrix
     - [ ] settings matrix snf_scheme column is undocumented?
     - [ ] provide code examples (@examples roxygen tag) for every complex function, especially batch_snf
     - [ ] p-values should follow unipolar colour palette
@@ -21,7 +21,7 @@
     - [x] define class
     - [ ] ensure class is used consistently throughout functionality
     - [ ] convert all dl-related functions to S3 methods (if applicable)
-    - [ ] define `print.data_list`: printing a data list only shows head/tibble head of each df sub-item
+    - [x] define `print.data_list`: printing a data list only shows head/tibble head of each df sub-item
     - [x] finish validator
     - [ ] establish attributes:
         - [ ] "components" which refer to the individual components of the dl
