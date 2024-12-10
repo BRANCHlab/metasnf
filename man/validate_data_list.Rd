@@ -4,14 +4,13 @@
 \alias{validate_data_list}
 \title{Validator for data_list class object}
 \usage{
-validate_data_list(dl)
+validate_data_list(dll)
 }
 \arguments{
-\item{dl}{An unvalidated \code{list}-class object to be checked for compliance
-with \code{data_list} class object formatting constraints.}
+\item{dll}{A data list-like \code{list} class object.}
 }
 \value{
-If the input has a valid structure for a \code{data_list} class object,
+If dll has a valid structure for a \code{data_list} class object,
 returns the input unchanged. Otherwise, raises an error.
 }
 \description{

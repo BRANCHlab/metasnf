@@ -4,15 +4,15 @@
 \alias{convert_uids}
 \title{Convert unique identifiers of data list to "uid"}
 \usage{
-convert_uids(dl, uid)
+convert_uids(dll, uid)
 }
 \arguments{
-\item{dl}{A nested list to be converted into a \code{data_list} object.}
+\item{dll}{A data list-like \code{list} class object.}
 
 \item{uid}{(string) the name of the uid column currently used data}
 }
 \value{
-dl The provided nested list with "uid" as UID.
+dll The provided nested list with "uid" as UID.
 }
 \description{
 Column name "uid" is reserved for the unique identifier of observations.

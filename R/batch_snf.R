@@ -448,7 +448,7 @@ drop_inputs <- function(settings_matrix_row, dl) {
     in_keeps_log <- c(unlist(in_keeps_list))
     # The selection
     selected_dl <- dl[in_keeps_log]
-    reduced_selected_dl <- reduce_dl_to_common(selected_dl)
+    reduced_selected_dl <- reduce_dll_to_common(selected_dl)
     return(reduced_selected_dl)
 }
 

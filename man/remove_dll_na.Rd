@@ -7,8 +7,7 @@
 remove_dll_na(dll)
 }
 \arguments{
-\item{dll}{A data list-like \code{list} class object. Should contain at least one
-nested list with a data frame named "data".}
+\item{dll}{A data list-like \code{list} class object.}
 }
 \value{
 dll The provided data list-like object with missing observations
@@ -16,6 +15,6 @@ removed.
 }
 \description{
 Helper function during \code{data_list} class initialization. Applies
-'\code{stats::na.omit()} to the data frames named "data" within a nested list.
+\code{stats::na.omit()} to the data frames named "data" within a nested list.
 }
 \keyword{internal}

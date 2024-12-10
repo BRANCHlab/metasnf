@@ -1,6 +1,6 @@
-###############################################################################
+#------------------------------------------------------------------------------
 # data_list()
-###############################################################################
+#------------------------------------------------------------------------------
 test_that("Return a correctly formatted data_list.", {
     heart_rate_df <- data.frame(
         patient_id = c("1", "2", "3"),
@@ -80,18 +80,25 @@ test_that(
     }
 )
 
-###############################################################################
+#------------------------------------------------------------------------------
 # convert_uids()
-###############################################################################
+#------------------------------------------------------------------------------
 test_that(
     "Properly converts UIDs of a data list in preparation to 'uid'.",
     {
-        dl <- data_list(
+        # Create a data list-like list
+        dll <- data_list(
             list(abcd_income, "name", "neuroimaging", "continuous"),
             uid = "patient"
-        )
-        wrong_uid_dl <- lapply(
-            dl,
+        ) |>
+            lapply(
+                function(x) {
+                    x
+                }
+            )
+        # Create a data list-like list with wrong UID
+        wrong_uid_dll <- lapply(
+            dll,
             function(x) {
                 x$"data" <- dplyr::rename(
                     x$"data",
@@ -100,16 +107,17 @@ test_that(
                 return(x)
             }
         ) 
+        # Check if convert_uids makes the two equal
         expect_equal(
-            dl, metasnf:::convert_uids(wrong_uid_dl, "patient")
+            dll,
+            metasnf:::convert_uids(wrong_uid_dll, "patient")
         )
     }
 )
 
-
-###############################################################################
+#------------------------------------------------------------------------------
 # new_data_list()
-###############################################################################
+#------------------------------------------------------------------------------
 test_that(
     "Developer constructor for a data list.",
     {

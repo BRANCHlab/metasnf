@@ -145,7 +145,7 @@ data_list <- function(...,
         arrange_dll() |> # sort observations in contained data frames by UID
         dll_uid_first_col() # position "uid" column at start of each data frame
     # Name the components of the data list
-    names(dll) <- summarize_dll(dll)$"name"
+    names(dll) <- summarize_dl(dll)$"name"
     # Class management
     dll <- validate_data_list(dll)
     dl <- new_data_list(dll)
@@ -569,40 +569,167 @@ is_data_list <- function(x) {
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
 #' @return A `data_list` object, which is a nested list with class `data_list`.
-new_data_list <- function(x) {
-    stopifnot(is.list(x))
-    stopifnot(is.list(x[[1]]))
-    dl <- structure(x, class = "data_list")
+new_data_list <- function(dll) {
+    stopifnot(is.list(dll))
+    stopifnot(is.list(dll[[1]]))
+    dl <- structure(dll, class = "data_list")
     return(dl)
 }
 
 #' Validator for data_list class object
 #' 
 #' @keywords internal
-#' @param dl An unvalidated `list`-class object to be checked for compliance
-#'  with `data_list` class object formatting constraints.
-#' @return If the input has a valid structure for a `data_list` class object, 
+#' @param dll A data list-like `list` class object.
+#' @return If dll has a valid structure for a `data_list` class object, 
 #'  returns the input unchanged. Otherwise, raises an error.
-validate_data_list <- function(dl) {
-    check_dl_duplicate_features(dl)
-    check_dl_inherits_list(dl)
-    check_dl_four_subitems(dl)
-    check_dl_subitem_names(dl)
-    check_dl_subitem_classes(dl)
-    check_dl_uid(dl)
-    check_dl_types(dl)
-    return(dl)
+validate_data_list <- function(dll) {
+    check_dll_duplicate_features(dll)
+    check_dll_inherits_list(dll)
+    check_dll_four_subitems(dll)
+    check_dll_subitem_names(dll)
+    check_dll_subitem_classes(dll)
+    check_dll_uid(dll)
+    check_dll_types(dll)
+    return(dll)
+}
+
+#' Check if data list contains any duplicate features
+#'
+#' @keywords internal
+#' @param dll A data list-like `list` class object.
+#' @return Doesn't return any value. Raises warning if there are features
+#'  with duplicate names in a generated data list.
+check_dll_duplicate_features <- function(dll) {
+    features <- dll |> lapply(
+        function(x) {
+            return(colnames(x$"data")[-1])
+        }
+    ) |>
+        unlist() |>
+        as.character()
+    duplicates <- unique(features[duplicated(features)])
+    if (length(duplicates) > 0) {
+        cli::cli_abort(
+            message = c(
+                x = "Provided data cannot contain duplicate features."
+            ),
+            .envir = rlang::caller_env(2)
+        )
+    }
+}
+
+#' Error if data list-like structure isn't a list
+#'
+#' @keywords internal
+#' @param dll A data list-like `list` class object.
+#' @return Raises error if data list-like structure isn't a list
+check_dll_inherits_list <- function(dll) {
+    if (!is.list(dll)) {
+        cli::cli_abort(
+            message = c(
+                x = "Data list must inherit from class `list`."
+            ),
+            .envir = rlang::caller_env(2)
+        )
+    }
+}
+
+#' Error if data list-like list doesn't have only 4-item nested lists
+#'
+#' @keywords internal
+#' @param dll A data list-like `list` class object.
+#' @return Raises error if dll doesn't have only 4-item nested lists
+check_dll_four_subitems <- function(dll) {
+    if (!all(unlist(lapply(dll, length) == 4))) {
+        cli::cli_abort(
+            message = c(
+                x = paste0(
+                    "Each data list component must be a 4-item list",
+                    " containing data (data.frame), name (character),",
+                    " domain (character), and type (character)."
+                )
+            ),
+            .envir = rlang::caller_env(2)
+        )
+    }
+}
+
+#' Check valid subitem names for a data list-like list
+#'
+#' Error if data list-like structure doesn't have nested names of "data",
+#' "name", "domain", and "type".
+#'
+#' @keywords internal
+#' @param dll A data list-like `list` class object.
+#' @return Raises error if dll doesn't have only 4-item nested lists
+check_dll_subitem_names <- function(dll) {
+    correct_names <- lapply(
+        dll,
+        function(x) {
+            identical(names(x), c("data", "name", "domain", "type"))
+        }
+    ) |> 
+        unlist() |>
+        all()
+    if (!correct_names) {
+        cli::cli_abort(
+            message = c(
+                x = paste0(
+                    "Each data list component must be a 4-item list",
+                    " containing data (data.frame), name (character),",
+                    " domain (character), and type (character)."
+                )
+            ),
+            .envir = rlang::caller_env(2)
+        )
+    }
 }
 
 #' Check if UID columns in a nested list have valid structure for a data list
 #'
 #' @keywords internal
-#' @param dl A data list or data list-like list object to be checked.
+#' @param dll A data list-like `list` class object.
 #' @return Raises an error if the UID columns do not have a valid structure.
-#' @export
-check_dl_uid <- function(dl) {
+check_dll_subitem_classes <- function(dll) {
+    correct_subitem_classes <- lapply(
+        dll,
+        function(x) {
+            all(
+                c(
+                    is.data.frame(x$"data"),
+                    is.character(x$"name"),
+                    is.character(x$"domain"),
+                    is.character(x$"type")
+                )
+            )
+        }
+    ) |>
+        unlist() |>
+        all()
+    if (!correct_subitem_classes) {
+        cli::cli_abort(
+            message = c(
+                x = paste0(
+                    "Each data list component must be a 4-item list",
+                    " containing data (data.frame), name (character),",
+                    " domain (character), and type (character)."
+                )
+            ),
+            .envir = rlang::caller_env(2)
+        )
+    }
+}
+
+
+
+#' Check if UID columns in a nested list have valid structure for a data list
+#'
+#' @keywords internal
+#' @param dll A data list-like `list` class object.
+#' @return Raises an error if the UID columns do not have a valid structure.
+check_dll_uid <- function(dll) {
     uids <- lapply(
-        dl,
+        dll,
         function(x) {
             x$"data"$"uid"
         }
@@ -640,91 +767,6 @@ check_dl_uid <- function(dl) {
     }
 }
 
-#' Check if UID columns in a nested list have valid structure for a data list
-#'
-#' @keywords internal
-#' @param dl A data list or data list-like list object to be checked.
-#' @return Raises an error if the UID columns do not have a valid structure.
-#' @export
-check_dl_subitem_classes <- function(dl) {
-    correct_subitem_classes <- lapply(
-        dl,
-        function(x) {
-            all(
-                c(
-                    is.data.frame(x$"data"),
-                    is.character(x$"name"),
-                    is.character(x$"domain"),
-                    is.character(x$"type")
-                )
-            )
-        }
-    ) |>
-        unlist() |>
-        all()
-    if (!correct_subitem_classes) {
-        cli::cli_abort(
-            message = c(
-                x = paste0(
-                    "Each data list component must be a 4-item list",
-                    " containing data (data.frame), name (character),",
-                    " domain (character), and type (character)."
-                )
-            ),
-            .envir = rlang::caller_env(2)
-        )
-    }
-}
-
-check_dl_subitem_names <- function(dl) {
-    correct_names <- lapply(
-        dl,
-        function(x) {
-            identical(names(x), c("data", "name", "domain", "type"))
-        }
-    ) |> 
-        unlist() |>
-        all()
-    if (!correct_names) {
-        cli::cli_abort(
-            message = c(
-                x = paste0(
-                    "Each data list component must be a 4-item list",
-                    " containing data (data.frame), name (character),",
-                    " domain (character), and type (character)."
-                )
-            ),
-            .envir = rlang::caller_env(2)
-        )
-    }
-}
-
-check_dl_four_subitems <- function(dl) {
-    if (!all(unlist(lapply(dl, length) == 4))) {
-        cli::cli_abort(
-            message = c(
-                x = paste0(
-                    "Each data list component must be a 4-item list",
-                    " containing data (data.frame), name (character),",
-                    " domain (character), and type (character)."
-                )
-            ),
-            .envir = rlang::caller_env(2)
-        )
-    }
-}
-
-check_dl_inherits_list <- function(dl) {
-    if (!is.list(dl)) {
-        cli::cli_abort(
-            message = c(
-                x = "Data list must inherit from class `list`."
-            ),
-            .envir = rlang::caller_env(2)
-        )
-    }
-}
-
 #' Error if data list-like structure has invalid feature types
 #'
 #' @keywords internal
@@ -746,7 +788,7 @@ check_dll_types <- function(dll) {
     ) |>
         unlist() |>
         all()
-    if (valid_dll_types) {
+    if (!valid_dll_types) {
         cli::cli_abort(
             message = c(
                 "!" = "Invalid type specified.",
@@ -760,38 +802,12 @@ check_dll_types <- function(dll) {
     }
 }
 
-#' Check if data list contains any duplicate features
-#'
-#' @keywords internal
-#' @param x A nested list of input data from `data_list()`.
-#' @return Doesn't return any value. Raises warning if there are features
-#'  with duplicate names in a generated data list.
-#' @export
-check_dl_duplicate_features <- function(x) {
-    features <- x |> lapply(
-        function(x) {
-            return(colnames(x$"data")[-1])
-        }
-    ) |>
-        unlist() |>
-        as.character()
-    duplicates <- unique(features[duplicated(features)])
-    if (length(duplicates) > 0) {
-        cli::cli_abort(
-            message = c(
-                x = "Provided data cannot contain duplicate features."
-            ),
-            .envir = rlang::caller_env(2)
-        )
-    }
-}
-
 #' Error if empty input provided during data list initalization
 #'
 #' @keywords internal
 #' @param data_list_input Input data provided for data list initialization.
 #' @return Raises an error if data_list_input has 0 length.
-check_dl_empty_input <- function(data_list_input) {
+check_dll_empty_input <- function(data_list_input) {
     if (length(data_list_input) == 0) {
         cli::cli_abort(
             message = c(

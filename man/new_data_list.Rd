@@ -4,10 +4,10 @@
 \alias{new_data_list}
 \title{Constructor for data_list class object}
 \usage{
-new_data_list(x)
+new_data_list(dll)
 }
 \arguments{
-\item{x}{A nested list to be converted into a \code{data_list} object.}
+\item{dll}{A data list-like \code{list} class object.}
 }
 \value{
 A \code{data_list} object, which is a nested list with class \code{data_list}.
