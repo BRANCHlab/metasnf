@@ -99,7 +99,7 @@ similarity_matrix_hm <- similarity_matrix_heatmap(
 # Export heatmaps using the `save_heatmap` function
 save_heatmap(
     heatmap = similarity_matrix_hm,
-    path = "./similarity_matrix_heatmap.png",
+    path = "similarity_matrix_heatmap.png",
     width = 410,
     height = 330,
     res = 80
@@ -153,7 +153,9 @@ annotated_sm_hm <- similarity_matrix_heatmap(
     heatmap_height = grid::unit(10, "cm"),
     heatmap_width = grid::unit(10, "cm")
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = annotated_sm_hm,
     path = "./annotated_sm_heatmap.png",

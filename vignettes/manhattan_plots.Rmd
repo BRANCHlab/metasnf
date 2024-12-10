@@ -82,7 +82,9 @@ esm_manhattan <- esm_manhattan_plot(
     text_size = 14,
     bonferroni_line = TRUE
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
     "esm_manhattan.png",
     esm_manhattan,
@@ -147,7 +149,9 @@ mc_manhattan <- mc_manhattan_plot(
     threshold = 0.05,
     neg_log_pval_thresh = 5
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
     "mc_manhattan_clean.png",
     mc_manhattan,
@@ -176,6 +180,9 @@ var_manhattan <- var_manhattan_plot(
     neg_log_pval_thresh = 3,
     threshold = 0.05
 )
+```
+
+```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
     "var_manhattan.png",
     var_manhattan,

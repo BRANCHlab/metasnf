@@ -317,7 +317,9 @@ ari_hm <- adjusted_rand_index_heatmap(
     solutions_matrix_aris,
     order = meta_cluster_order
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = ari_hm,
     path = "./adjusted_rand_index_heatmap.png",
@@ -365,7 +367,9 @@ ari_mc_hm <- adjusted_rand_index_heatmap(
     order = meta_cluster_order,
     split_vector = split_vec
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = ari_mc_hm,
     path = "./ari_mc_hm.png",
@@ -465,7 +469,9 @@ annotated_ari_hm <- adjusted_rand_index_heatmap(
         )
     )
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = annotated_ari_hm,
     path = "./annotated_ari_hm.png",
@@ -525,7 +531,9 @@ annotated_ari_hm2 <- adjusted_rand_index_heatmap(
         )
     )
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = annotated_ari_hm2,
     path = "./annotated_ari_hm2.png",
@@ -563,7 +571,9 @@ mc_manhattan <- mc_manhattan_plot(
     threshold = 0.05,
     neg_log_pval_thresh = 5
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
     "mc_manhattan.png",
     mc_manhattan,
@@ -600,8 +610,9 @@ mc_manhattan2 <- mc_manhattan_plot(
         "behaviour" = "firebrick"
     )
 )
-mc_manhattan2
+```
 
+```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
     "mc_manhattan2.png",
     mc_manhattan2,
@@ -630,7 +641,9 @@ sm_hm <- settings_matrix_heatmap(
     settings_matrix,
     order = meta_cluster_order
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = sm_hm,
     path = "./settings_matrix_heatmap_ordered.png",
@@ -779,7 +792,9 @@ There is a heatmap for visualizing this too:
 
 ```{r eval = FALSE}
 pval_hm <- pval_heatmap(target_pvals, order = meta_cluster_order)
+```
 
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = pval_hm,
     path = "./pval_heatmap_ordered.png",

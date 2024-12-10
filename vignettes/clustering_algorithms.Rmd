@@ -76,7 +76,9 @@ clust_esm_manhattan <- esm_manhattan_plot(
     threshold = 0.05,
     bonferroni_line = TRUE
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
     "clust_esm_manhattan.png",
     clust_esm_manhattan,

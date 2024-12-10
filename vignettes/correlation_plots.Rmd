@@ -65,7 +65,9 @@ Here's what a basic heatmap looks like:
 ap_heatmap <- assoc_pval_heatmap(
     assoc_pval_matrix
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     ap_heatmap,
     "assoc_pval_heatmap.png",
@@ -94,7 +96,9 @@ ap_heatmap2 <- assoc_pval_heatmap(
         "City" = "city"
     )
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     ap_heatmap2,
     "assoc_pval_heatmap2.png",
@@ -124,7 +128,9 @@ ap_heatmap3 <- assoc_pval_heatmap(
     row_km = 3,
     column_km = 3
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     ap_heatmap3,
     "assoc_pval_heatmap3.png",
@@ -154,7 +160,9 @@ ap_heatmap4 <- assoc_pval_heatmap(
     dl = data_list,
     split_by_domain = TRUE
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     ap_heatmap4,
     "assoc_pval_heatmap4.png",
