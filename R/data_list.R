@@ -106,13 +106,9 @@ data_list <- function(...,
         } else if (list_loaded) {
             dll <- append(dll, item)
         } else {
-            cli::cli_abort(
-                message = c(
-                    x = paste0(
-                        "Invalid data loading format. See `?data_list` for",
-                        " examples on proper data formatting."
-                    )
-                )
+            metasnf_error(
+                "Invalid data loading format. See `?data_list` for examples o",
+                "n proper data formatting."
             )
         }
     }
@@ -126,14 +122,10 @@ data_list <- function(...,
         dll_names <- c("data", "name", "domain", "type")
         dll <- lapply(dll, stats::setNames, dll_names)
     } else if (!(all(named_entries == 4))) {
-        cli::cli_abort(
-            message = c(
-                x = paste0(
-                    "Please either specify names (i.e., data = ...,",
-                    " name = ..., domain = ..., type = ...) for all of the",
-                    " elements or for none of them."
-                )
-            )
+        metasnf_error(
+            "Please either specify names (i.e., data = ...,",
+            " name = ..., domain = ..., type = ...) for all of the",
+            " elements or for none of them."
         )
     }
     # Additional formatting
@@ -180,35 +172,27 @@ ensure_dll_dataframe <- function(dll) {
 #' @return dll The provided nested list with "uid" as UID.
 convert_uids <- function(dll, uid) {
     dll <- lapply(dll,
-        function(x) {
+        function(x, uid) {
             # Stop if UID isn't in the data frame
             if (!uid %in% colnames(x$"data")) {
-                cli::cli_abort(
-                    message = c(
-                        x = paste0(
-                            "UID column \"{uid}\" is not present in all data",
-                            " frames."
-                        )
-                    ),
-                    .envir = rlang::caller_env(3)
+                metasnf_error(
+                    "UID column ", uid, " is not present in all data frames.",
+                    env = 4
                 )
             }
             colnames(x$"data")[colnames(x$"data") == uid] <- "uid"
             # Stop if UID isn't actually unique
             if (length(x$"data"$"uid") != length(unique(x$"data"$"uid"))) {
-                cli::cli_abort(
-                    message = c(
-                        x = paste0(
-                            "Column \"{uid}\" does not uniquely ID",
-                            " all observations in at least one provided",
-                            " data frame."
-                        )
-                    ),
-                    .envir = rlang::caller_env(2)
+                metasnf_error(
+                    "Column ", uid, " does not uniquely ID",
+                    " all observations in at least one provided",
+                    " data frame.",
+                    env = 4
                 )
             }
             return(x)
-        }
+        },
+        uid = uid
     )
     return(dll)
 }
@@ -466,7 +450,7 @@ rename_dl <- function(dl, name_mapping) {
     dl_features <- summarize_dl(dl, "feature")$"name"
     mismatches <- which(!name_mapping %in% dl_features)
     if (length(mismatches) > 0) {
-        warning(
+        metasnf_warning(
             "The following feature names were not found in the provided",
             " dl: ", name_mapping[mismatches]
         )
@@ -549,9 +533,9 @@ merge_dls <- function(dl_1, dl_2) {
     names(dl_1) <- dl_1_names
     names(dl_2) <- dl_2_names
     if (!identical(sort(dl_1_names), sort(dl_2_names))) {
-            
-
-            "The two data lists must have identical components. Check `summarize_dl()` on each data list to make sure the components align."
+        metasnf_error(
+            "The two data lists must have identical components."
+        )
     }
     merged_data_list <- lapply(
         dl_1_names,
@@ -627,11 +611,9 @@ check_dll_duplicate_features <- function(dll) {
         as.character()
     duplicates <- unique(features[duplicated(features)])
     if (length(duplicates) > 0) {
-        cli::cli_abort(
-            message = c(
-                x = "Provided data cannot contain duplicate features."
-            ),
-            .envir = rlang::caller_env(2)
+        metasnf_error(
+            "Provided data cannot contain duplicate features.",
+            env = 2
         )
     }
 }
@@ -643,11 +625,9 @@ check_dll_duplicate_features <- function(dll) {
 #' @return Raises error if data list-like structure isn't a list
 check_dll_inherits_list <- function(dll) {
     if (!is.list(dll)) {
-        cli::cli_abort(
-            message = c(
-                x = "Data list must inherit from class `list`."
-            ),
-            .envir = rlang::caller_env(2)
+        metasnf_error(
+            "Data list must inherit from class `list`.",
+            env = 2
         )
     }
 }
@@ -659,15 +639,11 @@ check_dll_inherits_list <- function(dll) {
 #' @return Raises error if dll doesn't have only 4-item nested lists
 check_dll_four_subitems <- function(dll) {
     if (!all(unlist(lapply(dll, length) == 4))) {
-        cli::cli_abort(
-            message = c(
-                x = paste0(
-                    "Each data list component must be a 4-item list",
-                    " containing data (data.frame), name (character),",
-                    " domain (character), and type (character)."
-                )
-            ),
-            .envir = rlang::caller_env(2)
+        metasnf_error(
+            "Each data list component must be a 4-item list",
+            " containing data (data.frame), name (character),",
+            " domain (character), and type (character).",
+            env = 2
         )
     }
 }
@@ -690,15 +666,11 @@ check_dll_subitem_names <- function(dll) {
         unlist() |>
         all()
     if (!correct_names) {
-        cli::cli_abort(
-            message = c(
-                x = paste0(
-                    "Each data list component must be a 4-item list",
-                    " containing data (data.frame), name (character),",
-                    " domain (character), and type (character)."
-                )
-            ),
-            .envir = rlang::caller_env(2)
+        metasnf_error(
+            "Each data list component must be a 4-item list",
+            " containing data (data.frame), name (character),",
+            " domain (character), and type (character).",
+            env = 2
         )
     }
 }
@@ -725,15 +697,11 @@ check_dll_subitem_classes <- function(dll) {
         unlist() |>
         all()
     if (!correct_subitem_classes) {
-        cli::cli_abort(
-            message = c(
-                x = paste0(
-                    "Each data list component must be a 4-item list",
-                    " containing data (data.frame), name (character),",
-                    " domain (character), and type (character)."
-                )
-            ),
-            .envir = rlang::caller_env(2)
+        metasnf_error(
+            "Each data list component must be a 4-item list",
+            " containing data (data.frame), name (character),",
+            " domain (character), and type (character).",
+            env = 2
         )
     }
 }
@@ -773,14 +741,10 @@ check_dll_uid <- function(dll) {
         )
     )
     if (!valid_uids) {
-        cli::cli_abort(
-            message = c(
-                x = paste0(
-                    "All data frames must contain identical `uid` columns",
-                    " that uniquely identify all observations."
-                )
-            ),
-            .envir = rlang::caller_env(2)
+        metasnf_error(
+            "All data frames must contain identical `uid` columns",
+            " that uniquely identify all observations.",
+            env = 2
         )
     }
 }
@@ -807,15 +771,10 @@ check_dll_types <- function(dll) {
         unlist() |>
         all()
     if (!valid_dll_types) {
-        cli::cli_abort(
-            message = c(
-                "!" = "Invalid type specified.",
-                x = paste0(
-                    "Valid component types include continuous, discrete,",
-                    " ordinal, categorical, and mixed."
-                )
-            ),
-            .envir = rlang::caller_env(2)
+        metasnf_error(
+            "Valid component types include continuous, discrete,",
+            " ordinal, categorical, and mixed.",
+            env = 2
         )
     }
 }
@@ -827,14 +786,10 @@ check_dll_types <- function(dll) {
 #' @return Raises an error if data_list_input has 0 length.
 check_dll_empty_input <- function(data_list_input) {
     if (length(data_list_input) == 0) {
-        cli::cli_abort(
-            message = c(
-                x = paste0(
-                    "Data list initialization requires at least one input.",
-                    " See `?data_list` for more examples."
-                )
-            ),
-            .envir = rlang::caller_env(1)
+        metasnf_error(
+            "Data list initialization requires at least one input.",
+            " See `?data_list` for more examples.",
+            env = 2
         )
     }
 }
@@ -881,10 +836,8 @@ dlapply.data_list <- function(X, FUN, ...) {
             result
         },
         error = function(e) {
-            cli::cli_warn(
-                message = c(
-                    "!" = "Result could not be assigned class `data_list`."
-                )
+            metasnf_warning(
+                "Result could not be assigned class `data_list`."
             )
             result
         }

@@ -24,7 +24,9 @@ linear_adjust <- function(dl, unwanted_signal_list, sig_digs = NULL) {
     dl_df <- collapse_dl(dl)
     usl_df <- collapse_dl(unwanted_signal_list)
     if (!identical(dl_df$"uid", usl_df$"uid")) {
-        stop("dl and unwanted_signal_list do not contain same patients")
+        metasnf_error(
+            "dl and unwanted_signal_list do not contain same patients."
+        )
     }
     ###########################################################################
     # 2. Adjustment

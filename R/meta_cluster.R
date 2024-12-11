@@ -68,11 +68,9 @@ calc_aris <- function(solutions_matrix,
         if (processes == "max") {
             processes <- max_cores
         } else if (processes > max_cores) {
-            warning(
-                paste0(
-                    "Requested processes exceed available cores.",
-                    " Defaulting to the max available (", max_cores, ")."
-                )
+            metasnf_warning(
+                "Requested processes exceed available cores.",
+                " Defaulting to the max available (", max_cores, ")."
             )
             processes <- max_cores
         }

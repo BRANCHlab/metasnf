@@ -20,11 +20,9 @@ calculate_silhouettes <- function(solutions_matrix, similarity_matrices) {
     }
     # Then ensure the size of the two arguments align.
     if (nrow(solutions_matrix) != length(similarity_matrices)) {
-        stop(
-            paste0(
-                "Size of solutions_matrix does not match length of",
-                " similarity_matrices."
-            )
+        metasnf_error(
+            "Size of solutions_matrix does not match length of",
+            " similarity_matrices."
         )
     }
     # Average out the intense signal present in the diagonals of the similarity
@@ -84,7 +82,7 @@ calculate_silhouettes <- function(solutions_matrix, similarity_matrices) {
 #' @export
 calculate_dunn_indices <- function(solutions_matrix, similarity_matrices) {
     if (!requireNamespace("clv", quietly = TRUE)) {
-        stop(
+        metasnf_error(
             "Package \"clv\" must be installed to use this function.",
             call. = FALSE
         )
@@ -97,11 +95,9 @@ calculate_dunn_indices <- function(solutions_matrix, similarity_matrices) {
     }
     # Then ensure the size of the two arguments align.
     if (nrow(solutions_matrix) != length(similarity_matrices)) {
-        stop(
-            paste0(
-                "Size of solutions_matrix does not match length of",
-                " similarity_matrices."
-            )
+        metasnf_error(
+            "Size of solutions_matrix does not match length of",
+            " similarity_matrices."
         )
     }
     # Average out the intense signal present in the diagonals of the similarity
@@ -180,7 +176,7 @@ calculate_dunn_indices <- function(solutions_matrix, similarity_matrices) {
 #' @export
 calculate_db_indices <- function(solutions_matrix, similarity_matrices) {
     if (!requireNamespace("clv", quietly = TRUE)) {
-        stop(
+        metasnf_error(
             "Package \"clv\" must be installed to use this function.",
             call. = FALSE
         )
@@ -193,11 +189,9 @@ calculate_db_indices <- function(solutions_matrix, similarity_matrices) {
     }
     # Then ensure the size of the two arguments align.
     if (nrow(solutions_matrix) != length(similarity_matrices)) {
-        stop(
-            paste0(
-                "Size of solutions_matrix does not match length of",
-                " similarity_matrices."
-            )
+        metasnf_error(
+            "Size of solutions_matrix does not match length of",
+            " similarity_matrices."
         )
     }
     # Average out the intense signal present in the diagonals of the similarity

@@ -397,17 +397,15 @@ add_settings_matrix_rows <- function(settings_matrix,
     null_min_max_alpha <- is.null(min_alpha) & is.null(max_alpha)
     null_alpha_values <- is.null(alpha_values)
     if (!null_alpha_values & !null_min_max_alpha) {
-        stop(
-            paste0(
-                "alpha parameter can be controlled using either the min/max",
-                " parameters or using the possible parameter - not both."
-            )
+        metasnf_error(
+            "alpha parameter can be controlled using either the min/max",
+            " parameters or using the possible parameter - not both."
         )
     }
     # 1b. Ensure specified upper and lower bounds are sensible
     if (!is.null(min_alpha)) {
         if (min_alpha < 0.3) {
-            warning(
+            metasnf_warning(
                 "Requested minimum / maximum alpha hyperparameter range is",
                 " outside range empirically considere reasonable (0.3 to 0.8)."
             )
@@ -415,7 +413,7 @@ add_settings_matrix_rows <- function(settings_matrix,
     }
     if (!is.null(max_alpha)) {
         if (max_alpha > 0.8) {
-            warning(
+            metasnf_warning(
                 "Requested minimum / maximum alpha hyperparameter range is",
                 " outside range empirically considere reasonable (0.3 to 0.8)."
             )
@@ -423,7 +421,7 @@ add_settings_matrix_rows <- function(settings_matrix,
     }
     if (!is.null(alpha_values)) {
         if (min(alpha_values) < 0.3 | max(alpha_values) > 0.8) {
-            warning(
+            metasnf_warning(
                 "Requested minimum / maximum alpha hyperparameter range is",
                 " outside range empirically considere reasonable (0.3 to 0.8)."
             )
@@ -446,17 +444,15 @@ add_settings_matrix_rows <- function(settings_matrix,
     null_min_max_k <- is.null(min_k) & is.null(max_k)
     null_k_values <- is.null(k_values)
     if (!null_k_values & !null_min_max_k) {
-        stop(
-            paste0(
-                "k parameter can be controlled using either the min/max",
-                " parameters or using the possible parameter - not both."
-            )
+        metasnf_error(
+            "k parameter can be controlled using either the min/max",
+            " parameters or using the possible parameter - not both."
         )
     }
     # 2b. Ensure specified upper and lower bounds are sensible
     if (!is.null(min_k)) {
         if (min_k < 10) {
-            warning(
+            metasnf_warning(
                 "The original SNF paper recommends setting k to either the",
                 " number of patients divided by the expected number of",
                 " clusters or the number of patients divided by 10 when the",
@@ -468,7 +464,7 @@ add_settings_matrix_rows <- function(settings_matrix,
     }
     if (!is.null(max_k)) {
         if (max_k > 100) {
-            warning(
+            metasnf_warning(
                 "The original SNF paper recommends setting k to either the",
                 " number of patients divided by the expected number of",
                 " clusters or the number of patients divided by 10 when the",
@@ -480,7 +476,7 @@ add_settings_matrix_rows <- function(settings_matrix,
     }
     if (!is.null(k_values)) {
         if (min(k_values) < 10 | max(k_values) > 100) {
-            warning(
+            metasnf_warning(
                 "The original SNF paper recommends setting k to either the",
                 " number of patients divided by the expected number of",
                 " clusters or the number of patients divided by 10 when the",
@@ -507,17 +503,15 @@ add_settings_matrix_rows <- function(settings_matrix,
     null_min_max_t <- is.null(min_t) & is.null(max_t)
     null_t_values <- is.null(t_values)
     if (!null_t_values & !null_min_max_t) {
-        stop(
-            paste0(
-                "t parameter can be controlled using either the min/max",
-                " parameters or using the possible parameter - not both."
-            )
+        metasnf_error(
+            "t parameter can be controlled using either the min/max",
+            " parameters or using the possible parameter - not both."
         )
     }
     # 3b. Ensure specified upper and lower bounds are sensible
     if (!is.null(min_t)) {
         if (min_t < 10) {
-            warning(
+            metasnf_warning(
                 "The original SNF paper recommends a t between 10 and 20.",
                 " Empirically, setting t above 20 is always sufficient for",
                 " SNF to converge. This warning is raised anytime a user",
@@ -527,7 +521,7 @@ add_settings_matrix_rows <- function(settings_matrix,
     }
     if (!is.null(max_t)) {
         if (max_t > 20) {
-            warning(
+            metasnf_warning(
                 "The original SNF paper recommends a t between 10 to 20.",
                 " Empirically, setting t above 20 is always sufficient for",
                 " SNF to converge. This warning is raised anytime a user",
@@ -537,7 +531,7 @@ add_settings_matrix_rows <- function(settings_matrix,
     }
     if (!is.null(t_values)) {
         if (min(t_values) < 10 | max(t_values) > 20) {
-            warning(
+            metasnf_warning(
                 "The original SNF paper recommends a t between 10 to 20.",
                 " Empirically, setting t above 20 is always sufficient for",
                 " SNF to converge. This warning is raised anytime a user",
@@ -565,7 +559,7 @@ add_settings_matrix_rows <- function(settings_matrix,
     # 5. Set the random seed (if provided)
     ###########################################################################
     if (!is.null(seed)) {
-        stop(
+        metasnf_error(
             "Adjusting the global seed through this function is deprecated.",
             " Please call `set.seed()` manually instead."
         )
@@ -688,7 +682,7 @@ add_settings_matrix_rows <- function(settings_matrix,
         }
         # Limit how many times a new row ended up already existing
         if (num_retries > retry_limit) {
-           stop(
+           metasnf_error(
                 "Matrix building failed to converge. To keep adding rows, try",
                 " raising the retry_limit parameter or specifying a larger",
                 " range of tunable parameters."
@@ -754,11 +748,9 @@ random_removal <- function(columns,
         max_removed_inputs <- num_cols - 1
     }
     if (max_removed_inputs >= num_cols || min_removed_inputs < 0) {
-        stop(
-            paste0(
-                "The number of removed elements must be between 0 and the",
-                " total number of elements in the data list (", num_cols, ")."
-            )
+        metasnf_error(
+            "The number of removed elements must be between 0 and the",
+            " total number of elements in the data list (", num_cols, ")."
         )
     }
     ###########################################################################

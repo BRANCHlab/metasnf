@@ -160,6 +160,28 @@ alpha hyperparameter that will be used on that run of the SNF pipeline.
 hyperparameter.
 \item A column named "t": Like above, but for the t (number of iterations)
 hyperparameter.
+\item A column named "snf_scheme": Which of 3 pre-defined schemes will be used
+to integrate the data frames of the data list into a final fused network.
+The purpose of varying these schemes is primarily to increase the
+diversity of the generated cluster solutions.
+\itemize{
+\item A value of 1 corresponds to the "individual" scheme, in which all data
+frames are directly merged by SNF into the final fused network. This
+scheme corresponds to the approach shown in the original SNF paper.
+\item A value of 2 corresponds to the "two-step" scheme, in which all data
+frames witin a domain are first merged into a domain-specific fused
+network. Next, domain-specific networks are fused once more by SNF
+into the final fused network. This scheme is useful for fairly
+re-weighting SNF pipelines with unequal numbers of data frames across
+domains.
+\item A value of 3 corresponds to the "domain" scheme, in which all data
+frames within a domain are first concatenated into a single domain-
+specific data frame before being merged by SNF into the final fused
+network. This approach serves as an alternative way to re-weight
+SNF pipelines with unequal numbers of data frames across domains.
+You can learn more about this parameter here:
+https://branchlab.github.io/metasnf/articles/snf_schemes.html.
+}
 \item A column named "clust_alg": Specification of which clustering algorithm
 will be applied to the final similarity matrix. By default, this
 column can take on the integer values 1 or 2, which correspond to
@@ -174,7 +196,7 @@ https://branchlab.github.io/metasnf/articles/distance_metrics.html
 \item A column named "disc_dist": Like above, but for discrete dataframes.
 \item A column named "ord_dist": Like above, but for ordinal dataframes.
 \item A column named "cat_dist": Like above, but for categorical dataframes.
-\item A column named "mixed_dist": Like above, but for mixed-type (e.g.,
+\item A column named "mix_dist": Like above, but for mixed-type (e.g.,
 both categorical and discrete) dataframes.
 \item One column for every input dataframe in the corresponding data list which
 can either have the value of 0 or 1. The name of the column should be

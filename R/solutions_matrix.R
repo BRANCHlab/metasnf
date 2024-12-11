@@ -49,7 +49,7 @@ extend_solutions <- function(solutions_matrix,
         as.logical() |>
         which()
     if (length(single_cluster_solutions) > 0) {
-        warning(
+        metasnf_warning(
             "Single-cluster solution rows removed: ",
             single_cluster_solutions
         )
@@ -63,7 +63,7 @@ extend_solutions <- function(solutions_matrix,
     # If tl not given but calculate_summaries is TRUE, give a warning.
     ###########################################################################
     if (is.null(target_dl) && calculate_summaries) {
-        warning(
+        metasnf_warning(
             "Calculate summaries only applies to target list features, but",
             " target list parameter was not specified."
         )
@@ -74,7 +74,7 @@ extend_solutions <- function(solutions_matrix,
     solution_subs <- colnames(subs(solutions_matrix))[-1]
     target_subs <- target_dl[[1]]$"data"$"uid"
     if (!identical(solution_subs, target_subs)) {
-        stop(
+        metasnf_error(
             "Subjects in data list/target list do not match those in",
             " solutions_matrix."
         )
@@ -165,11 +165,9 @@ extend_solutions <- function(solutions_matrix,
         if (processes == "max") {
             processes <- max_cores
         } else if (processes > max_cores) {
-            warning(
-                paste0(
-                    "Requested processes exceed available cores.",
-                    " Defaulting to the max available (", max_cores, ")."
-                )
+            metasnf_warning(
+                "Requested processes exceed available cores.",
+                " Defaulting to the max available (", max_cores, ")."
             )
             processes <- max_cores
         }
@@ -391,24 +389,28 @@ ord_reg_pval <- function(predictor, response) {
     # Otherwise, run regular ordinal regression
     response <- as.ordered(response)
     null_model <- MASS::polr(response ~ 1)
-    result <- tryCatch({
-        full_model <- MASS::polr(response ~ predictor)
-        pval <- stats::anova(null_model, full_model)$"Pr(Chi)"[2]
-        return(pval)
-    },
-    error = function(e) {
-        if (grepl("suitable starting values failed", e$message)) {
-            warning(
-                "Ordinal regression failed due to MASS:polr error:",
-                " 'attempt to find suitable starting values failed'. p-value",
-                " calculated by linear regression instead."
-            )
-            return(linear_model_pval(predictor, response))
-        } else {
-            warning(paste("Error during ordinal regression: ", e$message))
-            return(NA)
+    result <- tryCatch(
+        {
+            full_model <- MASS::polr(response ~ predictor)
+            pval <- stats::anova(null_model, full_model)$"Pr(Chi)"[2]
+            return(pval)
+        },
+        error = function(e) {
+            if (grepl("suitable starting values failed", e$message)) {
+                metasnf_warning(
+                    "Ordinal regression failed due to MASS:polr error:",
+                    " 'attempt to find suitable starting values failed'. p-value",
+                    " calculated by linear regression instead."
+                )
+                return(linear_model_pval(predictor, response))
+            } else {
+                metasnf_warning(
+                    "Error during ordinal regression: ", e$message
+                )
+                return(NA)
+            }
         }
-    })
+    )
 }
 
 #' Chi-squared test p-value (generic)
@@ -614,7 +616,7 @@ calc_assoc_pval_matrix <- function(dl,
     ###########################################################################
     dl_summary <- summarize_dl(dl)
     if (any(dl_summary$"type" == "mixed")) {
-        warning(
+        metasnf_warning(
             "When using the 'mixed' data type in the 'calculate_associations'",
             " function, any data that can be converted to numeric format will",
             " be treated as continuous and all others will be treated as",

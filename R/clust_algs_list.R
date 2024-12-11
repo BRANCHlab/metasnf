@@ -55,13 +55,9 @@ generate_clust_algs_list <- function(..., disable_base = FALSE) {
     # Ensure that user has provided a name for the algorithm
     if (length(user_algs_list) > 0) {
         if (min(nchar(names(user_algs_list))) == 0) {
-            cli::cli_abort(
-                message = c(
-                    x = paste0(
-                        "Please specify a name for every supplied algorithm.",
-                        " See ?generate_clust_algs_list for examples."
-                    )
-                )
+            metasnf_error(
+                "Please specify a name for every supplied algorithm.",
+                " See ?generate_clust_algs_list for examples."
             )
         }
     }
@@ -71,13 +67,9 @@ generate_clust_algs_list <- function(..., disable_base = FALSE) {
     )
     if (disable_base) {
         if (is.null(user_algs_list)) {
-            cli::cli_abort(
-                message = c(
-                    x = paste0(
-                        "disable_base is TRUE but no algorithms provided.",
-                        " There is nothing to make a list of!"
-                    )
-                )
+            metasnf_error(
+                "disable_base is TRUE but no algorithms provided.",
+                " There is nothing to make a list of!"
             )
         } else {
             clust_algs_list <- user_algs_list
@@ -228,7 +220,7 @@ spectral_two <- function(similarity_matrix) {
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
-        warning(
+        metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 2."
         )
@@ -255,7 +247,7 @@ spectral_three <- function(similarity_matrix) {
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
-        warning(
+        metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 3."
         )
@@ -282,7 +274,7 @@ spectral_four <- function(similarity_matrix) {
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
-        warning(
+        metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 4."
         )
@@ -309,7 +301,7 @@ spectral_five <- function(similarity_matrix) {
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
-        warning(
+        metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 5."
         )
@@ -336,7 +328,7 @@ spectral_six <- function(similarity_matrix) {
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
-        warning(
+        metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 6."
         )
@@ -363,7 +355,7 @@ spectral_seven <- function(similarity_matrix) {
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
-        warning(
+        metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 7."
         )
@@ -390,7 +382,7 @@ spectral_eight <- function(similarity_matrix) {
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
-        warning(
+        metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 8."
         )
@@ -417,7 +409,7 @@ spectral_nine <- function(similarity_matrix) {
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
-        warning(
+        metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 9."
         )
@@ -444,7 +436,7 @@ spectral_ten <- function(similarity_matrix) {
     nclust <- length(unique(solution))
     solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
-        warning(
+        metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 10."
         )

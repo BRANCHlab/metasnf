@@ -2,7 +2,6 @@
 #'
 #' Add new columns to a dataframe by specifying their names and a value to
 #' initialize them with.
-#'
 #' @keywords internal
 #' @param df The dataframe to extend.
 #' @param cols The vector containing new column names.
@@ -71,7 +70,7 @@ char_to_fac <- function(df) {
 #' @export
 no_subs <- function(df) {
     if (!"row_id" %in% colnames(df)) {
-        stop("Dataframe requires 'row_id' column.")
+        metasnf_error("Dataframe requires 'row_id' column.")
     }
     df_no_subs <- df |>
         dplyr::select(
@@ -79,7 +78,7 @@ no_subs <- function(df) {
             !(dplyr::starts_with("uid_"))
         )
     if (identical(df, df_no_subs)) {
-        warning("Provided dataframe had no 'uid_' columns to remove.")
+        metasnf_warning("Provided dataframe had no 'uid_' columns to remove.")
     }
     return(df_no_subs)
 }
@@ -97,14 +96,14 @@ no_subs <- function(df) {
 #' @export
 subs <- function(df) {
     if (!"row_id" %in% colnames(df)) {
-        stop("Dataframe requires 'row_id' column.")
+        metasnf_error("Dataframe requires 'row_id' column.")
     }
     df_subs <- df |> dplyr::select(
         "row_id",
         dplyr::starts_with("uid_")
     )
     if (identical(df, df_subs)) {
-        warning("Provided dataframe had no non-'uid_' columns to remove.")
+        metasnf_warning("Provided dataframe had no non-'uid_' columns to remove.")
     }
     return(df_subs)
 }
@@ -137,7 +136,7 @@ merge_df_list <- function(df_list,
             by = uid
         )
     } else {
-        stop("Invalid join type specified. Options are 'inner' and 'full'.")
+        metasnf_error("Invalid join type specified. Options are 'inner' and 'full'.")
     }
     if (no_na) {
         merged_df <- stats::na.omit(merged_df)
@@ -191,7 +190,7 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
     test <- subjects[hash >= train_thresh]
     assigned_subs <- list(train = train, test = test)
     if (length(train) == 0 || length(test) == 0) {
-        warning("Empty train or test set.")
+        metasnf_warning("Empty train or test set.")
     }
     return(assigned_subs)
 }
@@ -215,7 +214,7 @@ list_remove <- function(dl, ...) {
     list_names <- summarize_dl(dl)$"name"
     invalid_names <- to_remove[!to_remove %in% list_names]
     if (length(invalid_names) > 0) {
-        warning(
+        metasnf_warning(
             paste0(
                 "Did you make a typo? The following names are not present in",
                 " your data list: ", invalid_names
@@ -288,7 +287,7 @@ check_similarity_matrices <- function(similarity_matrices) {
         unlist() |>
         all()
     if (!valid_matrices) {
-        warning(
+        metasnf_warning(
             "Generated similarity matrices did not meet validity parameters."
         )
     }
@@ -324,7 +323,7 @@ scale_diagonals <- function(matrix, method = "mean") {
         off_diagonals <- matrix[col(matrix) != row(matrix)]
         diag(matrix) <- max(off_diagonals)
     } else if (method != "none") {
-        stop("Invalid scaling method specified.")
+        metasnf_error("Invalid scaling method specified.")
     }
     return(matrix)
 }

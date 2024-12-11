@@ -88,7 +88,7 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
         unlist() |>
         all()
     if (!all_metrics_are_named) {
-        stop(
+        metasnf_error(
             paste0(
                 "Please specify a name for every supplied metric."
             )
@@ -99,13 +99,11 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
     #  metric is provided for each feature type
     if (!keep_defaults) {
         if (length(user_distances) < 5) {
-            stop(
-                paste0(
-                    "If suppressing base distance metrics, you must specify",
-                    " at least one metric for each feature type (continuous,",
-                    " discrete, ordinal, categorical, and mixed) even if you",
-                    " are not intending on using that type."
-                )
+            metasnf_error(
+                "If suppressing base distance metrics, you must specify",
+                " at least one metric for each feature type (continuous,",
+                " discrete, ordinal, categorical, and mixed) even if you",
+                " are not intending on using that type."
             )
         }
     }

@@ -468,7 +468,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
     }
     if (split_by_domain) {
         if (is.null(dl)) {
-            stop(
+            metasnf_error(
                 "You must provide a data list to split the heatmap by domain."
             )
         }
@@ -786,7 +786,7 @@ shiny_annotator <- function(ari_heatmap) {
             )
         )
     } else {
-        cli::cli_alert_warning(
+        metasnf_alert(
             "Ignoring `shiny_annotator()` call in non-interactive session."
         )
     }
@@ -917,7 +917,7 @@ generate_annotations_list <- function(df,
     # Ensure all the features specified are in the provided data
     check_colnames <- function(annotation_list, sorted_df) {
         if (!all(annotation_list %in% colnames(sorted_df))) {
-            stop(
+            metasnf_error(
                 "At least one feature specified for annotation is not",
                 " present in the provided data list."
             )
@@ -927,7 +927,7 @@ generate_annotations_list <- function(df,
     # Ensure every feature specified is given a name for plotting/legend
     check_listnames <- function(list) {
         if (length(list) != sum(names(list) != "", na.rm = TRUE)) {
-            stop(
+            metasnf_error(
                 "All features provided must in the annotation lists must be",
                 " named."
             )
@@ -1392,7 +1392,7 @@ get_heatmap_order <- function(heatmap, type = "rows") {
     } else if (type == "columns") {
         order <- ComplexHeatmap::column_order(drawn_heatmap)
     } else {
-        stop("Valid types are 'rows' and 'columns'.")
+        metasnf_error("Valid types are 'rows' and 'columns'.")
     }
     return(order)
 }
@@ -1422,14 +1422,14 @@ split_parser <- function(row_split_vector = NULL,
                          n_rows,
                          n_columns) {
     if (is.null(column_split) + is.null(column_split_vector) == 0) {
-        warning(
+        metasnf_warning(
             "column_split and column_split_vector arguments were both",
             " provided. Only column_split_vector will be used to determine",
             " plot gaps."
         )
     }
     if (is.null(column_split) + is.null(column_split_vector) == 0) {
-        warning(
+        metasnf_warning(
             "row_split and row_split_vector arguments were both",
             " provided. Only row_split_vector will be used to determine",
             " plot gaps."
@@ -1463,7 +1463,7 @@ check_dataless_annotations <- function(annotation_requests, data) {
         any()
     if (!any_null_annotations) {
         if (is.null(data)) {
-            stop(
+            metasnf_error(
                 "You must provide data, either through a data list or a",
                 " dataframe passed in with the 'data' parameter to use",
                 " annotations."
@@ -1480,22 +1480,18 @@ check_dataless_annotations <- function(annotation_requests, data) {
 #' @export
 check_hm_dependencies <- function() {
     if (!requireNamespace("ComplexHeatmap", quietly = TRUE)) {
-        stop(
+        metasnf_error(
             "Package \"ComplexHeatmap\" is required to use this function.",
             " The package is available on BioConductor:",
             " https://bioconductor.org/packages/",
-            "release/bioc/html/ComplexHeatmap.html",
-            call. = FALSE
+            "release/bioc/html/ComplexHeatmap.html"
         )
     }
     if (!requireNamespace("circlize", quietly = TRUE)) {
-        stop(
+        metasnf_error(
             "Package \"circlize\" is required to use this function.",
             " The package is available on CRAN:",
-            " `install.packages(\"circlize\")`.",
-            call. = FALSE
+            " `install.packages(\"circlize\")`."
         )
     }
 }
-
-

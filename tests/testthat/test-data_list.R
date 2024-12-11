@@ -66,20 +66,6 @@ test_that(
     }
 )
 
-test_that(
-    "Errors when UID column is not unique.",
-    {
-        abcd_cort_t[1:2, "patient"] <- "x"
-        expect_error(
-            dl <- data_list(
-                list(abcd_cort_t, "name", "domain", "continuous"),
-                uid = "patient"
-            ),
-            "does not uniquely ID all observations"
-        )
-    }
-)
-
 #------------------------------------------------------------------------------
 # convert_uids()
 #------------------------------------------------------------------------------
@@ -114,6 +100,22 @@ test_that(
         )
     }
 )
+
+test_that(
+    "Errors when UID column is not unique.",
+    {
+        no_uid_df <- abcd_cort_t
+        no_uid_df[1:2, "patient"] <- "x"
+        expect_error(
+            dl <- data_list(
+                list(no_uid_df, "name", "domain", "continuous"),
+                uid = "patient"
+            ),
+            "does not uniquely ID all observations"
+        )
+    }
+)
+
 
 #------------------------------------------------------------------------------
 # new_data_list()

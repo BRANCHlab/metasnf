@@ -102,15 +102,11 @@ batch_snf <- function(dl,
     no_similarity_matrices <-
         is.null(similarity_matrix_dir) & !return_similarity_matrices
     if (no_similarity_matrices && suppress_clustering) {
-        cli::cli_abort(
-            message = c(
-                x = paste0(
-                    "Setting `suppress_clustering` to `TRUE`,",
-                    " `similarity_matrix_dir` to `NULL`,",
-                    " and return_similarity_matrices to `FALSE` yields",
-                    " no meaningful output."
-                )
-            )
+        metasnf_error(
+            "Setting `suppress_clustering` to `TRUE`,",
+            " `similarity_matrix_dir` to `NULL`,",
+            " and return_similarity_matrices to `FALSE` yields",
+            " no meaningful output."
         )
     }
     # If there is a value of the k hyperparameter that exceeds the number
@@ -123,69 +119,45 @@ batch_snf <- function(dl,
     n_patients <- unique(summarize_dl(dl)$"length")
     # Ensure that the maximum k value doesn't exceed the number of subjects
     if (max_k >= n_patients) {
-        cli::cli_abort(
-            message = c(
-                x = paste0(
-                    "The highest value of k in the settings_matrix ({max_k}) ",
-                    "cannot exceed the number of observations in the data lis",
-                    "t ({n_patients})."
-                )
-            )
+        metasnf_error(
+            "The highest value of k in the settings_matrix ({max_k}) ",
+            "cannot exceed the number of observations in the data lis",
+            "t ({n_patients})."
         )
     }
     ###########################################################################
     # 4. Creation of distance_metrics_list if it does not already exist
     ###########################################################################
     if (is.null(distance_metrics_list)) {
-        # Make sure the user didn't just forget to provide their list. If the
-        #  settings matrix has distances chosen beyond a value of 1, the user
-        #  certainly meant to provide a custom list.
-        max_dist_param <- max(
-            settings_matrix$"cont_dist",
-            settings_matrix$"disc_dist",
-            settings_matrix$"ord_dist",
-            settings_matrix$"cat_dist",
-            settings_matrix$"mix_dist"
-        )
-        if (max_dist_param > 1) {
-            stop(
-                "settings_matrix refers to distance metrics values beyond one",
-                " but no distance_metrics_list was provided. Did you forget",
-                " to provide a distance_metrics_list?"
+        if (automatic_standard_normalize) {
+            # Generate a list where numeric distances are all standard
+            # normalized.
+            distance_metrics_list <- generate_distance_metrics_list(
+                continuous_distances = list(
+                    "sn_euclidean_distance" = sn_euclidean_distance
+                ),
+                discrete_distances = list(
+                    "sn_euclidean_distance" = sn_euclidean_distance
+                ),
+                ordinal_distances = list(
+                    "sn_euclidean_distance" = sn_euclidean_distance
+                ),
+                categorical_distances = list(
+                    "gower_distance" = gower_distance
+                ),
+                mixed_distances = list(
+                    "gower_distance" = gower_distance
+                ),
+                keep_defaults = FALSE
             )
         } else {
-            if (automatic_standard_normalize) {
-                # Generate a list where numeric distances are all standard
-                # normalized.
-                distance_metrics_list <- generate_distance_metrics_list(
-                    continuous_distances = list(
-                        "sn_euclidean_distance" = sn_euclidean_distance
-                    ),
-                    discrete_distances = list(
-                        "sn_euclidean_distance" = sn_euclidean_distance
-                    ),
-                    ordinal_distances = list(
-                        "sn_euclidean_distance" = sn_euclidean_distance
-                    ),
-                    categorical_distances = list(
-                        "gower_distance" = gower_distance
-                    ),
-                    mixed_distances = list(
-                        "gower_distance" = gower_distance
-                    ),
-                    keep_defaults = FALSE
-                )
-            } else {
-                distance_metrics_list <- generate_distance_metrics_list()
-            }
+            distance_metrics_list <- generate_distance_metrics_list()
         }
     } else {
         if (automatic_standard_normalize) {
-            stop(
-                "The automatic_standard_normalize parameter cannot be used",
-                "at the same time as a custom distance metrics list. Please",
-                "ensure the custom distance metrics you are providing all",
-                "have built in standard normalization."
+            metasnf_error(
+                "`automatic_standard_normalize` cannot be used at the",
+                " same time as a custom distance metrics list."
             )
         }
     }
@@ -199,11 +171,9 @@ batch_snf <- function(dl,
         )
     } else {
         if (nrow(weights_matrix) != nrow(settings_matrix)) {
-            stop(
-                paste0(
-                    "weights_matrix and settings_matrix should have the same",
-                    " number of rows."
-                )
+            metasnf_error(
+                "weights_matrix and settings_matrix should have the same",
+                " number of rows."
             )
         }
     }
@@ -237,12 +207,10 @@ batch_snf <- function(dl,
         } else if (is.numeric(processes)) {
             # Use the user-specified number of cores
             if (processes > available_cores) {
-                warning(
-                    paste0(
-                        "You specified ", processes, " processes, but only ",
-                        available_cores, " cores are available. Defaulting to ",
-                        available_cores, " processes."
-                    )
+                metasnf_warning(
+                    "You specified ", processes, " processes, but only ",
+                    available_cores, " cores are available. Defaulting to ",
+                    available_cores, " processes."
                 )
                 processes <- available_cores
             }
@@ -258,8 +226,7 @@ batch_snf <- function(dl,
             )
             return(solutions_matrix)
         } else {
-            # Invalid input check
-            stop("Invalid number of processes specified.")
+            metasnf_error("Invalid number of processes specified.")
         }
     }
     ###########################################################################
@@ -507,9 +474,8 @@ get_dist_matrix <- function(df,
     } else if (input_type == "mixed") {
         dist_fn <- mix_dist_fn
     } else {
-        rlang::abort(
-            paste0("The value ", input_type, " is not a valid input type."),
-            class = "invalid_input"
+        metasnf_error(
+            "The value ", input_type, " is not a valid input type."
         )
     }
     dist_matrix <- dist_fn(df, weights_row_trim)
@@ -603,9 +569,8 @@ snf_step <- function(dl,
             weights_row = weights_row
         )
     } else {
-        rlang::abort(
-            paste0("The value '", scheme, "' is not a valid snf scheme."),
-            class = "invalid_input"
+        metasnf_error(
+            "The value '", scheme, "' is not a valid snf scheme."
         )
     }
     return(fused_network)

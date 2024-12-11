@@ -25,12 +25,10 @@ subsample_dl <- function(dl,
     both_null <- is.null(subsample_fraction) & is.null(n_subjects)
     neither_null <- !is.null(subsample_fraction) & !is.null(n_subjects)
     if (both_null | neither_null) {
-        stop(
-            paste0(
-                "Either the subsample_fraction parameter (fraction of",
-                " subjects) or n_subjects (number of subjects) must be",
-                " provided. Not both (or neither)."
-            )
+        metasnf_error(
+            "Either the subsample_fraction parameter (fraction of",
+            " subjects) or n_subjects (number of subjects) must be",
+            " provided. Not both (or neither)."
         )
     }
     # Calculate number of subjects to keep if fraction parameter was used
@@ -38,14 +36,12 @@ subsample_dl <- function(dl,
     # Ensure n_subjects is within 0 and the total number of subjects
     if (!is.null(n_subjects)) {
         if (n_subjects < 0 | n_subjects > length(all_subjects)) {
-            stop(
-                paste0(
-                    "n_subjects must be between 0 and the total number of",
-                    " subjects."
-                )
+            metasnf_error(
+                "n_subjects must be between 0 and the total number of",
+                " subjects."
             )
         } else if (as.integer(n_subjects) != n_subjects) {
-            stop(
+            metasnf_error(
                 "n_subjects must be an integer."
             )
         }
@@ -53,7 +49,7 @@ subsample_dl <- function(dl,
     # Ensure sample fraction is a real fraction
     if (!is.null(subsample_fraction)) {
         if (subsample_fraction > 1 | subsample_fraction < 0) {
-            stop(
+            metasnf_error(
                 "subsample_fraction must be between 0 and 1."
             )
         } else {
@@ -217,7 +213,7 @@ subsample_pairwise_aris <- function(subsample_solutions,
     # If number of subsamples is less than 3, warn that SD can't be calculated
     ###########################################################################
     if (length(subsample_solutions) < 3) {
-        warning(
+        metasnf_warning(
             "Fewer than 3 subsamples have been provided. Standard",
             " deviation of the pairwise ARIs for each settings matrix row",
             " will not be computed."
@@ -335,16 +331,14 @@ cocluster_density <- function(cocluster_df) {
     n_missing <- sum(is.na(cocluster_df$"cocluster_frac"))
     if (n_missing > 0) {
         cocluster_df <- stats::na.omit(cocluster_df)
-        warning(
-            paste0(
-                n_missing, " out of ", nrow(cocluster_df), " pairs of",
-                " observations that were originally clustered together were",
-                " never a part of the same subsampled data list. To avoid",
-                " this warning, increase the value of the",
-                " `subsample_fraction` or",
-                " `n_subsamples` arguments when calling",
-                " `subsample_dl()`."
-            )
+        metasnf_warning(
+            n_missing, " out of ", nrow(cocluster_df), " pairs of",
+            " observations that were originally clustered together were",
+            " never a part of the same subsampled data list. To avoid",
+            " this warning, increase the value of the",
+            " `subsample_fraction` or",
+            " `n_subsamples` arguments when calling",
+            " `subsample_dl()`."
         )
     }
     dist_plot <- cocluster_df |>
@@ -692,18 +686,16 @@ calculate_coclustering <- function(subsample_solutions,
     }
     incomplete_coverage <- sum(cocluster_df$"same_solution" == 0)
     if (incomplete_coverage > 0) {
-        warning(
-            paste0(
-                incomplete_coverage,
-                " out of ", nrow(cocluster_df), " originally",
-                " co-clustered pairs of observations did not appear in",
-                " any of the data list subsamples together. Estimates",
-                " of co-clustering quality may be skewed as a result.",
-                " Consider increasing the value of the",
-                " `subsample_fraction` or",
-                " `n_subsamples` arguments when calling",
-                " `subsample_dl()`."
-            )
+        metasnf_warning(
+            incomplete_coverage,
+            " out of ", nrow(cocluster_df), " originally",
+            " co-clustered pairs of observations did not appear in",
+            " any of the data list subsamples together. Estimates",
+            " of co-clustering quality may be skewed as a result.",
+            " Consider increasing the value of the",
+            " `subsample_fraction` or",
+            " `n_subsamples` arguments when calling",
+            " `subsample_dl()`."
         )
     }
     names(cocluster_dfs) <- paste0("row_", length(cocluster_dfs))
@@ -736,7 +728,7 @@ coclustering_coverage_check <- function(cocluster_df, action = "warn") {
     missing_coclustering <- sum(cocluster_df$"same_solution" == 0)
     if (missing_coclustering > 0) {
         if (action == "warn") {
-            warning(
+            metasnf_warning(
                 missing_coclustering, " out of ", nrow(cocluster_df),
                 " pairs of observations did not appear in",
                 " any of the data list subsamples together.",
@@ -745,7 +737,7 @@ coclustering_coverage_check <- function(cocluster_df, action = "warn") {
                 " `n_subsamples` when calling `subsample_dl()`."
             )
         } else if (action == "stop") {
-            stop(
+            metasnf_error(
                 missing_coclustering, " out of ", nrow(cocluster_df),
                 " pairs of observations did not appear in",
                 " any of the data list subsamples together. This function",

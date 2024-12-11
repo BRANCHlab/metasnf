@@ -12,7 +12,7 @@
     - [ ] add benchmarking code for figure 19
     - [x] strip "save_heatmap" /ggsave /etc. calls in vignettes and instead make a mention of how to use it
 - [ ] general
-    - [ ] replace stops/warnings with cli_abort / cli_warn
+    - [x] replace stops/warnings/alerts with cli wrapper functions
     - [ ] replace "subjectkey" and "subject" phrasing with more generic "uid" and "observation"
     - [ ] typo checking
     - [ ] more explicit documentation (nothing like, param settings_matrix A settings matrix)

@@ -81,7 +81,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     all_subjects <- full_dl[[1]][[1]]$"uid"
     # Quick check to make sure the train subjects are all in the full list
     if (!all(train_subjects %in% all_subjects)) {
-        stop(
+        metasnf_error(
             "\n\nAt least one subject from the `train_solutions_matrix`",
             "argument is missing from the `full_dl` argument.",
             " Please ensure that all subjects in the given solutions matrix",
@@ -118,11 +118,9 @@ lp_solutions_matrix <- function(train_solutions_matrix,
         )
     } else {
         if (nrow(weights_matrix) != nrow(train_solutions_matrix)) {
-            stop(
-                paste0(
-                    "Weights_matrix and train_solutions_matrix",
-                    " should have the same number of rows."
-                )
+            metasnf_error(
+                "Weights_matrix and train_solutions_matrix",
+                " should have the same number of rows."
             )
         }
     }

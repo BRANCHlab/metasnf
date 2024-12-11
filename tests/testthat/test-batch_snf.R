@@ -1,6 +1,3 @@
-#library(metasnf)
-#library(testthat)
-
 ###############################################################################
 # batch_snf()
 ###############################################################################
@@ -32,4 +29,3 @@ test_that("function and parallel equivalent run and give equal results", {
     )
     expect_equal(solutions_matrix, solutions_matrix_parallel)
 })
-

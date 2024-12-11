@@ -175,7 +175,7 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
     # Ensure one of data list or target list is not NULL
     ###########################################################################
     if (is.null(dl) && is.null(tl)) {
-        stop("At least one of `dl` or `tl` must be provided.")
+        metasnf_error("At least one of `dl` or `tl` must be provided.")
     }
     ###########################################################################
     # Suppress warnings related to non-standard evaluation
@@ -200,7 +200,7 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
             dplyr::ends_with("_pval")
         )
     if (ncol(extended_solutions_matrix) == 2) {
-        stop(
+        metasnf_error(
             "extended_solutions_matrix is missing p-value columns. Did you",
             " provide an unextended solutions matrix instead?"
         )

@@ -176,7 +176,7 @@ auto_plot <- function(solutions_matrix_row = NULL,
                       verbose = FALSE) {
     null_data_count <- is.null(solutions_matrix_row) + is.null(cluster_df)
     if (null_data_count != 1) {
-        stop(
+        metasnf_error(
             "This function requires cluster membership information to be",
             " provided through exactly one of the `solutions_matrix_row` or",
             " `cluster_df` arguments."
@@ -193,7 +193,7 @@ auto_plot <- function(solutions_matrix_row = NULL,
     # Generating the feature dataframe
     ###########################################################################
     if (is.null(dl) && is.null(tl)) {
-        stop("Please provide either `dl` or `tl`.")
+        metasnf_error("Please provide either `dl` or `tl`.")
     }
     dl_df <- metasnf::collapse_dl(c(dl, tl))
     ###########################################################################
@@ -202,7 +202,7 @@ auto_plot <- function(solutions_matrix_row = NULL,
     solutions_matrix_subjects <- sort(cluster_df$"uid")
     dl_subjects <- sort(dl_df$"uid")
     if (!identical(solutions_matrix_subjects, dl_subjects)) {
-        stop(
+        metasnf_error(
             "The uids in the solutions_matrix and DL do not match."
         )
     }
