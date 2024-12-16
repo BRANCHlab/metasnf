@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_list.R
 \name{new_data_list}
 \alias{new_data_list}
-\title{Constructor for data_list class object}
+\title{Constructor for \code{data_list} class object}
 \usage{
 new_data_list(dll)
 }
@@ -13,6 +13,6 @@ new_data_list(dll)
 A \code{data_list} object, which is a nested list with class \code{data_list}.
 }
 \description{
-Constructor for data_list class object
+Constructor for \code{data_list} class object
 }
 \keyword{internal}

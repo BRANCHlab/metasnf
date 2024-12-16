@@ -545,7 +545,7 @@ is_data_list <- function(x) {
     inherits(x, "data_list")
 }
 
-#' Constructor for data_list class object
+#' Constructor for `data_list` class object
 #' 
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
@@ -553,7 +553,7 @@ is_data_list <- function(x) {
 new_data_list <- function(dll) {
     stopifnot(is.list(dll))
     stopifnot(is.list(dll[[1]]))
-    dl <- structure(dll, class = "data_list")
+    dl <- structure(dll, class = c("data_list", "list"))
     attr(dl, "uids") <- dl[[1]]$"data"$"uid"
     #attr(dl, "observations") <- length(attributes(dl)$"uids")
     return(dl)

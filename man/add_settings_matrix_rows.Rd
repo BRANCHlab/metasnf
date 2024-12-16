@@ -6,7 +6,6 @@
 \usage{
 add_settings_matrix_rows(
   settings_matrix,
-  seed = NULL,
   nrows = 0,
   min_removed_inputs = 0,
   max_removed_inputs = sum(startsWith(colnames(settings_matrix), "inc_")) - 1,
@@ -35,9 +34,6 @@ add_settings_matrix_rows(
 }
 \arguments{
 \item{settings_matrix}{The existing settings matrix}
-
-\item{seed}{set a seed for the random matrix generation. Setting this value
-will change the seed of the global environment.}
 
 \item{nrows}{Number of rows to generate for the settings matrix.}
 
@@ -141,7 +137,7 @@ increases. If a new random row has matched an existing row \code{retry_limit}
 number of times, the function will terminate.}
 }
 \value{
-settings_matrix A settings matrix
+A settings matrix
 }
 \description{
 Add settings matrix rows
