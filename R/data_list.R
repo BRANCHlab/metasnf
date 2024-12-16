@@ -566,12 +566,19 @@ new_data_list <- function(dll) {
 #' @return If dll has a valid structure for a `data_list` class object, 
 #'  returns the input unchanged. Otherwise, raises an error.
 validate_data_list <- function(dll) {
-    check_dll_duplicate_features(dll)
+    # 1. Input is a list
     check_dll_inherits_list(dll)
+    # 2. Input list stores 4-item lists
     check_dll_four_subitems(dll)
+    # 3. Nested 4-items have proper names
     check_dll_subitem_names(dll)
+    # 4. Nested 4-items have proper classes
     check_dll_subitem_classes(dll)
+    # 5. Input has no duplicate features
+    check_dll_duplicate_features(dll)
+    # 6. Input has properly formatted UID columns
     check_dll_uid(dll)
+    # 7. Input has valid types specified
     check_dll_types(dll)
     return(dll)
 }
