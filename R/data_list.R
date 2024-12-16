@@ -916,6 +916,56 @@ print.data_list <- function(x, ...) {
         }
     }
 }
+
+#' Summarize a data list
+#'
+#' @param dl A nested list of input data from `data_list()`.
+#'
+#' @param scope The level of detail for the summary. Options are:
+#' - "component" (default): One row per component (dataframe) in the data list.
+#' - "feature": One row for each feature in the data list.
+#'
+#' @return "data.frame"-class object summarizing all components (or features if
+#' scope == "component").
+#'
+#' @export
+summarize_dl <- function(dl, scope = "component") {
+    if (scope == "component") {
+        dl_summary <- data.frame(
+            name = unlist(lapply(dl, function(x) x$"name")),
+            type = unlist(lapply(dl, function(x) x$"type")),
+            domain = unlist(domains(dl)),
+            length = unlist(lapply(dl, function(x) dim(x$"data")[1])),
+            width = unlist(lapply(dl, function(x) dim(x$"data")[2]))
+        )
+    } else if (scope == "feature") {
+        dl_df <- as.data.frame(dl)
+        dl_df <- dl_df[, colnames(dl_df) != "uid"]
+        types <- dl |>
+            lapply(
+                function(x) {
+                    rep(x$"type", ncol(x$"data") - 1)
+                }
+            ) |>
+            unlist()
+        domains <- dl |>
+            lapply(
+                function(x) {
+                    rep(x$"domain", ncol(x$"data") - 1)
+                }
+            ) |>
+            unlist()
+        var_names <- colnames(dl_df[, colnames(dl_df) != "uid"])
+        dl_summary <- data.frame(
+            name = var_names,
+            type = types,
+            domain = domains
+        )
+    }
+    rownames(dl_summary) <- seq_len(nrow(dl_summary))
+    return(dl_summary)
+}
+
 #' Coerce a `data_list` class object into a `data.frame` class object
 #'
 #' Horizontally joins data frames within a data list into a single data frame,
@@ -944,4 +994,22 @@ as.data.frame.data_list <- function(x,
             ... = ...
         )
     return(dl_df)
+}
+
+#' Extract observations from a metasnf object
+#'
+#' This function returns a character vector of the UIDs of the observations
+#' stored within an object from the metasnf package.
+#'
+#' @param x The object to extract observations from.
+#' @return Character vector of the UIDs of the observations stored in x.
+#' @export
+uids <- function(x) {
+    UseMethod("observations")
+}
+
+#' @export
+uids.data_list <- function(x) {
+    uid_vector <- attributes(x)$"uids"
+    return(uid_vector)
 }
