@@ -470,7 +470,7 @@ cocluster_heatmap <- function(cocluster_df,
     if (!is.null(dl)) {
         cluster_solution <- dplyr::left_join(
             cluster_solution,
-            collapse_dl(dl),
+            as.data.frame(dl),
             by = "uid"
         )
     }

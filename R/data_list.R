@@ -302,7 +302,7 @@ summarize_dl <- function(dl, scope = "component") {
             width = unlist(lapply(dl, function(x) dim(x$"data")[2]))
         )
     } else if (scope == "feature") {
-        dl_df <- collapse_dl(dl)
+        dl_df <- as.data.frame(dl)
         dl_df <- dl_df[, colnames(dl_df) != "uid"]
         types <- dl |>
             lapply(
@@ -382,8 +382,7 @@ dl_variable_summary <- function(dl) {
         ) |>
         unlist()
     merged_df <- dl |>
-        collapse_dl() |>
-        data.frame()
+        as.data.frame()
     var_names <- colnames(merged_df[, colnames(merged_df) != "uid"])
     variable_level_summary <- data.frame(
         name = var_names,
@@ -487,7 +486,7 @@ rename_dl <- function(dl, name_mapping) {
 #'
 #' @export
 get_dl_uids <- function(dl, prefix = FALSE) {
-    dl_df <- collapse_dl(dl)
+    dl_df <- as.data.frame(dl)
     uids <- dl_df$"uid"
     if (prefix) {
         return(uids)
@@ -913,4 +912,33 @@ print.data_list <- function(x, ...) {
             cat("\n")
         }
     }
+}
+#' Coerce a `data_list` class object into a `data.frame` class object
+#'
+#' Horizontally joins data frames within a data list into a single data frame,
+#' using the `uid` attribute as the joining key.
+#'
+#' @param x A `data_list` class object.
+#' @param row.names Additional parameter passed to `as.data.frame()`.
+#' @param optional Additional parameter passed to `as.data.frame()`.
+#' @param ... Additional parameter passed to `as.data.frame()`.
+#' @return dl_df A `data.frame` class object with all the features and
+#'  observations of `dl`.
+#' @export
+as.data.frame.data_list <- function(x,
+                                    row.names = NULL,
+                                    optional = FALSE,
+                                    ...) {
+    data_only <- x |> lapply(
+        function(component) {
+            return(component$"data")
+        }
+    )
+    dl_df <- merge_df_list(data_only) |>
+        as.data.frame(
+            row.names = row.names,
+            optional = optional,
+            ... = ...
+        )
+    return(dl_df)
 }

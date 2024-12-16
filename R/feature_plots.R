@@ -195,7 +195,7 @@ auto_plot <- function(solutions_matrix_row = NULL,
     if (is.null(dl) && is.null(tl)) {
         metasnf_error("Please provide either `dl` or `tl`.")
     }
-    dl_df <- metasnf::collapse_dl(c(dl, tl))
+    dl_df <- as.data.frame(dl)
     ###########################################################################
     # Ensure solutions_matrix and dl_df have the same uid column
     ###########################################################################

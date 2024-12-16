@@ -586,7 +586,7 @@ calc_assoc_pval_matrix <- function(dl,
     ###########################################################################
     # Build a single data.frame that contains all data
     ###########################################################################
-    merged_df <- collapse_dl(dl)
+    merged_df <- as.data.frame(dl)
     merged_df <- merged_df[, colnames(merged_df) != "uid"]
     ###########################################################################
     # Build data.frame containing the types of features in merged_df

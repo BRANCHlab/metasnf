@@ -856,7 +856,7 @@ cell_significance_fn <- function(data) {
 #' @export
 assemble_data <- function(data, dl) {
     if (!is.null(dl)) {
-        merged_df <- collapse_dl(dl)
+        merged_df <- as.data.frame(dl)
     }
     if (is.null(data)) {
         if (!is.null(dl)) {
