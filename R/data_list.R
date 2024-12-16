@@ -555,7 +555,6 @@ new_data_list <- function(dll) {
     stopifnot(is.list(dll[[1]]))
     dl <- structure(dll, class = "data_list")
     attr(dl, "uids") <- dl[[1]]$"data"$"uid"
-    #attr(dl, "uids") <- dll[[1]]$"data"$"uid"
     #attr(dl, "observations") <- length(attributes(dl)$"uids")
     return(dl)
 }
