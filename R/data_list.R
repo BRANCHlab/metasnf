@@ -1,4 +1,4 @@
-#' Build a data list
+#' Build a `data_list` class object
 #'
 #' `data_list()` constructs a data list object which inherits from classes
 #' `data_list` and `list`. This object is the primary way in which features to

@@ -82,12 +82,8 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     # Quick check to make sure the train subjects are all in the full list
     if (!all(train_subjects %in% all_subjects)) {
         metasnf_error(
-            "\n\nAt least one subject from the `train_solutions_matrix`",
-            "argument is missing from the `full_dl` argument.",
-            " Please ensure that all subjects in the given solutions matrix",
-            " are present in your full data list. E.g., ensure that:",
-            "\n\nall(get_cluster_df(train_solutions_matrix)$\"uid\"",
-            " %in% collapse_dl(full_dl)$\"uid\")"
+            "Not all subjects in the provided solutions matrix are present in",
+            " the provided data list."
         )
     }
     test_subjects <- all_subjects[!all_subjects %in% train_subjects]

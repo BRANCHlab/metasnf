@@ -1,12 +1,9 @@
 #' Jitter plot separating a feature by cluster
 #'
 #' @param df A data.frame containing cluster column and the feature to plot.
-#'
 #' @param feature The feature to plot.
-#'
 #' @return A jitter+violin plot (class "gg", "ggplot") showing the
-#' distribution of a feature across clusters.
-#'
+#'  distribution of a feature across clusters.
 #' @export
 jitter_plot <- function(df, feature) {
     ###########################################################################
@@ -127,8 +124,8 @@ bar_plot <- function(df, feature) {
 #' Automatically plot features across clusters
 #'
 #' Given a single row of a solutions matrix and data provided through
-#' `dl` and/or `tl` arguments, this function will
-#' return a series of bar and/or jitter plots based on feature types.
+#' a data list, this function will return a series of bar and/or
+#' jitter plots based on feature types.
 #'
 #' @param solutions_matrix_row A single row of a solutions matrix.
 #'
@@ -136,8 +133,6 @@ bar_plot <- function(df, feature) {
 #'
 #' @param cluster_df Directly provide a cluster_df rather than a solutions
 #' matrix. Useful if plotting data from label propagated results.
-#'
-#' @param tl A target list containing data to plot.
 #'
 #' @param return_plots If `TRUE`, the function will return a list of plots.
 #' If FALSE, the function will instead return the full data frame used for
@@ -166,7 +161,6 @@ bar_plot <- function(df, feature) {
 auto_plot <- function(solutions_matrix_row = NULL,
                       dl = NULL,
                       cluster_df = NULL,
-                      tl = NULL,
                       return_plots = TRUE,
                       save = NULL,
                       jitter_width = 6,
@@ -192,9 +186,6 @@ auto_plot <- function(solutions_matrix_row = NULL,
     ###########################################################################
     # Generating the feature dataframe
     ###########################################################################
-    if (is.null(dl) && is.null(tl)) {
-        metasnf_error("Please provide either `dl` or `tl`.")
-    }
     dl_df <- as.data.frame(dl)
     ###########################################################################
     # Ensure solutions_matrix and dl_df have the same uid column
@@ -203,7 +194,8 @@ auto_plot <- function(solutions_matrix_row = NULL,
     dl_subjects <- sort(dl_df$"uid")
     if (!identical(solutions_matrix_subjects, dl_subjects)) {
         metasnf_error(
-            "The uids in the solutions_matrix and DL do not match."
+            "The UIDs in the provided solutions matrix row and data list must",
+            " match."
         )
     }
     ###########################################################################

@@ -1,68 +1,41 @@
 #' Plot heatmap of similarity matrix
 #'
 #' @param similarity_matrix A similarity matrix
-#'
 #' @param order Vector of numbers to reorder the similarity matrix (and data
-#' if provided). Overwrites ordering specified by cluster_solution param.
-#'
+#'  if provided). Overwrites ordering specified by cluster_solution param.
 #' @param cluster_solution Vector containing cluster assignments.
-#'
 #' @param scale_diag Method of rescaling matrix diagonals. Can be "none"
-#' (don't change diagonals), "mean" (replace diagonals with average value of
-#' off-diagonals), or "zero" (replace diagonals with 0).
-#'
+#'  (don't change diagonals), "mean" (replace diagonals with average value of
+#'  off-diagonals), or "zero" (replace diagonals with 0).
 #' @param log_graph If TRUE, log transforms the graph.
-#'
 #' @param cluster_rows Parameter for ComplexHeatmap::Heatmap.
-#'
 #' @param cluster_columns Parameter for ComplexHeatmap::Heatmap.
-#'
 #' @param show_row_names Parameter for ComplexHeatmap::Heatmap.
-#'
 #' @param show_column_names Parameter for ComplexHeatmap::Heatmap.
-#'
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @param data A dataframe containing elements requested for annotation.
-#'
 #' @param left_bar Named list of strings, where the strings are features in
-#' df that should be used for a barplot annotation on the left of the plot and
-#' the names are the names that will be used to caption the plots and their
-#' legends.
-#'
+#'  df that should be used for a barplot annotation on the left of the plot and
+#'  the names are the names that will be used to caption the plots and their
+#'  legends.
 #' @param left_hm Like left_bar, but with a heatmap annotation instead of a
-#' barplot annotation.
-#'
+#'  barplot annotation.
 #' @param right_bar See left_bar.
-#'
 #' @param top_bar See left_bar.
-#'
 #' @param bottom_bar See left_bar.
-#'
 #' @param right_hm See left_hm.
-#'
 #' @param top_hm See left_hm.
-#'
 #' @param bottom_hm See left_hm.
-#'
 #' @param annotation_colours Named list of heatmap annotations and their
 #'  colours.
-#'
 #' @param min_colour Colour used for the lowest value in the heatmap.
-#'
 #' @param max_colour Colour used for the highest value in the heatmap.
-#'
 #' @param split_vector A vector of partition indices.
-#'
 #' @param row_split Standard parameter of `ComplexHeatmap::Heatmap`.
-#'
 #' @param column_split Standard parameter of `ComplexHeatmap::Heatmap`.
-#'
 #' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
-#'
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
-#' that displays the similarities between observations in the provided matrix.
-#'
+#'  that displays the similarities between observations in the provided matrix.
 #' @export
 similarity_matrix_heatmap <- function(similarity_matrix,
                                       order = NULL,
