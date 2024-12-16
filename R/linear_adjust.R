@@ -38,7 +38,7 @@ linear_adjust <- function(dl, unwanted_signal_list, sig_digs = NULL) {
     rhs <- paste0(unwanted_vars, collapse = " + ")
     # Outer lapply operates on each component of the data list
     numeric_vectors <- c("continuous", "discrete", "numeric", "ordinal")
-    adjusted_dl <- dl |> lapply(
+    adjusted_dl <- dl |> dlapply(
         function(x) {
             if (x$"type" %in% numeric_vectors) {
                 non_sub_cols <- colnames(x$"data") != "uid"
