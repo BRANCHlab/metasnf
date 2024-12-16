@@ -834,12 +834,12 @@ dlapply.data_list <- function(X, FUN, ...) {
     validation <- tryCatch(
         {
             result <- validate_data_list(result)
-            class(result) <- "data_list"
+            result <- new_data_list(result)
             result
         },
         error = function(e) {
             metasnf_warning(
-                "Result could not be assigned class `data_list`."
+                "Result could not be coerced into class `data_list`."
             )
             result
         }
