@@ -2,7 +2,7 @@
 % Please edit documentation in R/settings_matrix.R
 \name{generate_settings_matrix}
 \alias{generate_settings_matrix}
-\title{Build a \code{data_list} class object}
+\title{Build a settings matrix}
 \usage{
 generate_settings_matrix(
   dl,
