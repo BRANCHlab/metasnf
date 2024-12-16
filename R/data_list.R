@@ -341,23 +341,6 @@ domains <- function(dl) {
     return(domain_list)
 }
 
-#' Collapse a dl into a single dataframe
-#'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @return A "data.frame"-formatted version of the provided data list.
-#'
-#' @export
-collapse_dl <- function(dl) {
-    data_only <- dl |> lapply(
-        function(x) {
-            return(x$"data")
-        }
-    )
-    merged_df <- merge_df_list(data_only)
-    return(merged_df)
-}
-
 #' Variable-level summary of a data list
 #'
 #' @param dl A nested list of input data from `data_list()`.
