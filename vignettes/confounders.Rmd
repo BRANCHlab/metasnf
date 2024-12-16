@@ -64,6 +64,7 @@ What does the data look like?
 
 ```{r}
 library(metasnf)
+
 library(SNFtool)
 library(ggplot2)
 
@@ -282,7 +283,7 @@ adjusted_dl <- linear_adjust(dl, unwanted_signal_list1)
 
 # Combine the data from the two data_lists the second list is being merged
 # only because it also has the position data, for plotting purposes
-merged_df <- collapse_dl(c(adjusted_dl, unwanted_signal_list2))
+merged_df <- as.data.frame(c(adjusted_dl, unwanted_signal_list2))
 
 merged_df |>
     ggplot(aes(x = blocks, y = assists, shape = level, colour = position)) +
@@ -292,7 +293,7 @@ merged_df |>
 # Correcting too many things!
 adjusted_dl2 <- linear_adjust(dl, unwanted_signal_list2)
 
-merged_df2 <- collapse_dl(c(adjusted_dl2, unwanted_signal_list2))
+merged_df2 <- as.data.frame(c(adjusted_dl2, unwanted_signal_list2))
 
 merged_df2 |>
     ggplot(aes(x = blocks, y = assists, shape = level, colour = position)) +

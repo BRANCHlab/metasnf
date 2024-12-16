@@ -174,7 +174,7 @@ The colours `red3`, `pink1`, etc. are built-in R colours that you can browse by 
 For reference, the code below shows how you would achieve these annotations using standard `ComplexHeatmap` syntax.
 
 ```{r eval = FALSE}
-merged_df <- collapse_dl(data_list)
+merged_df <- as.data.frame(data_list)
 order <- sort(cluster_solution, index.return = TRUE)$"ix"
 merged_df <- merged_df[order, ]
 

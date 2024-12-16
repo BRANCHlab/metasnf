@@ -37,9 +37,7 @@ The code below goes over what the default clustering looks like.
 # Load the package
 library(metasnf)
 
-# Start by making a data list containing all our dataframes to more easily
-# identify subjects without missing data
-full_data_list <- data_list(
+dl <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -48,53 +46,15 @@ full_data_list <- data_list(
     uid = "unique_id"
 )
 
-# Partition into a data and target list (optional)
-data_list <- full_data_list[1:3]
-target_list <- full_data_list[4:5]
-
-# Specifying 5 different sets of settings for SNF
 set.seed(42)
 settings_matrix <- generate_settings_matrix(
-    data_list,
+    dl,
     nrow = 5,
     max_k = 40
 )
-
-# This matrix has clustering solutions for each of the 5 SNF runs!
-solutions_matrix <- batch_snf(data_list, settings_matrix)
-
-extended_solutions <- extend_solutions(
-    solutions_matrix,
-    target_list,
-    cat_test = "fisher_exact"
-)
 ```
 
-```{r eval = FALSE}
-clust_esm_manhattan <- esm_manhattan_plot(
-    extended_solutions,
-    threshold = 0.05,
-    bonferroni_line = TRUE
-)
-```
-
-```{r eval = FALSE, echo = FALSE}
-ggplot2::ggsave(
-    "clust_esm_manhattan.png",
-    clust_esm_manhattan,
-    width = 5,
-    height = 5,
-    dpi = 100
-)
-```
-
-<center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/clust_esm_manhattan_l.png)
-</center>
-
-The Manhattan plot shows the p-values (y-axis) of the associations between our target features (x-axis) and each cluster solution we calculated (colour) for each row of the settings matrix.
-
-The information about the clustering used is tucked away in the settings matrix:
+Information about the clustering used by default is stored in the settings matrix:
 
 ```{r}
 settings_matrix$"clust_alg"
@@ -165,7 +125,7 @@ clust_algs_list <- generate_clust_algs_list(
 # Specifying 5 different sets of settings for SNF
 set.seed(42)
 settings_matrix <- generate_settings_matrix(
-    data_list,
+    dl,
     nrow = 10,
     max_k = 40,
     clustering_algorithms = clust_algs_list
@@ -178,7 +138,7 @@ Then, make sure to provide the `clust_algs_list` once more during the call to `b
 
 ```{r eval = FALSE}
 solutions_matrix <- batch_snf(
-    data_list,
+    dl,
     settings_matrix,
     clust_algs_list = clust_algs_list
 )
@@ -255,7 +215,7 @@ This is particularly useful for clustering procedures where the transition from 
 
 ```{r}
 batch_snf_results <- batch_snf(
-    data_list,
+    dl,
     settings_matrix,
     clust_algs_list = clust_algs_list,
     return_similarity_matrices = TRUE
@@ -323,7 +283,7 @@ Whichever matrix values had the maximum similarity will now have a distance of 0
 library(dbscan)
 library(ggplot2)
 
-data_list <- data_list(
+dl <- data_list(
     list(
         data = expression_df,
         name = "genes_1_and_2_exp",
@@ -341,12 +301,12 @@ data_list <- data_list(
 
 set.seed(42)
 settings_matrix <- generate_settings_matrix(
-    data_list,
+    dl,
     nrow = 5
 )
 
 batch_snf_results <- batch_snf(
-    data_list,
+    dl,
     settings_matrix,
     return_similarity_matrices = TRUE
 )
