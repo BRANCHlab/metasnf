@@ -631,7 +631,7 @@ check_dll_four_subitems <- function(dll) {
             "Each data list component must be a 4-item list",
             " containing data (data.frame), name (character),",
             " domain (character), and type (character).",
-            env = 2
+            env = 3
         )
     }
 }
