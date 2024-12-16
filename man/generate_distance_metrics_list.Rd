@@ -5,24 +5,24 @@
 \title{Generate a list of distance metrics}
 \usage{
 generate_distance_metrics_list(
-  continuous_distances = NULL,
-  discrete_distances = NULL,
-  ordinal_distances = NULL,
-  categorical_distances = NULL,
-  mixed_distances = NULL,
+  cnt_dist_fns = NULL,
+  dsc_dist_fns = NULL,
+  ord_dist_fns = NULL,
+  cat_dist_fns = NULL,
+  mix_dist_fns = NULL,
   keep_defaults = TRUE
 )
 }
 \arguments{
-\item{continuous_distances}{A named list of distance metric functions}
+\item{cnt_dist_fns}{A named list of distance metric functions}
 
-\item{discrete_distances}{A named list of distance metric functions}
+\item{dsc_dist_fns}{A named list of distance metric functions}
 
-\item{ordinal_distances}{A named list of distance metric functions}
+\item{ord_dist_fns}{A named list of distance metric functions}
 
-\item{categorical_distances}{A named list of distance metric functions}
+\item{cat_dist_fns}{A named list of distance metric functions}
 
-\item{mixed_distances}{A named list of distance metric functions}
+\item{mix_dist_fns}{A named list of distance metric functions}
 
 \item{keep_defaults}{If TRUE (default), prepend the base distance metrics
 (euclidean and standard normalized euclidean)}
@@ -45,7 +45,7 @@ my_distance_metric <- function(df) {
 }
 
 distance_metrics_list <- generate_distance_metrics_list(
-    continuous_distances = list(
+    cnt_dist_fns = list(
          "my_distance_metric" = my_distance_metric
     )
 )
@@ -54,19 +54,19 @@ distance_metrics_list <- generate_distance_metrics_list(
 # This will contain only user-provided clustering algorithms
 
 distance_metrics_list <- generate_distance_metrics_list(
-    continuous_distances = list(
+    cnt_dist_fns = list(
          "my_distance_metric" = my_distance_metric
     ),
-    discrete_distances = list(
+    dsc_dist_fns = list(
          "my_distance_metric" = my_distance_metric
     ),
-    ordinal_distances = list(
+    ord_dist_fns = list(
          "my_distance_metric" = my_distance_metric
     ),
-    categorical_distances = list(
+    cat_dist_fns = list(
          "my_distance_metric" = my_distance_metric
     ),
-    mixed_distances = list(
+    mix_dist_fns = list(
          "my_distance_metric" = my_distance_metric
     ),
     keep_defaults = FALSE

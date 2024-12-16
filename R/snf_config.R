@@ -60,8 +60,7 @@ snf_config <- function(dl,
                        ord_dist_fns = NULL,
                        cat_dist_fns = NULL,
                        mix_dist_fns = NULL,
-                       keep_defaults = TRUE,
-                       ) {
+                       keep_defaults = TRUE) {
     scl <- NULL
     scl <- validate_snf_config(scl)
     sc <- new_snf_config(scl)

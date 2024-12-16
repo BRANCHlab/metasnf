@@ -138,16 +138,16 @@ lp_solutions_matrix <- function(train_solutions_matrix,
         k <- current_row$"k"
         alpha <- current_row$"alpha"
         t <- current_row$"t"
-        cont_dist <- current_row$"cont_dist"
-        disc_dist <- current_row$"disc_dist"
+        cnt_dist <- current_row$"cnt_dist"
+        dsc_dist <- current_row$"dsc_dist"
         ord_dist <- current_row$"ord_dist"
         cat_dist <- current_row$"cat_dist"
         mix_dist <- current_row$"mix_dist"
-        cont_dist_fn <- distance_metrics_list$"continuous_distance"[[cont_dist]]
-        disc_dist_fn <- distance_metrics_list$"discrete_distance"[[disc_dist]]
-        ord_dist_fn <- distance_metrics_list$"ordinal_distance"[[ord_dist]]
-        cat_dist_fn <- distance_metrics_list$"categorical_distance"[[cat_dist]]
-        mix_dist_fn <- distance_metrics_list$"mixed_distance"[[mix_dist]]
+        cnt_dist_fn <- distance_metrics_list$"cnt_dist_fns"[[cnt_dist]]
+        dsc_dist_fn <- distance_metrics_list$"dsc_dist_fns"[[dsc_dist]]
+        ord_dist_fn <- distance_metrics_list$"ord_dist_fns"[[ord_dist]]
+        cat_dist_fn <- distance_metrics_list$"cat_dist_fns"[[cat_dist]]
+        mix_dist_fn <- distance_metrics_list$"mix_dist_fns"[[mix_dist]]
         weights_row <- weights_matrix[i, , drop = FALSE]
         #######################################################################
         # The actual SNF
@@ -158,8 +158,8 @@ lp_solutions_matrix <- function(train_solutions_matrix,
             k = k,
             alpha = alpha,
             t = t,
-            cont_dist_fn = cont_dist_fn,
-            disc_dist_fn = disc_dist_fn,
+            cnt_dist_fn = cnt_dist_fn,
+            dsc_dist_fn = dsc_dist_fn,
             ord_dist_fn = ord_dist_fn,
             cat_dist_fn = cat_dist_fn,
             mix_dist_fn = mix_dist_fn,

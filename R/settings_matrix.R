@@ -40,11 +40,11 @@
 #'   eigen-gap or rotation cost heuristic respectively. You can learn more
 #'   about this parameter here:
 #'   https://branchlab.github.io/metasnf/articles/clustering_algorithms.html.
-#' * A column named "cont_dist": Specification of which distance metric will be
+#' * A column named "cnt_dist": Specification of which distance metric will be
 #'   used for dataframes of purely continuous data. You can learn about this
 #'   metric and its defaults here:
 #'   https://branchlab.github.io/metasnf/articles/distance_metrics.html
-#' * A column named "disc_dist": Like above, but for discrete dataframes.
+#' * A column named "dsc_dist": Like above, but for discrete dataframes.
 #' * A column named "ord_dist": Like above, but for ordinal dataframes.
 #' * A column named "cat_dist": Like above, but for categorical dataframes.
 #' * A column named "mix_dist": Like above, but for mixed-type (e.g.,
@@ -170,8 +170,8 @@ generate_settings_matrix <- function(dl,
         "t",
         "snf_scheme",
         "clust_alg",
-        "cont_dist",
-        "disc_dist",
+        "cnt_dist",
+        "dsc_dist",
         "ord_dist",
         "cat_dist",
         "mix_dist",
@@ -530,24 +530,24 @@ add_settings_matrix_rows <- function(settings_matrix,
         # 8. Distance metrics
         #######################################################################
         if (is.null(continuous_distances)) {
-            cont_dist <- sample(
-                1:length(distance_metrics_list$"continuous_distances"),
+            cnt_dist <- sample(
+                1:length(distance_metrics_list$"cnt_dist_fns"),
                 1
             )
         } else {
-            cont_dist <- resample(continuous_distances, 1)
+            cnt_dist <- resample(continuous_distances, 1)
         }
         if (is.null(discrete_distances)) {
-            disc_dist <- sample(
-                1:length(distance_metrics_list$"discrete_distances"),
+            dsc_dist <- sample(
+                1:length(distance_metrics_list$"dsc_dist_fns"),
                 1
             )
         } else {
-            disc_dist <- resample(discrete_distances, 1)
+            dsc_dist <- resample(discrete_distances, 1)
         }
         if (is.null(ordinal_distances)) {
             ord_dist <- sample(
-                1:length(distance_metrics_list$"ordinal_distances"),
+                1:length(distance_metrics_list$"ord_dist_fns"),
                 1
             )
         } else {
@@ -555,7 +555,7 @@ add_settings_matrix_rows <- function(settings_matrix,
         }
         if (is.null(categorical_distances)) {
             cat_dist <- sample(
-                1:length(distance_metrics_list$"categorical_distances"),
+                1:length(distance_metrics_list$"cat_dist_fns"),
                 1
             )
         } else {
@@ -563,7 +563,7 @@ add_settings_matrix_rows <- function(settings_matrix,
         }
         if (is.null(mixed_distances)) {
             mix_dist <- sample(
-                1:length(distance_metrics_list$"mixed_distances"),
+                1:length(distance_metrics_list$"mix_dist_fns"),
                 1
             )
         } else {
@@ -579,8 +579,8 @@ add_settings_matrix_rows <- function(settings_matrix,
             t,
             snf_scheme,
             clust_alg,
-            cont_dist,
-            disc_dist,
+            cnt_dist,
+            dsc_dist,
             ord_dist,
             cat_dist,
             mix_dist,

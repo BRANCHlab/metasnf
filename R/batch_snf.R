@@ -287,16 +287,16 @@ batch_snf <- function(dl,
         k <- settings_matrix_row$"k"
         alpha <- settings_matrix_row$"alpha"
         t <- settings_matrix_row$"t"
-        cont_dist <- settings_matrix_row$"cont_dist"
-        disc_dist <- settings_matrix_row$"disc_dist"
+        cnt_dist <- settings_matrix_row$"cnt_dist"
+        dsc_dist <- settings_matrix_row$"dsc_dist"
         ord_dist <- settings_matrix_row$"ord_dist"
         cat_dist <- settings_matrix_row$"cat_dist"
         mix_dist <- settings_matrix_row$"mix_dist"
-        cont_dist_fn <- distance_metrics_list$"continuous_distance"[[cont_dist]]
-        disc_dist_fn <- distance_metrics_list$"discrete_distance"[[disc_dist]]
-        ord_dist_fn <- distance_metrics_list$"ordinal_distance"[[ord_dist]]
-        cat_dist_fn <- distance_metrics_list$"categorical_distance"[[cat_dist]]
-        mix_dist_fn <- distance_metrics_list$"mixed_distance"[[mix_dist]]
+        cnt_dist_fn <- distance_metrics_list$"cnt_dist_fns"[[cnt_dist]]
+        dsc_dist_fn <- distance_metrics_list$"dsc_dist_fns"[[dsc_dist]]
+        ord_dist_fn <- distance_metrics_list$"ord_dist_fns"[[ord_dist]]
+        cat_dist_fn <- distance_metrics_list$"cat_dist_fns"[[cat_dist]]
+        mix_dist_fn <- distance_metrics_list$"mix_dist_fns"[[mix_dist]]
         # Run SNF
         fused_network <- snf_step(
             current_dl,
@@ -304,8 +304,8 @@ batch_snf <- function(dl,
             k = k,
             alpha = alpha,
             t = t,
-            cont_dist_fn = cont_dist_fn,
-            disc_dist_fn = disc_dist_fn,
+            cnt_dist_fn = cnt_dist_fn,
+            dsc_dist_fn = dsc_dist_fn,
             ord_dist_fn = ord_dist_fn,
             cat_dist_fn = cat_dist_fn,
             mix_dist_fn = mix_dist_fn,
@@ -428,9 +428,9 @@ drop_inputs <- function(settings_matrix_row, dl) {
 #' "categorical" (resulting in binary distances), or "mixed" (resulting in
 #' gower distances)
 #'
-#' @param cont_dist_fn distance metric function for continuous data
+#' @param cnt_dist_fn distance metric function for continuous data
 #'
-#' @param disc_dist_fn distance metric function for discrete data
+#' @param dsc_dist_fn distance metric function for discrete data
 #'
 #' @param ord_dist_fn distance metric function for ordinal data
 #'
@@ -446,8 +446,8 @@ drop_inputs <- function(settings_matrix_row, dl) {
 #' @export
 get_dist_matrix <- function(df,
                             input_type,
-                            cont_dist_fn,
-                            disc_dist_fn,
+                            cnt_dist_fn,
+                            dsc_dist_fn,
                             ord_dist_fn,
                             cat_dist_fn,
                             mix_dist_fn,
@@ -464,9 +464,9 @@ get_dist_matrix <- function(df,
     weights_row_trim <- cbind(weights_row_trim, missing_weights)
     weights_row_trim <- weights_row_trim[, colnames(df)]
     if (input_type == "continuous") {
-        dist_fn <- cont_dist_fn
+        dist_fn <- cnt_dist_fn
     } else if (input_type == "discrete") {
-        dist_fn <- disc_dist_fn
+        dist_fn <- dsc_dist_fn
     } else if (input_type == "ordinal") {
         dist_fn <- ord_dist_fn
     } else if (input_type == "categorical") {
@@ -482,41 +482,46 @@ get_dist_matrix <- function(df,
     return(dist_matrix)
 }
 
-#' Convert a data list to a similarity matrix through a variety of SNF schemes
+#' SNF schemes
+#'
+#' These functions manage the way in which input data frames are passed into
+#' SNF to yield a final fused network.
+#'
+#' snf_step: Manages which scheme function should be called.
+#'
+#' individual: The "vanilla" scheme - does distance matrix conversions of each input
+#' data frame separately before a single call to SNF fuses them into the final
+#' fused network.
+#'
+#' domain_merge: Given a data list, returns a new data list where all data objects of
+#' a particlar domain have been concatenated.
+#'
+#' two_step_merge: Individual dataframes into individual similarity matrices into one fused
+#' network per domain into one final fused network.
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @param scheme Which SNF system to use to achieve the final fused network.
-#'
 #' @param k k hyperparameter.
-#'
 #' @param alpha alpha/eta/sigma hyperparameter.
-#'
 #' @param t SNF number of iterations hyperparameter.
-#'
-#' @param cont_dist_fn distance metric function for continuous data.
-#'
-#' @param disc_dist_fn distance metric function for discrete data.
-#'
+#' @param cnt_dist_fn distance metric function for continuous data.
+#' @param dsc_dist_fn distance metric function for discrete data.
 #' @param ord_dist_fn distance metric function for ordinal data.
-#'
 #' @param cat_dist_fn distance metric function for categorical data.
-#'
 #' @param mix_dist_fn distance metric function for mixed data.
-#'
 #' @param weights_row dataframe row containing feature weights.
-#'
-#' @return fused_network The final fused network (class "matrix", "array")
-#' generated by SNF.
-#'
+#' @name snf_scheme
+NULL
+
+#' @rdname snf_scheme
 #' @export
 snf_step <- function(dl,
                      scheme,
                      k = 20,
                      alpha = 0.5,
                      t = 20,
-                     cont_dist_fn,
-                     disc_dist_fn,
+                     cnt_dist_fn,
+                     dsc_dist_fn,
                      ord_dist_fn,
                      cat_dist_fn,
                      mix_dist_fn,
@@ -532,8 +537,8 @@ snf_step <- function(dl,
     if (scheme %in% c("individual", 1)) {
         fused_network <- individual(
             dl,
-            cont_dist_fn = cont_dist_fn,
-            disc_dist_fn = disc_dist_fn,
+            cnt_dist_fn = cnt_dist_fn,
+            dsc_dist_fn = dsc_dist_fn,
             ord_dist_fn = ord_dist_fn,
             cat_dist_fn = cat_dist_fn,
             mix_dist_fn = mix_dist_fn,
@@ -545,8 +550,8 @@ snf_step <- function(dl,
     } else if (scheme %in% c("domain", 2)) {
         fused_network <- domain_merge(
             dl,
-            cont_dist_fn = cont_dist_fn,
-            disc_dist_fn = disc_dist_fn,
+            cnt_dist_fn = cnt_dist_fn,
+            dsc_dist_fn = dsc_dist_fn,
             ord_dist_fn = ord_dist_fn,
             cat_dist_fn = cat_dist_fn,
             mix_dist_fn = mix_dist_fn,
@@ -561,8 +566,8 @@ snf_step <- function(dl,
             k = k,
             alpha = alpha,
             t = t,
-            cont_dist_fn = cont_dist_fn,
-            disc_dist_fn = disc_dist_fn,
+            cnt_dist_fn = cnt_dist_fn,
+            dsc_dist_fn = dsc_dist_fn,
             ord_dist_fn = ord_dist_fn,
             cat_dist_fn = cat_dist_fn,
             mix_dist_fn = mix_dist_fn,
@@ -576,41 +581,14 @@ snf_step <- function(dl,
     return(fused_network)
 }
 
-#' Two step SNF
-#'
-#' Individual dataframes into individual similarity matrices into one fused
-#' network per domain into one final fused network.
-#'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @param k k hyperparameter.
-#'
-#' @param alpha alpha/eta/sigma hyperparameter.
-#'
-#' @param t SNF number of iterations hyperparameter.
-#'
-#' @param cont_dist_fn distance metric function for continuous data.
-#'
-#' @param disc_dist_fn distance metric function for discrete data.
-#'
-#' @param ord_dist_fn distance metric function for ordinal data.
-#'
-#' @param cat_dist_fn distance metric function for categorical data.
-#'
-#' @param mix_dist_fn distance metric function for mixed data.
-#'
-#' @param weights_row dataframe row containing feature weights.
-#'
-#' @return fused_network The final fused network (class "matrix", "array")
-#' generated by SNF.
-#'
+#' @rdname snf_scheme
 #' @export
 two_step_merge <- function(dl,
                            k = 20,
                            alpha = 0.5,
                            t = 20,
-                           cont_dist_fn,
-                           disc_dist_fn,
+                           cnt_dist_fn,
+                           dsc_dist_fn,
                            ord_dist_fn,
                            cat_dist_fn,
                            mix_dist_fn,
@@ -621,8 +599,8 @@ two_step_merge <- function(dl,
             get_dist_matrix(
                 df = x$"data",
                 input_type = x$"type",
-                cont_dist_fn = cont_dist_fn,
-                disc_dist_fn = disc_dist_fn,
+                cnt_dist_fn = cnt_dist_fn,
+                dsc_dist_fn = dsc_dist_fn,
                 ord_dist_fn = ord_dist_fn,
                 cat_dist_fn = cat_dist_fn,
                 mix_dist_fn = mix_dist_fn,
@@ -677,38 +655,11 @@ two_step_merge <- function(dl,
     return(fused_network)
 }
 
-#' SNF scheme: Domain merge
-#'
-#' Given a data list, returns a new data list where all data objects of
-#' a particlar domain have been concatenated.
-#'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @param k k hyperparameter.
-#'
-#' @param alpha alpha/eta/sigma hyperparameter.
-#'
-#' @param t SNF number of iterations hyperparameter.
-#'
-#' @param cont_dist_fn distance metric function for continuous data.
-#'
-#' @param disc_dist_fn distance metric function for discrete data.
-#'
-#' @param ord_dist_fn distance metric function for ordinal data.
-#'
-#' @param cat_dist_fn distance metric function for categorical data.
-#'
-#' @param mix_dist_fn distance metric function for mixed data.
-#'
-#' @param weights_row dataframe row containing feature weights.
-#'
-#' @return fused_network The final fused network (class "matrix", "array")
-#' generated by SNF.
-#'
+#' @rdname snf_scheme
 #' @export
 domain_merge <- function(dl,
-                         cont_dist_fn,
-                         disc_dist_fn,
+                         cnt_dist_fn,
+                         dsc_dist_fn,
                          ord_dist_fn,
                          cat_dist_fn,
                          mix_dist_fn,
@@ -760,8 +711,8 @@ domain_merge <- function(dl,
             get_dist_matrix(
                 df = x$"data",
                 input_type = x$"type",
-                cont_dist_fn = cont_dist_fn,
-                disc_dist_fn = disc_dist_fn,
+                cnt_dist_fn = cnt_dist_fn,
+                dsc_dist_fn = dsc_dist_fn,
                 ord_dist_fn = ord_dist_fn,
                 cat_dist_fn = cat_dist_fn,
                 mix_dist_fn = mix_dist_fn,
@@ -788,53 +739,26 @@ domain_merge <- function(dl,
     return(fused_network)
 }
 
-#' SNF Scheme: Individual
-#'
-#' The "vanilla" scheme - does distance matrix conversions of each input
-#' dataframe in a list and
-#'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @param k k hyperparameter.
-#'
-#' @param alpha alpha/eta/sigma hyperparameter.
-#'
-#' @param t SNF number of iterations hyperparameter.
-#'
-#' @param cont_dist_fn distance metric function for continuous data.
-#'
-#' @param disc_dist_fn distance metric function for discrete data.
-#'
-#' @param ord_dist_fn distance metric function for ordinal data.
-#'
-#' @param cat_dist_fn distance metric function for categorical data.
-#'
-#' @param mix_dist_fn distance metric function for mixed data.
-#'
-#' @param weights_row dataframe row containing feature weights.
-#'
-#' @return fused_network The final fused network (class "matrix", "array")
-#' generated by SNF.
-#'
+#' @rdname snf_scheme
 #' @export
 individual <- function(dl,
-                       cont_dist_fn,
-                       disc_dist_fn,
+                       k = 20,
+                       alpha = 0.5,
+                       t = 20,
+                       cnt_dist_fn,
+                       dsc_dist_fn,
                        ord_dist_fn,
                        cat_dist_fn,
                        mix_dist_fn,
-                       weights_row,
-                       k,
-                       alpha,
-                       t) {
+                       weights_row) {
     dist_list <- lapply(
         dl,
         function(x) {
             get_dist_matrix(
                 df = x$"data",
                 input_type = x$"type",
-                cont_dist_fn = cont_dist_fn,
-                disc_dist_fn = disc_dist_fn,
+                cnt_dist_fn = cnt_dist_fn,
+                dsc_dist_fn = dsc_dist_fn,
                 ord_dist_fn = ord_dist_fn,
                 cat_dist_fn = cat_dist_fn,
                 mix_dist_fn = mix_dist_fn,

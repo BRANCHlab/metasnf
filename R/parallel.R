@@ -142,16 +142,16 @@ batch_row_closure <- function(dl,
         k <- settings_matrix_row$"k"
         alpha <- settings_matrix_row$"alpha"
         t <- settings_matrix_row$"t"
-        cont_dist <- settings_matrix_row$"cont_dist"
-        disc_dist <- settings_matrix_row$"disc_dist"
+        cnt_dist <- settings_matrix_row$"cnt_dist"
+        dsc_dist <- settings_matrix_row$"dsc_dist"
         ord_dist <- settings_matrix_row$"ord_dist"
         cat_dist <- settings_matrix_row$"cat_dist"
         mix_dist <- settings_matrix_row$"mix_dist"
-        cont_dist_fn <- distance_metrics_list$"continuous_distance"[[cont_dist]]
-        disc_dist_fn <- distance_metrics_list$"discrete_distance"[[disc_dist]]
-        ord_dist_fn <- distance_metrics_list$"ordinal_distance"[[ord_dist]]
-        cat_dist_fn <- distance_metrics_list$"categorical_distance"[[cat_dist]]
-        mix_dist_fn <- distance_metrics_list$"mixed_distance"[[mix_dist]]
+        cnt_dist_fn <- distance_metrics_list$"cnt_dist_fns"[[cnt_dist]]
+        dsc_dist_fn <- distance_metrics_list$"dsc_dist_fns"[[dsc_dist]]
+        ord_dist_fn <- distance_metrics_list$"ord_dist_fns"[[ord_dist]]
+        cat_dist_fn <- distance_metrics_list$"cat_dist_fns"[[cat_dist]]
+        mix_dist_fn <- distance_metrics_list$"mix_dist_fns"[[mix_dist]]
         # Integrate data
         fused_network <- snf_step(
             current_dl,
@@ -159,8 +159,8 @@ batch_row_closure <- function(dl,
             k = k,
             alpha = alpha,
             t = t,
-            cont_dist_fn = cont_dist_fn,
-            disc_dist_fn = disc_dist_fn,
+            cnt_dist_fn = cnt_dist_fn,
+            dsc_dist_fn = dsc_dist_fn,
             ord_dist_fn = ord_dist_fn,
             cat_dist_fn = cat_dist_fn,
             mix_dist_fn = mix_dist_fn,

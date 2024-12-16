@@ -184,11 +184,11 @@ spectral clustering where the number of clusters is determined by the
 eigen-gap or rotation cost heuristic respectively. You can learn more
 about this parameter here:
 https://branchlab.github.io/metasnf/articles/clustering_algorithms.html.
-\item A column named "cont_dist": Specification of which distance metric will be
+\item A column named "cnt_dist": Specification of which distance metric will be
 used for dataframes of purely continuous data. You can learn about this
 metric and its defaults here:
 https://branchlab.github.io/metasnf/articles/distance_metrics.html
-\item A column named "disc_dist": Like above, but for discrete dataframes.
+\item A column named "dsc_dist": Like above, but for discrete dataframes.
 \item A column named "ord_dist": Like above, but for ordinal dataframes.
 \item A column named "cat_dist": Like above, but for categorical dataframes.
 \item A column named "mix_dist": Like above, but for mixed-type (e.g.,
