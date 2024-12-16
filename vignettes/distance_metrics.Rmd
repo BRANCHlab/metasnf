@@ -57,10 +57,10 @@ Here's how we can create a custom distance_metrics_list that includes this metri
 
 ```{r}
 my_distance_metrics <- generate_distance_metrics_list(
-    continuous_distances = list(
+    cnt_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance
     ),
-    discrete_distances = list(
+    dsc_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance
     )
 )
@@ -122,19 +122,19 @@ The first way is to use the `keep_defaults` parameter in `generate_distance_metr
 
 ```{r}
 no_default_metrics <- generate_distance_metrics_list(
-    continuous_distances = list(
+    cnt_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance
     ),
-    discrete_distances = list(
+    dsc_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance
     ),
-    ordinal_distances = list(
+    ord_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance
     ),
-    categorical_distances = list(
+    cat_dist_fns = list(
         "standard_norm_euclidean" = gower_distance
     ),
-    mixed_distances = list(
+    mix_dist_fns = list(
         "standard_norm_euclidean" = gower_distance
     ),
     keep_defaults = FALSE
@@ -150,11 +150,11 @@ The second way is to explicitly specify which indices you want to sample from du
 
 ```{r}
 my_distance_metrics <- generate_distance_metrics_list(
-    continuous_distances = list(
+    cnt_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance,
         "some_other_metric" = sn_euclidean_distance
     ),
-    discrete_distances = list(
+    dsc_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance,
         "some_other_metric" = sn_euclidean_distance
     )
@@ -342,7 +342,7 @@ You can load it into a custom distance_metrics_list:
 
 ```{r}
 my_distance_metrics <- generate_distance_metrics_list(
-    continuous_distances = list(
+    cnt_dist_fns = list(
         "my_scaled_euclidean" = my_scaled_euclidean
     )
 )

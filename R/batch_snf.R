@@ -133,19 +133,19 @@ batch_snf <- function(dl,
             # Generate a list where numeric distances are all standard
             # normalized.
             distance_metrics_list <- generate_distance_metrics_list(
-                continuous_distances = list(
+                cnt_dist_fns = list(
                     "sn_euclidean_distance" = sn_euclidean_distance
                 ),
-                discrete_distances = list(
+                dsc_dist_fns = list(
                     "sn_euclidean_distance" = sn_euclidean_distance
                 ),
-                ordinal_distances = list(
+                ord_dist_fns = list(
                     "sn_euclidean_distance" = sn_euclidean_distance
                 ),
-                categorical_distances = list(
+                cat_dist_fns = list(
                     "gower_distance" = gower_distance
                 ),
-                mixed_distances = list(
+                mix_dist_fns = list(
                     "gower_distance" = gower_distance
                 ),
                 keep_defaults = FALSE

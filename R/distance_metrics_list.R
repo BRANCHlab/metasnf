@@ -2,11 +2,11 @@
 #'
 #' This function can be used to specify custom distance metrics
 #'
-#' @param continuous_distances A named list of distance metric functions
-#' @param discrete_distances A named list of distance metric functions
-#' @param ordinal_distances A named list of distance metric functions
-#' @param categorical_distances A named list of distance metric functions
-#' @param mixed_distances A named list of distance metric functions
+#' @param cnt_dist_fns A named list of distance metric functions
+#' @param dsc_dist_fns A named list of distance metric functions
+#' @param ord_dist_fns A named list of distance metric functions
+#' @param cat_dist_fns A named list of distance metric functions
+#' @param mix_dist_fns A named list of distance metric functions
 #' @param keep_defaults If TRUE (default), prepend the base distance metrics
 #'  (euclidean and standard normalized euclidean)
 #'
@@ -24,7 +24,7 @@
 #' }
 #'
 #' distance_metrics_list <- generate_distance_metrics_list(
-#'     continuous_distances = list(
+#'     cnt_dist_fns = list(
 #'          "my_distance_metric" = my_distance_metric
 #'     )
 #' )
@@ -33,30 +33,30 @@
 #' # This will contain only user-provided clustering algorithms
 #'
 #' distance_metrics_list <- generate_distance_metrics_list(
-#'     continuous_distances = list(
+#'     cnt_dist_fns = list(
 #'          "my_distance_metric" = my_distance_metric
 #'     ),
-#'     discrete_distances = list(
+#'     dsc_dist_fns = list(
 #'          "my_distance_metric" = my_distance_metric
 #'     ),
-#'     ordinal_distances = list(
+#'     ord_dist_fns = list(
 #'          "my_distance_metric" = my_distance_metric
 #'     ),
-#'     categorical_distances = list(
+#'     cat_dist_fns = list(
 #'          "my_distance_metric" = my_distance_metric
 #'     ),
-#'     mixed_distances = list(
+#'     mix_dist_fns = list(
 #'          "my_distance_metric" = my_distance_metric
 #'     ),
 #'     keep_defaults = FALSE
 #' )
 #'
 #' @export
-generate_distance_metrics_list <- function(continuous_distances = NULL,
-                                           discrete_distances = NULL,
-                                           ordinal_distances = NULL,
-                                           categorical_distances = NULL,
-                                           mixed_distances = NULL,
+generate_distance_metrics_list <- function(cnt_dist_fns = NULL,
+                                           dsc_dist_fns = NULL,
+                                           ord_dist_fns = NULL,
+                                           cat_dist_fns = NULL,
+                                           mix_dist_fns = NULL,
                                            keep_defaults = TRUE) {
     # The code below is repetitive across the different types of distance
     #  metrics. For each type of metric, the following logic is applied to fill
@@ -69,11 +69,11 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
     # 1. Start with a check to ensure any list provided by the user has named
     #  elements.
     user_distances <- list(
-        continuous_distances,
-        discrete_distances,
-        ordinal_distances,
-        categorical_distances,
-        mixed_distances
+        cnt_dist_fns,
+        dsc_dist_fns,
+        ord_dist_fns,
+        cat_dist_fns,
+        mix_dist_fns
     )
     # Remove the NULL default elements
     user_distances <- user_distances[lengths(user_distances) != 0]
@@ -109,124 +109,124 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
     }
     ###########################################################################
     # 2. Set up the default lists
-    base_continuous_distances <- list(
+    base_cnt_dist_fns <- list(
         "euclidean_distance" = euclidean_distance
     )
-    base_discrete_distances <- list(
+    base_dsc_dist_fns <- list(
         "euclidean_distance" = euclidean_distance
     )
-    base_ordinal_distances <- list(
+    base_ord_dist_fns <- list(
         "euclidean_distance" = euclidean_distance
     )
-    base_categorical_distances <- list(
+    base_cat_dist_fns <- list(
         "gower_distance" = gower_distance
     )
-    base_mixed_distances <- list(
+    base_mix_dist_fns <- list(
         "gower_distance" = gower_distance
     )
     ###########################################################################
     # 3. Add any user provided lists
-    if (!is.null(continuous_distances)) {
-        # the user provided continuous_distances
+    if (!is.null(cnt_dist_fns)) {
+        # the user provided cnt_dist_fns
         if (keep_defaults) {
             # the user wants default metrics included
-            continuous_distances <- c(
-                base_continuous_distances,
-                continuous_distances
+            cnt_dist_fns <- c(
+                base_cnt_dist_fns,
+                cnt_dist_fns
             )
         } # no need for an else here, just leave their distances alone
     } else {
-        # the user did not provide continuous_distances
+        # the user did not provide cnt_dist_fns
         if (keep_defaults) {
             # the user wants default metrics included
-            continuous_distances <- base_continuous_distances
+            cnt_dist_fns <- base_cnt_dist_fns
         } else {
             # the user wants nothing
-            continuous_distances <- list(NULL)
+            cnt_dist_fns <- list(NULL)
         }
     }
-    if (!is.null(discrete_distances)) {
-        # the user provided discrete_distances
+    if (!is.null(dsc_dist_fns)) {
+        # the user provided dsc_dist_fns
         if (keep_defaults) {
             # the user wants default metrics included
-            discrete_distances <- c(
-                base_discrete_distances,
-                discrete_distances
+            dsc_dist_fns <- c(
+                base_dsc_dist_fns,
+                dsc_dist_fns
             )
         } # no need for an else here, just leave their distances alone
     } else {
-        # the user did not provide discrete_distances
+        # the user did not provide dsc_dist_fns
         if (keep_defaults) {
             # the user wants default metrics included
-            discrete_distances <- base_discrete_distances
+            dsc_dist_fns <- base_dsc_dist_fns
         } else {
             # the user wants nothing
-            discrete_distances <- list(NULL)
+            dsc_dist_fns <- list(NULL)
         }
     }
-    if (!is.null(ordinal_distances)) {
-        # the user provided ordinal_distances
+    if (!is.null(ord_dist_fns)) {
+        # the user provided ord_dist_fns
         if (keep_defaults) {
             # the user wants default metrics included
-            ordinal_distances <- c(
-                base_ordinal_distances,
-                ordinal_distances
+            ord_dist_fns <- c(
+                base_ord_dist_fns,
+                ord_dist_fns
             )
         } # no need for an else here, just leave their distances alone
     } else {
-        # the user did not provide ordinal_distances
+        # the user did not provide ord_dist_fns
         if (keep_defaults) {
             # the user wants default metrics included
-            ordinal_distances <- base_ordinal_distances
+            ord_dist_fns <- base_ord_dist_fns
         } else {
             # the user wants nothing
-            ordinal_distances <- list(NULL)
+            ord_dist_fns <- list(NULL)
         }
     }
-    if (!is.null(categorical_distances)) {
-        # the user provided categorical_distances
+    if (!is.null(cat_dist_fns)) {
+        # the user provided cat_dist_fns
         if (keep_defaults) {
             # the user wants default metrics included
-            categorical_distances <- c(
-                base_categorical_distances,
-                categorical_distances
+            cat_dist_fns <- c(
+                base_cat_dist_fns,
+                cat_dist_fns
             )
         } # no need for an else here, just leave their distances alone
     } else {
-        # the user did not provide categorical_distances
+        # the user did not provide cat_dist_fns
         if (keep_defaults) {
             # the user wants default metrics included
-            categorical_distances <- base_categorical_distances
+            cat_dist_fns <- base_cat_dist_fns
         } else {
             # the user wants nothing
-            categorical_distances <- list(NULL)
+            cat_dist_fns <- list(NULL)
         }
     }
-    if (!is.null(mixed_distances)) {
-        # the user provided mixed_distances
+    if (!is.null(mix_dist_fns)) {
+        # the user provided mix_dist_fns
         if (keep_defaults) {
             # the user wants default metrics included
-            mixed_distances <- c(
-                base_mixed_distances,
-                mixed_distances
+            mix_dist_fns <- c(
+                base_mix_dist_fns,
+                mix_dist_fns
             )
         } # no need for an else here, just leave their distances alone
     } else {
-        # the user did not provide mixed_distances
+        # the user did not provide mix_dist_fns
         if (keep_defaults) {
             # the user wants default metrics included
-            mixed_distances <- base_mixed_distances
+            mix_dist_fns <- base_mix_dist_fns
         } else {
             # the user wants nothing
-            mixed_distances <- list(NULL)
+            mix_dist_fns <- list(NULL)
         }
     }
     distance_metrics_list <- list(
-        "continuous_distances" = continuous_distances,
-        "discrete_distances" = discrete_distances,
-        "ordinal_distances" = ordinal_distances,
-        "categorical_distances" = categorical_distances,
-        "mixed_distances" = mixed_distances
+        "cnt_dist_fns" = cnt_dist_fns,
+        "dsc_dist_fns" = dsc_dist_fns,
+        "ord_dist_fns" = ord_dist_fns,
+        "cat_dist_fns" = cat_dist_fns,
+        "mix_dist_fns" = mix_dist_fns
     )
     return(distance_metrics_list)
 }
