@@ -702,6 +702,20 @@ check_dll_subitem_classes <- function(dll) {
 #' @param dll A data list-like `list` class object.
 #' @return Raises an error if the UID columns do not have a valid structure.
 check_dll_uid <- function(dll) {
+    # 1. Check if uid columns exist
+    has_uids <- lapply(
+        dll,
+        function(x) {
+            "uid" %in% colnames(x$"data")
+        }
+    ) |>
+        unlist() |>
+        all()
+    if (!has_uids) {
+        metasnf_error(
+            "At least one included data frame is missing a `uid` column."
+        )
+    }
     uids <- lapply(
         dll,
         function(x) {
