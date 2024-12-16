@@ -5,6 +5,8 @@
 \title{Summarize a data list}
 \usage{
 summarize_dl(dl, scope = "component")
+
+summarize_dl(dl, scope = "component")
 }
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}
@@ -18,7 +20,12 @@ summarize_dl(dl, scope = "component")
 \value{
 "data.frame"-class object summarizing all components (or features if
 scope == "component").
+
+"data.frame"-class object summarizing all components (or features if
+scope == "component").
 }
 \description{
+Summarize a data list
+
 Summarize a data list
 }

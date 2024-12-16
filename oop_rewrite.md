@@ -16,12 +16,15 @@
     - [ ] replace "subjectkey" and "subject" phrasing with more generic "uid" and "observation"
     - [ ] typo checking
     - [ ] more explicit documentation (nothing like, param settings_matrix A settings matrix)
+    - [ ] remove initial noun from @return tags
 - [ ] testing (complete coverage may be overkill?)
 - [ ] data list
     - [x] define class
     - [ ] ensure class is used consistently throughout functionality
     - [ ] convert all dl-related functions to S3 methods (if applicable)
     - [x] define `print.data_list`: printing a data list only shows head/tibble head of each df sub-item
+    - [ ] use `glimpse` in formatting `print.data_list`
+    - [ ] within constructor, permit a data list like object to just be directly passed into validate_data_list() and new_data_list()
     - [x] finish validator
     - [ ] establish attributes:
         - [ ] "components" which refer to the individual components of the dl
@@ -36,14 +39,19 @@
         - [ ] parameters are dl and target_dl
         - [ ] variables are more specifically named (e.g., demographic_dl)
         - [ ] documentation is data list
-- [ ] settings_matrix
-    - [ ] replace with name "settings_df" to be more transparent
+    - [ ] make sure things like c(data_list, data_list), data_list[[1]], etc. are resolved
+- [ ] settings_matrix -> snf_config
+    - [ ] replace with name "snf_config" to be more transparent
     - [ ] define class
     - [ ] define user/dev constructor
     - [ ] define validator
     - [ ] ensure class is used consistently throughout functionality
     - [ ] convert all dl-related functions to S3 methods (if applicable)
-- [ ] solutions_matrix (inherits settings_matrix)
+    - [ ] merge with classes:
+        - [ ] distance_metrics_list
+        - [ ] clust_algs_list
+        - [ ] weights_matrix (the only object named matrix that is actually a matrix)
+- [ ] solutions_matrix -> snf_results
     - [ ] replace with name "solutions_df" to be more transparent
     - [ ] define class
     - [ ] define user/dev constructor
@@ -52,24 +60,6 @@
     - [ ] convert all dl-related functions to S3 methods (if applicable)
 - [ ] extended_solutions_matrix (inherits settings_matrix, solutions_matrix)
     - [ ] replace with name "extended_solutions_df" to be more transparent
-    - [ ] define class
-    - [ ] define user/dev constructor
-    - [ ] define validator
-    - [ ] ensure class is used consistently throughout functionality
-    - [ ] convert all dl-related functions to S3 methods (if applicable)
-- [ ] distance_metrics_list
-    - [ ] define class
-    - [ ] define user/dev constructor
-    - [ ] define validator
-    - [ ] ensure class is used consistently throughout functionality
-    - [ ] convert all dl-related functions to S3 methods (if applicable)
-- [ ] clust_algs_list
-    - [ ] define class
-    - [ ] define user/dev constructor
-    - [ ] define validator
-    - [ ] ensure class is used consistently throughout functionality
-    - [ ] convert all dl-related functions to S3 methods (if applicable)
-- [ ] weights_matrix (the only object named matrix that is actually a matrix)
     - [ ] define class
     - [ ] define user/dev constructor
     - [ ] define validator

@@ -10,10 +10,10 @@ metasnf_warning(..., env = 1)
 \item{...}{Arbitrary number of strings to be pasted together into warning
 message.}
 
-\item{env}{}
+\item{env}{Environment to evaluate expressions in.}
 }
 \value{
-Returns no value. Raises an error through cli::cli_abort.
+Returns no value. Raises a warning through cli::cli_warn
 }
 \description{
 Helper function for raising warnings.

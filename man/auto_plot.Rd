@@ -8,7 +8,6 @@ auto_plot(
   solutions_matrix_row = NULL,
   dl = NULL,
   cluster_df = NULL,
-  tl = NULL,
   return_plots = TRUE,
   save = NULL,
   jitter_width = 6,
@@ -25,8 +24,6 @@ auto_plot(
 
 \item{cluster_df}{Directly provide a cluster_df rather than a solutions
 matrix. Useful if plotting data from label propagated results.}
-
-\item{tl}{A target list containing data to plot.}
 
 \item{return_plots}{If \code{TRUE}, the function will return a list of plots.
 If FALSE, the function will instead return the full data frame used for
@@ -54,6 +51,6 @@ format.
 }
 \description{
 Given a single row of a solutions matrix and data provided through
-\code{dl} and/or \code{tl} arguments, this function will
-return a series of bar and/or jitter plots based on feature types.
+a data list, this function will return a series of bar and/or
+jitter plots based on feature types.
 }

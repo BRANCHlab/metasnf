@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_list.R
 \name{data_list}
 \alias{data_list}
-\title{Build a data list}
+\title{Build a \code{data_list} class object}
 \usage{
 data_list(..., uid)
 }

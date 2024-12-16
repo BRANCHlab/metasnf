@@ -10,10 +10,10 @@ metasnf_alert(..., env = 1)
 \item{...}{Arbitrary number of strings to be pasted together into alert
 message.}
 
-\item{env}{}
+\item{env}{Environment to evaluate expressions in.}
 }
 \value{
-Returns no value. Raises an error through cli::cli_abort.
+Returns no value. Raises an alert through cli::cli_alert_info.
 }
 \description{
 Helper function for raising alerts
