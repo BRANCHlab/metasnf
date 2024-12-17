@@ -2,7 +2,7 @@
 % Please edit documentation in R/signal.R
 \name{metasnf_deprecated}
 \alias{metasnf_deprecated}
-\title{Helper function for deprecated function errors.}
+\title{Helper function for deprecated function warnings.}
 \usage{
 metasnf_deprecated(version, alternative, env = 1)
 }
@@ -14,9 +14,9 @@ metasnf_deprecated(version, alternative, env = 1)
 \item{env}{Environment to evaluate expressions in.}
 }
 \value{
-Returns no value. Raises an error through cli::cli_abort.
+Returns no value. Raises a warning through cli::cli_warn.
 }
 \description{
-Helper function for deprecated function errors.
+Helper function for deprecated function warnings.
 }
 \keyword{internal}

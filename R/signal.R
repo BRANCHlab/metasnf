@@ -48,20 +48,38 @@ metasnf_alert <- function(..., env = 1) {
     )
 }
 
-#' Helper function for deprecated function errors.
+#' Helper function for deprecated function warnings.
 #'
 #' @keywords internal
 #' @param version Version of metasnf in which function has been deprecated.
 #' @param alternative Recommended alternative approach.
 #' @param env Environment to evaluate expressions in.
-#' @return Returns no value. Raises an error through cli::cli_abort.
+#' @return Returns no value. Raises a warning through cli::cli_warn.
 metasnf_deprecated <- function(version, alternative, env = 1) {
-    cli::cli_abort(
+    cli::cli_warn(
         message = c(
             "!" = paste0(
                 "`", sys.call(-1)[[1]], "()` has been deprecated as of",
-                cli::cli_text("{.emph metasnf} version "), version, ".",
-                " Please ", alternative
+                " metasnf version ", version, ".", alternative
+            )
+        ),
+        .envir = rlang::caller_env(env)
+    )
+}
+
+#' Helper function for defunct function errors.
+#'
+#' @keywords internal
+#' @param version Version of metasnf in which function has been made defunct.
+#' @param alternative Recommended alternative approach.
+#' @param env Environment to evaluate expressions in.
+#' @return Returns no value. Raises an error through cli::cli_abort.
+metasnf_defunct <- function(version, alternative, env = 1) {
+    cli::cli_abort(
+        message = c(
+            "!" = paste0(
+                "`", sys.call(-1)[[1]], "()` has been made defunct as of",
+                " metasnf version ", version, ".", alternative
             )
         ),
         .envir = rlang::caller_env(env)

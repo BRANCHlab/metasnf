@@ -64,6 +64,7 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0),
     ggalluvial,
+    lifecycle,
     dbscan
 Config/testthat/edition: 3
 Depends:
