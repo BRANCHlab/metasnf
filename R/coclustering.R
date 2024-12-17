@@ -95,7 +95,7 @@ subsample_dl <- function(dl,
 #'
 #' @param suppress_clustering See ?batch_snf.
 #'
-#' @param distance_metrics_list See ?batch_snf.
+#' @param dml See ?batch_snf.
 #'
 #' @param weights_matrix See ?batch_snf.
 #'
@@ -122,7 +122,7 @@ batch_snf_subsamples <- function(dl_subsamples,
                                  return_similarity_matrices = FALSE,
                                  clust_algs_list = NULL,
                                  suppress_clustering = FALSE,
-                                 distance_metrics_list = NULL,
+                                 dml = NULL,
                                  weights_matrix = NULL,
                                  automatic_standard_normalize = FALSE,
                                  return_solutions_matrices = FALSE,
@@ -152,7 +152,7 @@ batch_snf_subsamples <- function(dl_subsamples,
                 return_similarity_matrices = return_similarity_matrices,
                 clust_algs_list = clust_algs_list,
                 suppress_clustering = suppress_clustering,
-                distance_metrics_list = distance_metrics_list,
+                dml = dml,
                 weights_matrix = weights_matrix,
                 automatic_standard_normalize = automatic_standard_normalize,
                 verbose = FALSE

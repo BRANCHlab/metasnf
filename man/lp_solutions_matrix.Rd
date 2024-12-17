@@ -7,7 +7,7 @@
 lp_solutions_matrix(
   train_solutions_matrix,
   full_dl,
-  distance_metrics_list = NULL,
+  dml = NULL,
   weights_matrix = NULL,
   verbose = FALSE
 )
@@ -22,7 +22,7 @@ for label propagation.}
 \item{full_dl}{A data list containing subjects from both the training
 and testing sets.}
 
-\item{distance_metrics_list}{Like above - the distance_metrics_list (if any)
+\item{dml}{Like above - the distance_metrics_list (if any)
 that was used for the original batch_snf call.}
 
 \item{weights_matrix}{Like above.}

@@ -29,12 +29,12 @@ Download a copy of the vignette to follow along here: [distance_metrics.Rmd](htt
 metasnf enables users to customize what distance metrics are used in the SNF pipeline.
 All information about distance metrics are stored in a `distance_metrics_list` object.
 
-By default, `batch_snf` will create its own `distance_metrics_list` by calling the `generate_distance_metrics_list` function with no additional arguments.
+By default, `batch_snf` will create its own `distance_metrics_list` by calling the `distance_metrics_list` function with no additional arguments.
 
 ```{r}
 library(metasnf)
 
-distance_metrics_list <- generate_distance_metrics_list()
+distance_metrics_list <- distance_metrics_list(use_defaults = TRUE)
 ```
 
 The list is a list of functions (`euclidean_distance()` and `gower_distance()`), and printing them out directly can be messy.
@@ -56,13 +56,14 @@ metasnf provides a Euclidean distance function that applies standard normalizati
 Here's how we can create a custom distance_metrics_list that includes this metric for continuous and discrete features.
 
 ```{r}
-my_distance_metrics <- generate_distance_metrics_list(
+my_distance_metrics <- distance_metrics_list(
     cnt_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance
     ),
     dsc_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance
-    )
+    ),
+    use_defaults = TRUE
 )
 
 summarize_dml(my_distance_metrics)
@@ -94,7 +95,7 @@ And then the settings_matrix can be generated:
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 10,
-    distance_metrics_list = my_distance_metrics
+    dml = my_distance_metrics
 )
 
 # showing just the columns that are related to distances
@@ -110,7 +111,7 @@ Because of that, you'll need to supply the distance_metrics_list once again when
 solutions_matrix <- batch_snf(
     data_list,
     settings_matrix,
-    distance_metrics_list = my_distance_metrics
+    dml = my_distance_metrics
 )
 ```
 
@@ -118,10 +119,10 @@ solutions_matrix <- batch_snf(
 
 There are two ways to avoid using the default distance metrics if you don't want to ever use them.
 
-The first way is to use the `keep_defaults` parameter in `generate_distance_metrics_list()`:
+The first way is to use the `keep_defaults` parameter in `distance_metrics_list()`:
 
 ```{r}
-no_default_metrics <- generate_distance_metrics_list(
+no_default_metrics <- distance_metrics_list(
     cnt_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance
     ),
@@ -137,7 +138,7 @@ no_default_metrics <- generate_distance_metrics_list(
     mix_dist_fns = list(
         "standard_norm_euclidean" = gower_distance
     ),
-    keep_defaults = FALSE
+    use_defaults = FALSE
 )
 
 summarize_dml(no_default_metrics)
@@ -149,7 +150,7 @@ A distance_metrics_list cannot have any of its feature types be completely empty
 The second way is to explicitly specify which indices you want to sample from during settings_matrix generation:
 
 ```{r}
-my_distance_metrics <- generate_distance_metrics_list(
+my_distance_metrics <- distance_metrics_list(
     cnt_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance,
         "some_other_metric" = sn_euclidean_distance
@@ -157,7 +158,8 @@ my_distance_metrics <- generate_distance_metrics_list(
     dsc_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance,
         "some_other_metric" = sn_euclidean_distance
-    )
+    ),
+    use_defaults = TRUE
 )
 
 summarize_dml(my_distance_metrics)
@@ -165,7 +167,7 @@ summarize_dml(my_distance_metrics)
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 10,
-    distance_metrics_list = my_distance_metrics,
+    dml = my_distance_metrics,
     continuous_distances = 1,
     discrete_distances = c(2, 3)
 )
@@ -180,7 +182,7 @@ This can save you the trouble of needing to manage several distinct distance met
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 10,
-    distance_metrics_list = my_distance_metrics,
+    dml = my_distance_metrics,
     continuous_distances = 1,
     discrete_distances = c(2, 3)
 )
@@ -188,7 +190,7 @@ settings_matrix <- generate_settings_matrix(
 settings_matrix <- add_settings_matrix_rows(
     settings_matrix,
     nrow = 10,
-    distance_metrics_list = my_distance_metrics,
+    dml = my_distance_metrics,
     continuous_distances = 3,
     discrete_distances = 1
 )
@@ -230,10 +232,12 @@ To actually use the matrix during SNF, you'll need to make sure that the number 
 settings_matrix <- generate_settings_matrix(
     data_list,
     nrow = 10,
-    distance_metrics_list = my_distance_metrics,
+    dml = my_distance_metrics,
     continuous_distances = 1,
     discrete_distances = c(2, 3)
 )
+
+settings_matrix
 
 weights_matrix <- generate_weights_matrix(
     data_list,
@@ -245,20 +249,20 @@ weights_matrix[1:5, ]
 solutions_matrix_1 <- batch_snf(
     data_list,
     settings_matrix,
-    distance_metrics_list = my_distance_metrics,
+    dml = my_distance_metrics,
     weights_matrix = weights_matrix
 )
 
 solutions_matrix_2 <- batch_snf(
     data_list,
     settings_matrix,
-    distance_metrics_list = my_distance_metrics
+    dml = my_distance_metrics
 )
 
 identical(
     solutions_matrix_1,
     solutions_matrix_2
-) # Try this on your machine - It'll evaluate to TRUE
+) # Try this on your own - It'll evaluate to TRUE
 ```
 
 A `weights_matrix` of all 1s (the default `weights_matrix` used when you don't supply one yourself) 'won't actually do anything to the data.
@@ -341,10 +345,11 @@ my_scaled_euclidean(processed_anxiety)[1:5, 1:5]
 You can load it into a custom distance_metrics_list:
 
 ```{r}
-my_distance_metrics <- generate_distance_metrics_list(
+my_distance_metrics <- distance_metrics_list(
     cnt_dist_fns = list(
         "my_scaled_euclidean" = my_scaled_euclidean
-    )
+    ),
+    use_defaults = TRUE
 )
 ```
 

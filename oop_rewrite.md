@@ -49,6 +49,7 @@
     - [ ] convert all dl-related functions to S3 methods (if applicable)
     - [ ] merge with classes:
         - [ ] distance_metrics_list
+            - [ ] ensure that there is an appropriate metric for each type of variable in the data list 
         - [ ] clust_algs_list
         - [ ] weights_matrix (the only object named matrix that is actually a matrix)
 - [ ] solutions_matrix -> snf_results

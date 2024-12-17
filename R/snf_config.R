@@ -23,7 +23,7 @@
 #'        different row in the settings data frame.
 #'
 #' @inheritParams generate_settings_matrix
-#' @inheritParams generate_distance_metrics_list
+#' @inheritParams distance_metrics_list
 #' @inheritParams generate_weights_matrix
 #' @inheritParams generate_clust_algs_list
 #' @return An `snf_config` class object.
@@ -51,7 +51,7 @@ snf_config <- function(dl,
                        ordinal_distances = NULL,
                        categorical_distances = NULL,
                        mixed_distances = NULL,
-                       distance_metrics_list = NULL,
+                       dml = NULL,
                        snf_input_weights = NULL,
                        snf_domain_weights = NULL,
                        retry_limit = 10,
@@ -60,7 +60,7 @@ snf_config <- function(dl,
                        ord_dist_fns = NULL,
                        cat_dist_fns = NULL,
                        mix_dist_fns = NULL,
-                       keep_defaults = TRUE) {
+                       use_defaults = TRUE) {
     scl <- NULL
     scl <- validate_snf_config(scl)
     sc <- new_snf_config(scl)

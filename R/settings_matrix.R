@@ -122,7 +122,7 @@
 #'  when a custom distance_metrics_list is provided.
 #' @param mixed_distances A vector of mixed distance metrics to use
 #'  when a custom distance_metrics_list is provided.
-#' @param distance_metrics_list List containing distance metrics to vary over.
+#' @param dml List containing distance metrics to vary over.
 #'  See ?generate_distance_metrics_list.
 #' @param snf_input_weights Nested list containing weights for when SNF is
 #'  used to merge individual input measures (see ?generate_snf_weights)
@@ -159,7 +159,7 @@ generate_settings_matrix <- function(dl,
                                      ordinal_distances = NULL,
                                      categorical_distances = NULL,
                                      mixed_distances = NULL,
-                                     distance_metrics_list = NULL,
+                                     dml = NULL,
                                      snf_input_weights = NULL,
                                      snf_domain_weights = NULL,
                                      retry_limit = 10) {
@@ -207,7 +207,7 @@ generate_settings_matrix <- function(dl,
         ordinal_distances = ordinal_distances,
         categorical_distances = categorical_distances,
         mixed_distances = mixed_distances,
-        distance_metrics_list = distance_metrics_list,
+        dml = dml,
         snf_input_weights = snf_input_weights,
         snf_domain_weights = snf_domain_weights,
         retry_limit = retry_limit
@@ -283,7 +283,7 @@ generate_settings_matrix <- function(dl,
 #'  when a custom distance_metrics_list is provided.
 #' @param mixed_distances A vector of mixed distance metrics to use
 #'  when a custom distance_metrics_list is provided.
-#' @param distance_metrics_list List containing distance metrics to vary over.
+#' @param dml List containing distance metrics to vary over.
 #'  See ?generate_distance_metrics_list.
 #' @param snf_input_weights Nested list containing weights for when SNF is
 #'  used to merge individual input measures (see ?generate_snf_weights)
@@ -323,7 +323,7 @@ add_settings_matrix_rows <- function(settings_matrix,
                                      ordinal_distances = NULL,
                                      categorical_distances = NULL,
                                      mixed_distances = NULL,
-                                     distance_metrics_list = NULL,
+                                     dml = NULL,
                                      snf_input_weights = NULL,
                                      snf_domain_weights = NULL,
                                      retry_limit = 10) {
@@ -489,8 +489,8 @@ add_settings_matrix_rows <- function(settings_matrix,
     ###########################################################################
     # 4. Handling distance metrics
     ###########################################################################
-    if (is.null(distance_metrics_list)) {
-        distance_metrics_list <- generate_distance_metrics_list()
+    if (is.null(dml)) {
+        dml <- distance_metrics_list(use_defaults = TRUE)
     }
     ###########################################################################
     # 6. Begin the loop that will generate new random settings_matrix rows
@@ -530,42 +530,27 @@ add_settings_matrix_rows <- function(settings_matrix,
         # 8. Distance metrics
         #######################################################################
         if (is.null(continuous_distances)) {
-            cnt_dist <- sample(
-                1:length(distance_metrics_list$"cnt_dist_fns"),
-                1
-            )
+            cnt_dist <- sample(length(dml$"cnt_dist_fns"), 1)
         } else {
             cnt_dist <- resample(continuous_distances, 1)
         }
         if (is.null(discrete_distances)) {
-            dsc_dist <- sample(
-                1:length(distance_metrics_list$"dsc_dist_fns"),
-                1
-            )
+            dsc_dist <- sample(length(dml$"dsc_dist_fns"), 1)
         } else {
             dsc_dist <- resample(discrete_distances, 1)
         }
         if (is.null(ordinal_distances)) {
-            ord_dist <- sample(
-                1:length(distance_metrics_list$"ord_dist_fns"),
-                1
-            )
+            ord_dist <- sample(length(dml$"ord_dist_fns"), 1)
         } else {
             ord_dist <- resample(ordinal_distances, 1)
         }
         if (is.null(categorical_distances)) {
-            cat_dist <- sample(
-                1:length(distance_metrics_list$"cat_dist_fns"),
-                1
-            )
+            cat_dist <- sample(length(dml$"cat_dist_fns"), 1)
         } else {
             cat_dist <- resample(categorical_distances, 1)
         }
         if (is.null(mixed_distances)) {
-            mix_dist <- sample(
-                1:length(distance_metrics_list$"mix_dist_fns"),
-                1
-            )
+            mix_dist <- sample(length(dml$"mix_dist_fns"), 1)
         } else {
             mix_dist <- resample(mixed_distances, 1)
         }

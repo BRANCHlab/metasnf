@@ -56,7 +56,7 @@ label_prop <- function(full_fused_network, clusters) {
 #' @param full_dl A data list containing subjects from both the training
 #' and testing sets.
 #'
-#' @param distance_metrics_list Like above - the distance_metrics_list (if any)
+#' @param dml Like above - the distance_metrics_list (if any)
 #' that was used for the original batch_snf call.
 #'
 #' @param weights_matrix Like above.
@@ -71,7 +71,7 @@ label_prop <- function(full_fused_network, clusters) {
 #' @export
 lp_solutions_matrix <- function(train_solutions_matrix,
                                 full_dl,
-                                distance_metrics_list = NULL,
+                                dml = NULL,
                                 weights_matrix = NULL,
                                 verbose = FALSE) {
     ###########################################################################
@@ -101,8 +101,8 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     ###########################################################################
     ## 3-1. Creation of distance_metrics_list, if it does not already exist
     ###########################################################################
-    if (is.null(distance_metrics_list)) {
-        distance_metrics_list <- generate_distance_metrics_list()
+    if (is.null(dml)) {
+        dml <- distance_metrics_list(use_defaults = TRUE)
     }
     ###########################################################################
     ## 3-2. Create (or check) weights_matrix
@@ -143,11 +143,11 @@ lp_solutions_matrix <- function(train_solutions_matrix,
         ord_dist <- current_row$"ord_dist"
         cat_dist <- current_row$"cat_dist"
         mix_dist <- current_row$"mix_dist"
-        cnt_dist_fn <- distance_metrics_list$"cnt_dist_fns"[[cnt_dist]]
-        dsc_dist_fn <- distance_metrics_list$"dsc_dist_fns"[[dsc_dist]]
-        ord_dist_fn <- distance_metrics_list$"ord_dist_fns"[[ord_dist]]
-        cat_dist_fn <- distance_metrics_list$"cat_dist_fns"[[cat_dist]]
-        mix_dist_fn <- distance_metrics_list$"mix_dist_fns"[[mix_dist]]
+        cnt_dist_fn <- dml$"cnt_dist_fns"[[cnt_dist]]
+        dsc_dist_fn <- dml$"dsc_dist_fns"[[dsc_dist]]
+        ord_dist_fn <- dml$"ord_dist_fns"[[ord_dist]]
+        cat_dist_fn <- dml$"cat_dist_fns"[[cat_dist]]
+        mix_dist_fn <- dml$"mix_dist_fns"[[mix_dist]]
         weights_row <- weights_matrix[i, , drop = FALSE]
         #######################################################################
         # The actual SNF

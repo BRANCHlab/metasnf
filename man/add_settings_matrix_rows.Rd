@@ -26,7 +26,7 @@ add_settings_matrix_rows(
   ordinal_distances = NULL,
   categorical_distances = NULL,
   mixed_distances = NULL,
-  distance_metrics_list = NULL,
+  dml = NULL,
   snf_input_weights = NULL,
   snf_domain_weights = NULL,
   retry_limit = 10
@@ -120,7 +120,7 @@ when a custom distance_metrics_list is provided.}
 \item{mixed_distances}{A vector of mixed distance metrics to use
 when a custom distance_metrics_list is provided.}
 
-\item{distance_metrics_list}{List containing distance metrics to vary over.
+\item{dml}{List containing distance metrics to vary over.
 See ?generate_distance_metrics_list.}
 
 \item{snf_input_weights}{Nested list containing weights for when SNF is

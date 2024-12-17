@@ -38,10 +38,10 @@
 #' clustering algorithms to provide cluster solutions on every iteration of
 #' SNF. If TRUE, parameter `similarity_matrix_dir` must be specified.
 #'
-#' @param distance_metrics_list An optional nested list containing which
+#' @param dml An optional nested list containing which
 #' distance metric function should be used for the various feature types
 #' (continuous, discrete, ordinal, categorical, and mixed). See
-#' ?generate_distance_metrics_list for details on how to build this.
+#' ?distance_metrics_list for details on how to build this.
 #'
 #' @param weights_matrix A matrix containing feature weights to use during
 #' distance matrix calculation. See ?generate_weights_matrix for details on
@@ -78,7 +78,7 @@ batch_snf <- function(dl,
                       similarity_matrix_dir = NULL,
                       clust_algs_list = NULL,
                       suppress_clustering = FALSE,
-                      distance_metrics_list = NULL,
+                      dml = NULL,
                       weights_matrix = NULL,
                       automatic_standard_normalize = FALSE,
                       verbose = FALSE) {
@@ -126,13 +126,12 @@ batch_snf <- function(dl,
         )
     }
     ###########################################################################
-    # 4. Creation of distance_metrics_list if it does not already exist
+    # 4. Creation of dml if it does not already exist
     ###########################################################################
-    if (is.null(distance_metrics_list)) {
+    if (is.null(dml)) {
         if (automatic_standard_normalize) {
-            # Generate a list where numeric distances are all standard
-            # normalized.
-            distance_metrics_list <- generate_distance_metrics_list(
+            # Generate a list with standard normalization
+            dml <- distance_metrics_list(
                 cnt_dist_fns = list(
                     "sn_euclidean_distance" = sn_euclidean_distance
                 ),
@@ -148,10 +147,10 @@ batch_snf <- function(dl,
                 mix_dist_fns = list(
                     "gower_distance" = gower_distance
                 ),
-                keep_defaults = FALSE
+                use_defaults = FALSE
             )
         } else {
-            distance_metrics_list <- generate_distance_metrics_list()
+            dml <- distance_metrics_list(use_defaults = TRUE)
         }
     } else {
         if (automatic_standard_normalize) {
@@ -195,7 +194,7 @@ batch_snf <- function(dl,
         if (processes == "max") {
             solutions_matrix <- parallel_batch_snf(
                 dl = dl,
-                distance_metrics_list = distance_metrics_list,
+                dml = dml,
                 clust_algs_list = clust_algs_list,
                 settings_matrix = settings_matrix,
                 weights_matrix = weights_matrix,
@@ -216,7 +215,7 @@ batch_snf <- function(dl,
             }
             solutions_matrix <- parallel_batch_snf(
                 dl = dl,
-                distance_metrics_list = distance_metrics_list,
+                dml = dml,
                 clust_algs_list = clust_algs_list,
                 settings_matrix = settings_matrix,
                 weights_matrix = weights_matrix,
@@ -292,11 +291,11 @@ batch_snf <- function(dl,
         ord_dist <- settings_matrix_row$"ord_dist"
         cat_dist <- settings_matrix_row$"cat_dist"
         mix_dist <- settings_matrix_row$"mix_dist"
-        cnt_dist_fn <- distance_metrics_list$"cnt_dist_fns"[[cnt_dist]]
-        dsc_dist_fn <- distance_metrics_list$"dsc_dist_fns"[[dsc_dist]]
-        ord_dist_fn <- distance_metrics_list$"ord_dist_fns"[[ord_dist]]
-        cat_dist_fn <- distance_metrics_list$"cat_dist_fns"[[cat_dist]]
-        mix_dist_fn <- distance_metrics_list$"mix_dist_fns"[[mix_dist]]
+        cnt_dist_fn <- dml$"cnt_dist_fns"[[cnt_dist]]
+        dsc_dist_fn <- dml$"dsc_dist_fns"[[dsc_dist]]
+        ord_dist_fn <- dml$"ord_dist_fns"[[ord_dist]]
+        cat_dist_fn <- dml$"cat_dist_fns"[[cat_dist]]
+        mix_dist_fn <- dml$"mix_dist_fns"[[mix_dist]]
         # Run SNF
         fused_network <- snf_step(
             current_dl,

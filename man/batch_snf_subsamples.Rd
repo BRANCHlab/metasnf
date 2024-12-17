@@ -11,7 +11,7 @@ batch_snf_subsamples(
   return_similarity_matrices = FALSE,
   clust_algs_list = NULL,
   suppress_clustering = FALSE,
-  distance_metrics_list = NULL,
+  dml = NULL,
   weights_matrix = NULL,
   automatic_standard_normalize = FALSE,
   return_solutions_matrices = FALSE,
@@ -33,7 +33,7 @@ pipelines to be applied to the subsampled data lists.}
 
 \item{suppress_clustering}{See ?batch_snf.}
 
-\item{distance_metrics_list}{See ?batch_snf.}
+\item{dml}{See ?batch_snf.}
 
 \item{weights_matrix}{See ?batch_snf.}
 

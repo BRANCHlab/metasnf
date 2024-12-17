@@ -26,7 +26,7 @@ snf_config(
   ordinal_distances = NULL,
   categorical_distances = NULL,
   mixed_distances = NULL,
-  distance_metrics_list = NULL,
+  dml = NULL,
   snf_input_weights = NULL,
   snf_domain_weights = NULL,
   retry_limit = 10,
@@ -35,7 +35,7 @@ snf_config(
   ord_dist_fns = NULL,
   cat_dist_fns = NULL,
   mix_dist_fns = NULL,
-  keep_defaults = TRUE
+  use_defaults = TRUE
 )
 }
 \arguments{
@@ -127,7 +127,7 @@ when a custom distance_metrics_list is provided.}
 \item{mixed_distances}{A vector of mixed distance metrics to use
 when a custom distance_metrics_list is provided.}
 
-\item{distance_metrics_list}{List containing distance metrics to vary over.
+\item{dml}{List containing distance metrics to vary over.
 See ?generate_distance_metrics_list.}
 
 \item{snf_input_weights}{Nested list containing weights for when SNF is
@@ -143,18 +143,19 @@ increases, the risk of randomly generating a row that already exists
 increases. If a new random row has matched an existing row \code{retry_limit}
 number of times, the function will terminate.}
 
-\item{cnt_dist_fns}{A named list of distance metric functions}
+\item{cnt_dist_fns}{A named list of continuous distance metric functions.}
 
-\item{dsc_dist_fns}{A named list of distance metric functions}
+\item{dsc_dist_fns}{A named list of discrete distance metric functions.}
 
-\item{ord_dist_fns}{A named list of distance metric functions}
+\item{ord_dist_fns}{A named list of ordinal distance metric functions.}
 
-\item{cat_dist_fns}{A named list of distance metric functions}
+\item{cat_dist_fns}{A named list of categorical distance metric functions.}
 
-\item{mix_dist_fns}{A named list of distance metric functions}
+\item{mix_dist_fns}{A named list of mixed distance metric functions.}
 
-\item{keep_defaults}{If TRUE (default), prepend the base distance metrics
-(euclidean and standard normalized euclidean)}
+\item{use_defaults}{If TRUE, prepend the base distance metrics (euclidean
+distance for continuous, discrete, and ordinal data and gower distance for
+categorical and mixed data) to the resulting distance metrics list.}
 }
 \value{
 An \code{snf_config} class object.

@@ -6,7 +6,7 @@
 \usage{
 batch_row_closure(
   dl,
-  distance_metrics_list,
+  dml,
   clust_algs_list,
   settings_matrix,
   weights_matrix,
@@ -18,10 +18,10 @@ batch_row_closure(
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{distance_metrics_list}{An optional nested list containing which
+\item{dml}{An optional nested list containing which
 distance metric function should be used for the various feature types
 (continuous, discrete, ordinal, categorical, and mixed). See
-?generate_distance_metrics_list for details on how to build this.}
+?distance_metrics_list for details on how to build this.}
 
 \item{clust_algs_list}{List of custom clustering algorithms to apply
 to the final fused network. See ?generate_clust_algs_list.}

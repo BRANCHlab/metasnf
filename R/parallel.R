@@ -2,10 +2,10 @@
 #'
 #' @param dl A nested list of input data from `data_list()`.
 #'
-#' @param distance_metrics_list An optional nested list containing which
+#' @param dml An optional nested list containing which
 #' distance metric function should be used for the various feature types
 #' (continuous, discrete, ordinal, categorical, and mixed). See
-#' ?generate_distance_metrics_list for details on how to build this.
+#' ?distance_metrics_list for details on how to build this.
 #'
 #' @param clust_algs_list List of custom clustering algorithms to apply
 #' to the final fused network. See ?generate_clust_algs_list.
@@ -29,7 +29,7 @@
 #'
 #' @export
 parallel_batch_snf <- function(dl,
-                               distance_metrics_list,
+                               dml,
                                clust_algs_list,
                                settings_matrix,
                                weights_matrix,
@@ -42,7 +42,7 @@ parallel_batch_snf <- function(dl,
     prog <- progressr::progressor(steps = nrow(settings_and_weights_df))
     batch_row_function <- batch_row_closure(
         dl = dl,
-        distance_metrics_list = distance_metrics_list,
+        dml = dml,
         clust_algs_list = clust_algs_list,
         settings_matrix = settings_matrix,
         weights_matrix = weights_matrix,
@@ -88,10 +88,10 @@ parallel_batch_snf <- function(dl,
 #'
 #' @param dl A nested list of input data from `data_list()`.
 #'
-#' @param distance_metrics_list An optional nested list containing which
+#' @param dml An optional nested list containing which
 #' distance metric function should be used for the various feature types
 #' (continuous, discrete, ordinal, categorical, and mixed). See
-#' ?generate_distance_metrics_list for details on how to build this.
+#' ?distance_metrics_list for details on how to build this.
 #'
 #' @param clust_algs_list List of custom clustering algorithms to apply
 #' to the final fused network. See ?generate_clust_algs_list.
@@ -116,7 +116,7 @@ parallel_batch_snf <- function(dl,
 #'
 #' @export
 batch_row_closure <- function(dl,
-                              distance_metrics_list,
+                              dml,
                               clust_algs_list,
                               settings_matrix,
                               weights_matrix,
@@ -147,11 +147,11 @@ batch_row_closure <- function(dl,
         ord_dist <- settings_matrix_row$"ord_dist"
         cat_dist <- settings_matrix_row$"cat_dist"
         mix_dist <- settings_matrix_row$"mix_dist"
-        cnt_dist_fn <- distance_metrics_list$"cnt_dist_fns"[[cnt_dist]]
-        dsc_dist_fn <- distance_metrics_list$"dsc_dist_fns"[[dsc_dist]]
-        ord_dist_fn <- distance_metrics_list$"ord_dist_fns"[[ord_dist]]
-        cat_dist_fn <- distance_metrics_list$"cat_dist_fns"[[cat_dist]]
-        mix_dist_fn <- distance_metrics_list$"mix_dist_fns"[[mix_dist]]
+        cnt_dist_fn <- dml$"cnt_dist_fns"[[cnt_dist]]
+        dsc_dist_fn <- dml$"dsc_dist_fns"[[dsc_dist]]
+        ord_dist_fn <- dml$"ord_dist_fns"[[ord_dist]]
+        cat_dist_fn <- dml$"cat_dist_fns"[[cat_dist]]
+        mix_dist_fn <- dml$"mix_dist_fns"[[mix_dist]]
         # Integrate data
         fused_network <- snf_step(
             current_dl,
