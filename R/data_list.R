@@ -554,8 +554,46 @@ new_data_list <- function(dll) {
     stopifnot(is.list(dll))
     stopifnot(is.list(dll[[1]]))
     dl <- structure(dll, class = c("data_list", "list"))
+    # Define attributes
+    # 1. UIDs of all observations
     attr(dl, "uids") <- dl[[1]]$"data"$"uid"
-    #attr(dl, "observations") <- length(attributes(dl)$"uids")
+    # 2. Number of observations
+    attr(dl, "n_observations") <- length(attributes(dl)$"uids")
+    # 3. Stored features
+    attr(dl, "features") <- dl |>
+        as.data.frame() |>
+       dplyr::select(-"uid") |>
+        colnames()
+    # 4. Number of features
+    attr(dl, "n_features") <- length(attributes(dl)$"features")
+    # 5. Domains
+    attr(dl, "domains") <- lapply(
+        dl,
+        function(x) {
+            x$"domain"
+        }
+    ) |>
+        unlist() |>
+        as.character() |>
+        unique()
+    # 6. Number of domains
+    attr(dl, "n_domains") <- length(attributes(dl)$"domains")
+    # 7. Types
+    attr(dl, "types") <- lapply(
+        dl,
+        function(x) {
+            x$"type"
+        }
+    ) |>
+        unlist() |>
+        as.character() |>
+        unique()
+    # 8. Number of types
+    attr(dl, "n_types") <- length(attributes(dl)$"types")
+    # 9. Components
+    attr(dl, "components") <- names(dl)
+    # 10. Number of components
+    attr(dl, "n_components") <- length(attributes(dl)$"components")
     return(dl)
 }
 
@@ -860,14 +898,9 @@ print.data_list <- function(x, ...) {
     uids <- attributes(x)$"uids"
     components <- length(x)
     cli::cli_rule(left = cli::col_yellow("Observations (n = {length(uids)})"))
-    if (length(uids) > 6) {
-        cat(
-            uids[1:3], "...", uids[(length(uids) - 3):length(uids)],
-            sep = "\n"
-        )
-    } else {
-        cat(uids, sep = "\n")
-    }
+    uid_output <- utils::capture.output(cat(uids, sep = ", "))
+    max_chars <- getOption("width")
+    cat(substr(uid_output, 1, max_chars - 5), "...\n", sep = "")
     cli::cli_rule(
         left = cli::col_yellow(
             "Components (c = {length(x)},",
@@ -891,29 +924,35 @@ print.data_list <- function(x, ...) {
         )
         # Capture tibble formatted data for additional manipulations
         data_out <- component$"data" |>
-            tibble::tibble() |>
             dplyr::select(-"uid") |>
-            utils::head(n = 5L) |>
-            print() |> 
+            dplyr::glimpse() |>
             utils::capture.output()
-        # Separate data from comments (additional columns, tibble class)
-        data_main <- data_out[!sapply(data_out, function(x) grepl("^#", x))]
-        data_extra <- data_out[sapply(data_out, function(x) grepl("^#", x))]
-        # Strip unnecessary first two characters
-        data_main <- gsub("^.{2}", "", data_main)
-        cat(
-            cli::col_magenta(data_main[1]), # column names
-            data_main[-c(1, 2)], # data
-            sep = "\n"
-        )
-        if (length(data_extra) > 1) {
-            data_extra <- gsub("# ", "", data_extra[2]) # remove hashes
-            data_extra <- gsub(":.*", ".", data_extra) # remove extra col list
-            cat(cli::col_blue(data_extra), sep = "\n")
+        data_main <- data_out[-c(1:2)]
+        if (length(data_main) <= 5) {
+            cat(data_main, sep = "\n")
+        } else {
+            cat(data_main[1:5], sep = "\n")
+            n_more_cols <- length(data_main) - 5
+            cat(cli::col_grey("And ", n_more_cols, " more features.\n"))
         }
-        if (i < length(x)) {
-            cat("\n")
-        }
+        ## Separate data from comments (additional columns, tibble class)
+        #data_main <- data_out[!sapply(data_out, function(x) grepl("^#", x))]
+        #data_extra <- data_out[sapply(data_out, function(x) grepl("^#", x))]
+        ## Strip unnecessary first two characters
+        #data_main <- gsub("^.{2}", "", data_main)
+        #cat(
+        #    cli::col_magenta(data_main[1]), # column names
+        #    data_main[-c(1, 2)], # data
+        #    sep = "\n"
+        #)
+        #if (length(data_extra) > 1) {
+        #    data_extra <- gsub("# ", "", data_extra[2]) # remove hashes
+        #    data_extra <- gsub(":.*", ".", data_extra) # remove extra col list
+        #    cat(cli::col_blue(data_extra), sep = "\n")
+        #}
+        #if (i < length(x)) {
+        #    cat("\n")
+        #}
     }
 }
 

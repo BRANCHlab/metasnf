@@ -23,15 +23,15 @@
     - [ ] ensure class is used consistently throughout functionality
     - [ ] convert all dl-related functions to S3 methods (if applicable)
     - [x] define `print.data_list`: printing a data list only shows head/tibble head of each df sub-item
-    - [ ] use `glimpse` in formatting `print.data_list`
+    - [x] use `glimpse` in formatting `print.data_list`
     - [ ] within constructor, permit a data list like object to just be directly passed into validate_data_list() and new_data_list()
     - [x] finish validator
-    - [ ] establish attributes:
-        - [ ] "components" which refer to the individual components of the dl
-        - [ ] "observations" which captures the number of observations of the dl
-        - [ ] "features" which captures the features in the dl
-        - [ ] "domains" which captures the domains in the dl
-        - [ ] "types" which captures the types present in the dl?
+    - [x] establish attributes:
+        - [x] "components" which refer to the individual components of the dl
+        - [x] "observations" which captures the number of observations of the dl
+        - [x] "features" which captures the features in the dl
+        - [x] "domains" which captures the domains in the dl
+        - [x] "types" which captures the types present in the dl?
     - [x] strip "removed_subjects" functionality of constructor to its own function
         - [x] Remove removed_subjects functionality from constructor
     - [ ] name changes for data_list and target_list throughout documentation and functionality

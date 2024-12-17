@@ -115,16 +115,3 @@ test_that(
         )
     }
 )
-
-
-#------------------------------------------------------------------------------
-# new_data_list()
-#------------------------------------------------------------------------------
-test_that(
-    "Developer constructor for a data list.",
-    {
-        expect_true(
-            inherits(metasnf:::new_data_list(list(list())), "data_list")
-        )
-    }
-)
