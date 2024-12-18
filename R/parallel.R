@@ -8,7 +8,7 @@
 #' ?dist_fns_list for details on how to build this.
 #'
 #' @param clust_algs_list List of custom clustering algorithms to apply
-#' to the final fused network. See ?generate_clust_algs_list.
+#' to the final fused network. See ?clust_algs_list.
 #'
 #' @param settings_matrix matrix indicating parameters to iterate SNF through.
 #'
@@ -94,7 +94,7 @@ parallel_batch_snf <- function(dl,
 #' ?dist_fns_list for details on how to build this.
 #'
 #' @param clust_algs_list List of custom clustering algorithms to apply
-#' to the final fused network. See ?generate_clust_algs_list.
+#' to the final fused network. See ?clust_algs_list.
 #'
 #' @param settings_matrix matrix indicating parameters to iterate SNF through.
 #'

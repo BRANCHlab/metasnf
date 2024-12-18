@@ -25,7 +25,7 @@
 #' @inheritParams settings_df
 #' @inheritParams dist_fns_list
 #' @inheritParams generate_weights_matrix
-#' @inheritParams generate_clust_algs_list
+#' @inheritParams clust_algs_list
 #' @return An `snf_config` class object.
 #' @export
 snf_config <- function(dl,

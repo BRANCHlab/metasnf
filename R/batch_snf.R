@@ -27,7 +27,7 @@
 #' @param similarity_matrix_dir If specified, this directory will be used to
 #'  save all generated similarity matrices.
 #' @param clust_algs_list List of custom clustering algorithms to apply
-#'  to the final fused network. See ?generate_clust_algs_list.
+#'  to the final fused network. See ?clust_algs_list.
 #' @param suppress_clustering If FALSE (default), will apply default or custom
 #'  clustering algorithms to provide cluster solutions on every iteration of
 #'  SNF. If TRUE, parameter `similarity_matrix_dir` must be specified.
@@ -164,7 +164,7 @@ batch_snf <- function(dl,
     ###########################################################################
     # 6. Creation of clust_algs_list if it does not already exist
     if (is.null(clust_algs_list)) {
-        clust_algs_list <- generate_clust_algs_list()
+        clust_algs_list <- clust_algs_list()
     }
     ###########################################################################
     # 7. Call separate function for parallel processing

@@ -83,7 +83,7 @@ To make use of any of these alternative algorithms, you'll need to provide `batc
 Here's what that looks like:
 
 ```{r}
-clust_algs_list <- generate_clust_algs_list()
+clust_algs_list <- clust_algs_list()
 
 # The default list:
 clust_algs_list
@@ -92,7 +92,7 @@ clust_algs_list
 summarize_clust_algs_list(clust_algs_list)
 
 # Adding algorithms provided by the package
-clust_algs_list <- generate_clust_algs_list(
+clust_algs_list <- clust_algs_list(
     "two_cluster_spectral" = spectral_two,
     "five_cluster_spectral" = spectral_five
 )
@@ -101,7 +101,7 @@ clust_algs_list <- generate_clust_algs_list(
 summarize_clust_algs_list(clust_algs_list)
 
 # This list has only the newly added ones, thanks to the disable_base parameter
-clust_algs_list <- generate_clust_algs_list(
+clust_algs_list <- clust_algs_list(
     "two_cluster_spectral" = spectral_two,
     "five_cluster_spectral" = spectral_five,
     disable_base = TRUE
@@ -116,7 +116,7 @@ If your custom list is two algorithms long, that's fine, but if it isn't, it's i
 
 ```{r}
 # This list has only the newly added ones, thanks to the disable_base parameter
-clust_algs_list <- generate_clust_algs_list(
+clust_algs_list <- clust_algs_list(
     "two_cluster_spectral" = spectral_two,
     "three_cluster_spectral" = spectral_three,
     "five_cluster_spectral" = spectral_five

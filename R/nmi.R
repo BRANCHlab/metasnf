@@ -8,7 +8,7 @@
 #' in the original call to `batch_snf()`.
 #'
 #' @param clust_algs_list List of custom clustering algorithms to apply
-#' to the final fused network. See ?generate_clust_algs_list. Use the same
+#' to the final fused network. See ?clust_algs_list. Use the same
 #' value as was used in the original call to `batch_snf()`.
 #'
 #' @param dml An optional nested list containing which

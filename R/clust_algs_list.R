@@ -1,30 +1,26 @@
-#' Generate a list of custom clustering algorithms
+#' Build a clusteing algorithms list
 #'
 #' This function can be used to specify custom clustering algorithms to apply
 #' to the final similarity matrices produced by each run of the batch_snf
 #' function.
 #'
-#' @param ... An arbitrary number of named clustering functions (see examples
-#' below)
-#'
+#' @param ... An arbitrary number of named clustering functions
 #' @param disable_base If TRUE, do not prepend the base clustering algorithms
-#' (spectral_eigen and spectral_rot, which apply spectral clustering and use
-#' the eigen-gap and rotation cost heuristics respectively for determining
-#' the number of clusters in the graph.
-#'
+#'  (spectral_eigen and spectral_rot, which apply spectral clustering and use
+#'  the eigen-gap and rotation cost heuristics respectively for determining
+#'  the number of clusters in the graph.
 #' @return A list of clustering algorithm functions that can
-#' be passed into the batch_snf and generate_settings_list functions.
-#'
+#'  be passed into the batch_snf and generate_settings_list functions.
 #' @examples
 #' # Using just the base clustering algorithms --------------------------------
 #' # This will just contain spectral_eigen and spectral_rot
-#' clust_algs_list <- generate_clust_algs_list()
+#' clust_algs_list <- clust_algs_list()
 #'
 #' # Adding algorithms provided by the package --------------------------------
 #' # This will contain the base clustering algorithms (spectral_eigen,
 #' #  spectral_rot) as well as two pre-defined spectral clustering functions
 #' #  that force the number of clusters to be two or five
-#' clust_algs_list <- generate_clust_algs_list(
+#' clust_algs_list <- clust_algs_list(
 #'     "two_cluster_spectral" = spectral_two,
 #'     "five_cluster_spectral" = spectral_five
 #' )
@@ -43,41 +39,33 @@
 #' # Suppress the base algorithms----------------------------------------------
 #' # This will contain only user-provided clustering algorithms
 #'
-#' clust_algs_list <- generate_clust_algs_list(
+#' clust_algs_list <- clust_algs_list(
 #'     "two_cluster_spectral" = spectral_two,
 #'     "five_cluster_spectral" = spectral_five,
 #'     disable_base = TRUE
 #' )
 #'
 #' @export
-generate_clust_algs_list <- function(..., disable_base = FALSE) {
+clust_algs_list <- function(..., use_default_clust_algs = FALSE) {
     user_algs_list <- list(...)
-    # Ensure that user has provided a name for the algorithm
-    if (length(user_algs_list) > 0) {
-        if (min(nchar(names(user_algs_list))) == 0) {
-            metasnf_error(
-                "Please specify a name for every supplied algorithm.",
-                " See ?generate_clust_algs_list for examples."
-            )
-        }
-    }
-    base_algs_list <- list(
-        "spectral_eigen" = spectral_eigen,
-        "spectral_rot" = spectral_rot
-    )
-    if (disable_base) {
-        if (is.null(user_algs_list)) {
-            metasnf_error(
-                "disable_base is TRUE but no algorithms provided.",
-                " There is nothing to make a list of!"
-            )
-        } else {
-            clust_algs_list <- user_algs_list
-        }
-    } else {
+    if (use_default_clust_algs) {
+        base_algs_list <- list(
+            "spectral_eigen" = spectral_eigen,
+            "spectral_rot" = spectral_rot
+        )
         clust_algs_list <- c(base_algs_list, user_algs_list)
     }
     return(clust_algs_list)
+}
+
+check_call_named <- function(call) {
+    # Ensure that user has provided a name for the algorithm
+    if (min(nchar(names(call))) == 0) {
+        metasnf_error(
+            "Please specify a name for every supplied algorithm.",
+            " See ?clust_algs_list for examples."
+        )
+    }
 }
 
 #' Summarize a clust_algs_list object
