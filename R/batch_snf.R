@@ -26,8 +26,8 @@
 #'  of similarity matrices for each row in the solutions_matrix. Default FALSE.
 #' @param similarity_matrix_dir If specified, this directory will be used to
 #'  save all generated similarity matrices.
-#' @param clust_algs_list List of custom clustering algorithms to apply
-#'  to the final fused network. See ?clust_algs_list.
+#' @param cfl List of custom clustering algorithms to apply
+#'  to the final fused network. See ?clust_fns_list.
 #' @param suppress_clustering If FALSE (default), will apply default or custom
 #'  clustering algorithms to provide cluster solutions on every iteration of
 #'  SNF. If TRUE, parameter `similarity_matrix_dir` must be specified.
@@ -64,7 +64,7 @@ batch_snf <- function(dl,
                       processes = 1,
                       return_similarity_matrices = FALSE,
                       similarity_matrix_dir = NULL,
-                      clust_algs_list = NULL,
+                      cfl = NULL,
                       suppress_clustering = FALSE,
                       dml = NULL,
                       weights_matrix = NULL,
@@ -162,9 +162,9 @@ batch_snf <- function(dl,
         }
     }
     ###########################################################################
-    # 6. Creation of clust_algs_list if it does not already exist
-    if (is.null(clust_algs_list)) {
-        clust_algs_list <- clust_algs_list()
+    # 6. Creation of clust_fns_list if it does not already exist
+    if (is.null(cfl)) {
+        cfl <- clust_fns_list(use_default_clust_fns = TRUE)
     }
     ###########################################################################
     # 7. Call separate function for parallel processing
@@ -176,7 +176,7 @@ batch_snf <- function(dl,
             solutions_matrix <- parallel_batch_snf(
                 dl = dl,
                 dml = dml,
-                clust_algs_list = clust_algs_list,
+                cfl = cfl,
                 settings_matrix = settings_matrix,
                 weights_matrix = weights_matrix,
                 similarity_matrix_dir = similarity_matrix_dir,
@@ -197,7 +197,7 @@ batch_snf <- function(dl,
             solutions_matrix <- parallel_batch_snf(
                 dl = dl,
                 dml = dml,
-                clust_algs_list = clust_algs_list,
+                cfl = cfl,
                 settings_matrix = settings_matrix,
                 weights_matrix = weights_matrix,
                 similarity_matrix_dir = similarity_matrix_dir,
@@ -307,7 +307,7 @@ batch_snf <- function(dl,
         # 11. Clustering of the final fused network
         #######################################################################
         # clust_alg stores the function to be used for this run of SNF
-        clust_alg <- clust_algs_list[[settings_matrix_row$"clust_alg"]]
+        clust_alg <- cfl[[settings_matrix_row$"clust_alg"]]
         # cluster_results is a named list containing the cluster solution
         #  (vector of which cluster each patient was assigned to) and the
         #  number of clusters for that solution

@@ -52,11 +52,11 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
 generate_clust_algs_list <- function(..., disable_base = FALSE) {
     metasnf_deprecated(
         "2.0.0",
-        "Please use `clust_algs_list()` instead."
+        "Please use `clust_fns_list()` instead."
     )
-    clust_algs_list(
-        ...,
-        use_default_clust_algs  = !disable_base
+    clust_fns_list(
+        clust_fns = list(...),
+        use_default_clust_fns  = !disable_base
     )
 }
 

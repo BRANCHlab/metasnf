@@ -9,7 +9,7 @@ batch_snf_subsamples(
   settings_matrix,
   processes = 1,
   return_similarity_matrices = FALSE,
-  clust_algs_list = NULL,
+  cfl = NULL,
   suppress_clustering = FALSE,
   dml = NULL,
   weights_matrix = NULL,
@@ -29,7 +29,7 @@ pipelines to be applied to the subsampled data lists.}
 
 \item{return_similarity_matrices}{See ?batch_snf.}
 
-\item{clust_algs_list}{See ?batch_snf.}
+\item{cfl}{See ?batch_snf.}
 
 \item{suppress_clustering}{See ?batch_snf.}
 

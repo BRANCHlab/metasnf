@@ -625,8 +625,8 @@ validate_data_list <- function(dll) {
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
-#' @return Doesn't return any value. Raises warning if there are features
-#'  with duplicate names in a generated data list.
+#' @return Doesn't return any value. Raises error if there are features with
+#'  duplicate names in a generated data list.
 check_dll_duplicate_features <- function(dll) {
     features <- dll |> lapply(
         function(x) {

@@ -10,7 +10,7 @@ batch_snf(
   processes = 1,
   return_similarity_matrices = FALSE,
   similarity_matrix_dir = NULL,
-  clust_algs_list = NULL,
+  cfl = NULL,
   suppress_clustering = FALSE,
   dml = NULL,
   weights_matrix = NULL,
@@ -47,8 +47,8 @@ of similarity matrices for each row in the solutions_matrix. Default FALSE.}
 \item{similarity_matrix_dir}{If specified, this directory will be used to
 save all generated similarity matrices.}
 
-\item{clust_algs_list}{List of custom clustering algorithms to apply
-to the final fused network. See ?generate_clust_algs_list.}
+\item{cfl}{List of custom clustering algorithms to apply
+to the final fused network. See ?clust_fns_list.}
 
 \item{suppress_clustering}{If FALSE (default), will apply default or custom
 clustering algorithms to provide cluster solutions on every iteration of

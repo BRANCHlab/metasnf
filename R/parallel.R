@@ -7,8 +7,8 @@
 #' (continuous, discrete, ordinal, categorical, and mixed). See
 #' ?dist_fns_list for details on how to build this.
 #'
-#' @param clust_algs_list List of custom clustering algorithms to apply
-#' to the final fused network. See ?clust_algs_list.
+#' @param cfl List of custom clustering algorithms to apply
+#' to the final fused network. See ?clust_fns_list.
 #'
 #' @param settings_matrix matrix indicating parameters to iterate SNF through.
 #'
@@ -30,7 +30,7 @@
 #' @export
 parallel_batch_snf <- function(dl,
                                dml,
-                               clust_algs_list,
+                               cfl,
                                settings_matrix,
                                weights_matrix,
                                similarity_matrix_dir,
@@ -43,7 +43,7 @@ parallel_batch_snf <- function(dl,
     batch_row_function <- batch_row_closure(
         dl = dl,
         dml = dml,
-        clust_algs_list = clust_algs_list,
+        cfl = cfl,
         settings_matrix = settings_matrix,
         weights_matrix = weights_matrix,
         similarity_matrix_dir = similarity_matrix_dir,
@@ -93,8 +93,8 @@ parallel_batch_snf <- function(dl,
 #' (continuous, discrete, ordinal, categorical, and mixed). See
 #' ?dist_fns_list for details on how to build this.
 #'
-#' @param clust_algs_list List of custom clustering algorithms to apply
-#' to the final fused network. See ?clust_algs_list.
+#' @param cfl List of custom clustering algorithms to apply
+#' to the final fused network. See ?clust_fns_list.
 #'
 #' @param settings_matrix matrix indicating parameters to iterate SNF through.
 #'
@@ -117,7 +117,7 @@ parallel_batch_snf <- function(dl,
 #' @export
 batch_row_closure <- function(dl,
                               dml,
-                              clust_algs_list,
+                              cfl,
                               settings_matrix,
                               weights_matrix,
                               similarity_matrix_dir,
@@ -175,7 +175,7 @@ batch_row_closure <- function(dl,
                 row.names = TRUE
             )
         }
-        clust_alg <- clust_algs_list[[settings_matrix_row$"clust_alg"]]
+        clust_alg <- cfl[[settings_matrix_row$"clust_alg"]]
         # cluster_results is a named list containing the cluster solution
         #  (vector of which cluster each patient was assigned to) and the
         #  number of clusters for that solution

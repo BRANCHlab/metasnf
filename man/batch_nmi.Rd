@@ -7,7 +7,7 @@
 batch_nmi(
   dl,
   solutions_matrix,
-  clust_algs_list = NULL,
+  cfl = NULL,
   dml = NULL,
   automatic_standard_normalize = FALSE,
   transpose = TRUE,
@@ -23,8 +23,8 @@ Use the same value as was used in the original call to \code{batch_snf()}.}
 the settings that were used to generate them. Use the same value as was used
 in the original call to \code{batch_snf()}.}
 
-\item{clust_algs_list}{List of custom clustering algorithms to apply
-to the final fused network. See ?generate_clust_algs_list. Use the same
+\item{cfl}{List of custom clustering algorithms to apply
+to the final fused network. See ?clust_fns_list. Use the same
 value as was used in the original call to \code{batch_snf()}.}
 
 \item{dml}{An optional nested list containing which

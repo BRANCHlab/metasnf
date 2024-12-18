@@ -109,7 +109,7 @@ scheme.}
 \item{clustering_algorithms}{A list of clustering algorithms to uniformly
 randomly pick from when clustering. When not specified, randomly select
 between spectral clustering using the eigen-gap heuristic and spectral
-clustering using the rotation cost heuristic. See ?generate_clust_algs_list
+clustering using the rotation cost heuristic. See ?clust_fns_list
 for more details on running custom clustering algorithms.}
 
 \item{continuous_distances}{A vector of continuous distance metrics to use
@@ -172,7 +172,7 @@ Data frame that stores SNF-specific hyperparameters and information
 about feature selection and weighting, SNF schemes, clustering
 algorithms, and distance metrics. Each row of the settings data frame
 corresponds to a distinct cluster solution.
-2. A clustering algorithms list (inherits from \code{clust_algs_list} and
+2. A clustering algorithms list (inherits from \code{clust_fns_list} and
 \code{list}), which stores all clustering algorithms that the settings
 data frame can point to.
 3. A distance metrics list (inherits from \code{dist_metrics_list} and

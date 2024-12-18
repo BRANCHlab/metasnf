@@ -10,7 +10,7 @@
 #'        about feature selection and weighting, SNF schemes, clustering
 #'        algorithms, and distance metrics. Each row of the settings data frame
 #'        corresponds to a distinct cluster solution.
-#'     2. A clustering algorithms list (inherits from `clust_algs_list` and
+#'     2. A clustering algorithms list (inherits from `clust_fns_list` and
 #'        `list`), which stores all clustering algorithms that the settings
 #'        data frame can point to. 
 #'     3. A distance metrics list (inherits from `dist_metrics_list` and
@@ -25,7 +25,7 @@
 #' @inheritParams settings_df
 #' @inheritParams dist_fns_list
 #' @inheritParams generate_weights_matrix
-#' @inheritParams clust_algs_list
+#' @inheritParams clust_fns_list
 #' @return An `snf_config` class object.
 #' @export
 snf_config <- function(dl,

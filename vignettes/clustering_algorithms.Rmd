@@ -79,35 +79,39 @@ Currently, the available clustering algorithms are:
 
 The first two are the defaults, and the remaining ones specifically use 2, 3, 4, ... and so on as their number of clusters rather than whatever is calculated by a separate heuristic function.
 
-To make use of any of these alternative algorithms, you'll need to provide `batch_snf` with a custom `clust_algs_list`.
+To make use of any of these alternative algorithms, you'll need to provide `batch_snf` with a custom `clust_fns_list`.
 Here's what that looks like:
 
 ```{r}
-clust_algs_list <- clust_algs_list()
+cfl <- clust_fns_list(use_default_clust_fns = TRUE)
 
 # The default list:
-clust_algs_list
+cfl
 
 # A prettier format:
-summarize_clust_algs_list(clust_algs_list)
+summarize_clust_fns_list(cfl)
 
 # Adding algorithms provided by the package
-clust_algs_list <- clust_algs_list(
-    "two_cluster_spectral" = spectral_two,
-    "five_cluster_spectral" = spectral_five
+cfl <- clust_fns_list(
+    clust_fns = list(
+        "two_cluster_spectral" = spectral_two,
+        "five_cluster_spectral" = spectral_five
+    ),
+    use_default_clust_fns = TRUE
 )
 
 # Note that this one has the default algorithms as well as the newly added ones
-summarize_clust_algs_list(clust_algs_list)
+summarize_clust_fns_list(cfl)
 
 # This list has only the newly added ones, thanks to the disable_base parameter
-clust_algs_list <- clust_algs_list(
-    "two_cluster_spectral" = spectral_two,
-    "five_cluster_spectral" = spectral_five,
-    disable_base = TRUE
+cfl <- clust_fns_list(
+    clust_fns = list(
+        "two_cluster_spectral" = spectral_two,
+        "five_cluster_spectral" = spectral_five
+    )
 )
 
-summarize_clust_algs_list(clust_algs_list)
+summarize_clust_fns_list(cfl)
 ```
 
 **By default, the settings matrix only varies over the values 1 and 2**.
@@ -116,10 +120,12 @@ If your custom list is two algorithms long, that's fine, but if it isn't, it's i
 
 ```{r}
 # This list has only the newly added ones, thanks to the disable_base parameter
-clust_algs_list <- clust_algs_list(
-    "two_cluster_spectral" = spectral_two,
-    "three_cluster_spectral" = spectral_three,
-    "five_cluster_spectral" = spectral_five
+cfl <- clust_fns_list(
+    clust_fns = list(
+        "two_cluster_spectral" = spectral_two,
+        "three_cluster_spectral" = spectral_three,
+        "five_cluster_spectral" = spectral_five
+    )
 )
 
 # Specifying 5 different sets of settings for SNF
@@ -128,19 +134,19 @@ settings_matrix <- settings_df(
     dl,
     nrow = 10,
     max_k = 40,
-    clustering_algorithms = clust_algs_list
+    clustering_algorithms = cfl
 )
 
 settings_matrix$"clust_alg"
 ```
 
-Then, make sure to provide the `clust_algs_list` once more during the call to `batch_snf`:
+Then, make sure to provide the `clust_fns_list` once more during the call to `batch_snf`:
 
 ```{r eval = FALSE}
 solutions_matrix <- batch_snf(
     dl,
     settings_matrix,
-    clust_algs_list = clust_algs_list
+    cfl = cfl
 )
 ```
 
@@ -217,7 +223,7 @@ This is particularly useful for clustering procedures where the transition from 
 batch_snf_results <- batch_snf(
     dl,
     settings_matrix,
-    clust_algs_list = clust_algs_list,
+    cfl = cfl,
     return_similarity_matrices = TRUE
 )
 

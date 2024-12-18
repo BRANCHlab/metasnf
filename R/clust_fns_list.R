@@ -4,25 +4,27 @@
 #' to the final similarity matrices produced by each run of the batch_snf
 #' function.
 #'
-#' @param ... An arbitrary number of named clustering functions
-#' @param disable_base If TRUE, do not prepend the base clustering algorithms
+#' @param clust_fns A list of named clustering functions
+#' @param use_default_clust_fns If TRUE, prepend the base clustering algorithms
 #'  (spectral_eigen and spectral_rot, which apply spectral clustering and use
 #'  the eigen-gap and rotation cost heuristics respectively for determining
-#'  the number of clusters in the graph.
+#'  the number of clusters in the graph) to clust_fns.
 #' @return A list of clustering algorithm functions that can
 #'  be passed into the batch_snf and generate_settings_list functions.
 #' @examples
 #' # Using just the base clustering algorithms --------------------------------
 #' # This will just contain spectral_eigen and spectral_rot
-#' clust_algs_list <- clust_algs_list()
+#' cfl <- clust_fns_list(use_default_clust_fns = TRUE)
 #'
 #' # Adding algorithms provided by the package --------------------------------
 #' # This will contain the base clustering algorithms (spectral_eigen,
 #' #  spectral_rot) as well as two pre-defined spectral clustering functions
 #' #  that force the number of clusters to be two or five
-#' clust_algs_list <- clust_algs_list(
-#'     "two_cluster_spectral" = spectral_two,
-#'     "five_cluster_spectral" = spectral_five
+#' cfl <- clust_fns_list(
+#'      clust_fns = list(
+#'         "two_cluster_spectral" = spectral_two,
+#'         "five_cluster_spectral" = spectral_five
+#'     )
 #' )
 #'
 #' # Adding your own algorithms -----------------------------------------------
@@ -38,48 +40,48 @@
 #'
 #' # Suppress the base algorithms----------------------------------------------
 #' # This will contain only user-provided clustering algorithms
-#'
-#' clust_algs_list <- clust_algs_list(
-#'     "two_cluster_spectral" = spectral_two,
-#'     "five_cluster_spectral" = spectral_five,
-#'     disable_base = TRUE
+#' cfl <- clust_fns_list(
+#'     clust_fns = list(
+#'         "two_cluster_spectral" = spectral_two,
+#'         "five_cluster_spectral" = spectral_five
+#'     )
 #' )
-#'
 #' @export
-clust_algs_list <- function(..., use_default_clust_algs = FALSE) {
-    user_algs_list <- list(...)
-    if (use_default_clust_algs) {
+clust_fns_list <- function(clust_fns = NULL, use_default_clust_fns = FALSE) {
+    cfl <- clust_fns
+    if (use_default_clust_fns) {
         base_algs_list <- list(
             "spectral_eigen" = spectral_eigen,
             "spectral_rot" = spectral_rot
         )
-        clust_algs_list <- c(base_algs_list, user_algs_list)
+        cfl <- c(base_algs_list, cfl)
     }
-    return(clust_algs_list)
+    return(cfl)
 }
 
-check_call_named <- function(call) {
+#' Check if clustering functions list-like object has named algorithms
+#'
+#' @keywords internal
+#' @param cfll A clustering functions list-like `list` class object.
+#' @return Doesn't return any value. Raises error if there are unnamed
+#'  clustering functions in cfll.
+check_cfll_named <- function(cfll) {
     # Ensure that user has provided a name for the algorithm
-    if (min(nchar(names(call))) == 0) {
-        metasnf_error(
-            "Please specify a name for every supplied algorithm.",
-            " See ?clust_algs_list for examples."
-        )
+    if (min(nchar(names(cfll))) == 0) {
+        metasnf_error("Please specify a name for every supplied function.")
     }
 }
 
-#' Summarize a clust_algs_list object
+#' Summarize a clust_fns_list object
 #'
-#' @param clust_algs_list A clust_algs_list object
-#'
+#' @param cfl A `clust_fns_list` class object.
 #' @return summary_df "data.frame" class object containing the name and index
-#' of each clustering algorithm in te provided `clust_algs_list`.
-#'
+#'  of each clustering algorithm in te provided `clust_fns_list`.
 #' @export
-summarize_clust_algs_list <- function(clust_algs_list) {
+summarize_clust_fns_list <- function(cfl) {
     summary_df <- data.frame(
-        alg_number = seq_along(clust_algs_list),
-        algorithm = names(clust_algs_list)
+        alg_number = seq_along(cfl),
+        algorithm = names(cfl)
     )
     return(summary_df)
 }

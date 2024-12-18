@@ -10,8 +10,8 @@ check_dll_duplicate_features(dll)
 \item{dll}{A data list-like \code{list} class object.}
 }
 \value{
-Doesn't return any value. Raises warning if there are features
-with duplicate names in a generated data list.
+Doesn't return any value. Raises error if there are features with
+duplicate names in a generated data list.
 }
 \description{
 Check if data list contains any duplicate features

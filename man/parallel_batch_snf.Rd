@@ -7,7 +7,7 @@
 parallel_batch_snf(
   dl,
   dml,
-  clust_algs_list,
+  cfl,
   settings_matrix,
   weights_matrix,
   similarity_matrix_dir,
@@ -23,8 +23,8 @@ distance metric function should be used for the various feature types
 (continuous, discrete, ordinal, categorical, and mixed). See
 ?dist_fns_list for details on how to build this.}
 
-\item{clust_algs_list}{List of custom clustering algorithms to apply
-to the final fused network. See ?generate_clust_algs_list.}
+\item{cfl}{List of custom clustering algorithms to apply
+to the final fused network. See ?clust_fns_list.}
 
 \item{settings_matrix}{matrix indicating parameters to iterate SNF through.}
 

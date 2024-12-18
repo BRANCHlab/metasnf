@@ -110,7 +110,7 @@
 #' @param clustering_algorithms A list of clustering algorithms to uniformly
 #'  randomly pick from when clustering. When not specified, randomly select
 #'  between spectral clustering using the eigen-gap heuristic and spectral
-#'  clustering using the rotation cost heuristic. See ?clust_algs_list
+#'  clustering using the rotation cost heuristic. See ?clust_fns_list
 #'  for more details on running custom clustering algorithms.
 #' @param continuous_distances A vector of continuous distance metrics to use
 #'  when a custom dist_fns_list is provided.
@@ -269,7 +269,7 @@ settings_df <- function(dl,
 #' @param clustering_algorithms A list of clustering algorithms to uniformly
 #'  randomly pick from when clustering. When not specified, randomly select
 #'  between spectral clustering using the eigen-gap heuristic and spectral
-#'  clustering using the rotation cost heuristic. See ?clust_algs_list
+#'  clustering using the rotation cost heuristic. See ?clust_fns_list
 #'  for more details on running custom clustering algorithms.
 #' @param continuous_distances A vector of continuous distance metrics to use
 #'  when a custom dist_fns_list is provided.

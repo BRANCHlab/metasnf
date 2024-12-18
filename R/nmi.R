@@ -7,8 +7,8 @@
 #' the settings that were used to generate them. Use the same value as was used
 #' in the original call to `batch_snf()`.
 #'
-#' @param clust_algs_list List of custom clustering algorithms to apply
-#' to the final fused network. See ?clust_algs_list. Use the same
+#' @param cfl List of custom clustering algorithms to apply
+#' to the final fused network. See ?clust_fns_list. Use the same
 #' value as was used in the original call to `batch_snf()`.
 #'
 #' @param dml An optional nested list containing which
@@ -36,7 +36,7 @@
 #' @export
 batch_nmi <- function(dl,
                       solutions_matrix,
-                      clust_algs_list = NULL,
+                      cfl = NULL,
                       dml = NULL,
                       automatic_standard_normalize = FALSE,
                       transpose = TRUE,
@@ -134,7 +134,7 @@ batch_nmi <- function(dl,
                 this_solutions_matrix <- batch_snf(
                     dl = feature_dl,
                     settings_matrix = this_settings_matrix,
-                    clust_algs_list = clust_algs_list,
+                    cfl = cfl,
                     dml = dml,
                     automatic_standard_normalize = asn,
                     verbose = FALSE
