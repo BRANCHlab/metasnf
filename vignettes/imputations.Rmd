@@ -59,7 +59,7 @@ data_list_imp2 <- data_list(
 )
 
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list_imp1,
     nrow = 10,
     min_k = 20,

@@ -47,16 +47,16 @@ print.data_list <- function(x, ...) {
     }
 }
 
-#' Print method for class `distance_metrics_list`
+#' Print method for class `dist_fns_list`
 #'
 #' Custom formatted print for distance metrics list objects that outputs
 #' information about the contained distance metrics to the console.
 #'
-#' @param x A `distance_metrics_list` class object.
+#' @param x A `dist_fns_list` class object.
 #' @param ... Other arguments passed to `print` (not used in this function)
 #' @return Function prints to console but does not return any value.
 #' @export
-print.distance_metrics_list <- function(x, ...) {
+print.dist_fns_list <- function(x, ...) {
     dml_names <- c(
         "Continuous" = "cnt_dist_fns",
         "Discrete" = "dsc_dist_fns",
@@ -71,7 +71,7 @@ print.distance_metrics_list <- function(x, ...) {
         cat(cli::col_yellow(clean_name, " (", length(this_type_fns),   "):\n"))
         all_output <- c()
         for (fn_idx in seq_along(x[[this_type]])) {
-            output <- capture.output(
+            output <- utils::capture.output(
                 cat(
                     cli::col_green(
                         "[", fn_idx, "] ", names(x[[this_type]])[fn_idx],

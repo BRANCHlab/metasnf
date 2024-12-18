@@ -1,6 +1,6 @@
 #' Build a distance metrics list
 #'
-#' The distance metrics list object (inherits classes `distance_metrics_list`
+#' The distance metrics list object (inherits classes `dist_fns_list`
 #' and `list`) is a list that stores R functions which can convert a data
 #' frame of features into a matrix of pairwise distances. The list is a nested
 #' one, where the first layer of the list can hold up to 5 items (one for each
@@ -23,7 +23,7 @@
 #' @return A distance metrics list object.
 #' @examples
 #' # Using just the base distance metrics  ------------------------------------
-#' distance_metrics_list <- distance_metrics_list()
+#' dist_fns_list <- dist_fns_list()
 #'
 #' # Adding your own metrics --------------------------------------------------
 #' # This will contain only the and user-provided distance function:
@@ -38,7 +38,7 @@
 #'     return(distance_matrix)
 #' }
 #'
-#' distance_metrics_list <- distance_metrics_list(
+#' dist_fns_list <- dist_fns_list(
 #'     cnt_dist_fns = list(
 #'          "my_cubed_euclidean" = cubed_euclidean
 #'     )
@@ -48,7 +48,7 @@
 #' # Call ?distance_metrics to see all distance metric functions provided in
 #' # metasnf. The code below will contain a mix of user-provided and built-in
 #' # distance metric functions.
-#' distance_metrics_list <- distance_metrics_list(
+#' dist_fns_list <- dist_fns_list(
 #'     cnt_dist_fns = list(
 #'          "my_distance_metric" = cubed_euclidean
 #'     ),
@@ -67,7 +67,7 @@
 #'     use_default_dist_fns = TRUE
 #' )
 #' @export
-distance_metrics_list <- function(cnt_dist_fns = NULL,
+dist_fns_list <- function(cnt_dist_fns = NULL,
                                   dsc_dist_fns = NULL,
                                   ord_dist_fns = NULL,
                                   cat_dist_fns = NULL,
@@ -96,18 +96,18 @@ distance_metrics_list <- function(cnt_dist_fns = NULL,
         dmll$"cat_dist_fns" <- c(base_cat_dist_fns, dmll$"cat_dist_fns")
         dmll$"mix_dist_fns" <- c(base_mix_dist_fns, dmll$"mix_dist_fns")
     }
-    dmll <- validate_distance_metrics_list(dmll)
-    dml <- new_distance_metrics_list(dmll)
+    dmll <- validate_dist_fns_list(dmll)
+    dml <- new_dist_fns_list(dmll)
     return(dml)
 }
 
-#' Validator for distance_metrics_list class object
+#' Validator for dist_fns_list class object
 #'
 #' @keywords internal
 #' @param dmll A distance metrics list-like list object to be validated.
-#' @return If dmll has a valid structure for a `distance_metrics_list` class
+#' @return If dmll has a valid structure for a `dist_fns_list` class
 #'  object, returns the input unchanged. Otherwise, raises an error.
-validate_distance_metrics_list <- function(dmll) {
+validate_dist_fns_list <- function(dmll) {
     # First layer of items have valid names
     check_dmll_item_names(dmll)
     # Second layer of items are all functions
@@ -121,15 +121,15 @@ validate_distance_metrics_list <- function(dmll) {
     return(dmll)
 }
 
-new_distance_metrics_list <- function(dmll) {
-    dml <- structure(dmll, class = c("distance_metrics_list", "list"))
+new_dist_fns_list <- function(dmll) {
+    dml <- structure(dmll, class = c("dist_fns_list", "list"))
     return(dml)
 }
 
 #' Check if items of a distance metrics list-like object have valid names
 #'
 #' @keywords internal
-#' @inheritParams validate_distance_metrics_list
+#' @inheritParams validate_dist_fns_list
 #' @return Doesn't return any value. Raises error if the items of dmll don't
 #'  have valid formatted names.
 check_dmll_item_names <- function(dmll) {
@@ -152,7 +152,7 @@ check_dmll_item_names <- function(dmll) {
 #' Check if subitems of a distance metrics list-like object are functions
 #'
 #' @keywords internal
-#' @inheritParams validate_distance_metrics_list
+#' @inheritParams validate_dist_fns_list
 #' @return Doesn't return any value. Raises error if the subitems of dmll are
 #'  not functions.
 check_dmll_subitems_are_fns <- function(dmll) {
@@ -179,7 +179,7 @@ check_dmll_subitems_are_fns <- function(dmll) {
 #' Check if names in a distance metrics list-like object are unique
 #'
 #' @keywords internal
-#' @inheritParams validate_distance_metrics_list
+#' @inheritParams validate_dist_fns_list
 #' @return Doesn't return any value. Raises error if the items of dmll aren't
 #'  unique across layer 1 or within each item of layer 2.
 check_dmll_unique_names <- function(dmll) {
@@ -208,7 +208,7 @@ check_dmll_unique_names <- function(dmll) {
 #' Check if functions in a distance metrics list-like have valid arguments
 #'
 #' @keywords internal
-#' @inheritParams validate_distance_metrics_list
+#' @inheritParams validate_dist_fns_list
 #' @return Doesn't return any value. Raises error if the functions in dmll
 #'  don't have valid arguments.
 check_dmll_fn_args <- function(dmll) {
@@ -238,7 +238,7 @@ check_dmll_fn_args <- function(dmll) {
 #' Check if functions in a distance metrics list-like have names
 #'
 #' @keywords internal
-#' @inheritParams validate_distance_metrics_list
+#' @inheritParams validate_dist_fns_list
 #' @return Doesn't return any value. Raises error if the functions in dmll
 #'  don't have names.
 check_dmll_fn_names <- function(dmll) {
@@ -255,16 +255,16 @@ check_dmll_fn_names <- function(dmll) {
     }
 }
 
-#' Summarize metrics contained in a distance_metrics_list
+#' Summarize metrics contained in a dist_fns_list
 #'
-#' @param distance_metrics_list A distance_metrics_list.
+#' @param dist_fns_list A dist_fns_list.
 #'
 #' @return "data.frame"-class object summarizing items in a distance metrics
 #' list.
 #'
 #' @export
-summarize_dml <- function(distance_metrics_list) {
-    dml_summary <- lapply(distance_metrics_list, names)
+summarize_dml <- function(dist_fns_list) {
+    dml_summary <- lapply(dist_fns_list, names)
     return(dml_summary)
 }
 

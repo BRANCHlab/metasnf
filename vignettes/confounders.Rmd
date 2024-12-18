@@ -165,7 +165,7 @@ data_list <- data_list(
     uid = "id"
 )
 
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     dl = data_list,
     nrow = 1,
     possible_snf_schemes = 1,

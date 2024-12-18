@@ -56,7 +56,7 @@ label_prop <- function(full_fused_network, clusters) {
 #' @param full_dl A data list containing subjects from both the training
 #' and testing sets.
 #'
-#' @param dml Like above - the distance_metrics_list (if any)
+#' @param dml Like above - the dist_fns_list (if any)
 #' that was used for the original batch_snf call.
 #'
 #' @param weights_matrix Like above.
@@ -99,10 +99,10 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     # 3. SNF of the full data list
     ###########################################################################
     ###########################################################################
-    ## 3-1. Creation of distance_metrics_list, if it does not already exist
+    ## 3-1. Creation of dist_fns_list, if it does not already exist
     ###########################################################################
     if (is.null(dml)) {
-        dml <- distance_metrics_list(use_default_dist_fns = TRUE)
+        dml <- dist_fns_list(use_default_dist_fns = TRUE)
     }
     ###########################################################################
     ## 3-2. Create (or check) weights_matrix

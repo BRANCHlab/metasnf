@@ -2,17 +2,17 @@
 % Please edit documentation in R/distance_metrics_list.R
 \name{summarize_dml}
 \alias{summarize_dml}
-\title{Summarize metrics contained in a distance_metrics_list}
+\title{Summarize metrics contained in a dist_fns_list}
 \usage{
-summarize_dml(distance_metrics_list)
+summarize_dml(dist_fns_list)
 }
 \arguments{
-\item{distance_metrics_list}{A distance_metrics_list.}
+\item{dist_fns_list}{A dist_fns_list.}
 }
 \value{
 "data.frame"-class object summarizing items in a distance metrics
 list.
 }
 \description{
-Summarize metrics contained in a distance_metrics_list
+Summarize metrics contained in a dist_fns_list
 }

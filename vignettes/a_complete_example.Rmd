@@ -217,11 +217,11 @@ If you'd like to have no target list and instead use every single feature of int
 ## Defining sets of hyperparameters to use for SNF and clustering
 
 The `settings_matrix` stores all the information about the settings we'd like to use for each of our SNF runs.
-Calling the `generate_settings_matrix` function with a specified number of rows will automatically build a randomly populated `settings_matrix`.
+Calling the `settings_df` function with a specified number of rows will automatically build a randomly populated `settings_matrix`.
 
 ```{r}
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     min_k = 20,
@@ -242,7 +242,7 @@ The columns are:
 - `*_dist` - Which distance metric will be used for the different types of data (discussed further in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html))
 - `inc_*` - binary columns indicating whether or not an input dataframe is included (1) or excluded (0) from the corresponding SNF run (discussed further in the [settings matrix vignette](https://branchlab.github.io/metasnf/articles/settings_matrix.html))
 
-Without specifying any additional parameters, `generate_settings_matrix` randomly populates these columns and ensures that no generated rows are identical.
+Without specifying any additional parameters, `settings_df` randomly populates these columns and ensures that no generated rows are identical.
 
 What's important for now is that the matrix (technically a dataframe in the R environment) contains several rows which each outline a different but reasonable way in which the raw data could be converted into a cluster solution.
 Further customization of the `settings_matrix` will enable you to access the broadest possible space of reasonable cluster solutions that your data can produce using SNF and ideally get you closer to a generalizable and useful solution for your context.
@@ -882,7 +882,7 @@ train_target_list <- data_list(
 
 # Find a clustering solution in your training data
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     train_data_list,
     nrow = 5,
     min_k = 10,

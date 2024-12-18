@@ -167,7 +167,7 @@ data_list <- data_list(
     uid = "patient"
 )
 
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     min_k = 20,

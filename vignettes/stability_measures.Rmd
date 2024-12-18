@@ -41,7 +41,7 @@ data_list <- data_list(
 )
 
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 4,
     max_k = 40

@@ -2,7 +2,7 @@
 #library(testthat)
 
 ###############################################################################
-# generate_settings_matrix()
+# settings_df()
 ###############################################################################
 test_that("return a correctly formatted settings_matrix", {
     heart_rate_df <- data.frame(
@@ -30,7 +30,7 @@ test_that("return a correctly formatted settings_matrix", {
         ),
         uid = "patient_id"
     )
-    empty_settings_matrix <- generate_settings_matrix(data_list)
+    empty_settings_matrix <- settings_df(data_list)
     empty_has_no_rows <- nrow(empty_settings_matrix) == 0
     proper_colnames <- (colnames(empty_settings_matrix) == c(
         "row_id",

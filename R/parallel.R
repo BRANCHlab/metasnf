@@ -5,7 +5,7 @@
 #' @param dml An optional nested list containing which
 #' distance metric function should be used for the various feature types
 #' (continuous, discrete, ordinal, categorical, and mixed). See
-#' ?distance_metrics_list for details on how to build this.
+#' ?dist_fns_list for details on how to build this.
 #'
 #' @param clust_algs_list List of custom clustering algorithms to apply
 #' to the final fused network. See ?generate_clust_algs_list.
@@ -91,7 +91,7 @@ parallel_batch_snf <- function(dl,
 #' @param dml An optional nested list containing which
 #' distance metric function should be used for the various feature types
 #' (continuous, discrete, ordinal, categorical, and mixed). See
-#' ?distance_metrics_list for details on how to build this.
+#' ?dist_fns_list for details on how to build this.
 #'
 #' @param clust_algs_list List of custom clustering algorithms to apply
 #' to the final fused network. See ?generate_clust_algs_list.

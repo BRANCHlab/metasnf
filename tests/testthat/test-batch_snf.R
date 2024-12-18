@@ -15,7 +15,7 @@ test_that("function and parallel equivalent run and give equal results", {
     )
     # Specifying 5 different sets of settings for SNF
     set.seed(42)
-    settings_matrix <- generate_settings_matrix(
+    settings_matrix <- settings_df(
         data_list,
         nrow = 3,
         max_k = 40

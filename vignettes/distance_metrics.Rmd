@@ -24,24 +24,24 @@ knitr::opts_chunk$set(
 
 Download a copy of the vignette to follow along here: [distance_metrics.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/distance_metrics.Rmd)
 
-## The distance_metrics_list
+## The dist_fns_list
 
 metasnf enables users to customize what distance metrics are used in the SNF pipeline.
-All information about distance metrics are stored in a `distance_metrics_list` object.
+All information about distance metrics are stored in a `dist_fns_list` object.
 
-By default, `batch_snf` will create its own `distance_metrics_list` by calling the `distance_metrics_list` function with no additional arguments.
+By default, `batch_snf` will create its own `dist_fns_list` by calling the `dist_fns_list` function with no additional arguments.
 
 ```{r}
 library(metasnf)
 
-distance_metrics_list <- distance_metrics_list(use_default_dist_fns = TRUE)
+dist_fns_list <- dist_fns_list(use_default_dist_fns = TRUE)
 ```
 
 The list is a list of functions (`euclidean_distance()` and `gower_distance()`), and printing them out directly can be messy.
 The `summarize_dml()` function prints the object with a nicer format.
 
 ```{r}
-summarize_dml(distance_metrics_list)
+summarize_dml(dist_fns_list)
 ```
 
 These lists must always contain at least 1 distance metric for each of the 5 recognized types of features: continuous, discrete, ordinal, categorical, and mixed (any combination of the previous four).
@@ -49,14 +49,14 @@ These lists must always contain at least 1 distance metric for each of the 5 rec
 By default, continuous, discrete, and ordinal data are converted to distance matrices using simple Euclidean distance.
 Categorical and mixed data are handled using Gower's formula as implemented by the cluster package (see `?cluster::daisy`).
 
-## How the distance_metrics_list is used
+## How the dist_fns_list is used
 
-To show how the distance_metrics_list is used, we'll start by extending our distance_metrics_list beyond just the default options.
+To show how the dist_fns_list is used, we'll start by extending our dist_fns_list beyond just the default options.
 metasnf provides a Euclidean distance function that applies standard normalization first, `sn_euclidean_distance()` (a wrapper around `SNFtool::standardNormalization` + `stats::dist`).
-Here's how we can create a custom distance_metrics_list that includes this metric for continuous and discrete features.
+Here's how we can create a custom dist_fns_list that includes this metric for continuous and discrete features.
 
 ```{r}
-my_distance_metrics <- distance_metrics_list(
+my_distance_metrics <- dist_fns_list(
     cnt_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance
     ),
@@ -69,7 +69,7 @@ my_distance_metrics <- distance_metrics_list(
 summarize_dml(my_distance_metrics)
 ```
 
-Now, during settings_matrix generation, we can provide our distance_metrics_list to ensure our new distance metrics will be used on some of our SNF runs.
+Now, during settings_matrix generation, we can provide our dist_fns_list to ensure our new distance metrics will be used on some of our SNF runs.
 
 Before making the settings_matrix, we'll quickly need to setup some data (as was done in [A Simple Example](https://branchlab.github.io/metasnf/articles/a_simple_example.html)).
 
@@ -92,7 +92,7 @@ data_list <- data_list(
 And then the settings_matrix can be generated:
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 10,
     dml = my_distance_metrics
@@ -104,8 +104,8 @@ settings_matrix |> dplyr::select(dplyr::ends_with("dist"))
 
 The continuous and discrete distance metrics values randomly fluctuate between 1 and 2, where 1 means that the first metric (`euclidean_distance()`) will be used and 2 means that the second metric (`sn_euclidean_distance`) will be used.
 
-It's important to note that the settings_matrix itself **does not store the distance metrics**, just the pointers to which position metric in the distance_metrics_list should be used for that SNF run.
-Because of that, you'll need to supply the distance_metrics_list once again when calling `batch_snf()`.
+It's important to note that the settings_matrix itself **does not store the distance metrics**, just the pointers to which position metric in the dist_fns_list should be used for that SNF run.
+Because of that, you'll need to supply the dist_fns_list once again when calling `batch_snf()`.
 
 ```{r eval = FALSE}
 solutions_matrix <- batch_snf(
@@ -119,10 +119,10 @@ solutions_matrix <- batch_snf(
 
 There are two ways to avoid using the default distance metrics if you don't want to ever use them.
 
-The first way is to use the `keep_defaults` parameter in `distance_metrics_list()`:
+The first way is to use the `keep_defaults` parameter in `dist_fns_list()`:
 
 ```{r}
-no_default_metrics <- distance_metrics_list(
+no_default_metrics <- dist_fns_list(
     cnt_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance
     ),
@@ -145,12 +145,12 @@ summarize_dml(no_default_metrics)
 ```
 
 For this option, it is necessary to provide at least one distance metric for every feature type.
-A distance_metrics_list cannot have any of its feature types be completely empty (even if you have no data for that feature type in the first place).
+A dist_fns_list cannot have any of its feature types be completely empty (even if you have no data for that feature type in the first place).
 
 The second way is to explicitly specify which indices you want to sample from during settings_matrix generation:
 
 ```{r}
-my_distance_metrics <- distance_metrics_list(
+my_distance_metrics <- dist_fns_list(
     cnt_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance,
         "some_other_metric" = sn_euclidean_distance
@@ -164,7 +164,7 @@ my_distance_metrics <- distance_metrics_list(
 
 summarize_dml(my_distance_metrics)
 
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 10,
     dml = my_distance_metrics,
@@ -179,7 +179,7 @@ The second option can be quite useful when paired with `add_settings_matrix_rows
 This can save you the trouble of needing to manage several distinct distance metrics lists or manage your solution space over separate runs of `batch_snf`.
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 10,
     dml = my_distance_metrics,
@@ -229,7 +229,7 @@ By default, this function will return a dataframe containing all the columns in 
 To actually use the matrix during SNF, you'll need to make sure that the number of rows in the weights matrix is the same as the number of rows in your settings matrix.
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 10,
     dml = my_distance_metrics,
@@ -342,10 +342,10 @@ Once you're happy that you distance function is working as you'd like it to:
 my_scaled_euclidean(processed_anxiety)[1:5, 1:5]
 ```
 
-You can load it into a custom distance_metrics_list:
+You can load it into a custom dist_fns_list:
 
 ```{r}
-my_distance_metrics <- distance_metrics_list(
+my_distance_metrics <- dist_fns_list(
     cnt_dist_fns = list(
         "my_scaled_euclidean" = my_scaled_euclidean
     ),

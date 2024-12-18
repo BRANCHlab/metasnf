@@ -52,7 +52,7 @@ data_list <- data_list(
 
 # Specifying 5 different sets of settings for SNF
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 10,
     max_k = 40

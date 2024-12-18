@@ -106,22 +106,22 @@ clustering using the rotation cost heuristic. See ?generate_clust_algs_list
 for more details on running custom clustering algorithms.}
 
 \item{continuous_distances}{A vector of continuous distance metrics to use
-when a custom distance_metrics_list is provided.}
+when a custom dist_fns_list is provided.}
 
 \item{discrete_distances}{A vector of categorical distance metrics to use
-when a custom distance_metrics_list is provided.}
+when a custom dist_fns_list is provided.}
 
 \item{ordinal_distances}{A vector of categorical distance metrics to use
-when a custom distance_metrics_list is provided.}
+when a custom dist_fns_list is provided.}
 
 \item{categorical_distances}{A vector of categorical distance metrics to use
-when a custom distance_metrics_list is provided.}
+when a custom dist_fns_list is provided.}
 
 \item{mixed_distances}{A vector of mixed distance metrics to use
-when a custom distance_metrics_list is provided.}
+when a custom dist_fns_list is provided.}
 
 \item{dml}{List containing distance metrics to vary over.
-See ?generate_distance_metrics_list.}
+See ?generate_dist_fns_list.}
 
 \item{snf_input_weights}{Nested list containing weights for when SNF is
 used to merge individual input measures (see ?generate_snf_weights)}

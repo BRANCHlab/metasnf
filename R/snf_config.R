@@ -22,8 +22,8 @@
 #'        different feature in the data list and each row corresponds to a
 #'        different row in the settings data frame.
 #'
-#' @inheritParams generate_settings_matrix
-#' @inheritParams distance_metrics_list
+#' @inheritParams settings_df
+#' @inheritParams dist_fns_list
 #' @inheritParams generate_weights_matrix
 #' @inheritParams generate_clust_algs_list
 #' @return An `snf_config` class object.
@@ -59,7 +59,7 @@ snf_config <- function(dl,
                        cat_dist_fns = NULL,
                        mix_dist_fns = NULL,
                        use_default_dist_fns = TRUE) {
-    dml <- distance_metrics_list(
+    dml <- dist_fns_list(
         cnt_dist_fns = cnt_dist_fns,
         dsc_dist_fns = dsc_dist_fns,
         ord_dist_fns = ord_dist_fns,

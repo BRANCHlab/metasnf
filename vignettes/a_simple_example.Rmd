@@ -245,7 +245,7 @@ In this case, we're going to create only a single cluster solution using the sam
 An explanation for the parameters in the `settings_matrix` can be found at [the settings_matrix vignette](https://branchlab.github.io/metasnf/articles/settings_matrix.html).
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 1,
     alpha_values = 0.5,

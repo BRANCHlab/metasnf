@@ -113,17 +113,17 @@
 #'  clustering using the rotation cost heuristic. See ?generate_clust_algs_list
 #'  for more details on running custom clustering algorithms.
 #' @param continuous_distances A vector of continuous distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#'  when a custom dist_fns_list is provided.
 #' @param discrete_distances A vector of categorical distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#'  when a custom dist_fns_list is provided.
 #' @param ordinal_distances A vector of categorical distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#'  when a custom dist_fns_list is provided.
 #' @param categorical_distances A vector of categorical distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#'  when a custom dist_fns_list is provided.
 #' @param mixed_distances A vector of mixed distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#'  when a custom dist_fns_list is provided.
 #' @param dml List containing distance metrics to vary over.
-#'  See ?generate_distance_metrics_list.
+#'  See ?generate_dist_fns_list.
 #' @param snf_input_weights Nested list containing weights for when SNF is
 #'  used to merge individual input measures (see ?generate_snf_weights)
 #' @param snf_domain_weights Nested list containing weights for when SNF is
@@ -136,31 +136,31 @@
 #'  number of times, the function will terminate.
 #' @return A settings matrix
 #' @export
-generate_settings_matrix <- function(dl,
-                                     nrows = 0,
-                                     min_removed_inputs = 0,
-                                     max_removed_inputs = length(dl) - 1,
-                                     dropout_dist = "exponential",
-                                     min_alpha = NULL,
-                                     max_alpha = NULL,
-                                     min_k = NULL,
-                                     max_k = NULL,
-                                     min_t = NULL,
-                                     max_t = NULL,
-                                     alpha_values = NULL,
-                                     k_values = NULL,
-                                     t_values = NULL,
-                                     possible_snf_schemes = c(1, 2, 3),
-                                     clustering_algorithms = NULL,
-                                     continuous_distances = NULL,
-                                     discrete_distances = NULL,
-                                     ordinal_distances = NULL,
-                                     categorical_distances = NULL,
-                                     mixed_distances = NULL,
-                                     dml = NULL,
-                                     snf_input_weights = NULL,
-                                     snf_domain_weights = NULL,
-                                     retry_limit = 10) {
+settings_df <- function(dl,
+                            nrows = 0,
+                            min_removed_inputs = 0,
+                            max_removed_inputs = length(dl) - 1,
+                            dropout_dist = "exponential",
+                            min_alpha = NULL,
+                            max_alpha = NULL,
+                            min_k = NULL,
+                            max_k = NULL,
+                            min_t = NULL,
+                            max_t = NULL,
+                            alpha_values = NULL,
+                            k_values = NULL,
+                            t_values = NULL,
+                            possible_snf_schemes = c(1, 2, 3),
+                            clustering_algorithms = NULL,
+                            continuous_distances = NULL,
+                            discrete_distances = NULL,
+                            ordinal_distances = NULL,
+                            categorical_distances = NULL,
+                            mixed_distances = NULL,
+                            dml = NULL,
+                            snf_input_weights = NULL,
+                            snf_domain_weights = NULL,
+                            retry_limit = 10) {
     settings_matrix_columns <- c(
         "row_id",
         "alpha",
@@ -272,17 +272,17 @@ generate_settings_matrix <- function(dl,
 #'  clustering using the rotation cost heuristic. See ?generate_clust_algs_list
 #'  for more details on running custom clustering algorithms.
 #' @param continuous_distances A vector of continuous distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#'  when a custom dist_fns_list is provided.
 #' @param discrete_distances A vector of categorical distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#'  when a custom dist_fns_list is provided.
 #' @param ordinal_distances A vector of categorical distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#'  when a custom dist_fns_list is provided.
 #' @param categorical_distances A vector of categorical distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#'  when a custom dist_fns_list is provided.
 #' @param mixed_distances A vector of mixed distance metrics to use
-#'  when a custom distance_metrics_list is provided.
+#'  when a custom dist_fns_list is provided.
 #' @param dml List containing distance metrics to vary over.
-#'  See ?generate_distance_metrics_list.
+#'  See ?generate_dist_fns_list.
 #' @param snf_input_weights Nested list containing weights for when SNF is
 #'  used to merge individual input measures (see ?generate_snf_weights)
 #' @param snf_domain_weights Nested list containing weights for when SNF is
@@ -488,7 +488,7 @@ add_settings_matrix_rows <- function(settings_matrix,
     # 4. Handling distance metrics
     ###########################################################################
     if (is.null(dml)) {
-        dml <- distance_metrics_list(use_default_dist_fns = TRUE)
+        dml <- dist_fns_list(use_default_dist_fns = TRUE)
     }
     ###########################################################################
     # 6. Begin the loop that will generate new random settings_matrix rows

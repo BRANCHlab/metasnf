@@ -40,15 +40,15 @@
         - [ ] variables are more specifically named (e.g., demographic_dl)
         - [ ] documentation is data list
     - [ ] make sure things like c(data_list, data_list), data_list[[1]], etc. are resolved
-- [ ] settings_matrix -> snf_config
-    - [ ] replace with name "snf_config" to be more transparent
+- [ ] settings_matrix -> subitem of snf_config
+    - [ ] replace with name "settings_df" to be more transparent
     - [ ] define class
     - [ ] define user/dev constructor
     - [ ] define validator
     - [ ] ensure class is used consistently throughout functionality
     - [ ] convert all dl-related functions to S3 methods (if applicable)
     - [ ] merge with classes:
-        - [ ] distance_metrics_list
+        - [ ] distance_metrics_list -> dist_fns_list()
             - [ ] ensure that there is an appropriate metric for each type of variable in the data list 
         - [ ] clust_algs_list
         - [ ] weights_matrix (the only object named matrix that is actually a matrix)

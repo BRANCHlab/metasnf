@@ -23,7 +23,7 @@ batch_snf(
 
 \item{settings_matrix}{A data.frame where each row completely defines an SNF
 pipeline transforming individual input dataframes into a final cluster
-solution. See ?generate_settings_matrix or
+solution. See ?settings_df or
 https://branchlab.github.io/metasnf/articles/settings_matrix.html for more
 details.}
 
@@ -57,7 +57,7 @@ SNF. If TRUE, parameter \code{similarity_matrix_dir} must be specified.}
 \item{dml}{An optional nested list containing which
 distance metric function should be used for the various feature types
 (continuous, discrete, ordinal, categorical, and mixed). See
-?distance_metrics_list for details on how to build this.}
+?dist_fns_list for details on how to build this.}
 
 \item{weights_matrix}{A matrix containing feature weights to use during
 distance matrix calculation. See ?generate_weights_matrix for details on
@@ -89,7 +89,7 @@ in the output.
 }
 \description{
 This is the core function of the metasnf package. Using the information
-stored in a settings_matrix (see ?generate_settings_matrix) and a data list
+stored in a settings_df (see ?settings_df) and a data list
 (see ?data_list), run repeated complete SNF pipelines to generate
 a broad space of post-SNF cluster solutions.
 }

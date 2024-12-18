@@ -34,7 +34,7 @@ data_list <- data_list(
 
 # Build space of settings to cluster over
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 2,
     min_k = 20,

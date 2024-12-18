@@ -3,7 +3,7 @@
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #' Deprecated function for building a distance metrics list. Please use
-#' `distance_metrics_list()` instead.
+#' `dist_fns_list()` instead.
 #'
 #' @param continuous_distances A named list of distance metric functions
 #' @param discrete_distances A named list of distance metric functions
@@ -23,9 +23,9 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
                                            keep_defaults = TRUE) {
     metasnf_deprecated(
         "2.0.0",
-        "Please use `distance_metrics_list()` instead."
+        "Please use `dist_fns_list()` instead."
     )
-    distance_metrics_list(
+    dist_fns_list(
         cnt_dist_fns = continuous_distances,
         dsc_dist_fns = discrete_distances,
         ord_dist_fns = ordinal_distances,

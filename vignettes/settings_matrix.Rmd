@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Download a copy of the vignette to follow along here: [settings_matrix.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/settings_matrix.Rmd)
 
-This vignette outlines the main functionality of the `generate_settings_matrix` function.
+This vignette outlines the main functionality of the `settings_df` function.
 
 ## The basic settings_matrix
 
@@ -37,7 +37,7 @@ data_list <- data_list(
     uid = "unique_id"
 )
 
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list
 )
 
@@ -56,7 +56,7 @@ The resulting columns are:
 * Columns starting with `inc`: Whether or not the corresponding dataframe will be included (1) or excluded (0) from this row
 
 By varying the values in these columns, we can define distinct SNF pipelines that should give rise to a broader space of cluster solutions.
-The following sections outline how to use `generate_settings_matrix` to build a wide range of settings that will hopefully help you find a subtyping solution useful for your purposes.
+The following sections outline how to use `settings_df` to build a wide range of settings that will hopefully help you find a subtyping solution useful for your purposes.
 
 ## Adding random rows
 
@@ -64,7 +64,7 @@ When not specifying any parameters beyond the number of rows that are created, t
 
 ```{r}
 # Through minimums and maximums
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 100,
 )
@@ -92,7 +92,7 @@ You can control any of these parameters either by providing a vector of values y
 
 ```{r}
 # Through minimums and maximums
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 100,
     min_k = 10,
@@ -104,7 +104,7 @@ settings_matrix <- generate_settings_matrix(
 )
 
 # Through specific value sampling
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     k_values = c(10, 25, 50),
@@ -118,14 +118,14 @@ settings_matrix <- generate_settings_matrix(
 
 Bounds on the number of input dataframes removed as well as the way in which the number removed is chosen can be controlled.
 
-By default, `generate_settings_matrix` will pick a random value between 0 and 1 less than the total number of available dataframes based on an exponential probability distribution.
+By default, `settings_df` will pick a random value between 0 and 1 less than the total number of available dataframes based on an exponential probability distribution.
 The exponential distribution makes it so that it is very likely that a small number of dataframes will be dropped and much less likely that a large number of dataframes will be dropped.
 
 You can control the distribution by changing the `dropout_dist` value to "uniform" (which will result in a much higher number of dataframes being dropped on average) or "none" (which will result in no dataframes being dropped).
 
 ```{r}
 # Exponential dropping
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     dropout_dist = "exponential" # the default behaviour
@@ -134,7 +134,7 @@ settings_matrix <- generate_settings_matrix(
 head(settings_matrix)
 
 # Uniform dropping
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     dropout_dist = "uniform"
@@ -144,7 +144,7 @@ head(settings_matrix)
 
 
 # No dropping
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     dropout_dist = "none"
@@ -156,7 +156,7 @@ head(settings_matrix)
 The bounds on the number of dataframes that can be dropped can be controlled using the `min_removed_inputs` and `max_removed_inputs`:
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     min_removed_inputs = 3
@@ -171,7 +171,7 @@ head(settings_matrix)
 If you are interested in grid searching over perhaps just a specific set of alpha and k values, you may want to consider varying those parameters and keeping everything else fixed:
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 10,
     alpha_values = c(0.3, 0.5, 0.8),
@@ -189,7 +189,7 @@ You can build two separate settings matrices and concatenate them, but you can a
 
 ```{r}
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 25,
     k_values = 50
@@ -213,7 +213,7 @@ You can always go in and modify things as you wish, but you do risk generating d
 
 ## "Matrix building failed"
 
-`generate_settings_matrix` will never build duplicate rows.
+`settings_df` will never build duplicate rows.
 A consequence of this is that if you request a very large number of rows over a very small range of possible values to vary over, it will be impossible for the matrix to be built.
 For example, there's no way to generate 10 unique rows when the only thing allowed to vary is which clustering algorithm (1 or 2) is used - only 2 rows could ever be created.
 

@@ -109,7 +109,7 @@ train_target_list <- data_list(
 )
 
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     train_data_list,
     nrow = 5,
     min_k = 10,

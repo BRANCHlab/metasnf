@@ -1,18 +1,16 @@
 #' Run variations of SNF.
 #'
 #' This is the core function of the metasnf package. Using the information
-#' stored in a settings_matrix (see ?generate_settings_matrix) and a data list
+#' stored in a settings_df (see ?settings_df) and a data list
 #' (see ?data_list), run repeated complete SNF pipelines to generate
 #' a broad space of post-SNF cluster solutions.
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @param settings_matrix A data.frame where each row completely defines an SNF
-#' pipeline transforming individual input dataframes into a final cluster
-#' solution. See ?generate_settings_matrix or
-#' https://branchlab.github.io/metasnf/articles/settings_matrix.html for more
-#' details.
-#'
+#'  pipeline transforming individual input dataframes into a final cluster
+#'  solution. See ?settings_df or
+#'  https://branchlab.github.io/metasnf/articles/settings_matrix.html for more
+#'  details.
 #' @param processes Specify number of processes used to complete SNF iterations
 #'  * `1` (default) Sequential processing: function will iterate through the
 #'    `settings_matrix` one row at a time with a for loop. This option will
@@ -23,53 +21,43 @@
 #'    available cores, a warning will be raised and the maximum number of
 #'    cores will be used.
 #'  * `max`: All available cores will be used.
-#'
 #' @param return_similarity_matrices If TRUE, function will return a list where
-#' the first element is the solutions matrix and the second element is a list
-#' of similarity matrices for each row in the solutions_matrix. Default FALSE.
-#'
+#'  the first element is the solutions matrix and the second element is a list
+#'  of similarity matrices for each row in the solutions_matrix. Default FALSE.
 #' @param similarity_matrix_dir If specified, this directory will be used to
-#' save all generated similarity matrices.
-#'
+#'  save all generated similarity matrices.
 #' @param clust_algs_list List of custom clustering algorithms to apply
-#' to the final fused network. See ?generate_clust_algs_list.
-#'
+#'  to the final fused network. See ?generate_clust_algs_list.
 #' @param suppress_clustering If FALSE (default), will apply default or custom
-#' clustering algorithms to provide cluster solutions on every iteration of
-#' SNF. If TRUE, parameter `similarity_matrix_dir` must be specified.
-#'
+#'  clustering algorithms to provide cluster solutions on every iteration of
+#'  SNF. If TRUE, parameter `similarity_matrix_dir` must be specified.
 #' @param dml An optional nested list containing which
-#' distance metric function should be used for the various feature types
-#' (continuous, discrete, ordinal, categorical, and mixed). See
-#' ?distance_metrics_list for details on how to build this.
-#'
+#'  distance metric function should be used for the various feature types
+#'  (continuous, discrete, ordinal, categorical, and mixed). See
+#'  ?dist_fns_list for details on how to build this.
 #' @param weights_matrix A matrix containing feature weights to use during
-#' distance matrix calculation. See ?generate_weights_matrix for details on
-#' how to build this.
-#'
+#'  distance matrix calculation. See ?generate_weights_matrix for details on
+#'  how to build this.
 #' @param automatic_standard_normalize If TRUE, will automatically apply
-#' standard normalization prior to calculation of any distance matrices. This
-#' parameter cannot be used in conjunction with a custom distance metrics list.
-#' If you wish to supply custom distance metrics but also always have standard
-#' normalization, simply ensure that the numeric (continuous, discrete, and
-#' ordinal) distance metrics are only populated with distance metric functions
-#' that apply standard normalization. See
-#' https://branchlab.github.io/metasnf/articles/distance_metrics.html to learn
-#' more.
-#'
+#'  standard normalization prior to calculation of any distance matrices. This
+#'  parameter cannot be used in conjunction with a custom distance metrics list.
+#'  If you wish to supply custom distance metrics but also always have standard
+#'  normalization, simply ensure that the numeric (continuous, discrete, and
+#'  ordinal) distance metrics are only populated with distance metric functions
+#'  that apply standard normalization. See
+#'  https://branchlab.github.io/metasnf/articles/distance_metrics.html to learn
+#'  more.
 #' @param verbose If TRUE, output time remaining estimates to console.
-#'
 #' @return By default, returns a solutions matrix (class "data.frame"), a 
-#' a data frame containing one row for every row of the provided settings
-#' matrix, all the original columns of that settings matrix, and new columns
-#' containing the assigned cluster of each observation from the cluster
-#' solution derived by that row's settings. If `return_similarity_matrices` is
-#' TRUE, the function will instead return a list containing the
-#' solutions matrix as well as a list of the final similarity matrices (class
-#' "matrix") generated by SNF for each row of the settings matrix. If 
-#' `suppress_clustering` is TRUE, the solutions matrix will not be returned
-#' in the output.
-#'
+#'  a data frame containing one row for every row of the provided settings
+#'  matrix, all the original columns of that settings matrix, and new columns
+#'  containing the assigned cluster of each observation from the cluster
+#'  solution derived by that row's settings. If `return_similarity_matrices` is
+#'  TRUE, the function will instead return a list containing the
+#'  solutions matrix as well as a list of the final similarity matrices (class
+#'  "matrix") generated by SNF for each row of the settings matrix. If 
+#'  `suppress_clustering` is TRUE, the solutions matrix will not be returned
+#'  in the output.
 #' @export
 batch_snf <- function(dl,
                       settings_matrix,
@@ -84,7 +72,6 @@ batch_snf <- function(dl,
                       verbose = FALSE) {
     ###########################################################################
     # 1. Start timer to keep track of entire function duration
-    ###########################################################################
     if (verbose) {
         start <- proc.time() # final time taken for entire function
         remaining_seconds_vector <- vector() # estimate time to completion
@@ -111,7 +98,7 @@ batch_snf <- function(dl,
     }
     # If there is a value of the k hyperparameter that exceeds the number
     # of patients in the data list, SNFtool::affinityMatrix cannot run. This
-    # check can't go in the generate_settings_matrix function in case the user
+    # check can't go in the settings_df function in case the user
     # creater their base settings_matrix with a valid k, then extended their
     # settings matrix using the add_settings_matrix_rows function with an
     # invalid k (a function that doesn't require users to supply the data).
@@ -126,12 +113,11 @@ batch_snf <- function(dl,
         )
     }
     ###########################################################################
-    # 4. Creation of dml if it does not already exist
-    ###########################################################################
+    # 4. Creation of distance metrics list if it does not already exist
     if (is.null(dml)) {
         if (automatic_standard_normalize) {
             # Generate a list with standard normalization
-            dml <- distance_metrics_list(
+            dml <- dist_fns_list(
                 cnt_dist_fns = list(
                     "sn_euclidean_distance" = sn_euclidean_distance
                 ),
@@ -150,7 +136,7 @@ batch_snf <- function(dl,
                 use_default_dist_fns = FALSE
             )
         } else {
-            dml <- distance_metrics_list(use_default_dist_fns = TRUE)
+            dml <- dist_fns_list(use_default_dist_fns = TRUE)
         }
     } else {
         if (automatic_standard_normalize) {
@@ -161,8 +147,7 @@ batch_snf <- function(dl,
         }
     }
     ###########################################################################
-    # 5. Creation of weights_matrix, if it does not already exist
-    ###########################################################################
+    # 5. Creation of weights_matrix if it does not already exist
     if (is.null(weights_matrix)) {
         weights_matrix <- generate_weights_matrix(
             dl,
@@ -177,11 +162,7 @@ batch_snf <- function(dl,
         }
     }
     ###########################################################################
-    # 6. Creation of clust_algs_list, if it does not already exist
-    ###########################################################################
-    # If the user has not provided their own list of clustering algorithms,
-    #  use the default ones (spectral clustering with eigen-gap or
-    #  rotation cost heuristics).
+    # 6. Creation of clust_algs_list if it does not already exist
     if (is.null(clust_algs_list)) {
         clust_algs_list <- generate_clust_algs_list()
     }
@@ -413,8 +394,7 @@ drop_inputs <- function(settings_matrix_row, dl) {
     in_keeps_log <- c(unlist(in_keeps_list))
     # The selection
     selected_dl <- dl[in_keeps_log]
-    reduced_selected_dl <- reduce_dll_to_common(selected_dl)
-    return(reduced_selected_dl)
+    return(selected_dl)
 }
 
 #' Calculate distance matrices
