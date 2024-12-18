@@ -147,10 +147,10 @@ batch_snf <- function(dl,
                 mix_dist_fns = list(
                     "gower_distance" = gower_distance
                 ),
-                use_defaults = FALSE
+                use_default_dist_fns = FALSE
             )
         } else {
-            dml <- distance_metrics_list(use_defaults = TRUE)
+            dml <- distance_metrics_list(use_default_dist_fns = TRUE)
         }
     } else {
         if (automatic_standard_normalize) {

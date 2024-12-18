@@ -10,7 +10,7 @@ distance_metrics_list(
   ord_dist_fns = NULL,
   cat_dist_fns = NULL,
   mix_dist_fns = NULL,
-  use_defaults = FALSE
+  use_default_dist_fns = FALSE
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ distance_metrics_list(
 
 \item{mix_dist_fns}{A named list of mixed distance metric functions.}
 
-\item{use_defaults}{If TRUE, prepend the base distance metrics (euclidean
+\item{use_default_dist_fns}{If TRUE, prepend the base distance metrics (euclidean
 distance for continuous, discrete, and ordinal data and gower distance for
 categorical and mixed data) to the resulting distance metrics list.}
 }
@@ -75,6 +75,6 @@ distance_metrics_list <- distance_metrics_list(
     mix_dist_fns = list(
          "my_distance_metric" = my_distance_metric
     ),
-    use_defaults = TRUE
+    use_default_dist_fns = TRUE
 )
 }

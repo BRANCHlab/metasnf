@@ -34,7 +34,7 @@ By default, `batch_snf` will create its own `distance_metrics_list` by calling t
 ```{r}
 library(metasnf)
 
-distance_metrics_list <- distance_metrics_list(use_defaults = TRUE)
+distance_metrics_list <- distance_metrics_list(use_default_dist_fns = TRUE)
 ```
 
 The list is a list of functions (`euclidean_distance()` and `gower_distance()`), and printing them out directly can be messy.
@@ -63,7 +63,7 @@ my_distance_metrics <- distance_metrics_list(
     dsc_dist_fns = list(
         "standard_norm_euclidean" = sn_euclidean_distance
     ),
-    use_defaults = TRUE
+    use_default_dist_fns = TRUE
 )
 
 summarize_dml(my_distance_metrics)
@@ -138,7 +138,7 @@ no_default_metrics <- distance_metrics_list(
     mix_dist_fns = list(
         "standard_norm_euclidean" = gower_distance
     ),
-    use_defaults = FALSE
+    use_default_dist_fns = FALSE
 )
 
 summarize_dml(no_default_metrics)
@@ -159,7 +159,7 @@ my_distance_metrics <- distance_metrics_list(
         "standard_norm_euclidean" = sn_euclidean_distance,
         "some_other_metric" = sn_euclidean_distance
     ),
-    use_defaults = TRUE
+    use_default_dist_fns = TRUE
 )
 
 summarize_dml(my_distance_metrics)
@@ -349,7 +349,7 @@ my_distance_metrics <- distance_metrics_list(
     cnt_dist_fns = list(
         "my_scaled_euclidean" = my_scaled_euclidean
     ),
-    use_defaults = TRUE
+    use_default_dist_fns = TRUE
 )
 ```
 

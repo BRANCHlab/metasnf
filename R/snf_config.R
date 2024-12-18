@@ -31,9 +31,7 @@
 snf_config <- function(dl,
                        nrows = 0,
                        min_removed_inputs = 0,
-                       max_removed_inputs = length(
-                           dl
-                       ) - 1,
+                       max_removed_inputs = length(dl) - 1,
                        dropout_dist = "exponential",
                        min_alpha = NULL,
                        max_alpha = NULL,
@@ -60,7 +58,15 @@ snf_config <- function(dl,
                        ord_dist_fns = NULL,
                        cat_dist_fns = NULL,
                        mix_dist_fns = NULL,
-                       use_defaults = TRUE) {
+                       use_default_dist_fns = TRUE) {
+    dml <- distance_metrics_list(
+        cnt_dist_fns = cnt_dist_fns,
+        dsc_dist_fns = dsc_dist_fns,
+        ord_dist_fns = ord_dist_fns,
+        cat_dist_fns = cat_dist_fns,
+        mix_dist_fns = mix_dist_fns,
+        use_default_dist_fns = use_default_dist_fns
+    )
     scl <- NULL
     scl <- validate_snf_config(scl)
     sc <- new_snf_config(scl)

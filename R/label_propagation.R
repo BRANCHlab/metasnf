@@ -102,7 +102,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     ## 3-1. Creation of distance_metrics_list, if it does not already exist
     ###########################################################################
     if (is.null(dml)) {
-        dml <- distance_metrics_list(use_defaults = TRUE)
+        dml <- distance_metrics_list(use_default_dist_fns = TRUE)
     }
     ###########################################################################
     ## 3-2. Create (or check) weights_matrix

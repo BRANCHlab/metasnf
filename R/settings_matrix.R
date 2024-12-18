@@ -139,9 +139,7 @@
 generate_settings_matrix <- function(dl,
                                      nrows = 0,
                                      min_removed_inputs = 0,
-                                     max_removed_inputs = length(
-                                         dl
-                                     ) - 1,
+                                     max_removed_inputs = length(dl) - 1,
                                      dropout_dist = "exponential",
                                      min_alpha = NULL,
                                      max_alpha = NULL,
@@ -490,7 +488,7 @@ add_settings_matrix_rows <- function(settings_matrix,
     # 4. Handling distance metrics
     ###########################################################################
     if (is.null(dml)) {
-        dml <- distance_metrics_list(use_defaults = TRUE)
+        dml <- distance_metrics_list(use_default_dist_fns = TRUE)
     }
     ###########################################################################
     # 6. Begin the loop that will generate new random settings_matrix rows

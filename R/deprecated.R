@@ -31,6 +31,6 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
         ord_dist_fns = ordinal_distances,
         cat_dist_fns = categorical_distances,
         mix_dist_fns = mixed_distances,
-        use_defaults = keep_defaults
+        use_default_dist_fns = keep_defaults
     )
 }
