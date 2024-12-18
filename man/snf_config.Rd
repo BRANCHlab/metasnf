@@ -153,9 +153,10 @@ number of times, the function will terminate.}
 
 \item{mix_dist_fns}{A named list of mixed distance metric functions.}
 
-\item{use_default_dist_fns}{If TRUE, prepend the base distance metrics (euclidean
-distance for continuous, discrete, and ordinal data and gower distance for
-categorical and mixed data) to the resulting distance metrics list.}
+\item{use_default_dist_fns}{If TRUE, prepend the base distance metrics
+(euclidean distance for continuous, discrete, and ordinal data and gower
+distance for categorical and mixed data) to the resulting distance metrics
+list.}
 }
 \value{
 An \code{snf_config} class object.

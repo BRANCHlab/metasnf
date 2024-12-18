@@ -8,14 +8,18 @@
 #' categorical, and mixed), and the second layer can hold an arbitrary number
 #' of distance functions for each of those types.
 #'
+#' Call ?distance_metrics to see all distance metric functions provided in
+#' metasnf.
+#'
 #' @param cnt_dist_fns A named list of continuous distance metric functions.
 #' @param dsc_dist_fns A named list of discrete distance metric functions.
 #' @param ord_dist_fns A named list of ordinal distance metric functions.
 #' @param cat_dist_fns A named list of categorical distance metric functions.
 #' @param mix_dist_fns A named list of mixed distance metric functions.
-#' @param use_default_dist_fns If TRUE, prepend the base distance metrics (euclidean
-#'  distance for continuous, discrete, and ordinal data and gower distance for
-#'  categorical and mixed data) to the resulting distance metrics list.
+#' @param use_default_dist_fns If TRUE, prepend the base distance metrics
+#'  (euclidean distance for continuous, discrete, and ordinal data and gower
+#'  distance for categorical and mixed data) to the resulting distance metrics
+#'  list.
 #' @return A distance metrics list object.
 #' @examples
 #' # Using just the base distance metrics  ------------------------------------
@@ -23,34 +27,42 @@
 #'
 #' # Adding your own metrics --------------------------------------------------
 #' # This will contain only the and user-provided distance function:
-#' my_distance_metric <- function(df) {
-#'     # your code that converts a dataframe to a distance metric here...
-#'     # return(distance_metric)
+#' cubed_euclidean <- function(df, weights_row) {
+#'     # (your code that converts a dataframe to a distance metric here...)
+#'     weights <- diag(weights_row, nrow = length(weights_row))
+#'     weighted_df <- as.matrix(df) %*% weights
+#'     distance_matrix <- weighted_df |>
+#'         stats::dist(method = "euclidean") |>
+#'         as.matrix()
+#'     distance_matrix <- distance_matrix^3
+#'     return(distance_matrix)
 #' }
 #'
 #' distance_metrics_list <- distance_metrics_list(
 #'     cnt_dist_fns = list(
-#'          "my_distance_metric" = my_distance_metric
+#'          "my_cubed_euclidean" = cubed_euclidean
 #'     )
 #' )
 #'
 #' # Using default base metrics------------------------------------------------
-#' # This will contain user-provided and default distance functions:
+#' # Call ?distance_metrics to see all distance metric functions provided in
+#' # metasnf. The code below will contain a mix of user-provided and built-in
+#' # distance metric functions.
 #' distance_metrics_list <- distance_metrics_list(
 #'     cnt_dist_fns = list(
-#'          "my_distance_metric" = my_distance_metric
+#'          "my_distance_metric" = cubed_euclidean
 #'     ),
 #'     dsc_dist_fns = list(
-#'          "my_distance_metric" = my_distance_metric
+#'          "my_distance_metric" = cubed_euclidean
 #'     ),
 #'     ord_dist_fns = list(
-#'          "my_distance_metric" = my_distance_metric
+#'          "my_distance_metric" = cubed_euclidean
 #'     ),
 #'     cat_dist_fns = list(
-#'          "my_distance_metric" = my_distance_metric
+#'          "my_distance_metric" = gower_distance
 #'     ),
 #'     mix_dist_fns = list(
-#'          "my_distance_metric" = my_distance_metric
+#'          "my_distance_metric" = gower_distance
 #'     ),
 #'     use_default_dist_fns = TRUE
 #' )
