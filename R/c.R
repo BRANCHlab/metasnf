@@ -15,9 +15,11 @@ c.data_list <- function(...) {
             return(x)
         }
     )
-    combined_dll <- do.call(c, dlls)
-    validate_data_list(combined_dll)
-    dl <- new_data_list(combined_dll)
+    dll <- do.call(c, dlls) |>
+        reduce_dll_to_common() |>
+        arrange_dll() |>
+        dll_uid_first_col()
+    validate_data_list(dll)
+    dl <- new_data_list(dll)
     return(dl)
 }
-
