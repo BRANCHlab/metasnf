@@ -51,9 +51,9 @@ clust_fns_list <- function(clust_fns = NULL, use_default_clust_fns = FALSE) {
     cfll <- clust_fns
     if (is.null(cfll) & !use_default_clust_fns) {
         metasnf_alert(
-            "Clustering functions list cannot be empty. To use default cluste",
-            "ring functions, set `use_default_clust_fns` to `TRUE`."
+            "No clustering functions specified. Using defaults."
         )
+        use_default_clust_fns <- TRUE
     }
     if (use_default_clust_fns) {
         base_algs_list <- list(
@@ -70,8 +70,8 @@ clust_fns_list <- function(clust_fns = NULL, use_default_clust_fns = FALSE) {
 #' Constructor for `clust_fns_list` class object
 #' 
 #' @keywords internal
-#' @param cfll A data list-like `list` class object.
-#' @return A `data_list` object, which is a nested list with class `data_list`.
+#' @param cfll A clust_fns_list-like `list` class object.
+#' @return A `clust_fns_list` class object.
 new_clust_fns_list <- function(cfll) {
     cfll <- structure(cfll, class = c("clust_fns_list", "list"))
     return(cfll)
