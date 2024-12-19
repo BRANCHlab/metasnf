@@ -12,7 +12,7 @@ random_removal(
 )
 }
 \arguments{
-\item{columns}{Columns of the settings_matrix that are passed in}
+\item{columns}{Columns of the settings_df that are passed in}
 
 \item{min_removed_inputs}{The smallest number of input dataframes that may
 be randomly removed.}
@@ -26,9 +26,10 @@ and max removed inputs), or "exponential" (like uniform, but using an
 exponential distribution; default).}
 }
 \value{
-inclusions_df Dataframe that can be rbind'ed to the settings_matrix
+inclusions_df Dataframe that can be rbind'ed to the settings_df
 }
 \description{
-Helper function to contribute to rows within the settings matrix. Number of
-columns removed follows a uniform or exponential probability distribution.
+Helper function to contribute to rows within the settings data frame. Number
+of columns removed follows a uniform or exponential probability
+distribution.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/settings_df.R
 \name{settings_df}
 \alias{settings_df}
-\title{Build a settings matrix}
+\title{Build a settings data frame}
 \usage{
 settings_df(
   dl,
@@ -29,13 +29,14 @@ settings_df(
   dfl = NULL,
   snf_input_weights = NULL,
   snf_domain_weights = NULL,
-  retry_limit = 10
+  retry_limit = 10,
+  allow_duplicates = FALSE
 )
 }
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{n_solutions}{Number of rows to generate for the settings matrix.}
+\item{n_solutions}{Number of rows to generate for the settings data frame.}
 
 \item{min_removed_inputs}{The smallest number of input dataframes that may be
 randomly removed. By default, 0.}
@@ -136,15 +137,20 @@ requested possible settings tightens and the number of requested rows
 increases, the risk of randomly generating a row that already exists
 increases. If a new random row has matched an existing row \code{retry_limit}
 number of times, the function will terminate.}
+
+\item{allow_duplicates}{If TRUE, enables creation of a settings data frame
+with duplicate non-feature weighting related hyperparameters. This function
+should only be used when paired with a custom weights matrix that has
+non-duplicate rows.}
 }
 \value{
-A settings matrix
+A settings data frame
 }
 \description{
-The settings_matrix is a dataframe whose rows completely specify the
+The settings_df is a dataframe whose rows completely specify the
 hyperparameters and decisions required to transform individual input
 dataframes (found in a data list, see ?data_list) into a single
-similarity matrix through SNF. The format of the settings matrix is as
+similarity matrix through SNF. The format of the settings data frame is as
 follows:
 \itemize{
 \item A column named "row_id": This column is used to keep

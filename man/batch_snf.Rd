@@ -6,7 +6,7 @@
 \usage{
 batch_snf(
   dl,
-  settings_matrix,
+  settings_df,
   processes = 1,
   return_similarity_matrices = FALSE,
   similarity_matrix_dir = NULL,
@@ -21,16 +21,16 @@ batch_snf(
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{settings_matrix}{A data.frame where each row completely defines an SNF
+\item{settings_df}{A data.frame where each row completely defines an SNF
 pipeline transforming individual input dataframes into a final cluster
 solution. See ?settings_df or
-https://branchlab.github.io/metasnf/articles/settings_matrix.html for more
+https://branchlab.github.io/metasnf/articles/settings_df.html for more
 details.}
 
 \item{processes}{Specify number of processes used to complete SNF iterations
 \itemize{
 \item \code{1} (default) Sequential processing: function will iterate through the
-\code{settings_matrix} one row at a time with a for loop. This option will
+\code{settings_df} one row at a time with a for loop. This option will
 not make use of multiple CPU cores, but will show a progress bar.
 \item \code{2} or higher: Parallel processing will use the
 \code{future.apply::future_apply} to distribute the SNF iterations across

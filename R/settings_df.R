@@ -166,7 +166,7 @@ settings_df <- function(dl,
                         snf_domain_weights = NULL,
                         retry_limit = 10,
                         allow_duplicates = FALSE) {
-    settings_df_columns <- c(
+    sdf_columns <- c(
         "row_id",
         "alpha",
         "k",
@@ -180,16 +180,16 @@ settings_df <- function(dl,
         "mix_dist",
         paste0("inc_", summarize_dl(dl)$"name")
     )
-    settings_df_base <- as.data.frame(
+    sdf_base <- as.data.frame(
         matrix(
             0,
-            ncol = length(settings_df_columns),
+            ncol = length(sdf_columns),
             nrow = 0
         )
     )
-    colnames(settings_df_base) <- settings_df_columns
-    settings_df <- add_settings_df_rows(
-        settings_df = settings_df_base,
+    colnames(sdf_base) <- sdf_columns
+    sdf <- add_settings_df_rows(
+        sdf = sdf_base,
         n_solutions = n_solutions,
         min_removed_inputs = min_removed_inputs,
         max_removed_inputs = max_removed_inputs,
@@ -216,46 +216,41 @@ settings_df <- function(dl,
         retry_limit = retry_limit,
         allow_duplicates = allow_duplicates
     )
-    return(settings_df)
+    return(sdf)
 }
 
 #' Add rows to a settings_df
 #'
-#' @param settings_df The existing settings data frame
+#' @param sdf The existing settings data frame
 #' @inheritParams settings_df
 #' @return A settings data frame
 #' @export
 add_settings_df_rows <- function(sdf,
-                                     n_solutions = 0,
-                                     min_removed_inputs = 0,
-                                     max_removed_inputs = sum(
-                                         startsWith(
-                                             colnames(settings_df),
-                                             "inc_"
-                                         )
-                                     ) - 1,
-                                     dropout_dist = "exponential",
-                                     min_alpha = NULL,
-                                     max_alpha = NULL,
-                                     min_k = NULL,
-                                     max_k = NULL,
-                                     min_t = NULL,
-                                     max_t = NULL,
-                                     alpha_values = NULL,
-                                     k_values = NULL,
-                                     t_values = NULL,
-                                     possible_snf_schemes = c(1, 2, 3),
-                                     clustering_algorithms = NULL,
-                                     continuous_distances = NULL,
-                                     discrete_distances = NULL,
-                                     ordinal_distances = NULL,
-                                     categorical_distances = NULL,
-                                     mixed_distances = NULL,
-                                     dfl = NULL,
-                                     snf_input_weights = NULL,
-                                     snf_domain_weights = NULL,
-                                     retry_limit = 10,
-                                     allow_duplicates = FALSE) {
+                                 n_solutions = 0,
+                                 min_removed_inputs = 0,
+                                 max_removed_inputs = sum(startsWith(colnames(sdf), "inc_")) - 1,
+                                 dropout_dist = "exponential",
+                                 min_alpha = NULL,
+                                 max_alpha = NULL,
+                                 min_k = NULL,
+                                 max_k = NULL,
+                                 min_t = NULL,
+                                 max_t = NULL,
+                                 alpha_values = NULL,
+                                 k_values = NULL,
+                                 t_values = NULL,
+                                 possible_snf_schemes = c(1, 2, 3),
+                                 clustering_algorithms = NULL,
+                                 continuous_distances = NULL,
+                                 discrete_distances = NULL,
+                                 ordinal_distances = NULL,
+                                 categorical_distances = NULL,
+                                 mixed_distances = NULL,
+                                 dfl = NULL,
+                                 snf_input_weights = NULL,
+                                 snf_domain_weights = NULL,
+                                 retry_limit = 10,
+                                 allow_duplicates = FALSE) {
     ###########################################################################
     # 1. Handling alpha hyperparameter
     ###########################################################################
@@ -427,11 +422,11 @@ add_settings_df_rows <- function(sdf,
     i <- 0
     num_retries <- 0
     while (i < n_solutions) {
-        row_id <- nrow(settings_df) + 1
+        row_id <- nrow(sdf) + 1
         new_row <- vector()
         # Inclusion columns
         inclusions <- random_removal(
-            columns = colnames(settings_df),
+            columns = colnames(sdf),
             min_removed_inputs = min_removed_inputs,
             max_removed_inputs = max_removed_inputs,
             dropout_dist = dropout_dist
@@ -503,20 +498,20 @@ add_settings_df_rows <- function(sdf,
         #######################################################################
         # 8. Append the new row to the full settings_df
         #######################################################################
-        colnames(new_row) <- colnames(settings_df)
+        colnames(new_row) <- colnames(sdf)
         new_row <- data.frame(new_row)
-        settings_df <- rbind(settings_df, new_row)
+        sdf <- rbind(sdf, new_row)
         i <- i + 1
         #######################################################################
         # 9. Check if newly added row already exists in settings_df
         #######################################################################
-        dm_no_id <- settings_df[, 2:length(settings_df)]
+        dm_no_id <- sdf[, 2:length(sdf)]
         num_duplicates <- length(which(
             duplicated(dm_no_id) |
             duplicated(dm_no_id, fromLast = TRUE)))
         if (num_duplicates > 0 & !allow_duplicates) {
             i <- i - 1
-            settings_df <- settings_df[seq_len(nrow(settings_df)) - 1, ]
+            sdf <- sdf[seq_len(nrow(sdf)) - 1, ]
             num_retries <- num_retries + 1
         } else {
             num_retries <- 0
@@ -530,8 +525,8 @@ add_settings_df_rows <- function(sdf,
             )
         }
     }
-    row.names(settings_df) <- NULL
-    return(settings_df)
+    row.names(sdf) <- NULL
+    return(sdf)
 }
 
 #' Generate random removal sequence

@@ -6,6 +6,9 @@
 \usage{
 new_weights_matrix(wml)
 }
+\arguments{
+\item{wml}{A weights_matrix-like matrix object to be validated.}
+}
 \value{
 A \code{new_weights_matrix} object.
 }

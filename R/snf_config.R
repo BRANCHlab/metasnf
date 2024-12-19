@@ -126,9 +126,6 @@ snf_config <- function(sdf = NULL,
             weights_fill = weights_fill
         )
     }
-    scl <- list(
-        sdf,
-    )
     scl <- NULL
     scl <- validate_snf_config(scl)
     sc <- new_snf_config(scl)

@@ -40,7 +40,7 @@ the same value as was used in the original call to \code{batch_snf()}.}
 
 \item{ignore_inclusions}{If TRUE, will ignore the inclusion columns in the
 solutions matrix and calculate NMIs for all features. If FALSE, will give
-NAs for features that were dropped on a given settings_matrix row.}
+NAs for features that were dropped on a given settings_df row.}
 
 \item{verbose}{If TRUE, output progress to console.}
 }

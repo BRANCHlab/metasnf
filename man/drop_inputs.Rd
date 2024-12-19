@@ -4,10 +4,10 @@
 \alias{drop_inputs}
 \title{Execute inclusion}
 \usage{
-drop_inputs(settings_matrix_row, dl)
+drop_inputs(settings_df_row, dl)
 }
 \arguments{
-\item{settings_matrix_row}{Row of a settings matrix.}
+\item{settings_df_row}{Row of a settings matrix.}
 
 \item{dl}{A nested list of input data from \code{data_list()}.}
 }

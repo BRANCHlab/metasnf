@@ -40,7 +40,8 @@ snf_config(
   mix_dist_fns = NULL,
   use_default_dist_fns = FALSE,
   clust_fns = NULL,
-  use_default_clust_fns = FALSE
+  use_default_clust_fns = FALSE,
+  weights_fill = "ones"
 )
 }
 \arguments{
@@ -58,7 +59,7 @@ related parameters.}
 
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{n_solutions}{Number of rows to generate for the settings matrix.}
+\item{n_solutions}{Number of rows to generate for the settings data frame.}
 
 \item{min_removed_inputs}{The smallest number of input dataframes that may be
 randomly removed. By default, 0.}
@@ -178,6 +179,11 @@ list.}
 (spectral_eigen and spectral_rot, which apply spectral clustering and use
 the eigen-gap and rotation cost heuristics respectively for determining
 the number of clusters in the graph) to clust_fns.}
+
+\item{weights_fill}{String indicating what to populate generate rows with.
+Can be "ones" (default; fill matrix with 1), "uniform" (fill matrix with
+uniformly distributed random values), or "exponential" (fill matrix with
+exponentially distributed random values).}
 }
 \value{
 An \code{snf_config} class object.
