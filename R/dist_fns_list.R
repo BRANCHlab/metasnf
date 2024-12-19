@@ -23,7 +23,7 @@
 #' @return A distance metrics list object.
 #' @examples
 #' # Using just the base distance metrics  ------------------------------------
-#' dist_fns_list <- dist_fns_list(use_default_dist_fns = TRUE)
+#' dist_fns_list <- dist_fns_list()
 #'
 #' # Adding your own metrics --------------------------------------------------
 #' # This will contain only the and user-provided distance function:
@@ -84,10 +84,10 @@ dist_fns_list <- function(cnt_dist_fns = NULL,
     # Remove NULL elements
     dfll <- dfll[lengths(dfll) != 0]
     if (length(dfll) == 0 & !use_default_dist_fns) {
-        metasnf_error(
-            "Distance functions list cannot be empty. To use default distance",
-            " functions, set `use_default_dist_fns` to `TRUE`."
+        metasnf_alert(
+            "No distance functions specified. Using defaults."
         )
+        use_default_dist_fns <- TRUE
     }
     # Add default metrics if requested `use_default_dist_fns` is TRUE
     if (use_default_dist_fns) {
@@ -127,6 +127,11 @@ validate_dist_fns_list <- function(dfll) {
     return(dfll)
 }
 
+#' Constructor for `dist_fns_list` class object
+#' 
+#' @keywords internal
+#' @inheritParams validate_dist_fns_list
+#' @return A `dist_fns_list` object.
 new_dist_fns_list <- function(dfll) {
     dfl <- structure(dfll, class = c("dist_fns_list", "list"))
     return(dfl)

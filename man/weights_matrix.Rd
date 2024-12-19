@@ -4,16 +4,16 @@
 \alias{weights_matrix}
 \title{Generate a matrix to store feature weights}
 \usage{
-weights_matrix(dl = NULL, nrow = 1, fill = "ones")
+weights_matrix(dl = NULL, nrow = NULL, weights_fill = "ones")
 }
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{nrow}{Number of rows to generate the template weights matrix for.}
 
-\item{fill}{String indicating what to populate generate rows with. Can be
-"ones" (default; fill matrix with 1), "uniform" (fill matrix with uniformly
-distributed random values), or "exponential" (fill matrix with
+\item{weights_fill}{String indicating what to populate generate rows with.
+Can be "ones" (default; fill matrix with 1), "uniform" (fill matrix with
+uniformly distributed random values), or "exponential" (fill matrix with
 exponentially distributed random values).}
 }
 \value{

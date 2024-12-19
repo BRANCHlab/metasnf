@@ -6,7 +6,7 @@
 \usage{
 settings_df(
   dl,
-  nrows = 0,
+  n_solutions = 0,
   min_removed_inputs = 0,
   max_removed_inputs = length(dl) - 1,
   dropout_dist = "exponential",
@@ -35,7 +35,7 @@ settings_df(
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{nrows}{Number of rows to generate for the settings matrix.}
+\item{n_solutions}{Number of rows to generate for the settings matrix.}
 
 \item{min_removed_inputs}{The smallest number of input dataframes that may be
 randomly removed. By default, 0.}

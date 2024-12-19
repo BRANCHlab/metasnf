@@ -15,16 +15,16 @@ test_that("function and parallel equivalent run and give equal results", {
     )
     # Specifying 5 different sets of settings for SNF
     set.seed(42)
-    settings_matrix <- settings_df(
+    settings_df <- settings_df(
         data_list,
-        nrow = 3,
+        n_solutions = 3,
         max_k = 40
     )
     # This matrix has clustering solutions for each of the 5 SNF runs!
-    solutions_matrix <- batch_snf(data_list, settings_matrix)
+    solutions_matrix <- batch_snf(data_list, settings_df)
     solutions_matrix_parallel <- batch_snf(
         data_list,
-        settings_matrix,
+        settings_df,
         processes = 2,
     )
     expect_equal(solutions_matrix, solutions_matrix_parallel)

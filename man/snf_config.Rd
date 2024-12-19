@@ -10,7 +10,7 @@ snf_config(
   cfl = NULL,
   wm = NULL,
   dl,
-  nrows = 0,
+  n_solutions = 0,
   min_removed_inputs = 0,
   max_removed_inputs = length(dl) - 1,
   dropout_dist = "exponential",
@@ -38,9 +38,9 @@ snf_config(
   ord_dist_fns = NULL,
   cat_dist_fns = NULL,
   mix_dist_fns = NULL,
-  use_default_dist_fns = TRUE,
+  use_default_dist_fns = FALSE,
   clust_fns = NULL,
-  use_default_clust_fns = TRUE
+  use_default_clust_fns = FALSE
 )
 }
 \arguments{
@@ -58,7 +58,7 @@ related parameters.}
 
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{nrows}{Number of rows to generate for the settings matrix.}
+\item{n_solutions}{Number of rows to generate for the settings matrix.}
 
 \item{min_removed_inputs}{The smallest number of input dataframes that may be
 randomly removed. By default, 0.}

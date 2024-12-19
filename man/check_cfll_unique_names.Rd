@@ -7,7 +7,7 @@
 check_cfll_unique_names(cfll)
 }
 \arguments{
-\item{cfll}{A data list-like \code{list} class object.}
+\item{cfll}{A clust_fns_list-like \code{list} class object.}
 }
 \value{
 Doesn't return any value. Raises error if the names in cfll aren't

@@ -89,7 +89,7 @@ print.dist_fns_list <- function(x, ...) {
             grammar <- if (n_more_fns > 1) "s.\n" else ".\n"
             cat(
                 cli::col_grey(
-                    "\u2026and ", n_more_fts, " more function", grammar
+                    "\u2026and ", n_more_fns, " more function", grammar
                 )
             )
         } else if (length(all_output) == 0){
@@ -126,7 +126,7 @@ print.clust_fns_list <- function(x, ...) {
         cat(cli::col_green(all_output[1:5]), sep = "\n")
         n_more_fns <- length(all_output) - 5
         grammar <- if (n_more_fns > 1) "s.\n" else ".\n"
-        cat(cli::col_grey("\u2026and ", n_more_fts, " more function", grammar))
+        cat(cli::col_grey("\u2026and ", n_more_fns, " more function", grammar))
     } else if (length(all_output) == 0){
     } else {
         cat(cli::col_green(all_output), sep = "\n")
@@ -146,7 +146,7 @@ print.weights_matrix <- function(x, ...) {
     all_output <- x |>
         data.frame() |>
         dplyr::glimpse() |>
-        capture.output()
+        utils::capture.output()
     all_output <- all_output[-c(1:2)]
     cat(cli::col_grey("Weights defined for ", nrow(x), " cluster solutions."))
     cat("\n")

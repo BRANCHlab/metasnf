@@ -34,7 +34,7 @@ data_list <- data_list(
 
 # Build space of settings to cluster over
 set.seed(42)
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
     nrow = 2,
     min_k = 20,
@@ -42,7 +42,7 @@ settings_matrix <- settings_df(
 )
 
 # Clustering
-solutions_matrix <- batch_snf(data_list, settings_matrix)
+solutions_matrix <- batch_snf(data_list, settings_df)
 
 sm_row <- solutions_matrix[1, ]
 ```

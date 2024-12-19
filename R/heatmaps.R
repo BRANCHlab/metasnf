@@ -526,7 +526,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #' Scales settings matrix values between 0 and 1 and plots as a heatmap. Rows
 #' can be reordered to match prior meta clustering results.
 #'
-#' @param settings_matrix Matrix indicating parameters to iterate SNF through.
+#' @param settings_df Matrix indicating parameters to iterate SNF through.
 #'
 #' @param remove_fixed_columns Whether columns that have no variation should be
 #' removed.
@@ -560,7 +560,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #' that displays the scaled values of the provided settings matrix.
 #'
 #' @export
-settings_matrix_heatmap <- function(settings_matrix,
+settings_df_heatmap <- function(settings_df,
                                     order = NULL,
                                     remove_fixed_columns = TRUE,
                                     show_column_names = TRUE,
@@ -575,13 +575,13 @@ settings_matrix_heatmap <- function(settings_matrix,
                                     column_title = NULL,
                                     ...) {
     if (!is.null(order)) {
-        settings_matrix <- settings_matrix[order, ]
+        settings_df <- settings_df[order, ]
     }
     # Scaling everything to have a max of 1
-    col_maxes <- apply(settings_matrix, 2, function(x) 1 / max(x))
-    scaled_matrix <- as.matrix(settings_matrix) %*% diag(col_maxes)
-    colnames(scaled_matrix) <- colnames(settings_matrix)
-    rownames(scaled_matrix) <- rownames(settings_matrix)
+    col_maxes <- apply(settings_df, 2, function(x) 1 / max(x))
+    scaled_matrix <- as.matrix(settings_df) %*% diag(col_maxes)
+    colnames(scaled_matrix) <- colnames(settings_df)
+    rownames(scaled_matrix) <- rownames(settings_df)
     ###########################################################################
     # Function to check number of unique values in each column
     unique_values <- apply(scaled_matrix, 2, function(x) length(unique(x)))

@@ -47,7 +47,7 @@ metasnf.
 }
 \examples{
 # Using just the base distance metrics  ------------------------------------
-dist_fns_list <- dist_fns_list(use_default_dist_fns = TRUE)
+dist_fns_list <- dist_fns_list()
 
 # Adding your own metrics --------------------------------------------------
 # This will contain only the and user-provided distance function:

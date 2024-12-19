@@ -15,13 +15,13 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Download a copy of the vignette to follow along here: [settings_matrix.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/settings_matrix.Rmd)
+Download a copy of the vignette to follow along here: [settings_df.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/settings_df.Rmd)
 
 This vignette outlines the main functionality of the `settings_df` function.
 
-## The basic settings_matrix
+## The basic settings_df
 
-The most minimal settings_matrix can be obtained by providing a data_list object.
+The most minimal settings_df can be obtained by providing a data_list object.
 
 ```{r}
 library(metasnf)
@@ -37,11 +37,11 @@ data_list <- data_list(
     uid = "unique_id"
 )
 
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list
 )
 
-head(settings_matrix)
+head(settings_df)
 ```
 
 The resulting columns are:
@@ -64,12 +64,12 @@ When not specifying any parameters beyond the number of rows that are created, t
 
 ```{r}
 # Through minimums and maximums
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 100,
+    n_solutions = 100,
 )
 
-head(settings_matrix)
+head(settings_df)
 ```
 
 The `alpha` and `k` hyperparameters are varied from 0.3 to 0.8 and 10 to 100 respectively based on suggestion from the authors of SNF.
@@ -92,9 +92,9 @@ You can control any of these parameters either by providing a vector of values y
 
 ```{r}
 # Through minimums and maximums
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 100,
+    n_solutions = 100,
     min_k = 10,
     max_k = 60,
     min_alpha = 0.3,
@@ -104,9 +104,9 @@ settings_matrix <- settings_df(
 )
 
 # Through specific value sampling
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 20,
+    n_solutions = 20,
     k_values = c(10, 25, 50),
     alpha_values = c(0.4, 0.8),
     t_values = c(20, 30)
@@ -125,45 +125,45 @@ You can control the distribution by changing the `dropout_dist` value to "unifor
 
 ```{r}
 # Exponential dropping
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 20,
+    n_solutions = 20,
     dropout_dist = "exponential" # the default behaviour
 )
 
-head(settings_matrix)
+head(settings_df)
 
 # Uniform dropping
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 20,
+    n_solutions = 20,
     dropout_dist = "uniform"
 )
 
-head(settings_matrix)
+head(settings_df)
 
 
 # No dropping
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 20,
+    n_solutions = 20,
     dropout_dist = "none"
 )
 
-head(settings_matrix)
+head(settings_df)
 ```
 
 The bounds on the number of dataframes that can be dropped can be controlled using the `min_removed_inputs` and `max_removed_inputs`:
 
 ```{r}
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 20,
+    n_solutions = 20,
     min_removed_inputs = 3
 )
 
 # No row will exclude fewer than 3 dataframes during SNF
-head(settings_matrix)
+head(settings_df)
 ```
 
 ## Grid searching
@@ -171,39 +171,39 @@ head(settings_matrix)
 If you are interested in grid searching over perhaps just a specific set of alpha and k values, you may want to consider varying those parameters and keeping everything else fixed:
 
 ```{r}
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 10,
+    n_solutions = 10,
     alpha_values = c(0.3, 0.5, 0.8),
     k_values = c(20, 40, 60),
     dropout_dist = "none"
 )
 ```
 
-## Assembling a settings_matrix in pieces
+## Assembling a settings_df in pieces
 
 Rather than varying everything equally all at once, you may be interested in looking at "chunks" of solution spaces that are based on distinct settings matrices.
 
 For example, you may want to look at 50 solutions generated with k = 50 and look at another 50 solutions generated with k = 80.
-You can build two separate settings matrices and concatenate them, but you can also build up a single matrix in parts using the `add_settings_matrix_rows` function:
+You can build two separate settings matrices and concatenate them, but you can also build up a single matrix in parts using the `add_settings_df_rows` function:
 
 ```{r}
 set.seed(42)
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 25,
+    n_solutions = 25,
     k_values = 50
 )
 
-settings_matrix <- add_settings_matrix_rows(
-    settings_matrix,
-    nrow = 25,
+settings_df <- add_settings_df_rows(
+    settings_df,
+    n_solutions = 25,
     k_values = 80
 )
 
-dim(settings_matrix)
+dim(settings_df)
 
-settings_matrix$"k"
+settings_df$"k"
 ```
 
 ## Manual adjustments

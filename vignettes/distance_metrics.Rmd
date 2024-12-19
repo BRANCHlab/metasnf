@@ -69,9 +69,9 @@ my_distance_metrics <- dist_fns_list(
 summarize_dfl(my_distance_metrics)
 ```
 
-Now, during settings_matrix generation, we can provide our dist_fns_list to ensure our new distance metrics will be used on some of our SNF runs.
+Now, during settings_df generation, we can provide our dist_fns_list to ensure our new distance metrics will be used on some of our SNF runs.
 
-Before making the settings_matrix, we'll quickly need to setup some data (as was done in [A Simple Example](https://branchlab.github.io/metasnf/articles/a_simple_example.html)).
+Before making the settings_df, we'll quickly need to setup some data (as was done in [A Simple Example](https://branchlab.github.io/metasnf/articles/a_simple_example.html)).
 
 ```{r}
 library(SNFtool)
@@ -89,28 +89,28 @@ data_list <- data_list(
 )
 ```
 
-And then the settings_matrix can be generated:
+And then the settings_df can be generated:
 
 ```{r}
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
     nrow = 10,
     dfl = my_distance_metrics
 )
 
 # showing just the columns that are related to distances
-settings_matrix |> dplyr::select(dplyr::ends_with("dist"))
+settings_df |> dplyr::select(dplyr::ends_with("dist"))
 ```
 
 The continuous and discrete distance metrics values randomly fluctuate between 1 and 2, where 1 means that the first metric (`euclidean_distance()`) will be used and 2 means that the second metric (`sn_euclidean_distance`) will be used.
 
-It's important to note that the settings_matrix itself **does not store the distance metrics**, just the pointers to which position metric in the dist_fns_list should be used for that SNF run.
+It's important to note that the settings_df itself **does not store the distance metrics**, just the pointers to which position metric in the dist_fns_list should be used for that SNF run.
 Because of that, you'll need to supply the dist_fns_list once again when calling `batch_snf()`.
 
 ```{r eval = FALSE}
 solutions_matrix <- batch_snf(
     data_list,
-    settings_matrix,
+    settings_df,
     dfl = my_distance_metrics
 )
 ```
@@ -147,7 +147,7 @@ summarize_dfl(no_default_metrics)
 For this option, it is necessary to provide at least one distance metric for every feature type.
 A dist_fns_list cannot have any of its feature types be completely empty (even if you have no data for that feature type in the first place).
 
-The second way is to explicitly specify which indices you want to sample from during settings_matrix generation:
+The second way is to explicitly specify which indices you want to sample from during settings_df generation:
 
 ```{r}
 my_distance_metrics <- dist_fns_list(
@@ -164,7 +164,7 @@ my_distance_metrics <- dist_fns_list(
 
 summarize_dfl(my_distance_metrics)
 
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
     nrow = 10,
     dfl = my_distance_metrics,
@@ -172,14 +172,14 @@ settings_matrix <- settings_df(
     discrete_distances = c(2, 3)
 )
 
-settings_matrix |> dplyr::select(dplyr::ends_with("dist"))
+settings_df |> dplyr::select(dplyr::ends_with("dist"))
 ```
 
-The second option can be quite useful when paired with `add_settings_matrix_rows()`, enabling you to build up distinct blocks of rows in the settings matrix that have different combinations of distance metrics.
+The second option can be quite useful when paired with `add_settings_df_rows()`, enabling you to build up distinct blocks of rows in the settings matrix that have different combinations of distance metrics.
 This can save you the trouble of needing to manage several distinct distance metrics lists or manage your solution space over separate runs of `batch_snf`.
 
 ```{r}
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
     nrow = 10,
     dfl = my_distance_metrics,
@@ -187,15 +187,15 @@ settings_matrix <- settings_df(
     discrete_distances = c(2, 3)
 )
 
-settings_matrix <- add_settings_matrix_rows(
-    settings_matrix,
+settings_df <- add_settings_df_rows(
+    settings_df,
     nrow = 10,
     dfl = my_distance_metrics,
     continuous_distances = 3,
     discrete_distances = 1
 )
 
-settings_matrix |> dplyr::select(dplyr::ends_with("dist"))
+settings_df |> dplyr::select(dplyr::ends_with("dist"))
 ```
 
 In rows 1 to 10, only continuous data will always be handled by the first continuous distance metric while discrete data will be handled by the second and third discrete distance metrics.
@@ -229,7 +229,7 @@ By default, this function will return a dataframe containing all the columns in 
 To actually use the matrix during SNF, you'll need to make sure that the number of rows in the weights matrix is the same as the number of rows in your settings matrix.
 
 ```{r}
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
     nrow = 10,
     dfl = my_distance_metrics,
@@ -237,25 +237,25 @@ settings_matrix <- settings_df(
     discrete_distances = c(2, 3)
 )
 
-settings_matrix
+settings_df
 
 wm <- weights_matrix(
     data_list,
-    nrow = nrow(settings_matrix)
+    nrow = nrow(settings_df)
 )
 
 wm[1:5, ]
 
 solutions_matrix_1 <- batch_snf(
     data_list,
-    settings_matrix,
+    settings_df,
     dfl = my_distance_metrics,
     wm = wm
 )
 
 solutions_matrix_2 <- batch_snf(
     data_list,
-    settings_matrix,
+    settings_df,
     dfl = my_distance_metrics
 )
 
@@ -271,7 +271,7 @@ You can either replace the 1s with your own weights that you've calculated outsi
 ```{r eval = FALSE}
 wm <- weights_matrix(
     data_list,
-    nrow = nrow(settings_matrix),
+    nrow = nrow(settings_df),
     fill = "uniform" # or fill = "exponential"
 )
 ```

@@ -42,7 +42,7 @@ snf_config <- function(sdf = NULL,
                        cfl = NULL,
                        wm = NULL,
                        dl,
-                       nrows = 0,
+                       n_solutions = 0,
                        min_removed_inputs = 0,
                        max_removed_inputs = length(dl) - 1,
                        dropout_dist = "exponential",
@@ -70,16 +70,64 @@ snf_config <- function(sdf = NULL,
                        ord_dist_fns = NULL,
                        cat_dist_fns = NULL,
                        mix_dist_fns = NULL,
-                       use_default_dist_fns = TRUE,
+                       use_default_dist_fns = FALSE,
                        clust_fns = NULL,
-                       use_default_clust_fns = TRUE) {
-    dfl <- dist_fns_list(
-        cnt_dist_fns = cnt_dist_fns,
-        dsc_dist_fns = dsc_dist_fns,
-        ord_dist_fns = ord_dist_fns,
-        cat_dist_fns = cat_dist_fns,
-        mix_dist_fns = mix_dist_fns,
-        use_default_dist_fns = use_default_dist_fns
+                       use_default_clust_fns = FALSE,
+                       weights_fill = "ones") {
+    if (is.null(sdf)) {
+        sdf <- settings_df(
+            dl,
+            n_solutions = n_solutions,
+            min_removed_inputs = min_removed_inputs,
+            max_removed_inputs = max_removed_inputs,
+            dropout_dist = dropout_dist,
+            min_alpha = min_alpha,
+            max_alpha = max_alpha,
+            min_k = min_k,
+            max_k = max_k,
+            min_t = min_t,
+            max_t = max_t,
+            alpha_values = alpha_values,
+            k_values = k_values,
+            t_values = t_values,
+            possible_snf_schemes = possible_snf_schemes,
+            clustering_algorithms = clustering_algorithms,
+            continuous_distances = continuous_distances,
+            discrete_distances = discrete_distances,
+            ordinal_distances = ordinal_distances,
+            categorical_distances = categorical_distances,
+            mixed_distances = mixed_distances,
+            dfl = dfl,
+            snf_input_weights = snf_input_weights,
+            snf_domain_weights = snf_domain_weights,
+            retry_limit = retry_limit
+        )
+    }
+    if (is.null(dfl)) {
+        dfl <- dist_fns_list(
+            cnt_dist_fns = cnt_dist_fns,
+            dsc_dist_fns = dsc_dist_fns,
+            ord_dist_fns = ord_dist_fns,
+            cat_dist_fns = cat_dist_fns,
+            mix_dist_fns = mix_dist_fns,
+            use_default_dist_fns = use_default_dist_fns
+        )
+    }
+    if (is.null(cfl)) {
+        cfl <- clust_fns_list(
+            clust_fns = clust_fns,
+            use_default_clust_fns = use_default_clust_fns
+        )
+    }
+    if (is.null(wm)) {
+        wm <- weights_matrix(
+            dl = dl,
+            n_solutions = n_solutions,
+            weights_fill = weights_fill
+        )
+    }
+    scl <- list(
+        sdf,
     )
     scl <- NULL
     scl <- validate_snf_config(scl)

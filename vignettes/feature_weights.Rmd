@@ -46,9 +46,9 @@ data_list <- data_list(
 summarize_dl(data_list)
 
 set.seed(42)
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 20,
+    n_solutions = 20,
     min_k = 20,
     max_k = 50
 )
@@ -65,7 +65,7 @@ By default, the weights are all 1.
 This is what `batch_snf` uses when no weights_matrix is supplied.
 
 If you have custom feature weights you'd like to be used you can manually populate this dataframe.
-There's one column per feature (no need to worry about column orders) and the number of rows should match the number of rows in the settings_matrix.
+There's one column per feature (no need to worry about column orders) and the number of rows should match the number of rows in the settings_df.
 
 If you are just looking to broaden the space of cluster solutions you generate, you can use some of the built-in randomization options for the weights:
 
@@ -73,14 +73,14 @@ If you are just looking to broaden the space of cluster solutions you generate, 
 # Random uniformly distributed values
 weights_matrix(
     data_list,
-    nrow = 5,
+    nrow = 20,
     fill = "uniform"
 )
 
 # Random exponentially distributed values
 weights_matrix(
     data_list,
-    nrow = 5,
+    nrow = 20,
     fill = "exponential"
 )
 ```
@@ -90,7 +90,7 @@ Once you're happy with your weights_matrix, you can pass it into batch_snf:
 ```{r eval = FALSE}
 batch_snf(
     dl = data_list,
-    settings_matrix = settings_matrix,
+    settings_df = settings_df,
     wm = wm
 )
 ```
@@ -100,7 +100,7 @@ batch_snf(
 The specific implementation of the weights during distance matrix calculations is dependent on the distance metric used, which you can learn more about in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html).
 
 The other aspect to understand if you want to know precisely how your weights are being used is related to the SNF schemes.
-Depending on which scheme is specified in the settings_matrix row, the feature columns that are involved at each distance matrix calculation can differ substantially.
+Depending on which scheme is specified in the settings_df row, the feature columns that are involved at each distance matrix calculation can differ substantially.
 
 For example, in the domain scheme, all features of the same domain are concatenated prior to distance matrix calculation.
 If you have any domains with multiple types of features (e.g., continuous and categorical), that will mean that the mixed distance metric (Gower's method by default) will be used, and weights will be applied but only on a per-domain basis.

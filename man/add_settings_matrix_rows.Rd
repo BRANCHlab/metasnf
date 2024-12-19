@@ -6,7 +6,7 @@
 \usage{
 add_settings_matrix_rows(
   settings_matrix,
-  nrows = 0,
+  n_solutions = 0,
   min_removed_inputs = 0,
   max_removed_inputs = sum(startsWith(colnames(settings_matrix), "inc_")) - 1,
   dropout_dist = "exponential",
@@ -35,7 +35,7 @@ add_settings_matrix_rows(
 \arguments{
 \item{settings_matrix}{The existing settings matrix}
 
-\item{nrows}{Number of rows to generate for the settings matrix.}
+\item{n_solutions}{Number of rows to generate for the settings matrix.}
 
 \item{min_removed_inputs}{The smallest number of input dataframes that may be
 randomly removed. By default, 0.}

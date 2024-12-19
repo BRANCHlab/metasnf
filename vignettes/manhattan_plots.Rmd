@@ -49,15 +49,15 @@ target_list <- full_data_list[4:5]
 
 # Build space of settings to cluster over
 set.seed(42)
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 20,
+    n_solutions = 20,
     min_k = 20,
     max_k = 50
 )
 
 # Clustering
-solutions_matrix <- batch_snf(data_list, settings_matrix)
+solutions_matrix <- batch_snf(data_list, settings_df)
 
 # Calculate p-values between cluster solutions and features
 extended_solutions_matrix <- extend_solutions(

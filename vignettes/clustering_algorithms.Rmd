@@ -47,7 +47,7 @@ dl <- data_list(
 )
 
 set.seed(42)
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     dl,
     nrow = 5,
     max_k = 40
@@ -57,7 +57,7 @@ settings_matrix <- settings_df(
 Information about the clustering used by default is stored in the settings matrix:
 
 ```{r}
-settings_matrix$"clust_alg"
+settings_df$"clust_alg"
 ```
 
 The "1" corresponds to spectral clustering using the eigen-gap heuristic to determine the number of clusters, while the "2" corresponds to spectral clustering using the rotation cost heuristic to determine the number of clusters.
@@ -116,7 +116,7 @@ summarize_clust_fns_list(cfl)
 
 **By default, the settings matrix only varies over the values 1 and 2**.
 This is because, by default, it only expects you to use the default clustering algorithms.
-If your custom list is two algorithms long, that's fine, but if it isn't, it's imperative that you either manually adjust the numbers in `settings_matrix$"clust_algs"` or (more easily) you supply your custom list during settings matrix generation:
+If your custom list is two algorithms long, that's fine, but if it isn't, it's imperative that you either manually adjust the numbers in `settings_df$"clust_algs"` or (more easily) you supply your custom list during settings matrix generation:
 
 ```{r}
 # This list has only the newly added ones, thanks to the disable_base parameter
@@ -130,14 +130,14 @@ cfl <- clust_fns_list(
 
 # Specifying 5 different sets of settings for SNF
 set.seed(42)
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     dl,
     nrow = 10,
     max_k = 40,
     clustering_algorithms = cfl
 )
 
-settings_matrix$"clust_alg"
+settings_df$"clust_alg"
 ```
 
 Then, make sure to provide the `clust_fns_list` once more during the call to `batch_snf`:
@@ -145,7 +145,7 @@ Then, make sure to provide the `clust_fns_list` once more during the call to `ba
 ```{r eval = FALSE}
 solutions_matrix <- batch_snf(
     dl,
-    settings_matrix,
+    settings_df,
     cfl = cfl
 )
 ```
@@ -222,7 +222,7 @@ This is particularly useful for clustering procedures where the transition from 
 ```{r}
 batch_snf_results <- batch_snf(
     dl,
-    settings_matrix,
+    settings_df,
     cfl = cfl,
     return_similarity_matrices = TRUE
 )
@@ -306,14 +306,14 @@ dl <- data_list(
 )
 
 set.seed(42)
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     dl,
     nrow = 5
 )
 
 batch_snf_results <- batch_snf(
     dl,
-    settings_matrix,
+    settings_df,
     return_similarity_matrices = TRUE
 )
 

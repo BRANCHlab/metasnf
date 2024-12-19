@@ -52,15 +52,15 @@ data_list <- data_list(
 
 # Specifying 5 different sets of settings for SNF
 set.seed(42)
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 10,
+    n_solutions = 10,
     max_k = 40
 )
 
 solutions_matrix <- batch_snf(
     data_list,
-    settings_matrix,
+    settings_df,
     processes = "max" # Can also be a specific integer
 )
 ```
@@ -73,7 +73,7 @@ Use the progressr package to visualize the progress of parallel batch_snf.
 progressr::with_progress({
     solutions_matrix <- batch_snf(
         data_list,
-        settings_matrix,
+        settings_df,
         processes = "max"
     )
 })
@@ -88,7 +88,7 @@ If you want to dial things back a little, you can specify more precisely the num
 ```{r eval = FALSE}
 solutions_matrix <- batch_snf(
     data_list,
-    settings_matrix,
+    settings_df,
     processes = 4
 )
 ```

@@ -24,7 +24,7 @@
 #'
 #' @param ignore_inclusions If TRUE, will ignore the inclusion columns in the
 #' solutions matrix and calculate NMIs for all features. If FALSE, will give
-#' NAs for features that were dropped on a given settings_matrix row.
+#' NAs for features that were dropped on a given settings_df row.
 #'
 #' @param verbose If TRUE, output progress to console.
 #'
@@ -54,7 +54,7 @@ batch_nmi <- function(dl,
     # Extracting settings used to generate the solutions matrix. These will be
     # used to generate the new solutions based on the solo features.
     ###########################################################################
-    settings_matrix <- no_subs(solutions_matrix)
+    settings_df <- no_subs(solutions_matrix)
     ###########################################################################
     # nmi_df will store all the NMIs for each feature
     ###########################################################################
@@ -63,7 +63,7 @@ batch_nmi <- function(dl,
     # If ignore_inclusions is TRUE, all inclusion columns will be set to 1
     ###########################################################################
     if (ignore_inclusions) {
-        settings_matrix <- settings_matrix |> dplyr::mutate(
+        settings_df <- settings_df |> dplyr::mutate(
             dplyr::across(
                 dplyr::starts_with("inc_"), ~ 1
             )
@@ -106,10 +106,10 @@ batch_nmi <- function(dl,
         #######################################################################
         feature_dl <- feature_dl[!sapply(feature_dl, is.null)]
         inc_this_data_type <- paste0("inc_", feature_dl[[1]]$"name")
-        inc_columns <- startsWith(colnames(settings_matrix), "inc_")
-        is_this_inc <- colnames(settings_matrix) == inc_this_data_type
+        inc_columns <- startsWith(colnames(settings_df), "inc_")
+        is_this_inc <- colnames(settings_df) == inc_this_data_type
         keep_cols <- is_this_inc | !inc_columns
-        feature_settings_matrix <- settings_matrix[, keep_cols]
+        feature_settings_df <- settings_df[, keep_cols]
         #######################################################################
         # Vector storing this feature's NMIs
         #######################################################################
@@ -117,9 +117,9 @@ batch_nmi <- function(dl,
         #######################################################################
         # Loop through the settings matrix and run solo-feature SNFs
         #######################################################################
-        for (j in seq_len(nrow(feature_settings_matrix))) {
-            this_settings_matrix <- feature_settings_matrix[j, ]
-            this_inclusion <- this_settings_matrix[, inc_this_data_type]
+        for (j in seq_len(nrow(feature_settings_df))) {
+            this_settings_df <- feature_settings_df[j, ]
+            this_inclusion <- this_settings_df[, inc_this_data_type]
             if (!ignore_inclusions && this_inclusion == 0) {
                 ###############################################################
                 # If feature is dropped and inc not ignored, the NMI is NA
@@ -133,7 +133,7 @@ batch_nmi <- function(dl,
                 asn <- automatic_standard_normalize
                 this_solutions_matrix <- batch_snf(
                     dl = feature_dl,
-                    settings_matrix = this_settings_matrix,
+                    settings_df = this_settings_df,
                     cfl = cfl,
                     dfl = dfl,
                     automatic_standard_normalize = asn,

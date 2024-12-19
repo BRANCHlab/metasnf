@@ -42,17 +42,17 @@ data_list <- data_list(
     uid = "unique_id"
 )
 
-# build settings_matrix
+# build settings_df
 set.seed(42)
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 15
+    n_solutions = 15
 )
 
 # collect similarity matrices and solutions matrix from batch_snf
 batch_snf_results <- batch_snf(
     data_list,
-    settings_matrix,
+    settings_df,
     return_similarity_matrices = TRUE
 )
 

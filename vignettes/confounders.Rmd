@@ -165,7 +165,7 @@ data_list <- data_list(
     uid = "id"
 )
 
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     dl = data_list,
     nrow = 1,
     possible_snf_schemes = 1,
@@ -173,7 +173,7 @@ settings_matrix <- settings_df(
     alpha_values = 0.8
 )
 
-solutions_matrix <- batch_snf(data_list, settings_matrix)
+solutions_matrix <- batch_snf(data_list, settings_df)
 
 cluster_solutions_df <- get_cluster_solutions(solutions_matrix) |>
     dplyr::rename(

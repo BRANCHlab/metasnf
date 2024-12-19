@@ -4,7 +4,7 @@
 ###############################################################################
 # settings_df()
 ###############################################################################
-test_that("return a correctly formatted settings_matrix", {
+test_that("return a correctly formatted settings_df", {
     heart_rate_df <- data.frame(
         patient_id = c("1", "2", "3"),
         var1 = c(0.04, 0.1, 0.3),
@@ -30,9 +30,9 @@ test_that("return a correctly formatted settings_matrix", {
         ),
         uid = "patient_id"
     )
-    empty_settings_matrix <- settings_df(data_list)
-    empty_has_no_rows <- nrow(empty_settings_matrix) == 0
-    proper_colnames <- (colnames(empty_settings_matrix) == c(
+    empty_settings_df <- settings_df(data_list)
+    empty_has_no_rows <- nrow(empty_settings_df) == 0
+    proper_colnames <- (colnames(empty_settings_df) == c(
         "row_id",
         "alpha",
         "k",

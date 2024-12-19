@@ -41,14 +41,14 @@ data_list <- data_list(
 )
 
 set.seed(42)
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 4,
+    n_solutions = 4,
     max_k = 40
 )
 
 # Cluster solutions made using the full data
-solutions_matrix <- batch_snf(data_list, settings_matrix)
+solutions_matrix <- batch_snf(data_list, settings_df)
 ```
 
 To begin start calculating resampling-based stability measures, we'll build subsamples of the data list using the `subsample_data_list` function.
@@ -67,7 +67,7 @@ Each variation only has a random 85% of the original observations.
 ```{r eval = FALSE}
 batch_subsample_results <- batch_snf_subsamples(
     data_list_subsamples,
-    settings_matrix
+    settings_df
 )
 ```
 

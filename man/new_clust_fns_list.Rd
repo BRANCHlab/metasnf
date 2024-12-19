@@ -7,10 +7,10 @@
 new_clust_fns_list(cfll)
 }
 \arguments{
-\item{cfll}{A data list-like \code{list} class object.}
+\item{cfll}{A clust_fns_list-like \code{list} class object.}
 }
 \value{
-A \code{data_list} object, which is a nested list with class \code{data_list}.
+A \code{clust_fns_list} class object.
 }
 \description{
 Constructor for \code{clust_fns_list} class object

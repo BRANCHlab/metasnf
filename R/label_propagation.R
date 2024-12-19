@@ -110,7 +110,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     if (is.null(wm)) {
         wm <- weights_matrix(
             full_dl,
-            nrow = nrow(train_solutions_matrix)
+            n_solutions = nrow(train_solutions_matrix)
         )
     } else {
         if (nrow(wm) != nrow(train_solutions_matrix)) {

@@ -59,16 +59,16 @@ data_list_imp2 <- data_list(
 )
 
 set.seed(42)
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list_imp1,
-    nrow = 10,
+    n_solutions = 10,
     min_k = 20,
     max_k = 50
 )
 
 # Generation of 20 cluster solutions
-solutions_matrix_imp1 <- batch_snf(data_list_imp1, settings_matrix)
-solutions_matrix_imp2 <- batch_snf(data_list_imp2, settings_matrix)
+solutions_matrix_imp1 <- batch_snf(data_list_imp1, settings_df)
+solutions_matrix_imp2 <- batch_snf(data_list_imp2, settings_df)
 
 solutions_matrix_imp1$"imputation" <- 1
 solutions_matrix_imp1$"imputation" <- 2

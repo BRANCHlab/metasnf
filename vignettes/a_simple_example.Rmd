@@ -235,17 +235,17 @@ data_list <- data_list(
 )
 ```
 
-### 3. Store all the settings of the desired SNF runs in a *settings_matrix*
+### 3. Store all the settings of the desired SNF runs in a *settings_df*
 
-The `settings_matrix` is a dataframe where each row contains all the information required to convert the raw data into a final cluster solution.
+The `settings_df` is a dataframe where each row contains all the information required to convert the raw data into a final cluster solution.
 By varying the rows in this matrix, we can access a broader space of possible solutions and hopefully get closer to something that will be as useful as possible for our context.
 
 In this case, we're going to create only a single cluster solution using the same process outlined in the original SNFtool example above.
 
-An explanation for the parameters in the `settings_matrix` can be found at [the settings_matrix vignette](https://branchlab.github.io/metasnf/articles/settings_matrix.html).
+An explanation for the parameters in the `settings_df` can be found at [the settings_df vignette](https://branchlab.github.io/metasnf/articles/settings_df.html).
 
 ```{r}
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
     nrow = 1,
     alpha_values = 0.5,
@@ -255,10 +255,10 @@ settings_matrix <- settings_df(
     possible_snf_schemes = 1
 )
 
-settings_matrix
+settings_df
 ```
 
-The columns in this `settings_matrix` mean the following:
+The columns in this `settings_df` mean the following:
 
 * row_id: A way to keep track of the different rows
 * alpha, k, t: The hyperparameters seen above
@@ -267,22 +267,22 @@ The columns in this `settings_matrix` mean the following:
 * Columns ending in "dist": Which distance metric should be used. By default, 1 refers to Euclidean distance for continuous, discrete, and ordinal data, and 1 refers to Gower's distance for categorical and mixed data.
 * Columns starting with "inc": Whether or not the corresponding dataframe will be included for this round of SNF.
 
-More detailed descriptions on all of these columns can also be found in the settings_matrix vignette.
+More detailed descriptions on all of these columns can also be found in the settings_df vignette.
 
 ### 4. Run SNF
 
-The `batch_snf` function will apply each row of the `settings_matrix` (in this case, just one row) to the `data_list`.
+The `batch_snf` function will apply each row of the `settings_df` (in this case, just one row) to the `data_list`.
 
 ```{r}
 solutions_matrix <- batch_snf(
     data_list,
-    settings_matrix
+    settings_df
 )
 
 solutions_matrix[, 1:20] # it goes on like this for some time...
 
 ```
-The `solutions_matrix` is essentially an augmented `settings_matrix`, where new columns have been added for each included patient.
+The `solutions_matrix` is essentially an augmented `settings_df`, where new columns have been added for each included patient.
 On each row, those new columns show what cluster that patient ended up in.
 
 A friendlier format of the clustering results can be obtained:
@@ -305,7 +305,7 @@ Running `batch_snf` with the `return_similarity_matrices` parameter set to `TRUE
 
 batch_snf_results <- batch_snf(
     data_list,
-    settings_matrix,
+    settings_df,
     return_similarity_matrices = TRUE
 )
 
@@ -325,7 +325,7 @@ max(similarity_matrix - fused_network)
 ```
 
 And now we've completed a basic example of using this package.
-The subsequent vignettes provide guidance on how you can leverage the `settings_matrix` to access a wide range of clustering solutions from your data, how you can use other tools in this package to pick a best solution for your purposes, and how to validate the generalizability.
+The subsequent vignettes provide guidance on how you can leverage the `settings_df` to access a wide range of clustering solutions from your data, how you can use other tools in this package to pick a best solution for your purposes, and how to validate the generalizability.
 
 Go give the [less simple example](https://branchlab.github.io/metasnf/articles/a_complete_example.html) a try!
 

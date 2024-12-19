@@ -1,9 +1,9 @@
-#' Build a settings matrix
+#' Build a settings data frame
 #'
-#' The settings_matrix is a dataframe whose rows completely specify the
+#' The settings_df is a dataframe whose rows completely specify the
 #' hyperparameters and decisions required to transform individual input
 #' dataframes (found in a data list, see ?data_list) into a single
-#' similarity matrix through SNF. The format of the settings matrix is as
+#' similarity matrix through SNF. The format of the settings data frame is as
 #' follows:
 #' * A column named "row_id": This column is used to keep
 #'   track of the rows and should have integer values only.
@@ -56,7 +56,7 @@
 #'   0, that dataframe will be excluded from that run of the SNF pipeline. When
 #'   1, that dataframe will be included.
 #' @param dl A nested list of input data from `data_list()`.
-#' @param nrows Number of rows to generate for the settings matrix.
+#' @param n_solutions Number of rows to generate for the settings data frame.
 #' @param min_removed_inputs The smallest number of input dataframes that may be
 #'  randomly removed. By default, 0.
 #' @param max_removed_inputs The largest number of input dataframes that may be
@@ -134,10 +134,14 @@
 #'  increases, the risk of randomly generating a row that already exists
 #'  increases. If a new random row has matched an existing row `retry_limit`
 #'  number of times, the function will terminate.
-#' @return A settings matrix
+#' @param allow_duplicates If TRUE, enables creation of a settings data frame
+#'  with duplicate non-feature weighting related hyperparameters. This function
+#'  should only be used when paired with a custom weights matrix that has
+#'  non-duplicate rows.
+#' @return A settings data frame
 #' @export
 settings_df <- function(dl,
-                        nrows = 0,
+                        n_solutions = 0,
                         min_removed_inputs = 0,
                         max_removed_inputs = length(dl) - 1,
                         dropout_dist = "exponential",
@@ -160,8 +164,9 @@ settings_df <- function(dl,
                         dfl = NULL,
                         snf_input_weights = NULL,
                         snf_domain_weights = NULL,
-                        retry_limit = 10) {
-    settings_matrix_columns <- c(
+                        retry_limit = 10,
+                        allow_duplicates = FALSE) {
+    settings_df_columns <- c(
         "row_id",
         "alpha",
         "k",
@@ -175,17 +180,17 @@ settings_df <- function(dl,
         "mix_dist",
         paste0("inc_", summarize_dl(dl)$"name")
     )
-    settings_matrix_base <- as.data.frame(
+    settings_df_base <- as.data.frame(
         matrix(
             0,
-            ncol = length(settings_matrix_columns),
+            ncol = length(settings_df_columns),
             nrow = 0
         )
     )
-    colnames(settings_matrix_base) <- settings_matrix_columns
-    settings_matrix <- add_settings_matrix_rows(
-        settings_matrix = settings_matrix_base,
-        nrows = nrows,
+    colnames(settings_df_base) <- settings_df_columns
+    settings_df <- add_settings_df_rows(
+        settings_df = settings_df_base,
+        n_solutions = n_solutions,
         min_removed_inputs = min_removed_inputs,
         max_removed_inputs = max_removed_inputs,
         dropout_dist = dropout_dist,
@@ -208,99 +213,24 @@ settings_df <- function(dl,
         dfl = dfl,
         snf_input_weights = snf_input_weights,
         snf_domain_weights = snf_domain_weights,
-        retry_limit = retry_limit
+        retry_limit = retry_limit,
+        allow_duplicates = allow_duplicates
     )
-    return(settings_matrix)
+    return(settings_df)
 }
 
-#' Add settings matrix rows
+#' Add rows to a settings_df
 #'
-#' @param settings_matrix The existing settings matrix
-#' @param nrows Number of rows to generate for the settings matrix.
-#' @param min_removed_inputs The smallest number of input dataframes that may be
-#'  randomly removed. By default, 0.
-#' @param max_removed_inputs The largest number of input dataframes that may be
-#'  randomly removed. By default, this is 1 less than all the provided input
-#'  dataframes in the data list.
-#' @param dropout_dist Parameter controlling how the random removal of input
-#'  dataframes should occur. Can be "none" (no input dataframes are randomly
-#'  removed), "uniform" (uniformly sample between min_removed_inputs and max_removed_inputs
-#'  to determine number of input dataframes to remove), or "exponential" (pick
-#'  number of input dataframes to remove by sampling from min_removed_inputs to
-#'  max_removed_inputs with an exponential distribution; default).
-#' @param min_alpha The minimum value that the alpha hyperparameter can have.
-#'  Random assigned value of alpha for each row will be obtained by uniformly
-#'  sampling numbers between `min_alpha` and `max_alpha` at intervals of 0.1.
-#'  Cannot be used in conjunction with the `alpha_values` parameter.
-#' @param max_alpha The maximum value that the alpha hyperparameter can have.
-#'  See `min_alpha` parameter. Cannot be used in conjunction with the
-#'  `alpha_values` parameter.
-#' @param min_k The minimum value that the k hyperparameter can have.
-#'  Random assigned value of k for each row will be obtained by uniformly
-#'  sampling numbers between `min_k` and `max_k` at intervals of 1.
-#'  Cannot be used in conjunction with the `k_values` parameter.
-#' @param max_k The maximum value that the k hyperparameter can have.
-#'  See `min_k` parameter. Cannot be used in conjunction with the
-#'  `k_values` parameter.
-#' @param min_t The minimum value that the t hyperparameter can have.
-#'  Random assigned value of t for each row will be obtained by uniformly
-#'  sampling numbers between `min_t` and `max_t` at intervals of 1.
-#'  Cannot be used in conjunction with the `t_values` parameter.
-#' @param max_t The maximum value that the t hyperparameter can have.
-#'  See `min_t` parameter. Cannot be used in conjunction with the
-#'  `t_values` parameter.
-#' @param alpha_values A number or numeric vector of a set of possible values
-#'  that alpha can take on. Value will be obtained by uniformly sampling the
-#'  vector. Cannot be used in conjunction with the `min_alpha` or `max_alpha`
-#'  parameters.
-#' @param k_values A number or numeric vector of a set of possible values
-#'  that k can take on. Value will be obtained by uniformly sampling the
-#'  vector. Cannot be used in conjunction with the `min_k` or `max_k`
-#'  parameters.
-#' @param t_values A number or numeric vector of a set of possible values
-#'  that t can take on. Value will be obtained by uniformly sampling the
-#'  vector. Cannot be used in conjunction with the `min_t` or `max_t`
-#'  parameters.
-#' @param possible_snf_schemes A vector containing the possible snf_schemes to
-#'  uniformly randomly select from. By default, the vector contains all
-#'  3 possible schemes: c(1, 2, 3). 1 corresponds to the "individual" scheme,
-#'  2 corresponds to the "domain" scheme, and 3 corresponds to the "twostep"
-#'  scheme.
-#' @param clustering_algorithms A list of clustering algorithms to uniformly
-#'  randomly pick from when clustering. When not specified, randomly select
-#'  between spectral clustering using the eigen-gap heuristic and spectral
-#'  clustering using the rotation cost heuristic. See ?clust_fns_list
-#'  for more details on running custom clustering algorithms.
-#' @param continuous_distances A vector of continuous distance metrics to use
-#'  when a custom dist_fns_list is provided.
-#' @param discrete_distances A vector of categorical distance metrics to use
-#'  when a custom dist_fns_list is provided.
-#' @param ordinal_distances A vector of categorical distance metrics to use
-#'  when a custom dist_fns_list is provided.
-#' @param categorical_distances A vector of categorical distance metrics to use
-#'  when a custom dist_fns_list is provided.
-#' @param mixed_distances A vector of mixed distance metrics to use
-#'  when a custom dist_fns_list is provided.
-#' @param dfl List containing distance metrics to vary over.
-#'  See ?generate_dist_fns_list.
-#' @param snf_input_weights Nested list containing weights for when SNF is
-#'  used to merge individual input measures (see ?generate_snf_weights)
-#' @param snf_domain_weights Nested list containing weights for when SNF is
-#'  used to merge domains (see ?generate_snf_weights)
-#' @param retry_limit The maximum number of attempts to generate a novel row.
-#'  This function does not return matrices with identical rows. As the range of
-#'  requested possible settings tightens and the number of requested rows
-#'  increases, the risk of randomly generating a row that already exists
-#'  increases. If a new random row has matched an existing row `retry_limit`
-#'  number of times, the function will terminate.
-#' @return A settings matrix
+#' @param settings_df The existing settings data frame
+#' @inheritParams settings_df
+#' @return A settings data frame
 #' @export
-add_settings_matrix_rows <- function(settings_matrix,
-                                     nrows = 0,
+add_settings_df_rows <- function(sdf,
+                                     n_solutions = 0,
                                      min_removed_inputs = 0,
                                      max_removed_inputs = sum(
                                          startsWith(
-                                             colnames(settings_matrix),
+                                             colnames(settings_df),
                                              "inc_"
                                          )
                                      ) - 1,
@@ -324,7 +254,8 @@ add_settings_matrix_rows <- function(settings_matrix,
                                      dfl = NULL,
                                      snf_input_weights = NULL,
                                      snf_domain_weights = NULL,
-                                     retry_limit = 10) {
+                                     retry_limit = 10,
+                                     allow_duplicates = FALSE) {
     ###########################################################################
     # 1. Handling alpha hyperparameter
     ###########################################################################
@@ -491,16 +422,16 @@ add_settings_matrix_rows <- function(settings_matrix,
         dfl <- dist_fns_list(use_default_dist_fns = TRUE)
     }
     ###########################################################################
-    # 6. Begin the loop that will generate new random settings_matrix rows
+    # 6. Begin the loop that will generate new random settings_df rows
     ###########################################################################
     i <- 0
     num_retries <- 0
-    while (i < nrows) {
-        row_id <- nrow(settings_matrix) + 1
+    while (i < n_solutions) {
+        row_id <- nrow(settings_df) + 1
         new_row <- vector()
         # Inclusion columns
         inclusions <- random_removal(
-            columns = colnames(settings_matrix),
+            columns = colnames(settings_df),
             min_removed_inputs = min_removed_inputs,
             max_removed_inputs = max_removed_inputs,
             dropout_dist = dropout_dist
@@ -570,23 +501,22 @@ add_settings_matrix_rows <- function(settings_matrix,
             inclusions
         )
         #######################################################################
-        # 8. Append the new row to the full settings_matrix
+        # 8. Append the new row to the full settings_df
         #######################################################################
-        colnames(new_row) <- colnames(settings_matrix)
+        colnames(new_row) <- colnames(settings_df)
         new_row <- data.frame(new_row)
-        settings_matrix <- rbind(settings_matrix, new_row)
+        settings_df <- rbind(settings_df, new_row)
         i <- i + 1
         #######################################################################
-        # 9. Check if newly added row already exists in settings_matrix
+        # 9. Check if newly added row already exists in settings_df
         #######################################################################
-        dm_no_id <- settings_matrix[, 2:length(settings_matrix)]
+        dm_no_id <- settings_df[, 2:length(settings_df)]
         num_duplicates <- length(which(
             duplicated(dm_no_id) |
             duplicated(dm_no_id, fromLast = TRUE)))
-        if (num_duplicates > 0) {
+        if (num_duplicates > 0 & !allow_duplicates) {
             i <- i - 1
-            settings_matrix <-
-                settings_matrix[seq_len(nrow(settings_matrix)) - 1, ]
+            settings_df <- settings_df[seq_len(nrow(settings_df)) - 1, ]
             num_retries <- num_retries + 1
         } else {
             num_retries <- 0
@@ -600,30 +530,26 @@ add_settings_matrix_rows <- function(settings_matrix,
             )
         }
     }
-    row.names(settings_matrix) <- NULL
-    return(settings_matrix)
+    row.names(settings_df) <- NULL
+    return(settings_df)
 }
 
 #' Generate random removal sequence
 #'
-#' Helper function to contribute to rows within the settings matrix. Number of
-#'  columns removed follows a uniform or exponential probability distribution.
+#' Helper function to contribute to rows within the settings data frame. Number
+#'  of columns removed follows a uniform or exponential probability
+#'  distribution.
 #'
-#' @param columns Columns of the settings_matrix that are passed in
-#'
+#' @param columns Columns of the settings_df that are passed in
 #' @param min_removed_inputs The smallest number of input dataframes that may
 #'  be randomly removed.
-#'
 #' @param max_removed_inputs The largest number of input dataframes that may be
 #'  randomly removed.
-#'
 #' @param dropout_dist Indication of how input dataframes should be dropped.
 #'  can be "none" (no dropout), "uniform" (uniformly draw number between min
 #'  and max removed inputs), or "exponential" (like uniform, but using an
 #'  exponential distribution; default).
-#'
-#' @return inclusions_df Dataframe that can be rbind'ed to the settings_matrix
-#'
+#' @return inclusions_df Dataframe that can be rbind'ed to the settings_df
 #' @export
 random_removal <- function(columns,
                            min_removed_inputs,
@@ -713,7 +639,7 @@ random_removal <- function(columns,
     unshuffled_removals <- c(remove_placeholders, keep_placeholders)
     shuffled_removals <- sample(unshuffled_removals)
     # Turn that shuffled vector into a dataframe row and return that row to be
-    #  merged into the rest of the settings_matrix
+    #  merged into the rest of the settings_df
     inclusions_df <- shuffled_removals |>
         data.frame() |>
         t()

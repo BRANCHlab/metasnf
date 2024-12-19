@@ -59,18 +59,18 @@ data_list <- data_list(
     uid = "patient_id"
 )
 
-# Generate settings_matrix
+# Generate settings_df
 set.seed(42)
-settings_matrix <- settings_df(
+settings_df <- settings_df(
     data_list,
-    nrow = 1,
+    n_solutions = 1,
     max_k = 40
 )
 
 # Run SNF and clustering
 batch_snf_results <- batch_snf(
     data_list,
-    settings_matrix,
+    settings_df,
     return_similarity_matrices = TRUE
 )
 

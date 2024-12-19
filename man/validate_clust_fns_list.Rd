@@ -7,7 +7,7 @@
 validate_clust_fns_list(cfll)
 }
 \arguments{
-\item{cfll}{A data list-like \code{list} class object.}
+\item{cfll}{A clust_fns_list-like \code{list} class object.}
 }
 \value{
 If cfll has a valid structure for a \code{clust_fns_list} class object,
