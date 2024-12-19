@@ -84,8 +84,8 @@ subsample_dl <- function(dl,
 #' @param return_similarity_matrices See ?batch_snf.
 #' @param cfl See ?batch_snf.
 #' @param suppress_clustering See ?batch_snf.
-#' @param dml See ?batch_snf.
-#' @param weights_matrix See ?batch_snf.
+#' @param dfl See ?batch_snf.
+#' @param wm See ?batch_snf.
 #' @param automatic_standard_normalize See ?batch_snf.
 #' @param return_solutions_matrices If TRUE, includes the solutions matrices
 #'  corresponding to each subsample in the output.
@@ -105,8 +105,8 @@ batch_snf_subsamples <- function(dl_subsamples,
                                  return_similarity_matrices = FALSE,
                                  cfl = NULL,
                                  suppress_clustering = FALSE,
-                                 dml = NULL,
-                                 weights_matrix = NULL,
+                                 dfl = NULL,
+                                 wm = NULL,
                                  automatic_standard_normalize = FALSE,
                                  return_solutions_matrices = FALSE,
                                  verbose = FALSE) {
@@ -135,8 +135,8 @@ batch_snf_subsamples <- function(dl_subsamples,
                 return_similarity_matrices = return_similarity_matrices,
                 cfl = cfl,
                 suppress_clustering = suppress_clustering,
-                dml = dml,
-                weights_matrix = weights_matrix,
+                dfl = dfl,
+                wm = wm,
                 automatic_standard_normalize = automatic_standard_normalize,
                 verbose = FALSE
             )

@@ -5,6 +5,10 @@
 \title{Define configuration for generating a set of SNF-based cluster solutions}
 \usage{
 snf_config(
+  sdf = NULL,
+  dfl = NULL,
+  cfl = NULL,
+  wm = NULL,
   dl,
   nrows = 0,
   min_removed_inputs = 0,
@@ -26,7 +30,6 @@ snf_config(
   ordinal_distances = NULL,
   categorical_distances = NULL,
   mixed_distances = NULL,
-  dml = NULL,
   snf_input_weights = NULL,
   snf_domain_weights = NULL,
   retry_limit = 10,
@@ -35,10 +38,24 @@ snf_config(
   ord_dist_fns = NULL,
   cat_dist_fns = NULL,
   mix_dist_fns = NULL,
-  use_default_dist_fns = TRUE
+  use_default_dist_fns = TRUE,
+  clust_fns = NULL,
+  use_default_clust_fns = TRUE
 )
 }
 \arguments{
+\item{sdf}{A \code{settings_df} class object. Overrides settings data frame
+related parameters.}
+
+\item{dfl}{A \code{dist_fns_list} class object. Overrides distance functions list
+related parameters.}
+
+\item{cfl}{A \code{clust_fns_list} class object. Overrides clustering functions
+list related parameters.}
+
+\item{wm}{A \code{weights_matrix} class object. Overrides weights matrix
+related parameters.}
+
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{nrows}{Number of rows to generate for the settings matrix.}
@@ -127,9 +144,6 @@ when a custom dist_fns_list is provided.}
 \item{mixed_distances}{A vector of mixed distance metrics to use
 when a custom dist_fns_list is provided.}
 
-\item{dml}{List containing distance metrics to vary over.
-See ?generate_dist_fns_list.}
-
 \item{snf_input_weights}{Nested list containing weights for when SNF is
 used to merge individual input measures (see ?generate_snf_weights)}
 
@@ -157,6 +171,13 @@ number of times, the function will terminate.}
 (euclidean distance for continuous, discrete, and ordinal data and gower
 distance for categorical and mixed data) to the resulting distance metrics
 list.}
+
+\item{clust_fns}{A list of named clustering functions}
+
+\item{use_default_clust_fns}{If TRUE, prepend the base clustering algorithms
+(spectral_eigen and spectral_rot, which apply spectral clustering and use
+the eigen-gap and rotation cost heuristics respectively for determining
+the number of clusters in the graph) to clust_fns.}
 }
 \value{
 An \code{snf_config} class object.

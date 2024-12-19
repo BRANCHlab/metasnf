@@ -48,27 +48,117 @@
 #' )
 #' @export
 clust_fns_list <- function(clust_fns = NULL, use_default_clust_fns = FALSE) {
-    cfl <- clust_fns
+    cfll <- clust_fns
+    if (is.null(cfll) & !use_default_clust_fns) {
+        metasnf_alert(
+            "Clustering functions list cannot be empty. To use default cluste",
+            "ring functions, set `use_default_clust_fns` to `TRUE`."
+        )
+    }
     if (use_default_clust_fns) {
         base_algs_list <- list(
             "spectral_eigen" = spectral_eigen,
             "spectral_rot" = spectral_rot
         )
-        cfl <- c(base_algs_list, cfl)
+        cfll <- c(base_algs_list, cfll)
     }
+    cfll <- validate_clust_fns_list(cfll)
+    cfl <- new_clust_fns_list(cfll)
     return(cfl)
+}
+
+#' Constructor for `clust_fns_list` class object
+#' 
+#' @keywords internal
+#' @param cfll A data list-like `list` class object.
+#' @return A `data_list` object, which is a nested list with class `data_list`.
+new_clust_fns_list <- function(cfll) {
+    cfll <- structure(cfll, class = c("clust_fns_list", "list"))
+    return(cfll)
+}
+
+#' Validator for `clust_fns_list` class object
+#' 
+#' @keywords internal
+#' @inheritParams new_clust_fns_list
+#' @return If cfll has a valid structure for a `clust_fns_list` class object, 
+#'  returns the input unchanged. Otherwise, raises an error.
+validate_clust_fns_list <- function(cfll) {
+    check_cfll_named(cfll)
+    check_cfll_unique_names(cfll)
+    check_cfll_fns(cfll)
+    check_cfll_fn_args(cfll)
+    return(cfll)
 }
 
 #' Check if clustering functions list-like object has named algorithms
 #'
 #' @keywords internal
-#' @param cfll A clustering functions list-like `list` class object.
+#' @inheritParams new_clust_fns_list
 #' @return Doesn't return any value. Raises error if there are unnamed
 #'  clustering functions in cfll.
 check_cfll_named <- function(cfll) {
-    # Ensure that user has provided a name for the algorithm
     if (min(nchar(names(cfll))) == 0) {
         metasnf_error("Please specify a name for every supplied function.")
+    }
+}
+
+#' Check if names in a clustering functions list-like object are unique
+#'
+#' @keywords internal
+#' @inheritParams new_clust_fns_list
+#' @return Doesn't return any value. Raises error if the names in cfll aren't
+#'  unique.
+check_cfll_unique_names <- function(cfll) {
+    n_names <- length(names(cfll))
+    n_unique_names <- length(unique(names(cfll)))
+    if (n_names != n_unique_names) {
+        metasnf_error(
+            "Clustering functions list cannot have duplicate function names."
+        )
+    }
+}
+
+#' Check if items of a clustering functions list-like object are functions
+#'
+#' @keywords internal
+#' @inheritParams new_clust_fns_list
+#' @return Doesn't return any value. Raises error if the items of cfll are
+#'  not functions.
+check_cfll_fns <- function(cfll) {
+    items_are_fns <- lapply(
+        cfll,
+        function(x) {
+            inherits(x, "function")
+        }
+    ) |>
+        unlist() |>
+        all()
+    if (!items_are_fns) {
+        metasnf_error("Clustering functions list can only store functions.")
+    }
+}
+
+#' Check if functions in a distance metrics list-like have valid arguments
+#'
+#' @keywords internal
+#' @inheritParams validate_dist_fns_list
+#' @return Doesn't return any value. Raises error if the functions in dfll
+#'  don't have valid arguments.
+check_cfll_fn_args <- function(cfll) {
+    valid_args <- lapply(
+        cfll,
+        function(x) {
+            methods::formalArgs(x) == "similarity_matrix"
+        }
+    ) |>
+        unlist() |>
+        all()
+    if (!valid_args) {
+        metasnf_error(
+            "Clustering functions list functions must only accept argument `s",
+            "imilarity_matrix`."
+        )
     }
 }
 

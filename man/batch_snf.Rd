@@ -12,8 +12,8 @@ batch_snf(
   similarity_matrix_dir = NULL,
   cfl = NULL,
   suppress_clustering = FALSE,
-  dml = NULL,
-  weights_matrix = NULL,
+  dfl = NULL,
+  wm = NULL,
   automatic_standard_normalize = FALSE,
   verbose = FALSE
 )
@@ -54,13 +54,13 @@ to the final fused network. See ?clust_fns_list.}
 clustering algorithms to provide cluster solutions on every iteration of
 SNF. If TRUE, parameter \code{similarity_matrix_dir} must be specified.}
 
-\item{dml}{An optional nested list containing which
+\item{dfl}{An optional nested list containing which
 distance metric function should be used for the various feature types
 (continuous, discrete, ordinal, categorical, and mixed). See
 ?dist_fns_list for details on how to build this.}
 
-\item{weights_matrix}{A matrix containing feature weights to use during
-distance matrix calculation. See ?generate_weights_matrix for details on
+\item{wm}{A matrix containing feature weights to use during
+distance matrix calculation. See ?weights_matrix for details on
 how to build this.}
 
 \item{automatic_standard_normalize}{If TRUE, will automatically apply

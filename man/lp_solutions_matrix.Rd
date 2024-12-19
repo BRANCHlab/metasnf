@@ -7,8 +7,8 @@
 lp_solutions_matrix(
   train_solutions_matrix,
   full_dl,
-  dml = NULL,
-  weights_matrix = NULL,
+  dfl = NULL,
+  wm = NULL,
   verbose = FALSE
 )
 }
@@ -22,10 +22,10 @@ for label propagation.}
 \item{full_dl}{A data list containing subjects from both the training
 and testing sets.}
 
-\item{dml}{Like above - the dist_fns_list (if any)
+\item{dfl}{Like above - the dist_fns_list (if any)
 that was used for the original batch_snf call.}
 
-\item{weights_matrix}{Like above.}
+\item{wm}{Like above.}
 
 \item{verbose}{If TRUE, output progress to console.}
 }

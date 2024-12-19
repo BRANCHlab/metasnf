@@ -8,7 +8,7 @@ batch_nmi(
   dl,
   solutions_matrix,
   cfl = NULL,
-  dml = NULL,
+  dfl = NULL,
   automatic_standard_normalize = FALSE,
   transpose = TRUE,
   ignore_inclusions = TRUE,
@@ -27,7 +27,7 @@ in the original call to \code{batch_snf()}.}
 to the final fused network. See ?clust_fns_list. Use the same
 value as was used in the original call to \code{batch_snf()}.}
 
-\item{dml}{An optional nested list containing which
+\item{dfl}{An optional nested list containing which
 distance metric function should be used for the various feature types
 (continuous, discrete, ordinal, categorical, and mixed). Use the same value
 as was used in the original call to \code{batch_snf()}.}

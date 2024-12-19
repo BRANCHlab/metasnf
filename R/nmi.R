@@ -11,7 +11,7 @@
 #' to the final fused network. See ?clust_fns_list. Use the same
 #' value as was used in the original call to `batch_snf()`.
 #'
-#' @param dml An optional nested list containing which
+#' @param dfl An optional nested list containing which
 #' distance metric function should be used for the various feature types
 #' (continuous, discrete, ordinal, categorical, and mixed). Use the same value
 #' as was used in the original call to `batch_snf()`.
@@ -37,7 +37,7 @@
 batch_nmi <- function(dl,
                       solutions_matrix,
                       cfl = NULL,
-                      dml = NULL,
+                      dfl = NULL,
                       automatic_standard_normalize = FALSE,
                       transpose = TRUE,
                       ignore_inclusions = TRUE,
@@ -135,7 +135,7 @@ batch_nmi <- function(dl,
                     dl = feature_dl,
                     settings_matrix = this_settings_matrix,
                     cfl = cfl,
-                    dml = dml,
+                    dfl = dfl,
                     automatic_standard_normalize = asn,
                     verbose = FALSE
                 )

@@ -57,16 +57,16 @@ print.data_list <- function(x, ...) {
 #' @return Function prints to console but does not return any value.
 #' @export
 print.dist_fns_list <- function(x, ...) {
-    dml_names <- c(
+    dfl_names <- c(
         "Continuous" = "cnt_dist_fns",
         "Discrete" = "dsc_dist_fns",
         "Ordinal" = "ord_dist_fns",
         "Categorical" = "cat_dist_fns",
         "Mixed" = "mix_dist_fns"
     )
-    for (i in seq_along(dml_names)) {
-        clean_name <- names(dml_names)[i]
-        this_type <- dml_names[i]
+    for (i in seq_along(dfl_names)) {
+        clean_name <- names(dfl_names)[i]
+        this_type <- dfl_names[i]
         this_type_fns <- x[[this_type]]
         cat(cli::col_yellow(clean_name, " (", length(this_type_fns),   "):\n"))
         all_output <- c()
@@ -103,7 +103,7 @@ print.dist_fns_list <- function(x, ...) {
 #' @param ... Other arguments passed to `print` (not used in this function)
 #' @return Function prints to console but does not return any value.
 #' @export
-print.dist_fns_list <- function(x, ...) {
+print.clust_fns_list <- function(x, ...) {
     all_output <- c()
     for (fn_idx in seq_along(x)) {
         output <- utils::capture.output(
@@ -117,42 +117,15 @@ print.dist_fns_list <- function(x, ...) {
         )
         all_output <- c(all_output, output)
     }
-    cat(all_output)
-    #dml_names <- c(
-    #    "Continuous" = "cnt_dist_fns",
-    #    "Discrete" = "dsc_dist_fns",
-    #    "Ordinal" = "ord_dist_fns",
-    #    "Categorical" = "cat_dist_fns",
-    #    "Mixed" = "mix_dist_fns"
-    #)
-    #for (i in seq_along(dml_names)) {
-    #    clean_name <- names(dml_names)[i]
-    #    this_type <- dml_names[i]
-    #    this_type_fns <- x[[this_type]]
-    #    cat(cli::col_yellow(clean_name, " (", length(this_type_fns),   "):\n"))
-    #    all_output <- c()
-    #    for (fn_idx in seq_along(x[[this_type]])) {
-    #        output <- utils::capture.output(
-    #            cat(
-    #                cli::col_green(
-    #                    "[", fn_idx, "] ", names(x[[this_type]])[fn_idx],
-    #                    "\n",
-    #                    sep = ""
-    #                )
-    #            )
-    #        )
-    #        all_output <- c(all_output, output)
-    #    }
-    #    if (length(all_output) > 5) {
-    #        cat(cli::col_green(all_output[1:5]), sep = "\n")
-    #        n_more_fns <- length(all_output) - 5
-    #        grammar <- if (n_more_fns > 1) "s.\n" else ".\n"
-    #        cat(cli::col_grey("And ", n_more_fns, " more function", grammar))
-    #    } else if (length(all_output) == 0){
-    #    } else {
-    #        cat(cli::col_green(all_output), sep = "\n")
-    #    }
-    #}
+    if (length(all_output) > 5) {
+        cat(cli::col_green(all_output[1:5]), sep = "\n")
+        n_more_fns <- length(all_output) - 5
+        grammar <- if (n_more_fns > 1) "s.\n" else ".\n"
+        cat(cli::col_grey("And ", n_more_fns, " more function", grammar))
+    } else if (length(all_output) == 0){
+    } else {
+        cat(cli::col_green(all_output), sep = "\n")
+    }
 }
 
 

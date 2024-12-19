@@ -31,12 +31,12 @@
 #' @param suppress_clustering If FALSE (default), will apply default or custom
 #'  clustering algorithms to provide cluster solutions on every iteration of
 #'  SNF. If TRUE, parameter `similarity_matrix_dir` must be specified.
-#' @param dml An optional nested list containing which
+#' @param dfl An optional nested list containing which
 #'  distance metric function should be used for the various feature types
 #'  (continuous, discrete, ordinal, categorical, and mixed). See
 #'  ?dist_fns_list for details on how to build this.
-#' @param weights_matrix A matrix containing feature weights to use during
-#'  distance matrix calculation. See ?generate_weights_matrix for details on
+#' @param wm A matrix containing feature weights to use during
+#'  distance matrix calculation. See ?weights_matrix for details on
 #'  how to build this.
 #' @param automatic_standard_normalize If TRUE, will automatically apply
 #'  standard normalization prior to calculation of any distance matrices. This
@@ -66,8 +66,8 @@ batch_snf <- function(dl,
                       similarity_matrix_dir = NULL,
                       cfl = NULL,
                       suppress_clustering = FALSE,
-                      dml = NULL,
-                      weights_matrix = NULL,
+                      dfl = NULL,
+                      wm = NULL,
                       automatic_standard_normalize = FALSE,
                       verbose = FALSE) {
     ###########################################################################
@@ -114,10 +114,10 @@ batch_snf <- function(dl,
     }
     ###########################################################################
     # 4. Creation of distance metrics list if it does not already exist
-    if (is.null(dml)) {
+    if (is.null(dfl)) {
         if (automatic_standard_normalize) {
             # Generate a list with standard normalization
-            dml <- dist_fns_list(
+            dfl <- dist_fns_list(
                 cnt_dist_fns = list(
                     "sn_euclidean_distance" = sn_euclidean_distance
                 ),
@@ -136,7 +136,7 @@ batch_snf <- function(dl,
                 use_default_dist_fns = FALSE
             )
         } else {
-            dml <- dist_fns_list(use_default_dist_fns = TRUE)
+            dfl <- dist_fns_list(use_default_dist_fns = TRUE)
         }
     } else {
         if (automatic_standard_normalize) {
@@ -148,13 +148,13 @@ batch_snf <- function(dl,
     }
     ###########################################################################
     # 5. Creation of weights_matrix if it does not already exist
-    if (is.null(weights_matrix)) {
-        weights_matrix <- generate_weights_matrix(
+    if (is.null(wm)) {
+        wm <- weights_matrix(
             dl,
             nrow = nrow(settings_matrix)
         )
     } else {
-        if (nrow(weights_matrix) != nrow(settings_matrix)) {
+        if (nrow(wm) != nrow(settings_matrix)) {
             metasnf_error(
                 "weights_matrix and settings_matrix should have the same",
                 " number of rows."
@@ -175,10 +175,10 @@ batch_snf <- function(dl,
         if (processes == "max") {
             solutions_matrix <- parallel_batch_snf(
                 dl = dl,
-                dml = dml,
+                dfl = dfl,
                 cfl = cfl,
                 settings_matrix = settings_matrix,
-                weights_matrix = weights_matrix,
+                wm = wm,
                 similarity_matrix_dir = similarity_matrix_dir,
                 return_similarity_matrices = return_similarity_matrices,
                 processes = available_cores
@@ -196,10 +196,10 @@ batch_snf <- function(dl,
             }
             solutions_matrix <- parallel_batch_snf(
                 dl = dl,
-                dml = dml,
+                dfl = dfl,
                 cfl = cfl,
                 settings_matrix = settings_matrix,
-                weights_matrix = weights_matrix,
+                wm = wm,
                 similarity_matrix_dir = similarity_matrix_dir,
                 return_similarity_matrices = return_similarity_matrices,
                 processes = processes
@@ -256,7 +256,7 @@ batch_snf <- function(dl,
     for (i in seq_len(nrow(settings_matrix))) {
         start_time <- Sys.time() # used to estimate time to completion
         settings_matrix_row <- settings_matrix[i, ]
-        weights_row <- weights_matrix[i, , drop = FALSE]
+        weights_row <- wm[i, , drop = FALSE]
         current_dl <- drop_inputs(settings_matrix_row, dl)
         # Apply the current row's SNF scheme
         current_snf_scheme <- dplyr::case_when(
@@ -272,11 +272,11 @@ batch_snf <- function(dl,
         ord_dist <- settings_matrix_row$"ord_dist"
         cat_dist <- settings_matrix_row$"cat_dist"
         mix_dist <- settings_matrix_row$"mix_dist"
-        cnt_dist_fn <- dml$"cnt_dist_fns"[[cnt_dist]]
-        dsc_dist_fn <- dml$"dsc_dist_fns"[[dsc_dist]]
-        ord_dist_fn <- dml$"ord_dist_fns"[[ord_dist]]
-        cat_dist_fn <- dml$"cat_dist_fns"[[cat_dist]]
-        mix_dist_fn <- dml$"mix_dist_fns"[[mix_dist]]
+        cnt_dist_fn <- dfl$"cnt_dist_fns"[[cnt_dist]]
+        dsc_dist_fn <- dfl$"dsc_dist_fns"[[dsc_dist]]
+        ord_dist_fn <- dfl$"ord_dist_fns"[[ord_dist]]
+        cat_dist_fn <- dfl$"cat_dist_fns"[[cat_dist]]
+        mix_dist_fn <- dfl$"mix_dist_fns"[[mix_dist]]
         # Run SNF
         fused_network <- snf_step(
             current_dl,

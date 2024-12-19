@@ -38,10 +38,10 @@ dist_fns_list <- dist_fns_list(use_default_dist_fns = TRUE)
 ```
 
 The list is a list of functions (`euclidean_distance()` and `gower_distance()`), and printing them out directly can be messy.
-The `summarize_dml()` function prints the object with a nicer format.
+The `summarize_dfl()` function prints the object with a nicer format.
 
 ```{r}
-summarize_dml(dist_fns_list)
+summarize_dfl(dist_fns_list)
 ```
 
 These lists must always contain at least 1 distance metric for each of the 5 recognized types of features: continuous, discrete, ordinal, categorical, and mixed (any combination of the previous four).
@@ -66,7 +66,7 @@ my_distance_metrics <- dist_fns_list(
     use_default_dist_fns = TRUE
 )
 
-summarize_dml(my_distance_metrics)
+summarize_dfl(my_distance_metrics)
 ```
 
 Now, during settings_matrix generation, we can provide our dist_fns_list to ensure our new distance metrics will be used on some of our SNF runs.
@@ -95,7 +95,7 @@ And then the settings_matrix can be generated:
 settings_matrix <- settings_df(
     data_list,
     nrow = 10,
-    dml = my_distance_metrics
+    dfl = my_distance_metrics
 )
 
 # showing just the columns that are related to distances
@@ -111,7 +111,7 @@ Because of that, you'll need to supply the dist_fns_list once again when calling
 solutions_matrix <- batch_snf(
     data_list,
     settings_matrix,
-    dml = my_distance_metrics
+    dfl = my_distance_metrics
 )
 ```
 
@@ -141,7 +141,7 @@ no_default_metrics <- dist_fns_list(
     use_default_dist_fns = FALSE
 )
 
-summarize_dml(no_default_metrics)
+summarize_dfl(no_default_metrics)
 ```
 
 For this option, it is necessary to provide at least one distance metric for every feature type.
@@ -162,12 +162,12 @@ my_distance_metrics <- dist_fns_list(
     use_default_dist_fns = TRUE
 )
 
-summarize_dml(my_distance_metrics)
+summarize_dfl(my_distance_metrics)
 
 settings_matrix <- settings_df(
     data_list,
     nrow = 10,
-    dml = my_distance_metrics,
+    dfl = my_distance_metrics,
     continuous_distances = 1,
     discrete_distances = c(2, 3)
 )
@@ -182,7 +182,7 @@ This can save you the trouble of needing to manage several distinct distance met
 settings_matrix <- settings_df(
     data_list,
     nrow = 10,
-    dml = my_distance_metrics,
+    dfl = my_distance_metrics,
     continuous_distances = 1,
     discrete_distances = c(2, 3)
 )
@@ -190,7 +190,7 @@ settings_matrix <- settings_df(
 settings_matrix <- add_settings_matrix_rows(
     settings_matrix,
     nrow = 10,
-    dml = my_distance_metrics,
+    dfl = my_distance_metrics,
     continuous_distances = 3,
     discrete_distances = 1
 )
@@ -217,11 +217,11 @@ Anytime you have more than one dataframe with the same domain label and you use 
 The first step in providing custom weights is to generate a `weights_matrix`:
 
 ```{r}
-weights_matrix <- generate_weights_matrix(
+wm <- weights_matrix(
     data_list
 )
 
-weights_matrix
+wm
 ```
 
 By default, this function will return a dataframe containing all the columns in the `data_list` and a single row of 1s, which are the weights that will be used for a single run of SNF.
@@ -232,31 +232,31 @@ To actually use the matrix during SNF, you'll need to make sure that the number 
 settings_matrix <- settings_df(
     data_list,
     nrow = 10,
-    dml = my_distance_metrics,
+    dfl = my_distance_metrics,
     continuous_distances = 1,
     discrete_distances = c(2, 3)
 )
 
 settings_matrix
 
-weights_matrix <- generate_weights_matrix(
+wm <- weights_matrix(
     data_list,
     nrow = nrow(settings_matrix)
 )
 
-weights_matrix[1:5, ]
+wm[1:5, ]
 
 solutions_matrix_1 <- batch_snf(
     data_list,
     settings_matrix,
-    dml = my_distance_metrics,
-    weights_matrix = weights_matrix
+    dfl = my_distance_metrics,
+    wm = wm
 )
 
 solutions_matrix_2 <- batch_snf(
     data_list,
     settings_matrix,
-    dml = my_distance_metrics
+    dfl = my_distance_metrics
 )
 
 identical(
@@ -269,7 +269,7 @@ A `weights_matrix` of all 1s (the default `weights_matrix` used when you don't s
 You can either replace the 1s with your own weights that you've calculated outside of the package, or use some random weights following a uniform or exponential distribution.
 
 ```{r eval = FALSE}
-weights_matrix <- generate_weights_matrix(
+wm <- weights_matrix(
     data_list,
     nrow = nrow(settings_matrix),
     fill = "uniform" # or fill = "exponential"

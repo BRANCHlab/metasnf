@@ -1,51 +1,42 @@
 #' Parallel processing form of batch_snf
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#'
-#' @param dml An optional nested list containing which
-#' distance metric function should be used for the various feature types
-#' (continuous, discrete, ordinal, categorical, and mixed). See
-#' ?dist_fns_list for details on how to build this.
-#'
+#' @param dfl An optional nested list containing which
+#'  distance metric function should be used for the various feature types
+#'  (continuous, discrete, ordinal, categorical, and mixed). See
+#'  ?dist_fns_list for details on how to build this.
 #' @param cfl List of custom clustering algorithms to apply
 #' to the final fused network. See ?clust_fns_list.
-#'
 #' @param settings_matrix matrix indicating parameters to iterate SNF through.
-#'
-#' @param weights_matrix A matrix containing feature weights to use during
-#'  distance matrix calculation. See ?generate_weights_matrix for details on
+#' @param wm A matrix containing feature weights to use during
+#'  distance matrix calculation. See ?weights_matrix for details on
 #'  how to build this.
-#'
 #' @param return_similarity_matrices If TRUE, function will return a list where
 #'  the first element is the solutions matrix and the second element is a list
 #'  of similarity matrices for each row in the solutions_matrix. Default FALSE.
-#'
 #' @param similarity_matrix_dir If specified, this directory will be used to
 #'  save all generated similarity matrices.
-#'
 #' @param processes Number of parallel processes used when executing SNF.
-#'
 #' @return The same values as ?batch_snf().
-#'
 #' @export
 parallel_batch_snf <- function(dl,
-                               dml,
+                               dfl,
                                cfl,
                                settings_matrix,
-                               weights_matrix,
+                               wm,
                                similarity_matrix_dir,
                                return_similarity_matrices,
                                processes) {
     future::plan(future::multisession, workers = processes)
     ############################################################################
-    settings_and_weights_df <- cbind(settings_matrix, weights_matrix)
+    settings_and_weights_df <- cbind(settings_matrix, wm)
     prog <- progressr::progressor(steps = nrow(settings_and_weights_df))
     batch_row_function <- batch_row_closure(
         dl = dl,
-        dml = dml,
+        dfl = dfl,
         cfl = cfl,
         settings_matrix = settings_matrix,
-        weights_matrix = weights_matrix,
+        wm = wm,
         similarity_matrix_dir = similarity_matrix_dir,
         return_similarity_matrices = return_similarity_matrices,
         prog = prog
@@ -87,50 +78,41 @@ parallel_batch_snf <- function(dl,
 #' Generate closure function to run batch_snf in an apply-friendly format
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#'
-#' @param dml An optional nested list containing which
-#' distance metric function should be used for the various feature types
-#' (continuous, discrete, ordinal, categorical, and mixed). See
-#' ?dist_fns_list for details on how to build this.
-#'
+#' @param dfl An optional nested list containing which
+#'  distance metric function should be used for the various feature types
+#'  (continuous, discrete, ordinal, categorical, and mixed). See
+#'  ?dist_fns_list for details on how to build this.
 #' @param cfl List of custom clustering algorithms to apply
-#' to the final fused network. See ?clust_fns_list.
-#'
+#'  to the final fused network. See ?clust_fns_list.
 #' @param settings_matrix matrix indicating parameters to iterate SNF through.
-#'
-#' @param weights_matrix A matrix containing feature weights to use during
-#'  distance matrix calculation. See ?generate_weights_matrix for details on
+#' @param wm A matrix containing feature weights to use during
+#'  distance matrix calculation. See ?weights_matrix for details on
 #'  how to build this.
-#'
 #' @param return_similarity_matrices If TRUE, function will return a list where
 #'  the first element is the solutions matrix and the second element is a list
 #'  of similarity matrices for each row in the solutions_matrix. Default FALSE.
-#'
 #' @param similarity_matrix_dir If specified, this directory will be used to
 #'  save all generated similarity matrices.
-#'
 #' @param prog Progressr function to update parallel processing progress
-#'
 #' @return A "function" class object used to run `batch_snf` in lapply-form
-#' for parallel processing.
-#'
+#'  for parallel processing.
 #' @export
 batch_row_closure <- function(dl,
-                              dml,
+                              dfl,
                               cfl,
                               settings_matrix,
-                              weights_matrix,
+                              wm,
                               similarity_matrix_dir,
                               return_similarity_matrices,
                               prog) {
     settings_matrix_names <- colnames(settings_matrix)
-    weights_matrix_names <- colnames(weights_matrix)
+    wm_names <- colnames(wm)
     row_function <- function(settings_and_weights_row) {
         prog()
         settings_and_weights_row_df <- data.frame(t(settings_and_weights_row))
         settings_matrix_row <-
             settings_and_weights_row_df[, settings_matrix_names]
-        weights_row <- settings_and_weights_row_df[, weights_matrix_names]
+        weights_row <- settings_and_weights_row_df[, wm_names]
         # Reduce data list
         current_dl <- drop_inputs(settings_matrix_row, dl)
         # Extract parameters for snf_step
@@ -147,11 +129,11 @@ batch_row_closure <- function(dl,
         ord_dist <- settings_matrix_row$"ord_dist"
         cat_dist <- settings_matrix_row$"cat_dist"
         mix_dist <- settings_matrix_row$"mix_dist"
-        cnt_dist_fn <- dml$"cnt_dist_fns"[[cnt_dist]]
-        dsc_dist_fn <- dml$"dsc_dist_fns"[[dsc_dist]]
-        ord_dist_fn <- dml$"ord_dist_fns"[[ord_dist]]
-        cat_dist_fn <- dml$"cat_dist_fns"[[cat_dist]]
-        mix_dist_fn <- dml$"mix_dist_fns"[[mix_dist]]
+        cnt_dist_fn <- dfl$"cnt_dist_fns"[[cnt_dist]]
+        dsc_dist_fn <- dfl$"dsc_dist_fns"[[dsc_dist]]
+        ord_dist_fn <- dfl$"ord_dist_fns"[[ord_dist]]
+        cat_dist_fn <- dfl$"cat_dist_fns"[[cat_dist]]
+        mix_dist_fn <- dfl$"mix_dist_fns"[[mix_dist]]
         # Integrate data
         fused_network <- snf_step(
             current_dl,

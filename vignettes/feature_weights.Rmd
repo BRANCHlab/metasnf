@@ -53,12 +53,12 @@ settings_matrix <- settings_df(
     max_k = 50
 )
 
-weights_matrix <- generate_weights_matrix(
+wm <- weights_matrix(
     data_list,
     nrow = 20
 )
 
-head(weights_matrix)
+head(wm)
 ```
 
 By default, the weights are all 1.
@@ -71,14 +71,14 @@ If you are just looking to broaden the space of cluster solutions you generate, 
 
 ```{r}
 # Random uniformly distributed values
-generate_weights_matrix(
+weights_matrix(
     data_list,
     nrow = 5,
     fill = "uniform"
 )
 
 # Random exponentially distributed values
-generate_weights_matrix(
+weights_matrix(
     data_list,
     nrow = 5,
     fill = "exponential"
@@ -91,7 +91,7 @@ Once you're happy with your weights_matrix, you can pass it into batch_snf:
 batch_snf(
     dl = data_list,
     settings_matrix = settings_matrix,
-    weights_matrix = weights_matrix
+    wm = wm
 )
 ```
 

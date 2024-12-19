@@ -6,10 +6,10 @@
 \usage{
 batch_row_closure(
   dl,
-  dml,
+  dfl,
   cfl,
   settings_matrix,
-  weights_matrix,
+  wm,
   similarity_matrix_dir,
   return_similarity_matrices,
   prog
@@ -18,7 +18,7 @@ batch_row_closure(
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{dml}{An optional nested list containing which
+\item{dfl}{An optional nested list containing which
 distance metric function should be used for the various feature types
 (continuous, discrete, ordinal, categorical, and mixed). See
 ?dist_fns_list for details on how to build this.}
@@ -28,8 +28,8 @@ to the final fused network. See ?clust_fns_list.}
 
 \item{settings_matrix}{matrix indicating parameters to iterate SNF through.}
 
-\item{weights_matrix}{A matrix containing feature weights to use during
-distance matrix calculation. See ?generate_weights_matrix for details on
+\item{wm}{A matrix containing feature weights to use during
+distance matrix calculation. See ?weights_matrix for details on
 how to build this.}
 
 \item{similarity_matrix_dir}{If specified, this directory will be used to

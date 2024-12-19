@@ -56,10 +56,10 @@ label_prop <- function(full_fused_network, clusters) {
 #' @param full_dl A data list containing subjects from both the training
 #' and testing sets.
 #'
-#' @param dml Like above - the dist_fns_list (if any)
+#' @param dfl Like above - the dist_fns_list (if any)
 #' that was used for the original batch_snf call.
 #'
-#' @param weights_matrix Like above.
+#' @param wm Like above.
 #'
 #' @param verbose If TRUE, output progress to console.
 #'
@@ -71,8 +71,8 @@ label_prop <- function(full_fused_network, clusters) {
 #' @export
 lp_solutions_matrix <- function(train_solutions_matrix,
                                 full_dl,
-                                dml = NULL,
-                                weights_matrix = NULL,
+                                dfl = NULL,
+                                wm = NULL,
                                 verbose = FALSE) {
     ###########################################################################
     # 1. Reorder data list subjects
@@ -101,19 +101,19 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     ###########################################################################
     ## 3-1. Creation of dist_fns_list, if it does not already exist
     ###########################################################################
-    if (is.null(dml)) {
-        dml <- dist_fns_list(use_default_dist_fns = TRUE)
+    if (is.null(dfl)) {
+        dfl <- dist_fns_list(use_default_dist_fns = TRUE)
     }
     ###########################################################################
-    ## 3-2. Create (or check) weights_matrix
+    ## 3-2. Create (or check) wm
     ###########################################################################
-    if (is.null(weights_matrix)) {
-        weights_matrix <- generate_weights_matrix(
+    if (is.null(wm)) {
+        wm <- weights_matrix(
             full_dl,
             nrow = nrow(train_solutions_matrix)
         )
     } else {
-        if (nrow(weights_matrix) != nrow(train_solutions_matrix)) {
+        if (nrow(wm) != nrow(train_solutions_matrix)) {
             metasnf_error(
                 "Weights_matrix and train_solutions_matrix",
                 " should have the same number of rows."
@@ -143,12 +143,12 @@ lp_solutions_matrix <- function(train_solutions_matrix,
         ord_dist <- current_row$"ord_dist"
         cat_dist <- current_row$"cat_dist"
         mix_dist <- current_row$"mix_dist"
-        cnt_dist_fn <- dml$"cnt_dist_fns"[[cnt_dist]]
-        dsc_dist_fn <- dml$"dsc_dist_fns"[[dsc_dist]]
-        ord_dist_fn <- dml$"ord_dist_fns"[[ord_dist]]
-        cat_dist_fn <- dml$"cat_dist_fns"[[cat_dist]]
-        mix_dist_fn <- dml$"mix_dist_fns"[[mix_dist]]
-        weights_row <- weights_matrix[i, , drop = FALSE]
+        cnt_dist_fn <- dfl$"cnt_dist_fns"[[cnt_dist]]
+        dsc_dist_fn <- dfl$"dsc_dist_fns"[[dsc_dist]]
+        ord_dist_fn <- dfl$"ord_dist_fns"[[ord_dist]]
+        cat_dist_fn <- dfl$"cat_dist_fns"[[cat_dist]]
+        mix_dist_fn <- dfl$"mix_dist_fns"[[mix_dist]]
+        weights_row <- wm[i, , drop = FALSE]
         #######################################################################
         # The actual SNF
         #######################################################################

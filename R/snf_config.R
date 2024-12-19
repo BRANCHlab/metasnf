@@ -22,13 +22,26 @@
 #'        different feature in the data list and each row corresponds to a
 #'        different row in the settings data frame.
 #'
+#'
+#' @param sdf A `settings_df` class object. Overrides settings data frame
+#'  related parameters.
+#' @param dfl A `dist_fns_list` class object. Overrides distance functions list
+#'  related parameters.
+#' @param cfl A `clust_fns_list` class object. Overrides clustering functions
+#'  list related parameters.
+#' @param wm A `weights_matrix` class object. Overrides weights matrix
+#'  related parameters.
 #' @inheritParams settings_df
 #' @inheritParams dist_fns_list
-#' @inheritParams generate_weights_matrix
 #' @inheritParams clust_fns_list
+#' @inheritParams weights_matrix
 #' @return An `snf_config` class object.
 #' @export
-snf_config <- function(dl,
+snf_config <- function(sdf = NULL,
+                       dfl = NULL,
+                       cfl = NULL,
+                       wm = NULL,
+                       dl,
                        nrows = 0,
                        min_removed_inputs = 0,
                        max_removed_inputs = length(dl) - 1,
@@ -49,7 +62,6 @@ snf_config <- function(dl,
                        ordinal_distances = NULL,
                        categorical_distances = NULL,
                        mixed_distances = NULL,
-                       dml = NULL,
                        snf_input_weights = NULL,
                        snf_domain_weights = NULL,
                        retry_limit = 10,
@@ -58,8 +70,10 @@ snf_config <- function(dl,
                        ord_dist_fns = NULL,
                        cat_dist_fns = NULL,
                        mix_dist_fns = NULL,
-                       use_default_dist_fns = TRUE) {
-    dml <- dist_fns_list(
+                       use_default_dist_fns = TRUE,
+                       clust_fns = NULL,
+                       use_default_clust_fns = TRUE) {
+    dfl <- dist_fns_list(
         cnt_dist_fns = cnt_dist_fns,
         dsc_dist_fns = dsc_dist_fns,
         ord_dist_fns = ord_dist_fns,
