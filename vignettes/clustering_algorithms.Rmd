@@ -49,7 +49,7 @@ dl <- data_list(
 set.seed(42)
 settings_df <- settings_df(
     dl,
-    nrow = 5,
+    n_solutions = 5,
     max_k = 40
 )
 ```
@@ -132,7 +132,7 @@ cfl <- clust_fns_list(
 set.seed(42)
 settings_df <- settings_df(
     dl,
-    nrow = 10,
+    n_solutions = 10,
     max_k = 40,
     clustering_algorithms = cfl
 )
@@ -308,7 +308,7 @@ dl <- data_list(
 set.seed(42)
 settings_df <- settings_df(
     dl,
-    nrow = 5
+    n_solutions = 5
 )
 
 batch_snf_results <- batch_snf(

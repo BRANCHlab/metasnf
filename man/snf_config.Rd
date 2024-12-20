@@ -5,11 +5,11 @@
 \title{Define configuration for generating a set of SNF-based cluster solutions}
 \usage{
 snf_config(
+  dl,
   sdf = NULL,
   dfl = NULL,
   cfl = NULL,
   wm = NULL,
-  dl,
   n_solutions = 0,
   min_removed_inputs = 0,
   max_removed_inputs = length(dl) - 1,
@@ -45,6 +45,8 @@ snf_config(
 )
 }
 \arguments{
+\item{dl}{A nested list of input data from \code{data_list()}.}
+
 \item{sdf}{A \code{settings_df} class object. Overrides settings data frame
 related parameters.}
 
@@ -56,8 +58,6 @@ list related parameters.}
 
 \item{wm}{A \code{weights_matrix} class object. Overrides weights matrix
 related parameters.}
-
-\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{n_solutions}{Number of rows to generate for the settings data frame.}
 

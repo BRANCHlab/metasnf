@@ -22,7 +22,8 @@
     - [x] validator
     - [x] constructors
     - [x] as_object
-    - [x] print
+    - [ ] print
+        - [ ] resolve <dbl> colouring etc.
     - [x] c
     - [ ] summary
     - [ ] used consistently / S3 methods when needed

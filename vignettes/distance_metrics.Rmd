@@ -94,7 +94,7 @@ And then the settings_df can be generated:
 ```{r}
 settings_df <- settings_df(
     data_list,
-    nrow = 10,
+    n_solutions = 10,
     dfl = my_distance_metrics
 )
 
@@ -166,7 +166,7 @@ summarize_dfl(my_distance_metrics)
 
 settings_df <- settings_df(
     data_list,
-    nrow = 10,
+    n_solutions = 10,
     dfl = my_distance_metrics,
     continuous_distances = 1,
     discrete_distances = c(2, 3)
@@ -181,7 +181,7 @@ This can save you the trouble of needing to manage several distinct distance met
 ```{r}
 settings_df <- settings_df(
     data_list,
-    nrow = 10,
+    n_solutions = 10,
     dfl = my_distance_metrics,
     continuous_distances = 1,
     discrete_distances = c(2, 3)
@@ -189,7 +189,7 @@ settings_df <- settings_df(
 
 settings_df <- add_settings_df_rows(
     settings_df,
-    nrow = 10,
+    n_solutions = 10,
     dfl = my_distance_metrics,
     continuous_distances = 3,
     discrete_distances = 1
@@ -224,14 +224,14 @@ wm <- weights_matrix(
 wm
 ```
 
-By default, this function will return a dataframe containing all the columns in the `data_list` and a single row of 1s, which are the weights that will be used for a single run of SNF.
+This function will return a dataframe containing all the columns in the `data_list` and a single row of 1s, which are the weights that will be used for a single run of SNF.
 
 To actually use the matrix during SNF, you'll need to make sure that the number of rows in the weights matrix is the same as the number of rows in your settings matrix.
 
 ```{r}
 settings_df <- settings_df(
     data_list,
-    nrow = 10,
+    n_solutions = 10,
     dfl = my_distance_metrics,
     continuous_distances = 1,
     discrete_distances = c(2, 3)
@@ -241,7 +241,7 @@ settings_df
 
 wm <- weights_matrix(
     data_list,
-    nrow = nrow(settings_df)
+    n_solutions = nrow(settings_df)
 )
 
 wm[1:5, ]
@@ -271,7 +271,7 @@ You can either replace the 1s with your own weights that you've calculated outsi
 ```{r eval = FALSE}
 wm <- weights_matrix(
     data_list,
-    nrow = nrow(settings_df),
+    n_solutions = nrow(settings_df),
     fill = "uniform" # or fill = "exponential"
 )
 ```

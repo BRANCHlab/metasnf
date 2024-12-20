@@ -55,7 +55,7 @@ settings_df <- settings_df(
 
 wm <- weights_matrix(
     data_list,
-    nrow = 20
+    n_solutions = 20
 )
 
 head(wm)
@@ -73,15 +73,15 @@ If you are just looking to broaden the space of cluster solutions you generate, 
 # Random uniformly distributed values
 weights_matrix(
     data_list,
-    nrow = 20,
-    fill = "uniform"
+    n_solutions = 20,
+    weights_fill = "uniform"
 )
 
 # Random exponentially distributed values
 weights_matrix(
     data_list,
-    nrow = 20,
-    fill = "exponential"
+    n_solutions = 20,
+    weights_fill = "exponential"
 )
 ```
 

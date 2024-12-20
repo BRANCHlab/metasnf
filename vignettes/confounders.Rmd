@@ -167,7 +167,7 @@ data_list <- data_list(
 
 settings_df <- settings_df(
     dl = data_list,
-    nrow = 1,
+    n_solutions = 1,
     possible_snf_schemes = 1,
     k_values = 20,
     alpha_values = 0.8

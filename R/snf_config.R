@@ -37,11 +37,11 @@
 #' @inheritParams weights_matrix
 #' @return An `snf_config` class object.
 #' @export
-snf_config <- function(sdf = NULL,
+snf_config <- function(dl,
+                       sdf = NULL,
                        dfl = NULL,
                        cfl = NULL,
                        wm = NULL,
-                       dl,
                        n_solutions = 0,
                        min_removed_inputs = 0,
                        max_removed_inputs = length(dl) - 1,
@@ -126,9 +126,15 @@ snf_config <- function(sdf = NULL,
             weights_fill = weights_fill
         )
     }
-    scl <- NULL
+    scl <- list(
+        "settings_df" = sdf,
+        "dist_fns_list" = dfl,
+        "clust_fns_list" = cfl,
+        "weights_matrix" = wm
+    )
     scl <- validate_snf_config(scl)
     sc <- new_snf_config(scl)
+    return(sc)
 }
 
 #' Validator for snf_config class object

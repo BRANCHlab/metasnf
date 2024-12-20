@@ -10,7 +10,7 @@
 #'  all the features that require weights and rows.
 #' @export
 weights_matrix <- function(dl = NULL,
-                           n_solutions = NULL,
+                           n_solutions = 1,
                            weights_fill = "ones") {
     if (is.null(dl)) {
         metasnf_error(

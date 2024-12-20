@@ -4,7 +4,7 @@
 \alias{weights_matrix}
 \title{Generate a matrix to store feature weights}
 \usage{
-weights_matrix(dl = NULL, n_solutions = NULL, weights_fill = "ones")
+weights_matrix(dl = NULL, n_solutions = 1, weights_fill = "ones")
 }
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}

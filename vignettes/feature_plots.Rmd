@@ -36,7 +36,7 @@ data_list <- data_list(
 set.seed(42)
 settings_df <- settings_df(
     data_list,
-    nrow = 2,
+    n_solutions = 2,
     min_k = 20,
     max_k = 50
 )

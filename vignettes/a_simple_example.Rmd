@@ -247,7 +247,7 @@ An explanation for the parameters in the `settings_df` can be found at [the sett
 ```{r}
 settings_df <- settings_df(
     data_list,
-    nrow = 1,
+    n_solutions = 1,
     alpha_values = 0.5,
     k_values = 20,
     t_values = 20,
