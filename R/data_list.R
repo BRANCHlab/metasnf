@@ -846,7 +846,6 @@ check_dll_empty_input <- function(data_list_input) {
 #' @param ... Optional arguments to `FUN`.
 #' @return If FUN applied to each component of X yields a valid data list, a
 #'  data list. Otherwise, a list.
-#' @export
 #' @examples
 #' # Convert all UID values to lowercase
 #' dl <- data_list(
@@ -862,12 +861,13 @@ check_dll_empty_input <- function(data_list_input) {
 #'         return(x)
 #'     }
 #' )
-dlapply <- function(X, FUN, ...) {
-    UseMethod("dlapply")
-}
-
 #' @export
-dlapply.data_list <- function(X, FUN, ...) {
+dlapply <- function(X, FUN, ...) {
+    if (!(inherits(X, "list"))) {
+        metasnf_error(
+            "`dlapply` can only be used with list-class objects."
+        )
+    }
     result <- base::lapply(X, FUN, ...)
     validation <- tryCatch(
         {
