@@ -166,7 +166,7 @@ settings_df <- function(dl,
                         snf_domain_weights = NULL,
                         retry_limit = 10,
                         allow_duplicates = FALSE) {
-    sdf_columns <- c(
+    sdfl_columns <- c(
         "row_id",
         "alpha",
         "k",
@@ -180,16 +180,16 @@ settings_df <- function(dl,
         "mix_dist",
         paste0("inc_", summarize_dl(dl)$"name")
     )
-    sdf_base <- as.data.frame(
+    sdfl_base <- as.data.frame(
         matrix(
             0,
-            ncol = length(sdf_columns),
+            ncol = length(sdfl_columns),
             nrow = 0
         )
     )
-    colnames(sdf_base) <- sdf_columns
-    sdf <- add_settings_df_rows(
-        sdf = sdf_base,
+    colnames(sdfl_base) <- sdfl_columns
+    sdfl <- add_settings_df_rows(
+        sdf = sdfl_base,
         n_solutions = n_solutions,
         min_removed_inputs = min_removed_inputs,
         max_removed_inputs = max_removed_inputs,
@@ -216,7 +216,29 @@ settings_df <- function(dl,
         retry_limit = retry_limit,
         allow_duplicates = allow_duplicates
     )
+    sdfl <- validate_settings_df(sdfl)
+    sdf <- new_settings_df(sdfl)
     return(sdf)
+}
+
+#' Validator for `settings_df` class object
+#'
+#' @keywords internal
+#' @param sdfl A settings data frame-like matrix object to be validated.
+#' @return If sdfl has a valid structure for a `settings_df` class object,
+#'  returns the input unchanged. Otherwise, raises an error.
+validate_settings_df <- function(sdfl) {
+    return(sdfl)
+}
+
+#' Constructor for `settings_df` class object
+#' 
+#' @keywords internal
+#' @inheritParams validate_settings_df
+#' @return A `settings_df` object.
+new_settings_df <- function(sdfl) {
+    sdf <- structure(sdfl, class = c("settings_df", "data.frame"))
+    return(sdfl)
 }
 
 #' Add rows to a settings_df

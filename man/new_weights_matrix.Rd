@@ -2,7 +2,7 @@
 % Please edit documentation in R/weights_matrix.R
 \name{new_weights_matrix}
 \alias{new_weights_matrix}
-\title{Constructor for \code{new_weights_matrix} class object}
+\title{Constructor for \code{weights_matrix} class object}
 \usage{
 new_weights_matrix(wml)
 }
@@ -10,9 +10,9 @@ new_weights_matrix(wml)
 \item{wml}{A weights_matrix-like matrix object to be validated.}
 }
 \value{
-A \code{new_weights_matrix} object.
+A \code{weights_matrix} object.
 }
 \description{
-Constructor for \code{new_weights_matrix} class object
+Constructor for \code{weights_matrix} class object
 }
 \keyword{internal}

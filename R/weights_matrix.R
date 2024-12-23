@@ -63,11 +63,11 @@ validate_weights_matrix <- function(wml) {
     return(wml)
 }
 
-#' Constructor for `new_weights_matrix` class object
+#' Constructor for `weights_matrix` class object
 #' 
 #' @keywords internal
 #' @inheritParams validate_weights_matrix
-#' @return A `new_weights_matrix` object.
+#' @return A `weights_matrix` object.
 new_weights_matrix <- function(wml) {
     wm <- structure(wml, class = c("weights_matrix", "matrix", "array"))    
     return(wm)
