@@ -612,11 +612,13 @@ validate_data_list <- function(dll) {
     check_dll_subitem_names(dll)
     # 4. Nested 4-items have proper classes
     check_dll_subitem_classes(dll)
-    # 5. Input has no duplicate features
+    # 5. Input has no duplicate components
+    check_dll_duplicate_components(dll)
+    # 6. Input has no duplicate features
     check_dll_duplicate_features(dll)
-    # 6. Input has properly formatted UID columns
+    # 7. Input has properly formatted UID columns
     check_dll_uid(dll)
-    # 7. Input has valid types specified
+    # 8. Input has valid types specified
     check_dll_types(dll)
     return(dll)
 }
@@ -639,6 +641,23 @@ check_dll_duplicate_features <- function(dll) {
     if (length(duplicates) > 0) {
         metasnf_error(
             "Provided data cannot contain duplicate features.",
+            env = 2
+        )
+    }
+}
+
+#' Check if data list contains any duplicate names
+#'
+#' @keywords internal
+#' @param dll A data list-like `list` class object.
+#' @return Doesn't return any value. Raises error if there are features with
+#'  duplicate names in a generated data list.
+check_dll_duplicate_components <- function(dll) {
+    n_names <- length(names(dll))
+    n_unique_names <- length(unique(names(dll)))
+    if (n_names != n_unique_names) {
+        metasnf_error(
+            "Data list components must have unique names.",
             env = 2
         )
     }

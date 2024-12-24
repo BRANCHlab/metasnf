@@ -238,7 +238,7 @@ validate_settings_df <- function(sdfl) {
 #' @return A `settings_df` object.
 new_settings_df <- function(sdfl) {
     sdf <- structure(sdfl, class = c("settings_df", "data.frame"))
-    return(sdfl)
+    return(sdf)
 }
 
 #' Add rows to a settings_df

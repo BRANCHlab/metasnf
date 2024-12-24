@@ -15,7 +15,11 @@ print.data_list <- function(x, ...) {
     uid_output <- utils::capture.output(cat(uids, sep = ", "))
     max_chars <- getOption("width")
     cat(substr(uid_output, 1, max_chars - 2), "\u2026\n", sep = "")
-    cat(cli::col_yellow("Components (c = ", n_components, ", p = ", n_features, "):\n"))
+    cat(
+        cli::col_yellow(
+            "Components (c = ", n_components, ", p = ", n_features, "):\n"
+        )
+    )
     # Iterate over data list components
     for (i in seq_along(x)) {
         # Send metadata to console
@@ -46,6 +50,68 @@ print.data_list <- function(x, ...) {
             cat(cli::col_grey("\u2026and ", n_more_fts, " more feature", grammar))
         }
     }
+}
+
+#' Print method for class `settings_df`
+#'
+#' Custom formatted print for settings data frame that outputs information
+#' about SNF hyperparameters to the console.
+#'
+#' @param x A `settings_df` class object.
+#' @param ... Other arguments passed to `print` (not used in this function)
+#' @return Function prints to console but does not return any value.
+#' @export
+print.settings_df <- function(x, ...) {
+    # Settings DF includes 11 boilerplate columns
+    BOILERPLATE_COLS <- 11
+    # Number of components is found by subtracting off boilerplate columns
+    n_comp <- ncol(x) - BOILERPLATE_COLS
+    # String for manipulation into each piece of output
+    all_output <- utils::capture.output(t(x))
+    # The corresponding row index
+    idx_out <- all_output[1]
+    idx_out <- gsub("\\[,", "  ", idx_out)
+    idx_out <- gsub("\\]", " ", idx_out)
+    idx_out <- sub(" ", "", idx_out)
+    hyper_out <- all_output[c(3:5)]
+    hyper_out <- gsub("\\.0", "  ", hyper_out)
+    hyper_out <- sub("alpha  ", "alpha", hyper_out)
+    scheme_out <- all_output[6]
+    scheme_out <- gsub("\\.0", "  ", scheme_out)
+    scheme_out <- sub("snf_scheme", "          ", scheme_out)
+    clust_out <- all_output[7]
+    clust_out <- gsub("\\.0", "  ", clust_out)
+    clust_out <- sub("clust_alg", "         ", clust_out)
+    dist_out <- all_output[8:12]
+    dist_out <- gsub("\\.0", "  ", dist_out)
+    dist_out <- sub("_dist", "     ", dist_out)
+    dist_out <- toupper(dist_out)
+    comp_out <- all_output[13:(12 + n_comp)]
+    comp_out <- gsub("\\.0", "  ", comp_out)
+    comp_out <- sub("inc_([^ ]+)", "\\1    ", comp_out)
+    comp_out <- gsub("1", cli::col_green(cli::symbol$tick), comp_out)
+    comp_out <- gsub("0", cli::col_red(cli::symbol$cross), comp_out)
+    cat(cli::col_silver(idx_out), sep = "\n")
+    cat(cli::col_yellow("SNF hyperparameters:"), hyper_out, sep = "\n")
+    cat(cli::col_yellow("SNF scheme:"), scheme_out, sep = "\n")
+    cat(cli::col_yellow("Clustering functions:"), clust_out, sep = "\n")
+    cat(cli::col_yellow("Distance functions:"), dist_out, sep = "\n")
+    cat(cli::col_yellow("Component dropout:"), comp_out, sep = "\n")
+    # Message for number of rows not shown 
+    shown_idx <- max(
+        stats::na.omit(as.numeric(strsplit(idx_out, "\\s+")[[1]]))
+    )
+    hidden_idx <- nrow(x) - shown_idx
+    grammar <- if (hidden_idx > 1) "s.\n" else ".\n"
+    cat(
+        cli::col_grey(
+            "\u2026and settings defined to create ",
+            hidden_idx,
+            " more cluster solution",
+            grammar
+        ),
+        sep = ""
+    )
 }
 
 #' Print method for class `dist_fns_list`
