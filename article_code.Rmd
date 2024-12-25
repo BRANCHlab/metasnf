@@ -32,11 +32,11 @@ abcd_dl <- data_list(
 set.seed(42)
 abcd_sdf <- settings_df(
     abcd_dl,
-    nrow = 100,
+    n_solutions = 100,
     max_k = 40
 )
 
-solutions_matrix <- batch_snf(data_list, settings_matrix, verbose = TRUE)
+solutions_matrix <- batch_snf(abcd_dl, abcd_sdf, verbose = TRUE)
 ```
 
 ## Data set-up
@@ -45,12 +45,14 @@ solutions_matrix <- batch_snf(data_list, settings_matrix, verbose = TRUE)
 
 ```{r}
 library("metasnf")
+
 dim(cort_t)
 str(cort_t[1:4, 1:5])
 ```
 
 ```{r}
 library("metasnf")
+
 all_dfs <- list(
     anxiety,
     depress,
@@ -75,7 +77,7 @@ pubertal_df <- dplyr::filter(pubertal, unique_id %in% complete_uids)
 ### Creating a data list 
 
 ```{r}
-data_list <- generate_data_list(
+data_list <- data_list(
     list(cort_t_df, "cortical_thickness", "neuroimaging", "continuous"),
     list(cort_sa_df, "cortical_surface_area", "neuroimaging", "continuous"),
     list(subc_v_df, "subcortical_volume", "neuroimaging", "continuous"),
@@ -92,7 +94,7 @@ summarize_dl(data_list)
 ### Target lists
 
 ```{r}
-target_list <- generate_data_list(
+target_list <- data_list(
     list(anxiety_df, "anxiety", "behaviour", "ordinal"),
     list(depress_df, "depressed", "behaviour", "ordinal"),
     uid = "unique_id"
@@ -106,7 +108,7 @@ summarize_dl(target_list)
 
 ```{r}
 library("metasnf")
-data_list <- generate_data_list(
+data_list <- data_list(
     list(cort_t_df, "cortical_thickness", "neuroimaging", "continuous"),
     list(cort_sa_df, "cortical_surface_area", "neuroimaging", "continuous"),
     list(subc_v_df, "subcortical_volume", "neuroimaging", "continuous"),
@@ -114,7 +116,7 @@ data_list <- generate_data_list(
     list(pubertal_df, "pubertal_status", "demographics", "continuous"),
     uid = "unique_id"
 )
-settings_matrix <- generate_settings_matrix(data_list)
+settings_matrix <- settings_df(data_list)
 head(settings_matrix)
 ```
 
@@ -123,7 +125,7 @@ head(settings_matrix)
 #### Basic random population
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 100
 )
@@ -133,7 +135,7 @@ head(settings_matrix)
 #### Specifying ranges of variation
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 100,
     min_k = 10,
@@ -144,7 +146,7 @@ settings_matrix <- generate_settings_matrix(
 ```
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     k_values = c(10, 25, 50),
@@ -155,13 +157,13 @@ settings_matrix <- generate_settings_matrix(
 #### Controlling data type dropout
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     dropout_dist = "uniform"
 )
 head(settings_matrix)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     dropout_dist = "none"
@@ -171,7 +173,7 @@ head(settings_matrix)
 ```
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     min_removed_inputs = 3
@@ -181,7 +183,7 @@ settings_matrix <- generate_settings_matrix(
 #### Piecewise construction and manual editing
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 50,
     k_values = 50
@@ -199,7 +201,7 @@ settings_matrix <- add_settings_matrix_rows(
 
 ```{r}
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     min_k = 20,
@@ -534,7 +536,7 @@ db_indices <- calculate_db_indices(
 ```{r}
 library("metasnf")
 
-data_list <- generate_data_list(
+data_list <- data_list(
     list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(cort_sa, "cortical_area", "neuroimaging", "continuous"),
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -544,7 +546,7 @@ data_list <- generate_data_list(
 )
 
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 4,
     max_k = 40
@@ -673,7 +675,7 @@ full_pubertal_df <- rbind(train_pubertal_df, test_pubertal_df)
 full_anxiety_df <- rbind(train_anxiety_df, test_anxiety_df) 
 full_depress_df <- rbind(train_depress_df, test_depress_df) 
 # A data list with just training subjects
-train_data_list <- generate_data_list(
+train_data_list <- data_list(
     list(train_cort_t_df, "cort_thick", "neuro", "continuous"),
     list(train_cort_sa_df, "cort_sa", "neuro", "continuous"),
     list(train_subc_v_df, "subcort_vol", "neuro", "continuous"),
@@ -682,7 +684,7 @@ train_data_list <- generate_data_list(
     uid = "unique_id"
 )
 # A data list with training and testing subjects
-full_data_list <- generate_data_list(
+full_data_list <- data_list(
     list(full_cort_t_df, "cort_thickness", "neuro", "continuous"),
     list(full_cort_sa_df, "cort_surface_area", "neuro", "continuous"),
     list(full_subc_v_df, "subcort_volume", "neuro", "continuous"),
@@ -691,14 +693,14 @@ full_data_list <- generate_data_list(
     uid = "unique_id"
 )
 # Construct the target lists
-train_target_list <- generate_data_list(
+train_target_list <- data_list(
     list(train_anxiety_df, "anxiety", "behav", "ordinal"),
     list(train_depress_df, "depressed", "behav", "ordinal"),
     uid = "unique_id"
 )
 # Find a clustering solution in your training data
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     train_data_list,
     nrow = 5,
     min_k = 10,
@@ -729,7 +731,7 @@ tail(propagated_labels)
 
 ```{r}
 library("metasnf")
-data_list <- generate_data_list(
+data_list <- data_list(
     list(subc_v, "subc_v", "neuro", "continuous"),
     list(income, "income", "demo", "continuous"),
     list(fav_colour, "colour", "misc", "categorical"),
@@ -739,7 +741,7 @@ data_list <- generate_data_list(
     uid = "unique_id"
 )
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 2,
     min_k = 20,
@@ -779,7 +781,7 @@ plot_list[["colour"]] +
 ```{r}
 library("metasnf")
 cort_sa_minimal <- cort_sa[, 1:5]
-data_list <- generate_data_list(
+data_list <- data_list(
     list(cort_sa_minimal, "cortical_sa", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "ordinal"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -825,7 +827,7 @@ save_heatmap(
 
 ```{r}
 library("metasnf")
-data_list <- generate_data_list(
+data_list <- data_list(
     list(
         data = expression_df,
         name = "genes_1_and_2_exp",
@@ -853,7 +855,7 @@ data_list <- generate_data_list(
     uid = "patient_id"
 )
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 1,
     max_k = 40
@@ -905,7 +907,7 @@ save_heatmap(
 ### Other manhattan plots
 
 ```{r}
-full_data_list <- generate_data_list(
+full_data_list <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -917,7 +919,7 @@ data_list <- full_data_list[1:3]
 target_list <- full_data_list[4:5]
 
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     min_k = 20,
@@ -996,7 +998,7 @@ city_df <- data.frame(
     unique_id = c("1", "2", "3"),
     var7 = c("toronto", "montreal", "vancouver")
 )
-data_list <- generate_data_list(
+data_list <- data_list(
     list(
         data = heart_rate_df,
         name = "heart_rate",
@@ -1032,7 +1034,7 @@ list_of_lists <- list(
     list(heart_rate_df, "data1", "domain1", "continuous"),
     list(personality_test_df, "data2", "domain2", "continuous")
 )
-data_list <- generate_data_list(
+data_list <- data_list(
     list_of_lists,
     uid = "unique_id"
 )
@@ -1089,7 +1091,7 @@ summarize_clust_algs_list(clust_algs_list)
 
 ```{r}
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 10,
     max_k = 40,
@@ -1100,7 +1102,7 @@ settings_matrix <- generate_settings_matrix(
 ### Using a custom clustering algorithms list
 
 ```{r}
-data_list <- generate_data_list(
+data_list <- data_list(
     list(subc_v, "subc_v", "neuro", "continuous"),
     list(income, "income", "demo", "continuous"),
     list(fav_colour, "colour", "misc", "categorical"),
@@ -1110,7 +1112,7 @@ data_list <- generate_data_list(
     uid = "unique_id"
 )
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 2,
     min_k = 20,
@@ -1173,13 +1175,13 @@ data(Data2)
 Data1$"patient_id" <- 101:(nrow(Data1) + 100)
 Data2$"patient_id" <- 101:(nrow(Data2) + 100)
 
-data_list <- generate_data_list(
+data_list <- data_list(
     list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
     list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
     uid = "patient_id"
 )
 
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 10,
     distance_metrics_list = my_distance_metrics
@@ -1196,7 +1198,7 @@ solutions_matrix <- batch_snf(
 
 ```{r}
 library("metasnf")
-data_list <- generate_data_list(
+data_list <- data_list(
     list(income_df, "household_income", "demographics", "ordinal"),
     list(pubertal_df, "pubertal_status", "demographics", "continuous"),
     list(fav_colour, "favourite_colour", "demographics", "categorical"),
@@ -1226,7 +1228,7 @@ exp_weights <- generate_weights_matrix(
 
 ```{r}
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 5,
     min_k = 20,
@@ -1244,7 +1246,7 @@ batch_snf(
 ```{r}
 library("metasnf")
 # Build data list with held-out feature just for p-value calculations
-data_list_with_held_out_f <- generate_data_list(
+data_list_with_held_out_f <- data_list(
     list(income, "income", "demographics", "ordinal"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
     list(fav_colour, "favourite_colour", "demographics", "categorical"),
@@ -1297,7 +1299,7 @@ for (row in seq_len(nrow(my_weights))) {
 
 ```{r}
 library("metasnf")
-data_list_imp1 <- generate_data_list(
+data_list_imp1 <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -1305,7 +1307,7 @@ data_list_imp1 <- generate_data_list(
     list(depress, "depressed", "behaviour", "ordinal"),
     uid = "unique_id"
 )
-data_list_imp2 <- generate_data_list(
+data_list_imp2 <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -1314,7 +1316,7 @@ data_list_imp2 <- generate_data_list(
     uid = "unique_id"
 )
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 10,
     min_k = 20,

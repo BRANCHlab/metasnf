@@ -133,7 +133,7 @@ batch_nmi <- function(dl,
                 asn <- automatic_standard_normalize
                 this_solutions_matrix <- batch_snf(
                     dl = feature_dl,
-                    settings_df = this_settings_df,
+                    sdf = this_settings_df,
                     cfl = cfl,
                     dfl = dfl,
                     automatic_standard_normalize = asn,

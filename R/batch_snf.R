@@ -6,7 +6,7 @@
 #' a broad space of post-SNF cluster solutions.
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#' @param settings_df A data.frame where each row completely defines an SNF
+#' @param sdf A data.frame where each row completely defines an SNF
 #'  pipeline transforming individual input dataframes into a final cluster
 #'  solution. See ?settings_df or
 #'  https://branchlab.github.io/metasnf/articles/settings_df.html for more
@@ -60,7 +60,7 @@
 #'  in the output.
 #' @export
 batch_snf <- function(dl,
-                      settings_df,
+                      sdf,
                       processes = 1,
                       return_similarity_matrices = FALSE,
                       similarity_matrix_dir = NULL,
@@ -77,9 +77,11 @@ batch_snf <- function(dl,
         remaining_seconds_vector <- vector() # estimate time to completion
     }
     ###########################################################################
-    # 2. Ensure settings_df is a data.frame (not a tibble or matrix)
+    # 2. Ensure settings_df is a `settings_df` class object
     ###########################################################################
-    settings_df <- data.frame(settings_df)
+    if (!inherits(sdf, "settings_df")) {
+        metasnf_error("`sdf` must be a `settings_df` class object.")
+    }
     ###########################################################################
     # 3. Check validity of settings
     ###########################################################################
@@ -102,7 +104,7 @@ batch_snf <- function(dl,
     # creater their base settings_df with a valid k, then extended their
     # settings matrix using the add_settings_df_rows function with an
     # invalid k (a function that doesn't require users to supply the data).
-    max_k <- max(settings_df$"k")
+    max_k <- max(sdf$"k")
     n_patients <- unique(summarize_dl(dl)$"length")
     # Ensure that the maximum k value doesn't exceed the number of subjects
     if (max_k >= n_patients) {
@@ -151,10 +153,10 @@ batch_snf <- function(dl,
     if (is.null(wm)) {
         wm <- weights_matrix(
             dl,
-            n_solutions = nrow(settings_df)
+            n_solutions = nrow(sdf)
         )
     } else {
-        if (nrow(wm) != nrow(settings_df)) {
+        if (nrow(wm) != nrow(sdf)) {
             metasnf_error(
                 "weights_matrix and settings_df should have the same",
                 " number of rows."
@@ -177,12 +179,13 @@ batch_snf <- function(dl,
                 dl = dl,
                 dfl = dfl,
                 cfl = cfl,
-                settings_df = settings_df,
+                sdf = sdf,
                 wm = wm,
                 similarity_matrix_dir = similarity_matrix_dir,
                 return_similarity_matrices = return_similarity_matrices,
                 processes = available_cores
             )
+            solutions_matrix <- as_settings_df(solutions_matrix)
             return(solutions_matrix)
         } else if (is.numeric(processes)) {
             # Use the user-specified number of cores
@@ -198,12 +201,13 @@ batch_snf <- function(dl,
                 dl = dl,
                 dfl = dfl,
                 cfl = cfl,
-                settings_df = settings_df,
+                sdf = sdf,
                 wm = wm,
                 similarity_matrix_dir = similarity_matrix_dir,
                 return_similarity_matrices = return_similarity_matrices,
                 processes = processes
             )
+            solutions_matrix <- as_settings_df(solutions_matrix)
             return(solutions_matrix)
         } else {
             metasnf_error("Invalid number of processes specified.")
@@ -232,14 +236,14 @@ batch_snf <- function(dl,
     #  column for every subjects.
     if (!suppress_clustering) {
         solutions_matrix <- add_columns(
-            df = settings_df,
+            df = sdf,
             cols = dl[[1]]$"data"$"uid", # one col/patient
             value = 0 # populate the new column with 0s by default
         )
         # 5b. solutions_matrix gets one new column to store the cluster that
         # each subject was assigned to.
         solutions_matrix <- add_columns(
-            df = settings_df,
+            df = sdf,
             cols = "nclust",
             value = 0
         )
@@ -253,25 +257,25 @@ batch_snf <- function(dl,
     ###########################################################################
     # 10. Iterate through the rows of the settings matrix
     ###########################################################################
-    for (i in seq_len(nrow(settings_df))) {
+    for (i in seq_len(nrow(sdf))) {
         start_time <- Sys.time() # used to estimate time to completion
-        settings_df_row <- settings_df[i, ]
+        sdf_row <- sdf[i, ]
         weights_row <- wm[i, , drop = FALSE]
-        current_dl <- drop_inputs(settings_df_row, dl)
+        current_dl <- drop_inputs(sdf_row, dl)
         # Apply the current row's SNF scheme
         current_snf_scheme <- dplyr::case_when(
-            settings_df_row$"snf_scheme" == 1 ~ "individual",
-            settings_df_row$"snf_scheme" == 2 ~ "domain",
-            settings_df_row$"snf_scheme" == 3 ~ "twostep",
+            sdf_row$"snf_scheme" == 1 ~ "individual",
+            sdf_row$"snf_scheme" == 2 ~ "domain",
+            sdf_row$"snf_scheme" == 3 ~ "twostep",
         )
-        k <- settings_df_row$"k"
-        alpha <- settings_df_row$"alpha"
-        t <- settings_df_row$"t"
-        cnt_dist <- settings_df_row$"cnt_dist"
-        dsc_dist <- settings_df_row$"dsc_dist"
-        ord_dist <- settings_df_row$"ord_dist"
-        cat_dist <- settings_df_row$"cat_dist"
-        mix_dist <- settings_df_row$"mix_dist"
+        k <- sdf_row$"k"
+        alpha <- sdf_row$"alpha"
+        t <- sdf_row$"t"
+        cnt_dist <- sdf_row$"cnt_dist"
+        dsc_dist <- sdf_row$"dsc_dist"
+        ord_dist <- sdf_row$"ord_dist"
+        cat_dist <- sdf_row$"cat_dist"
+        mix_dist <- sdf_row$"mix_dist"
         cnt_dist_fn <- dfl$"cnt_dist_fns"[[cnt_dist]]
         dsc_dist_fn <- dfl$"dsc_dist_fns"[[dsc_dist]]
         ord_dist_fn <- dfl$"ord_dist_fns"[[ord_dist]]
@@ -307,7 +311,7 @@ batch_snf <- function(dl,
         # 11. Clustering of the final fused network
         #######################################################################
         # clust_alg stores the function to be used for this run of SNF
-        clust_alg <- cfl[[settings_df_row$"clust_alg"]]
+        clust_alg <- cfl[[sdf_row$"clust_alg"]]
         # cluster_results is a named list containing the cluster solution
         #  (vector of which cluster each patient was assigned to) and the
         #  number of clusters for that solution
@@ -325,7 +329,7 @@ batch_snf <- function(dl,
         #######################################################################
         if (verbose) {
             cat(
-                "Processing row: ", i, "/", nrow(settings_df), "\n",
+                "Processing row: ", i, "/", nrow(sdf), "\n",
                 sep = ""
             )
         }
@@ -347,7 +351,7 @@ batch_snf <- function(dl,
         if (!suppress_clustering) {
             # the user wants similarity matrices and solutions matrix
             batch_snf_results <- list(
-                solutions_matrix,
+                as_settings_df(solutions_matrix),
                 similarity_matrices
             )
             names(batch_snf_results) <- c(
@@ -363,7 +367,7 @@ batch_snf <- function(dl,
         # The user did not request that similarity matrices are returned. Just
         #  return the solutions matrix. Don't need to check if solutions
         #  matrices are requested - that was handled earlier in the funciton.
-        return(solutions_matrix)
+        return(as_settings_df(solutions_matrix))
     }
 }
 

@@ -6,7 +6,7 @@
 \usage{
 batch_snf(
   dl,
-  settings_df,
+  sdf,
   processes = 1,
   return_similarity_matrices = FALSE,
   similarity_matrix_dir = NULL,
@@ -21,7 +21,7 @@ batch_snf(
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{settings_df}{A data.frame where each row completely defines an SNF
+\item{sdf}{A data.frame where each row completely defines an SNF
 pipeline transforming individual input dataframes into a final cluster
 solution. See ?settings_df or
 https://branchlab.github.io/metasnf/articles/settings_df.html for more

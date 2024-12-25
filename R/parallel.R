@@ -7,7 +7,7 @@
 #'  ?dist_fns_list for details on how to build this.
 #' @param cfl List of custom clustering algorithms to apply
 #' to the final fused network. See ?clust_fns_list.
-#' @param settings_df matrix indicating parameters to iterate SNF through.
+#' @param sdf matrix indicating parameters to iterate SNF through.
 #' @param wm A matrix containing feature weights to use during
 #'  distance matrix calculation. See ?weights_matrix for details on
 #'  how to build this.
@@ -22,20 +22,21 @@
 parallel_batch_snf <- function(dl,
                                dfl,
                                cfl,
-                               settings_df,
+                               sdf,
                                wm,
                                similarity_matrix_dir,
                                return_similarity_matrices,
                                processes) {
     future::plan(future::multisession, workers = processes)
     ############################################################################
-    settings_and_weights_df <- cbind(settings_df, wm)
+    settings_and_weights_df <- cbind(sdf, wm)
+    print(class(settings_and_weights_df))
     prog <- progressr::progressor(steps = nrow(settings_and_weights_df))
     batch_row_function <- batch_row_closure(
         dl = dl,
         dfl = dfl,
         cfl = cfl,
-        settings_df = settings_df,
+        sdf = sdf,
         wm = wm,
         similarity_matrix_dir = similarity_matrix_dir,
         return_similarity_matrices = return_similarity_matrices,
@@ -84,7 +85,7 @@ parallel_batch_snf <- function(dl,
 #'  ?dist_fns_list for details on how to build this.
 #' @param cfl List of custom clustering algorithms to apply
 #'  to the final fused network. See ?clust_fns_list.
-#' @param settings_df matrix indicating parameters to iterate SNF through.
+#' @param sdf matrix indicating parameters to iterate SNF through.
 #' @param wm A matrix containing feature weights to use during
 #'  distance matrix calculation. See ?weights_matrix for details on
 #'  how to build this.
@@ -100,35 +101,34 @@ parallel_batch_snf <- function(dl,
 batch_row_closure <- function(dl,
                               dfl,
                               cfl,
-                              settings_df,
+                              sdf,
                               wm,
                               similarity_matrix_dir,
                               return_similarity_matrices,
                               prog) {
-    settings_df_names <- colnames(settings_df)
+    sdf_names <- colnames(sdf)
     wm_names <- colnames(wm)
     row_function <- function(settings_and_weights_row) {
         prog()
         settings_and_weights_row_df <- data.frame(t(settings_and_weights_row))
-        settings_df_row <-
-            settings_and_weights_row_df[, settings_df_names]
+        sdf_row <- settings_and_weights_row_df[, sdf_names]
         weights_row <- settings_and_weights_row_df[, wm_names]
         # Reduce data list
-        current_dl <- drop_inputs(settings_df_row, dl)
+        current_dl <- drop_inputs(sdf_row, dl)
         # Extract parameters for snf_step
         current_snf_scheme <- dplyr::case_when(
-            settings_df_row$"snf_scheme" == 1 ~ "individual",
-            settings_df_row$"snf_scheme" == 2 ~ "domain",
-            settings_df_row$"snf_scheme" == 3 ~ "twostep",
+            sdf_row$"snf_scheme" == 1 ~ "individual",
+            sdf_row$"snf_scheme" == 2 ~ "domain",
+            sdf_row$"snf_scheme" == 3 ~ "twostep",
         )
-        k <- settings_df_row$"k"
-        alpha <- settings_df_row$"alpha"
-        t <- settings_df_row$"t"
-        cnt_dist <- settings_df_row$"cnt_dist"
-        dsc_dist <- settings_df_row$"dsc_dist"
-        ord_dist <- settings_df_row$"ord_dist"
-        cat_dist <- settings_df_row$"cat_dist"
-        mix_dist <- settings_df_row$"mix_dist"
+        k <- sdf_row$"k"
+        alpha <- sdf_row$"alpha"
+        t <- sdf_row$"t"
+        cnt_dist <- sdf_row$"cnt_dist"
+        dsc_dist <- sdf_row$"dsc_dist"
+        ord_dist <- sdf_row$"ord_dist"
+        cat_dist <- sdf_row$"cat_dist"
+        mix_dist <- sdf_row$"mix_dist"
         cnt_dist_fn <- dfl$"cnt_dist_fns"[[cnt_dist]]
         dsc_dist_fn <- dfl$"dsc_dist_fns"[[dsc_dist]]
         ord_dist_fn <- dfl$"ord_dist_fns"[[ord_dist]]
@@ -150,21 +150,21 @@ batch_row_closure <- function(dl,
         )
         # Write similarity matrices if requested
         if (!is.null(similarity_matrix_dir)) {
-            row_id <- settings_df_row$"row_id"
+            row_id <- sdf_row$"row_id"
             utils::write.csv(
                 x = fused_network,
                 file = similarity_matrix_path(similarity_matrix_dir, row_id),
                 row.names = TRUE
             )
         }
-        clust_alg <- cfl[[settings_df_row$"clust_alg"]]
+        clust_alg <- cfl[[sdf_row$"clust_alg"]]
         # cluster_results is a named list containing the cluster solution
         #  (vector of which cluster each patient was assigned to) and the
         #  number of clusters for that solution
         cluster_results <- clust_alg(fused_network)
         solution <- cluster_results$"solution"
         nclust <- cluster_results$"nclust"
-        solutions_matrix_row <- settings_df_row
+        solutions_matrix_row <- sdf_row
         solutions_matrix_row$"nclust" <- nclust
         solutions_matrix_row[1, rownames(fused_network)] <- solution
         if (return_similarity_matrices) {

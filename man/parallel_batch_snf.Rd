@@ -8,7 +8,7 @@ parallel_batch_snf(
   dl,
   dfl,
   cfl,
-  settings_df,
+  sdf,
   wm,
   similarity_matrix_dir,
   return_similarity_matrices,
@@ -26,7 +26,7 @@ distance metric function should be used for the various feature types
 \item{cfl}{List of custom clustering algorithms to apply
 to the final fused network. See ?clust_fns_list.}
 
-\item{settings_df}{matrix indicating parameters to iterate SNF through.}
+\item{sdf}{matrix indicating parameters to iterate SNF through.}
 
 \item{wm}{A matrix containing feature weights to use during
 distance matrix calculation. See ?weights_matrix for details on
