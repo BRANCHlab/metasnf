@@ -82,7 +82,7 @@ data(Data2)
 Data1$"patient_id" <- 101:(nrow(Data1) + 100) # nolint
 Data2$"patient_id" <- 101:(nrow(Data2) + 100) # nolint
 
-data_list <- data_list(
+dl <- data_list(
     list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
     list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
     uid = "patient_id"
@@ -93,7 +93,7 @@ And then the settings_df can be generated:
 
 ```{r}
 settings_df <- settings_df(
-    data_list,
+    dl,
     n_solutions = 10,
     dfl = my_distance_metrics
 )
@@ -109,7 +109,7 @@ Because of that, you'll need to supply the dist_fns_list once again when calling
 
 ```{r eval = FALSE}
 solutions_matrix <- batch_snf(
-    data_list,
+    dl,
     settings_df,
     dfl = my_distance_metrics
 )
@@ -165,7 +165,7 @@ my_distance_metrics <- dist_fns_list(
 summarize_dfl(my_distance_metrics)
 
 settings_df <- settings_df(
-    data_list,
+    dl,
     n_solutions = 10,
     dfl = my_distance_metrics,
     continuous_distances = 1,
@@ -180,7 +180,7 @@ This can save you the trouble of needing to manage several distinct distance met
 
 ```{r}
 settings_df <- settings_df(
-    data_list,
+    dl,
     n_solutions = 10,
     dfl = my_distance_metrics,
     continuous_distances = 1,
@@ -210,7 +210,7 @@ The bottom of this vignette outlines the available distance metric functions gro
 You can examine the documentation of those weighted functions to learn more about how the weights you provide will be used.
 
 An important note on providing weights for a run of SNF is that the specific form of the data may not be what you expect by the time it is ready to be converted into a distance metric function.
-The "individual" and "two-step" SNF schemes involve distance metrics only being applied to the input dataframes in the `data_list` as they are.
+The "individual" and "two-step" SNF schemes involve distance metrics only being applied to the input dataframes in the data list as they are.
 The "domain" scheme, however, concatenates data within a domain before converting that larger dataframe into a distance matrix.
 Anytime you have more than one dataframe with the same domain label and you use the domain SNF scheme, all the columns associated with that domain will be in a single dataframe when the distance metric function is applied.
 
@@ -218,19 +218,19 @@ The first step in providing custom weights is to generate a `weights_matrix`:
 
 ```{r}
 wm <- weights_matrix(
-    data_list
+    dl
 )
 
 wm
 ```
 
-This function will return a dataframe containing all the columns in the `data_list` and a single row of 1s, which are the weights that will be used for a single run of SNF.
+This function will return a dataframe containing all the columns in the data list and a single row of 1s, which are the weights that will be used for a single run of SNF.
 
 To actually use the matrix during SNF, you'll need to make sure that the number of rows in the weights matrix is the same as the number of rows in your settings matrix.
 
 ```{r}
 settings_df <- settings_df(
-    data_list,
+    dl,
     n_solutions = 10,
     dfl = my_distance_metrics,
     continuous_distances = 1,
@@ -240,21 +240,21 @@ settings_df <- settings_df(
 settings_df
 
 wm <- weights_matrix(
-    data_list,
+    dl,
     n_solutions = nrow(settings_df)
 )
 
 wm[1:5, ]
 
 solutions_matrix_1 <- batch_snf(
-    data_list,
+    dl,
     settings_df,
     dfl = my_distance_metrics,
     wm = wm
 )
 
 solutions_matrix_2 <- batch_snf(
-    data_list,
+    dl,
     settings_df,
     dfl = my_distance_metrics
 )
@@ -270,7 +270,7 @@ You can either replace the 1s with your own weights that you've calculated outsi
 
 ```{r eval = FALSE}
 wm <- weights_matrix(
-    data_list,
+    dl,
     n_solutions = nrow(settings_df),
     fill = "uniform" # or fill = "exponential"
 )

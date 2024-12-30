@@ -55,6 +55,7 @@ batch_nmi <- function(dl,
     # used to generate the new solutions based on the solo features.
     ###########################################################################
     settings_df <- no_subs(solutions_matrix)
+    class(settings_df) <- c("settings_df", "data.frame")
     ###########################################################################
     # nmi_df will store all the NMIs for each feature
     ###########################################################################

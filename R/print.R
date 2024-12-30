@@ -62,6 +62,21 @@ print.data_list <- function(x, ...) {
 #' @return Function prints to console but does not return any value.
 #' @export
 print.settings_df <- function(x, ...) {
+    #x <- x |>
+    #    dplyr::select(
+    #        "row_id",
+    #        "alpha",
+    #        "k",
+    #        "t",
+    #        "snf_scheme",
+    #        "clust_alg",
+    #        "cnt_dist",
+    #        "dsc_dist",
+    #        "ord_dist",
+    #        "cat_dist",
+    #        "mix_dist",
+    #        dplyr::starts_with("inc_")
+    #    )
     # Settings DF includes 11 boilerplate columns
     BOILERPLATE_COLS <- 11
     # Number of components is found by subtracting off boilerplate columns
@@ -72,7 +87,7 @@ print.settings_df <- function(x, ...) {
     idx_out <- all_output[1]
     idx_out <- gsub("\\[,", "  ", idx_out)
     idx_out <- gsub("\\]", " ", idx_out)
-    idx_out <- sub(" ", "", idx_out)
+    idx_out <- sub("  ", "", idx_out)
     hyper_out <- all_output[c(3:5)]
     hyper_out <- gsub("\\.0", "  ", hyper_out)
     hyper_out <- sub("alpha  ", "alpha", hyper_out)
@@ -102,16 +117,18 @@ print.settings_df <- function(x, ...) {
         stats::na.omit(as.numeric(strsplit(idx_out, "\\s+")[[1]]))
     )
     hidden_idx <- nrow(x) - shown_idx
-    grammar <- if (hidden_idx > 1) "s.\n" else ".\n"
-    cat(
-        cli::col_grey(
-            "\u2026and settings defined to create ",
-            hidden_idx,
-            " more cluster solution",
-            grammar
-        ),
-        sep = ""
-    )
+    if (hidden_idx > 0) {
+        grammar <- if (hidden_idx > 1) "s.\n" else ".\n"
+        cat(
+            cli::col_grey(
+                "\u2026and settings defined to create ",
+                hidden_idx,
+                " more cluster solution",
+                grammar
+            ),
+            sep = ""
+        )
+    }
 }
 
 #' Print method for class `dist_fns_list`

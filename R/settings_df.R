@@ -228,6 +228,8 @@ settings_df <- function(dl,
 #' @return If sdfl has a valid structure for a `settings_df` class object,
 #'  returns the input unchanged. Otherwise, raises an error.
 validate_settings_df <- function(sdfl) {
+    check_sdfl_is_df(sdfl)
+    check_sdfl_colnames(sdfl)
     return(sdfl)
 }
 
@@ -239,6 +241,50 @@ validate_settings_df <- function(sdfl) {
 new_settings_df <- function(sdfl) {
     sdf <- structure(sdfl, class = c("settings_df", "data.frame"))
     return(sdf)
+}
+
+#' Check if settings data frame inherits class `data.frame`
+#'
+#' @keywords internal
+#' @inheritParams validate_settings_df
+#' @return Doesn't return any value. Raises error if there are features with
+#'  duplicate names in a generated data list.
+check_sdfl_is_df <- function(sdfl) {
+    if(!inherits(sdfl, "data.frame")) {
+        metasnf_error(
+            "Settings data frame must inherit from class `data.frame`."
+        )
+    }
+}
+
+#' Check if settings data frame inherits class `data.frame`
+#'
+#' @keywords internal
+#' @inheritParams validate_settings_df
+#' @return Doesn't return any value. Raises error if there are features with
+#'  duplicate names in a generated data list.
+check_sdfl_colnames <- function(sdfl) {
+    sdf_cols <- c(
+        "row_id",
+        "alpha",
+        "k",
+        "t",
+        "snf_scheme",
+        "clust_alg",
+        "cnt_dist",
+        "dsc_dist",
+        "ord_dist",
+        "cat_dist",
+        "mix_dist"
+    )
+    has_non_inc_cols <- all(sdf_cols %in% colnames(sdfl))
+    n_inc_cols <- ncol(dplyr::select(sdfl, dplyr::starts_with("inc_")))
+    has_inc_cols <- n_inc_cols > 0
+    if (!has_non_inc_cols & !has_inc_cols) {
+        metasnf_error(
+            "Settings data frame has invalid columns."
+        )
+    }
 }
 
 #' Add rows to a settings_df
