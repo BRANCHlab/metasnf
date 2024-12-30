@@ -186,7 +186,7 @@ batch_snf <- function(dl,
                 processes = available_cores
             )
             solutions_matrix <- as_settings_df(solutions_matrix)
-            return(solutions_matrix)
+            return(data.frame(solutions_matrix))
         } else if (is.numeric(processes)) {
             # Use the user-specified number of cores
             if (processes > available_cores) {
@@ -208,7 +208,7 @@ batch_snf <- function(dl,
                 processes = processes
             )
             solutions_matrix <- as_settings_df(solutions_matrix)
-            return(solutions_matrix)
+            return(data.frame(solutions_matrix))
         } else {
             metasnf_error("Invalid number of processes specified.")
         }
@@ -351,7 +351,7 @@ batch_snf <- function(dl,
         if (!suppress_clustering) {
             # the user wants similarity matrices and solutions matrix
             batch_snf_results <- list(
-                as_settings_df(solutions_matrix),
+                data.frame(as_settings_df(solutions_matrix)),
                 similarity_matrices
             )
             names(batch_snf_results) <- c(
@@ -367,7 +367,7 @@ batch_snf <- function(dl,
         # The user did not request that similarity matrices are returned. Just
         #  return the solutions matrix. Don't need to check if solutions
         #  matrices are requested - that was handled earlier in the funciton.
-        return(as_settings_df(solutions_matrix))
+        return(data.frame(as_settings_df(solutions_matrix)))
     }
 }
 
@@ -376,16 +376,23 @@ batch_snf <- function(dl,
 #' Given a data list and a settings matrix row, returns a data list of selected
 #' inputs
 #'
-#' @param settings_df_row Row of a settings matrix.
+#' @param sdf_row Row of a settings matrix.
 #' @param dl A nested list of input data from `data_list()`.
 #'
 #' @return A data list (class "list") in which any component with a
 #' corresponding 0 value in the provided settings matrix row has been removed.
 #'
 #' @export
-drop_inputs <- function(settings_df_row, dl) {
+drop_inputs <- function(sdf_row, dl) {
+    if (!inherits(sdf_row, "settings_df")) {
+        metasnf_error(
+            "`drop_inputs` requires a row of a `settings_df`-class",
+            " object."
+        )
+    }
     # Dataframe just of the inclusion features
-    inc_df <- settings_df_row |>
+    inc_df <- sdf_row |>
+        data.frame() |>
         dplyr::select(dplyr::starts_with("inc"))
     # The subset of columns that are in 'keep' (1) mode
     keepcols <- colnames(inc_df)[inc_df[1, ] == 1]

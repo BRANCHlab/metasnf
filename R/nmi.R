@@ -64,11 +64,12 @@ batch_nmi <- function(dl,
     # If ignore_inclusions is TRUE, all inclusion columns will be set to 1
     ###########################################################################
     if (ignore_inclusions) {
-        settings_df <- settings_df |> dplyr::mutate(
-            dplyr::across(
-                dplyr::starts_with("inc_"), ~ 1
+        settings_df <- settings_df |>
+            dplyr::mutate(
+                dplyr::across(
+                    dplyr::starts_with("inc_"), ~ 1
+                )
             )
-        )
     }
     ###########################################################################
     # Loop through each feature
@@ -119,7 +120,7 @@ batch_nmi <- function(dl,
         # Loop through the settings matrix and run solo-feature SNFs
         #######################################################################
         for (j in seq_len(nrow(feature_settings_df))) {
-            this_settings_df <- feature_settings_df[j, ]
+            this_settings_df <- data.frame(feature_settings_df[j, ])
             this_inclusion <- this_settings_df[, inc_this_data_type]
             if (!ignore_inclusions && this_inclusion == 0) {
                 ###############################################################
@@ -134,7 +135,7 @@ batch_nmi <- function(dl,
                 asn <- automatic_standard_normalize
                 this_solutions_matrix <- batch_snf(
                     dl = feature_dl,
-                    sdf = this_settings_df,
+                    sdf = as_settings_df(this_settings_df),
                     cfl = cfl,
                     dfl = dfl,
                     automatic_standard_normalize = asn,

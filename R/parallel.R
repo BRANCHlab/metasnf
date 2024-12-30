@@ -30,7 +30,6 @@ parallel_batch_snf <- function(dl,
     future::plan(future::multisession, workers = processes)
     ############################################################################
     settings_and_weights_df <- cbind(sdf, wm)
-    print(class(settings_and_weights_df))
     prog <- progressr::progressor(steps = nrow(settings_and_weights_df))
     batch_row_function <- batch_row_closure(
         dl = dl,
@@ -56,7 +55,7 @@ parallel_batch_snf <- function(dl,
                     x$"solutions_matrix_row"
                 }
             )
-        solutions_matrix <- do.call("rbind", solutions_matrix_rows)
+        solutions_matrix <- data.frame(do.call("rbind", solutions_matrix_rows))
         solutions_matrix <- numcol_to_numeric(solutions_matrix)
         similarity_matrices <- batch_snf_results |>
             lapply(
@@ -70,7 +69,7 @@ parallel_batch_snf <- function(dl,
         )
         return(batch_snf_results)
     } else {
-        solutions_matrix <- do.call("rbind", batch_snf_results)
+        solutions_matrix <- data.frame(do.call("rbind", batch_snf_results))
         solutions_matrix <- numcol_to_numeric(solutions_matrix)
         return(solutions_matrix)
     }
@@ -111,7 +110,8 @@ batch_row_closure <- function(dl,
     row_function <- function(settings_and_weights_row) {
         prog()
         settings_and_weights_row_df <- data.frame(t(settings_and_weights_row))
-        sdf_row <- settings_and_weights_row_df[, sdf_names]
+        sdf_row <- settings_and_weights_row_df[, sdf_names] |>
+            as_settings_df()
         weights_row <- settings_and_weights_row_df[, wm_names]
         # Reduce data list
         current_dl <- drop_inputs(sdf_row, dl)

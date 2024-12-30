@@ -46,7 +46,7 @@ data_list <- data_list(
 )
 
 set.seed(42)
-settings_df <- settings_df(
+sdf <- settings_df(
     data_list,
     n_solutions = 20,
     min_k = 20,
@@ -54,7 +54,7 @@ settings_df <- settings_df(
 )
 
 # Generation of 20 cluster solutions
-solutions_matrix <- batch_snf(data_list, settings_df)
+solutions_matrix <- batch_snf(data_list, sdf)
 
 # Let's just calculate NMIs of the anxiety and depression data types for the
 # first 5 cluster solutions to save time:

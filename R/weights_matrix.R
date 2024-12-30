@@ -48,6 +48,7 @@ weights_matrix <- function(dl = NULL,
 #' @return If wml has a valid structure for a `weights_matrix` class
 #'  object, returns the input unchanged. Otherwise, raises an error.
 validate_weights_matrix <- function(wml) {
+    class(wml) <- setdiff(class(wml), "weights_matrix")
     # 1. Ensure is matrix
     if (!inherits(wml, "matrix")) {
         metasnf_error("`weights_matrix` must inherit from class `matrix`.")

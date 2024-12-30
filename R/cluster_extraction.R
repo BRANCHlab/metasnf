@@ -16,6 +16,7 @@
 #'
 #' @export
 get_cluster_solutions <- function(solutions_matrix) {
+    class(solutions_matrix) <- "data.frame"
     # Create a skeleton dataframe using just the columns of the solutions
     # matrix containing information about which cluster each patient was
     # assigned to on each SNF run
@@ -54,6 +55,7 @@ get_cluster_solutions <- function(solutions_matrix) {
 #'
 #' @export
 get_cluster_df <- function(solutions_matrix_row) {
+    class(solutions_matrix_row) <- "data.frame"
     cluster_df <-
         subs(solutions_matrix_row) |>
         t() |>
@@ -83,6 +85,7 @@ get_cluster_df <- function(solutions_matrix_row) {
 #'
 #' @export
 get_clusters <- function(solutions_matrix_row) {
+    class(solutions_matrix_row) <- "data.frame"
     cluster_df <-
         subs(solutions_matrix_row) |>
         t() |>

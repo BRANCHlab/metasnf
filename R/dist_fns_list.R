@@ -114,6 +114,7 @@ dist_fns_list <- function(cnt_dist_fns = NULL,
 #' @return If dfll has a valid structure for a `dist_fns_list` class
 #'  object, returns the input unchanged. Otherwise, raises an error.
 validate_dist_fns_list <- function(dfll) {
+    class(dfll) <- setdiff(class(dfll), "dist_fns_list")
     # First layer of items have valid names
     check_dfll_item_names(dfll)
     # Second layer of items are all functions

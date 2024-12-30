@@ -109,7 +109,7 @@ train_target_list <- data_list(
 )
 
 set.seed(42)
-settings_df <- settings_df(
+sdf <- settings_df(
     train_data_list,
     n_solutions = 5,
     min_k = 10,
@@ -118,7 +118,7 @@ settings_df <- settings_df(
 
 train_solutions_matrix <- batch_snf(
     train_data_list,
-    settings_df
+    sdf
 )
 
 extended_solutions_matrix <- extend_solutions(

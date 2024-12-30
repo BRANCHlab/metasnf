@@ -604,6 +604,7 @@ new_data_list <- function(dll) {
 #' @return If dll has a valid structure for a `data_list` class object, 
 #'  returns the input unchanged. Otherwise, raises an error.
 validate_data_list <- function(dll) {
+    class(dll) <- setdiff(class(dll), "data_list")
     # 1. Input is a list
     check_dll_inherits_list(dll)
     # 2. Input list stores 4-item lists

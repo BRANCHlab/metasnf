@@ -228,8 +228,10 @@ settings_df <- function(dl,
 #' @return If sdfl has a valid structure for a `settings_df` class object,
 #'  returns the input unchanged. Otherwise, raises an error.
 validate_settings_df <- function(sdfl) {
+    class(sdfl) <- setdiff(class(sdfl), "settings_df")
     check_sdfl_is_df(sdfl)
     check_sdfl_colnames(sdfl)
+    check_sdfl_numeric(sdfl)
     return(sdfl)
 }
 
@@ -280,12 +282,28 @@ check_sdfl_colnames <- function(sdfl) {
     has_non_inc_cols <- all(sdf_cols %in% colnames(sdfl))
     n_inc_cols <- ncol(dplyr::select(sdfl, dplyr::starts_with("inc_")))
     has_inc_cols <- n_inc_cols > 0
-    if (!has_non_inc_cols & !has_inc_cols) {
+    valid_cols <- has_non_inc_cols & has_inc_cols
+    if (!valid_cols) {
         metasnf_error(
             "Settings data frame has invalid columns."
         )
     }
 }
+
+#' Check if settings data frame is numeric
+#'
+#' @keywords internal
+#' @inheritParams validate_settings_df
+#' @return Doesn't return any value. Raises error if there are features with
+#'  duplicate names in a generated data list.
+check_sdfl_numeric <- function(sdfl) {
+    if(!is.numeric(unlist(sdfl))) {
+        metasnf_error(
+            "Settings data frame may only have numeric values."
+        )
+    }
+}
+
 
 #' Add rows to a settings_df
 #'
@@ -573,7 +591,8 @@ add_settings_df_rows <- function(sdf,
         #######################################################################
         # 9. Check if newly added row already exists in settings_df
         #######################################################################
-        dm_no_id <- sdf[, 2:length(sdf)]
+        dm_no_id <- data.frame(sdf)
+        dm_no_id <- dm_no_id[, 2:length(dm_no_id)]
         num_duplicates <- length(which(
             duplicated(dm_no_id) |
             duplicated(dm_no_id, fromLast = TRUE)))

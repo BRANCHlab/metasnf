@@ -18,3 +18,21 @@
     dl <- as_data_list(dll)
     return(dl)
 }
+
+#' Assignment operator for settings data frames
+#'
+#' Enables usage of `[<-` assignment operator on `settings_df` class objects.
+#' Given a `numeric` or `character` index, returns an new settings data frame.
+#'
+#' @param x A `settings_df` class object.
+#' @param i Index for component assignment.
+#' @param j Index for component assignment.
+#' @param value Value to pass into x.
+#' @return A settings data frame with the assigned value(s).
+#' @export
+`[<-.settings_df` <- function(x, i, j, value) {
+    sdfl <- NextMethod()
+    validate_settings_df(sdfl)
+    sdf <- as_settings_df(sdfl)
+    return(sdf)
+}

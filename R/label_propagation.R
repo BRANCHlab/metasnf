@@ -133,7 +133,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
         }
         current_row <- train_solutions_matrix[i, ]
         sig <- paste0(current_row$"row_id")
-        reduced_dl <- drop_inputs(current_row, full_dl)
+        reduced_dl <- drop_inputs(as_settings_df(current_row), full_dl)
         scheme <- current_row$"snf_scheme"
         k <- current_row$"k"
         alpha <- current_row$"alpha"

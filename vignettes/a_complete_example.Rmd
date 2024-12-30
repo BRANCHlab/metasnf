@@ -221,14 +221,14 @@ Calling the `settings_df` function with a specified number of rows will automati
 
 ```{r}
 set.seed(42)
-settings_df <- settings_df(
+sdf <- settings_df(
     data_list,
     n_solutions = 20,
     min_k = 20,
     max_k = 50
 )
 
-settings_df[1:5, ]
+sdf[1:5, ]
 ```
 
 The columns are:
@@ -260,7 +260,7 @@ The `batch_snf` function integrates the data in the `data_list` using each of th
 The resulting structure is an `solutions_matrix` which is an extension of the `settings_df` that contains columns specifying which cluster each subject was assigned for the corresponding `settings_df` row.
 
 ```{r}
-solutions_matrix <- batch_snf(data_list, settings_df)
+solutions_matrix <- batch_snf(data_list, sdf)
 
 colnames(solutions_matrix)[1:30]
 ```
@@ -638,7 +638,7 @@ Another option is to start by taking a first look at entire `settings_df`, sorte
 
 ```{r eval = FALSE}
 sm_hm <- settings_df_heatmap(
-    settings_df,
+    sdf,
     order = meta_cluster_order
 )
 ```
@@ -710,7 +710,7 @@ These similarity matrices can be collected from the `batch_snf` using the `retur
 ```{r}
 batch_snf_results <- batch_snf(
     data_list,
-    settings_df,
+    sdf,
     return_similarity_matrices = TRUE
 )
 
@@ -882,7 +882,7 @@ train_target_list <- data_list(
 
 # Find a clustering solution in your training data
 set.seed(42)
-settings_df <- settings_df(
+sdf <- settings_df(
     train_data_list,
     n_solutions = 5,
     min_k = 10,
@@ -891,7 +891,7 @@ settings_df <- settings_df(
 
 train_solutions_matrix <- batch_snf(
     train_data_list,
-    settings_df
+    sdf
 )
 
 extended_solutions_matrix <- extend_solutions(

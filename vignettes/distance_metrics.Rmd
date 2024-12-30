@@ -92,14 +92,14 @@ dl <- data_list(
 And then the settings_df can be generated:
 
 ```{r}
-settings_df <- settings_df(
+sdf <- settings_df(
     dl,
     n_solutions = 10,
     dfl = my_distance_metrics
 )
 
 # showing just the columns that are related to distances
-settings_df |> dplyr::select(dplyr::ends_with("dist"))
+sdf
 ```
 
 The continuous and discrete distance metrics values randomly fluctuate between 1 and 2, where 1 means that the first metric (`euclidean_distance()`) will be used and 2 means that the second metric (`sn_euclidean_distance`) will be used.
@@ -110,7 +110,7 @@ Because of that, you'll need to supply the dist_fns_list once again when calling
 ```{r eval = FALSE}
 solutions_matrix <- batch_snf(
     dl,
-    settings_df,
+    sdf,
     dfl = my_distance_metrics
 )
 ```
@@ -164,7 +164,7 @@ my_distance_metrics <- dist_fns_list(
 
 summarize_dfl(my_distance_metrics)
 
-settings_df <- settings_df(
+sdf <- settings_df(
     dl,
     n_solutions = 10,
     dfl = my_distance_metrics,
@@ -172,14 +172,14 @@ settings_df <- settings_df(
     discrete_distances = c(2, 3)
 )
 
-settings_df |> dplyr::select(dplyr::ends_with("dist"))
+sdf
 ```
 
 The second option can be quite useful when paired with `add_settings_df_rows()`, enabling you to build up distinct blocks of rows in the settings matrix that have different combinations of distance metrics.
 This can save you the trouble of needing to manage several distinct distance metrics lists or manage your solution space over separate runs of `batch_snf`.
 
 ```{r}
-settings_df <- settings_df(
+sdf <- settings_df(
     dl,
     n_solutions = 10,
     dfl = my_distance_metrics,
@@ -187,15 +187,15 @@ settings_df <- settings_df(
     discrete_distances = c(2, 3)
 )
 
-settings_df <- add_settings_df_rows(
-    settings_df,
+sdf <- add_settings_df_rows(
+    sdf,
     n_solutions = 10,
     dfl = my_distance_metrics,
     continuous_distances = 3,
     discrete_distances = 1
 )
 
-settings_df |> dplyr::select(dplyr::ends_with("dist"))
+sdf
 ```
 
 In rows 1 to 10, only continuous data will always be handled by the first continuous distance metric while discrete data will be handled by the second and third discrete distance metrics.
@@ -229,7 +229,7 @@ This function will return a dataframe containing all the columns in the data lis
 To actually use the matrix during SNF, you'll need to make sure that the number of rows in the weights matrix is the same as the number of rows in your settings matrix.
 
 ```{r}
-settings_df <- settings_df(
+sdf <- settings_df(
     dl,
     n_solutions = 10,
     dfl = my_distance_metrics,
@@ -237,25 +237,25 @@ settings_df <- settings_df(
     discrete_distances = c(2, 3)
 )
 
-settings_df
+sdf
 
 wm <- weights_matrix(
     dl,
-    n_solutions = nrow(settings_df)
+    n_solutions = nrow(sdf)
 )
 
 wm[1:5, ]
 
 solutions_matrix_1 <- batch_snf(
     dl,
-    settings_df,
+    sdf,
     dfl = my_distance_metrics,
     wm = wm
 )
 
 solutions_matrix_2 <- batch_snf(
     dl,
-    settings_df,
+    sdf,
     dfl = my_distance_metrics
 )
 
@@ -271,8 +271,8 @@ You can either replace the 1s with your own weights that you've calculated outsi
 ```{r eval = FALSE}
 wm <- weights_matrix(
     dl,
-    n_solutions = nrow(settings_df),
-    fill = "uniform" # or fill = "exponential"
+    n_solutions = nrow(sdf),
+    weights_fill = "uniform" # or fill = "exponential"
 )
 ```
 

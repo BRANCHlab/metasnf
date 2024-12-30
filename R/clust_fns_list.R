@@ -84,6 +84,7 @@ new_clust_fns_list <- function(cfll) {
 #' @return If cfll has a valid structure for a `clust_fns_list` class object, 
 #'  returns the input unchanged. Otherwise, raises an error.
 validate_clust_fns_list <- function(cfll) {
+    class(cfll) <- setdiff(class(cfll), "clust_fns_list")
     check_cfll_named(cfll)
     check_cfll_unique_names(cfll)
     check_cfll_fns(cfll)

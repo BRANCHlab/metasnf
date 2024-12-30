@@ -22,3 +22,26 @@
     dl <- as_data_list(dll)
     return(dl)
 }
+
+#' Extraction operator for settings data frames
+#'
+#' Enables usage of `[` extraction operator on `settings_df` class objects.
+#'
+#' @param x A `settings_df` class object.
+#' @param i Indices for component extraction.
+#' @param j Indices for component extraction.
+#' @param ... Additional parameters (invalid for settings df extraction).
+#' @return `settings_df` class object of extracted components.
+#' @export
+`[.settings_df` <- function(x, i, j, ...) {
+    extra_args <- list(...)
+    if (length(extra_args) > 0) {
+       metasnf_error(
+           "Incorrect number of dimensions for settings df subsetting."
+       )
+    }
+    sdfl <- NextMethod()
+    validate_settings_df(sdfl)
+    sdf <- as_settings_df(sdfl)
+    return(sdf)
+}

@@ -106,16 +106,28 @@ print.settings_df <- function(x, ...) {
     comp_out <- sub("inc_([^ ]+)", "\\1    ", comp_out)
     comp_out <- gsub("1", cli::col_green(cli::symbol$tick), comp_out)
     comp_out <- gsub("0", cli::col_red(cli::symbol$cross), comp_out)
-    cat(cli::col_silver(idx_out), sep = "\n")
+    if (nrow(x) == 0) {
+        scheme_out <- cli::col_grey("empty")
+        clust_out <- cli::col_grey("empty")
+        hyper_out <- cli::col_grey("empty")
+        dist_out <- cli::col_grey("empty")
+        comp_out <- cli::col_grey("empty")
+    } else {
+        cat(cli::col_silver(idx_out), sep = "\n")
+    }
     cat(cli::col_yellow("SNF hyperparameters:"), hyper_out, sep = "\n")
     cat(cli::col_yellow("SNF scheme:"), scheme_out, sep = "\n")
     cat(cli::col_yellow("Clustering functions:"), clust_out, sep = "\n")
     cat(cli::col_yellow("Distance functions:"), dist_out, sep = "\n")
     cat(cli::col_yellow("Component dropout:"), comp_out, sep = "\n")
     # Message for number of rows not shown 
-    shown_idx <- max(
-        stats::na.omit(as.numeric(strsplit(idx_out, "\\s+")[[1]]))
-    )
+    if (nrow(x) == 0) {
+        shown_idx <- 0
+    } else {
+        shown_idx <- max(
+            stats::na.omit(as.numeric(strsplit(idx_out, "\\s+")[[1]]))
+        )
+    }
     hidden_idx <- nrow(x) - shown_idx
     if (hidden_idx > 0) {
         grammar <- if (hidden_idx > 1) "s.\n" else ".\n"
