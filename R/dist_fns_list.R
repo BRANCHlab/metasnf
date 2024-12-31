@@ -20,6 +20,9 @@
 #'  (euclidean distance for continuous, discrete, and ordinal data and gower
 #'  distance for categorical and mixed data) to the resulting distance metrics
 #'  list.
+#' @param automatic_standard_normalize If TRUE, will automatically use
+#'  standard normalization prior to calculation of any numeric distances. This
+#'  parameter overrides all other distance functions list-related parameters.
 #' @return A distance metrics list object.
 #' @examples
 #' # Using just the base distance metrics  ------------------------------------
@@ -72,35 +75,49 @@ dist_fns_list <- function(cnt_dist_fns = NULL,
                           ord_dist_fns = NULL,
                           cat_dist_fns = NULL,
                           mix_dist_fns = NULL,
+                          automatic_standard_normalize = FALSE,
                           use_default_dist_fns = FALSE) {
-    # Initialize distance metrics list-like object from user-provided functions
-    dfll <- list(
-        "cnt_dist_fns" = cnt_dist_fns,
-        "dsc_dist_fns" = dsc_dist_fns,
-        "ord_dist_fns" = ord_dist_fns,
-        "cat_dist_fns" = cat_dist_fns,
-        "mix_dist_fns" = mix_dist_fns
-    )
-    # Remove NULL elements
-    dfll <- dfll[lengths(dfll) != 0]
-    if (length(dfll) == 0 & !use_default_dist_fns) {
+    if (automatic_standard_normalize) {
         metasnf_alert(
-            "No distance functions specified. Using defaults."
+            "Automatic standard normalization requested.",
+            " All other distance functions list parameters will be ignored."
         )
-        use_default_dist_fns <- TRUE
-    }
-    # Add default metrics if requested `use_default_dist_fns` is TRUE
-    if (use_default_dist_fns) {
-        base_cnt_dist_fns <- list("euclidean_distance" = euclidean_distance)
-        base_dsc_dist_fns <- list("euclidean_distance" = euclidean_distance)
-        base_ord_dist_fns <- list("euclidean_distance" = euclidean_distance)
-        base_cat_dist_fns <- list("gower_distance" = gower_distance)
-        base_mix_dist_fns <- list("gower_distance" = gower_distance)
-        dfll$"cnt_dist_fns" <- c(base_cnt_dist_fns, dfll$"cnt_dist_fns") 
-        dfll$"dsc_dist_fns" <- c(base_dsc_dist_fns, dfll$"dsc_dist_fns")
-        dfll$"ord_dist_fns" <- c(base_ord_dist_fns, dfll$"ord_dist_fns")
-        dfll$"cat_dist_fns" <- c(base_cat_dist_fns, dfll$"cat_dist_fns")
-        dfll$"mix_dist_fns" <- c(base_mix_dist_fns, dfll$"mix_dist_fns")
+        dfll <- list(
+            "cnt_dist_fns" = cnt_dist_fns,
+            "dsc_dist_fns" = dsc_dist_fns,
+            "ord_dist_fns" = ord_dist_fns,
+            "cat_dist_fns" = cat_dist_fns,
+            "mix_dist_fns" = mix_dist_fns
+        )
+    } else {
+        dfll <- list(
+            "cnt_dist_fns" = cnt_dist_fns,
+            "dsc_dist_fns" = dsc_dist_fns,
+            "ord_dist_fns" = ord_dist_fns,
+            "cat_dist_fns" = cat_dist_fns,
+            "mix_dist_fns" = mix_dist_fns
+        )
+        # Remove NULL elements
+        dfll <- dfll[lengths(dfll) != 0]
+        if (length(dfll) == 0 & !use_default_dist_fns) {
+            metasnf_alert(
+                "No distance functions specified. Using defaults."
+            )
+            use_default_dist_fns <- TRUE
+        }
+        # Add default metrics if requested `use_default_dist_fns` is TRUE
+        if (use_default_dist_fns) {
+            base_cnt_fns <- list("euclidean_distance" = euclidean_distance)
+            base_dsc_fns <- list("euclidean_distance" = euclidean_distance)
+            base_ord_fns <- list("euclidean_distance" = euclidean_distance)
+            base_cat_fns <- list("gower_distance" = gower_distance)
+            base_mix_fns <- list("gower_distance" = gower_distance)
+            dfll$"cnt_dist_fns" <- c(base_cnt_fns, dfll$"cnt_dist_fns") 
+            dfll$"dsc_dist_fns" <- c(base_dsc_fns, dfll$"dsc_dist_fns")
+            dfll$"ord_dist_fns" <- c(base_ord_fns, dfll$"ord_dist_fns")
+            dfll$"cat_dist_fns" <- c(base_cat_fns, dfll$"cat_dist_fns")
+            dfll$"mix_dist_fns" <- c(base_mix_fns, dfll$"mix_dist_fns")
+        }
     }
     dfll <- validate_dist_fns_list(dfll)
     dfl <- new_dist_fns_list(dfll)

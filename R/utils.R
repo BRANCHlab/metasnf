@@ -276,22 +276,24 @@ resample <- function(x, ...) {
 #'
 #' @export
 check_similarity_matrices <- function(similarity_matrices) {
-    valid_matrices <- similarity_matrices |>
+    invalid_mats <- similarity_matrices |>
         lapply(
             function(x) {
-                max_along_diags <- diag(x) == max(x)
-                max_diag_pt_5 <- diag(x) == 0.5
-                return(max_along_diags & max_diag_pt_5)
+                length(unique(diag(x))) != 1 | max(diag(x)) != 0.5
             }
         ) |>
         unlist() |>
-        all()
-    if (!valid_matrices) {
+        which()
+    if (length(invalid_mats) > 0) {
         metasnf_warning(
-            "Generated similarity matrices did not meet validity parameters."
+            length(invalid_mats), "/", length(similarity_matrices),
+            " SNF runs yielded irregularly structured similarity matrices: ",
+            cli::col_red(invalid_mats)
         )
+        return(FALSE)
+    } else {
+        return(TRUE)
     }
-    return(valid_matrices)
 }
 
 #' Adjust the diagonals of a matrix

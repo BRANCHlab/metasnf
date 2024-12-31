@@ -31,8 +31,17 @@
 #' @return A settings data frame with the assigned value(s).
 #' @export
 `[<-.settings_df` <- function(x, i, j, value) {
-    sdfl <- NextMethod()
-    validate_settings_df(sdfl)
-    sdf <- as_settings_df(sdfl)
-    return(sdf)
+    result <- NextMethod()
+    class(result) <- setdiff(class(result), "settings_df")
+    result <- tryCatch(
+        expr = {
+            result <- validate_settings_df(result)
+            result <- new_settings_df(result)
+            result
+        },
+        error = function(e) {
+            result
+        }
+    )
+    return(result)
 }

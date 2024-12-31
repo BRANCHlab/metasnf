@@ -70,10 +70,35 @@ snf_config <- function(dl,
                        ord_dist_fns = NULL,
                        cat_dist_fns = NULL,
                        mix_dist_fns = NULL,
+                       automatic_standard_normalize = FALSE,
                        use_default_dist_fns = FALSE,
                        clust_fns = NULL,
                        use_default_clust_fns = FALSE,
                        weights_fill = "ones") {
+    if (is.null(dfl)) {
+        dfl <- dist_fns_list(
+            cnt_dist_fns = cnt_dist_fns,
+            dsc_dist_fns = dsc_dist_fns,
+            ord_dist_fns = ord_dist_fns,
+            cat_dist_fns = cat_dist_fns,
+            mix_dist_fns = mix_dist_fns,
+            automatic_standard_normalize = automatic_standard_normalize,
+            use_default_dist_fns = use_default_dist_fns
+        )
+    }
+    if (is.null(cfl)) {
+        cfl <- clust_fns_list(
+            clust_fns = clust_fns,
+            use_default_clust_fns = use_default_clust_fns
+        )
+    }
+    if (is.null(wm)) {
+        wm <- weights_matrix(
+            dl = dl,
+            n_solutions = n_solutions,
+            weights_fill = weights_fill
+        )
+    }
     if (is.null(sdf)) {
         sdf <- settings_df(
             dl,
@@ -101,29 +126,6 @@ snf_config <- function(dl,
             snf_input_weights = snf_input_weights,
             snf_domain_weights = snf_domain_weights,
             retry_limit = retry_limit
-        )
-    }
-    if (is.null(dfl)) {
-        dfl <- dist_fns_list(
-            cnt_dist_fns = cnt_dist_fns,
-            dsc_dist_fns = dsc_dist_fns,
-            ord_dist_fns = ord_dist_fns,
-            cat_dist_fns = cat_dist_fns,
-            mix_dist_fns = mix_dist_fns,
-            use_default_dist_fns = use_default_dist_fns
-        )
-    }
-    if (is.null(cfl)) {
-        cfl <- clust_fns_list(
-            clust_fns = clust_fns,
-            use_default_clust_fns = use_default_clust_fns
-        )
-    }
-    if (is.null(wm)) {
-        wm <- weights_matrix(
-            dl = dl,
-            n_solutions = n_solutions,
-            weights_fill = weights_fill
         )
     }
     scl <- list(

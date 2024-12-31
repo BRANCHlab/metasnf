@@ -34,14 +34,23 @@
 #' @return `settings_df` class object of extracted components.
 #' @export
 `[.settings_df` <- function(x, i, j, ...) {
-    extra_args <- list(...)
-    if (length(extra_args) > 0) {
-       metasnf_error(
-           "Incorrect number of dimensions for settings df subsetting."
-       )
-    }
-    sdfl <- NextMethod()
-    validate_settings_df(sdfl)
-    sdf <- as_settings_df(sdfl)
-    return(sdf)
+    #extra_args <- list(...)
+    #if (length(extra_args) > 0) {
+    #   metasnf_error(
+    #       "Incorrect number of dimensions for settings df subsetting."
+    #   )
+    #}
+    result <- NextMethod()
+    class(result) <- setdiff(class(result), "settings_df")
+    result <- tryCatch(
+        expr = {
+            result <- validate_settings_df(result)
+            result <- new_settings_df(result)
+            result
+        },
+        error = function(e) {
+            result
+        }
+    )
+    return(result)
 }

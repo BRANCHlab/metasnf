@@ -409,30 +409,6 @@ add_settings_df_rows <- function(sdf,
             )
         }
     }
-    if (!is.null(max_k)) {
-        if (max_k > 100) {
-            metasnf_warning(
-                "The original SNF paper recommends setting k to either the",
-                " number of patients divided by the expected number of",
-                " clusters or the number of patients divided by 10 when the",
-                " expected number of clusters was unknown. This warning is",
-                " raised anytime a user tries to set a k value smaller than",
-                " 10 or larger than 100."
-            )
-        }
-    }
-    if (!is.null(k_values)) {
-        if (min(k_values) < 10 | max(k_values) > 100) {
-            metasnf_warning(
-                "The original SNF paper recommends setting k to either the",
-                " number of patients divided by the expected number of",
-                " clusters or the number of patients divided by 10 when the",
-                " expected number of clusters was unknown. This warning is",
-                " raised anytime a user tries to set a k value smaller than",
-                " 10 or larger than 100."
-            )
-        }
-    }
     # 2c. Setup k_values to contain values to sample from
     if (is.null(k_values)) {
         if (is.null(min_k)) {

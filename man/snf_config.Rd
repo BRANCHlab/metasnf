@@ -38,6 +38,7 @@ snf_config(
   ord_dist_fns = NULL,
   cat_dist_fns = NULL,
   mix_dist_fns = NULL,
+  automatic_standard_normalize = FALSE,
   use_default_dist_fns = FALSE,
   clust_fns = NULL,
   use_default_clust_fns = FALSE,
@@ -167,6 +168,10 @@ number of times, the function will terminate.}
 \item{cat_dist_fns}{A named list of categorical distance metric functions.}
 
 \item{mix_dist_fns}{A named list of mixed distance metric functions.}
+
+\item{automatic_standard_normalize}{If TRUE, will automatically use
+standard normalization prior to calculation of any numeric distances. This
+parameter overrides all other distance functions list-related parameters.}
 
 \item{use_default_dist_fns}{If TRUE, prepend the base distance metrics
 (euclidean distance for continuous, discrete, and ordinal data and gower

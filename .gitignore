@@ -5,5 +5,4 @@ docs
 shared-code
 *.html
 Session.vim
-sandbox.R
 utest.R
