@@ -2,26 +2,11 @@
 % Please edit documentation in R/batch_snf.R
 \name{snf_scheme}
 \alias{snf_scheme}
-\alias{snf_step}
 \alias{two_step_merge}
 \alias{domain_merge}
 \alias{individual}
 \title{SNF schemes}
 \usage{
-snf_step(
-  dl,
-  scheme,
-  k = 20,
-  alpha = 0.5,
-  t = 20,
-  cnt_dist_fn,
-  dsc_dist_fn,
-  ord_dist_fn,
-  cat_dist_fn,
-  mix_dist_fn,
-  weights_row
-)
-
 two_step_merge(
   dl,
   k = 20,
@@ -64,8 +49,6 @@ individual(
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{scheme}{Which SNF system to use to achieve the final fused network.}
-
 \item{k}{k hyperparameter.}
 
 \item{alpha}{alpha/eta/sigma hyperparameter.}
@@ -89,8 +72,6 @@ These functions manage the way in which input data frames are passed into
 SNF to yield a final fused network.
 }
 \details{
-snf_step: Manages which scheme function should be called.
-
 individual: The "vanilla" scheme - does distance matrix conversions of each input
 data frame separately before a single call to SNF fuses them into the final
 fused network.

@@ -31,11 +31,6 @@
 #' # This will contain the base and user-provided clustering algorithms
 #' my_clustering_algorithm <- function(similarity_matrix) {
 #'     # your code that converts similarity matrix to clusters here...
-#'     # solution_data <- list(
-#'     #     "solution" = solution,
-#'     #     "nclust" = number_of_clusters
-#'     # )
-#'     # return(solution_data)
 #' }
 #'
 #' # Suppress the base algorithms----------------------------------------------
@@ -177,16 +172,26 @@ summarize_clust_fns_list <- function(cfl) {
     return(summary_df)
 }
 
-#' Clustering algorithm: Spectral clustering with eigen-gap heuristic
+#' Built-in clustering algorithms
 #'
-#' Applies spectral clustering to similarity matrix. Number of clusters is based
-#' on the eigen-gap heuristic.
+#' These functions can be used when building a metasnf clustering functions
+#' list. Each function converts a similarity matrix (matrix class object) to a
+#' cluster solution (numeric vector). Note that these functions (or custom
+#' clustering functions) cannot accept number of clusters as a parameter; this
+#' value must be built into the function itself if necessary.
+#'
+#' - spectral_eigen: Spectral clustering where the number of clusters is based
+#'   on the eigen-gap heuristic
+#' - spectral_rot: Spectral clustering where the number of clusters is based
+#'   on the rotation-cost heuristic
+#' - spectral_(C): Spectral clustering for a C-cluster solution.
 #'
 #' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @return solution_data A vector of cluster assignments
+#' @name clust_fns
+NULL
+
+#' @rdname clust_fns
 #' @export
 spectral_eigen <- function(similarity_matrix) {
     estimated_n <- estimate_nclust_given_graph(
@@ -198,21 +203,10 @@ spectral_eigen <- function(similarity_matrix) {
         similarity_matrix,
         nclust_estimate
     )
-    nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
-    return(solution_data)
+    return(solution)
 }
 
-#' Clustering algorithm: Spectral clustering with rotation cost heuristic
-#'
-#' Applies spectral clustering to similarity matrix. Number of clusters is based
-#'  on the rotation cost heuristic.
-#'
-#' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @rdname clust_fns
 #' @export
 spectral_rot <- function(similarity_matrix) {
     estimated_n <- estimate_nclust_given_graph(
@@ -224,22 +218,10 @@ spectral_rot <- function(similarity_matrix) {
         similarity_matrix,
         nclust_estimate
     )
-    nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
-    return(solution_data)
+    return(solution)
 }
 
-#' Clustering algorithm: Spectral clustering with eigen-gap heuristic
-#'
-#' Applies spectral clustering to similarity matrix. Number of clusters is based
-#' on the eigen-gap heuristic. Range of possible cluster solutions is fixed
-#' between 2 and 5 inclusive.
-#'
-#' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @rdname clust_fns
 #' @export
 spectral_eigen_classic <- function(similarity_matrix) {
     estimated_n <- estimate_nclust_given_graph(
@@ -251,21 +233,10 @@ spectral_eigen_classic <- function(similarity_matrix) {
         similarity_matrix,
         nclust_estimate
     )
-    nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
-    return(solution_data)
+    return(solution)
 }
 
-#' Clustering algorithm: Spectral clustering with rotation cost heuristic
-#'
-#' Applies spectral clustering to similarity matrix. Number of clusters is based
-#' on the rotation cost heuristic.
-#'
-#' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @rdname clust_fns
 #' @export
 spectral_rot_classic <- function(similarity_matrix) {
     estimated_n <- estimate_nclust_given_graph(
@@ -277,20 +248,10 @@ spectral_rot_classic <- function(similarity_matrix) {
         similarity_matrix,
         nclust_estimate
     )
-    nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
-    return(solution_data)
+    return(solution)
 }
 
-#' Clustering algorithm: Spectral clustering for a two cluster solution
-#'
-#' Applies spectral clustering to similarity matrix. Seeks two clusters.
-#'
-#' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @rdname clust_fns
 #' @export
 spectral_two <- function(similarity_matrix) {
     number_of_clusters <- 2
@@ -299,25 +260,16 @@ spectral_two <- function(similarity_matrix) {
         number_of_clusters
     )
     nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
         metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 2."
         )
     }
-    return(solution_data)
+    return(solution)
 }
 
-#' Clustering algorithm: Spectral clustering for a three cluster solution
-#'
-#' Applies spectral clustering to similarity matrix. Seeks three clusters.
-#'
-#' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @rdname clust_fns
 #' @export
 spectral_three <- function(similarity_matrix) {
     number_of_clusters <- 3
@@ -326,25 +278,16 @@ spectral_three <- function(similarity_matrix) {
         number_of_clusters
     )
     nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
         metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 3."
         )
     }
-    return(solution_data)
+    return(solution)
 }
 
-#' Clustering algorithm: Spectral clustering for a four cluster solution
-#'
-#' Applies spectral clustering to similarity matrix. Seeks four clusters.
-#'
-#' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @rdname clust_fns
 #' @export
 spectral_four <- function(similarity_matrix) {
     number_of_clusters <- 4
@@ -353,25 +296,16 @@ spectral_four <- function(similarity_matrix) {
         number_of_clusters
     )
     nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
         metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 4."
         )
     }
-    return(solution_data)
+    return(solution)
 }
 
-#' Clustering algorithm: Spectral clustering for a five cluster solution
-#'
-#' Applies spectral clustering to similarity matrix. Seeks five clusters.
-#'
-#' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @rdname clust_fns
 #' @export
 spectral_five <- function(similarity_matrix) {
     number_of_clusters <- 5
@@ -380,25 +314,16 @@ spectral_five <- function(similarity_matrix) {
         number_of_clusters
     )
     nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
         metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 5."
         )
     }
-    return(solution_data)
+    return(solution)
 }
 
-#' Clustering algorithm: Spectral clustering for a six cluster solution
-#'
-#' Applies spectral clustering to similarity matrix. Seeks six clusters.
-#'
-#' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @rdname clust_fns
 #' @export
 spectral_six <- function(similarity_matrix) {
     number_of_clusters <- 6
@@ -407,25 +332,16 @@ spectral_six <- function(similarity_matrix) {
         number_of_clusters
     )
     nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
         metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 6."
         )
     }
-    return(solution_data)
+    return(solution)
 }
 
-#' Clustering algorithm: Spectral clustering for a seven cluster solution
-#'
-#' Applies spectral clustering to similarity matrix. Seeks seven clusters.
-#'
-#' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @rdname clust_fns
 #' @export
 spectral_seven <- function(similarity_matrix) {
     number_of_clusters <- 7
@@ -434,25 +350,16 @@ spectral_seven <- function(similarity_matrix) {
         number_of_clusters
     )
     nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
         metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 7."
         )
     }
-    return(solution_data)
+    return(solution)
 }
 
-#' Clustering algorithm: Spectral clustering for a eight cluster solution
-#'
-#' Applies spectral clustering to similarity matrix. Seeks eight clusters.
-#'
-#' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @rdname clust_fns
 #' @export
 spectral_eight <- function(similarity_matrix) {
     number_of_clusters <- 8
@@ -461,25 +368,16 @@ spectral_eight <- function(similarity_matrix) {
         number_of_clusters
     )
     nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
         metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 8."
         )
     }
-    return(solution_data)
+    return(solution)
 }
 
-#' Clustering algorithm: Spectral clustering for a nine cluster solution
-#'
-#' Applies spectral clustering to similarity matrix. Seeks nine clusters.
-#'
-#' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @rdname clust_fns
 #' @export
 spectral_nine <- function(similarity_matrix) {
     number_of_clusters <- 9
@@ -488,25 +386,16 @@ spectral_nine <- function(similarity_matrix) {
         number_of_clusters
     )
     nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
         metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 9."
         )
     }
-    return(solution_data)
+    return(solution)
 }
 
-#' Clustering algorithm: Spectral clustering for a ten cluster solution
-#'
-#' Applies spectral clustering to similarity matrix. Seeks ten clusters.
-#'
-#' @param similarity_matrix A similarity matrix.
-#'
-#' @return solution_data A list storing cluster assignments ("solution") and
-#' the number of clusters ("nclust").
-#'
+#' @rdname clust_fns
 #' @export
 spectral_ten <- function(similarity_matrix) {
     number_of_clusters <- 10
@@ -515,12 +404,11 @@ spectral_ten <- function(similarity_matrix) {
         number_of_clusters
     )
     nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
     if (number_of_clusters != nclust) {
         metasnf_warning(
             "Spectral clustering provided a solution of size ", nclust,
             " when the number requested was 10."
         )
     }
-    return(solution_data)
+    return(solution)
 }

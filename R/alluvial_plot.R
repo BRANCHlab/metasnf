@@ -43,9 +43,8 @@ alluvial_cluster_plot <- function(cluster_sequence,
     ###########################################################################
     alluvial_df <- data.frame(uid = colnames(similarity_matrix))
     for (algorithm in cluster_sequence) {
-        cluster_output <- algorithm(similarity_matrix)
-        solution <- cluster_output$"solution"
-        nclust <- cluster_output$"nclust"
+        solution <- algorithm(similarity_matrix)
+        nclust <- length(unique(solution))
         solution_col <- data.frame(solution)
         colnames(solution_col) <- paste0("c", nclust)
         alluvial_df <- cbind(alluvial_df, solution_col)

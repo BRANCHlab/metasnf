@@ -116,11 +116,6 @@ batch_row_closure <- function(dl,
         # Reduce data list
         current_dl <- drop_inputs(sdf_row, dl)
         # Extract parameters for snf_step
-        current_snf_scheme <- dplyr::case_when(
-            sdf_row$"snf_scheme" == 1 ~ "individual",
-            sdf_row$"snf_scheme" == 2 ~ "domain",
-            sdf_row$"snf_scheme" == 3 ~ "twostep",
-        )
         k <- sdf_row$"k"
         alpha <- sdf_row$"alpha"
         t <- sdf_row$"t"
@@ -137,7 +132,7 @@ batch_row_closure <- function(dl,
         # Integrate data
         fused_network <- snf_step(
             current_dl,
-            current_snf_scheme,
+            scheme = sdf_row$"snf_scheme",
             k = k,
             alpha = alpha,
             t = t,
@@ -161,9 +156,8 @@ batch_row_closure <- function(dl,
         # cluster_results is a named list containing the cluster solution
         #  (vector of which cluster each patient was assigned to) and the
         #  number of clusters for that solution
-        cluster_results <- clust_alg(fused_network)
-        solution <- cluster_results$"solution"
-        nclust <- cluster_results$"nclust"
+        solution <- clust_alg(fused_network)
+        nclust <- length(unique(solution))
         solutions_matrix_row <- sdf_row
         solutions_matrix_row$"nclust" <- nclust
         solutions_matrix_row[1, rownames(fused_network)] <- solution

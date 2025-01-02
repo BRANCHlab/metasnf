@@ -262,12 +262,6 @@ batch_snf <- function(dl,
         sdf_row <- sdf[i, ]
         weights_row <- wm[i, , drop = FALSE]
         current_dl <- drop_inputs(sdf_row, dl)
-        # Apply the current row's SNF scheme
-        current_snf_scheme <- dplyr::case_when(
-            sdf_row$"snf_scheme" == 1 ~ "individual",
-            sdf_row$"snf_scheme" == 2 ~ "domain",
-            sdf_row$"snf_scheme" == 3 ~ "twostep",
-        )
         k <- sdf_row$"k"
         alpha <- sdf_row$"alpha"
         t <- sdf_row$"t"
@@ -283,8 +277,8 @@ batch_snf <- function(dl,
         mix_dist_fn <- dfl$"mix_dist_fns"[[mix_dist]]
         # Run SNF
         fused_network <- snf_step(
-            current_dl,
-            current_snf_scheme,
+            dl = current_dl,
+            scheme = sdf_row$"snf_scheme",
             k = k,
             alpha = alpha,
             t = t,
@@ -315,9 +309,8 @@ batch_snf <- function(dl,
         # cluster_results is a named list containing the cluster solution
         #  (vector of which cluster each patient was assigned to) and the
         #  number of clusters for that solution
-        cluster_results <- clust_alg(fused_network)
-        solution <- cluster_results$"solution"
-        nclust <- cluster_results$"nclust"
+        solution <- clust_alg(fused_network)
+        nclust <- length(unique(solution))
         # Update the solutions_matrix with the cluster solution and the number
         #  of clusters for that solution
         if (!suppress_clustering) {
@@ -453,41 +446,18 @@ get_dist_matrix <- function(df,
     missing_weights[, ] <- 1
     weights_row_trim <- cbind(weights_row_trim, missing_weights)
     weights_row_trim <- weights_row_trim[, colnames(df)]
-    if (input_type == "continuous") {
-        dist_fn <- cnt_dist_fn
-    } else if (input_type == "discrete") {
-        dist_fn <- dsc_dist_fn
-    } else if (input_type == "ordinal") {
-        dist_fn <- ord_dist_fn
-    } else if (input_type == "categorical") {
-        dist_fn <- cat_dist_fn
-    } else if (input_type == "mixed") {
-        dist_fn <- mix_dist_fn
-    } else {
-        metasnf_error(
-            "The value ", input_type, " is not a valid input type."
-        )
-    }
-    dist_matrix <- dist_fn(df, weights_row_trim)
+    dist_fns <- list(
+        "continuous" = cnt_dist_fn,
+        "discrete" = dsc_dist_fn,
+        "ordinal" = ord_dist_fn,
+        "categorical" = cat_dist_fn,
+        "mixed" = mix_dist_fn
+    )
+    dist_matrix <- dist_fns[[input_type]](df, weights_row_trim)
     return(dist_matrix)
 }
 
-#' SNF schemes
-#'
-#' These functions manage the way in which input data frames are passed into
-#' SNF to yield a final fused network.
-#'
-#' snf_step: Manages which scheme function should be called.
-#'
-#' individual: The "vanilla" scheme - does distance matrix conversions of each input
-#' data frame separately before a single call to SNF fuses them into the final
-#' fused network.
-#'
-#' domain_merge: Given a data list, returns a new data list where all data objects of
-#' a particlar domain have been concatenated.
-#'
-#' two_step_merge: Individual dataframes into individual similarity matrices into one fused
-#' network per domain into one final fused network.
+#' Helper function for using the correct SNF scheme
 #'
 #' @param dl A nested list of input data from `data_list()`.
 #' @param scheme Which SNF system to use to achieve the final fused network.
@@ -500,10 +470,7 @@ get_dist_matrix <- function(df,
 #' @param cat_dist_fn distance metric function for categorical data.
 #' @param mix_dist_fn distance metric function for mixed data.
 #' @param weights_row dataframe row containing feature weights.
-#' @name snf_scheme
-NULL
-
-#' @rdname snf_scheme
+#' @return A fused similarity network (matrix).
 #' @export
 snf_step <- function(dl,
                      scheme,
@@ -516,60 +483,44 @@ snf_step <- function(dl,
                      cat_dist_fn,
                      mix_dist_fn,
                      weights_row) {
-    # The individual scheme creates similarity matrices for each dl element
-    # and pools them all into a single SNF run.
-    #
-    # The domain scheme first runs domain merge on the data list (concatenates
-    # any data of the same domain) and then pools the concatenated data into a
-    # single SNF run.
-    #
-    # The twostep scheme
-    if (scheme %in% c("individual", 1)) {
-        fused_network <- individual(
-            dl,
-            cnt_dist_fn = cnt_dist_fn,
-            dsc_dist_fn = dsc_dist_fn,
-            ord_dist_fn = ord_dist_fn,
-            cat_dist_fn = cat_dist_fn,
-            mix_dist_fn = mix_dist_fn,
-            weights_row = weights_row,
-            k = k,
-            alpha = alpha,
-            t = t
-        )
-    } else if (scheme %in% c("domain", 2)) {
-        fused_network <- domain_merge(
-            dl,
-            cnt_dist_fn = cnt_dist_fn,
-            dsc_dist_fn = dsc_dist_fn,
-            ord_dist_fn = ord_dist_fn,
-            cat_dist_fn = cat_dist_fn,
-            mix_dist_fn = mix_dist_fn,
-            weights_row = weights_row,
-            k = k,
-            alpha = alpha,
-            t = t
-        )
-    } else if (scheme %in% c("twostep", 3)) {
-        fused_network <- two_step_merge(
-            dl,
-            k = k,
-            alpha = alpha,
-            t = t,
-            cnt_dist_fn = cnt_dist_fn,
-            dsc_dist_fn = dsc_dist_fn,
-            ord_dist_fn = ord_dist_fn,
-            cat_dist_fn = cat_dist_fn,
-            mix_dist_fn = mix_dist_fn,
-            weights_row = weights_row
-        )
-    } else {
-        metasnf_error(
-            "The value '", scheme, "' is not a valid snf scheme."
-        )
-    }
+    fns <- list(
+        individual,
+        domain_merge,
+        two_step_merge
+    )
+    fused_network <- fns[[scheme]](
+        dl,
+        k = k,
+        alpha = alpha,
+        t = t,
+        cnt_dist_fn = cnt_dist_fn,
+        dsc_dist_fn = dsc_dist_fn,
+        ord_dist_fn = ord_dist_fn,
+        cat_dist_fn = cat_dist_fn,
+        mix_dist_fn = mix_dist_fn,
+        weights_row = weights_row
+    )
     return(fused_network)
 }
+
+#' SNF schemes
+#'
+#' These functions manage the way in which input data frames are passed into
+#' SNF to yield a final fused network.
+#'
+#' individual: The "vanilla" scheme - does distance matrix conversions of each input
+#' data frame separately before a single call to SNF fuses them into the final
+#' fused network.
+#'
+#' domain_merge: Given a data list, returns a new data list where all data objects of
+#' a particlar domain have been concatenated.
+#'
+#' two_step_merge: Individual dataframes into individual similarity matrices into one fused
+#' network per domain into one final fused network.
+#'
+#' @inheritParams snf_step
+#' @name snf_scheme
+NULL
 
 #' @rdname snf_scheme
 #' @export
