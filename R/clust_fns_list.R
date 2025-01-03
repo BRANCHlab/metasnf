@@ -68,8 +68,8 @@ clust_fns_list <- function(clust_fns = NULL, use_default_clust_fns = FALSE) {
 #' @param cfll A clust_fns_list-like `list` class object.
 #' @return A `clust_fns_list` class object.
 new_clust_fns_list <- function(cfll) {
-    cfll <- structure(cfll, class = c("clust_fns_list", "list"))
-    return(cfll)
+    cfl <- structure(cfll, class = c("clust_fns_list", "list"))
+    return(cfl)
 }
 
 #' Validator for `clust_fns_list` class object

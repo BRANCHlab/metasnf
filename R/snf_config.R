@@ -22,7 +22,6 @@
 #'        different feature in the data list and each row corresponds to a
 #'        different row in the settings data frame.
 #'
-#'
 #' @param sdf A `settings_df` class object. Overrides settings data frame
 #'  related parameters.
 #' @param dfl A `dist_fns_list` class object. Overrides distance functions list

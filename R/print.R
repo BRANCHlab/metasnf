@@ -52,6 +52,37 @@ print.data_list <- function(x, ...) {
     }
 }
 
+#' Print method for class `snf_config`
+#'
+#' Custom formatted print for SNF config
+#'
+#' @param x A `snf_config` class object.
+#' @param ... Other arguments passed to `print` (not used in this function)
+#' @return Function prints to console but does not return any value.
+#' @export
+print.snf_config <- function(x, ...) {
+    cat(cli::col_blue("Settings:\n"))
+    print(x$"settings_df")
+    cat(cli::col_blue("Distance Functions List:\n"))
+    print(x$"dist_fns_list")
+    cat(cli::col_blue("Clustering functions:\n"))
+    print(x$"clust_fns_list")
+    cat(cli::col_blue("Weights:\n"))
+    print(x$"weights_matrix")
+}
+
+#' Print method for class `snf_results`
+#'
+#' Custom formatted print for SNF results
+#'
+#' @param x A `snf_results` class object.
+#' @param ... Other arguments passed to `print` (not used in this function)
+#' @return Function prints to console but does not return any value.
+#' @export
+print.snf_results <- function(x, ...) {
+    NextMethod()
+}
+
 #' Print method for class `settings_df`
 #'
 #' Custom formatted print for settings data frame that outputs information
@@ -62,21 +93,6 @@ print.data_list <- function(x, ...) {
 #' @return Function prints to console but does not return any value.
 #' @export
 print.settings_df <- function(x, ...) {
-    #x <- x |>
-    #    dplyr::select(
-    #        "row_id",
-    #        "alpha",
-    #        "k",
-    #        "t",
-    #        "snf_scheme",
-    #        "clust_alg",
-    #        "cnt_dist",
-    #        "dsc_dist",
-    #        "ord_dist",
-    #        "cat_dist",
-    #        "mix_dist",
-    #        dplyr::starts_with("inc_")
-    #    )
     # Settings DF includes 11 boilerplate columns
     BOILERPLATE_COLS <- 11
     # Number of components is found by subtracting off boilerplate columns
@@ -257,5 +273,104 @@ print.weights_matrix <- function(x, ...) {
     } else if (length(all_output) == 0){
     } else {
         cat(cli::col_green(all_output), sep = "\n")
+    }
+}
+
+#' Print method for class `weights_matrix`
+#'
+#' Custom formatted print for weights matrices that outputs
+#' information about feature weights functions to the console.
+#'
+#' @param x A `weights_matrix` class object.
+#' @param ... Other arguments passed to `print` (not used in this function)
+#' @return Function prints to console but does not return any value.
+#' @export
+print.solutions_df <- function(x, t = FALSE, ...) {
+    cat(
+        cli::col_grey(
+            nrow(x), " cluster solutions of ", ncol(x) - 2, " observations:\n"
+        )
+    )
+    if (t) {
+        assignment_df <- data.frame(t(x))
+        assignment_df$"uid" <- rownames(assignment_df)
+        rownames(assignment_df) <- NULL
+        assignment_df <- dplyr::select(
+            assignment_df,
+            "uid",
+            dplyr::everything()
+        )
+        assignment_df <- tibble::tibble(assignment_df)
+        output <- utils::capture.output(print(assignment_df, width = Inf))
+        output <- output[-c(1:3)]
+        output <- output[c(1:10)]
+        output <- sub("...", "", output)
+        output <- sub("uid      ", "solution:", output)
+        cat(cli::col_green(output[1], "\n"))
+        cat(cli::col_yellow(output[2], "\n"))
+        cat(output[3:length(output)], sep = "\n")
+        displayed_solutions <- length(strsplit(output[1], "\\s+")[[1]]) - 1
+        displayed_observations <- length(output) - 2
+        hidden_observations <- ncol(x) - 2 - displayed_observations
+        hidden_solutions <- nrow(x) - displayed_solutions
+    } else {
+        assignment_df <- tibble::tibble(data.frame(x))
+        output <- utils::capture.output(print(assignment_df))
+        output <- output[-c(1, 3)]
+        output <- output[!grepl("^#", output)]
+        output <- sub("...", "", output)
+        for (sentence in output) {
+            first <- substr(sentence, 1, 8)
+            second <- substr(sentence, 9, 16)
+            rest <- substr(sentence, 17, nchar(sentence))
+            cat(
+                cli::col_green(first),
+                cli::col_yellow(second),
+                rest, "\n", sep = ""
+            )
+        }
+        displayed_observations <- length(strsplit(output[1], "\\s+")[[1]]) - 1
+        displayed_solutions <- length(output) - 1
+        hidden_observations <- ncol(x) - 1 - displayed_observations
+        hidden_solutions <- nrow(x) - displayed_solutions
+    }
+    solution_suffix <- if (hidden_solutions == 1) "" else "s"
+    observation_suffix <- if (hidden_observations == 1) "" else "s"
+    if (hidden_solutions > 0 & hidden_observations > 0) {
+        cat(
+            cli::col_grey(
+                hidden_solutions, " solution",
+                solution_suffix, " and ", hidden_observations,
+                " observation", observation_suffix, " not shown.\n"
+            )
+        )
+    } else if (hidden_solutions > 0) {
+        cat(
+            cli::col_grey(
+                hidden_solutions, " solution",
+                solution_suffix, " not shown.\n"
+            )
+        )
+    } else if (hidden_observations > 0) {
+        cat(
+            cli::col_grey(
+                hidden_observations, " observation",
+                observation_suffix, " not shown.\n"
+            )
+        )
+    }
+    if (t) {
+        cat(
+            cli::col_grey(
+                "Transposed for compactness.\n"
+            )
+        )
+    } else {
+        cat(
+            cli::col_grey(
+                "Use `print(t = TRUE)`",
+                " to display compact form.\n"
+            )
+        )
     }
 }

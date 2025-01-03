@@ -1,3 +1,45 @@
+#' Constructor for `solutions_df` class object
+#'
+#' @param run_snf_results 
+#' @return RETURN
+#' @export
+solutions_df <- function(sol_dfl, smll, sc, dl) {
+    smll <- validate_sim_mats_list(smll)
+    sml <- new_sim_mats_list(smll)
+    attributes(sol_dfl)$"sim_mats_list" <- sml
+    attributes(sol_dfl)$"snf_config" <- sc
+    sol_dfl <- validate_solutions_df(sol_dfl)
+    sol_df <- new_solutions_df(sol_dfl)
+    return(sol_df)
+}
+
+#' Validator for `solutions_df` class object
+#'
+#' @inheritParams solutions_df
+#' @return RETURN
+#' @export
+validate_solutions_df <- function(sol_dfl) {
+    class(sol_dfl)  <- setdiff(class(sol_dfl), "solutions_df")
+    if (!"nclust" %in% colnames(sol_dfl)) {
+        print(colnames(sol_dfl))
+        metasnf_error(
+            "`solutions_df` class object cannot be created without `nclust`",
+            " column."
+        )
+    }
+    return(sol_dfl)
+}
+
+#' Constructor for `solutions_df` class object
+#'
+#' @inheritParams solutions_df 
+#' @return RETURN
+#' @export
+new_solutions_df <- function(sol_dfl) {
+    sol_df <- structure(sol_dfl, class = c("solutions_df", "data.frame"))    
+    return(sol_df)
+}
+
 #' Extend an solutions matrix to include outcome evaluations
 #'
 #' @param solutions_matrix Result of `batch_snf` storing cluster solutions and
