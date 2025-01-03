@@ -285,55 +285,31 @@ print.weights_matrix <- function(x, ...) {
 #' @param ... Other arguments passed to `print` (not used in this function)
 #' @return Function prints to console but does not return any value.
 #' @export
-print.solutions_df <- function(x, t = FALSE, ...) {
+print.solutions_df <- function(x, ...) {
     cat(
         cli::col_grey(
             nrow(x), " cluster solutions of ", ncol(x) - 2, " observations:\n"
         )
     )
-    if (t) {
-        assignment_df <- data.frame(t(x))
-        assignment_df$"uid" <- rownames(assignment_df)
-        rownames(assignment_df) <- NULL
-        assignment_df <- dplyr::select(
-            assignment_df,
-            "uid",
-            dplyr::everything()
+    assignment_df <- tibble::tibble(data.frame(x))
+    output <- utils::capture.output(print(assignment_df))
+    output <- output[-c(1, 3)]
+    output <- output[!grepl("^#", output)]
+    output <- sub("...", "", output)
+    for (sentence in output) {
+        first <- substr(sentence, 1, 8)
+        second <- substr(sentence, 9, 16)
+        rest <- substr(sentence, 17, nchar(sentence))
+        cat(
+            cli::col_green(first),
+            cli::col_yellow(second),
+            rest, "\n", sep = ""
         )
-        assignment_df <- tibble::tibble(assignment_df)
-        output <- utils::capture.output(print(assignment_df, width = Inf))
-        output <- output[-c(1:3)]
-        output <- output[c(1:10)]
-        output <- sub("...", "", output)
-        output <- sub("uid      ", "solution:", output)
-        cat(cli::col_green(output[1], "\n"))
-        cat(cli::col_yellow(output[2], "\n"))
-        cat(output[3:length(output)], sep = "\n")
-        displayed_solutions <- length(strsplit(output[1], "\\s+")[[1]]) - 1
-        displayed_observations <- length(output) - 2
-        hidden_observations <- ncol(x) - 2 - displayed_observations
-        hidden_solutions <- nrow(x) - displayed_solutions
-    } else {
-        assignment_df <- tibble::tibble(data.frame(x))
-        output <- utils::capture.output(print(assignment_df))
-        output <- output[-c(1, 3)]
-        output <- output[!grepl("^#", output)]
-        output <- sub("...", "", output)
-        for (sentence in output) {
-            first <- substr(sentence, 1, 8)
-            second <- substr(sentence, 9, 16)
-            rest <- substr(sentence, 17, nchar(sentence))
-            cat(
-                cli::col_green(first),
-                cli::col_yellow(second),
-                rest, "\n", sep = ""
-            )
-        }
-        displayed_observations <- length(strsplit(output[1], "\\s+")[[1]]) - 1
-        displayed_solutions <- length(output) - 1
-        hidden_observations <- ncol(x) - 1 - displayed_observations
-        hidden_solutions <- nrow(x) - displayed_solutions
     }
+    displayed_observations <- length(strsplit(output[1], "\\s+")[[1]]) - 1
+    displayed_solutions <- length(output) - 1
+    hidden_observations <- ncol(x) - 1 - displayed_observations
+    hidden_solutions <- nrow(x) - displayed_solutions
     solution_suffix <- if (hidden_solutions == 1) "" else "s"
     observation_suffix <- if (hidden_observations == 1) "" else "s"
     if (hidden_solutions > 0 & hidden_observations > 0) {
@@ -359,18 +335,22 @@ print.solutions_df <- function(x, t = FALSE, ...) {
             )
         )
     }
-    if (t) {
-        cat(
-            cli::col_grey(
-                "Transposed for compactness.\n"
-            )
-        )
-    } else {
-        cat(
-            cli::col_grey(
-                "Use `print(t = TRUE)`",
-                " to display compact form.\n"
-            )
-        )
-    }
+}
+
+#' Print method for class `t_solutions_df`
+#'
+#' Custom formatted print for transposed solutions data frame class objects.
+#'
+#' @param x A `t_solutions_df` class object.
+#' @param ... Other arguments passed to `print` (not used in this function)
+#' @return Function prints to console but does not return any value.
+#' @export
+print.t_solutions_df <- function(x, ...) {
+    x <- tibble::tibble(data.frame(x))
+    output <- utils::capture.output(x)
+    output <- output[!grepl("^#", output)]
+    output <- sub("...", "", output)
+    output <- output[!grepl("^<", output)]
+    cat(cli::col_blue(output[1]), "\n")
+    cat(output[-1], sep = "\n")
 }

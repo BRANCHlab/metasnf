@@ -6,8 +6,11 @@
 \usage{
 new_sim_mats_list(smll)
 }
+\arguments{
+\item{smll}{A similarity matrix list-like object.}
+}
 \value{
-RETURN
+A \code{similarity_matrix_list} class object.
 }
 \description{
 Constructor for \code{similarity_matrix_list} class object

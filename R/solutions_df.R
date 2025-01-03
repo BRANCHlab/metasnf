@@ -1,7 +1,12 @@
 #' Constructor for `solutions_df` class object
 #'
-#' @param run_snf_results 
-#' @return RETURN
+#' @param sol_dfl A solutions data frame-like object to be validated and
+#'  converted into a solutions data frame.
+#' @param smll A similarity matrix list-like object to be validated and used
+#'  to construct a solutions data frame.
+#' @param sc An `snf_config` object used to construct a solutions data frame.
+#' @param dl An `data_list` object used to construct a solutions data frame.
+#' @return A solutions data frame (`solutions_df` class object).
 #' @export
 solutions_df <- function(sol_dfl, smll, sc, dl) {
     smll <- validate_sim_mats_list(smll)

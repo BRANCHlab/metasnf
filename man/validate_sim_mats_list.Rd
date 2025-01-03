@@ -6,8 +6,12 @@
 \usage{
 validate_sim_mats_list(smll)
 }
+\arguments{
+\item{smll}{A similarity matrix list-like object.}
+}
 \value{
-RETURN
+If smll has a valid structure for class \code{similarity_matrix_list},
+returns smll. Otherwise, raises an error.
 }
 \description{
 Validator for \code{similarity_matrix_list} class object

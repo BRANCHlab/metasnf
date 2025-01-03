@@ -54,3 +54,24 @@
     )
     return(result)
 }
+
+#' Extraction operator for SNF config
+#'
+#' Enables usage of `[` extraction operator on `snf_config` class objects.
+#'
+#' @param x A `snf_config` class object.
+#' @param i Indices for component extraction.
+#' @param ... Additional parameters (invalid for snf_config extraction).
+#' @return `snf_config` class object of extracted components.
+#' @export
+`[.snf_config` <- function(x, i, ...) {
+    extra_args <- list(...)
+    if (length(extra_args) > 0) {
+       metasnf_error(
+           "Incorrect number of dimensions for SNF config subsetting."
+       )
+    }
+    x$"settings_df" <- x$"settings_df"[i, ]
+    x$"wm" <- x$"weights_matrix"[i, ]
+    x
+}

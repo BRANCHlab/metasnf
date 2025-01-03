@@ -6,9 +6,9 @@
 #' a broad space of post-SNF cluster solutions.
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#' @param sdf A data.frame where each row completely defines an SNF
-#'  pipeline transforming individual input dataframes into a final cluster
-#'  solution. See ?settings_df or
+#' @param sc An `snf_config` class object which stores all sets of
+#'  hyperparameters used to transform data in dl into a cluster solutions. See
+#'  `?settings_df` or
 #'  https://branchlab.github.io/metasnf/articles/settings_df.html for more
 #'  details.
 #' @param processes Specify number of processes used to complete SNF iterations
@@ -26,7 +26,6 @@
 #'  of similarity matrices for each row in the solutions_matrix. Default FALSE.
 #' @param sim_mats_dir If specified, this directory will be used to
 #'  save all generated similarity matrices.
-#' @param verbose If TRUE, output progress to console.
 #' @return By default, returns a solutions matrix (class "data.frame"), a 
 #'  a data frame containing one row for every row of the provided settings
 #'  matrix, all the original columns of that settings matrix, and new columns
@@ -134,7 +133,6 @@ run_snf <- function(i, dl, sc, return_sim_mats, sim_mats_dir, p) {
 #' Check if SNF config has valid structure
 #'
 #' @keywords internal
-#' @inheritParams batch_snf
 #' @param sc An `snf_config` class object. 
 #' @return Doesn't return any value. Raises error if snf_config is not an
 #'  `snf_config` class object.
@@ -197,25 +195,15 @@ check_compatible_sdf_cfl <- function(sdf, cfl) {
 #'
 #' @keywords internal
 #' @param sdf A `settings_df` class object. 
-#' @param wm A `weights_matrix` class object. 
+#' @param dfl A `dist_fns_list` class object. 
 #' @return Doesn't return any value. Raises error if sdf calls for a distance
 #'  function outside the range of dfl.
 check_compatible_sdf_dfl <- function(sdf, dfl) {
-    valid_cnt <- max(config$"settings_df"$"cnt_dist") <= length(
-        config$"dist_fns_list"$"cnt_dist_fns"
-    )
-    valid_dsc <- max(config$"settings_df"$"dsc_dist") <= length(
-        config$"dist_fns_list"$"dsc_dist_fns"
-    )
-    valid_ord <- max(config$"settings_df"$"ord_dist") <= length(
-        config$"dist_fns_list"$"ord_dist_fns"
-    )
-    valid_cat <- max(config$"settings_df"$"cat_dist") <= length(
-        config$"dist_fns_list"$"cat_dist_fns"
-    )
-    valid_mix <- max(config$"settings_df"$"mix_dist") <= length(
-        config$"dist_fns_list"$"mix_dist_fns"
-    )
+    valid_cnt <- max(sdf$"cnt_dist") <= length(dfl$"cnt_dist_fns")
+    valid_dsc <- max(sdf$"dsc_dist") <= length(dfl$"dsc_dist_fns")
+    valid_ord <- max(sdf$"ord_dist") <= length(dfl$"ord_dist_fns")
+    valid_cat <- max(sdf$"cat_dist") <= length(dfl$"cat_dist_fns")
+    valid_mix <- max(sdf$"mix_dist") <= length(dfl$"mix_dist_fns")
     valid_dist <- all(valid_cnt, valid_dsc, valid_ord, valid_cat, valid_mix)
     if (!valid_dist) {
         metasnf_error(

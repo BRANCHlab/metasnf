@@ -9,7 +9,7 @@ check_compatible_sdf_dfl(sdf, dfl)
 \arguments{
 \item{sdf}{A \code{settings_df} class object.}
 
-\item{wm}{A \code{weights_matrix} class object.}
+\item{dfl}{A \code{dist_fns_list} class object.}
 }
 \value{
 Doesn't return any value. Raises error if sdf calls for a distance

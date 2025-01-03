@@ -2,39 +2,22 @@
 % Please edit documentation in R/nmi.R
 \name{batch_nmi}
 \alias{batch_nmi}
-\title{Calculate feature NMIs for a data list and a derived solutions_matrix}
+\title{Calculate feature NMIs for a data list and a derived sol_df}
 \usage{
 batch_nmi(
   dl,
-  solutions_matrix,
-  cfl = NULL,
-  dfl = NULL,
-  automatic_standard_normalize = FALSE,
+  sol_df,
   transpose = TRUE,
   ignore_inclusions = TRUE,
   verbose = FALSE
 )
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{data_list()}.
-Use the same value as was used in the original call to \code{batch_snf()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{solutions_matrix}{Result of \code{batch_snf} storing cluster solutions and
+\item{sol_df}{Result of \code{batch_snf} storing cluster solutions and
 the settings that were used to generate them. Use the same value as was used
 in the original call to \code{batch_snf()}.}
-
-\item{cfl}{List of custom clustering algorithms to apply
-to the final fused network. See ?clust_fns_list. Use the same
-value as was used in the original call to \code{batch_snf()}.}
-
-\item{dfl}{An optional nested list containing which
-distance metric function should be used for the various feature types
-(continuous, discrete, ordinal, categorical, and mixed). Use the same value
-as was used in the original call to \code{batch_snf()}.}
-
-\item{automatic_standard_normalize}{If TRUE, will automatically apply
-standard normalization prior to calculation of any distance matrices. Use
-the same value as was used in the original call to \code{batch_snf()}.}
 
 \item{transpose}{If TRUE, will transpose the output dataframe.}
 
@@ -51,5 +34,5 @@ solutions matrix. Populated values show the calculated NMI score for each
 feature-solution combination.
 }
 \description{
-Calculate feature NMIs for a data list and a derived solutions_matrix
+Calculate feature NMIs for a data list and a derived sol_df
 }

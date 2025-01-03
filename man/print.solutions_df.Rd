@@ -4,7 +4,7 @@
 \alias{print.solutions_df}
 \title{Print method for class \code{weights_matrix}}
 \usage{
-\method{print}{solutions_df}(x, t = FALSE, ...)
+\method{print}{solutions_df}(x, ...)
 }
 \arguments{
 \item{x}{A \code{weights_matrix} class object.}

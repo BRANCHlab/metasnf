@@ -31,7 +31,7 @@ In this vignette, we will highlight the main stability measure options in the me
 ```{r eval = FALSE}
 library(metasnf)
 
-data_list <- data_list(
+my_dl <- data_list(
     list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(cort_sa, "cortical_area", "neuroimaging", "continuous"),
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -41,33 +41,82 @@ data_list <- data_list(
 )
 
 set.seed(42)
-settings_df <- settings_df(
-    data_list,
+config <- snf_config(
+    my_dl,
     n_solutions = 4,
     max_k = 40
 )
 
 # Cluster solutions made using the full data
-solutions_matrix <- batch_snf(data_list, settings_df)
+solutions_matrix <- batch_snf(my_dl, config)
+
+
+
+rownames(solutions_matrix)
+
+solutions_matrix
+
+rownames(t(t(solutions_matrix)))
+
+z
+
+z[1, ]
+
+all.equal(t(t(solutions_matrix)), solutions_matrix)
+
+print(solutions_matrix)
+
+print(solutions_matrix, t = FALSE)
+
+attributes(solutions_matrix) |> names()
+
+data.frame(solutions_matrix) |>
+    t()
+
+
+    if (t) {
+        assignment_df <- data.frame(t(data.frame(x)))
+        assignment_df$"uid" <- rownames(assignment_df)
+        rownames(assignment_df) <- NULL
+        assignment_df <- dplyr::select(
+            assignment_df,
+            "uid",
+            dplyr::everything()
+        )
+        assignment_df <- tibble::tibble(assignment_df)
+        output <- utils::capture.output(print(assignment_df, width = Inf))
+        output <- output[-c(1:3)]
+        output <- output[c(1:10)]
+        output <- sub("...", "", output)
+        output <- sub("uid      ", "solution:", output)
+        cat(cli::col_green(output[1], "\n"))
+        cat(cli::col_yellow(output[2], "\n"))
+        cat(output[3:length(output)], sep = "\n")
+        displayed_solutions <- length(strsplit(output[1], "\\s+")[[1]]) - 1
+        displayed_observations <- length(output) - 2
+        hidden_observations <- ncol(x) - 2 - displayed_observations
+        hidden_solutions <- nrow(x) - displayed_solutions
+    } else {
+
 ```
 
 To begin start calculating resampling-based stability measures, we'll build subsamples of the data list using the `subsample_data_list` function.
 
 ```{r eval = FALSE}
-data_list_subsamples <- subsample_data_list(
-    data_list,
+my_dl_subsamples <- subsample_dl(
+    my_dl,
     n_subsamples = 100,
     subsample_fraction = 0.85
 )
 ```
 
-`data_list_subsamples` contains a list of 100 subsamples of the full data list.
+`my_dl_subsamples` contains a list of 100 subsamples of the full data list.
 Each variation only has a random 85% of the original observations.
 
 ```{r eval = FALSE}
 batch_subsample_results <- batch_snf_subsamples(
-    data_list_subsamples,
-    settings_df
+    my_dl_subsamples,
+    config
 )
 ```
 
@@ -140,7 +189,7 @@ Or as a heatmap:
 # cluster membership
 cocluster_heatmap(
     cocluster_dfs[[1]],
-    dl = data_list,
+    dl = my_dl,
     top_hm = list(
         "Income" = "household_income",
         "Pubertal Status" = "pubertal_status"

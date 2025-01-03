@@ -1,70 +1,36 @@
-#' Calculate feature NMIs for a data list and a derived solutions_matrix
+#' Calculate feature NMIs for a data list and a derived sol_df
 #'
-#' @param dl A nested list of input data from `data_list()`.
-#' Use the same value as was used in the original call to `batch_snf()`.
-#'
-#' @param solutions_matrix Result of `batch_snf` storing cluster solutions and
-#' the settings that were used to generate them. Use the same value as was used
-#' in the original call to `batch_snf()`.
-#'
-#' @param cfl List of custom clustering algorithms to apply
-#' to the final fused network. See ?clust_fns_list. Use the same
-#' value as was used in the original call to `batch_snf()`.
-#'
-#' @param dfl An optional nested list containing which
-#' distance metric function should be used for the various feature types
-#' (continuous, discrete, ordinal, categorical, and mixed). Use the same value
-#' as was used in the original call to `batch_snf()`.
-#'
-#' @param automatic_standard_normalize If TRUE, will automatically apply
-#' standard normalization prior to calculation of any distance matrices. Use
-#' the same value as was used in the original call to `batch_snf()`.
-#'
+#' @inheritParams batch_snf
+#' @param sol_df Result of `batch_snf` storing cluster solutions and
+#'  the settings that were used to generate them. Use the same value as was used
+#'  in the original call to `batch_snf()`.
 #' @param transpose If TRUE, will transpose the output dataframe.
-#'
 #' @param ignore_inclusions If TRUE, will ignore the inclusion columns in the
-#' solutions matrix and calculate NMIs for all features. If FALSE, will give
-#' NAs for features that were dropped on a given settings_df row.
-#'
+#'  solutions matrix and calculate NMIs for all features. If FALSE, will give
+#'  NAs for features that were dropped on a given settings_df row.
 #' @param verbose If TRUE, output progress to console.
-#'
 #' @return A "data.frame" class object containing one row for every feature
-#' in the provided data list and one column for every solution in the provided
-#' solutions matrix. Populated values show the calculated NMI score for each
-#' feature-solution combination.
+#'  in the provided data list and one column for every solution in the provided
+#'  solutions matrix. Populated values show the calculated NMI score for each
+#'  feature-solution combination.
 #'
 #' @export
 batch_nmi <- function(dl,
-                      solutions_matrix,
-                      cfl = NULL,
-                      dfl = NULL,
-                      automatic_standard_normalize = FALSE,
+                      sol_df,
                       transpose = TRUE,
                       ignore_inclusions = TRUE,
                       verbose = FALSE) {
-    ###########################################################################
-    # Dataframe storing all the features in the data list
-    ###########################################################################
-    dl_df <- as.data.frame(dl)
-    ###########################################################################
-    # Extracting features in the data list
-    ###########################################################################
-    features <- colnames(dl_df[-1])
-    ###########################################################################
-    # Extracting settings used to generate the solutions matrix. These will be
-    # used to generate the new solutions based on the solo features.
-    ###########################################################################
-    settings_df <- no_subs(solutions_matrix)
-    class(settings_df) <- c("settings_df", "data.frame")
+    # Features to calculate NMIs for
+    features <- attributes(dl)$"features"
+    # Settings used to generate the solutions data frame
+    sc <- attributes(sol_df)$"snf_config"
     ###########################################################################
     # nmi_df will store all the NMIs for each feature
-    ###########################################################################
-    nmi_df <- solutions_matrix[, "row_id", drop = FALSE]
+    nmi_df <- sol_df[, "solution", drop = FALSE]
     ###########################################################################
     # If ignore_inclusions is TRUE, all inclusion columns will be set to 1
-    ###########################################################################
     if (ignore_inclusions) {
-        settings_df <- settings_df |>
+        sc$"settings_df" <- sc$"settings_df" |>
             dplyr::mutate(
                 dplyr::across(
                     dplyr::starts_with("inc_"), ~ 1
@@ -73,7 +39,6 @@ batch_nmi <- function(dl,
     }
     ###########################################################################
     # Loop through each feature
-    ###########################################################################
     for (i in seq_along(features)) {
         feature <- features[i]
         if (verbose) {
@@ -85,7 +50,6 @@ batch_nmi <- function(dl,
         }
         #######################################################################
         # Reduced data list containing only the current feature
-        #######################################################################
         feature_dl <- lapply(
             dl,
             function(component) {
@@ -105,47 +69,39 @@ batch_nmi <- function(dl,
         )
         #######################################################################
         # Stripping away other inclusion columns from settings matrix
-        #######################################################################
         feature_dl <- feature_dl[!sapply(feature_dl, is.null)]
+        feature_dl <- as_data_list(feature_dl)
+        browser()
         inc_this_data_type <- paste0("inc_", feature_dl[[1]]$"name")
-        inc_columns <- startsWith(colnames(settings_df), "inc_")
-        is_this_inc <- colnames(settings_df) == inc_this_data_type
+        inc_columns <- startsWith(colnames(sc$"settings_df"), "inc_")
+        is_this_inc <- colnames(sc$"settings_df") == inc_this_data_type
         keep_cols <- is_this_inc | !inc_columns
-        feature_settings_df <- settings_df[, keep_cols]
+        feature_settings_df <- sc$"settings_df"[, keep_cols]
         #######################################################################
         # Vector storing this feature's NMIs
-        #######################################################################
         feature_nmis <- c()
         #######################################################################
         # Loop through the settings matrix and run solo-feature SNFs
-        #######################################################################
         for (j in seq_len(nrow(feature_settings_df))) {
             this_settings_df <- data.frame(feature_settings_df[j, ])
             this_inclusion <- this_settings_df[, inc_this_data_type]
             if (!ignore_inclusions && this_inclusion == 0) {
                 ###############################################################
                 # If feature is dropped and inc not ignored, the NMI is NA
-                ###############################################################
                 feature_nmis <- c(feature_nmis, NA)
             } else {
                 ###############################################################
                 # Running SNF
-                ###############################################################
                 # Aliasing to avoiding excess column length
-                asn <- automatic_standard_normalize
-                this_solutions_matrix <- batch_snf(
+                this_sol_df <- batch_snf(
                     dl = feature_dl,
-                    sdf = as_settings_df(this_settings_df),
-                    cfl = cfl,
-                    dfl = dfl,
-                    automatic_standard_normalize = asn,
-                    verbose = FALSE
+                    sc = as_settings_df(this_settings_df)
                 )
                 ###############################################################
                 # Inner join to ensure consistent subject order
                 ###############################################################
-                solo_solution <- get_cluster_df(this_solutions_matrix)
-                full_solution <- get_cluster_df(solutions_matrix[j, ])
+                solo_solution <- get_cluster_df(this_sol_df)
+                full_solution <- get_cluster_df(sol_df[j, ])
                 colnames(solo_solution) <- c("uid", "solo_cluster")
                 joint_solution <- dplyr::inner_join(
                     solo_solution,

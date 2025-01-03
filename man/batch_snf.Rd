@@ -9,6 +9,12 @@ batch_snf(dl, sc, processes = 1, return_sim_mats = FALSE, sim_mats_dir = NULL)
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
+\item{sc}{An \code{snf_config} class object which stores all sets of
+hyperparameters used to transform data in dl into a cluster solutions. See
+\code{?settings_df} or
+https://branchlab.github.io/metasnf/articles/settings_df.html for more
+details.}
+
 \item{processes}{Specify number of processes used to complete SNF iterations
 \itemize{
 \item \code{1} (default) Sequential processing: function will iterate through the
@@ -28,14 +34,6 @@ of similarity matrices for each row in the solutions_matrix. Default FALSE.}
 
 \item{sim_mats_dir}{If specified, this directory will be used to
 save all generated similarity matrices.}
-
-\item{sdf}{A data.frame where each row completely defines an SNF
-pipeline transforming individual input dataframes into a final cluster
-solution. See ?settings_df or
-https://branchlab.github.io/metasnf/articles/settings_df.html for more
-details.}
-
-\item{verbose}{If TRUE, output progress to console.}
 }
 \value{
 By default, returns a solutions matrix (class "data.frame"), a

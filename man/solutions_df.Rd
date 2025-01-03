@@ -7,10 +7,18 @@
 solutions_df(sol_dfl, smll, sc, dl)
 }
 \arguments{
-\item{run_snf_results}{}
+\item{sol_dfl}{A solutions data frame-like object to be validated and
+converted into a solutions data frame.}
+
+\item{smll}{A similarity matrix list-like object to be validated and used
+to construct a solutions data frame.}
+
+\item{sc}{An \code{snf_config} object used to construct a solutions data frame.}
+
+\item{dl}{An \code{data_list} object used to construct a solutions data frame.}
 }
 \value{
-RETURN
+A solutions data frame (\code{solutions_df} class object).
 }
 \description{
 Constructor for \code{solutions_df} class object

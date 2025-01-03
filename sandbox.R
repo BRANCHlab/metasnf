@@ -13,7 +13,7 @@ dl <- data_list(
 
 config <- snf_config(
     dl,
-    n_solutions = 40,
+    n_solutions = 5,
     cnt_dist_fns = list(
         "siw_euclidean" = siw_euclidean_distance,
         "sew_euclidean" = sew_euclidean_distance
@@ -21,45 +21,38 @@ config <- snf_config(
     use_default_dist_fns = TRUE
 )
 
-config
-
-
-
-
-
-
-
-start <- Sys.time()
 with_progress(
-    sol_df <- batch_snf2(dl, config, return_sim_mats = FALSE, processes = 1)
+    sol_df <- batch_snf(dl, config, return_sim_mats = FALSE, processes = 1)
 )
-print(Sys.time() - start)
 
-data.frame(sol_df)
+devtools::load_all()
+z <- batch_nmi(dl, sol_df)
 
-print(sol_df, t = TRUE)
+feature_dl
 
-class(sol_df)
+paste0("inc_", feature_dl[[1]]$"name")
 
-attributes(sol_df)
 
-tibble::tibble(as.data.frame(sol_df))
+class(config) <- "snf_config"
 
-class(sr)
+nrow(config)
 
-tibble::tibble(income)
+getS3method("nrow", class())
 
-tibble::tibble(sol_df)
+exists("nrow.snf_config")
 
-sr |> attributes()
+is.function(nrow)
 
-attributes(sr)$"sim_mats_list"
+methods("nrow")
 
-class(sr$"solutions_df")
+sloop::s3_dispatch(nrow(config))
 
-#start <- Sys.time()
-#sol_df <- batch_snf(dl, config$"settings_df", return_similarity_matrices = TRUE)
-#print(Sys.time() - start)
+nrow.snf_config(config)
 
-# Printing out snf results / solutions df!
+class(config) <- ""
 
+z |>
+    dlapply(
+        function(x) {
+        }
+    )

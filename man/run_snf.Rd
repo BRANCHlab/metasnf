@@ -11,6 +11,12 @@ run_snf(i, dl, sc, return_sim_mats, sim_mats_dir, p)
 
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
+\item{sc}{An \code{snf_config} class object which stores all sets of
+hyperparameters used to transform data in dl into a cluster solutions. See
+\code{?settings_df} or
+https://branchlab.github.io/metasnf/articles/settings_df.html for more
+details.}
+
 \item{return_sim_mats}{If TRUE, function will return a list where
 the first element is the solutions matrix and the second element is a list
 of similarity matrices for each row in the solutions_matrix. Default FALSE.}

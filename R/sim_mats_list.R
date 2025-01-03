@@ -1,7 +1,8 @@
 #' Validator for `similarity_matrix_list` class object
 #'
-#' @param PARAM1
-#' @return RETURN
+#' @param smll A similarity matrix list-like object.
+#' @return If smll has a valid structure for class `similarity_matrix_list`,
+#'  returns smll. Otherwise, raises an error.
 #' @export
 validate_sim_mats_list <- function(smll) {
     all_null_or_mat <- lapply(
@@ -23,7 +24,7 @@ validate_sim_mats_list <- function(smll) {
 #' Constructor for `similarity_matrix_list` class object
 #'
 #' @inheritParams validate_sim_mats_list
-#' @return RETURN
+#' @return A `similarity_matrix_list` class object.
 #' @export
 new_sim_mats_list <- function(smll) {
     sml <- structure(smll, class = c("sim_mats_list", "list"))

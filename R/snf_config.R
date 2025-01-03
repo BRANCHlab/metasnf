@@ -156,4 +156,6 @@ validate_snf_config <- function(scl) {
 new_snf_config <- function(scl) {
     stopifnot(is.list(scl))
     sc <- structure(scl, class = c("snf_config", "list"))
+    attributes(sc)$"n_solutions" <- nrow(sc$"settings_df")
+    sc
 }
