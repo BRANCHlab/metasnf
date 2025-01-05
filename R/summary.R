@@ -22,7 +22,7 @@ summary.data_list <- function(object, scope = "component", ...) {
             type = unlist(lapply(object, function(x) x$"type")),
             domain = unlist(domains(object)),
             length = unlist(lapply(object, function(x) dim(x$"data")[1])),
-            width = unlist(lapply(object, function(x) dim(x$"data")[2]))
+            width = unlist(lapply(object, function(x) dim(x$"data")[2] - 1))
         )
     } else if (scope == "feature") {
         dl_df <- as.data.frame(object)

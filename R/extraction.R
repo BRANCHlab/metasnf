@@ -12,9 +12,9 @@
 `[.data_list` <- function(x, i, ...) {
     extra_args <- list(...)
     if (length(extra_args) > 0) {
-       metasnf_error(
-           "Incorrect number of dimensions for data list subsetting."
-       )
+        metasnf_error(
+            "Incorrect number of dimensions for data list subsetting."
+        )
     }
     class(x) <- "list"
     dll <- NextMethod()
@@ -67,11 +67,52 @@
 `[.snf_config` <- function(x, i, ...) {
     extra_args <- list(...)
     if (length(extra_args) > 0) {
-       metasnf_error(
-           "Incorrect number of dimensions for SNF config subsetting."
-       )
+        metasnf_error(
+            "Incorrect number of dimensions for SNF config subsetting."
+        )
     }
-    x$"settings_df" <- x$"settings_df"[i, ]
-    x$"wm" <- x$"weights_matrix"[i, ]
+    x$"settings_df" <- x$"settings_df"[i, , drop = FALSE]
+    x$"weights_matrix" <- x$"weights_matrix"[i, , drop = FALSE]
     x
+}
+
+#' Extraction operator for weights matrix
+#'
+#' Enables usage of `[` extraction operator on `weights_matrix` class objects.
+#'
+#' @param x A `weights_matrix` class object.
+#' @param i Indices for component extraction.
+#' @param j Indices for component extraction.
+#' @param ... Additional parameters (invalid for weights_matrix extraction).
+#' @return `weights_matrix` class object of extracted components.
+#' @export
+`[.weights_matrix` <- function(x, i, j, ...) {
+    result <- NextMethod("[")
+    class(result) <- class(x)
+    result
+}
+
+#' Extraction operator for weights matrix
+#'
+#' Enables usage of `[` extraction operator on `weights_matrix` class objects.
+#'
+#' @param x A `weights_matrix` class object.
+#' @param i Indices for component extraction.
+#' @param j Indices for component extraction.
+#' @param ... Additional parameters (invalid for weights_matrix extraction).
+#' @return `weights_matrix` class object of extracted components.
+#' @export
+`[.solutions_df` <- function(x, i, ...) {
+    extra_args <- list(...)
+    if (length(extra_args) > 0) {
+        metasnf_error(
+            "Incorrect number of dimensions for subsetting solutions_df."
+        )
+    }
+    browser()
+    result <- NextMethod("[", , i, ...)
+    class(result) <- class(x)
+    attributes(result) <- attributes(x)
+    attributes(result)$"snf_config" <- attributes(result)$"snf_config"[i]
+    result
 }

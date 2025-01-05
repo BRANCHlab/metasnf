@@ -5,7 +5,7 @@
 \title{Automatically plot features across clusters}
 \usage{
 auto_plot(
-  solutions_matrix_row = NULL,
+  sol_df_row = NULL,
   dl = NULL,
   cluster_df = NULL,
   return_plots = TRUE,
@@ -18,7 +18,7 @@ auto_plot(
 )
 }
 \arguments{
-\item{solutions_matrix_row}{A single row of a solutions matrix.}
+\item{sol_df_row}{A single row of a solutions matrix.}
 
 \item{dl}{A data list containing data to plot.}
 

@@ -4,10 +4,10 @@
 \alias{get_clusters}
 \title{Extract cluster membership vector from one solutions matrix row}
 \usage{
-get_clusters(solutions_matrix_row)
+get_clusters(sol_df_row)
 }
 \arguments{
-\item{solutions_matrix_row}{Output matrix row.}
+\item{sol_df_row}{Output matrix row.}
 }
 \value{
 clusters Vector of assigned clusters.

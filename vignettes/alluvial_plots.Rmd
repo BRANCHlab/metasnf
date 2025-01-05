@@ -25,7 +25,7 @@ First, some data setup just as was done in the previous vignettes.
 library(metasnf)
 
 # Generate data_list
-data_list <- data_list(
+my_dl <- data_list(
     list(
         data = expression_df,
         name = "genes_1_and_2_exp",
@@ -54,24 +54,21 @@ data_list <- data_list(
 )
 
 set.seed(42)
-settings_df <- settings_df(
-    data_list,
+my_sc <- snf_config(
+    my_dl,
     n_solutions = 1,
     max_k = 40
 )
 
-batch_snf_results <- batch_snf(
-    data_list,
-    settings_df,
-    return_similarity_matrices = TRUE
+sol_df <- batch_snf(
+    dl = my_dl,
+    sc = my_sc,
+    return_sim_mats = TRUE
 )
 
-solutions_matrix <- batch_snf_results$"solutions_matrix"
-similarity_matrices <- batch_snf_results$"similarity_matrices"
+sim_mats <- attributes(sol_df)$"sim_mats_list"
 
-similarity_matrix <- similarity_matrices[[1]]
-
-cluster_solution <- get_cluster_solutions(solutions_matrix)$"1"
+similarity_matrix <- sim_mats[[1]]
 ```
 
 Next, assemble a list clustering algorithm functions that cover the range of the number of clusters you'd like to visualize.
@@ -92,7 +89,7 @@ Then, we can either generate an alluvial plot covering our similarity matrix ove
 alluvial_cluster_plot(
     cluster_sequence = cluster_sequence,
     similarity_matrix = similarity_matrix,
-    dl = data_list,
+    dl = my_dl,
     key_outcome = "gender", # the name of the feature of interest
     key_label = "Gender", # how the feature of interest should be displayed
     extra_outcomes = "diagnosis", # more features to plot but not colour by

@@ -5,7 +5,7 @@
 \title{Manhattan plot of feature-meta cluster associaiton p-values}
 \usage{
 mc_manhattan_plot(
-  extended_solutions_matrix,
+  ext_sol_df,
   dl = NULL,
   tl = NULL,
   variable_order = NULL,
@@ -20,7 +20,7 @@ mc_manhattan_plot(
 )
 }
 \arguments{
-\item{extended_solutions_matrix}{A solutions_matrix that contains "_pval"
+\item{ext_sol_df}{A sol_df that contains "_pval"
 columns containing the values to be plotted. This object is the output of
 \code{extend_solutions()}.}
 

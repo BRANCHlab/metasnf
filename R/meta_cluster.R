@@ -3,7 +3,7 @@
 #' Generate matrix of pairwise cluster-solution similarities by Adjusted Rand
 #'  index calculations.
 #'
-#' @param solutions_matrix solutions_matrix containing cluster solutions to
+#' @param sol_df sol_df containing cluster solutions to
 #' calculate pairwise ARIs for.
 #'
 #' @param processes Specify number of processes used to complete calculations
@@ -21,14 +21,14 @@
 #' @return om_aris ARIs between clustering solutions of an solutions matrix
 #'
 #' @export
-calc_aris <- function(solutions_matrix,
+calc_aris <- function(sol_df,
                       processes = 1,
                       verbose = FALSE) {
     ###########################################################################
     # Prepare dataframe containing 1 cluster solution per row
     ###########################################################################
     # Row id and uid columns
-    subjects <- subs(solutions_matrix)
+    subjects <- dplyr::select(sol_df, -"solution", -"nclust")
     # Only subject label cols
     subjects_no_id <- as.matrix(subjects[, 2:length(subjects)])
     # The skeleton of the inter-cluster similarity matrix
@@ -57,8 +57,8 @@ calc_aris <- function(solutions_matrix,
             aris[v1, v2] <- ari
             aris[v2, v1] <- ari
         }
-        colnames(aris) <- solutions_matrix$"row_id"
-        rownames(aris) <- solutions_matrix$"row_id"
+        colnames(aris) <- sol_df$"row_id"
+        rownames(aris) <- sol_df$"row_id"
         if (verbose) {
             cat("100% completed.\n")
         }
@@ -93,8 +93,8 @@ calc_aris <- function(solutions_matrix,
         aris[lower.tri(aris, diag = FALSE)] <- ari_vector
         aris <- t(aris)
         aris[lower.tri(aris)] <- t(aris)[lower.tri(aris)]
-        colnames(aris) <- solutions_matrix$"row_id"
-        rownames(aris) <- solutions_matrix$"row_id"
+        colnames(aris) <- sol_df$"row_id"
+        rownames(aris) <- sol_df$"row_id"
         return(aris)
     }
 }
@@ -116,7 +116,7 @@ calc_aris <- function(solutions_matrix,
 #'
 #' @param order Numeric vector indicating row ordering of settings matrix.
 #'
-#' @param solutions_matrix Output of `batch_snf` containing cluster solutions.
+#' @param sol_df Output of `batch_snf` containing cluster solutions.
 #'
 #' @param filter_fn Optional function to filter the meta-cluster by prior to
 #' maximum average ARI determination. This can be useful if you are explicitly
@@ -131,20 +131,20 @@ calc_aris <- function(solutions_matrix,
 get_representative_solutions <- function(aris,
                                          split_vector,
                                          order,
-                                         solutions_matrix,
+                                         sol_df,
                                          filter_fn = NULL) {
     ###########################################################################
     # Re-sort the solutions matrix based on the aris
     ###########################################################################
     order <- unlist(order)
     aris <- data.frame(aris[order, order])
-    solutions_matrix <- solutions_matrix[order, ]
+    sol_df <- sol_df[order, ]
     ###########################################################################
     # Extract and assign meta cluster labels
     ###########################################################################
-    mc_labels <- label_splits(split_vector, nrow(solutions_matrix))
+    mc_labels <- label_splits(split_vector, nrow(sol_df))
     mcs <- unique(mc_labels)
-    solutions_matrix$"label" <- mc_labels
+    sol_df$"label" <- mc_labels
     aris$"label" <- mc_labels
     ###########################################################################
     # Iterate through the meta clusters and keep the representative solution
@@ -152,7 +152,7 @@ get_representative_solutions <- function(aris,
     rep_solutions <- data.frame()
     for (mc in mcs) {
         # Subset to just those solutions and ARIs within the MC
-        mc_sm <- solutions_matrix[solutions_matrix$"label" == mc, ]
+        mc_sm <- sol_df[sol_df$"label" == mc, ]
         mc_ari <- aris[aris$"label" == mc, ]
         mc_ari$"label" <- NULL
         # The most representative solution based on total ARI within MC

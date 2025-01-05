@@ -90,7 +90,7 @@ income[1:5, ]
 Putting everything in a list will help us get quicker summaries of all the data.
 
 ```{r}
-data <- list(
+df_list <- list(
     anxiety,
     depress,
     cort_t,
@@ -101,10 +101,10 @@ data <- list(
 )
 
 # The number of rows in each dataframe:
-lapply(data, dim)
+lapply(df_list, dim)
 
 # Whether or not each dataframe has missing values:
-lapply(data,
+lapply(df_list,
     function(x) {
         any(is.na(x))
     }
@@ -119,7 +119,7 @@ For now, we'll just examine the simpler complete-case analysis approach by reduc
 This can be made easier using the `get_complete_uids` function.
 
 ```{r}
-complete_uids <- get_complete_uids(data, uid = "unique_id")
+complete_uids <- get_complete_uids(df_list, uid = "unique_id")
 
 print(length(complete_uids))
 
@@ -135,16 +135,16 @@ pubertal <- pubertal[pubertal$"unique_id" %in% complete_uids, ]
 
 ### Generating the data list
 
-The `data_list` structure is a structured list of dataframes (like the one already created), but with some additional metadata about each dataframe.
-It should only contain the input dataframes we want to directly use as inputs for the clustering.
-Out of all the data we have available to us, we may be working in a context where the anxiety and depression data are especially important outcomes, and we want to know if we can find subtypes using the rest of the data which still do a good job of separating out subjects by their anxiety and depression scores.
+The `data_list` class is a structured list of data frames (like the one already created), but with some additional metadata about each data frame.
+It should only contain the data frames we want to directly use as inputs for the clustering.
+Let's say we are working in a context where the anxiety and depression data are especially important outcomes and we want to know if we can find subtypes using the other data which still do a good job of separating out subjects by their anxiety and depression scores.
 
-We'll start by creating a data list that stores our input features.
+We'll start by initializing a data list that stores our input features.
 
 ```{r}
 # Note that you do not need to explicitly name every single named element
 # (data = ..., name = ..., etc.)
-data_list <- data_list(
+input_dl <- data_list(
     list(
         data = cort_t,
         name = "cortical_thickness",
@@ -180,92 +180,127 @@ data_list <- data_list(
 ```
 
 This process removes any observations that did not have complete data across all provided input dataframes.
-If you'd like to keep track of that information, you can set the "return_missing" parameter to `TRUE` and receive a list containing the data_list as well as the removed observations.
-The structure of the data list is a nested list tracking the data, the name of the dataframe, what domain (broader source of information) the data belongs to, and the type of feature stored in the dataframe.
-Options for feature type include "continuous", "discrete", "ordinal", and "categorical".
+The structure of the data list is a nested list tracking the data, the name of the data frame, what domain (broader source of information) the data frame belongs to, and the type of feature stored in that data frame.
+Options for feature type include "continuous", "discrete", "ordinal", "categorical", and "mixed".
 
 The "uid" parameter is the name of the column in the dataframes that uniquely identifies each observation.
 Upon data list creation, the UID will be converted to "uid" for consistency across other functions in the package.
 
-We can get a summary of our constructed `data_list` with the `summarize_dl` function:
+We can get a summary of our constructed `data_list` with the `summary` function:
 
 ```{r}
-summarize_dl(data_list)
+summary(input_dl)
 ```
 
-Each input dataframe now has the same 87 subjects with complete data.
-The width refers to the number of columns in each dataframe, which equals 1 for the UID (uid) column + the number of features in the dataframe.
+Each input data frame now has the same 87 subjects with complete data.
+The width refers to the number of features in each data frame (not including the UID column).
 
 `data_list` now stores all the features we intend on using for the clustering.
 We're interested in knowing if any of the clustering solutions we generate can distinguish children apart based on their anxiety and depression scores.
 To do this, we'll also create a data list storing only features that we'll use for evaluating our cluster solutions and not for the clustering itself.
-We'll refer to this as the "target_list".
+We'll refer to this as the target data list.
 
 ```{r}
-target_list <- data_list(
+target_dl <- data_list(
     list(anxiety, "anxiety", "behaviour", "ordinal"),
     list(depress, "depressed", "behaviour", "ordinal"),
     uid = "unique_id"
 )
 
-summarize_dl(target_list)
+summary(target_dl)
 ```
 
 Note that it is not necessary to make use of a partition of input and out-of-model measures in this way.
-If you'd like to have no target list and instead use every single feature of interest for the clustering, you can stick to just using one data list.
+If you'd like to have no target data list and instead use every single feature of interest for the clustering, you can stick to just using one data list.
 
 ## Defining sets of hyperparameters to use for SNF and clustering
 
-The `settings_df` stores all the information about the settings we'd like to use for each of our SNF runs.
-Calling the `settings_df` function with a specified number of rows will automatically build a randomly populated `settings_df`.
+The SNF config stores all the information about the settings we'd like to use for each of our SNF runs.
+Calling the `snf_config` function with a specified number of rows will automatically build a randomly populated `snf_config` class object.
 
 ```{r}
 set.seed(42)
-sdf <- settings_df(
-    data_list,
+my_sc <- snf_config(
+    dl = input_dl,
     n_solutions = 20,
     min_k = 20,
     max_k = 50
 )
 
-sdf[1:5, ]
+my_sc
 ```
 
-The columns are:
+The SNF config contains multiple parts that all play a role in determining how the data in a data list will be converted into a cluster solution.
 
-- `row_id`: Integer to keep track of which row is which
-- `alpha` - A hyperparameter for SNF (feature that influences the subtyping process)
-- `k` - A hyperparameter for SNF
-- `t` - A hyperparameter for SNF
-- `snf_scheme` - the specific way in which input data gets collapsed into a final fused network (discussed further in the [SNF schemes vignette](https://branchlab.github.io/metasnf/articles/snf_schemes.html))
-- `clust_alg` - Which clustering algorithm will be applied to the final fused network produced by SNF
-- `*_dist` - Which distance metric will be used for the different types of data (discussed further in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html))
-- `inc_*` - binary columns indicating whether or not an input dataframe is included (1) or excluded (0) from the corresponding SNF run (discussed further in the [settings matrix vignette](https://branchlab.github.io/metasnf/articles/settings_df.html))
+### The settings data frame
 
-Without specifying any additional parameters, `settings_df` randomly populates these columns and ensures that no generated rows are identical.
+The first part is the settings data frame:
 
-What's important for now is that the matrix (technically a dataframe in the R environment) contains several rows which each outline a different but reasonable way in which the raw data could be converted into a cluster solution.
-Further customization of the `settings_df` will enable you to access the broadest possible space of reasonable cluster solutions that your data can produce using SNF and ideally get you closer to a generalizable and useful solution for your context.
+```{r}
+my_sc$"settings_df"
+```
+
+The settings data frame stores information about:
+
+- **SNF hyperparameters**: `alpha`, `k`, and `t` hyperparameters that are directly used by the SNF algorithm.
+- **SNF scheme**: the specific way in which input data gets collapsed into a final fused network (discussed further in the [SNF schemes vignette](https://branchlab.github.io/metasnf/articles/snf_schemes.html))
+- **Clustering functions**: Which clustering algorithm will be applied to the final fused network produced by SNF
+- **Distance function**: Which distance metric will be used when converting continuous, discrete, ordinal, categorical, or mixed type data into intermediate distance matrices (discussed further in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html))
+- **Component dropout** - Information on whether or not a particular input data frame in the data list will be in included or excluded from the corresponding SNF run (discussed further in the [settings matrix vignette](https://branchlab.github.io/metasnf/articles/settings_df.html)).
+
+The underlying structure of a settings data frame can be viewed by converting it from a `settings_df` class object into a regular `data.frame` class object:
+
+```{r}
+head(as.data.frame(my_sc$"settings_df"))
+```
+
+Each row of the settings data frame corresponds to a set of hyperparameters for generating a final cluster solution.
+
+Without specifying any additional parameters, the `snf_config` function randomly populates these columns and ensures that no generated rows are identical.
+
+Further customization of the `settings_df` and the other parts of the SNF config will enable you to generate a broader space of cluster solutions from your data and ideally get you closer to finding a more generalizable and useful solution for your context.
 More on `settings_df` customization can be found in the [settings matrix vignette](https://branchlab.github.io/metasnf/articles/settings_df.html).
 
-Setting the optional `seed` parameter (which will affect the seed of your entire R session) ensures that the same settings matrix is generated each time we run the code.
+Setting a seed prior to calling `snf_config()` ensures that the same settings data frame is generated each time we run the code.
 
 While we end up with a random set of settings here, there is nothing wrong with manually altering the settings matrix to suit your needs.
 For example, if you wanted to know how much of a difference one input dataframe made, you could ensure that half of the rows included this input dataframe and the other half didn't.
-You can also add random rows to an already existing dataframe using the `add_settings_df_rows` function (further discussed in the vignette).
+
+### Other parts of the SNF config
+
+There are three other parts to an SNF config object: a distance functions list (`dist_fns_list` class object) that stores distance metric functions, a clustering functions list (`clust_fns_list` class object) that stores clustering algrithm functions, and a weights matrix (`weights_matrix`) class object that stores feature weights.
+
+```{r}
+names(my_sc)
+```
+
+Customizing each of these parts is explained in more detail in separate vignettes:
+
+- [distance functions list](https://branchlab.github.io/metasnf/articles/dist_fns_list.html)
+- [clustering functions list](https://branchlab.github.io/metasnf/articles/clust_fns_list.html)
+- [weights matrix](https://branchlab.github.io/metasnf/articles/weights_matrix.html)
+
+For now, we'll leave them as the default values generated during our `snf_config` call.
 
 ## Running SNF and clustering
 
-The `batch_snf` function integrates the data in the `data_list` using each of the sets of settings contained in the `settings_df`.
-The resulting structure is an `solutions_matrix` which is an extension of the `settings_df` that contains columns specifying which cluster each subject was assigned for the corresponding `settings_df` row.
+The `batch_snf()` function integrates the data in the data list using the settings contained in the SNF config.
+The resulting structure is an `solutions_df` class object, which contains an index column (`solution`), a column tracking the number of clusters in the cluster solution (`nclust`), and columns specifying which cluster each subject was assigned to for each corresponding `settings_df` row.
 
 ```{r}
-solutions_matrix <- batch_snf(data_list, sdf)
+sol_df <- batch_snf(input_dl, my_sc)
 
-colnames(solutions_matrix)[1:30]
+sol_df[1, 1]
+
+# Working on extracting solutions data frame properly
+sol_df[1]
+
+sol_df
+
+attributes(sol_df)
+
 ```
 
-It goes on like this for some time.
 
 Just like that, 20 different cluster solutions have been generated!
 
@@ -273,13 +308,16 @@ In practice, you may end up wanting to create hundreds or thousands of cluster s
 If you have access to a multi-core system, `batch_snf` can be run with parallel processing enabled.
 See `?batch_snf` or the [parallel processing vignette](https://branchlab.github.io/metasnf/articles/parallel_processing.html) for more information.
 
-You can pull the clustering results out of each row using the `get_cluster_solutions` function:
+You can pull the clustering results out of each row in a more convenient, transposed format using the `t()` function:
 
 ```{r}
-cluster_solutions <- get_cluster_solutions(solutions_matrix)
+cluster_solutions <- t(sol_df)
 
-head(cluster_solutions)
+cluster_solutions
 ```
+
+When transposed, the `solutions_df` class object is converted to a `t_solutions_df` class object.
+It is like a regular transposition, but the `solution` and `nclust` columns are dropped.
 
 ## Identifying and visualizing meta clusters
 
@@ -297,14 +335,14 @@ The first step is to calculate the [adjusted Rand index](https://en.wikipedia.or
 This metric tells us how similar the solutions are to each other, thereby allowing us to find clusters of cluster solutions.
 
 ```{r}
-solutions_matrix_aris <- calc_aris(solutions_matrix)
+sol_aris <- calc_aris(sol_df)
 ```
 
 We can visualize the resulting inter-cluster similarities with a heatmap.
 First, call `get_matrix_order` to get a hierarchical clustering-based ordering of the rows in the adjusted rand indices.
 
 ```{r}
-meta_cluster_order <- get_matrix_order(solutions_matrix_aris)
+meta_cluster_order <- get_matrix_order(sol_aris)
 
 # Just a vector of numbers
 meta_cluster_order
@@ -314,7 +352,7 @@ This order can be passed into the `adjusted_rand_index_heatmap` function to get 
 
 ```{r eval = FALSE}
 ari_hm <- adjusted_rand_index_heatmap(
-    solutions_matrix_aris,
+    sol_aris,
     order = meta_cluster_order
 )
 ```
@@ -363,7 +401,7 @@ Clicking on cell boundaries and tracking the row/column indices (printed to the 
 split_vec <- c(2, 5, 12, 17)
 
 ari_mc_hm <- adjusted_rand_index_heatmap(
-    solutions_matrix_aris,
+    sol_aris,
     order = meta_cluster_order,
     split_vector = split_vec
 )
@@ -394,23 +432,31 @@ We start by running the `extend_solutions` function, which will calculate p-valu
 `extend_solutions` also adds summary p-value measures (min, mean, and max) of any features present in the target list.
 
 ```{r}
+
+
+attributes(sol_df[1])
+
+sol_df[1:2, 2:5]
+
+attributes(sol_df)
+
 # Only looking at our out-of-model p-values
-extended_solutions_matrix <- extend_solutions(
-    solutions_matrix,
-    target_dl = target_list
+extended_sol_df <- extend_solutions(
+    sol_df,
+    target_dl = target_dl
 )
 
 # What columns have been added?
-old_cols <- colnames(extended_solutions_matrix) %in% colnames(solutions_matrix)
+old_cols <- colnames(extended_sol_df) %in% colnames(sol_df)
 new_cols <- !old_cols
 
-head(extended_solutions_matrix[, new_cols])
+head(extended_sol_df[, new_cols])
 
 # Re-running to calculate the p-value for every single input and out-of-model
 # feature:
-extended_solutions_matrix <- extend_solutions(
-    solutions_matrix,
-    dl = data_list,
+extended_sol_df <- extend_solutions(
+    sol_df,
+    dl = input_dl,
     target_dl = target_list
 )
 ```
@@ -419,15 +465,15 @@ Functionally, the only difference between the `data_list` and `target_list` argu
 
 ```{r eval = FALSE}
 # Also would work, but without any summary p-values
-extended_solutions_matrix <- extend_solutions(
-    solutions_matrix,
-    dl = c(data_list, target_list)
+extended_sol_df <- extend_solutions(
+    sol_df,
+    dl = c(input_dl, target_list)
 )
 
 # Also would work, but now every feature would be part of the summaries
-extended_solutions_matrix <- extend_solutions(
-    solutions_matrix,
-    target_dl = c(data_list, target_list)
+extended_sol_df <- extend_solutions(
+    sol_df,
+    target_dl = c(input_dl, target_list)
 )
 ```
 
@@ -435,14 +481,14 @@ The summary p-value measures can be suppressed by setting `calculate_summaries =
 
 ### Visualizing feature associations with meta clustering results
 
-This `extended_solutions_matrix` we created can be passed into the `adjusted_rand_index_heatmap` function to easily visualize the level of separation on each of our features for each of our cluster solutions.
+This `extended_sol_df` we created can be passed into the `adjusted_rand_index_heatmap` function to easily visualize the level of separation on each of our features for each of our cluster solutions.
 
 ```{r eval = FALSE}
 annotated_ari_hm <- adjusted_rand_index_heatmap(
-    solutions_matrix_aris,
+    sol_aris,
     order = meta_cluster_order,
     split_vector = split_vec,
-    data = extended_solutions_matrix,
+    data = extended_sol_df,
     top_hm = list(
         "Depression p-value" = "cbcl_depress_r_pval",
         "Anxiety p-value" = "cbcl_anxiety_r_pval",
@@ -453,17 +499,17 @@ annotated_ari_hm <- adjusted_rand_index_heatmap(
     ),
     annotation_colours = list(
         "Depression p-value" = colour_scale(
-            extended_solutions_matrix$"cbcl_depress_r_pval",
+            extended_sol_df$"cbcl_depress_r_pval",
             min_colour = "purple",
             max_colour = "black"
         ),
         "Anxiety p-value" = colour_scale(
-            extended_solutions_matrix$"cbcl_anxiety_r_pval",
+            extended_sol_df$"cbcl_anxiety_r_pval",
             min_colour = "green",
             max_colour = "black"
         ),
         "Overall outcomes p-value" = colour_scale(
-            extended_solutions_matrix$"mean_pval",
+            extended_sol_df$"mean_pval",
             min_colour = "lightblue",
             max_colour = "black"
         )
@@ -493,7 +539,7 @@ The data for the annotations don't necessarily need to come from functions in me
 If you wanted to, for example, highlight the solutions where two very specific observations happened to cluster together, you could easily add that in as another annotation:
 
 ```{r eval = FALSE}
-extended_solutions_matrix2 <- extended_solutions_matrix |>
+extended_sol_df2 <- extended_sol_df |>
     dplyr::mutate(
         key_subjects_cluster_together = dplyr::case_when(
             uid_NDAR_INVLF3TNDUZ == uid_NDAR_INVLDQH8ATK ~ TRUE,
@@ -502,10 +548,10 @@ extended_solutions_matrix2 <- extended_solutions_matrix |>
     )
 
 annotated_ari_hm2 <- adjusted_rand_index_heatmap(
-    solutions_matrix_aris,
+    sol_aris,
     order = meta_cluster_order,
     split_vector = split_vec,
-    data = extended_solutions_matrix2,
+    data = extended_sol_df2,
     top_hm = list(
         "Depression p-value" = "cbcl_depress_r_pval",
         "Anxiety p-value" = "cbcl_anxiety_r_pval",
@@ -516,12 +562,12 @@ annotated_ari_hm2 <- adjusted_rand_index_heatmap(
     ),
     annotation_colours = list(
         "Depression p-value" = colour_scale(
-            extended_solutions_matrix$"cbcl_depress_r_pval",
+            extended_sol_df$"cbcl_depress_r_pval",
             min_colour = "purple",
             max_colour = "black"
         ),
         "Anxiety p-value" = colour_scale(
-            extended_solutions_matrix$"cbcl_anxiety_r_pval",
+            extended_sol_df$"cbcl_anxiety_r_pval",
             min_colour = "purple",
             max_colour = "black"
         ),
@@ -555,15 +601,15 @@ This can be achieved by the `get_representative_solutions` function, which extra
 
 ```{r eval = FALSE}
 rep_solutions <- get_representative_solutions(
-    solutions_matrix_aris,
+    sol_aris,
     split_vector = split_vec,
     order = meta_cluster_order,
-    extended_solutions_matrix
+    extended_sol_df
 )
 
 mc_manhattan <- mc_manhattan_plot(
     rep_solutions,
-    dl = data_list,
+    dl = input_dl,
     target_dl = target_list,
     hide_x_labels = TRUE,
     point_size = 2,
@@ -599,7 +645,7 @@ rep_solutions_no_cort <- dplyr::select(
 
 mc_manhattan2 <- mc_manhattan_plot(
     rep_solutions_no_cort,
-    dl = data_list,
+    dl = input_dl,
     target_dl = target_list,
     point_size = 4,
     threshold = 0.01,
@@ -660,16 +706,16 @@ save_heatmap(
 This heatmap rescales all the columns in the settings_df to have a maximum value of 1.
 The purpose of re-ordering the settings matrix in this way is to see if any associations exist between certain settings values and pairwise cluster solution similarities.
 If there are any particular important settings, you can simply add them into your adjusted rand index heatmap annotations.
-Recall that the `solutions_matrix` (and, by extension, the `extended_solutions_matrix`) is an extension of the settings matrix, so no further data manipulation is needed to add a setting as a heatmap annotation.
+Recall that the `sol_df` (and, by extension, the `extended_sol_df`) is an extension of the settings matrix, so no further data manipulation is needed to add a setting as a heatmap annotation.
 
 Give it a try with the code below:
 
 ```{r eval = FALSE}
 annotated_ari_hm3 <- adjusted_rand_index_heatmap(
-    solutions_matrix_aris,
+    sol_aris,
     order = meta_cluster_order,
     split_vector = c(11, 14),
-    data = extended_solutions_matrix,
+    data = extended_sol_df,
     top_hm = list(
         "Depression p-value" = "cbcl_depress_r_pval",
         "Anxiety p-value" = "cbcl_anxiety_r_pval",
@@ -683,12 +729,12 @@ annotated_ari_hm3 <- adjusted_rand_index_heatmap(
     ),
     annotation_colours = list(
         "Depression p-value" = colour_scale(
-            extended_solutions_matrix$"cbcl_depress_r_pval",
+            extended_sol_df$"cbcl_depress_r_pval",
             min_colour = "purple",
             max_colour = "black"
         ),
         "Anxiety p-value" = colour_scale(
-            extended_solutions_matrix$"cbcl_anxiety_r_pval",
+            extended_sol_df$"cbcl_anxiety_r_pval",
             min_colour = "purple",
             max_colour = "black"
         ),
@@ -709,33 +755,33 @@ These similarity matrices can be collected from the `batch_snf` using the `retur
 
 ```{r}
 batch_snf_results <- batch_snf(
-    data_list,
+    input_dl,
     sdf,
     return_similarity_matrices = TRUE
 )
 
-solutions_matrix <- batch_snf_results$"solutions_matrix"
+sol_df <- batch_snf_results$"sol_df"
 similarity_matrices <- batch_snf_results$"similarity_matrices"
 ```
 
 This time, the output of `batch_snf` is a list.
-The first element of the list is a single solutions_matrix, like what we usually get.
+The first element of the list is a single sol_df, like what we usually get.
 The second element is *yet another list* containing one final fused network (AKA similarity matrix / similarity matrix) per SNF run.
 Using those two lists, we can calculate the above mentioned quality metrics:
 
 ```{r eval = FALSE}
 silhouette_scores <- calculate_silhouettes(
-    solutions_matrix,
+    sol_df,
     similarity_matrices
 )
 
 dunn_indices <- calculate_dunn_indices(
-    solutions_matrix,
+    sol_df,
     similarity_matrices
 )
 
 db_indices <- calculate_db_indices(
-    solutions_matrix,
+    sol_df,
     similarity_matrices
 )
 ```
@@ -769,21 +815,21 @@ The `target_list` contains dataframes what we can examine our clustering results
 
 Just like when generating the initial `data_list`, we need to specify the name of the column in the provided dataframes that is originally being used to uniquely identify the different observations from each other with the `uid` parameter.
 
-We will next extend our `solutions_matrix` with p-values from regressing the `target_list` features onto our generated clusters.
+We will next extend our `sol_df` with p-values from regressing the `target_list` features onto our generated clusters.
 
 ```{r}
-extended_solutions_matrix <- extend_solutions(solutions_matrix, target_list)
+extended_sol_df <- extend_solutions(sol_df, target_list)
 
-colnames(extended_solutions_matrix)[1:25]
+colnames(extended_sol_df)[1:25]
 
 # Looking at the newly added columns
-head(no_subs(extended_solutions_matrix))
+head(no_subs(extended_sol_df))
 ```
 
 If you just want the p-values:
 
 ```{r}
-target_pvals <- get_pvals(extended_solutions_matrix)
+target_pvals <- get_pvals(extended_sol_df)
 
 head(target_pvals)
 ```
@@ -823,7 +869,7 @@ The `metasnf` package comes equipped with a function to do the training/testing 
 
 ```{r}
 # All the subjects present in all dataframes with no NAs
-all_subjects <- data_list[[1]]$"data"$"uid"
+all_subjects <- input_dl[[1]]$"data"$"uid"
 
 # Remove the "uid_" prefix to allow merges with the original data
 all_subjects <- gsub("uid_", "", all_subjects)
@@ -854,7 +900,7 @@ test_anxiety <- anxiety[anxiety$"unique_id" %in% test_subs, ]
 test_depress <- depress[depress$"unique_id" %in% test_subs, ]
 
 # A data list with just training subjects
-train_data_list <- data_list(
+train_input_dl <- data_list(
     list(train_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(train_cort_sa, "cortical_sa", "neuroimaging", "continuous"),
     list(train_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -864,7 +910,7 @@ train_data_list <- data_list(
 )
 
 # A data list with training and testing subjects
-full_data_list <- data_list(
+full_input_dl <- data_list(
     list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -883,34 +929,34 @@ train_target_list <- data_list(
 # Find a clustering solution in your training data
 set.seed(42)
 sdf <- settings_df(
-    train_data_list,
+    train_input_dl,
     n_solutions = 5,
     min_k = 10,
     max_k = 30
 )
 
-train_solutions_matrix <- batch_snf(
-    train_data_list,
+train_sol_df <- batch_snf(
+    train_input_dl,
     sdf
 )
 
-extended_solutions_matrix <- extend_solutions(
-    train_solutions_matrix,
+extended_sol_df <- extend_solutions(
+    train_sol_df,
     train_target_list
 )
 
-extended_solutions_matrix |> colnames()
+extended_sol_df |> colnames()
 
 # The fifth row had the lowest minimum p-value across our outcomes
-lowest_min_pval <- min(extended_solutions_matrix$"min_pval")
-which(extended_solutions_matrix$"min_pval" == lowest_min_pval)
+lowest_min_pval <- min(extended_sol_df$"min_pval")
+which(extended_sol_df$"min_pval" == lowest_min_pval)
 
 # Keep track of your top solution
-top_row <- extended_solutions_matrix[4, ]
+top_row <- extended_sol_df[4, ]
 
 # Use the solutions matrix from the training subjects and the data list from
 # the training and testing subjects to propagate labels to the test subjects
-propagated_labels <- lp_solutions_matrix(top_row, full_data_list)
+propagated_labels <- lp_sol_df(top_row, full_input_dl)
 
 head(propagated_labels)
 tail(propagated_labels)
@@ -919,9 +965,9 @@ tail(propagated_labels)
 You could, if you wanted, see how *all* of your clustering solutions propagate to the test set, but that would mean reusing your test set and removing the protection against overfitting conferred by this procedure.
 
 ```{r}
-propagated_labels_all <- lp_solutions_matrix(
-    extended_solutions_matrix,
-    full_data_list
+propagated_labels_all <- lp_sol_df(
+    extended_sol_df,
+    full_input_dl
 )
 
 head(propagated_labels_all)

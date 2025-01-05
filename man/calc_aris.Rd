@@ -4,10 +4,10 @@
 \alias{calc_aris}
 \title{Meta-cluster calculations}
 \usage{
-calc_aris(solutions_matrix, processes = 1, verbose = FALSE)
+calc_aris(sol_df, processes = 1, verbose = FALSE)
 }
 \arguments{
-\item{solutions_matrix}{solutions_matrix containing cluster solutions to
+\item{sol_df}{sol_df containing cluster solutions to
 calculate pairwise ARIs for.}
 
 \item{processes}{Specify number of processes used to complete calculations

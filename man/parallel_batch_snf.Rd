@@ -37,7 +37,7 @@ save all generated similarity matrices.}
 
 \item{return_similarity_matrices}{If TRUE, function will return a list where
 the first element is the solutions matrix and the second element is a list
-of similarity matrices for each row in the solutions_matrix. Default FALSE.}
+of similarity matrices for each row in the sol_df. Default FALSE.}
 
 \item{processes}{Number of parallel processes used when executing SNF.}
 }

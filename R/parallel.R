@@ -13,7 +13,7 @@
 #'  how to build this.
 #' @param return_similarity_matrices If TRUE, function will return a list where
 #'  the first element is the solutions matrix and the second element is a list
-#'  of similarity matrices for each row in the solutions_matrix. Default FALSE.
+#'  of similarity matrices for each row in the sol_df. Default FALSE.
 #' @param similarity_matrix_dir If specified, this directory will be used to
 #'  save all generated similarity matrices.
 #' @param processes Number of parallel processes used when executing SNF.
@@ -49,14 +49,14 @@ parallel_batch_snf <- function(dl,
     ############################################################################
     future::plan(future::sequential)
     if (return_similarity_matrices) {
-        solutions_matrix_rows <- batch_snf_results |>
+        sol_df_rows <- batch_snf_results |>
             lapply(
                 function(x) {
-                    x$"solutions_matrix_row"
+                    x$"sol_df_row"
                 }
             )
-        solutions_matrix <- data.frame(do.call("rbind", solutions_matrix_rows))
-        solutions_matrix <- numcol_to_numeric(solutions_matrix)
+        sol_df <- data.frame(do.call("rbind", sol_df_rows))
+        sol_df <- numcol_to_numeric(sol_df)
         similarity_matrices <- batch_snf_results |>
             lapply(
                 function(x) {
@@ -64,14 +64,14 @@ parallel_batch_snf <- function(dl,
                 }
             )
         batch_snf_results <- list(
-            "solutions_matrix" = solutions_matrix,
+            "sol_df" = sol_df,
             "similarity_matrices" = similarity_matrices
         )
         return(batch_snf_results)
     } else {
-        solutions_matrix <- data.frame(do.call("rbind", batch_snf_results))
-        solutions_matrix <- numcol_to_numeric(solutions_matrix)
-        return(solutions_matrix)
+        sol_df <- data.frame(do.call("rbind", batch_snf_results))
+        sol_df <- numcol_to_numeric(sol_df)
+        return(sol_df)
     }
 }
 
@@ -90,7 +90,7 @@ parallel_batch_snf <- function(dl,
 #'  how to build this.
 #' @param return_similarity_matrices If TRUE, function will return a list where
 #'  the first element is the solutions matrix and the second element is a list
-#'  of similarity matrices for each row in the solutions_matrix. Default FALSE.
+#'  of similarity matrices for each row in the sol_df. Default FALSE.
 #' @param similarity_matrix_dir If specified, this directory will be used to
 #'  save all generated similarity matrices.
 #' @param prog Progressr function to update parallel processing progress
@@ -158,17 +158,17 @@ batch_row_closure <- function(dl,
         #  number of clusters for that solution
         solution <- clust_alg(fused_network)
         nclust <- length(unique(solution))
-        solutions_matrix_row <- sdf_row
-        solutions_matrix_row$"nclust" <- nclust
-        solutions_matrix_row[1, rownames(fused_network)] <- solution
+        sol_df_row <- sdf_row
+        sol_df_row$"nclust" <- nclust
+        sol_df_row[1, rownames(fused_network)] <- solution
         if (return_similarity_matrices) {
             batch_snf_results <- list(
-                "solutions_matrix_row" = solutions_matrix_row,
+                "sol_df_row" = sol_df_row,
                 "similarity_matrix" = fused_network
             )
             return(batch_snf_results)
         } else {
-            return(solutions_matrix_row)
+            return(sol_df_row)
         }
     }
     return(row_function)

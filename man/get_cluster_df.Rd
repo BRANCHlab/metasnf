@@ -4,10 +4,10 @@
 \alias{get_cluster_df}
 \title{Extract cluster membership information from one solutions matrix row}
 \usage{
-get_cluster_df(solutions_matrix_row)
+get_cluster_df(sol_df_row)
 }
 \arguments{
-\item{solutions_matrix_row}{One row from a solutions matrix.}
+\item{sol_df_row}{One row from a solutions matrix.}
 }
 \value{
 cluster_df dataframe of cluster and uid.

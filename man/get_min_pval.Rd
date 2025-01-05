@@ -4,10 +4,10 @@
 \alias{get_min_pval}
 \title{Get minimum p-value}
 \usage{
-get_min_pval(solutions_matrix_row)
+get_min_pval(sol_df_row)
 }
 \arguments{
-\item{solutions_matrix_row}{row of solutions_matrix object}
+\item{sol_df_row}{row of sol_df object}
 }
 \value{
 min_pval minimum p-value

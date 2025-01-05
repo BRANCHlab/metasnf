@@ -261,18 +261,23 @@ print.weights_matrix <- function(x, ...) {
     all_output <- all_output[-c(1:2)]
     cat(cli::col_grey("Weights defined for ", nrow(x), " cluster solutions."))
     cat("\n")
-    if (length(all_output) > 5) {
+    if (length(all_output) >= 5) {
         for (string in all_output[1:5]) {
             word_vec <- strsplit(string, "\\s+")[[1]]
-            cat(word_vec)
-            cat("\n")
+            cat(word_vec, "\n")
         }
         n_more_fts <- length(all_output) - 5
         grammar <- if (n_more_fts > 1) "s.\n" else ".\n"
-        cat(cli::col_grey("\u2026and ", n_more_fts, " more feature", grammar))
+        if (n_more_fts > 0) {
+            cat(
+                cli::col_grey(
+                    "\u2026and ", n_more_fts, " more feature", grammar
+                )
+            )
+        }
     } else if (length(all_output) == 0){
     } else {
-        cat(cli::col_green(all_output), sep = "\n")
+        cat(all_output, sep = "\n")
     }
 }
 
@@ -295,7 +300,7 @@ print.solutions_df <- function(x, ...) {
     output <- utils::capture.output(print(assignment_df))
     output <- output[-c(1, 3)]
     output <- output[!grepl("^#", output)]
-    output <- sub("...", "", output)
+    output <- sub("..", "", output)
     for (sentence in output) {
         first <- substr(sentence, 1, 8)
         second <- substr(sentence, 9, 16)

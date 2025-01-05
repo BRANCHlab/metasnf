@@ -19,7 +19,7 @@ details.}
 
 \item{return_sim_mats}{If TRUE, function will return a list where
 the first element is the solutions matrix and the second element is a list
-of similarity matrices for each row in the solutions_matrix. Default FALSE.}
+of similarity matrices for each row in the sol_df. Default FALSE.}
 
 \item{sim_mats_dir}{If specified, this directory will be used to
 save all generated similarity matrices.}

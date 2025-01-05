@@ -4,10 +4,10 @@
 \alias{get_mean_pval}
 \title{Get mean p-value}
 \usage{
-get_mean_pval(solutions_matrix_row)
+get_mean_pval(sol_df_row)
 }
 \arguments{
-\item{solutions_matrix_row}{row of solutions_matrix object}
+\item{sol_df_row}{row of sol_df object}
 }
 \value{
 mean_pval mean p-value

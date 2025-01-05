@@ -4,10 +4,10 @@
 \alias{calculate_db_indices}
 \title{Calculate Davies-Bouldin indices}
 \usage{
-calculate_db_indices(solutions_matrix, similarity_matrices)
+calculate_db_indices(sol_df, similarity_matrices)
 }
 \arguments{
-\item{solutions_matrix}{A solutions_matrix (see ?batch_snf)}
+\item{sol_df}{A sol_df (see ?batch_snf)}
 
 \item{similarity_matrices}{A list of similarity matrices (see ?batch_snf)}
 }
@@ -16,7 +16,7 @@ davies_bouldin_indices A vector of Davies-Bouldin indices for each
 cluster solution.
 }
 \description{
-Given a solutions_matrix and a list of similarity_matrices (or a single
-similarity_matrix if the solutions_matrix has only 1 row), return a vector of
+Given a sol_df and a list of similarity_matrices (or a single
+similarity_matrix if the sol_df has only 1 row), return a vector of
 Davies-Bouldin indices
 }

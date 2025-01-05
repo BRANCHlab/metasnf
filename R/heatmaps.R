@@ -86,7 +86,6 @@ similarity_matrix_heatmap <- function(similarity_matrix,
     )
     ###########################################################################
     # Sort the matrix and any other provided data
-    ###########################################################################
     # The order can come from the following sources:
     #  - nowhere (reorder by similarity?)
     #  - cluster_solution (just sort by cluster_solution)
@@ -95,7 +94,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
         # Order was not provided
         if (!is.null(cluster_solution)) {
             # Cluster solution was provided
-            order <- sort(cluster_solution, index.return = TRUE)$"ix"
+            order <- sort(cluster_solution[, 2], index.return = TRUE)$"ix"
             message("Sorting by cluster solution.")
         } else {
             # Neither order nor cluster solution was provided

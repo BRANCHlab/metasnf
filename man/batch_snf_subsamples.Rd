@@ -38,7 +38,7 @@ cores will be used.
 
 \item{return_sim_mats}{If TRUE, function will return a list where
 the first element is the solutions matrix and the second element is a list
-of similarity matrices for each row in the solutions_matrix. Default FALSE.}
+of similarity matrices for each row in the sol_df. Default FALSE.}
 
 \item{return_solutions_matrices}{If TRUE, includes the solutions matrices
 corresponding to each subsample in the output.}

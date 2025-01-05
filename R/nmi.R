@@ -20,12 +20,11 @@ batch_nmi <- function(dl,
                       transpose = TRUE,
                       ignore_inclusions = TRUE,
                       verbose = FALSE) {
-    # Features to calculate NMIs for
+    # A vector of features from the data list
     features <- attributes(dl)$"features"
-    # Settings used to generate the solutions data frame
+    # An `snf_config` object used to create sol_df
     sc <- attributes(sol_df)$"snf_config"
-    ###########################################################################
-    # nmi_df will store all the NMIs for each feature
+    # A data frame with the same nrows as sol_df and column name "solution"
     nmi_df <- sol_df[, "solution", drop = FALSE]
     ###########################################################################
     # If ignore_inclusions is TRUE, all inclusion columns will be set to 1
@@ -43,7 +42,7 @@ batch_nmi <- function(dl,
         feature <- features[i]
         if (verbose) {
             cat(
-                "Calculating NMIs for ",
+                "Calculating NMI for ",
                 feature, " (feature ", i, "/", length(features), ")...\n",
                 sep = ""
             )
@@ -71,7 +70,6 @@ batch_nmi <- function(dl,
         # Stripping away other inclusion columns from settings matrix
         feature_dl <- feature_dl[!sapply(feature_dl, is.null)]
         feature_dl <- as_data_list(feature_dl)
-        browser()
         inc_this_data_type <- paste0("inc_", feature_dl[[1]]$"name")
         inc_columns <- startsWith(colnames(sc$"settings_df"), "inc_")
         is_this_inc <- colnames(sc$"settings_df") == inc_this_data_type
@@ -83,47 +81,37 @@ batch_nmi <- function(dl,
         #######################################################################
         # Loop through the settings matrix and run solo-feature SNFs
         for (j in seq_len(nrow(feature_settings_df))) {
-            this_settings_df <- data.frame(feature_settings_df[j, ])
-            this_inclusion <- this_settings_df[, inc_this_data_type]
+            this_sc <- sc[j]
+            this_inclusion <- this_sc$"settings_df"[, inc_this_data_type]
             if (!ignore_inclusions && this_inclusion == 0) {
-                ###############################################################
                 # If feature is dropped and inc not ignored, the NMI is NA
                 feature_nmis <- c(feature_nmis, NA)
             } else {
-                ###############################################################
                 # Running SNF
-                # Aliasing to avoiding excess column length
                 this_sol_df <- batch_snf(
                     dl = feature_dl,
-                    sc = as_settings_df(this_settings_df)
+                    sc = this_sc
                 )
-                ###############################################################
                 # Inner join to ensure consistent subject order
-                ###############################################################
-                solo_solution <- get_cluster_df(this_sol_df)
-                full_solution <- get_cluster_df(sol_df[j, ])
+                solo_solution <- t(this_sol_df)
+                full_solution <- t(sol_df[j, ])
                 colnames(solo_solution) <- c("uid", "solo_cluster")
                 joint_solution <- dplyr::inner_join(
                     solo_solution,
                     full_solution,
                     by = "uid"
                 )
-                ###############################################################
                 # Calculate NMI
-                ###############################################################
                 nmi <- SNFtool::calNMI(
                     joint_solution$"solo_cluster",
-                    joint_solution$"cluster"
+                    joint_solution[, 2]
                 )
-                ###############################################################
                 # Append to this feature's NMI vector
-                ###############################################################
                 feature_nmis <- c(feature_nmis, nmi)
             }
         }
         #######################################################################
         # Combine this feature's NMIs with the overall NMI dataframe
-        #######################################################################
         nmi_df <- data.frame(nmi_df, new_feature = feature_nmis)
         colnames(nmi_df)[ncol(nmi_df)] <- feature
     }

@@ -25,7 +25,7 @@ This vignette walks through usage of `similarity_matrix_heatmap` to visualize th
 library(metasnf)
 
 # Generate data_list
-data_list <- data_list(
+my_dl <- data_list(
     list(
         data = expression_df,
         name = "expression_data",
@@ -59,29 +59,26 @@ data_list <- data_list(
     uid = "patient_id"
 )
 
-# Generate settings_df
 set.seed(42)
-settings_df <- settings_df(
-    data_list,
+my_sc <- snf_config(
+    my_dl,
     n_solutions = 1,
     max_k = 40
 )
 
-# Run SNF and clustering
-batch_snf_results <- batch_snf(
-    data_list,
-    settings_df,
-    return_similarity_matrices = TRUE
+sol_df <- batch_snf(
+    my_dl,
+    my_sc,
+    return_sim_mats = TRUE
 )
 
-solutions_matrix <- batch_snf_results$"solutions_matrix"
-similarity_matrices <- batch_snf_results$"similarity_matrices"
+similarity_matrices <- attributes(sol_df)$"sim_mats_list"
 
 # The first (and only) similarity matrix:
 similarity_matrix <- similarity_matrices[[1]]
 
 # The first (and only) cluster solution:
-cluster_solution <- get_cluster_solutions(solutions_matrix)$"1"
+cluster_solution <- t(sol_df)
 ```
 
 ## Visualize similarity matrices sorted by cluster label
@@ -123,13 +120,12 @@ In addition to that, this package offers some convenient functionality to specif
 In the example below, we make use of data supplied through a data_list.
 
 ```{r eval = FALSE}
-
 annotated_sm_hm <- similarity_matrix_heatmap(
     similarity_matrix = similarity_matrix,
     cluster_solution = cluster_solution,
     scale_diag = "mean",
     log_graph = TRUE,
-    dl = data_list,
+    dl = my_dl,
     left_hm = list(
         "Diagnosis" = "diagnosis"
     ),
@@ -174,8 +170,8 @@ The colours `red3`, `pink1`, etc. are built-in R colours that you can browse by 
 For reference, the code below shows how you would achieve these annotations using standard `ComplexHeatmap` syntax.
 
 ```{r eval = FALSE}
-merged_df <- as.data.frame(data_list)
-order <- sort(cluster_solution, index.return = TRUE)$"ix"
+merged_df <- as.data.frame(my_dl)
+order <- sort(cluster_solution[, 2], index.return = TRUE)$"ix"
 merged_df <- merged_df[order, ]
 
 top_annotations <- ComplexHeatmap::HeatmapAnnotation(
@@ -211,7 +207,6 @@ similarity_matrix_heatmap(
     top_annotation = top_annotations,
     left_annotation = left_annotations
 )
-
 ```
 
 Take a look at the [ComplexHeatmap Complete Reference](https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html) to learn more about what is possible with this package.

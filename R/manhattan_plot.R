@@ -127,7 +127,7 @@ var_manhattan_plot <- function(dl,
 #' `get_representative_solutions()`, returns a Manhattan plot for showing
 #' feature separation across all features in provided data/target lists.
 #'
-#' @param extended_solutions_matrix A solutions_matrix that contains "_pval"
+#' @param ext_sol_df A sol_df that contains "_pval"
 #' columns containing the values to be plotted. This object is the output of
 #' `extend_solutions()`.
 #'
@@ -159,7 +159,7 @@ var_manhattan_plot <- function(dl,
 #' stratified by meta cluster label.
 #'
 #' @export
-mc_manhattan_plot <- function(extended_solutions_matrix,
+mc_manhattan_plot <- function(ext_sol_df,
                               dl = NULL,
                               tl = NULL,
                               variable_order = NULL,
@@ -184,39 +184,39 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
     domain <- ""
     neg_log_pval <- ""
     ###########################################################################
-    # Formatting extended_solutions_matrix as dataframe
+    # Formatting ext_sol_df as dataframe
     ###########################################################################
-    extended_solutions_matrix <- data.frame(extended_solutions_matrix)
+    ext_sol_df <- data.frame(ext_sol_df)
     ###########################################################################
     # Select row_id, label, and p-value related columns only
     ###########################################################################
-    if (!"label" %in% colnames(extended_solutions_matrix)) {
-        extended_solutions_matrix$"label" <- extended_solutions_matrix$"row_id"
+    if (!"label" %in% colnames(ext_sol_df)) {
+        ext_sol_df$"label" <- ext_sol_df$"row_id"
     }
-    extended_solutions_matrix <- extended_solutions_matrix |>
+    ext_sol_df <- ext_sol_df |>
         dplyr::select(
             "row_id",
             "label",
             dplyr::ends_with("_pval")
         )
-    if (ncol(extended_solutions_matrix) == 2) {
+    if (ncol(ext_sol_df) == 2) {
         metasnf_error(
-            "extended_solutions_matrix is missing p-value columns. Did you",
+            "ext_sol_df is missing p-value columns. Did you",
             " provide an unextended solutions matrix instead?"
         )
     }
-    extended_solutions_matrix <- dplyr::select(
-        extended_solutions_matrix,
+    ext_sol_df <- dplyr::select(
+        ext_sol_df,
         -dplyr::contains(c("min_pval", "mean_pval", "max_pval"))
     )
     ###########################################################################
     # Convert row_id and label to factors
     ###########################################################################
-    extended_solutions_matrix$"row_id" <- factor(
-        extended_solutions_matrix$"row_id"
+    ext_sol_df$"row_id" <- factor(
+        ext_sol_df$"row_id"
     )
-    extended_solutions_matrix$"label" <- factor(
-        extended_solutions_matrix$"label"
+    ext_sol_df$"label" <- factor(
+        ext_sol_df$"label"
     )
     ###########################################################################
     # Re-assign names to the data list and target list
@@ -239,9 +239,9 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
     ###########################################################################
     # Columns that end with _pval are truncated by neg_log_pval_thresh
     ###########################################################################
-    var_cols_idx <- endsWith(colnames(extended_solutions_matrix), "_pval")
-    var_cols <- colnames(extended_solutions_matrix)[var_cols_idx]
-    cutoff_var_cols <- extended_solutions_matrix[, var_cols] |>
+    var_cols_idx <- endsWith(colnames(ext_sol_df), "_pval")
+    var_cols <- colnames(ext_sol_df)[var_cols_idx]
+    cutoff_var_cols <- ext_sol_df[, var_cols] |>
         apply(
             MARGIN = 2,
             FUN = function(x) {
@@ -260,8 +260,8 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
     if (dim(cutoff_var_cols)[2] == 1) {
         cutoff_var_cols <- t(cutoff_var_cols)
     }
-    extended_solutions_matrix[, var_cols] <- cutoff_var_cols
-    summary_data <- extended_solutions_matrix |>
+    ext_sol_df[, var_cols] <- cutoff_var_cols
+    summary_data <- ext_sol_df |>
         tidyr::pivot_longer(
             !(c("row_id", "label")),
             names_to = "variable",

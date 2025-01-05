@@ -42,15 +42,15 @@ label_prop <- function(full_fused_network, clusters) {
 
 #' Label propagate cluster solutions to unclustered subjects
 #'
-#' Given a solutions_matrix derived from training subjects and a full_data_list
+#' Given a sol_df derived from training subjects and a full_data_list
 #' containing both training and test subjects, re-run SNF to generate a total
 #' affinity matrix of both train and subjects and use the label propagation
 #' algorithm to assigned predicted clusters to test subjects.
 #'
-#' @param train_solutions_matrix A solutions_matrix derived from the training
+#' @param train_sol_df A sol_df derived from the training
 #' set. The propagation algorithm is slow and should be used for validating a
 #' top or top few meaningful chosen clustering solutions. It is advisable to
-#' use only a small subset of rows from the original training solutions_matrix
+#' use only a small subset of rows from the original training sol_df
 #' for label propagation.
 #'
 #' @param full_dl A data list containing subjects from both the training
@@ -69,7 +69,7 @@ label_prop <- function(full_fused_network, clusters) {
 #' original and propagated clusters.
 #'
 #' @export
-lp_solutions_matrix <- function(train_solutions_matrix,
+lp_sol_df <- function(train_sol_df,
                                 full_dl,
                                 dfl = NULL,
                                 wm = NULL,
@@ -77,7 +77,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     ###########################################################################
     # 1. Reorder data list subjects
     ###########################################################################
-    train_subjects <- colnames(subs(train_solutions_matrix))[-1]
+    train_subjects <- uids(train_sol_df)
     all_subjects <- full_dl[[1]][[1]]$"uid"
     # Quick check to make sure the train subjects are all in the full list
     if (!all(train_subjects %in% all_subjects)) {
@@ -110,12 +110,12 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     if (is.null(wm)) {
         wm <- weights_matrix(
             full_dl,
-            n_solutions = nrow(train_solutions_matrix)
+            n_solutions = nrow(train_sol_df)
         )
     } else {
-        if (nrow(wm) != nrow(train_solutions_matrix)) {
+        if (nrow(wm) != nrow(train_sol_df)) {
             metasnf_error(
-                "Weights_matrix and train_solutions_matrix",
+                "Weights_matrix and train_sol_df",
                 " should have the same number of rows."
             )
         }
@@ -123,15 +123,15 @@ lp_solutions_matrix <- function(train_solutions_matrix,
     ###########################################################################
     ## 3-3. SNF one row at a time
     ###########################################################################
-    for (i in seq_len(nrow(train_solutions_matrix))) {
+    for (i in seq_len(nrow(train_sol_df))) {
         if (verbose) {
             cat(
                 "Processing row ", i, " of ",
-                nrow(train_solutions_matrix), "...\n",
+                nrow(train_sol_df), "...\n",
                 sep = ""
             )
         }
-        current_row <- train_solutions_matrix[i, ]
+        current_row <- train_sol_df[i, ]
         sig <- paste0(current_row$"row_id")
         reduced_dl <- drop_inputs(as_settings_df(current_row), full_dl)
         scheme <- current_row$"snf_scheme"

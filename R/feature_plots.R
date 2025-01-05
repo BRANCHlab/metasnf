@@ -127,7 +127,7 @@ bar_plot <- function(df, feature) {
 #' a data list, this function will return a series of bar and/or
 #' jitter plots based on feature types.
 #'
-#' @param solutions_matrix_row A single row of a solutions matrix.
+#' @param sol_df_row A single row of a solutions matrix.
 #'
 #' @param dl A data list containing data to plot.
 #'
@@ -158,7 +158,7 @@ bar_plot <- function(df, feature) {
 #' format.
 #'
 #' @export
-auto_plot <- function(solutions_matrix_row = NULL,
+auto_plot <- function(sol_df_row = NULL,
                       dl = NULL,
                       cluster_df = NULL,
                       return_plots = TRUE,
@@ -168,11 +168,11 @@ auto_plot <- function(solutions_matrix_row = NULL,
                       bar_width = 6,
                       bar_height = 6,
                       verbose = FALSE) {
-    null_data_count <- is.null(solutions_matrix_row) + is.null(cluster_df)
+    null_data_count <- is.null(sol_df_row) + is.null(cluster_df)
     if (null_data_count != 1) {
         metasnf_error(
             "This function requires cluster membership information to be",
-            " provided through exactly one of the `solutions_matrix_row` or",
+            " provided through exactly one of the `sol_df_row` or",
             " `cluster_df` arguments."
         )
     }
@@ -180,19 +180,19 @@ auto_plot <- function(solutions_matrix_row = NULL,
     # Generating the required cluster dataframe
     ###########################################################################
     if (is.null(cluster_df)) {
-        solutions_matrix_row <- data.frame(solutions_matrix_row[1, ])
-        cluster_df <- get_cluster_df(solutions_matrix_row)
+        sol_df_row <- data.frame(sol_df_row[1, ])
+        cluster_df <- t(sol_df_row)
     }
     ###########################################################################
     # Generating the feature dataframe
     ###########################################################################
     dl_df <- as.data.frame(dl)
     ###########################################################################
-    # Ensure solutions_matrix and dl_df have the same uid column
+    # Ensure sol_df and dl_df have the same uid column
     ###########################################################################
-    solutions_matrix_subjects <- sort(cluster_df$"uid")
+    sol_df_subjects <- sort(cluster_df$"uid")
     dl_subjects <- sort(dl_df$"uid")
-    if (!identical(solutions_matrix_subjects, dl_subjects)) {
+    if (!identical(sol_df_subjects, dl_subjects)) {
         metasnf_error(
             "The UIDs in the provided solutions matrix row and data list must",
             " match."

@@ -1,4 +1,4 @@
-#' Extract cluster membership information from a solutions_matrix
+#' Extract cluster membership information from a sol_df
 #'
 #' This function takes in a solutions matrix and returns a dataframe containing
 #' the cluster assignments for each uid. It is similar to
@@ -7,7 +7,7 @@
 #' matrix with only one row and returns a dataframe with two columns: "cluster"
 #' and "uid" (the UID of the observation).
 #'
-#' @param solutions_matrix A solutions_matrix.
+#' @param sol_df A sol_df.
 #'
 #' @return cluster_solutions A "data.frame" object where each row is an
 #' observation and each column (apart from the uid column) indicates
@@ -15,17 +15,14 @@
 #' solutions matrix row.
 #'
 #' @export
-get_cluster_solutions <- function(solutions_matrix) {
-    class(solutions_matrix) <- "data.frame"
+get_cluster_solutions <- function(sol_df) {
+    class(sol_df) <- "data.frame"
     # Create a skeleton dataframe using just the columns of the solutions
     # matrix containing information about which cluster each patient was
     # assigned to on each SNF run
-    cluster_solutions <- solutions_matrix |>
-        subs() |>
-        t() |>
-        data.frame()
+    cluster_solutions <- t(sol_df)
     # Assign the column names to match the corresponding SNF run
-    colnames(cluster_solutions) <- rownames(solutions_matrix)
+    colnames(cluster_solutions) <- rownames(sol_df)
     # Remove the first row, which just contains the row_id. That info is now
     #  in the column names.
     cluster_solutions <- cluster_solutions[-1, , drop = FALSE]
@@ -49,15 +46,15 @@ get_cluster_solutions <- function(solutions_matrix) {
 #' which takes a solutions matrix with any number of rows and returns a
 #' dataframe indicating the cluster assignments for each of those rows.
 #'
-#' @param solutions_matrix_row One row from a solutions matrix.
+#' @param sol_df_row One row from a solutions matrix.
 #'
 #' @return cluster_df dataframe of cluster and uid.
 #'
 #' @export
-get_cluster_df <- function(solutions_matrix_row) {
-    class(solutions_matrix_row) <- "data.frame"
+get_cluster_df <- function(sol_df_row) {
+    class(sol_df_row) <- "data.frame"
     cluster_df <-
-        subs(solutions_matrix_row) |>
+        uids(sol_df_row) |>
         t() |>
         data.frame()
     cluster_df$id <- rownames(cluster_df)
@@ -79,15 +76,15 @@ get_cluster_df <- function(solutions_matrix_row) {
 #' solutions matrix with any number of rows and returns a dataframe indicating
 #' the cluster assignments for each of those rows.
 #'
-#' @param solutions_matrix_row Output matrix row.
+#' @param sol_df_row Output matrix row.
 #'
 #' @return clusters Vector of assigned clusters.
 #'
 #' @export
-get_clusters <- function(solutions_matrix_row) {
-    class(solutions_matrix_row) <- "data.frame"
+get_clusters <- function(sol_df_row) {
+    class(sol_df_row) <- "data.frame"
     cluster_df <-
-        subs(solutions_matrix_row) |>
+        subs(sol_df_row) |>
         t() |>
         data.frame()
     cluster_df$id <- rownames(cluster_df)

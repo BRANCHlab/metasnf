@@ -4,10 +4,10 @@
 \alias{summarize_pvals}
 \title{Summarize p-value columns of an extended solutions matrix}
 \usage{
-summarize_pvals(extended_solutions_matrix)
+summarize_pvals(ext_sol_df)
 }
 \arguments{
-\item{extended_solutions_matrix}{Result of \code{extend_solutions}}
+\item{ext_sol_df}{Result of \code{extend_solutions}}
 }
 \value{
 The provided extended solutions matrix along with columns for

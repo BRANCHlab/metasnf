@@ -47,37 +47,28 @@ new_solutions_df <- function(sol_dfl) {
 
 #' Extend an solutions matrix to include outcome evaluations
 #'
-#' @param solutions_matrix Result of `batch_snf` storing cluster solutions and
-#' the settings that were used to generate them.
-#'
+#' @param sol_df Result of `batch_snf` storing cluster solutions and
+#'  the settings that were used to generate them.
 #' @param target_dl A data list with features to calculate p-values for.
-#' Features in the target list will be included during p-value summary
-#' measure calculations.
-#'
+#'  Features in the target list will be included during p-value summary
+#'  measure calculations.
 #' @param dl A data list with features to calcualte p-values for, but
-#' that should not be incorporated into p-value summary measure columns (i.e.,
-#' min/mean/max p-value columns).
-#'
+#'  that should not be incorporated into p-value summary measure columns (i.e.,
+#'  min/mean/max p-value columns).
 #' @param cat_test String indicating which statistical test will be used to
-# associate cluster with a categorical feature. Options are "chi_squared" for
-#' the Chi-squared test and "fisher_exact" for Fisher's exact test.
-#'
+#'  associate cluster with a categorical feature. Options are "chi_squared" for
+#'  the Chi-squared test and "fisher_exact" for Fisher's exact test.
 #' @param calculate_summaries If TRUE, the function will calculate the minimum
-#' and mean p-values for each row of the solutions matrix.
-#'
+#'  and mean p-values for each row of the solutions matrix.
 #' @param min_pval If assigned a value, any p-value less than this will be
-#' replaced with this value.
-#'
+#'  replaced with this value.
 #' @param processes The number of processes to use for parallelization.
-#' Progress is only reported for sequential processing (processes = 1).
-#'
-#' @return extended_solutions_matrix an extended solutions matrix that contains
-#'  p-value columns for each outcome in the provided target list
-#'
+#'  Progress is only reported for sequential processing (processes = 1).
+#' @return An extended solutions data frame (`ext_sol_df` class object)
+#'  that contains p-value columns for each outcome in the provided data lists
 #' @param verbose If TRUE, output progress to console.
-#'
 #' @export
-extend_solutions <- function(solutions_matrix,
+extend_solutions <- function(sol_df,
                              target_dl = NULL,
                              dl = NULL,
                              cat_test = "chi_squared",
@@ -85,22 +76,14 @@ extend_solutions <- function(solutions_matrix,
                              min_pval = 1e-10,
                              processes = 1,
                              verbose = FALSE) {
-    ###########################################################################
     # Remove nclust = 1 solutions
-    ###########################################################################
-    single_cluster_solutions <- apply(
-        get_cluster_solutions(solutions_matrix)[, -1, drop = FALSE],
-        2,
-        function(x) length(unique(x)) == 1
-    ) |>
-        as.logical() |>
-        which()
+    single_cluster_solutions <- which(sol_df$"nclust" == 1)
     if (length(single_cluster_solutions) > 0) {
         metasnf_warning(
             "Single-cluster solution rows removed: ",
             single_cluster_solutions
         )
-        solutions_matrix <- solutions_matrix[-c(single_cluster_solutions), ]
+        sol_df <- sol_df[-c(single_cluster_solutions), ]
     }
     ###########################################################################
     # If data list and target list both exist, merge them
@@ -116,14 +99,14 @@ extend_solutions <- function(solutions_matrix,
         )
     }
     ###########################################################################
-    # Check to see if the dl and solutions_matrix have matching subjects
+    # Check to see if the dl and sol_df have matching subjects
     ###########################################################################
-    solution_subs <- colnames(subs(solutions_matrix))[-1]
-    target_subs <- target_dl[[1]]$"data"$"uid"
+    solution_subs <- uids(sol_df)
+    target_subs <- uids(target_dl)
     if (!identical(solution_subs, target_subs)) {
         metasnf_error(
             "Subjects in data list/target list do not match those in",
-            " solutions_matrix."
+            " sol_df."
         )
     }
     ###########################################################################
@@ -155,7 +138,7 @@ extend_solutions <- function(solutions_matrix,
     # p-values of all features
     ###########################################################################
     # Specifying the dataframe structure avoids tibble-related errors
-    esm <- solutions_matrix |>
+    esm <- sol_df |>
         data.frame() |>
         add_columns(
             paste0(features, "_pval"),
@@ -291,7 +274,7 @@ extend_solutions <- function(solutions_matrix,
 #' extended solutions matrix. It can also calculate the negative logs of those
 #' p-values to make it easier to interpret large-scale differences.
 #'
-#' @param extended_solutions_matrix The output of `extend_solutions`. A
+#' @param ext_sol_df The output of `extend_solutions`. A
 #' dataframe that contains at least one p-value column ending in "_pval".
 #'
 #' @param negative_log If TRUE, will replace p-values with negative log
@@ -300,14 +283,14 @@ extend_solutions <- function(solutions_matrix,
 #' @param keep_summaries If FALSE, will remove the mean, min, and max p-value.
 #'
 #' @return A "data.frame" class object Of only the p-value related columns
-#' of the provided extended_solutions_matrix.
+#' of the provided ext_sol_df.
 #'
 #' @export
-get_pvals <- function(extended_solutions_matrix,
+get_pvals <- function(ext_sol_df,
                       negative_log = FALSE,
                       keep_summaries = TRUE) {
     # Select p-value columns and convert to numeric
-    pval_df <- extended_solutions_matrix |>
+    pval_df <- ext_sol_df |>
         dplyr::select(
             "row_id",
             dplyr::ends_with("_pval")
@@ -334,16 +317,16 @@ get_pvals <- function(extended_solutions_matrix,
 
 #' Summarize p-value columns of an extended solutions matrix
 #'
-#' @param extended_solutions_matrix Result of `extend_solutions`
+#' @param ext_sol_df Result of `extend_solutions`
 #'
 #' @return The provided extended solutions matrix along with columns for
 #' the min, mean, and maximum across p-values for each row.
 #'
 #' @export
-summarize_pvals <- function(extended_solutions_matrix) {
+summarize_pvals <- function(ext_sol_df) {
     # Restrict to just p-value columns
     pval_cols <- dplyr::select(
-        extended_solutions_matrix,
+        ext_sol_df,
         dplyr::ends_with("_pval")
     ) |>
         numcol_to_numeric()
@@ -370,10 +353,10 @@ summarize_pvals <- function(extended_solutions_matrix) {
         }
     )
     # Attach summary statistics to the solutions matrix
-    extended_solutions_matrix$"min_pval" <- min_pvals
-    extended_solutions_matrix$"mean_pval" <- mean_pvals
-    extended_solutions_matrix$"max_pval" <- max_pvals
-    return(extended_solutions_matrix)
+    ext_sol_df$"min_pval" <- min_pvals
+    ext_sol_df$"mean_pval" <- mean_pvals
+    ext_sol_df$"max_pval" <- max_pvals
+    return(ext_sol_df)
 }
 
 
@@ -381,13 +364,13 @@ summarize_pvals <- function(extended_solutions_matrix) {
 #'
 #' Given an solutions matrix row containing evaluated p-values, returns min.
 #'
-#' @param solutions_matrix_row row of solutions_matrix object
+#' @param sol_df_row row of sol_df object
 #'
 #' @return min_pval minimum p-value
 #'
 #' @export
-get_min_pval <- function(solutions_matrix_row) {
-    min_pval <- solutions_matrix_row |>
+get_min_pval <- function(sol_df_row) {
+    min_pval <- sol_df_row |>
         dplyr::mutate(
             dplyr::across(dplyr::ends_with("_pval"), ~ as.numeric(.))
         ) |>
@@ -400,13 +383,13 @@ get_min_pval <- function(solutions_matrix_row) {
 #'
 #' Given an solutions matrix row containing evaluated p-values, returns mean.
 #'
-#' @param solutions_matrix_row row of solutions_matrix object
+#' @param sol_df_row row of sol_df object
 #'
 #' @return mean_pval mean p-value
 #'
 #' @export
-get_mean_pval <- function(solutions_matrix_row) {
-    mean_pval <- solutions_matrix_row |>
+get_mean_pval <- function(sol_df_row) {
+    mean_pval <- sol_df_row |>
         dplyr::mutate(
             dplyr::across(dplyr::ends_with("_pval"), ~ as.numeric(.))
         ) |>

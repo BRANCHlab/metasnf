@@ -2,12 +2,12 @@
 % Please edit documentation in R/cluster_extraction.R
 \name{get_cluster_solutions}
 \alias{get_cluster_solutions}
-\title{Extract cluster membership information from a solutions_matrix}
+\title{Extract cluster membership information from a sol_df}
 \usage{
-get_cluster_solutions(solutions_matrix)
+get_cluster_solutions(sol_df)
 }
 \arguments{
-\item{solutions_matrix}{A solutions_matrix.}
+\item{sol_df}{A sol_df.}
 }
 \value{
 cluster_solutions A "data.frame" object where each row is an
