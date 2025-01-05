@@ -300,7 +300,12 @@ print.solutions_df <- function(x, ...) {
     output <- utils::capture.output(print(assignment_df))
     output <- output[-c(1, 3)]
     output <- output[!grepl("^#", output)]
-    output <- sub("..", "", output)
+    if (length(output) >= 11) {
+        output <- output[1:11]
+        output <- sub("...", "", output)
+    } else {
+        output <- sub("..", "", output)
+    }
     for (sentence in output) {
         first <- substr(sentence, 1, 8)
         second <- substr(sentence, 9, 16)
@@ -352,10 +357,117 @@ print.solutions_df <- function(x, ...) {
 #' @export
 print.t_solutions_df <- function(x, ...) {
     x <- tibble::tibble(data.frame(x))
-    output <- utils::capture.output(x)
+    n_sols <- ncol(x) - 1
+    n_obs <- nrow(x)
+    output <- utils::capture.output(print(x, width = Inf))
     output <- output[!grepl("^#", output)]
     output <- sub("...", "", output)
     output <- output[!grepl("^<", output)]
-    cat(cli::col_blue(output[1]), "\n")
-    cat(output[-1], sep = "\n")
+    header <- output[1]
+    rest <- output[-1]
+    cat(cli::col_blue(header), "\n")
+    # Calculating shown vs. hidden solutions
+    shown_sols <- length(strsplit(header, "\\s+")[[1]]) - 1
+    hidden_sols <- n_sols - shown_sols
+    if (hidden_sols == 1) {
+        sols_message <- "1 solution"
+    } else if (hidden_sols > 1) {
+        sols_message <- paste0(hidden_sols, " solutions")
+    } else {
+        sols_message <- ""
+    }
+    # Calculating shown vs. hidden observations
+    if (length(rest) > 10) {
+        hidden_obs <- n_obs - 10
+        if (hidden_obs == 1) {
+            obs_message <- "1 observation"
+        } else if (hidden_obs > 1) {
+            obs_message <- paste0(hidden_obs, " observations")
+        }
+    } else {
+        hidden_obs <- 0
+        obs_message <- ""
+    }
+    if (hidden_sols > 0 & hidden_obs > 0) {
+        joiner <- " and "
+    } else {
+        joiner <- ""
+    }
+    if (hidden_obs > 0 | hidden_sols > 0) {
+        cat(rest[1:10], sep = "\n")
+        cat(
+            cli::col_grey(
+                "Not showing ", obs_message, joiner, sols_message, ".\n",
+                sep = ""
+            )
+        )
+    } else {
+        cat(rest, sep = "\n")
+    }
+}
+
+#' Print method for class `ext_solutions_df`
+#'
+#' Custom formatted print for extended solutions data frame class objects.
+#'
+#' @param x A `ext_solutions_df` class object.
+#' @param ... Other arguments passed to `print` (not used in this function)
+#' @return Function prints to console but does not return any value.
+#' @export
+print.ext_solutions_df <- function(x, ...) {
+    cat(
+        cli::col_grey(
+            "P-values for ", length(attributes(x)$"features"), " features",
+            " over ", nrow(x), " cluster solutions.\n"
+        )
+    )
+    assignment_df <- x
+    class(assignment_df) <- "data.frame"
+    assignment_df <- tibble::tibble(assignment_df)
+    output <- utils::capture.output(print(assignment_df))
+    output <- output[-c(1, 3)]
+    output <- output[!grepl("^#", output)]
+    if (length(output) >= 11) {
+        output <- output[1:11]
+        output <- sub("...", "", output)
+    } else {
+        output <- sub("..", "", output)
+    }
+    for (sentence in output) {
+        first <- substr(sentence, 1, 8)
+        rest <- substr(sentence, 9, nchar(sentence))
+        cat(
+            cli::col_green(first),
+            rest, "\n", sep = ""
+        )
+    }
+    displayed_cols <- length(strsplit(output[1], "\\s+")[[1]])
+    displayed_solutions <- length(output) - 1
+    hidden_cols <- ncol(x) - displayed_cols
+    hidden_solutions <- nrow(x) - displayed_solutions
+    solution_suffix <- if (hidden_solutions == 1) "" else "s"
+    column_suffix <- if (hidden_cols == 1) "" else "s"
+    if (hidden_solutions > 0 & hidden_cols > 0) {
+        cat(
+            cli::col_grey(
+                hidden_solutions, " solution",
+                solution_suffix, " and ", hidden_cols,
+                " column", column_suffix, " not shown.\n"
+            )
+        )
+    } else if (hidden_solutions > 0) {
+        cat(
+            cli::col_grey(
+                hidden_solutions, " solution",
+                solution_suffix, " not shown.\n"
+            )
+        )
+    } else if (hidden_cols > 0) {
+        cat(
+            cli::col_grey(
+                hidden_cols, " column",
+                column_suffix, " not shown.\n"
+            )
+        )
+    }
 }

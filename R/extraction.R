@@ -92,27 +92,61 @@
     result
 }
 
-#' Extraction operator for weights matrix
+#' Extraction operator for solutions data frame
 #'
-#' Enables usage of `[` extraction operator on `weights_matrix` class objects.
+#' Enables usage of `[` extraction operator on `solutions_df` class objects.
 #'
-#' @param x A `weights_matrix` class object.
+#' @param x A `solutions_df` class object.
 #' @param i Indices for component extraction.
 #' @param j Indices for component extraction.
-#' @param ... Additional parameters (invalid for weights_matrix extraction).
-#' @return `weights_matrix` class object of extracted components.
+#' @param ... Additional parameters (invalid for solutions_df extraction).
+#' @return `solutions_df` class object of extracted components.
 #' @export
-`[.solutions_df` <- function(x, i, ...) {
-    extra_args <- list(...)
-    if (length(extra_args) > 0) {
-        metasnf_error(
-            "Incorrect number of dimensions for subsetting solutions_df."
-        )
+`[.solutions_df` <- function(x, i, j, ...) {
+    result <- NextMethod()
+    class(result) <- setdiff(class(result), "solutions_df")
+    result <- tryCatch(
+        expr = {
+            result <- validate_solutions_df(result)
+            result <- new_solutions_df(result)
+            attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"[i]
+            attributes(result)$"snf_config" <- attributes(x)$"snf_config"[i]
+            result
+        },
+        error = function(e) {
+            result
+        }
+    )
+    return(result)
+}
+
+#' Extraction operator for solutions data frame
+#'
+#' Enables usage of `[` extraction operator on `solutions_df` class objects.
+#'
+#' @param x A `solutions_df` class object.
+#' @param i Indices for component extraction.
+#' @param j Indices for component extraction.
+#' @param ... Additional parameters (invalid for solutions_df extraction).
+#' @return `solutions_df` class object of extracted components.
+#' @export
+`[.ext_solutions_df` <- function(x, i, j, ...) {
+    result <- NextMethod()
+    class(result) <- setdiff(class(result), "ext_solutions_df")
+    if (!identical(colnames(result), colnames(x))) {
+        return(result)
     }
-    browser()
-    result <- NextMethod("[", , i, ...)
-    class(result) <- class(x)
-    attributes(result) <- attributes(x)
-    attributes(result)$"snf_config" <- attributes(result)$"snf_config"[i]
-    result
+    result <- tryCatch(
+        expr = {
+            result <- validate_ext_solutions_df(result)
+            result <- new_ext_solutions_df(result)
+            attributes(result)$"solutions_df" <- attributes(x)$"solutions_df"[i, ]
+            attributes(result)$"features" <- attributes(x)$"features"
+            result
+        },
+        error = function(e) {
+            result
+        }
+    )
+    return(result)
 }

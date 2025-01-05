@@ -9,7 +9,6 @@ extend_solutions(
   target_dl = NULL,
   dl = NULL,
   cat_test = "chi_squared",
-  calculate_summaries = TRUE,
   min_pval = 1e-10,
   processes = 1,
   verbose = FALSE
@@ -30,9 +29,6 @@ min/mean/max p-value columns).}
 \item{cat_test}{String indicating which statistical test will be used to
 associate cluster with a categorical feature. Options are "chi_squared" for
 the Chi-squared test and "fisher_exact" for Fisher's exact test.}
-
-\item{calculate_summaries}{If TRUE, the function will calculate the minimum
-and mean p-values for each row of the solutions matrix.}
 
 \item{min_pval}{If assigned a value, any p-value less than this will be
 replaced with this value.}

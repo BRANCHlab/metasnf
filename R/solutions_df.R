@@ -25,11 +25,10 @@ solutions_df <- function(sol_dfl, smll, sc, dl) {
 #' @export
 validate_solutions_df <- function(sol_dfl) {
     class(sol_dfl)  <- setdiff(class(sol_dfl), "solutions_df")
-    if (!"nclust" %in% colnames(sol_dfl)) {
-        print(colnames(sol_dfl))
+    if (!identical(colnames(sol_dfl)[1:2], c("solution", "nclust"))) {
         metasnf_error(
-            "`solutions_df` class object cannot be created without `nclust`",
-            " column."
+            "First two columns of `solutions_df` must be \"solution\" and",
+            " \"nclust\"."
         )
     }
     return(sol_dfl)
@@ -58,8 +57,6 @@ new_solutions_df <- function(sol_dfl) {
 #' @param cat_test String indicating which statistical test will be used to
 #'  associate cluster with a categorical feature. Options are "chi_squared" for
 #'  the Chi-squared test and "fisher_exact" for Fisher's exact test.
-#' @param calculate_summaries If TRUE, the function will calculate the minimum
-#'  and mean p-values for each row of the solutions matrix.
 #' @param min_pval If assigned a value, any p-value less than this will be
 #'  replaced with this value.
 #' @param processes The number of processes to use for parallelization.
@@ -72,7 +69,6 @@ extend_solutions <- function(sol_df,
                              target_dl = NULL,
                              dl = NULL,
                              cat_test = "chi_squared",
-                             calculate_summaries = TRUE,
                              min_pval = 1e-10,
                              processes = 1,
                              verbose = FALSE) {
@@ -88,22 +84,19 @@ extend_solutions <- function(sol_df,
     ###########################################################################
     # If data list and target list both exist, merge them
     ###########################################################################
-    dl <- c(dl, target_dl)
-    ###########################################################################
-    # If tl not given but calculate_summaries is TRUE, give a warning.
-    ###########################################################################
-    if (is.null(target_dl) && calculate_summaries) {
-        metasnf_warning(
-            "Calculate summaries only applies to target list features, but",
-            " target list parameter was not specified."
-        )
+    if (!is.null(dl) & !is.null(target_dl)) {
+        dl <- c(dl, target_dl)
+    } else {
+        if (is.null(dl)) {
+            dl <- target_dl
+        }
     }
     ###########################################################################
     # Check to see if the dl and sol_df have matching subjects
     ###########################################################################
     solution_subs <- uids(sol_df)
-    target_subs <- uids(target_dl)
-    if (!identical(solution_subs, target_subs)) {
+    dl_subs <- uids(dl)
+    if (!identical(solution_subs, dl_subs)) {
         metasnf_error(
             "Subjects in data list/target list do not match those in",
             " sol_df."
@@ -138,12 +131,10 @@ extend_solutions <- function(sol_df,
     # p-values of all features
     ###########################################################################
     # Specifying the dataframe structure avoids tibble-related errors
-    esm <- sol_df |>
-        data.frame() |>
-        add_columns(
-            paste0(features, "_pval"),
-            value = NA
-        )
+    esm <- data.frame(
+        matrix(NA, nrow = nrow(sol_df), ncol = 1 + length(features))
+    )
+    colnames(esm) <- c("solution", paste0(features, "_pval"))
     ###########################################################################
     # Single DF to contain all features to calculate p-values for
     ###########################################################################
@@ -159,23 +150,18 @@ extend_solutions <- function(sol_df,
     ###########################################################################
     if (processes == 1) {
         # Iterate across rows of the solutions matrix
-        for (i in seq_len(nrow(esm))) {
+        for (i in seq_len(nrow(sol_df))) {
             if (verbose) {
-                cat("Processing row ", i, " of ", nrow(esm), "\n", sep = "")
+                cat("Processing row ", i, " of ", nrow(sol_df), "\n", sep = "")
             }
-            clustered_subs <- get_cluster_df(esm[i, ])
+            clustered_subs <- t(sol_df[i, ])
             for (j in seq_along(features)) {
                 current_component_df <- merged_df[, c(1, j + 1)]
                 current_feature <- colnames(current_component_df)[2]
-                evaluation_df <- dplyr::inner_join(
-                    clustered_subs,
-                    current_component_df,
-                    by = "uid"
-                )
                 suppressWarnings({
                     pval <- calc_assoc_pval(
-                        evaluation_df[, "cluster"],
-                        evaluation_df[, features[j]],
+                        clustered_subs[, 2],
+                        current_component_df[, 2],
                         "categorical",
                         feature_types[j],
                         cat_test = cat_test
@@ -184,13 +170,13 @@ extend_solutions <- function(sol_df,
                 target_col <- which(
                     paste0(current_feature, "_pval") == colnames(esm)
                 )
-                esm[i, target_col] <- pval
+                esm[[target_col]][i] <- pval
             }
         }
     } else {
-        #######################################################################
-        # Parallel extension
-        #######################################################################
+        ########################################################################
+        ## Parallel extension
+        ########################################################################
         max_cores <- future::availableCores()
         if (processes == "max") {
             processes <- max_cores
@@ -206,7 +192,7 @@ extend_solutions <- function(sol_df,
         esm_rows <- future.apply::future_lapply(
             seq_len(nrow(esm)),
             function(i) {
-                clustered_subs <- get_cluster_df(esm[i, ])
+                clustered_subs <- t(sol_df[i, ])
                 for (j in seq_along(features)) {
                     current_component_df <- merged_df[, c(1, j + 1)]
                     current_feature <- colnames(current_component_df)[2]
@@ -217,7 +203,7 @@ extend_solutions <- function(sol_df,
                     )
                     suppressWarnings({
                         pval <- calc_assoc_pval(
-                            evaluation_df[, "cluster"],
+                            evaluation_df[, 2],
                             evaluation_df[, features[j]],
                             "categorical",
                             feature_types[j],
@@ -227,7 +213,7 @@ extend_solutions <- function(sol_df,
                     target_col <- which(
                         paste0(current_feature, "_pval") == colnames(esm)
                     )
-                    esm[i, target_col] <- pval
+                    esm[[target_col]][i] <- pval
                 }
                 return(esm[i, ])
             }
@@ -235,6 +221,11 @@ extend_solutions <- function(sol_df,
         future::plan(future::sequential)
         esm <- do.call("rbind", esm_rows)
     }
+    esm$solution <- sol_df$solution
+    esm <- esm |> dplyr::select(
+        solution,
+        dplyr::everything()
+    )
     ###########################################################################
     # If min_pval is assigned, use to replace any smaller p-value
     ###########################################################################
@@ -248,7 +239,7 @@ extend_solutions <- function(sol_df,
                 )
             )
     }
-    if (calculate_summaries) {
+    if (!is.null(target_dl)) {
         #######################################################################
         # Identify features present in target list
         #######################################################################
@@ -256,15 +247,18 @@ extend_solutions <- function(sol_df,
         target_features <- paste0(target_features, "_pval")
         target_esm <- dplyr::select(
             esm,
-            "row_id",
+            "solution",
             dplyr::all_of(target_features)
         )
         target_esm <- summarize_pvals(target_esm)
-        target_esm <- dplyr::select(target_esm, -"row_id")
+        target_esm <- dplyr::select(target_esm, -"solution")
         esm <- dplyr::select(esm, -dplyr::all_of(target_features))
         esm <- cbind(esm, target_esm)
     }
     esm <- numcol_to_numeric(esm)
+    class(esm) <- c("ext_solutions_df", "data.frame")
+    attributes(esm)$"solutions_df" <- sol_df
+    attributes(esm)$"features" <- features
     return(esm)
 }
 

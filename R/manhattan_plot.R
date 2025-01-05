@@ -128,40 +128,27 @@ var_manhattan_plot <- function(dl,
 #' feature separation across all features in provided data/target lists.
 #'
 #' @param ext_sol_df A sol_df that contains "_pval"
-#' columns containing the values to be plotted. This object is the output of
-#' `extend_solutions()`.
-#'
+#'  columns containing the values to be plotted. This object is the output of
+#'  `extend_solutions()`.
 #' @param dl List of dataframes containing data information.
-#'
-#' @param tl List of dataframes containing target information.
-#'
+#' @param target_dl List of dataframes containing target information.
 #' @param variable_order Order of features to be displayed in the plot.
-#'
 #' @param neg_log_pval_thresh Threshold for negative log p-values.
-#'
 #' @param threshold p-value threshold to plot horizontal dashed line at.
-#'
 #' @param point_size Size of points in the plot.
-#'
 #' @param text_size Size of text in the plot.
-#'
 #' @param plot_title Title of the plot.
-#'
 #' @param xints Either "outcomes" or a vector of numeric values to plot
-#' vertical lines at.
-#'
+#'  vertical lines at.
 #' @param hide_x_labels If TRUE, hides x-axis labels.
-#'
 #' @param domain_colours Named vector of colours for domains.
-#'
 #' @return A Manhattan plot (class "gg", "ggplot") showing the association
-#' p-values of features against each solution in the provided solutions matrix,
-#' stratified by meta cluster label.
-#'
+#'  p-values of features against each solution in the provided solutions matrix,
+#'  stratified by meta cluster label.
 #' @export
 mc_manhattan_plot <- function(ext_sol_df,
                               dl = NULL,
-                              tl = NULL,
+                              target_dl = NULL,
                               variable_order = NULL,
                               neg_log_pval_thresh = 5,
                               threshold = NULL,
@@ -174,8 +161,8 @@ mc_manhattan_plot <- function(ext_sol_df,
     ###########################################################################
     # Ensure one of data list or target list is not NULL
     ###########################################################################
-    if (is.null(dl) && is.null(tl)) {
-        metasnf_error("At least one of `dl` or `tl` must be provided.")
+    if (is.null(dl) && is.null(target_dl)) {
+        metasnf_error("At least one of `dl` or `target_dl` must be provided.")
     }
     ###########################################################################
     # Suppress warnings related to non-standard evaluation
@@ -188,14 +175,14 @@ mc_manhattan_plot <- function(ext_sol_df,
     ###########################################################################
     ext_sol_df <- data.frame(ext_sol_df)
     ###########################################################################
-    # Select row_id, label, and p-value related columns only
+    # Select solution, label, and p-value related columns only
     ###########################################################################
     if (!"label" %in% colnames(ext_sol_df)) {
-        ext_sol_df$"label" <- ext_sol_df$"row_id"
+        ext_sol_df$"label" <- ext_sol_df$"solution"
     }
     ext_sol_df <- ext_sol_df |>
         dplyr::select(
-            "row_id",
+            "solution",
             "label",
             dplyr::ends_with("_pval")
         )
@@ -210,10 +197,10 @@ mc_manhattan_plot <- function(ext_sol_df,
         -dplyr::contains(c("min_pval", "mean_pval", "max_pval"))
     )
     ###########################################################################
-    # Convert row_id and label to factors
+    # Convert solution and label to factors
     ###########################################################################
-    ext_sol_df$"row_id" <- factor(
-        ext_sol_df$"row_id"
+    ext_sol_df$"solution" <- factor(
+        ext_sol_df$"solution"
     )
     ext_sol_df$"label" <- factor(
         ext_sol_df$"label"
@@ -221,14 +208,14 @@ mc_manhattan_plot <- function(ext_sol_df,
     ###########################################################################
     # Re-assign names to the data list and target list
     ###########################################################################
-    if (!is.null(tl)) {
-        dl_renamed <- dl |> lapply(
+    if (!is.null(target_dl)) {
+        dl_renamed <- dl |> dlapply(
             function(x) {
                 x$"domain" <- paste0("I-", x$"domain")
                 return(x)
             }
         )
-        tl_renamed <- tl |> lapply(
+        tl_renamed <- target_dl |> dlapply(
             function(x) {
                 x$"domain" <- paste0("O-", x$"domain")
                 return(x)
@@ -263,7 +250,7 @@ mc_manhattan_plot <- function(ext_sol_df,
     ext_sol_df[, var_cols] <- cutoff_var_cols
     summary_data <- ext_sol_df |>
         tidyr::pivot_longer(
-            !(c("row_id", "label")),
+            !(c("solution", "label")),
             names_to = "variable",
             values_to = "neg_log_pval"
         ) |>
@@ -272,7 +259,7 @@ mc_manhattan_plot <- function(ext_sol_df,
     ###########################################################################
     # Merge the summmary plot with domain information from the data list
     ###########################################################################
-    dl_metadata <- summarize_dl(dl, "feature") |> dplyr::select(-"type")
+    dl_metadata <- summary(dl, "feature") |> dplyr::select(-"type")
     summary_data <- merge(
         summary_data,
         dl_metadata,
@@ -366,7 +353,7 @@ mc_manhattan_plot <- function(ext_sol_df,
     n_vars <- length(unique(summary_data$"variable"))
     target_rows <- startsWith(summary_data$"domain", "O")
     n_outcomes <- length(unique(summary_data[target_rows, "variable"]))
-    if (is.null(xints) && !is.null(dl) && !is.null(tl)) {
+    if (is.null(xints) && !is.null(dl) && !is.null(target_dl)) {
         plot <- plot + ggplot2::geom_vline(
             xintercept = n_vars - n_outcomes + 0.5
         )
@@ -454,13 +441,13 @@ esm_manhattan_plot <- function(esm,
     pval_df[, var_cols] <- cutoff_var_cols
     ###########################################################################
     # Suppress global visible binding errors during building
-    row_id <- ""
+    solution <- ""
     variable <- ""
     pval <- ""
-    pval_df$"row_id" <- factor(pval_df$"row_id")
+    pval_df$"solution" <- factor(pval_df$"solution")
     pval_df <- pval_df |>
         tidyr::pivot_longer(
-            !row_id,
+            !solution,
             names_to = "variable",
             values_to = "pval"
         ) |>
@@ -472,7 +459,7 @@ esm_manhattan_plot <- function(esm,
             mapping = ggplot2::aes(
                 x = variable,
                 y = pval,
-                colour = row_id
+                colour = solution
             ),
             width = jitter_width,
             height = jitter_height,

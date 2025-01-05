@@ -290,15 +290,7 @@ The resulting structure is an `solutions_df` class object, which contains an ind
 ```{r}
 sol_df <- batch_snf(input_dl, my_sc)
 
-sol_df[1, 1]
-
-# Working on extracting solutions data frame properly
-sol_df[1]
-
 sol_df
-
-attributes(sol_df)
-
 ```
 
 
@@ -432,63 +424,47 @@ We start by running the `extend_solutions` function, which will calculate p-valu
 `extend_solutions` also adds summary p-value measures (min, mean, and max) of any features present in the target list.
 
 ```{r}
-
-
-attributes(sol_df[1])
-
-sol_df[1:2, 2:5]
-
-attributes(sol_df)
-
 # Only looking at our out-of-model p-values
-extended_sol_df <- extend_solutions(
+ext_sol_df <- extend_solutions(
     sol_df,
     target_dl = target_dl
 )
 
-# What columns have been added?
-old_cols <- colnames(extended_sol_df) %in% colnames(sol_df)
-new_cols <- !old_cols
-
-head(extended_sol_df[, new_cols])
-
 # Re-running to calculate the p-value for every single input and out-of-model
 # feature:
-extended_sol_df <- extend_solutions(
+ext_sol_df <- extend_solutions(
     sol_df,
     dl = input_dl,
-    target_dl = target_list
+    target_dl = target_dl
 )
 ```
 
-Functionally, the only difference between the `data_list` and `target_list` arguments are that the `target_list` features will also be a part of those summary measures.
+Functionally, the only difference between the data list passed into the `dl` parameter and the one passed into the `target_dl` parameter is that the `target_dl` features are the only ones used for generating the p-value summary columns.
 
 ```{r eval = FALSE}
 # Also would work, but without any summary p-values
-extended_sol_df <- extend_solutions(
+ext_sol_df <- extend_solutions(
     sol_df,
-    dl = c(input_dl, target_list)
+    dl = c(input_dl, target_dl)
 )
 
 # Also would work, but now every feature would be part of the summaries
-extended_sol_df <- extend_solutions(
+ext_sol_df <- extend_solutions(
     sol_df,
-    target_dl = c(input_dl, target_list)
+    target_dl = c(input_dl, target_dl)
 )
 ```
 
-The summary p-value measures can be suppressed by setting `calculate_summaries = FALSE`.
-
 ### Visualizing feature associations with meta clustering results
 
-This `extended_sol_df` we created can be passed into the `adjusted_rand_index_heatmap` function to easily visualize the level of separation on each of our features for each of our cluster solutions.
+This `ext_sol_df` we created can be converted into a standard data frame and passed into the `adjusted_rand_index_heatmap` function to easily visualize the level of separation on each of our features for each of our cluster solutions.
 
 ```{r eval = FALSE}
 annotated_ari_hm <- adjusted_rand_index_heatmap(
     sol_aris,
     order = meta_cluster_order,
     split_vector = split_vec,
-    data = extended_sol_df,
+    data = as.data.frame(ext_sol_df),
     top_hm = list(
         "Depression p-value" = "cbcl_depress_r_pval",
         "Anxiety p-value" = "cbcl_anxiety_r_pval",
@@ -499,17 +475,17 @@ annotated_ari_hm <- adjusted_rand_index_heatmap(
     ),
     annotation_colours = list(
         "Depression p-value" = colour_scale(
-            extended_sol_df$"cbcl_depress_r_pval",
+            ext_sol_df$"cbcl_depress_r_pval",
             min_colour = "purple",
             max_colour = "black"
         ),
         "Anxiety p-value" = colour_scale(
-            extended_sol_df$"cbcl_anxiety_r_pval",
+            ext_sol_df$"cbcl_anxiety_r_pval",
             min_colour = "green",
             max_colour = "black"
         ),
         "Overall outcomes p-value" = colour_scale(
-            extended_sol_df$"mean_pval",
+            ext_sol_df$"mean_pval",
             min_colour = "lightblue",
             max_colour = "black"
         )
@@ -536,10 +512,14 @@ Consequently, anything that can be done in the `ComplexHeatmap` package can be d
 This also makes the documentation for the `ComplexHeatmap` package one of the best places to learn more about what can be done for these heatmaps.
 
 The data for the annotations don't necessarily need to come from functions in metasnf either.
-If you wanted to, for example, highlight the solutions where two very specific observations happened to cluster together, you could easily add that in as another annotation:
+If you wanted to, for example, highlight the solutions where two very specific observations happened to cluster together, you could easily add that in as another annotation.
+
+By converting an `ext_solutions_df` class object into a data frame, it'll retain both the p-value and cluster assignment columns.
+Then, we can use `dplyr::mutate()` to create a new column flagging when two observations co-cluster.
 
 ```{r eval = FALSE}
-extended_sol_df2 <- extended_sol_df |>
+annotation_data <- ext_sol_df |>
+    as.data.frame() |>
     dplyr::mutate(
         key_subjects_cluster_together = dplyr::case_when(
             uid_NDAR_INVLF3TNDUZ == uid_NDAR_INVLDQH8ATK ~ TRUE,
@@ -551,7 +531,7 @@ annotated_ari_hm2 <- adjusted_rand_index_heatmap(
     sol_aris,
     order = meta_cluster_order,
     split_vector = split_vec,
-    data = extended_sol_df2,
+    data = annotation_data,
     top_hm = list(
         "Depression p-value" = "cbcl_depress_r_pval",
         "Anxiety p-value" = "cbcl_anxiety_r_pval",
@@ -562,12 +542,12 @@ annotated_ari_hm2 <- adjusted_rand_index_heatmap(
     ),
     annotation_colours = list(
         "Depression p-value" = colour_scale(
-            extended_sol_df$"cbcl_depress_r_pval",
+            ext_sol_df$"cbcl_depress_r_pval",
             min_colour = "purple",
             max_colour = "black"
         ),
         "Anxiety p-value" = colour_scale(
-            extended_sol_df$"cbcl_anxiety_r_pval",
+            ext_sol_df$"cbcl_anxiety_r_pval",
             min_colour = "purple",
             max_colour = "black"
         ),
@@ -604,13 +584,13 @@ rep_solutions <- get_representative_solutions(
     sol_aris,
     split_vector = split_vec,
     order = meta_cluster_order,
-    extended_sol_df
+    ext_sol_df
 )
 
 mc_manhattan <- mc_manhattan_plot(
     rep_solutions,
     dl = input_dl,
-    target_dl = target_list,
+    target_dl = target_dl,
     hide_x_labels = TRUE,
     point_size = 2,
     text_size = 12,
@@ -638,15 +618,17 @@ Let's take out the cortical thickness and surface area measures to make the plot
 We'll also be able to read some feature measures more clearly when we dial the number of features plotted back a bit, as well.
 
 ```{r eval = FALSE}
+# Note that removing columns from an `ext_solutions_df` class object turns
+# it into a regular data frame.
 rep_solutions_no_cort <- dplyr::select(
     rep_solutions,
     -dplyr::contains("mrisdp")
 )
 
 mc_manhattan2 <- mc_manhattan_plot(
-    rep_solutions_no_cort,
+    ext_sol_df = rep_solutions_no_cort,
     dl = input_dl,
-    target_dl = target_list,
+    target_dl = target_dl,
     point_size = 4,
     threshold = 0.01,
     text_size = 12,
@@ -681,10 +663,11 @@ If you see something interesting in your heatmap, you may be curious to know how
 
 You could certainly stack on each setting to the ARI heatmap as annotations, but that may be a bit cumbersome given how many settings there are.
 Another option is to start by taking a first look at entire `settings_df`, sorted by the meta cluster results, through the `settings_df_heatmap` function.
+The settings can be passed in through either an `snf_config` or `settings_df` class object.
 
 ```{r eval = FALSE}
 sm_hm <- settings_df_heatmap(
-    sdf,
+    settings = my_sc,
     order = meta_cluster_order
 )
 ```
@@ -706,7 +689,7 @@ save_heatmap(
 This heatmap rescales all the columns in the settings_df to have a maximum value of 1.
 The purpose of re-ordering the settings matrix in this way is to see if any associations exist between certain settings values and pairwise cluster solution similarities.
 If there are any particular important settings, you can simply add them into your adjusted rand index heatmap annotations.
-Recall that the `sol_df` (and, by extension, the `extended_sol_df`) is an extension of the settings matrix, so no further data manipulation is needed to add a setting as a heatmap annotation.
+Recall that the `solutions_df` class (and, by extension, the `ext_solutions_df` class that contains a `solutions_df` object as an attribute) contain  the SNF config as an attribute, so no further data manipulation is needed to add a setting as a heatmap annotation.
 
 Give it a try with the code below:
 
@@ -715,7 +698,7 @@ annotated_ari_hm3 <- adjusted_rand_index_heatmap(
     sol_aris,
     order = meta_cluster_order,
     split_vector = c(11, 14),
-    data = extended_sol_df,
+    data = ext_sol_df,
     top_hm = list(
         "Depression p-value" = "cbcl_depress_r_pval",
         "Anxiety p-value" = "cbcl_anxiety_r_pval",
@@ -729,12 +712,12 @@ annotated_ari_hm3 <- adjusted_rand_index_heatmap(
     ),
     annotation_colours = list(
         "Depression p-value" = colour_scale(
-            extended_sol_df$"cbcl_depress_r_pval",
+            ext_sol_df$"cbcl_depress_r_pval",
             min_colour = "purple",
             max_colour = "black"
         ),
         "Anxiety p-value" = colour_scale(
-            extended_sol_df$"cbcl_anxiety_r_pval",
+            ext_sol_df$"cbcl_anxiety_r_pval",
             min_colour = "purple",
             max_colour = "black"
         ),
@@ -818,18 +801,18 @@ Just like when generating the initial `data_list`, we need to specify the name o
 We will next extend our `sol_df` with p-values from regressing the `target_list` features onto our generated clusters.
 
 ```{r}
-extended_sol_df <- extend_solutions(sol_df, target_list)
+ext_sol_df <- extend_solutions(sol_df, target_list)
 
-colnames(extended_sol_df)[1:25]
+colnames(ext_sol_df)[1:25]
 
 # Looking at the newly added columns
-head(no_subs(extended_sol_df))
+head(no_subs(ext_sol_df))
 ```
 
 If you just want the p-values:
 
 ```{r}
-target_pvals <- get_pvals(extended_sol_df)
+target_pvals <- get_pvals(ext_sol_df)
 
 head(target_pvals)
 ```
@@ -940,19 +923,19 @@ train_sol_df <- batch_snf(
     sdf
 )
 
-extended_sol_df <- extend_solutions(
+ext_sol_df <- extend_solutions(
     train_sol_df,
     train_target_list
 )
 
-extended_sol_df |> colnames()
+ext_sol_df |> colnames()
 
 # The fifth row had the lowest minimum p-value across our outcomes
-lowest_min_pval <- min(extended_sol_df$"min_pval")
-which(extended_sol_df$"min_pval" == lowest_min_pval)
+lowest_min_pval <- min(ext_sol_df$"min_pval")
+which(ext_sol_df$"min_pval" == lowest_min_pval)
 
 # Keep track of your top solution
-top_row <- extended_sol_df[4, ]
+top_row <- ext_sol_df[4, ]
 
 # Use the solutions matrix from the training subjects and the data list from
 # the training and testing subjects to propagate labels to the test subjects
@@ -966,7 +949,7 @@ You could, if you wanted, see how *all* of your clustering solutions propagate t
 
 ```{r}
 propagated_labels_all <- lp_sol_df(
-    extended_sol_df,
+    ext_sol_df,
     full_input_dl
 )
 

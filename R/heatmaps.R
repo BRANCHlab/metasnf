@@ -12,7 +12,6 @@
 #' @param cluster_columns Parameter for ComplexHeatmap::Heatmap.
 #' @param show_row_names Parameter for ComplexHeatmap::Heatmap.
 #' @param show_column_names Parameter for ComplexHeatmap::Heatmap.
-#' @param dl A nested list of input data from `data_list()`.
 #' @param data A dataframe containing elements requested for annotation.
 #' @param left_bar Named list of strings, where the strings are features in
 #'  df that should be used for a barplot annotation on the left of the plot and
@@ -46,7 +45,6 @@ similarity_matrix_heatmap <- function(similarity_matrix,
                                       cluster_columns = FALSE,
                                       show_row_names = FALSE,
                                       show_column_names = FALSE,
-                                      dl = NULL,
                                       data = NULL,
                                       left_bar = NULL,
                                       right_bar = NULL,
@@ -67,7 +65,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
     ###########################################################################
     # Assemble any provided data
     ###########################################################################
-    data <- assemble_data(data, dl)
+    data <- as.data.frame(data)
     ###########################################################################
     # Ensure that annotations aren't being requested when data isn't given
     ###########################################################################
@@ -525,7 +523,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #' Scales settings matrix values between 0 and 1 and plots as a heatmap. Rows
 #' can be reordered to match prior meta clustering results.
 #'
-#' @param settings_df Matrix indicating parameters to iterate SNF through.
+#' @param sdf Matrix indicating parameters to iterate SNF through.
 #'
 #' @param remove_fixed_columns Whether columns that have no variation should be
 #' removed.
@@ -559,28 +557,38 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #' that displays the scaled values of the provided settings matrix.
 #'
 #' @export
-settings_df_heatmap <- function(settings_df,
-                                    order = NULL,
-                                    remove_fixed_columns = TRUE,
-                                    show_column_names = TRUE,
-                                    show_row_names = TRUE,
-                                    rect_gp = grid::gpar(col = "black"),
-                                    colour_breaks = c(0, 1),
-                                    colours = c("black", "darkseagreen"),
-                                    column_split_vector = NULL,
-                                    row_split_vector = NULL,
-                                    column_split = NULL,
-                                    row_split = NULL,
-                                    column_title = NULL,
-                                    ...) {
+settings_df_heatmap <- function(settings,
+                                order = NULL,
+                                remove_fixed_columns = TRUE,
+                                show_column_names = TRUE,
+                                show_row_names = TRUE,
+                                rect_gp = grid::gpar(col = "black"),
+                                colour_breaks = c(0, 1),
+                                colours = c("black", "darkseagreen"),
+                                column_split_vector = NULL,
+                                row_split_vector = NULL,
+                                column_split = NULL,
+                                row_split = NULL,
+                                column_title = NULL,
+                                ...) {
+    if (inherits(settings, "snf_config")) {
+        sdf <- settings$"settings_df"
+    } else if (inherits(settings, "settings_df")) {
+        sdf <- settings
+    } else {
+        metasnf_error(
+            "`settings` must be either a `snf_config` or `settings_df` class",
+            " object."
+        )
+    }
     if (!is.null(order)) {
-        settings_df <- settings_df[order, ]
+        sdf <- sdf[order, ]
     }
     # Scaling everything to have a max of 1
-    col_maxes <- apply(settings_df, 2, function(x) 1 / max(x))
-    scaled_matrix <- as.matrix(settings_df) %*% diag(col_maxes)
-    colnames(scaled_matrix) <- colnames(settings_df)
-    rownames(scaled_matrix) <- rownames(settings_df)
+    col_maxes <- apply(sdf, 2, function(x) 1 / max(x))
+    scaled_matrix <- as.matrix(sdf) %*% diag(col_maxes)
+    colnames(scaled_matrix) <- colnames(sdf)
+    rownames(scaled_matrix) <- rownames(sdf)
     ###########################################################################
     # Function to check number of unique values in each column
     unique_values <- apply(scaled_matrix, 2, function(x) length(unique(x)))

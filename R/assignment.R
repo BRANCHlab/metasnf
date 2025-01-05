@@ -45,3 +45,30 @@
     )
     return(result)
 }
+
+#' Assignment operator for extended solutions data frame
+#'
+#' Enables usage of `[<-` assignment operator on `ext_solutions_df` objects.
+#' Given a `numeric` or `character` index, returns an new settings data frame.
+#'
+#' @param x A `ext_solutions_df` class object.
+#' @param i Index for component assignment.
+#' @param j Index for component assignment.
+#' @param value Value to pass into x.
+#' @return A settings data frame with the assigned value(s).
+#' @export
+`[<-.ext_solutions_df` <- function(x, i, j, value) {
+    result <- NextMethod()
+    class(result) <- setdiff(class(result), "ext_solutions_df")
+    result <- tryCatch(
+        expr = {
+            result <- validate_ext_solutions_df(result)
+            result <- new_ext_solutions_df(result)
+            result
+        },
+        error = function(e) {
+            result
+        }
+    )
+    return(result)
+}

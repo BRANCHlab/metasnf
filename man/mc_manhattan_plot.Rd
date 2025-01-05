@@ -7,7 +7,7 @@
 mc_manhattan_plot(
   ext_sol_df,
   dl = NULL,
-  tl = NULL,
+  target_dl = NULL,
   variable_order = NULL,
   neg_log_pval_thresh = 5,
   threshold = NULL,
@@ -26,7 +26,7 @@ columns containing the values to be plotted. This object is the output of
 
 \item{dl}{List of dataframes containing data information.}
 
-\item{tl}{List of dataframes containing target information.}
+\item{target_dl}{List of dataframes containing target information.}
 
 \item{variable_order}{Order of features to be displayed in the plot.}
 

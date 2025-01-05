@@ -14,7 +14,6 @@ similarity_matrix_heatmap(
   cluster_columns = FALSE,
   show_row_names = FALSE,
   show_column_names = FALSE,
-  dl = NULL,
   data = NULL,
   left_bar = NULL,
   right_bar = NULL,
@@ -54,8 +53,6 @@ off-diagonals), or "zero" (replace diagonals with 0).}
 \item{show_row_names}{Parameter for ComplexHeatmap::Heatmap.}
 
 \item{show_column_names}{Parameter for ComplexHeatmap::Heatmap.}
-
-\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{data}{A dataframe containing elements requested for annotation.}
 
