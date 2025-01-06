@@ -57,8 +57,8 @@ calc_aris <- function(sol_df,
             aris[v1, v2] <- ari
             aris[v2, v1] <- ari
         }
-        colnames(aris) <- sol_df$"row_id"
-        rownames(aris) <- sol_df$"row_id"
+        colnames(aris) <- sol_df$"solution"
+        rownames(aris) <- sol_df$"solution"
         if (verbose) {
             cat("100% completed.\n")
         }
@@ -93,8 +93,8 @@ calc_aris <- function(sol_df,
         aris[lower.tri(aris, diag = FALSE)] <- ari_vector
         aris <- t(aris)
         aris[lower.tri(aris)] <- t(aris)[lower.tri(aris)]
-        colnames(aris) <- sol_df$"row_id"
-        rownames(aris) <- sol_df$"row_id"
+        colnames(aris) <- sol_df$"solution"
+        rownames(aris) <- sol_df$"solution"
         return(aris)
     }
 }

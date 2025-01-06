@@ -523,39 +523,24 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #' Scales settings matrix values between 0 and 1 and plots as a heatmap. Rows
 #' can be reordered to match prior meta clustering results.
 #'
-#' @param sdf Matrix indicating parameters to iterate SNF through.
-#'
+#' @param settings Matrix indicating parameters to iterate SNF through.
 #' @param remove_fixed_columns Whether columns that have no variation should be
-#' removed.
-#'
+#'  removed.
 #' @param order Numeric vector indicating row ordering of settings matrix.
-#'
 #' @param show_column_names Whether column names should be shown.
-#'
 #' @param show_row_names Whether row names should be shown.
-#'
 #' @param rect_gp Cell border function for `ComplexHeatmap::Heatmap`.
-#'
 #' @param column_title Standard parameter of `ComplexHeatmap::Heatmap`.
-#'
 #' @param colour_breaks Numeric vector of breaks for the legend.
-#'
 #' @param colours Vector of colours to use for the heatmap. Should match the
-#' length of colour_breaks.
-#'
+#'  length of colour_breaks.
 #' @param column_split_vector Vector of indices to split columns by.
-#'
 #' @param column_split Standard parameter of `ComplexHeatmap::Heatmap`.
-#'
 #' @param row_split_vector Vector of indices to split rows by.
-#'
 #' @param row_split Standard parameter of `ComplexHeatmap::Heatmap`.
-#'
 #' @param ... Additional parameters passed to `ComplexHeatmap::Heatmap`.
-#'
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
-#' that displays the scaled values of the provided settings matrix.
-#'
+#'  that displays the scaled values of the provided settings matrix.
 #' @export
 settings_df_heatmap <- function(settings,
                                 order = NULL,
@@ -687,17 +672,16 @@ pval_heatmap <- function(pvals,
                          show_row_names = FALSE,
                          show_column_names = TRUE,
                          min_colour = "red2",
-                         mid_colour = "lightyellow",
-                         max_colour = "slateblue4",
-                         legend_breaks = c(0, 0.5, 1),
+                         max_colour = "white",
+                         legend_breaks = c(0, 1),
                          col = circlize::colorRamp2(
                              legend_breaks,
-                             c(min_colour, mid_colour, max_colour)
+                             c(min_colour, max_colour)
                          ),
                          heatmap_legend_param = list(
                              color_bar = "continuous",
                              title = "p-value",
-                             at = c(0, 0.5, 1)
+                             at = c(0, 1)
                          ),
                          rect_gp = grid::gpar(col = "black"),
                          column_split_vector = NULL,
@@ -705,10 +689,9 @@ pval_heatmap <- function(pvals,
                          column_split = NULL,
                          row_split = NULL,
                          ...) {
-    if ("row_id" %in% colnames(pvals)) {
-        rownames(pvals) <- pvals$"row_id"
-        pvals <- pvals |>
-            dplyr::select(-"row_id")
+    if ("solution" %in% colnames(pvals)) {
+        rownames(pvals) <- pvals$"solution"
+        pvals <- pvals |> dplyr::select(-"solution")
     }
     if (!is.null(order)) {
         pvals <- pvals[order, ]

@@ -221,9 +221,9 @@ extend_solutions <- function(sol_df,
         future::plan(future::sequential)
         esm <- do.call("rbind", esm_rows)
     }
-    esm$solution <- sol_df$solution
+    esm$"solution" <- sol_df$"solution"
     esm <- esm |> dplyr::select(
-        solution,
+        "solution",
         dplyr::everything()
     )
     ###########################################################################
@@ -286,7 +286,7 @@ get_pvals <- function(ext_sol_df,
     # Select p-value columns and convert to numeric
     pval_df <- ext_sol_df |>
         dplyr::select(
-            "row_id",
+            "solution",
             dplyr::ends_with("_pval")
         ) |>
         data.frame() |>
@@ -295,7 +295,7 @@ get_pvals <- function(ext_sol_df,
     if (negative_log) {
         # Negative log conversions
         neg_log_pval_df <- -log(pval_df)
-        neg_log_pval_df$"row_id" <- pval_df$"row_id"
+        neg_log_pval_df$"solution" <- pval_df$"solution"
         return(neg_log_pval_df)
     }
     if (!keep_summaries) {

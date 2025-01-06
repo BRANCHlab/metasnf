@@ -23,7 +23,7 @@ get_cluster_solutions <- function(sol_df) {
     cluster_solutions <- t(sol_df)
     # Assign the column names to match the corresponding SNF run
     colnames(cluster_solutions) <- rownames(sol_df)
-    # Remove the first row, which just contains the row_id. That info is now
+    # Remove the first row, which just contains the solution. That info is now
     #  in the column names.
     cluster_solutions <- cluster_solutions[-1, , drop = FALSE]
     # Store the uids of the observations in a separate dataframe

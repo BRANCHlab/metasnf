@@ -36,7 +36,7 @@
 #' @inheritParams weights_matrix
 #' @return An `snf_config` class object.
 #' @export
-snf_config <- function(dl,
+snf_config <- function(dl = NULL,
                        sdf = NULL,
                        dfl = NULL,
                        cfl = NULL,

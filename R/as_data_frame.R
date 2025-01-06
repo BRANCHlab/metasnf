@@ -28,6 +28,32 @@ as.data.frame.data_list <- function(x,
     return(dl_df)
 }
 
+#' Coerce a `solutions_df` class object into a `data.frame` class object
+#'
+#' @param x A `solutions_df` class object.
+#' @param row.names Additional parameter passed to `as.data.frame()`.
+#' @param optional Additional parameter passed to `as.data.frame()`.
+#' @param ... Additional parameter passed to `as.data.frame()`.
+#' @return A `data.frame` class object with all the columns of x and its
+#'  contained solutions data frame.
+#' @export
+as.data.frame.solutions_df <- function(x,
+                                       row.names = NULL,
+                                       optional = FALSE,
+                                       ...) {
+    sdf <- attributes(x)$"snf_config"$"settings_df"
+    wm <- attributes(x)$"snf_config"$"weights_matrix"
+    sdf_wm <- cbind(data.frame(sdf), data.frame(wm))
+    df <- dplyr::inner_join(
+        sdf_wm,
+        sol_df,
+        by = "solution"
+    )
+    return(df)
+}
+
+
+
 #' Coerce a `ext_solutions_df` class object into a `data.frame` class object
 #'
 #' @param x A `ext_solutions_df` class object.
@@ -41,12 +67,13 @@ as.data.frame.ext_solutions_df <- function(x,
                                            row.names = NULL,
                                            optional = FALSE,
                                            ...) {
+
+    sol_df <- as.data.frame(attributes(x)$"solutions_df")
     df <- dplyr::inner_join(
-        attributes(x)$"solutions_df",
+        sol_df,
         x,
         by = "solution"
-    ) |>
-        data.frame()
+    )
     return(df)
 }
 

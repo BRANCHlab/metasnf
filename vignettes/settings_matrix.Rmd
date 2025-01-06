@@ -46,7 +46,7 @@ sdf
 
 The resulting columns are:
 
-* `row_id`: A label to keep track of which row is which
+* `solution`: A label to keep track of which row is which
 * `alpha`: The alpha (also referred to as sigma or eta) hyperparameter in SNF
 * `k`: The K (nearest neighbours) hyperparameter in similarity matrix calculations and SNF
 * `t`: The T (number of iterations) hyperparameter used in SNF

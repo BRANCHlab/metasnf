@@ -1,28 +1,26 @@
 #' Calculate silhouette scores
 #'
-#' Given a sol_df and a list of similarity_matrices (or a single
-#'  similarity_matrix if the sol_df has only 1 row), return a list
-#'  of 'silhouette' objects from the cluster package
+#' Given a solutions data frame containing a similarity matrix list, return a
+#'  list of 'silhouette' objects from the cluster package
 #'
-#' @param sol_df A sol_df (see ?batch_snf)
-#' @param similarity_matrices A list of similarity matrices (see ?batch_snf)
-#'
+#' @param sol_df A `solutions_df` class object created by  `batch_snf()`.
 #' @return silhouette_scores A list of "silhouette" objects from the cluster
 #'  package.
-#'
 #' @export
-calculate_silhouettes <- function(sol_df, similarity_matrices) {
-    # The size of the sol_df and the number of similarity_matrices
-    #  should match up. First, handle the special case of the user providing
-    #  a single similarity_matrix not bundled in a list.
-    if (inherits(similarity_matrices, "matrix")) {
-        similarity_matrices <- list(similarity_matrices)
-    }
-    # Then ensure the size of the two arguments align.
-    if (nrow(sol_df) != length(similarity_matrices)) {
+calculate_silhouettes <- function(sol_df) {
+    similarity_matrices <- attributes(sol_df)$"sim_mats_list"
+    all_is_null <- lapply(
+        similarity_matrices,
+        function(x) {
+            is.null(x)
+        }
+    ) |>
+        unlist() |>
+        all()
+    if (all_is_null) {
         metasnf_error(
-            "Size of sol_df does not match length of",
-            " similarity_matrices."
+            "Solutions data frame is missing similarity matrices attribute.",
+            " Please set `return_sim_mats = TRUE` when calling `batch_snf()`."
         )
     }
     # Average out the intense signal present in the diagonals of the similarity
@@ -74,30 +72,28 @@ calculate_silhouettes <- function(sol_df, similarity_matrices) {
 #' Dunn indices
 #'
 #' @param sol_df A sol_df (see ?batch_snf)
-#'
-#' @param similarity_matrices A list of similarity matrices (see ?batch_snf)
-#'
 #' @return dunn_indices A vector of Dunn indices for each cluster solution
-#'
 #' @export
-calculate_dunn_indices <- function(sol_df, similarity_matrices) {
+calculate_dunn_indices <- function(sol_df) {
     if (!requireNamespace("clv", quietly = TRUE)) {
         metasnf_error(
             "Package \"clv\" must be installed to use this function.",
             call. = FALSE
         )
     }
-    # The size of the sol_df and the number of similarity_matrices
-    #  should match up. First, handle the special case of the user providing
-    #  a single similarity_matrix not bundled in a list.
-    if (inherits(similarity_matrices, "matrix")) {
-        similarity_matrices <- list(similarity_matrices)
-    }
-    # Then ensure the size of the two arguments align.
-    if (nrow(sol_df) != length(similarity_matrices)) {
+    similarity_matrices <- attributes(sol_df)$"sim_mats_list"
+    all_is_null <- lapply(
+        similarity_matrices,
+        function(x) {
+            is.null(x)
+        }
+    ) |>
+        unlist() |>
+        all()
+    if (all_is_null) {
         metasnf_error(
-            "Size of sol_df does not match length of",
-            " similarity_matrices."
+            "Solutions data frame is missing similarity matrices attribute.",
+            " Please set `return_sim_mats = TRUE` when calling `batch_snf()`."
         )
     }
     # Average out the intense signal present in the diagonals of the similarity
@@ -168,11 +164,8 @@ calculate_dunn_indices <- function(sol_df, similarity_matrices) {
 #' Davies-Bouldin indices
 #'
 #' @param sol_df A sol_df (see ?batch_snf)
-#' @param similarity_matrices A list of similarity matrices (see ?batch_snf)
-#'
 #' @return davies_bouldin_indices A vector of Davies-Bouldin indices for each
 #'  cluster solution.
-#'
 #' @export
 calculate_db_indices <- function(sol_df, similarity_matrices) {
     if (!requireNamespace("clv", quietly = TRUE)) {
@@ -181,17 +174,19 @@ calculate_db_indices <- function(sol_df, similarity_matrices) {
             call. = FALSE
         )
     }
-    # The size of the sol_df and the number of similarity_matrices
-    #  should match up. First, handle the special case of the user providing
-    #  a single similarity_matrix not bundled in a list.
-    if (inherits(similarity_matrices, "matrix")) {
-        similarity_matrices <- list(similarity_matrices)
-    }
-    # Then ensure the size of the two arguments align.
-    if (nrow(sol_df) != length(similarity_matrices)) {
+    similarity_matrices <- attributes(sol_df)$"sim_mats_list"
+    all_is_null <- lapply(
+        similarity_matrices,
+        function(x) {
+            is.null(x)
+        }
+    ) |>
+        unlist() |>
+        all()
+    if (all_is_null) {
         metasnf_error(
-            "Size of sol_df does not match length of",
-            " similarity_matrices."
+            "Solutions data frame is missing similarity matrices attribute.",
+            " Please set `return_sim_mats = TRUE` when calling `batch_snf()`."
         )
     }
     # Average out the intense signal present in the diagonals of the similarity

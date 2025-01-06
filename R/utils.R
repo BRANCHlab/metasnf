@@ -69,12 +69,12 @@ char_to_fac <- function(df) {
 #'
 #' @export
 no_subs <- function(df) {
-    if (!"row_id" %in% colnames(df)) {
-        metasnf_error("Dataframe requires 'row_id' column.")
+    if (!"solution" %in% colnames(df)) {
+        metasnf_error("Dataframe requires 'solution' column.")
     }
     df_no_subs <- df |>
         dplyr::select(
-            "row_id",
+            "solution",
             !(dplyr::starts_with("uid_"))
         )
     if (identical(df, df_no_subs)) {
@@ -95,11 +95,11 @@ no_subs <- function(df) {
 #'
 #' @export
 subs <- function(df) {
-    if (!"row_id" %in% colnames(df)) {
-        metasnf_error("Dataframe requires 'row_id' column.")
+    if (!"solution" %in% colnames(df)) {
+        metasnf_error("Dataframe requires 'solution' column.")
     }
     df_subs <- df |> dplyr::select(
-        "row_id",
+        "solution",
         dplyr::starts_with("uid_")
     )
     if (identical(df, df_subs)) {

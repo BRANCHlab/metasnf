@@ -60,14 +60,14 @@ test_that(
     "ensure that columns starting with uid_ are removed from a dataframe",
     {
         df1 <- data.frame(
-            row_id = c(1, 2, 3),
+            solution = c(1, 2, 3),
             A = c(1, 2, 3),
             B = c(1, 2, 3),
             uid_1 = c(1, 2, 3),
             uid_2 = c(1, 2, 3)
         )
         df2 <- data.frame(
-            row_id = c(1, 2, 3),
+            solution = c(1, 2, 3),
             A = c(1, 2, 3),
             B = c(1, 2, 3)
         )
@@ -82,7 +82,7 @@ test_that(
     "ensure that dataframes without any 'uid_' columns raise a warning",
     {
         df <- data.frame(
-            row_id = c(1, 2, 3),
+            solution = c(1, 2, 3),
             A = c(1, 2, 3),
             B = c(1, 2, 3)
         )
@@ -99,14 +99,14 @@ test_that(
     "ensure columns not starting with uid_ are removed from a dataframe",
     {
         df1 <- data.frame(
-            row_id = c(1, 2, 3),
+            solution = c(1, 2, 3),
             A = c(1, 2, 3),
             B = c(1, 2, 3),
             uid_1 = c(1, 2, 3),
             uid_2 = c(1, 2, 3)
         )
         df2 <- data.frame(
-            row_id = c(1, 2, 3),
+            solution = c(1, 2, 3),
             uid_1 = c(1, 2, 3),
             uid_2 = c(1, 2, 3)
         )
@@ -118,7 +118,7 @@ test_that(
 )
 
 test_that(
-    "ensure dataframes without 'row_id' column raises error",
+    "ensure dataframes without 'solution' column raises error",
     {
         df <- data.frame(
             A = c(1, 2, 3),
@@ -128,7 +128,7 @@ test_that(
         )
         expect_error(
             subs(df),
-            regexp = "row_id"
+            regexp = "solution"
         )
     }
 )
@@ -137,7 +137,7 @@ test_that(
     "ensure that dataframes with only 'uid_' columns raise a warning",
     {
         df <- data.frame(
-            row_id = c(1, 2, 3),
+            solution = c(1, 2, 3),
             uid_A = c(1, 2, 3),
             uid_B = c(1, 2, 3)
         )

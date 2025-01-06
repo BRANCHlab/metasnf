@@ -153,7 +153,7 @@ dataframes (found in a data list, see ?data_list) into a single
 similarity matrix through SNF. The format of the settings data frame is as
 follows:
 \itemize{
-\item A column named "row_id": This column is used to keep
+\item A column named "solution": This column is used to keep
 track of the rows and should have integer values only.
 \item A column named "alpha": This column contains the value of the
 alpha hyperparameter that will be used on that run of the SNF pipeline.

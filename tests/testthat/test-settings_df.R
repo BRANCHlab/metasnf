@@ -33,7 +33,7 @@ test_that("return a correctly formatted settings_df", {
     empty_settings_df <- settings_df(data_list)
     empty_has_no_rows <- nrow(empty_settings_df) == 0
     proper_colnames <- (colnames(empty_settings_df) == c(
-        "row_id",
+        "solution",
         "alpha",
         "k",
         "t",

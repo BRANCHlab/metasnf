@@ -11,7 +11,7 @@
 #' @param wm A matrix containing feature weights to use during
 #'  distance matrix calculation. See ?weights_matrix for details on
 #'  how to build this.
-#' @param return_similarity_matrices If TRUE, function will return a list where
+#' @param return_sim_mats If TRUE, function will return a list where
 #'  the first element is the solutions matrix and the second element is a list
 #'  of similarity matrices for each row in the sol_df. Default FALSE.
 #' @param similarity_matrix_dir If specified, this directory will be used to
@@ -25,7 +25,7 @@ parallel_batch_snf <- function(dl,
                                sdf,
                                wm,
                                similarity_matrix_dir,
-                               return_similarity_matrices,
+                               return_sim_mats,
                                processes) {
     future::plan(future::multisession, workers = processes)
     ############################################################################
@@ -38,7 +38,7 @@ parallel_batch_snf <- function(dl,
         sdf = sdf,
         wm = wm,
         similarity_matrix_dir = similarity_matrix_dir,
-        return_similarity_matrices = return_similarity_matrices,
+        return_sim_mats = return_sim_mats,
         prog = prog
     )
     batch_snf_results <- future.apply::future_apply(
@@ -48,7 +48,7 @@ parallel_batch_snf <- function(dl,
     )
     ############################################################################
     future::plan(future::sequential)
-    if (return_similarity_matrices) {
+    if (return_sim_mats) {
         sol_df_rows <- batch_snf_results |>
             lapply(
                 function(x) {
@@ -88,7 +88,7 @@ parallel_batch_snf <- function(dl,
 #' @param wm A matrix containing feature weights to use during
 #'  distance matrix calculation. See ?weights_matrix for details on
 #'  how to build this.
-#' @param return_similarity_matrices If TRUE, function will return a list where
+#' @param return_sim_mats If TRUE, function will return a list where
 #'  the first element is the solutions matrix and the second element is a list
 #'  of similarity matrices for each row in the sol_df. Default FALSE.
 #' @param similarity_matrix_dir If specified, this directory will be used to
@@ -103,7 +103,7 @@ batch_row_closure <- function(dl,
                               sdf,
                               wm,
                               similarity_matrix_dir,
-                              return_similarity_matrices,
+                              return_sim_mats,
                               prog) {
     sdf_names <- colnames(sdf)
     wm_names <- colnames(wm)
@@ -145,10 +145,10 @@ batch_row_closure <- function(dl,
         )
         # Write similarity matrices if requested
         if (!is.null(similarity_matrix_dir)) {
-            row_id <- sdf_row$"row_id"
+            solution <- sdf_row$"solution"
             utils::write.csv(
                 x = fused_network,
-                file = similarity_matrix_path(similarity_matrix_dir, row_id),
+                file = similarity_matrix_path(similarity_matrix_dir, solution),
                 row.names = TRUE
             )
         }
@@ -161,7 +161,7 @@ batch_row_closure <- function(dl,
         sol_df_row <- sdf_row
         sol_df_row$"nclust" <- nclust
         sol_df_row[1, rownames(fused_network)] <- solution
-        if (return_similarity_matrices) {
+        if (return_sim_mats) {
             batch_snf_results <- list(
                 "sol_df_row" = sol_df_row,
                 "similarity_matrix" = fused_network

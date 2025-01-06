@@ -5,7 +5,7 @@
 \title{Heatmap for visualizing a settings matrix}
 \usage{
 settings_df_heatmap(
-  settings_df,
+  settings,
   order = NULL,
   remove_fixed_columns = TRUE,
   show_column_names = TRUE,
@@ -22,7 +22,7 @@ settings_df_heatmap(
 )
 }
 \arguments{
-\item{settings_df}{Matrix indicating parameters to iterate SNF through.}
+\item{settings}{Matrix indicating parameters to iterate SNF through.}
 
 \item{order}{Numeric vector indicating row ordering of settings matrix.}
 

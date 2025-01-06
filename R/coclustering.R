@@ -81,7 +81,7 @@ subsample_dl <- function(dl,
 #' @return By default, returns a one-element list: `cluster_solutions`, which
 #'  is itself a list of cluster solution data frames corresponding to each of
 #'  the provided data list subsamples. Setting the parameters
-#'  `return_similarity_matrices`  and `return_solutions_matrices` to `TRUE`
+#'  `return_sim_mats`  and `return_solutions_matrices` to `TRUE`
 #'  will turn the result of the function to a three-element list containing the
 #'  corresponding solutions matrices and final fused similarity matrices of
 #'  those cluster solutions, should you require these objects for your own

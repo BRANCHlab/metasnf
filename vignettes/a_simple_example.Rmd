@@ -260,7 +260,7 @@ settings_df
 
 The columns in this `settings_df` mean the following:
 
-* row_id: A way to keep track of the different rows
+* solution: A way to keep track of the different rows
 * alpha, k, t: The hyperparameters seen above
 * snf_scheme: Which "scheme" will be used to transform the inputs into a final fused network. We'll discuss this in more detail in the next vignette.
 * clust_alg: Which clustering algorithm will be applied to the final fused network. By default, one of two possible base options are randomly chosen. A value of 2 indicates that spectral clustering will be used and that the number of clusters will be determined by the rotation cost heuristic.
@@ -299,14 +299,14 @@ These cluster results are exactly the same as in the original SNF example:
 identical(cluster_solution$"cluster", true_label)
 ```
 
-Running `batch_snf` with the `return_similarity_matrices` parameter set to `TRUE` will let us also take a look at the final fused networks from SNF rather than just the results of applying spectral clustering to those networks:
+Running `batch_snf` with the `return_sim_mats` parameter set to `TRUE` will let us also take a look at the final fused networks from SNF rather than just the results of applying spectral clustering to those networks:
 
 ```{r}
 
 batch_snf_results <- batch_snf(
     data_list,
     settings_df,
-    return_similarity_matrices = TRUE
+    return_sim_mats = TRUE
 )
 
 names(batch_snf_results)

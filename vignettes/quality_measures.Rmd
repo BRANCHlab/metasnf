@@ -53,7 +53,7 @@ settings_df <- settings_df(
 batch_snf_results <- batch_snf(
     data_list,
     settings_df,
-    return_similarity_matrices = TRUE
+    return_sim_mats = TRUE
 )
 
 solutions_matrix <- batch_snf_results$"solutions_matrix"

@@ -119,12 +119,12 @@ batch_nmi <- function(dl,
     # Transpose and clean
     ###########################################################################
     if (transpose) {
-        row_ids <- nmi_df$"row_id"
+        solution_idx <- nmi_df$"solution"
         nmi_df <- t(nmi_df)
         nmi_df <- nmi_df[-1, , drop = FALSE]
         nmi_df <- data.frame(rownames(nmi_df), nmi_df)
         rownames(nmi_df) <- NULL
-        colnames(nmi_df) <- c("feature", paste0("row_id_", row_ids))
+        colnames(nmi_df) <- c("feature", paste0("s", solution_idx))
         return(nmi_df)
     }
     return(nmi_df)

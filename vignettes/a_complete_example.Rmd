@@ -694,11 +694,20 @@ Recall that the `solutions_df` class (and, by extension, the `ext_solutions_df` 
 Give it a try with the code below:
 
 ```{r eval = FALSE}
+annotation_data <- ext_sol_df |>
+    as.data.frame() |>
+    dplyr::mutate(
+        key_subjects_cluster_together = dplyr::case_when(
+            uid_NDAR_INVLF3TNDUZ == uid_NDAR_INVLDQH8ATK ~ TRUE,
+            TRUE ~ FALSE
+        )
+    )
+
 annotated_ari_hm3 <- adjusted_rand_index_heatmap(
     sol_aris,
     order = meta_cluster_order,
     split_vector = c(11, 14),
-    data = ext_sol_df,
+    data = annotation_data,
     top_hm = list(
         "Depression p-value" = "cbcl_depress_r_pval",
         "Anxiety p-value" = "cbcl_anxiety_r_pval",
@@ -734,39 +743,24 @@ annotated_ari_hm3 <- adjusted_rand_index_heatmap(
 Quality metrics are another useful heuristic for the goodness of a cluster that don't require any contextualization of results in the domain they may be used in.
 metasnf enables measures of silhouette scores, Dunn indices, and Davies-Bouldin indices.
 To calculate these values, we'll need not only the cluster results but also the final fused network (the similarity matrices produced by SNF) that the clusters came from.
-These similarity matrices can be collected from the `batch_snf` using the `return_similarity_matrices` parameter:
+These similarity matrices can be collected from the `batch_snf` using the `return_sim_mats` parameter:
 
 ```{r}
-batch_snf_results <- batch_snf(
-    input_dl,
-    sdf,
-    return_similarity_matrices = TRUE
+sol_df <- batch_snf(
+    dl = input_dl,
+    sc = my_sc,
+    return_sim_mats = TRUE
 )
-
-sol_df <- batch_snf_results$"sol_df"
-similarity_matrices <- batch_snf_results$"similarity_matrices"
 ```
 
-This time, the output of `batch_snf` is a list.
-The first element of the list is a single sol_df, like what we usually get.
-The second element is *yet another list* containing one final fused network (AKA similarity matrix / similarity matrix) per SNF run.
-Using those two lists, we can calculate the above mentioned quality metrics:
+Now, the solutions data frame contains a non-empty list of similarity matrices as one of its attributes. 
+These similarity matrices are the final SNF-derived networks from each SNF run.
+Using that attribute, we can calculate the above mentioned quality metrics:
 
 ```{r eval = FALSE}
-silhouette_scores <- calculate_silhouettes(
-    sol_df,
-    similarity_matrices
-)
-
-dunn_indices <- calculate_dunn_indices(
-    sol_df,
-    similarity_matrices
-)
-
-db_indices <- calculate_db_indices(
-    sol_df,
-    similarity_matrices
-)
+silhouette_scores <- calculate_silhouettes(sol_df)
+dunn_indices <- calculate_dunn_indices(sol_df)
+db_indices <- calculate_db_indices(sol_df)
 ```
 
 The first function is a wrapper around `cluster::silhouette` while the second and third come from the *clv* package.
@@ -801,26 +795,13 @@ Just like when generating the initial `data_list`, we need to specify the name o
 We will next extend our `sol_df` with p-values from regressing the `target_list` features onto our generated clusters.
 
 ```{r}
-ext_sol_df <- extend_solutions(sol_df, target_list)
-
-colnames(ext_sol_df)[1:25]
-
-# Looking at the newly added columns
-head(no_subs(ext_sol_df))
-```
-
-If you just want the p-values:
-
-```{r}
-target_pvals <- get_pvals(ext_sol_df)
-
-head(target_pvals)
+ext_sol_df <- extend_solutions(sol_df, target_dl)
 ```
 
 There is a heatmap for visualizing this too:
 
 ```{r eval = FALSE}
-pval_hm <- pval_heatmap(target_pvals, order = meta_cluster_order)
+pval_hm <- pval_heatmap(ext_sol_df, order = meta_cluster_order)
 ```
 
 ```{r eval = FALSE, echo = FALSE}
@@ -848,11 +829,13 @@ We recommend using *label propagation* (provided by the SNFtool package in the `
 
 Here's a quick step through of the complete procedure, from the beginning, with label propagation to validate our findings.
 
-The `metasnf` package comes equipped with a function to do the training/testing split for you :)
+The `metasnf` package comes equipped with the function `train_test_assign` to provide random splitting for you.
 
 ```{r}
 # All the subjects present in all dataframes with no NAs
-all_subjects <- input_dl[[1]]$"data"$"uid"
+all_subjects <- uids(input_dl)
+
+all_subjects
 
 # Remove the "uid_" prefix to allow merges with the original data
 all_subjects <- gsub("uid_", "", all_subjects)
@@ -883,7 +866,7 @@ test_anxiety <- anxiety[anxiety$"unique_id" %in% test_subs, ]
 test_depress <- depress[depress$"unique_id" %in% test_subs, ]
 
 # A data list with just training subjects
-train_input_dl <- data_list(
+train_dl <- data_list(
     list(train_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(train_cort_sa, "cortical_sa", "neuroimaging", "continuous"),
     list(train_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -893,7 +876,7 @@ train_input_dl <- data_list(
 )
 
 # A data list with training and testing subjects
-full_input_dl <- data_list(
+full_dl <- data_list(
     list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -903,7 +886,7 @@ full_input_dl <- data_list(
 )
 
 # Construct the target lists
-train_target_list <- data_list(
+train_target_dl <- data_list(
     list(train_anxiety, "anxiety", "behaviour", "ordinal"),
     list(train_depress, "depressed", "behaviour", "ordinal"),
     uid = "unique_id"
@@ -911,35 +894,35 @@ train_target_list <- data_list(
 
 # Find a clustering solution in your training data
 set.seed(42)
-sdf <- settings_df(
-    train_input_dl,
+my_sc <- snf_config(
+    train_dl,
     n_solutions = 5,
     min_k = 10,
     max_k = 30
 )
 
 train_sol_df <- batch_snf(
-    train_input_dl,
-    sdf
+    train_dl,
+    my_sc
 )
 
 ext_sol_df <- extend_solutions(
     train_sol_df,
-    train_target_list
+    train_target_dl
 )
 
-ext_sol_df |> colnames()
+ext_sol_df
 
-# The fifth row had the lowest minimum p-value across our outcomes
+# The first row had the lowest minimum p-value across our outcomes
 lowest_min_pval <- min(ext_sol_df$"min_pval")
 which(ext_sol_df$"min_pval" == lowest_min_pval)
 
 # Keep track of your top solution
-top_row <- ext_sol_df[4, ]
+top_row <- ext_sol_df[1, ]
 
 # Use the solutions matrix from the training subjects and the data list from
 # the training and testing subjects to propagate labels to the test subjects
-propagated_labels <- lp_sol_df(top_row, full_input_dl)
+propagated_labels <- lp_sol_df(top_row, full_dl)
 
 head(propagated_labels)
 tail(propagated_labels)
@@ -950,7 +933,7 @@ You could, if you wanted, see how *all* of your clustering solutions propagate t
 ```{r}
 propagated_labels_all <- lp_sol_df(
     ext_sol_df,
-    full_input_dl
+    full_dl
 )
 
 head(propagated_labels_all)

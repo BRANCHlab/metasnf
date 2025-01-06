@@ -70,16 +70,17 @@ label_prop <- function(full_fused_network, clusters) {
 #'
 #' @export
 lp_sol_df <- function(train_sol_df,
-                                full_dl,
-                                dfl = NULL,
-                                wm = NULL,
-                                verbose = FALSE) {
+                      full_dl,
+                      verbose = FALSE) {
     ###########################################################################
     # 1. Reorder data list subjects
     ###########################################################################
+    if (inherits(train_sol_df, "ext_solutions_df")) {
+        train_sol_df <- attributes(train_sol_df)$"solutions_df"
+    }
     train_subjects <- uids(train_sol_df)
-    all_subjects <- full_dl[[1]][[1]]$"uid"
-    # Quick check to make sure the train subjects are all in the full list
+    all_subjects <- uids(full_dl)
+    # Check to make sure the train subjects are all in the full list
     if (!all(train_subjects %in% all_subjects)) {
         metasnf_error(
             "Not all subjects in the provided solutions matrix are present in",
@@ -91,85 +92,43 @@ lp_sol_df <- function(train_sol_df,
     full_dl <- reorder_dl_subs(full_dl, lp_ordered_subjects)
     ###########################################################################
     # 2. Prepare vectors containing the names of the train and test subjects
-    ###########################################################################
     n_train <- length(train_subjects)
     n_test <- length(test_subjects)
     group_vec <- c(rep("train", n_train), rep("test", n_test))
     ###########################################################################
-    # 3. SNF of the full data list
-    ###########################################################################
-    ###########################################################################
-    ## 3-1. Creation of dist_fns_list, if it does not already exist
-    ###########################################################################
-    if (is.null(dfl)) {
-        dfl <- dist_fns_list(use_default_dist_fns = TRUE)
-    }
-    ###########################################################################
-    ## 3-2. Create (or check) wm
-    ###########################################################################
-    if (is.null(wm)) {
-        wm <- weights_matrix(
-            full_dl,
-            n_solutions = nrow(train_sol_df)
-        )
-    } else {
-        if (nrow(wm) != nrow(train_sol_df)) {
-            metasnf_error(
-                "Weights_matrix and train_sol_df",
-                " should have the same number of rows."
-            )
-        }
-    }
-    ###########################################################################
-    ## 3-3. SNF one row at a time
-    ###########################################################################
+    sc <- as_snf_config(train_sol_df)
     for (i in seq_len(nrow(train_sol_df))) {
         if (verbose) {
             cat(
-                "Processing row ", i, " of ",
-                nrow(train_sol_df), "...\n",
+                "Processing row ", i, " of ", nrow(train_sol_df), "...\n",
                 sep = ""
             )
         }
         current_row <- train_sol_df[i, ]
-        sig <- paste0(current_row$"row_id")
-        reduced_dl <- drop_inputs(as_settings_df(current_row), full_dl)
-        scheme <- current_row$"snf_scheme"
-        k <- current_row$"k"
-        alpha <- current_row$"alpha"
-        t <- current_row$"t"
-        cnt_dist <- current_row$"cnt_dist"
-        dsc_dist <- current_row$"dsc_dist"
-        ord_dist <- current_row$"ord_dist"
-        cat_dist <- current_row$"cat_dist"
-        mix_dist <- current_row$"mix_dist"
-        cnt_dist_fn <- dfl$"cnt_dist_fns"[[cnt_dist]]
-        dsc_dist_fn <- dfl$"dsc_dist_fns"[[dsc_dist]]
-        ord_dist_fn <- dfl$"ord_dist_fns"[[ord_dist]]
-        cat_dist_fn <- dfl$"cat_dist_fns"[[cat_dist]]
-        mix_dist_fn <- dfl$"mix_dist_fns"[[mix_dist]]
-        weights_row <- wm[i, , drop = FALSE]
+        sig <- paste0(current_row$"solution")
         #######################################################################
         # The actual SNF
         #######################################################################
+        # 1. Run SNF using the full data list
+        sdf_row <- sc$"settings_df"[i, ]
         full_fused_network <- snf_step(
-            reduced_dl,
-            scheme = scheme,
-            k = k,
-            alpha = alpha,
-            t = t,
-            cnt_dist_fn = cnt_dist_fn,
-            dsc_dist_fn = dsc_dist_fn,
-            ord_dist_fn = ord_dist_fn,
-            cat_dist_fn = cat_dist_fn,
-            mix_dist_fn = mix_dist_fn,
-            weights_row = weights_row
+            dl = drop_inputs(sdf_row, full_dl),
+            scheme = sdf_row$"snf_scheme",
+            k = sdf_row$"k",
+            alpha = sdf_row$"alpha",
+            t = sdf_row$"t",
+            cnt_dist_fn = sc$"dist_fns_list"$"cnt_dist_fns"[[sdf_row$"cnt_dist"]],
+            dsc_dist_fn = sc$"dist_fns_list"$"dsc_dist_fns"[[sdf_row$"dsc_dist"]],
+            ord_dist_fn = sc$"dist_fns_list"$"ord_dist_fns"[[sdf_row$"ord_dist"]],
+            cat_dist_fn = sc$"dist_fns_list"$"cat_dist_fns"[[sdf_row$"cat_dist"]],
+            mix_dist_fn = sc$"dist_fns_list"$"mix_dist_fns"[[sdf_row$"mix_dist"]],
+            weights_row = sc$"weights_matrix"[i, , drop = FALSE]
         )
         full_fused_network <- full_fused_network[
             lp_ordered_subjects,
             lp_ordered_subjects
         ]
-        clusters <- get_clusters(current_row)
+        clusters <- t(train_sol_df[i, ])[, 2]
         #######################################################################
         # Label propagation
         #######################################################################

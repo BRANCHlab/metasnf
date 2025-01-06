@@ -5,7 +5,7 @@
 #' dataframes (found in a data list, see ?data_list) into a single
 #' similarity matrix through SNF. The format of the settings data frame is as
 #' follows:
-#' * A column named "row_id": This column is used to keep
+#' * A column named "solution": This column is used to keep
 #'   track of the rows and should have integer values only.
 #' * A column named "alpha": This column contains the value of the
 #'   alpha hyperparameter that will be used on that run of the SNF pipeline.
@@ -167,7 +167,7 @@ settings_df <- function(dl,
                         retry_limit = 10,
                         allow_duplicates = FALSE) {
     sdfl_columns <- c(
-        "row_id",
+        "solution",
         "alpha",
         "k",
         "t",
@@ -267,7 +267,7 @@ check_sdfl_is_df <- function(sdfl) {
 #'  duplicate names in a generated data list.
 check_sdfl_colnames <- function(sdfl) {
     sdf_cols <- c(
-        "row_id",
+        "solution",
         "alpha",
         "k",
         "t",
@@ -484,7 +484,7 @@ add_settings_df_rows <- function(sdf,
     i <- 0
     num_retries <- 0
     while (i < n_solutions) {
-        row_id <- nrow(sdf) + 1
+        solution <- nrow(sdf) + 1
         new_row <- vector()
         # Inclusion columns
         inclusions <- random_removal(
@@ -544,7 +544,7 @@ add_settings_df_rows <- function(sdf,
         # 7. Combine selected values to a single dataframe row
         #######################################################################
         new_row <- cbind(
-            row_id,
+            solution,
             alpha,
             k,
             t,
