@@ -42,7 +42,7 @@ For example, step one could be done by assigning clusters in your training set m
 Step two could be done just by calculating the euclidean distances across all the training and testing subjects for a small subset of features.
 The features used to calculate the similarities in step 2 don't necessarily need to be the same ones used to derive the cluster solution in the training set either.
 
-All that aside, we show here a simple approach that involves assigning the clusters by a call to `batch_snf`, assembling a data list that has the training and testing set subjects, and feeding the results into a simple label propagating function, `lp_solutions_matrix`.
+All that aside, we show here a simple approach that involves assigning the clusters by a call to `batch_snf`, assembling a data list that has the training and testing set subjects, and feeding the results into a simple label propagating function, `lp_sol_df`.
 
 ```{r}
 library(metasnf)

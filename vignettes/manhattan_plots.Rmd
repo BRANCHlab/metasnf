@@ -34,7 +34,7 @@ library(metasnf)
 
 # Start by making a data list containing all our dataframes to more easily
 # identify subjects without missing data
-full_data_list <- data_list(
+full_dl <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -44,26 +44,26 @@ full_data_list <- data_list(
 )
 
 # Partition into a data and target list (optional)
-data_list <- full_data_list[1:3]
-target_list <- full_data_list[4:5]
+dl <- full_dl[1:3]
+target_dl <- full_dl[4:5]
 
 # Build space of settings to cluster over
 set.seed(42)
-settings_df <- settings_df(
-    data_list,
+sc <- snf_config(
+    dl = dl,
     n_solutions = 20,
     min_k = 20,
     max_k = 50
 )
 
 # Clustering
-solutions_matrix <- batch_snf(data_list, settings_df)
+sol_df <- batch_snf(dl, sc)
 
 # Calculate p-values between cluster solutions and features
-extended_solutions_matrix <- extend_solutions(
-    solutions_matrix,
-    dl = data_list,
-    tl = target_list,
+ext_sol_df <- extend_solutions(
+    sol_df,
+    dl = dl,
+    tl = target_dl,
     min_pval = 1e-10 # p-values below 1e-10 will be thresholded to 1e-10
 )
 ```
@@ -72,7 +72,7 @@ extended_solutions_matrix <- extend_solutions(
 
 ```{r eval = FALSE}
 esm_manhattan <- esm_manhattan_plot(
-    extended_solutions_matrix[1:5, ],
+    ext_sol_df[1:5, ],
     neg_log_pval_thresh = 5,
     threshold = 0.05,
     point_size = 3,
@@ -106,14 +106,14 @@ The `mc_manhattan_plot` function can be used after meta clustering to more effic
 
 ```{r eval = FALSE}
 # Calculate pairwise similarities between cluster solutions
-solutions_matrix_aris <- calc_aris(solutions_matrix)
+sol_aris <- calc_aris(sol_df)
 
 # Extract hierarchical clustering order of the cluster solutions
-meta_cluster_order <- get_matrix_order(solutions_matrix_aris)
+meta_cluster_order <- get_matrix_order(sol_aris)
 
 # Create a base heatmap for visual meta clustering
 ari_hm <- adjusted_rand_index_heatmap(
-    solutions_matrix_aris,
+    sol_aris,
     order = meta_cluster_order
 )
 
@@ -126,23 +126,23 @@ split_vec <- c(2, 5, 12, 17)
 
 # Create a base heatmap for visual meta clustering
 ari_hm <- adjusted_rand_index_heatmap(
-    solutions_matrix_aris,
+    sol_aris,
     order = meta_cluster_order,
     split_vector = split_vec
 )
 
 # Extracting representative solutions from each defined meta cluster
 rep_solutions <- get_representative_solutions(
-    solutions_matrix_aris,
+    sol_aris,
     split_vector = split_vec,
     order = meta_cluster_order,
-    extended_solutions_matrix
+    ext_sol_df
 )
 
 mc_manhattan <- mc_manhattan_plot(
     rep_solutions,
-    dl = data_list,
-    tl = target_list,
+    dl = dl,
+    target_dl = target_dl,
     point_size = 3,
     text_size = 12,
     plot_title = "Feature-Meta Cluster Associations",
@@ -173,7 +173,7 @@ The only thing needed for this plot is a data_list - no clustering necessary.
 
 ```{r eval = FALSE}
 var_manhattan <- var_manhattan_plot(
-    data_list,
+    dl,
     key_var = "household_income",
     plot_title = "Correlation of Features with Household Income",
     text_size = 16,
