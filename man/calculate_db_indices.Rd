@@ -4,12 +4,10 @@
 \alias{calculate_db_indices}
 \title{Calculate Davies-Bouldin indices}
 \usage{
-calculate_db_indices(sol_df, similarity_matrices)
+calculate_db_indices(sol_df)
 }
 \arguments{
 \item{sol_df}{A sol_df (see ?batch_snf)}
-
-\item{similarity_matrices}{A list of similarity matrices (see ?batch_snf)}
 }
 \value{
 davies_bouldin_indices A vector of Davies-Bouldin indices for each

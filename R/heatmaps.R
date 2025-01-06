@@ -65,7 +65,12 @@ similarity_matrix_heatmap <- function(similarity_matrix,
     ###########################################################################
     # Assemble any provided data
     ###########################################################################
-    data <- as.data.frame(data)
+    if (inherits(data, "solutions_df") | inherits(data, "ext_solutions_df")) {
+        # Keep attributes flag merges in sdf, wm, and sol_df
+        data <- as.data.frame(data, keep_attributes = TRUE)
+    } else {
+        data <- as.data.frame(data)
+    }
     ###########################################################################
     # Ensure that annotations aren't being requested when data isn't given
     ###########################################################################
@@ -624,46 +629,26 @@ settings_df_heatmap <- function(settings,
 #' Heatmap of p-values
 #'
 #' @param pvals A matrix of p-values.
-#'
 #' @param order Numeric vector containing row order of the heatmap.
-#'
 #' @param cluster_columns Whether columns should be sorted by hierarchical
-#' clustering.
-#'
+#'  clustering.
 #' @param cluster_rows Whether rows should be sorted by hierarchical
-#' clustering.
-#'
+#'  clustering.
 #' @param show_column_names Whether column names should be shown.
-#'
 #' @param min_colour Colour used for the lowest value in the heatmap.
-#'
-#' @param mid_colour Colour used for the middle value in the heatmap.
-#'
 #' @param max_colour Colour used for the highest value in the heatmap.
-#'
 #' @param legend_breaks Numeric vector of breaks for the legend.
-#'
 #' @param show_row_names Whether row names should be shown.
-#'
 #' @param col Colour function for `ComplexHeatmap::Heatmap()`
-#'
 #' @param heatmap_legend_param Legend function for `ComplexHeatmap::Heatmap()`
-#'
 #' @param rect_gp Cell border function for `ComplexHeatmap::Heatmap()`
-#'
 #' @param row_split_vector Vector of indices to split rows by.
-#'
 #' @param column_split_vector Vector of indices to split columns by.
-#'
 #' @param row_split Standard parameter of `ComplexHeatmap::Heatmap`.
-#'
 #' @param column_split Standard parameter of `ComplexHeatmap::Heatmap`.
-#'
 #' @param ... Additional parameters passed to `ComplexHeatmap::Heatmap`.
-#'
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
-#' that displays the provided p-values.
-#'
+#'  that displays the provided p-values.
 #' @export
 pval_heatmap <- function(pvals,
                          order = NULL,

@@ -180,7 +180,7 @@ auto_plot <- function(sol_df_row = NULL,
     # Generating the required cluster dataframe
     ###########################################################################
     if (is.null(cluster_df)) {
-        sol_df_row <- data.frame(sol_df_row[1, ])
+        sol_df_row <- sol_df_row[1, ]
         cluster_df <- t(sol_df_row)
     }
     ###########################################################################
@@ -202,12 +202,13 @@ auto_plot <- function(sol_df_row = NULL,
     # Merge cluster solution and dl_df to get full data for plotting
     ###########################################################################
     full_data <- dplyr::inner_join(cluster_df, dl_df, by = "uid")
-    full_data$"cluster" <- factor(full_data$"cluster")
+    # Second column contains the cluster column
+    full_data$"cluster" <- factor(full_data[, 2])
     if (return_plots == FALSE) {
         return(full_data)
     }
     # Identifying features to plot (first cols are cluster and uid)
-    features <- colnames(full_data)[3:length(colnames(full_data))]
+    features <- attributes(dl)$"features"
     # Generating plot for every feature
     plot_list <- list()
     for (i in seq_along(features)) {

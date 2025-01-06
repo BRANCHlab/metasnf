@@ -293,7 +293,6 @@ sol_df <- batch_snf(input_dl, my_sc)
 sol_df
 ```
 
-
 Just like that, 20 different cluster solutions have been generated!
 
 In practice, you may end up wanting to create hundreds or thousands of cluster solutions at a time.
@@ -352,7 +351,7 @@ ari_hm <- adjusted_rand_index_heatmap(
 ```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = ari_hm,
-    path = "./adjusted_rand_index_heatmap.png",
+    path = "vignettes/adjusted_rand_index_heatmap.png",
     width = 330,
     height = 300,
     res = 100
@@ -402,7 +401,7 @@ ari_mc_hm <- adjusted_rand_index_heatmap(
 ```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = ari_mc_hm,
-    path = "./ari_mc_hm.png",
+    path = "vignettes/ari_mc_hm.png",
     width = 330,
     height = 300,
     res = 100
@@ -422,6 +421,7 @@ At this point, we have our meta clusters but are not yet sure of how they differ
 We start by running the `extend_solutions` function, which will calculate p-values representing the strength of the association between cluster membership (treated as a categorical feature) and any feature present in a provided data list and/or target_list.
 
 `extend_solutions` also adds summary p-value measures (min, mean, and max) of any features present in the target list.
+This function can be quite slow depending on how large your data is; you can monitor its progress by setting `verbose = TRUE`.
 
 ```{r}
 # Only looking at our out-of-model p-values
@@ -430,6 +430,8 @@ ext_sol_df <- extend_solutions(
     target_dl = target_dl
 )
 
+ext_sol_df
+
 # Re-running to calculate the p-value for every single input and out-of-model
 # feature:
 ext_sol_df <- extend_solutions(
@@ -437,6 +439,10 @@ ext_sol_df <- extend_solutions(
     dl = input_dl,
     target_dl = target_dl
 )
+
+ext_sol_df
+
+ext_sol_df[, (ncol(ext_sol_df) - 2):ncol(ext_sol_df)]
 ```
 
 Functionally, the only difference between the data list passed into the `dl` parameter and the one passed into the `target_dl` parameter is that the `target_dl` features are the only ones used for generating the p-value summary columns.
@@ -514,12 +520,13 @@ This also makes the documentation for the `ComplexHeatmap` package one of the be
 The data for the annotations don't necessarily need to come from functions in metasnf either.
 If you wanted to, for example, highlight the solutions where two very specific observations happened to cluster together, you could easily add that in as another annotation.
 
-By converting an `ext_solutions_df` class object into a data frame, it'll retain both the p-value and cluster assignment columns.
+By converting an `ext_solutions_df` class object into a data frame with the parameter `keep_attributes = TRUE`, the resulting data frame will retain the p-value information from the `ext_solutions_df` side of things,  cluster assignment columns from the `solutions_df` side of things, and `settings_df` and `weights_matrix` columns from the embedded original SNF config.
+
 Then, we can use `dplyr::mutate()` to create a new column flagging when two observations co-cluster.
 
 ```{r eval = FALSE}
 annotation_data <- ext_sol_df |>
-    as.data.frame() |>
+    as.data.frame(keep_attributes = TRUE) |>
     dplyr::mutate(
         key_subjects_cluster_together = dplyr::case_when(
             uid_NDAR_INVLF3TNDUZ == uid_NDAR_INVLDQH8ATK ~ TRUE,
@@ -695,7 +702,7 @@ Give it a try with the code below:
 
 ```{r eval = FALSE}
 annotation_data <- ext_sol_df |>
-    as.data.frame() |>
+    as.data.frame(keep_attributes = TRUE) |>
     dplyr::mutate(
         key_subjects_cluster_together = dplyr::case_when(
             uid_NDAR_INVLF3TNDUZ == uid_NDAR_INVLDQH8ATK ~ TRUE,

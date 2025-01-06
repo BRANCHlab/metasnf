@@ -33,7 +33,7 @@ To use these functions, you will need to have the `clv` package installed.
 library(metasnf)
 
 # generate data_list
-data_list <- data_list(
+dl <- data_list(
     list(cort_t, "cort_t", "neuroimaging", "continuous"),
     list(cort_sa, "cort_sa", "neuroimaging", "continuous"),
     list(subc_v, "subc_v", "neuroimaging", "continuous"),
@@ -44,38 +44,26 @@ data_list <- data_list(
 
 # build settings_df
 set.seed(42)
-settings_df <- settings_df(
-    data_list,
+sc <- snf_config(
+    dl = dl,
     n_solutions = 15
 )
 
 # collect similarity matrices and solutions matrix from batch_snf
-batch_snf_results <- batch_snf(
-    data_list,
-    settings_df,
+sol_df <- batch_snf(
+    dl = dl,
+    sc,
     return_sim_mats = TRUE
 )
 
-solutions_matrix <- batch_snf_results$"solutions_matrix"
-similarity_matrices <- batch_snf_results$"similarity_matrices"
-
 # calculate Davies-Bouldin indices
-davies_bouldin_indices <- calculate_db_indices(
-    solutions_matrix,
-    similarity_matrices
-)
+davies_bouldin_indices <- calculate_db_indices(sol_df)
 
 # calculate Dunn indices
-dunn_indices <- calculate_dunn_indices(
-    solutions_matrix,
-    similarity_matrices
-)
+dunn_indices <- calculate_dunn_indices(sol_df)
 
 # calculate silhouette scores
-silhouette_scores <- calculate_silhouettes(
-    solutions_matrix,
-    similarity_matrices
-)
+silhouette_scores <- calculate_silhouettes(sol_df)
 
 # plot the silhouette scores of the first solutions
 plot(silhouette_scores[[1]])

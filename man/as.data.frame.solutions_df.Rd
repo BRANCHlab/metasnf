@@ -4,7 +4,13 @@
 \alias{as.data.frame.solutions_df}
 \title{Coerce a \code{solutions_df} class object into a \code{data.frame} class object}
 \usage{
-\method{as.data.frame}{solutions_df}(x, row.names = NULL, optional = FALSE, ...)
+\method{as.data.frame}{solutions_df}(
+  x,
+  row.names = NULL,
+  optional = FALSE,
+  keep_attributes = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{solutions_df} class object.}
@@ -12,6 +18,9 @@
 \item{row.names}{Additional parameter passed to \code{as.data.frame()}.}
 
 \item{optional}{Additional parameter passed to \code{as.data.frame()}.}
+
+\item{keep_attributes}{If TRUE, resulting data frame includes settings
+data frame and weights matrix.}
 
 \item{...}{Additional parameter passed to \code{as.data.frame()}.}
 }

@@ -104,7 +104,7 @@ batch_nmi <- function(dl,
                 # Calculate NMI
                 nmi <- SNFtool::calNMI(
                     joint_solution$"solo_cluster",
-                    joint_solution[, 2]
+                    joint_solution[, 3]
                 )
                 # Append to this feature's NMI vector
                 feature_nmis <- c(feature_nmis, nmi)

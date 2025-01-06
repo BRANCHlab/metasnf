@@ -4,12 +4,10 @@
 \alias{calculate_dunn_indices}
 \title{Calculate Dunn indices}
 \usage{
-calculate_dunn_indices(sol_df, similarity_matrices)
+calculate_dunn_indices(sol_df)
 }
 \arguments{
 \item{sol_df}{A sol_df (see ?batch_snf)}
-
-\item{similarity_matrices}{A list of similarity matrices (see ?batch_snf)}
 }
 \value{
 dunn_indices A vector of Dunn indices for each cluster solution

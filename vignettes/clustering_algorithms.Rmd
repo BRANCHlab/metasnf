@@ -47,8 +47,8 @@ dl <- data_list(
 )
 
 set.seed(42)
-settings_df <- settings_df(
-    dl,
+sc <- snf_config(
+    dl = dl,
     n_solutions = 5,
     max_k = 40
 )
@@ -57,11 +57,11 @@ settings_df <- settings_df(
 Information about the clustering used by default is stored in the settings matrix:
 
 ```{r}
-settings_df$"clust_alg"
+sc$"clust_fns_list"
 ```
 
 The "1" corresponds to spectral clustering using the eigen-gap heuristic to determine the number of clusters, while the "2" corresponds to spectral clustering using the rotation cost heuristic to determine the number of clusters.
-You can find this information by running `?settings_df`.
+You can find this information by running `?snf_config`.
 
 ### Other built-in clustering options
 
@@ -79,20 +79,23 @@ Currently, the available clustering algorithms are:
 
 The first two are the defaults, and the remaining ones specifically use 2, 3, 4, ... and so on as their number of clusters rather than whatever is calculated by a separate heuristic function.
 
-To make use of any of these alternative algorithms, you'll need to provide `batch_snf` with a custom `clust_fns_list`.
+To make use of any of these alternative algorithms, you'll need to customize the `clust_fns_list` generated during the call to `snf_config()`.
 Here's what that looks like:
 
 ```{r}
-cfl <- clust_fns_list(use_default_clust_fns = TRUE)
-
 # The default list:
-cfl
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 5,
+    use_default_clust_fns = TRUE
+)
 
-# A prettier format:
-summarize_clust_fns_list(cfl)
+sc$"clust_fns_list"
 
 # Adding algorithms provided by the package
-cfl <- clust_fns_list(
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 5,
     clust_fns = list(
         "two_cluster_spectral" = spectral_two,
         "five_cluster_spectral" = spectral_five
@@ -101,52 +104,35 @@ cfl <- clust_fns_list(
 )
 
 # Note that this one has the default algorithms as well as the newly added ones
-summarize_clust_fns_list(cfl)
+sc$"clust_fns_list"
 
-# This list has only the newly added ones, thanks to the disable_base parameter
-cfl <- clust_fns_list(
+# This list has only the newly added ones
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 5,
     clust_fns = list(
         "two_cluster_spectral" = spectral_two,
         "five_cluster_spectral" = spectral_five
     )
 )
 
-summarize_clust_fns_list(cfl)
+sc$"clust_fns_list"
 ```
 
-**By default, the settings matrix only varies over the values 1 and 2**.
-This is because, by default, it only expects you to use the default clustering algorithms.
-If your custom list is two algorithms long, that's fine, but if it isn't, it's imperative that you either manually adjust the numbers in `settings_df$"clust_algs"` or (more easily) you supply your custom list during settings matrix generation:
+When looking at the clustering functions values in the settings part of an SNF config, you can see that there is some random fluctuation between 1 and 2:
 
 ```{r}
-# This list has only the newly added ones, thanks to the disable_base parameter
-cfl <- clust_fns_list(
-    clust_fns = list(
-        "two_cluster_spectral" = spectral_two,
-        "three_cluster_spectral" = spectral_three,
-        "five_cluster_spectral" = spectral_five
-    )
-)
-
-# Specifying 5 different sets of settings for SNF
-set.seed(42)
-settings_df <- settings_df(
-    dl,
-    n_solutions = 10,
-    max_k = 40,
-    clustering_algorithms = cfl
-)
-
-settings_df$"clust_alg"
+sc
 ```
 
-Then, make sure to provide the `clust_fns_list` once more during the call to `batch_snf`:
+The settings segment contains pointers to which clustering function to use, while the clustering functions list stores the actual functions.
+
+When you are satisfied with the clustering functions you've specified, you can try them out with a typical call to `batch_snf()`:
 
 ```{r eval = FALSE}
-solutions_matrix <- batch_snf(
-    dl,
-    settings_df,
-    cfl = cfl
+sol_df <- batch_snf(
+    dl = dl,
+    sc = sc
 )
 ```
 
@@ -178,16 +164,7 @@ spectral_eigen <- function(similarity_matrix) {
         similarity_matrix,
         nclust_estimate
     )
-    nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
-    if (nclust_estimate != nclust) {
-        warning(
-            "Spectral clustering provided a solution of size ", nclust,
-            " when the number requested based on the eigen-gap heuristic",
-            " was ", nclust_estimate, "."
-        )
-    }
-    return(solution_data)
+    return(solution)
 }
 
 # Default clustering algorithm #2
@@ -201,16 +178,7 @@ spectral_rot <- function(similarity_matrix) {
         similarity_matrix,
         nclust_estimate
     )
-    nclust <- length(unique(solution))
-    solution_data <- list("solution" = solution, "nclust" = nclust)
-    if (nclust_estimate != length(unique(solution))) {
-        warning(
-            "Spectral clustering provided a solution of size ", nclust,
-            " when the number requested based on the rotation cost heuristic",
-            " was ", nclust_estimate, "."
-        )
-    }
-    return(solution_data)
+    return(solution)
 }
 ```
 
@@ -220,19 +188,14 @@ You can also extract the similarity matrices for each computed row of the settin
 This is particularly useful for clustering procedures where the transition from a similarity matrix to the final solution requires human intervention (e.g., judgement for clustering hyperparameters).
 
 ```{r}
-batch_snf_results <- batch_snf(
+sol_df <- batch_snf(
     dl,
-    settings_df,
-    cfl = cfl,
+    sc,
     return_sim_mats = TRUE
 )
 
-names(batch_snf_results)
-
-solutions_matrix <- batch_snf_results$"solutions_matrix"
-
 # Similarity matrices are in the list below:
-similarity_matrices <- batch_snf_results$"similarity_matrices"
+similarity_matrices <- attributes(sol_df)$"sim_mats_list"
 
 length(similarity_matrices)
 
@@ -306,20 +269,18 @@ dl <- data_list(
 )
 
 set.seed(42)
-settings_df <- settings_df(
-    dl,
+sc <- snf_config(
+    dl = dl,
     n_solutions = 5
 )
 
-batch_snf_results <- batch_snf(
-    dl,
-    settings_df,
+sol_df <- batch_snf(
+    dl = dl,
+    sc = sc,
     return_sim_mats = TRUE
 )
 
-similarity_matrices <- batch_snf_results$"similarity_matrices"
-
-solutions_matrix <- batch_snf_results$"solutions_matrix"
+similarity_matrices <- attributes(sol_df)$"sim_mats_list"
 
 representative_sm <- similarity_matrices[[1]]
 
@@ -339,7 +300,7 @@ abline(h=0.4872, col = "red", lty = 2)
 
 dbscan_results <- dbscan(distance_matrix1, eps = 0.4872, minPts = 10)$"cluster"
 
-spectral_results <- get_clusters(solutions_matrix[1, ])
+spectral_results <- t(sol_df[1, ])[, 2]
 
 dbscan_vs_spectral <- data.frame(
     dbscan = dbscan_results,

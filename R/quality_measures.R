@@ -167,7 +167,7 @@ calculate_dunn_indices <- function(sol_df) {
 #' @return davies_bouldin_indices A vector of Davies-Bouldin indices for each
 #'  cluster solution.
 #' @export
-calculate_db_indices <- function(sol_df, similarity_matrices) {
+calculate_db_indices <- function(sol_df) {
     if (!requireNamespace("clv", quietly = TRUE)) {
         metasnf_error(
             "Package \"clv\" must be installed to use this function.",

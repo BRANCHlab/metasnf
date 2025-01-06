@@ -47,27 +47,14 @@ label_prop <- function(full_fused_network, clusters) {
 #' affinity matrix of both train and subjects and use the label propagation
 #' algorithm to assigned predicted clusters to test subjects.
 #'
-#' @param train_sol_df A sol_df derived from the training
-#' set. The propagation algorithm is slow and should be used for validating a
-#' top or top few meaningful chosen clustering solutions. It is advisable to
-#' use only a small subset of rows from the original training sol_df
-#' for label propagation.
-#'
+#' @param train_sol_df A solutions data frame derived from the training set. 
 #' @param full_dl A data list containing subjects from both the training
-#' and testing sets.
-#'
-#' @param dfl Like above - the dist_fns_list (if any)
-#' that was used for the original batch_snf call.
-#'
-#' @param wm Like above.
-#'
+#'  and testing sets.
 #' @param verbose If TRUE, output progress to console.
-#'
-#' @return labeled_df a dataframe containing a column for uids,
-#' a column for whether the subject was in the train (original) or test (held
-#' out) set, and one column per row of the solutions matrix indicating the
-#' original and propagated clusters.
-#'
+#' @return A data frame with one row per observation containing a column for
+#'  UIDs, a column for whether the subject was in the train (original) or test
+#'  (held out) set, and one column per row of the solutions data frame
+#'  indicating the original and propagated clusters.
 #' @export
 lp_sol_df <- function(train_sol_df,
                       full_dl,

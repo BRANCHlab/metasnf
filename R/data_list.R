@@ -953,21 +953,3 @@ summarize_dl <- function(dl, scope = "component") {
     rownames(dl_summary) <- seq_len(nrow(dl_summary))
     return(dl_summary)
 }
-
-#' Extract observations from a metasnf object
-#'
-#' This function returns a character vector of the UIDs of the observations
-#' stored within an object from the metasnf package.
-#'
-#' @param x The object to extract observations from.
-#' @return Character vector of the UIDs of the observations stored in x.
-#' @export
-uids <- function(x) {
-    UseMethod("observations")
-}
-
-#' @export
-uids.data_list <- function(x) {
-    uid_vector <- attributes(x)$"uids"
-    return(uid_vector)
-}

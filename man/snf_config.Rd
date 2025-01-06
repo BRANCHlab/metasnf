@@ -5,7 +5,7 @@
 \title{Define configuration for generating a set of SNF-based cluster solutions}
 \usage{
 snf_config(
-  dl,
+  dl = NULL,
   sdf = NULL,
   dfl = NULL,
   cfl = NULL,

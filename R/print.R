@@ -61,13 +61,13 @@ print.data_list <- function(x, ...) {
 #' @return Function prints to console but does not return any value.
 #' @export
 print.snf_config <- function(x, ...) {
-    cat(cli::col_blue("Settings:\n"))
+    cat(cli::col_blue("Settings Data Frame:\n"))
     print(x$"settings_df")
     cat(cli::col_blue("Distance Functions List:\n"))
     print(x$"dist_fns_list")
-    cat(cli::col_blue("Clustering functions:\n"))
+    cat(cli::col_blue("Clustering Functions List:\n"))
     print(x$"clust_fns_list")
-    cat(cli::col_blue("Weights:\n"))
+    cat(cli::col_blue("Weights Matrix:\n"))
     print(x$"weights_matrix")
 }
 
@@ -296,7 +296,7 @@ print.solutions_df <- function(x, ...) {
             nrow(x), " cluster solutions of ", ncol(x) - 2, " observations:\n"
         )
     )
-    assignment_df <- tibble::tibble(data.frame(x))
+    assignment_df <- tibble::tibble(as.data.frame(x))
     output <- utils::capture.output(print(assignment_df))
     output <- output[-c(1, 3)]
     output <- output[!grepl("^#", output)]

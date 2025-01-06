@@ -11,7 +11,7 @@ batch_row_closure(
   sdf,
   wm,
   similarity_matrix_dir,
-  return_similarity_matrices,
+  return_sim_mats,
   prog
 )
 }
@@ -35,7 +35,7 @@ how to build this.}
 \item{similarity_matrix_dir}{If specified, this directory will be used to
 save all generated similarity matrices.}
 
-\item{return_similarity_matrices}{If TRUE, function will return a list where
+\item{return_sim_mats}{If TRUE, function will return a list where
 the first element is the solutions matrix and the second element is a list
 of similarity matrices for each row in the sol_df. Default FALSE.}
 

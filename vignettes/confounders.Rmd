@@ -155,7 +155,7 @@ set.seed(42)
 
 metasnf_data <- player_data |> dplyr::select("id", "assists", "blocks")
 
-data_list <- data_list(
+dl <- data_list(
     list(
         data = metasnf_data,
         name = "player_data",
@@ -165,17 +165,17 @@ data_list <- data_list(
     uid = "id"
 )
 
-settings_df <- settings_df(
-    dl = data_list,
+sc <- snf_config(
+    dl = dl,
     n_solutions = 1,
     possible_snf_schemes = 1,
     k_values = 20,
     alpha_values = 0.8
 )
 
-solutions_matrix <- batch_snf(data_list, settings_df)
+sol_df <- batch_snf(dl, sc)
 
-cluster_solutions_df <- get_cluster_solutions(solutions_matrix) |>
+cluster_solutions_df <- get_cluster_solutions(sol_df) |>
     dplyr::rename(
         "id" = "uid",
         "cluster" = `1`

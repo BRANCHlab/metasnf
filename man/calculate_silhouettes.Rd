@@ -4,19 +4,16 @@
 \alias{calculate_silhouettes}
 \title{Calculate silhouette scores}
 \usage{
-calculate_silhouettes(sol_df, similarity_matrices)
+calculate_silhouettes(sol_df)
 }
 \arguments{
-\item{sol_df}{A sol_df (see ?batch_snf)}
-
-\item{similarity_matrices}{A list of similarity matrices (see ?batch_snf)}
+\item{sol_df}{A \code{solutions_df} class object created by  \code{batch_snf()}.}
 }
 \value{
 silhouette_scores A list of "silhouette" objects from the cluster
 package.
 }
 \description{
-Given a sol_df and a list of similarity_matrices (or a single
-similarity_matrix if the sol_df has only 1 row), return a list
-of 'silhouette' objects from the cluster package
+Given a solutions data frame containing a similarity matrix list, return a
+list of 'silhouette' objects from the cluster package
 }

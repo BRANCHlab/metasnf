@@ -33,6 +33,8 @@ as.data.frame.data_list <- function(x,
 #' @param x A `solutions_df` class object.
 #' @param row.names Additional parameter passed to `as.data.frame()`.
 #' @param optional Additional parameter passed to `as.data.frame()`.
+#' @param keep_attributes If TRUE, resulting data frame includes settings
+#'  data frame and weights matrix.
 #' @param ... Additional parameter passed to `as.data.frame()`.
 #' @return A `data.frame` class object with all the columns of x and its
 #'  contained solutions data frame.
@@ -40,25 +42,30 @@ as.data.frame.data_list <- function(x,
 as.data.frame.solutions_df <- function(x,
                                        row.names = NULL,
                                        optional = FALSE,
+                                       keep_attributes = FALSE,
                                        ...) {
-    sdf <- attributes(x)$"snf_config"$"settings_df"
-    wm <- attributes(x)$"snf_config"$"weights_matrix"
-    sdf_wm <- cbind(data.frame(sdf), data.frame(wm))
-    df <- dplyr::inner_join(
-        sdf_wm,
-        sol_df,
-        by = "solution"
-    )
+    if (keep_attributes) {
+        sdf <- attributes(x)$"snf_config"$"settings_df"
+        wm <- attributes(x)$"snf_config"$"weights_matrix"
+        sdf_wm <- cbind(data.frame(sdf), data.frame(wm))
+        df <- dplyr::inner_join(
+            sdf_wm,
+            x,
+            by = "solution"
+        )
+    } else {
+        df <- NextMethod()
+    }
     return(df)
 }
-
-
 
 #' Coerce a `ext_solutions_df` class object into a `data.frame` class object
 #'
 #' @param x A `ext_solutions_df` class object.
 #' @param row.names Additional parameter passed to `as.data.frame()`.
 #' @param optional Additional parameter passed to `as.data.frame()`.
+#' @param keep_attributes If TRUE, resulting data frame includes settings
+#'  data frame and weights matrix.
 #' @param ... Additional parameter passed to `as.data.frame()`.
 #' @return A `data.frame` class object with all the columns of x and its
 #'  contained solutions data frame.
@@ -66,14 +73,20 @@ as.data.frame.solutions_df <- function(x,
 as.data.frame.ext_solutions_df <- function(x,
                                            row.names = NULL,
                                            optional = FALSE,
+                                           keep_attributes = FALSE,
                                            ...) {
-
-    sol_df <- as.data.frame(attributes(x)$"solutions_df")
-    df <- dplyr::inner_join(
-        sol_df,
-        x,
-        by = "solution"
-    )
+    if (keep_attributes) {
+        sol_df <- as.data.frame(
+            attributes(x)$"solutions_df",
+            keep_attributes = TRUE
+        )
+        df <- dplyr::inner_join(
+            sol_df,
+            x,
+            by = "solution"
+        )
+    } else {
+        df <- NextMethod()
+    }
     return(df)
 }
-

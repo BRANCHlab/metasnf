@@ -184,7 +184,7 @@ The added IDs span from 101 onwards (rather than from 1 onwards) purely for conv
 Data1$"patient_id" <- 101:(nrow(Data1) + 100)
 Data2$"patient_id" <- 101:(nrow(Data2) + 100)
 
-data_list <- data_list(
+my_dl <- data_list(
     list(
         data = Data1,
         name = "genes_1_and_2_exp",
@@ -199,7 +199,6 @@ data_list <- data_list(
     ),
     uid = "patient_id"
 )
-
 ```
 
 The first entries are all lists which contains the following elements:
@@ -228,16 +227,17 @@ As long as you provide the objects within each list in the correct order (data, 
 
 ```{r eval = FALSE}
 # Compactly:
-data_list <- data_list(
+my_dl <- data_list(
     list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
     list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
     uid = "patient_id"
 )
 ```
 
-### 3. Store all the settings of the desired SNF runs in a *settings_df*
+### 3. Store all the settings of the desired SNF runs in an *SNF config*
 
-The `settings_df` is a dataframe where each row contains all the information required to convert the raw data into a final cluster solution.
+The `snf_config` is an object storing all the information required to convert the raw data into a final cluster solution.
+It is composed of multiple parts, including a *settings data frame* which tracks one set of SNF hyperparameters per row, a *weights matrix* which 
 By varying the rows in this matrix, we can access a broader space of possible solutions and hopefully get closer to something that will be as useful as possible for our context.
 
 In this case, we're going to create only a single cluster solution using the same process outlined in the original SNFtool example above.
@@ -245,8 +245,8 @@ In this case, we're going to create only a single cluster solution using the sam
 An explanation for the parameters in the `settings_df` can be found at [the settings_df vignette](https://branchlab.github.io/metasnf/articles/settings_df.html).
 
 ```{r}
-settings_df <- settings_df(
-    data_list,
+sc <- snf_config(
+    dl = my_dl,
     n_solutions = 1,
     alpha_values = 0.5,
     k_values = 20,
@@ -255,7 +255,7 @@ settings_df <- settings_df(
     possible_snf_schemes = 1
 )
 
-settings_df
+sc
 ```
 
 The columns in this `settings_df` mean the following:
@@ -274,48 +274,42 @@ More detailed descriptions on all of these columns can also be found in the sett
 The `batch_snf` function will apply each row of the `settings_df` (in this case, just one row) to the `data_list`.
 
 ```{r}
-solutions_matrix <- batch_snf(
-    data_list,
-    settings_df
+sol_df <- batch_snf(
+    my_dl,
+    sc
 )
 
-solutions_matrix[, 1:20] # it goes on like this for some time...
-
+sol_df
 ```
-The `solutions_matrix` is essentially an augmented `settings_df`, where new columns have been added for each included patient.
+
+The solutions data frame (`solutions_df` class object) is a data frame that contains one cluster solution per row. essentially an augmented , where new columns have been added for each included patient.
 On each row, those new columns show what cluster that patient ended up in.
 
 A friendlier format of the clustering results can be obtained:
 
 ```{r}
-cluster_solution <- get_cluster_df(solutions_matrix)
+cluster_solution <- t(sol_df)
 
-head(cluster_solution)
+cluster_solution
 ```
 
 These cluster results are exactly the same as in the original SNF example:
 
 ```{r}
-identical(cluster_solution$"cluster", true_label)
+all.equal(cluster_solution$"s1", true_label)
 ```
 
 Running `batch_snf` with the `return_sim_mats` parameter set to `TRUE` will let us also take a look at the final fused networks from SNF rather than just the results of applying spectral clustering to those networks:
 
 ```{r}
-
-batch_snf_results <- batch_snf(
-    data_list,
-    settings_df,
+sol_df <- batch_snf(
+    dl = my_dl,
+    sc,
     return_sim_mats = TRUE
 )
 
-names(batch_snf_results)
-
-# The solutions_matrix
-solutions_matrix <- batch_snf_results$"solutions_matrix"
-
 # The first (and only, in this case) final fused network
-similarity_matrix <- batch_snf_results$"similarity_matrices"[[1]]
+similarity_matrix <- attributes(sol_df)$"sim_mats_list"[[1]]
 ```
 
 The fused network obtained through this approach is also the same as the one obtained in the original example:
