@@ -145,6 +145,21 @@ snf_config <- function(dl = NULL,
 #' @return If dll has a valid structure for a `data_list` class object, 
 #'  returns input unchanged. Otherwise, raises an error.
 validate_snf_config <- function(scl) {
+    class(scl) <- setdiff(class(scl), "snf_config")
+    # 1. Correct length
+    if (!length(scl) == 4) {
+        metasnf_error("SNF config must contain 4 items.")
+    }
+    # 2. Correct items
+    items <- c(
+        "settings_df", "dist_fns_list", "clust_fns_list", "weights_matrix"
+    )
+    if (!all(items %in% names(scl))) {
+        metasnf_error(
+            "SNF config must contain `settings_df`, `dist_fns_list`,",
+            " `clust_fns_list`, and `weights_matrix`."
+        )
+    }
     return(scl)
 }
 

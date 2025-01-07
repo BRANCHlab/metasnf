@@ -71,13 +71,21 @@ rbind.solutions_df <- function(...) {
     )
     metasnf_alert("Resettings solutions indices during `rbind`.")
     result <- rbind.data.frame(...)
-    result$"solution" <- seq_len(nrow(result))
     merged_sdf <- do.call(rbind, sdfs)
-    merged_sdf$"solution" <- seq_len(nrow(result))
     merged_wm <- do.call(rbind, wms)
     merged_sml <- do.call(c, smls)
+    result$"solution" <- seq_len(nrow(result))
+    merged_sdf$"solution" <- seq_len(nrow(result))
     attributes(result)$"sim_mats_list" <- merged_sml
     attributes(result)$"snf_config"$"settings_df" <- merged_sdf
-    attributes(result)$"snf_config"$"weights_matrix" <- as_weights_matrix(merged_wm)
+    attributes(result)$"snf_config"$"weights_matrix" <- merged_wm
+    return(result)
+}
+
+#' @export
+rbind.weights_matrix <- function(...) {
+    result <- as.matrix(rbind.data.frame(...))
+    result <- validate_weights_matrix(result)
+    result <- new_weights_matrix(result)
     return(result)
 }

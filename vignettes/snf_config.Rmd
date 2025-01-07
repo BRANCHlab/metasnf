@@ -72,10 +72,16 @@ The columns in a `settings_df` class object include:
 * `alpha`: The alpha (also referred to as sigma or eta in the original SNF paper) hyperparameter in SNF. This hyperparameter plays a role in converting distance matrices into similarity matrices. The process by which `SNFtool::affinityMatrix()` does this conversion essentially involves plugging the distance value as the x-coordinate of a normal distribution and pulling out the density at that point as the similarity. The thickness of the normal distribution is regulated by alpha, where a larger alpha leads to a broader normal distribution and a greater sensitivity to discriminating distances.
 * `k`: The k (nearest neighbours) hyperparameter in the distance matrix to similarity matrix conversion as well as in similarity network fusion. In the distance matrix to similarity matrix conversion (`SNFtool::affinityMatrix()`), k controls how many nearest neighbours to consider when calculating how similar each observation is to its nearest neighbours. The closer an observation is to its k nearest neighbours, the broader the normal distribution that is used for the distance to similarity conversion. For the similarity network fusion step (`SNFtool::SNF()`), k controls how intensely all the matrices should be sparsified before information is passed between them. With a very small k, say, k = 1, all the values in all the matrices will be reduced to 0 with the exception of one value between each observation and that observation's most similar neighbour.
 * `t`: The T (number of iterations) hyperparameter used in SNF. A larger `t` results in more rounds of information passing between similarity matrices. SNF eventually converges, so overshooting this value offers no benefit but undershooting can yield inaccurate results. The original SNF developers recommend leaving this value at 20.
-* `snf_scheme`: Which SNF "scheme" is being used to convert the initial provided dataframes into a final fused network (more on this in the [appendix of the "Less Simple Example" vignette](https://branchlab.github.io/metasnf/articles/a_complete_example.html#snf_scheme))
-* `clust_alg`: Which clustering algorithm will be applied to the final fused network. By default, this varies between the pre-provided options of (1) spectral clustering with the number of clusters determined by the eigen-gap heuristic and (2) the same thing but using the rotation cost heuristic. You can learn more about using this parameter in the [clustering algorithnms vignette](https://branchlab.github.io/metasnf/articles/clustering_algorithms.html).
-* Columns ending in `dist`: Which distance metric is being used for the various types of features (more on this in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html))
-* Columns starting with `inc`: Whether or not the corresponding dataframe will be included (1) or excluded (0) from this row
+* `snf_scheme`: Which SNF "scheme" is being used to convert the initial provided dataframes into a final fused network (more on this in the [SNF schemes vignette](https://branchlab.github.io/metasnf/articles/snf_schemes.html))
+* `clust_alg`: Which clustering algorithm function from the *clustering functions list* of the config will be applied to the final fused network. You can learn more about using this parameter in the [clustering algorithnms vignette](https://branchlab.github.io/metasnf/articles/clustering_algorithms.html).
+* Columns ending in `dist`: Which distance metric function from the *distance functions list* of the config will be used for each of the various types of features in the data list (more on this in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html))
+* Columns starting with `inc`: Whether or not the corresponding data frame will be included (1) or excluded (0) from this row
+
+By default, the `alpha` and `k` hyperparameters are randomly varied from 0.3 to 0.8 and 10 to 100 respectively based on suggestions from the original SNF paper.
+The `t` hyperparameter by default stays fixed at 20.
+The `snf_scheme` column varies randomly from 1 to 3, corresponding to each of the three differente schemes that are available.
+The `clust_alg` randomly varies between 1 and 2 for the two default clustering algoritm functions: (1) spectral clustering using the eigen-gap heuristic to calculate the number of clusters and (2) spectral clustering using the rotation cost heuristic.
+The distance columns will always be 1 by default, as there is only one default distance metric function per variable type:  simple Euclidean for anything numeric and Gower's distance for anything mixed or categorical.
 
 ### The distance functions list
 
@@ -126,46 +132,30 @@ class(wm) <- "matrix"
 wm[1:5, 1:5]
 ```
 
-There's one row in the weights matrix corresponding to every row in the settings data frame.
+There's one row in the weights matrix corresponding to every row in the settings data frame and one column for every feature in the data list.
+By default, all the weights are set to 1, so no weighting occurs.
 
-By varying the values in these columns, we can define distinct SNF pipelines that should give rise to a broader space of cluster solutions.
-The following sections outline how to use `settings_df` to build a wide range of settings that will hopefully help you find a subtyping solution useful for your purposes.
-
-## Adding random rows
+## Customizing an SNF config
 
 When not specifying any parameters beyond the number of rows that are created, the function will randomly (but sensibly) vary the values in the matrix.
 
 ```{r}
 # Through minimums and maximums
-sdf <- settings_df(
+sc <- snf_config(
     dl,
-    n_solutions = 100,
+    n_solutions = 100
 )
 
-sdf
+sc
 ```
 
-The `alpha` and `k` hyperparameters are varied from 0.3 to 0.8 and 10 to 100 respectively based on suggestion from the authors of SNF.
-
-The `t` hyperparameter, which controls how many iterations of updates occur to the fused network during SNF, stays fixed at 20, by default.
-This value (20) has been empirically demonstrated to be sufficient for achieving convergence of the matrix, and varying it doesn't seem to have much relevance to what kinds of cluster solutions are produced.
-
-The `snf_scheme` column will vary from 1 to 3, which outlines the 3 differente schemes that are available.
-
-The `clust_alg` column will vary randomly between (1) spectral clustering using the eigen-gap heuristic and (2) spectral clustering using the rotation cost heuristic by default.
-
-The distance columns will always be 1 by default, as they will just use the default distance metrics of simple Euclidean for anything numeric and Gower's distance for anything mixed or categorical.
-
-Controlling the scheme, the clustering algorithms, and the distance metrics are discussed in more details in separate vignettes linked to above.
-Controlling the remaining options are shown below.
-
-## Alpha, k, and t
+### Alpha, k, and t
 
 You can control any of these parameters either by providing a vector of values you'd like to randomly sample from or by specifying a minimum and maximum range.
 
 ```{r}
 # Through minimums and maximums
-sdf <- settings_df(
+sc <- snf_config(
     dl,
     n_solutions = 100,
     min_k = 10,
@@ -177,66 +167,64 @@ sdf <- settings_df(
 )
 
 # Through specific value sampling
-sdf <- settings_df(
+sc <- snf_config(
     dl,
     n_solutions = 20,
     k_values = c(10, 25, 50),
     alpha_values = c(0.4, 0.8),
     t_values = c(20, 30)
 )
-
 ```
 
-## Inclusion columns
+### Inclusion columns and data frame dropout
 
-Bounds on the number of input dataframes removed as well as the way in which the number removed is chosen can be controlled.
+Bounds on the number of input data frames removed as well as the way in which the number removed is chosen can be controlled.
 
-By default, `settings_df` will pick a random value between 0 and 1 less than the total number of available dataframes based on an exponential probability distribution.
-The exponential distribution makes it so that it is very likely that a small number of dataframes will be dropped and much less likely that a large number of dataframes will be dropped.
+By default, the `settings_df` generated during the call to `snf_config()` will pick a random value between 0 (printed as a red X) and 1 (printed as a green checkmark) less than the total number of available data frames in the data list based on an exponential probability distribution.
+The exponential distribution makes it so that it is very likely that a small number of data frames will be dropped and much less likely that a large number of data frames will be dropped.
 
 You can control the distribution by changing the `dropout_dist` value to "uniform" (which will result in a much higher number of dataframes being dropped on average) or "none" (which will result in no dataframes being dropped).
 
 ```{r}
 # Exponential dropping
-sdf <- settings_df(
+sc <- snf_config(
     dl,
     n_solutions = 20,
     dropout_dist = "exponential" # the default behaviour
 )
 
-sdf
+sc
 
 # Uniform dropping
-sdf <- settings_df(
+sc <- snf_config(
     dl,
     n_solutions = 20,
     dropout_dist = "uniform"
 )
 
-sdf
-
+sc
 
 # No dropping
-sdf <- settings_df(
+sc <- snf_config(
     dl,
     n_solutions = 20,
     dropout_dist = "none"
 )
 
-sdf
+sc
 ```
 
 The bounds on the number of dataframes that can be dropped can be controlled using the `min_removed_inputs` and `max_removed_inputs`:
 
 ```{r}
-sdf <- settings_df(
+sc <- snf_config(
     dl,
     n_solutions = 20,
     min_removed_inputs = 3
 )
 
 # No row will exclude fewer than 3 dataframes during SNF
-sdf
+sc
 ```
 
 ## Grid searching
@@ -244,49 +232,45 @@ sdf
 If you are interested in grid searching over perhaps just a specific set of alpha and k values, you may want to consider varying those parameters and keeping everything else fixed:
 
 ```{r}
-sdf <- settings_df(
+sc <- snf_config(
     dl,
     n_solutions = 10,
     alpha_values = c(0.3, 0.5, 0.8),
     k_values = c(20, 40, 60),
     dropout_dist = "none"
 )
+
+sc
 ```
 
-## Assembling a settings_df in pieces
+## Assembling an SNF config in pieces
 
-Rather than varying everything equally all at once, you may be interested in looking at "chunks" of solution spaces that are based on distinct settings matrices.
-
-For example, you may want to look at 50 solutions generated with k = 50 and look at another 50 solutions generated with k = 80.
-You can build two separate settings matrices and concatenate them, but you can also build up a single matrix in parts using the `add_settings_df_rows` function:
+Rather than varying everything equally all at once, you may be interested in looking at "chunks" of solution spaces that are based on distinct SNF configs.
+For example, you may want to look at 25 solutions generated with k = 50 and look at another 25 solutions generated with k = 80.
+You can build two separate SNF configs and join them using the `merge()` function.
 
 ```{r}
 set.seed(42)
-sdf <- settings_df(
+sc_1 <- snf_config(
     dl,
     n_solutions = 25,
     k_values = 50
 )
 
-sdf <- add_settings_df_rows(
-    sdf,
+sc_2 <- snf_config(
+    dl,
     n_solutions = 25,
     k_values = 80
 )
 
-dim(sdf)
+full_sc <- merge(sc_1, sc_2)
 
-sdf$"k"
+full_sc
 ```
-
-## Manual adjustments
-
-Don't forget that the settings matrix is just a dataframe.
-You can always go in and modify things as you wish, but you do risk generating duplicate or invalid rows that the package functions would have prevented.
 
 ## "Matrix building failed"
 
-`settings_df` will never build duplicate rows.
+`snf_config()` will never build duplicate rows.
 A consequence of this is that if you request a very large number of rows over a very small range of possible values to vary over, it will be impossible for the matrix to be built.
 For example, there's no way to generate 10 unique rows when the only thing allowed to vary is which clustering algorithm (1 or 2) is used - only 2 rows could ever be created.
 
