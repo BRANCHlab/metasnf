@@ -259,6 +259,7 @@ print.weights_matrix <- function(x, ...) {
         dplyr::glimpse() |>
         utils::capture.output()
     all_output <- all_output[-c(1:2)]
+    all_output <- gsub("<dbl>", "", all_output)
     cat(cli::col_grey("Weights defined for ", nrow(x), " cluster solutions."))
     cat("\n")
     if (length(all_output) >= 5) {
