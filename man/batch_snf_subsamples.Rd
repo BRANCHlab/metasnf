@@ -9,7 +9,7 @@ batch_snf_subsamples(
   sc,
   processes = 1,
   return_sim_mats = FALSE,
-  return_solutions_matrices = FALSE,
+  return_solutions = FALSE,
   verbose = TRUE
 )
 }
@@ -37,10 +37,10 @@ cores will be used.
 }}
 
 \item{return_sim_mats}{If TRUE, function will return a list where
-the first element is the solutions matrix and the second element is a list
+the first element is the solutions data frame and the second element is a list
 of similarity matrices for each row in the sol_df. Default FALSE.}
 
-\item{return_solutions_matrices}{If TRUE, includes the solutions matrices
+\item{return_solutions}{If TRUE, includes the solutions data frames
 corresponding to each subsample in the output.}
 
 \item{verbose}{If TRUE, output progress to console.}
@@ -49,9 +49,9 @@ corresponding to each subsample in the output.}
 By default, returns a one-element list: \code{cluster_solutions}, which
 is itself a list of cluster solution data frames corresponding to each of
 the provided data list subsamples. Setting the parameters
-\code{return_sim_mats}  and \code{return_solutions_matrices} to \code{TRUE}
+\code{return_sim_mats}  and \code{return_solutions} to \code{TRUE}
 will turn the result of the function to a three-element list containing the
-corresponding solutions matrices and final fused similarity matrices of
+corresponding solutions data frames and final fused similarity matrices of
 those cluster solutions, should you require these objects for your own
 stability calculations.
 }

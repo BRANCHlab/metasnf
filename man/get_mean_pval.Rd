@@ -13,5 +13,5 @@ get_mean_pval(sol_df_row)
 mean_pval mean p-value
 }
 \description{
-Given an solutions matrix row containing evaluated p-values, returns mean.
+Given an solutions data frame row containing evaluated p-values, returns mean.
 }

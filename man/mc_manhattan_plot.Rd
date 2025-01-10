@@ -49,7 +49,7 @@ vertical lines at.}
 }
 \value{
 A Manhattan plot (class "gg", "ggplot") showing the association
-p-values of features against each solution in the provided solutions matrix,
+p-values of features against each solution in the provided solutions data frame,
 stratified by meta cluster label.
 }
 \description{

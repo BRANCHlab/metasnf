@@ -4,7 +4,7 @@ output:
     rmarkdown::html_vignette:
         toc: true
 description: >
-  The main object used to store data in the metasnf package.
+  The main object used to store data in the `metasnf` package.
 vignette: >
   %\VignetteIndexEntry{The Data List}
   %\VignetteEngine{knitr::rmarkdown}
@@ -20,9 +20,9 @@ Download a copy of the vignette to follow along here: [data_list.Rmd](https://ra
 ## The data_list
 
 This vignette outlines the importance, structure, and creation of the data_list object.
-You can find much of this info by running `?data_list` after loading the metasnf package.
+You can find much of this info by running `?data_list` after loading the `metasnf` package.
 
-The data_list is the main object used in the metasnf package to store data.
+The data_list is the main object used in the `metasnf` package to store data.
 It is a named and nested list containing input dataframes (data), the name of that input dataframe (for the user's reference), the 'domain' of that dataframe (the broader source of information that the input dataframe is capturing, determined by user's domain knowledge), and the type of feature stored in the dataframe (continuous, discrete, ordinal, categorical, or mixed).
 
 Some examples of data_list generation and usage are below:

@@ -13,5 +13,5 @@ get_min_pval(sol_df_row)
 min_pval minimum p-value
 }
 \description{
-Given an solutions matrix row containing evaluated p-values, returns min.
+Given an solutions data frame row containing evaluated p-values, returns min.
 }

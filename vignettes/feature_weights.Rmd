@@ -26,7 +26,7 @@ Download a copy of the vignette to follow along here: [feature_weights.Rmd](http
 
 ## Generating and Using the Weights Matrix
 
-The [distance metrics](https://branchlab.github.io/metasnf/articles/distance_metrics.html) used in metasnf are all capable of applying custom weights to included features.
+The [distance metrics](https://branchlab.github.io/metasnf/articles/distance_metrics.html) used in `metasnf` are all capable of applying custom weights to included features.
 The code below outlines how to generate and use a weights_matrix (dataframe containing feature weights) object.
 
 ```{r}

@@ -25,7 +25,7 @@ Note that no progress indicator is available during multi-core processing.
 \item{verbose}{If TRUE, output progress to console.}
 }
 \value{
-om_aris ARIs between clustering solutions of an solutions matrix
+om_aris ARIs between clustering solutions of an solutions data frame
 }
 \description{
 Generate matrix of pairwise cluster-solution similarities by Adjusted Rand

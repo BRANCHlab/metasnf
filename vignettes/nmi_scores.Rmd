@@ -65,7 +65,7 @@ print(feature_nmis)
 
 One important thing to note is that if the cluster space you initially set up when calling `batch_snf` relied on custom distance metrics, clustering algorithms, or the `automatic_standard_normalize` parameter, you should use those same values when calling `batch_nmi()` as well.
 
-Another important note is that by default, `batch_nmi` will ignore the `inc_*` columns of the settings matrix, i.e., no data types are dropped during solo feature cluster solution calculations.
+Another important note is that by default, `batch_nmi` will ignore the `inc_*` columns of the settings data frame, i.e., no data types are dropped during solo feature cluster solution calculations.
 This can lead to a bit of an odd interpretation if you view NMI as a direct reflection of contribution to the final SNF output.
 It is possible for a feature that was not a part of a particular cluster solution to still produce its own cluster solution that has a very high NMI score to the prior one.
 If you wish to suppress the calculation of NMIs for features that were not actually included in a particular SNF run due to having a 0 value in the inclusion column, you can set the `ignore_inclusions` parameter to `FALSE`.

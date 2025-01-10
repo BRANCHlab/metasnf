@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 
 Download a copy of the vignette to follow along here: [confounders.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/confounders.Rmd)
 
-This vignette walks through handling confounding features and features introducing unwanted signal using the metasnf package.
+This vignette walks through handling confounding features and features introducing unwanted signal using the `metasnf` package.
 
 A confounding feature is one that influences both a dependent and independent feature, making it appear as though there is a stronger association between the two than there mechanistically is.
 
@@ -240,7 +240,7 @@ That's looking much more like what we want to see.
 Following this correction, you'll have a much easier identifying the clustering structure that exists independently of the variance you don't care about from pro-status.
 
 
-## Procedure using the metasnf package
+## Procedure using the `metasnf` package
 
 Note that you can only adjust out signal from categorical features, the adjustment will be linear, it will only be applied to numeric (continuous, discrete, ordinal) data, and that the adjustment can lead to some major information loss (see the section below)!
 

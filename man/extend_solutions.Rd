@@ -2,7 +2,7 @@
 % Please edit documentation in R/solutions_df.R
 \name{extend_solutions}
 \alias{extend_solutions}
-\title{Extend an solutions matrix to include outcome evaluations}
+\title{Extend a solutions data frame to include outcome evaluations}
 \usage{
 extend_solutions(
   sol_df,
@@ -43,5 +43,5 @@ An extended solutions data frame (\code{ext_sol_df} class object)
 that contains p-value columns for each outcome in the provided data lists
 }
 \description{
-Extend an solutions matrix to include outcome evaluations
+Extend a solutions data frame to include outcome evaluations
 }

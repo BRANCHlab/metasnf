@@ -4,7 +4,7 @@ output:
     rmarkdown::html_vignette:
         toc: true
 description: >
-  Leverage parallel processing to speed up the metasnf pipeline.
+  Leverage parallel processing to speed up the `metasnf` pipeline.
 vignette: >
   %\VignetteIndexEntry{Parallel Processing}
   %\VignetteEngine{knitr::rmarkdown}
@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 
 Download a copy of the vignette to follow along here: [parallel_processing.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/parallel_processing.Rmd)
 
-metasnf can use [future apply](https://future.apply.futureverse.org/) to run the rows of a settings matrix in parallel.
+metasnf can use [future apply](https://future.apply.futureverse.org/) to run the rows of a settings data frame in parallel.
 
 Parallel processing has some overhead cost, so it's possible that your particular situation won't greatly benefit (or may even run slower) with parallel processing enabled.
 
@@ -93,7 +93,7 @@ sol_df <- batch_snf(
 )
 ```
 
-To find out how many processes you have access to (or at least, how many metasnf will think you have access to), use the `availableCores()` function from the future package:
+To find out how many processes you have access to (or at least, how many `metasnf` will think you have access to), use the `availableCores()` function from the future package:
 
 ```{r eval = FALSE}
 library(future)

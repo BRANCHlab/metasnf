@@ -29,7 +29,7 @@ valid function could be \code{fn <- function(x) x[x$"nclust" == 4, ]}.}
 }
 \value{
 A "data.frame" class object corresponding to a subset of the
-provided solutions matrix in which only one row is present per meta cluster.
+provided solutions data frame in which only one row is present per meta cluster.
 }
 \description{
 Following clustering with \code{batch_snf}, a matrix of pairwise ARIs that show

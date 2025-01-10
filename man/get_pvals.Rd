@@ -2,7 +2,7 @@
 % Please edit documentation in R/solutions_df.R
 \name{get_pvals}
 \alias{get_pvals}
-\title{Get p-values from an extended solutions matrix}
+\title{Get p-values from an extended solutions data frame}
 \usage{
 get_pvals(ext_sol_df, negative_log = FALSE, keep_summaries = TRUE)
 }
@@ -21,6 +21,6 @@ of the provided ext_sol_df.
 }
 \description{
 This function can be used to neatly format the p-values associated with an
-extended solutions matrix. It can also calculate the negative logs of those
+extended solutions data frame. It can also calculate the negative logs of those
 p-values to make it easier to interpret large-scale differences.
 }

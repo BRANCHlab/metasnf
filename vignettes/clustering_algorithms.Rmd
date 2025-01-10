@@ -28,7 +28,7 @@ Download a copy of the vignette to follow along here: [clustering_algorithms.Rmd
 
 SNF produces a single similarity matrix that is meant to describe how similar all the observations are to each other across all the provided input features.
 Dividing that similarity matrix into subtypes requires can be done using clustering algorithms.
-Within the metasnf package, clustering is done by default using the spectral clustering algorithm (as implemented by the original SNFtool package).
+Within the `metasnf` package, clustering is done by default using the spectral clustering algorithm (as implemented by the original SNFtool package).
 The code below goes over what the default clustering looks like.
 
 ### Default clustering
@@ -54,7 +54,7 @@ sc <- snf_config(
 )
 ```
 
-Information about the clustering used by default is stored in the settings matrix:
+Information about the clustering used by default is stored in the settings data frame:
 
 ```{r}
 sc$"clust_fns_list"
@@ -184,7 +184,7 @@ spectral_rot <- function(similarity_matrix) {
 
 ### Non-automated clustering
 
-You can also extract the similarity matrices for each computed row of the settings matrix and perform the clustering more "manually".
+You can also extract the similarity matrices for each computed row of the settings data frame and perform the clustering more "manually".
 This is particularly useful for clustering procedures where the transition from a similarity matrix to the final solution requires human intervention (e.g., judgement for clustering hyperparameters).
 
 ```{r}

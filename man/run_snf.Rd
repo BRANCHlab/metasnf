@@ -18,7 +18,7 @@ https://branchlab.github.io/metasnf/articles/settings_df.html for more
 details.}
 
 \item{return_sim_mats}{If TRUE, function will return a list where
-the first element is the solutions matrix and the second element is a list
+the first element is the solutions data frame and the second element is a list
 of similarity matrices for each row in the sol_df. Default FALSE.}
 
 \item{sim_mats_dir}{If specified, this directory will be used to

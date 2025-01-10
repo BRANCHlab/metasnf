@@ -44,7 +44,7 @@ the function that this function wraps.}
 \value{
 Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
 that displays the pairwise adjusted Rand indices (similarities) between
-the cluster solutions of the provided solutions matrix.
+the cluster solutions of the provided solutions data frame.
 }
 \description{
 Heatmap of pairwise adjusted rand indices between solutions

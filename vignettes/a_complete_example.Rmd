@@ -246,7 +246,7 @@ The settings data frame stores information about:
 - **SNF scheme**: the specific way in which input data gets collapsed into a final fused network (discussed further in the [SNF schemes vignette](https://branchlab.github.io/metasnf/articles/snf_schemes.html))
 - **Clustering functions**: Which clustering algorithm will be applied to the final fused network produced by SNF
 - **Distance function**: Which distance metric will be used when converting continuous, discrete, ordinal, categorical, or mixed type data into intermediate distance matrices (discussed further in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html))
-- **Component dropout** - Information on whether or not a particular input data frame in the data list will be in included or excluded from the corresponding SNF run (discussed further in the [settings matrix vignette](https://branchlab.github.io/metasnf/articles/settings_df.html)).
+- **Component dropout** - Information on whether or not a particular input data frame in the data list will be in included or excluded from the corresponding SNF run (discussed further in the [settings data frame vignette](https://branchlab.github.io/metasnf/articles/settings_df.html)).
 
 The underlying structure of a settings data frame can be viewed by converting it from a `settings_df` class object into a regular `data.frame` class object:
 
@@ -259,11 +259,11 @@ Each row of the settings data frame corresponds to a set of hyperparameters for 
 Without specifying any additional parameters, the `snf_config` function randomly populates these columns and ensures that no generated rows are identical.
 
 Further customization of the `settings_df` and the other parts of the SNF config will enable you to generate a broader space of cluster solutions from your data and ideally get you closer to finding a more generalizable and useful solution for your context.
-More on `settings_df` customization can be found in the [settings matrix vignette](https://branchlab.github.io/metasnf/articles/settings_df.html).
+More on `settings_df` customization can be found in the [settings data frame vignette](https://branchlab.github.io/metasnf/articles/settings_df.html).
 
 Setting a seed prior to calling `snf_config()` ensures that the same settings data frame is generated each time we run the code.
 
-While we end up with a random set of settings here, there is nothing wrong with manually altering the settings matrix to suit your needs.
+While we end up with a random set of settings here, there is nothing wrong with manually altering the settings data frame to suit your needs.
 For example, if you wanted to know how much of a difference one input dataframe made, you could ensure that half of the rows included this input dataframe and the other half didn't.
 
 ### Other parts of the SNF config
@@ -367,7 +367,7 @@ The diagonals should always be red, representing the maximum value of 1, as they
 Complete-linkage, Euclidean-distance based hierarchical clustering is being applied to these solutions to obtain the row ordering.
 This is also the default approach used by the `ComplexHeatmap` package, the backbone of all heatmap functions in `metasnf`.
 
-This heatmap is integral to understanding what meta clusters exist in your data (given the space of parameters you explored in the settings matrix).
+This heatmap is integral to understanding what meta clusters exist in your data (given the space of parameters you explored in the settings data frame).
 We will later see how to further customize this heatmap to add in rich information about how each plotted cluster solution differs on various measures of quality, different clustering settings, and different levels of separation on input and out-of-model measures.
 
 First, we'll divide the heatmap into meta clusters by visual inspection.
@@ -517,7 +517,7 @@ The `adjusted_rand_index_heatmap` function wraps around a more generic `similari
 Consequently, anything that can be done in the `ComplexHeatmap` package can be done here.
 This also makes the documentation for the `ComplexHeatmap` package one of the best places to learn more about what can be done for these heatmaps.
 
-The data for the annotations don't necessarily need to come from functions in metasnf either.
+The data for the annotations don't necessarily need to come from functions in `metasnf` either.
 If you wanted to, for example, highlight the solutions where two very specific observations happened to cluster together, you could easily add that in as another annotation.
 
 By converting an `ext_solutions_df` class object into a data frame with the parameter `keep_attributes = TRUE`, the resulting data frame will retain the p-value information from the `ext_solutions_df` side of things,  cluster assignment columns from the `solutions_df` side of things, and `settings_df` and `weights_matrix` columns from the embedded original SNF config.
@@ -664,9 +664,9 @@ ggplot2::ggsave(
 Note that the Manhattan plot automatically uses a vertical line to separate features in the data_list argument from those in the target_list.
 Vertical boundaries can be controlled with the `xints` parameter.
 
-### Relating results to metasnf hyperparameters
+### Relating results to `metasnf` hyperparameters
 
-If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your settings matrix.
+If you see something interesting in your heatmap, you may be curious to know how that corresponds to the settings that were in your settings data frame.
 
 You could certainly stack on each setting to the ARI heatmap as annotations, but that may be a bit cumbersome given how many settings there are.
 Another option is to start by taking a first look at entire `settings_df`, sorted by the meta cluster results, through the `settings_df_heatmap` function.
@@ -694,7 +694,7 @@ save_heatmap(
 </center>
 
 This heatmap rescales all the columns in the settings_df to have a maximum value of 1.
-The purpose of re-ordering the settings matrix in this way is to see if any associations exist between certain settings values and pairwise cluster solution similarities.
+The purpose of re-ordering the settings data frame in this way is to see if any associations exist between certain settings values and pairwise cluster solution similarities.
 If there are any particular important settings, you can simply add them into your adjusted rand index heatmap annotations.
 Recall that the `solutions_df` class (and, by extension, the `ext_solutions_df` class that contains a `solutions_df` object as an attribute) contain  the SNF config as an attribute, so no further data manipulation is needed to add a setting as a heatmap annotation.
 

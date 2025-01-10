@@ -131,9 +131,8 @@ data_list <- function(...,
     # Additional formatting
     dll <- dll |>
         ensure_dll_dataframe() |> # format the "data" subitem as a data frame
-        remove_dll_na() |> # remove NAs
         convert_uids(uid) |> # Convert data frame UID column to "uid"
-        reduce_dll_to_common() |> # only keep common subjects
+        remove_dll_incomplete() |> # drop observations without complete data
         prefix_dll_uid() |> # append "uid_" to the literal UID values
         arrange_dll() |> # sort observations in contained data frames by UID
         dll_uid_first_col() # position "uid" column at start of each data frame
@@ -182,7 +181,9 @@ convert_uids <- function(dll, uid) {
             }
             colnames(x$"data")[colnames(x$"data") == uid] <- "uid"
             # Stop if UID isn't actually unique
-            if (length(x$"data"$"uid") != length(unique(x$"data"$"uid"))) {
+            len_uids <- length(stats::na.omit(x$"data")$"uid")
+            len_unique_uids <- length(unique(stats::na.omit(x$"data")$"uid"))
+            if (len_uids != len_unique_uids) {
                 metasnf_error(
                     "Column ", uid, " does not uniquely ID",
                     " all observations in at least one provided",
@@ -197,24 +198,39 @@ convert_uids <- function(dll, uid) {
     return(dll)
 }
 
-#' Remove NA values from a data list-like list object
+#' Remove observations with incomplete data from a data list-like list object
 #'
-#' Helper function during `data_list` class initialization. Applies
+#' Helper function during `data_list` class initialization. First applies 
 #' `stats::na.omit()` to the data frames named "data" within a nested list.
+#' Then removes any observations that are not present across all data frames.
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
 #' @return dll The provided data list-like object with missing observations
 #'  removed.
-remove_dll_na <- function(dll) {
-    dll <- lapply(
-        dll,
-        function(x) {
-            x$"data" <- stats::na.omit(x$"data")
-            return(x)
-        }
-    )
-    return(dll)
+remove_dll_incomplete <- function(dll) {
+    all_uids <- unique(unlist(lapply(dll, function(x) x$"data"$"uid")))
+    uids_no_na <- lapply(dll, function(x) stats::na.omit(x$"data")$"uid")
+    common_uids <- Reduce(intersect, uids_no_na)
+    reduced_dll <- dll |>
+        lapply(
+            function(x) {
+                x$"data"  <- x$"data" |>
+                    dplyr::filter(
+                        x$"data"$"uid" %in% common_uids
+                    )
+                x
+            }
+        )
+    dropped_uids <- length(all_uids) - length(common_uids)
+    if (dropped_uids > 0) {
+        grammar <- if (dropped_uids == 1) "" else "s"
+        metasnf_alert(
+            dropped_uids, " observation", grammar, " dropped due to",
+            " incomplete data."
+        )
+    }
+    return(reduced_dll)
 }
 
 #' Add "uid_" prefix to all UID values in uid column
@@ -231,32 +247,6 @@ prefix_dll_uid <- function(dll) {
         }
     )
     return(dll_prefixed)
-}
-
-#' Reduce data list-like object to common observations
-#'
-#' Given a data list-like list object, reduce each nested dataframe to contain
-#' only the set of UIDs that are shared by all nested dataframes.
-#'
-#' @keywords internal
-#' @param dll A data list-like `list` class object.
-#' @return reduced_dl The data list object subsetted only to uids shared across
-#'  all nested dataframes.
-reduce_dll_to_common <- function(dll) {
-    uids <- lapply(dll, function(x) x[[1]]$"uid")
-    data_objects <- lapply(dll, function(x) x[[1]])
-    common_uids <- Reduce(intersect, uids)
-    filtered_data_objects <- data_objects |>
-        lapply(
-            function(x) {
-                dplyr::filter(x, x$"uid" %in% common_uids)
-            }
-        )
-    reduced_dll <- dll
-    for (i in seq_along(dll)) {
-        reduced_dll[[i]][[1]] <- filtered_data_objects[[i]]
-    }
-    return(reduced_dll)
 }
 
 #' Sort data frames in a data list by their unique ID values.

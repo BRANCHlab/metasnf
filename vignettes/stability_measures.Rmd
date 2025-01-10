@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 
 Download a copy of the vignette to follow along here: [stability_measures.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/stability_measures.Rmd)
 
-In this vignette, we will highlight the main stability measure options in the metasnf package.
+In this vignette, we will highlight the main stability measure options in the `metasnf` package.
 
 ## Data set-up
 
@@ -84,8 +84,8 @@ pairwise_aris <- subsample_pairwise_aris(
 )
 ```
 
-`pairwise_aris` is a list containing a summary data frame of the ARIs between subsamples for each row of the original settings matrix, as well as another list of all the generated inter-subsample ARIs as a result of setting `return_raw_aris` to `TRUE`.
-The raw inter-subsample ARIs corresponding to a particualr settings matrix row can be visualized with a heatmap:
+`pairwise_aris` is a list containing a summary data frame of the ARIs between subsamples for each row of the original settings data frame, as well as another list of all the generated inter-subsample ARIs as a result of setting `return_raw_aris` to `TRUE`.
+The raw inter-subsample ARIs corresponding to a particualr settings data frame row can be visualized with a heatmap:
 
 ```{r eval = FALSE}
 ComplexHeatmap::Heatmap(

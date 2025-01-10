@@ -18,7 +18,7 @@ esm_manhattan_plot(
 )
 }
 \arguments{
-\item{esm}{Extended solutions matrix storing associations between features
+\item{esm}{Extended solutions data frame storing associations between features
 and cluster assignments. See \code{?extend_solutions}.}
 
 \item{neg_log_pval_thresh}{Threshold for negative log p-values.}
@@ -42,7 +42,7 @@ Bonferroni-corrected equivalent of the p-value threshold.}
 }
 \value{
 A Manhattan plot (class "gg", "ggplot") showing the association
-p-values of features against each solution in the provided solutions matrix.
+p-values of features against each solution in the provided solutions data frame.
 }
 \description{
 Manhattan plot of feature-cluster association p-values

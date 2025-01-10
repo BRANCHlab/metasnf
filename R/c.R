@@ -16,7 +16,7 @@ c.data_list <- function(...) {
         }
     )
     dll <- do.call(c, dlls) |>
-        reduce_dll_to_common() |>
+        remove_dll_incomplete() |>
         arrange_dll() |>
         dll_uid_first_col()
     validate_data_list(dll)
