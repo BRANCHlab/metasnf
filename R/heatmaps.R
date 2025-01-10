@@ -222,7 +222,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
 #'
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
 #' that displays the pairwise adjusted Rand indices (similarities) between
-#' the cluster solutions of the provided solutions matrix.
+#' the cluster solutions of the provided solutions data frame.
 #'
 #' @export
 adjusted_rand_index_heatmap <- function(aris,

@@ -70,7 +70,7 @@ lp_sol_df <- function(train_sol_df,
     # Check to make sure the train subjects are all in the full list
     if (!all(train_subjects %in% all_subjects)) {
         metasnf_error(
-            "Not all subjects in the provided solutions matrix are present in",
+            "Not all subjects in the provided solutions data frame are present in",
             " the provided data list."
         )
     }

@@ -6,12 +6,12 @@
 #'  in the original call to `batch_snf()`.
 #' @param transpose If TRUE, will transpose the output dataframe.
 #' @param ignore_inclusions If TRUE, will ignore the inclusion columns in the
-#'  solutions matrix and calculate NMIs for all features. If FALSE, will give
+#'  solutions data frame and calculate NMIs for all features. If FALSE, will give
 #'  NAs for features that were dropped on a given settings_df row.
 #' @param verbose If TRUE, output progress to console.
 #' @return A "data.frame" class object containing one row for every feature
 #'  in the provided data list and one column for every solution in the provided
-#'  solutions matrix. Populated values show the calculated NMI score for each
+#'  solutions data frame. Populated values show the calculated NMI score for each
 #'  feature-solution combination.
 #'
 #' @export

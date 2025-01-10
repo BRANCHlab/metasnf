@@ -49,7 +49,7 @@ sc <- snf_config(
     n_solutions = 15
 )
 
-# collect similarity matrices and solutions matrix from batch_snf
+# collect similarity matrices and solutions data frame from batch_snf
 sol_df <- batch_snf(
     dl = dl,
     sc,

@@ -44,7 +44,7 @@ new_solutions_df <- function(sol_dfl) {
     return(sol_df)
 }
 
-#' Extend an solutions matrix to include outcome evaluations
+#' Extend a solutions data frame to include outcome evaluations
 #'
 #' @param sol_df Result of `batch_snf` storing cluster solutions and
 #'  the settings that were used to generate them.
@@ -127,7 +127,7 @@ extend_solutions <- function(sol_df,
         ) |>
         unlist()
     ###########################################################################
-    # Construct base of extended solutions matrix by adding columns for
+    # Construct base of extended solutions data frame by adding columns for
     # p-values of all features
     ###########################################################################
     # Specifying the dataframe structure avoids tibble-related errors
@@ -149,7 +149,7 @@ extend_solutions <- function(sol_df,
     # Sequential extension
     ###########################################################################
     if (processes == 1) {
-        # Iterate across rows of the solutions matrix
+        # Iterate across rows of the solutions data frame
         for (i in seq_len(nrow(sol_df))) {
             if (verbose) {
                 cat("Processing row ", i, " of ", nrow(sol_df), "\n", sep = "")
@@ -187,7 +187,7 @@ extend_solutions <- function(sol_df,
             )
             processes <- max_cores
         }
-        # Iterate across rows of the solutions matrix
+        # Iterate across rows of the solutions data frame
         future::plan(future::multisession, workers = processes)
         esm_rows <- future.apply::future_lapply(
             seq_len(nrow(esm)),
@@ -262,10 +262,10 @@ extend_solutions <- function(sol_df,
     return(esm)
 }
 
-#' Get p-values from an extended solutions matrix
+#' Get p-values from an extended solutions data frame
 #'
 #' This function can be used to neatly format the p-values associated with an
-#' extended solutions matrix. It can also calculate the negative logs of those
+#' extended solutions data frame. It can also calculate the negative logs of those
 #' p-values to make it easier to interpret large-scale differences.
 #'
 #' @param ext_sol_df The output of `extend_solutions`. A
@@ -309,11 +309,11 @@ get_pvals <- function(ext_sol_df,
     return(pval_df)
 }
 
-#' Summarize p-value columns of an extended solutions matrix
+#' Summarize p-value columns of an extended solutions data frame
 #'
 #' @param ext_sol_df Result of `extend_solutions`
 #'
-#' @return The provided extended solutions matrix along with columns for
+#' @return The provided extended solutions data frame along with columns for
 #' the min, mean, and maximum across p-values for each row.
 #'
 #' @export
@@ -346,7 +346,7 @@ summarize_pvals <- function(ext_sol_df) {
             max(x, na.rm = TRUE)
         }
     )
-    # Attach summary statistics to the solutions matrix
+    # Attach summary statistics to the solutions data frame
     ext_sol_df$"min_pval" <- min_pvals
     ext_sol_df$"mean_pval" <- mean_pvals
     ext_sol_df$"max_pval" <- max_pvals
@@ -356,7 +356,7 @@ summarize_pvals <- function(ext_sol_df) {
 
 #' Get minimum p-value
 #'
-#' Given an solutions matrix row containing evaluated p-values, returns min.
+#' Given an solutions data frame row containing evaluated p-values, returns min.
 #'
 #' @param sol_df_row row of sol_df object
 #'
@@ -375,7 +375,7 @@ get_min_pval <- function(sol_df_row) {
 
 #' Get mean p-value
 #'
-#' Given an solutions matrix row containing evaluated p-values, returns mean.
+#' Given an solutions data frame row containing evaluated p-values, returns mean.
 #'
 #' @param sol_df_row row of sol_df object
 #'

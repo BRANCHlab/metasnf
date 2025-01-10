@@ -123,11 +123,11 @@ bar_plot <- function(df, feature) {
 
 #' Automatically plot features across clusters
 #'
-#' Given a single row of a solutions matrix and data provided through
+#' Given a single row of a solutions data frame and data provided through
 #' a data list, this function will return a series of bar and/or
 #' jitter plots based on feature types.
 #'
-#' @param sol_df_row A single row of a solutions matrix.
+#' @param sol_df_row A single row of a solutions data frame.
 #'
 #' @param dl A data list containing data to plot.
 #'
@@ -194,7 +194,7 @@ auto_plot <- function(sol_df_row = NULL,
     dl_subjects <- sort(dl_df$"uid")
     if (!identical(sol_df_subjects, dl_subjects)) {
         metasnf_error(
-            "The UIDs in the provided solutions matrix row and data list must",
+            "The UIDs in the provided solutions data frame row and data list must",
             " match."
         )
     }

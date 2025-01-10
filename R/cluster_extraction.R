@@ -1,8 +1,8 @@
 #' Extract cluster membership information from a sol_df
 #'
-#' This function takes in a solutions matrix and returns a dataframe containing
+#' This function takes in a solutions data frame and returns a dataframe containing
 #' the cluster assignments for each uid. It is similar to
-#' '`get_clusters()`, which takes one solutions matrix row and returns a vector
+#' '`get_clusters()`, which takes one solutions data frame row and returns a vector
 #' of cluster assignments' and `get_cluster_df()`, which takes a solutions
 #' matrix with only one row and returns a dataframe with two columns: "cluster"
 #' and "uid" (the UID of the observation).
@@ -12,7 +12,7 @@
 #' @return cluster_solutions A "data.frame" object where each row is an
 #' observation and each column (apart from the uid column) indicates
 #' the cluster that observation was assigned to for the corresponding
-#' solutions matrix row.
+#' solutions data frame row.
 #'
 #' @export
 get_cluster_solutions <- function(sol_df) {
@@ -37,16 +37,16 @@ get_cluster_solutions <- function(sol_df) {
     return(cluster_solutions)
 }
 
-#' Extract cluster membership information from one solutions matrix row
+#' Extract cluster membership information from one solutions data frame row
 #'
-#' This function takes in a single row of a solutions matrix and returns a
+#' This function takes in a single row of a solutions data frame and returns a
 #' dataframe containing the cluster assignments for each uid. It is
-#' similar to `get_clusters()`, which takes one solutions matrix row and
+#' similar to `get_clusters()`, which takes one solutions data frame row and
 #' returns a vector of cluster assignments' and `get_cluster_solutions()`,
-#' which takes a solutions matrix with any number of rows and returns a
+#' which takes a solutions data frame with any number of rows and returns a
 #' dataframe indicating the cluster assignments for each of those rows.
 #'
-#' @param sol_df_row One row from a solutions matrix.
+#' @param sol_df_row One row from a solutions data frame.
 #'
 #' @return cluster_df dataframe of cluster and uid.
 #'
@@ -66,14 +66,14 @@ get_cluster_df <- function(sol_df_row) {
     return(cluster_df)
 }
 
-#' Extract cluster membership vector from one solutions matrix row
+#' Extract cluster membership vector from one solutions data frame row
 #'
-#' This function takes in a single row of a solutions matrix and returns a
+#' This function takes in a single row of a solutions data frame and returns a
 #' vector containing the cluster assignments for each observation. It is
-#' similar to `get_cluster_df()`, which takes a solutions matrix with only one
+#' similar to `get_cluster_df()`, which takes a solutions data frame with only one
 #' row and returns a dataframe with two columns: "cluster" and "uid"
 #' '(the UID of the observation) and `get_cluster_solutions()`, which takes a
-#' solutions matrix with any number of rows and returns a dataframe indicating
+#' solutions data frame with any number of rows and returns a dataframe indicating
 #' the cluster assignments for each of those rows.
 #'
 #' @param sol_df_row Output matrix row.

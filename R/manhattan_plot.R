@@ -143,7 +143,7 @@ var_manhattan_plot <- function(dl,
 #' @param hide_x_labels If TRUE, hides x-axis labels.
 #' @param domain_colours Named vector of colours for domains.
 #' @return A Manhattan plot (class "gg", "ggplot") showing the association
-#'  p-values of features against each solution in the provided solutions matrix,
+#'  p-values of features against each solution in the provided solutions data frame,
 #'  stratified by meta cluster label.
 #' @export
 mc_manhattan_plot <- function(ext_sol_df,
@@ -189,7 +189,7 @@ mc_manhattan_plot <- function(ext_sol_df,
     if (ncol(ext_sol_df) == 2) {
         metasnf_error(
             "ext_sol_df is missing p-value columns. Did you",
-            " provide an unextended solutions matrix instead?"
+            " provide an unextended solutions data frame instead?"
         )
     }
     ext_sol_df <- dplyr::select(
@@ -378,7 +378,7 @@ mc_manhattan_plot <- function(ext_sol_df,
 
 #' Manhattan plot of feature-cluster association p-values
 #'
-#' @param esm Extended solutions matrix storing associations between features
+#' @param esm Extended solutions data frame storing associations between features
 #' and cluster assignments. See `?extend_solutions`.
 #'
 #' @param neg_log_pval_thresh Threshold for negative log p-values.
@@ -401,7 +401,7 @@ mc_manhattan_plot <- function(ext_sol_df,
 #'  Bonferroni-corrected equivalent of the p-value threshold.
 #'
 #' @return A Manhattan plot (class "gg", "ggplot") showing the association
-#' p-values of features against each solution in the provided solutions matrix.
+#' p-values of features against each solution in the provided solutions data frame.
 #'
 #' @export
 esm_manhattan_plot <- function(esm,

@@ -18,7 +18,7 @@
 #'
 #' @param verbose If TRUE, output progress to console.
 #'
-#' @return om_aris ARIs between clustering solutions of an solutions matrix
+#' @return om_aris ARIs between clustering solutions of an solutions data frame
 #'
 #' @export
 calc_aris <- function(sol_df,
@@ -125,7 +125,7 @@ calc_aris <- function(sol_df,
 #' valid function could be `fn <- function(x) x[x$"nclust" == 4, ]`.
 #'
 #' @return A "data.frame" class object corresponding to a subset of the
-#' provided solutions matrix in which only one row is present per meta cluster.
+#' provided solutions data frame in which only one row is present per meta cluster.
 #'
 #' @export
 get_representative_solutions <- function(aris,
@@ -134,7 +134,7 @@ get_representative_solutions <- function(aris,
                                          sol_df,
                                          filter_fn = NULL) {
     ###########################################################################
-    # Re-sort the solutions matrix based on the aris
+    # Re-sort the solutions data frame based on the aris
     ###########################################################################
     order <- unlist(order)
     aris <- data.frame(aris[order, order])

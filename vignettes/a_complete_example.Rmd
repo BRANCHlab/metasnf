@@ -927,7 +927,7 @@ which(ext_sol_df$"min_pval" == lowest_min_pval)
 # Keep track of your top solution
 top_row <- ext_sol_df[1, ]
 
-# Use the solutions matrix from the training subjects and the data list from
+# Use the solutions data frame from the training subjects and the data list from
 # the training and testing subjects to propagate labels to the test subjects
 propagated_labels <- lp_sol_df(top_row, full_dl)
 
