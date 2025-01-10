@@ -582,9 +582,9 @@ add_settings_df_rows <- function(sdf,
         # Limit how many times a new row ended up already existing
         if (num_retries > retry_limit) {
            metasnf_error(
-                "Matrix building failed to converge. To keep adding rows, try",
-                " raising the retry_limit parameter or specifying a larger",
-                " range of tunable parameters."
+                "`settings_df` building failed to converge. To keep adding ro",
+                "ws, try raising the retry_limit parameter or specifying a la",
+                "rger range of tunable parameters."
             )
         }
     }

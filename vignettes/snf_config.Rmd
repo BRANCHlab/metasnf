@@ -268,7 +268,7 @@ full_sc <- merge(sc_1, sc_2)
 full_sc
 ```
 
-## "Matrix building failed"
+## "`settings_df` building failed to converge"
 
 `snf_config()` will never build duplicate rows.
 A consequence of this is that if you request a very large number of rows over a very small range of possible values to vary over, it will be impossible for the matrix to be built.
