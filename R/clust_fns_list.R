@@ -174,7 +174,7 @@ summarize_clust_fns_list <- function(cfl) {
 
 #' Built-in clustering algorithms
 #'
-#' These functions can be used when building a metasnf clustering functions
+#' These functions can be used when building a `metasnf` clustering functions
 #' list. Each function converts a similarity matrix (matrix class object) to a
 #' cluster solution (numeric vector). Note that these functions (or custom
 #' clustering functions) cannot accept number of clusters as a parameter; this

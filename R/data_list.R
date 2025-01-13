@@ -2,7 +2,7 @@
 #'
 #' `data_list()` constructs a data list object which inherits from classes
 #' `data_list` and `list`. This object is the primary way in which features to
-#' be used along the metasnf clustering pipeline are stored. The data list is
+#' be used along the `metasnf` clustering pipeline are stored. The data list is
 #' fundamentally a 2-level nested list object where each inner list contains a
 #' data frame and associated metadata for that data frame. The metadata
 #' includes the name of the dataframe, the 'domain' of that dataframe (the

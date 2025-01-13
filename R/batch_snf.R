@@ -1,6 +1,6 @@
 #' Run variations of SNF.
 #'
-#' This is the core function of the metasnf package. Using the information
+#' This is the core function of the `metasnf` package. Using the information
 #' stored in a settings_df (see ?settings_df) and a data list
 #' (see ?data_list), run repeated complete SNF pipelines to generate
 #' a broad space of post-SNF cluster solutions.

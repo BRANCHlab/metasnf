@@ -239,7 +239,6 @@ player_data |>
 That's looking much more like what we want to see.
 Following this correction, you'll have a much easier identifying the clustering structure that exists independently of the variance you don't care about from pro-status.
 
-
 ## Procedure using the `metasnf` package
 
 Note that you can only adjust out signal from categorical features, the adjustment will be linear, it will only be applied to numeric (continuous, discrete, ordinal) data, and that the adjustment can lead to some major information loss (see the section below)!

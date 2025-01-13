@@ -330,6 +330,20 @@ sol_aris <- calc_aris(sol_df)
 ```
 
 We can visualize the resulting inter-cluster similarities with a heatmap.
+Heatmaps in the `metasnf` package are constructed using the [`ComplexHeatmap`](https://bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html) and [`InteractiveComplexHeatmap`](https://bioconductor.org/packages/release/bioc/html/InteractiveComplexHeatmap.html) packages from [Bioconductor](https://bioconductor.org/).
+If you don't already have these packages, you can install them with the following code:
+
+```{r eval = FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+# To make heatmaps with metasnf
+BiocManager::install("ComplexHeatmap")
+
+# To use heatmap shiny app (later in vignette) with metasnf
+BiocManager::install("InteractiveComplexHeatmap")
+```
+
 First, call `get_matrix_order` to get a hierarchical clustering-based ordering of the rows in the adjusted rand indices.
 
 ```{r}
@@ -372,10 +386,13 @@ We will later see how to further customize this heatmap to add in rich informati
 
 First, we'll divide the heatmap into meta clusters by visual inspection.
 The indices of our meta cluster boundaries can be passed into the `adjusted_rand_index_heatmap` function as the `split_vector` parameter.
-You can determine this vector through trial and error or by using the `shiny_annotator` function (a wrapper around functionality from the `InteractiveComplexHeatmap` package).
+You can determine  vector through trial and error or by using the `shiny_annotator` function (a wrapper around functionality from the `InteractiveComplexHeatmap` package).
+
 
 ```{r eval = FALSE}
+
 shiny_annotator(ari_hm)
+
 ```
 
 <center>

@@ -77,8 +77,7 @@ calculate_silhouettes <- function(sol_df) {
 calculate_dunn_indices <- function(sol_df) {
     if (!requireNamespace("clv", quietly = TRUE)) {
         metasnf_error(
-            "Package \"clv\" must be installed to use this function.",
-            call. = FALSE
+            "Package \"clv\" must be installed to use this function."
         )
     }
     similarity_matrices <- attributes(sol_df)$"sim_mats_list"
@@ -170,8 +169,7 @@ calculate_dunn_indices <- function(sol_df) {
 calculate_db_indices <- function(sol_df) {
     if (!requireNamespace("clv", quietly = TRUE)) {
         metasnf_error(
-            "Package \"clv\" must be installed to use this function.",
-            call. = FALSE
+            "Package \"clv\" must be installed to use this function."
         )
     }
     similarity_matrices <- attributes(sol_df)$"sim_mats_list"

@@ -17,7 +17,7 @@ data frame.}
 \description{
 \code{data_list()} constructs a data list object which inherits from classes
 \code{data_list} and \code{list}. This object is the primary way in which features to
-be used along the metasnf clustering pipeline are stored. The data list is
+be used along the metaSNF clustering pipeline are stored. The data list is
 fundamentally a 2-level nested list object where each inner list contains a
 data frame and associated metadata for that data frame. The metadata
 includes the name of the dataframe, the 'domain' of that dataframe (the

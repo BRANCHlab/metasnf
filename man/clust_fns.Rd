@@ -50,7 +50,7 @@ spectral_ten(similarity_matrix)
 solution_data A vector of cluster assignments
 }
 \description{
-These functions can be used when building a metasnf clustering functions
+These functions can be used when building a metaSNF clustering functions
 list. Each function converts a similarity matrix (matrix class object) to a
 cluster solution (numeric vector). Note that these functions (or custom
 clustering functions) cannot accept number of clusters as a parameter; this
