@@ -195,36 +195,6 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
     return(assigned_subs)
 }
 
-#' Remove items from a data list
-#'
-#' Removes specified elements from a provided data list
-#'
-#' @param dl The data list containing components to be removed
-#'
-#' @param ... Any number of components to remove from the list object, passed as
-#' strings
-#'
-#' @return A "list"-class object in which any specified elements have been
-#' removed.
-#'
-#' @export
-list_remove <- function(dl, ...) {
-    to_remove <- list(...)
-    # Check to make sure all items to remove are components in dl
-    list_names <- summarize_dl(dl)$"name"
-    invalid_names <- to_remove[!to_remove %in% list_names]
-    if (length(invalid_names) > 0) {
-        metasnf_warning(
-            paste0(
-                "Did you make a typo? The following names are not present in",
-                " your data list: ", invalid_names
-            )
-        )
-    }
-    pruned_list <- dl[!list_names %in% to_remove]
-    return(pruned_list)
-}
-
 #' Generate a complete path and filename to store an similarity matrix
 #'
 #' @param similarity_matrix_dir Directory to store similarity matrices

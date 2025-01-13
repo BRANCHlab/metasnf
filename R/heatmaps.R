@@ -447,7 +447,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
                 "You must provide a data list to split the heatmap by domain."
             )
         }
-        dl_var_summary <- dl_variable_summary(dl)
+        dl_var_summary <- summary(dl, scope = "feature")
         keep_vars <- dl_var_summary$"name" %in% colnames(correlation_matrix)
         dl_var_summary <- dl_var_summary[keep_vars, ]
         args_list$"cluster_rows" <- FALSE

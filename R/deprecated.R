@@ -103,3 +103,49 @@ collapse_dl <- function(data_list) {
         return(dl_df)
     }
 }
+
+#' Summarize a data list
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' Defunct function for summarizing a data list. Please
+#'  use `summary()` instead.
+#'
+#' @param dl A nested list of input data from `data_list()`.
+#' @param scope The level of detail for the summary. Options are:
+#' - "component" (default): One row per component (dataframe) in the data list.
+#' - "feature": One row for each feature in the data list.
+#' @return data.frame class object summarizing all components (or features if
+#' scope == "component").
+#' @export
+summarize_dl <- function(data_list, scope = "component") {
+    metasnf_deprecated("2.0.0", "Please use `summary()` instead.")
+    if (inherits(data_list, "data_list")) {
+        dl_summary <- summary(data_list) 
+        return(dl_summary)
+    }
+}
+
+#' Variable-level summary of a data list
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' Defunct function to summarize a data list. Please use `summary()` with
+#' argument `scope = "feature"` instead.
+#'
+#' @param dl A nested list of input data from `data_list()`.
+#' @return variable_level_summary A dataframe containing the name, type, and
+#' domain of every variable in a data list.
+#'
+#' @export
+dl_variable_summary <- function(dl) {
+    metasnf_deprecated(
+        "2.0.0",
+        "Please use `summary()` with `scope = \"feature\"` instead."
+    )
+    if (inherits(data_list, "data_list")) {
+        dl_summary <- summary(data_list, scope = "feature") 
+        return(dl_summary)
+    }
+}
+

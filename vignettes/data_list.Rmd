@@ -93,7 +93,7 @@ data_list <- data_list(
 )
 
 # Printing data_list summaries
-summarize_dl(data_list)
+summary(data_list)
 ```
 
 Depending on your data preprocessing, it may be more convenient to you to assemble the components of your data_list in an automated way and then provide that result to `data_list`.
@@ -115,5 +115,5 @@ dl <- data_list(
     uid = "patient_id"
 )
 
-summarize_dl(dl)
+summary(dl)
 ```

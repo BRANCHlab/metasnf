@@ -26,7 +26,7 @@ summary.data_list <- function(object, scope = "component", ...) {
         )
     } else if (scope == "feature") {
         dl_df <- as.data.frame(object)
-        dl_df <- dl_df[, colnames(dl_df) != "uid"]
+        dl_df <- dl_df[, colnames(dl_df) != "uid", drop = FALSE]
         types <- object |>
             lapply(
                 function(x) {
@@ -41,9 +41,8 @@ summary.data_list <- function(object, scope = "component", ...) {
                 }
             ) |>
             unlist()
-        var_names <- colnames(dl_df[, colnames(dl_df) != "uid"])
         dl_summary <- data.frame(
-            name = var_names,
+            name = colnames(dl_df),
             type = types,
             domain = domains
         )

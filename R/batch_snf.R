@@ -464,7 +464,7 @@ domain_merge <- function(dl,
         current_domain <- dl[[i]]$"domain"
         current_data <- dl[[i]]$"data"
         current_type <- dl[[i]]$"type"
-        merged_dl_domains <- summarize_dl(merged_dl)$"domain" |> unique()
+        merged_dl_domains <- summary(merged_dl)$"domain" |> unique()
         if (current_domain %in% merged_dl_domains) {
             # the index of the new data list that already has the domain of the
             #  ith component of the original data list

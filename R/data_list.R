@@ -79,7 +79,7 @@
 #' )
 #'
 #' # Printing data list summaries
-#' summarize_dl(dl)
+#' summary(dl)
 #'
 #' # Alternative loading: providing a single list of lists
 #' list_of_lists <- list(
@@ -137,7 +137,7 @@ data_list <- function(...,
         arrange_dll() |> # sort observations in contained data frames by UID
         dll_uid_first_col() # position "uid" column at start of each data frame
     # Name the components of the data list
-    names(dll) <- summarize_dl(dll)$"name"
+    names(dll) <- summary(dll)$"name"
     # Class management
     dll <- validate_data_list(dll)
     dl <- new_data_list(dll)
@@ -270,55 +270,6 @@ arrange_dll <- function(dll) {
     return(arranged_dll)
 }
 
-#' Summarize a data list
-#'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @param scope The level of detail for the summary. Options are:
-#' - "component" (default): One row per component (dataframe) in the data list.
-#' - "feature": One row for each feature in the data list.
-#'
-#' @return "data.frame"-class object summarizing all components (or features if
-#' scope == "component").
-#'
-#' @export
-summarize_dl <- function(dl, scope = "component") {
-    if (scope == "component") {
-        dl_summary <- data.frame(
-            name = unlist(lapply(dl, function(x) x$"name")),
-            type = unlist(lapply(dl, function(x) x$"type")),
-            domain = unlist(domains(dl)),
-            length = unlist(lapply(dl, function(x) dim(x$"data")[1])),
-            width = unlist(lapply(dl, function(x) dim(x$"data")[2]))
-        )
-    } else if (scope == "feature") {
-        dl_df <- as.data.frame(dl)
-        dl_df <- dl_df[, colnames(dl_df) != "uid"]
-        types <- dl |>
-            lapply(
-                function(x) {
-                    rep(x$"type", ncol(x$"data") - 1)
-                }
-            ) |>
-            unlist()
-        domains <- dl |>
-            lapply(
-                function(x) {
-                    rep(x$"domain", ncol(x$"data") - 1)
-                }
-            ) |>
-            unlist()
-        var_names <- colnames(dl_df[, colnames(dl_df) != "uid"])
-        dl_summary <- data.frame(
-            name = var_names,
-            type = types,
-            domain = domains
-        )
-    }
-    rownames(dl_summary) <- seq_len(nrow(dl_summary))
-    return(dl_summary)
-}
-
 #' Domains
 #'
 #' @param dl A nested list of input data from `data_list()`.
@@ -329,40 +280,6 @@ summarize_dl <- function(dl, scope = "component") {
 domains <- function(dl) {
     domain_list <- lapply(dl, function(x) x$"domain")
     return(domain_list)
-}
-
-#' Variable-level summary of a data list
-#'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @return variable_level_summary A dataframe containing the name, type, and
-#' domain of every variable in a data list.
-#'
-#' @export
-dl_variable_summary <- function(dl) {
-    types <- dl |>
-        lapply(
-            function(x) {
-                rep(x$"type", ncol(x$"data") - 1)
-            }
-        ) |>
-        unlist()
-    domains <- dl |>
-        lapply(
-            function(x) {
-                rep(x$"domain", ncol(x$"data") - 1)
-            }
-        ) |>
-        unlist()
-    merged_df <- dl |>
-        as.data.frame()
-    var_names <- colnames(merged_df[, colnames(merged_df) != "uid"])
-    variable_level_summary <- data.frame(
-        name = var_names,
-        type = types,
-        domain = domains
-    )
-    return(variable_level_summary)
 }
 
 #' Reorder the uids in a data list
@@ -408,7 +325,7 @@ reorder_dl_subs <- function(dl, ordered_uids) {
 #'     uid = "unique_id"
 #' )
 #'
-#' summarize_dl(dl, "feature")
+#' summary(dl, "feature")
 #'
 #' name_changes <- c(
 #'     "anxiety_score" = "cbcl_anxiety_r",
@@ -417,9 +334,9 @@ reorder_dl_subs <- function(dl, ordered_uids) {
 #'
 #' dl <- rename_dl(dl, name_changes)
 #'
-#' summarize_dl(dl, "feature")
+#' summary(dl, "feature")
 rename_dl <- function(dl, name_mapping) {
-    dl_features <- summarize_dl(dl, "feature")$"name"
+    dl_features <- summary(dl, "feature")$"name"
     mismatches <- which(!name_mapping %in% dl_features)
     if (length(mismatches) > 0) {
         metasnf_warning(
@@ -500,8 +417,8 @@ dll_uid_first_col <- function(dll) {
 #'  both provided data lists.
 #' @export
 merge_dls <- function(dl_1, dl_2) {
-    dl_1_names <- summarize_dl(dl_1)$"name"
-    dl_2_names <- summarize_dl(dl_2)$"name"
+    dl_1_names <- summary(dl_1)$"name"
+    dl_2_names <- summary(dl_2)$"name"
     names(dl_1) <- dl_1_names
     names(dl_2) <- dl_2_names
     if (!identical(sort(dl_1_names), sort(dl_2_names))) {
@@ -893,53 +810,4 @@ dlapply <- function(X, FUN, ...) {
         }
     )
     return(validation)
-}
-
-#' Summarize a data list
-#'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @param scope The level of detail for the summary. Options are:
-#' - "component" (default): One row per component (dataframe) in the data list.
-#' - "feature": One row for each feature in the data list.
-#'
-#' @return "data.frame"-class object summarizing all components (or features if
-#' scope == "component").
-#'
-#' @export
-summarize_dl <- function(dl, scope = "component") {
-    if (scope == "component") {
-        dl_summary <- data.frame(
-            name = unlist(lapply(dl, function(x) x$"name")),
-            type = unlist(lapply(dl, function(x) x$"type")),
-            domain = unlist(domains(dl)),
-            length = unlist(lapply(dl, function(x) dim(x$"data")[1])),
-            width = unlist(lapply(dl, function(x) dim(x$"data")[2]))
-        )
-    } else if (scope == "feature") {
-        dl_df <- as.data.frame(dl)
-        dl_df <- dl_df[, colnames(dl_df) != "uid"]
-        types <- dl |>
-            lapply(
-                function(x) {
-                    rep(x$"type", ncol(x$"data") - 1)
-                }
-            ) |>
-            unlist()
-        domains <- dl |>
-            lapply(
-                function(x) {
-                    rep(x$"domain", ncol(x$"data") - 1)
-                }
-            ) |>
-            unlist()
-        var_names <- colnames(dl_df[, colnames(dl_df) != "uid"])
-        dl_summary <- data.frame(
-            name = var_names,
-            type = types,
-            domain = domains
-        )
-    }
-    rownames(dl_summary) <- seq_len(nrow(dl_summary))
-    return(dl_summary)
 }

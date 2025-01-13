@@ -178,7 +178,7 @@ settings_df <- function(dl,
         "ord_dist",
         "cat_dist",
         "mix_dist",
-        paste0("inc_", summarize_dl(dl)$"name")
+        paste0("inc_", summary(dl)$"name")
     )
     sdfl_base <- as.data.frame(
         matrix(

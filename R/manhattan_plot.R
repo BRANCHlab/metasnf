@@ -57,7 +57,7 @@ var_manhattan_plot <- function(dl,
     )
     summary_data <- dplyr::inner_join(
         pval_df,
-        dl_variable_summary(dl),
+        summary(dl, scope = "feature"),
         by = dplyr::join_by("variable" == "name")
     )
     summary_data <- dplyr::arrange(summary_data, domain)

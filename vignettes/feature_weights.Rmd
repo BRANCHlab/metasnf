@@ -43,7 +43,7 @@ data_list <- data_list(
     uid = "unique_id"
 )
 
-summarize_dl(data_list)
+summary(data_list)
 
 set.seed(42)
 sdf <- settings_df(

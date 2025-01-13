@@ -243,7 +243,7 @@ extend_solutions <- function(sol_df,
         #######################################################################
         # Identify features present in target list
         #######################################################################
-        target_features <- dl_variable_summary(target_dl)$"name"
+        target_features <- summary(target_dl, scope = "feature")$"name"
         target_features <- paste0(target_features, "_pval")
         target_esm <- dplyr::select(
             esm,
@@ -638,7 +638,7 @@ calc_assoc_pval_matrix <- function(dl,
     ###########################################################################
     # Ensure that 'mixed' data type is not being used
     ###########################################################################
-    dl_summary <- summarize_dl(dl)
+    dl_summary <- summary(dl)
     if (any(dl_summary$"type" == "mixed")) {
         metasnf_warning(
             "When using the 'mixed' data type in the 'calculate_associations'",
