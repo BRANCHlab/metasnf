@@ -120,8 +120,8 @@ print.settings_df <- function(x, ...) {
     comp_out <- all_output[13:(12 + n_comp)]
     comp_out <- gsub("\\.0", "  ", comp_out)
     comp_out <- sub("inc_([^ ]+)", "\\1    ", comp_out)
-    comp_out <- gsub("1", cli::col_green(cli::symbol$tick), comp_out)
-    comp_out <- gsub("0", cli::col_red(cli::symbol$cross), comp_out)
+    comp_out <- gsub(" 1 ", cli::col_green(" ", cli::symbol$tick, " "), comp_out)
+    comp_out <- gsub(" 0 ", cli::col_red(" ", cli::symbol$cross, " "), comp_out)
     if (nrow(x) == 0) {
         scheme_out <- cli::col_grey("empty")
         clust_out <- cli::col_grey("empty")

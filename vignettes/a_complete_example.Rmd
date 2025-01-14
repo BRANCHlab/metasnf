@@ -246,7 +246,7 @@ The settings data frame stores information about:
 - **SNF scheme**: the specific way in which input data gets collapsed into a final fused network (discussed further in the [SNF schemes vignette](https://branchlab.github.io/metasnf/articles/snf_schemes.html))
 - **Clustering functions**: Which clustering algorithm will be applied to the final fused network produced by SNF
 - **Distance function**: Which distance metric will be used when converting continuous, discrete, ordinal, categorical, or mixed type data into intermediate distance matrices (discussed further in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html))
-- **Component dropout** - Information on whether or not a particular input data frame in the data list will be in included or excluded from the corresponding SNF run (discussed further in the [settings data frame vignette](https://branchlab.github.io/metasnf/articles/settings_df.html)).
+- **Component dropout** - Information on whether or not a particular input data frame in the data list will be in included or excluded from the corresponding SNF run (discussed further in the [SNF config vignette](https://branchlab.github.io/metasnf/articles/snf_config.html)).
 
 The underlying structure of a settings data frame can be viewed by converting it from a `settings_df` class object into a regular `data.frame` class object:
 
@@ -259,12 +259,9 @@ Each row of the settings data frame corresponds to a set of hyperparameters for 
 Without specifying any additional parameters, the `snf_config` function randomly populates these columns and ensures that no generated rows are identical.
 
 Further customization of the `settings_df` and the other parts of the SNF config will enable you to generate a broader space of cluster solutions from your data and ideally get you closer to finding a more generalizable and useful solution for your context.
-More on `settings_df` customization can be found in the [settings data frame vignette](https://branchlab.github.io/metasnf/articles/settings_df.html).
+More on `settings_df` customization can be found in the [SNF config vignette](https://branchlab.github.io/metasnf/articles/snf_config.html).
 
-Setting a seed prior to calling `snf_config()` ensures that the same settings data frame is generated each time we run the code.
-
-While we end up with a random set of settings here, there is nothing wrong with manually altering the settings data frame to suit your needs.
-For example, if you wanted to know how much of a difference one input dataframe made, you could ensure that half of the rows included this input dataframe and the other half didn't.
+Setting a seed prior to calling `snf_config()` ensures that the same random settings are generated each time we run the code.
 
 ### Other parts of the SNF config
 
@@ -284,7 +281,7 @@ For now, we'll leave them as the default values generated during our `snf_config
 
 ## Running SNF and clustering
 
-The `batch_snf()` function integrates the data in the data list using the settings contained in the SNF config.
+The `batch_snf()` function integrates the data in the data list using all the hyperparameters, and functions contained in the SNF config.
 The resulting structure is an `solutions_df` class object, which contains an index column (`solution`), a column tracking the number of clusters in the cluster solution (`nclust`), and columns specifying which cluster each subject was assigned to for each corresponding `settings_df` row.
 
 ```{r}
@@ -383,7 +380,7 @@ The diagonals should always be red, representing the maximum value of 1, as they
 Complete-linkage, Euclidean-distance based hierarchical clustering is being applied to these solutions to obtain the row ordering.
 This is also the default approach used by the `ComplexHeatmap` package, the backbone of all heatmap functions in `metasnf`.
 
-This heatmap is integral to understanding what meta clusters exist in your data (given the space of parameters you explored in the settings data frame).
+This heatmap is integral to understanding what meta clusters were created from your data using the space of parameters you defined in the SNF config.
 We will later see how to further customize this heatmap to add in rich information about how each plotted cluster solution differs on various measures of quality, different clustering settings, and different levels of separation on input and out-of-model measures.
 
 First, we'll divide the heatmap into meta clusters by visual inspection.

@@ -32,8 +32,8 @@ In this vignette, we will highlight the main stability measure options in the `m
 library(metasnf)
 
 my_dl <- data_list(
-    list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
-    list(cort_sa, "cortical_area", "neuroimaging", "continuous"),
+    #list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    #list(cort_sa, "cortical_area", "neuroimaging", "continuous"),
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -41,14 +41,14 @@ my_dl <- data_list(
 )
 
 set.seed(42)
-config <- snf_config(
+sc <- snf_config(
     my_dl,
-    n_solutions = 4,
+    n_solutions = 3,
     max_k = 40
 )
 
 # Cluster solutions made using the full data
-sol_df <- batch_snf(my_dl, config)
+sol_df <- batch_snf(my_dl, sc)
 ```
 
 To begin start calculating resampling-based stability measures, we'll build subsamples of the data list using the `subsample_data_list` function.
@@ -56,7 +56,7 @@ To begin start calculating resampling-based stability measures, we'll build subs
 ```{r eval = FALSE}
 my_dl_subsamples <- subsample_dl(
     my_dl,
-    n_subsamples = 100,
+    n_subsamples = 5,
     subsample_fraction = 0.85
 )
 ```
@@ -67,7 +67,8 @@ Each variation only has a random 85% of the original observations.
 ```{r eval = FALSE}
 batch_subsample_results <- batch_snf_subsamples(
     my_dl_subsamples,
-    config
+    sc,
+    verbose = TRUE
 )
 ```
 
@@ -80,7 +81,8 @@ The function `subsample_pairwise_aris` can then be used to calculate the ARIs be
 subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
 pairwise_aris <- subsample_pairwise_aris(
     subsample_cluster_solutions,
-    return_raw_aris = TRUE
+    return_raw_aris = TRUE,
+    verbose = TRUE
 )
 ```
 
@@ -109,8 +111,11 @@ To calculate information about how often each pair of observations clustered tog
 ```{r eval = FALSE}
 coclustering_results <- calculate_coclustering(
     subsample_cluster_solutions,
-    sol_df
+    sol_df,
+    verbose = TRUE
 )
+
+coclustering_results$"cocluster_summary"
 ```
 
 Note that the runtime of this function scales quadratically with the number of observations and linearly with the number of subsamples.

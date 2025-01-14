@@ -550,9 +550,7 @@ calculate_coclustering <- function(subsample_solutions,
             cluster_solution,
             dplyr::join_by(sub_2 == uid)
         )
-        colnames(cocluster_df) <- c(
-            "sub_1", "sub_2", "sub_1_clust", "sub_2_clust"
-        )
+        colnames(cocluster_df) <- c("sub_1", "sub_2", "sub_1_clust", "sub_2_clust")
         cocluster_df$"same_solution" <- 0
         cocluster_df$"same_cluster" <- 0
         # Matrix templates
@@ -588,8 +586,7 @@ calculate_coclustering <- function(subsample_solutions,
                 }
             }
         }
-        cocluster_df <- cocluster_df |>
-            dplyr::mutate(cocluster_frac = same_cluster / same_solution)
+        cocluster_df <- cocluster_df |> dplyr::mutate(cocluster_frac = same_cluster / same_solution)
         cocluster_cf_mat <- cocluster_sc_mat / cocluster_ss_mat
         avg_cocluster_frac <- cocluster_df |>
             dplyr::filter(sub_1_clust == sub_2_clust) |>
@@ -598,10 +595,7 @@ calculate_coclustering <- function(subsample_solutions,
             mean(na.rm = TRUE)
         cocluster_frac_df <- rbind(
             cocluster_frac_df,
-            data.frame(
-                "row" = idx,
-                "avg_cocluster_frac" = avg_cocluster_frac
-            )
+            data.frame("row" = idx, "avg_cocluster_frac" = avg_cocluster_frac)
         )
         idx <- length(cocluster_dfs) + 1
         cocluster_dfs[[idx]] <- cocluster_df

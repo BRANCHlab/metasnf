@@ -70,17 +70,14 @@ sc <- snf_config(
 sol_df_imp1 <- batch_snf(dl_imp1, sc)
 sol_df_imp2 <- batch_snf(dl_imp2, sc)
 
-attributes(sol_df_imp1)$"snf_config"$"settings_df"
-
-sol_df_imp2$"solution" <- 11:20
-attributes(sol_df_imp2)$"snf_config"$"settings_df"$"solution" <- 11:20
-
 nrow(sol_df_imp1)
 nrow(sol_df_imp1)
 
 # Create a stacked solution matrix that stores solutions from both imputations
 # Solutions 1:10 are for imputation 1, 11:20 are for imputation 2
 sol_df <- rbind(sol_df_imp1, sol_df_imp2)
+
+sol_df
 
 # Calculate pairwise similarities across all solutions
 # (Including across imputations)

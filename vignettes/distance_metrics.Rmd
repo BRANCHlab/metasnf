@@ -80,20 +80,6 @@ The settings data frame within the config stores pointers to which function shou
 Once you have an SNF config that contains a distance functions list to your liking, you can call `batch_snf()` as usual:
 
 ```{r eval = FALSE}
-library(SNFtool)
-
-data(Data1)
-data(Data2)
-
-Data1$"patient_id" <- 101:(nrow(Data1) + 100) # nolint
-Data2$"patient_id" <- 101:(nrow(Data2) + 100) # nolint
-
-dl <- data_list(
-    list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
-    list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
-    uid = "patient_id"
-)
-
 sol_df <- batch_snf(dl, sc)
 ```
 
@@ -117,7 +103,7 @@ sc <- snf_config(
 sc
 ```
 
-The second way is to explicitly specify which indices you want to sample from during settings_df generation:
+The second way is to explicitly specify which indices you want to sample from during SNF config generation:
 
 ```{r}
 sc <- snf_config(

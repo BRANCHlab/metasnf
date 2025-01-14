@@ -137,11 +137,7 @@ Those similarity matrices can be passed into the `SNF` function to integrate the
 ### 5. Integrate similarity matrices with SNF
 
 ```{r}
-fused_network <- SNF(
-    list(similarity_matrix_1, similarity_matrix_2),
-    K,
-    T
-)
+fused_network <- SNF(list(similarity_matrix_1, similarity_matrix_2), K, T)
 ```
 
 ### 6. Find clusters in the integrated matrix
@@ -242,7 +238,7 @@ By varying the rows in this matrix, we can access a broader space of possible so
 
 In this case, we're going to create only a single cluster solution using the same process outlined in the original SNFtool example above.
 
-An explanation for the parameters in the `settings_df` can be found at [the settings_df vignette](https://branchlab.github.io/metasnf/articles/settings_df.html).
+A full explanation of all the parameters in the `snf_config()` function can be found at [the SNF config vignette](https://branchlab.github.io/metasnf/articles/snf_config.html).
 
 ```{r}
 sc <- snf_config(
@@ -258,26 +254,31 @@ sc <- snf_config(
 sc
 ```
 
-The columns in this `settings_df` mean the following:
+The SNF config is made of 4 parts: a settings data frame (class `settings_df`), a distance functions list (class `dist_fns_list`), a clustering functions list (class `clust_fns_list`), and a weights matrix (class `weights_matrix`).
+For now, we'll only focus on the settings data frame part.
+It can be printed as a regular data frame by calling `as.data.frame()` on it:
+
+```{r}
+as.data.frame(sc$"settings_df")
+```
+
+The columns in the `settings_df` account for the following:
 
 * solution: A way to keep track of the different rows
 * alpha, k, t: The hyperparameters seen above
 * snf_scheme: Which "scheme" will be used to transform the inputs into a final fused network. We'll discuss this in more detail in the next vignette.
-* clust_alg: Which clustering algorithm will be applied to the final fused network. By default, one of two possible base options are randomly chosen. A value of 2 indicates that spectral clustering will be used and that the number of clusters will be determined by the rotation cost heuristic.
-* Columns ending in "dist": Which distance metric should be used. By default, 1 refers to Euclidean distance for continuous, discrete, and ordinal data, and 1 refers to Gower's distance for categorical and mixed data.
-* Columns starting with "inc": Whether or not the corresponding dataframe will be included for this round of SNF.
+* clust_alg: Which clustering function from the `clust_fns_list` will be applied to the final fused network. By default, the `clust_fns_list` has index 1 referencing spectral clustering paired with the eigen-gap heuristic determining the number of clusters, while index 2 references spectral clustering paired with the rotation cost heuristic instead.
+* Columns ending in "dist": Which distance metric function from the `dist_fns_list` should be used. By default, the `dist_fns_list` has index 1 referencing simple Euclidean distance for continuous, discrete, and ordinal data, and Gower's distance for categorical and mixed data.
+* Columns starting with "inc": Component dropout - whether or not the corresponding dataframe will be included for this round of SNF.
 
-More detailed descriptions on all of these columns can also be found in the settings_df vignette.
+More detailed descriptions on all of these columns can also be found in the [the SNF config vignette](https://branchlab.github.io/metasnf/articles/snf_config.html).
 
 ### 4. Run SNF
 
-The `batch_snf` function will apply each row of the `settings_df` (in this case, just one row) to the `data_list`.
+The `batch_snf` function will use all of the hyperparameters and functions stored in the SNF config to the create cluster solutions from the `data_list`.
 
 ```{r}
-sol_df <- batch_snf(
-    my_dl,
-    sc
-)
+sol_df <- batch_snf(dl = my_dl, sc = sc)
 
 sol_df
 ```
@@ -319,7 +320,7 @@ max(similarity_matrix - fused_network)
 ```
 
 And now we've completed a basic example of using this package.
-The subsequent vignettes provide guidance on how you can leverage the `settings_df` to access a wide range of clustering solutions from your data, how you can use other tools in this package to pick a best solution for your purposes, and how to validate the generalizability.
+The subsequent vignettes provide guidance on how you can leverage the SNF config to access a wide range of clustering solutions from your data, how you can use other tools in this package to pick a best solution for your purposes, and how to validate the generalizability of your results.
 
 Go give the [less simple example](https://branchlab.github.io/metasnf/articles/a_complete_example.html) a try!
 
