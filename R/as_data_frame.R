@@ -86,7 +86,15 @@ as.data.frame.ext_solutions_df <- function(x,
             by = "solution"
         )
     } else {
-        df <- NextMethod()
+        sol_df <- as.data.frame(
+            attributes(x)$"solutions_df",
+            keep_attributes = FALSE
+        )
+        df <- dplyr::inner_join(
+            sol_df,
+            x,
+            by = "solution"
+        )
     }
     return(df)
 }

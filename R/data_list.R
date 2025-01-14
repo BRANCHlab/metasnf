@@ -137,7 +137,7 @@ data_list <- function(...,
         arrange_dll() |> # sort observations in contained data frames by UID
         dll_uid_first_col() # position "uid" column at start of each data frame
     # Name the components of the data list
-    names(dll) <- summary(dll)$"name"
+    names(dll) <- sapply(dll, function(x) x$"name")
     # Class management
     dll <- validate_data_list(dll)
     dl <- new_data_list(dll)
