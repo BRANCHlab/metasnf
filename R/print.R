@@ -416,13 +416,15 @@ print.t_solutions_df <- function(x, ...) {
 #' @return Function prints to console but does not return any value.
 #' @export
 print.ext_solutions_df <- function(x, ...) {
+    x_nouids <- dplyr::select(x, -dplyr::starts_with("uid"))
     cat(
         cli::col_grey(
             "P-values for ", length(attributes(x)$"features"), " features",
             " over ", nrow(x), " cluster solutions.\n"
         )
     )
-    assignment_df <- x
+    cat(cli::col_grey("Cluster assignment columns are present but hidden.\n"))
+    assignment_df <- x_nouids
     class(assignment_df) <- "data.frame"
     assignment_df <- tibble::tibble(assignment_df)
     output <- utils::capture.output(print(assignment_df))
@@ -436,9 +438,11 @@ print.ext_solutions_df <- function(x, ...) {
     }
     for (sentence in output) {
         first <- substr(sentence, 1, 8)
-        rest <- substr(sentence, 9, nchar(sentence))
+        second <- substr(sentence, 9, 16)
+        rest <- substr(sentence, 17, nchar(sentence))
         cat(
             cli::col_green(first),
+            cli::col_yellow(second),
             rest, "\n", sep = ""
         )
     }

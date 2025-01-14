@@ -76,25 +76,16 @@ as.data.frame.ext_solutions_df <- function(x,
                                            keep_attributes = FALSE,
                                            ...) {
     if (keep_attributes) {
-        sol_df <- as.data.frame(
-            attributes(x)$"solutions_df",
-            keep_attributes = TRUE
-        )
+        sdf <- attributes(x)$"snf_config"$"settings_df"
+        wm <- attributes(x)$"snf_config"$"weights_matrix"
+        sdf_wm <- cbind(data.frame(sdf), data.frame(wm))
         df <- dplyr::inner_join(
-            sol_df,
+            sdf_wm,
             x,
             by = "solution"
         )
     } else {
-        sol_df <- as.data.frame(
-            attributes(x)$"solutions_df",
-            keep_attributes = FALSE
-        )
-        df <- dplyr::inner_join(
-            sol_df,
-            x,
-            by = "solution"
-        )
+        df <- NextMethod()
     }
     return(df)
 }

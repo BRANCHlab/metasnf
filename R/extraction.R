@@ -140,7 +140,6 @@
         expr = {
             result <- validate_ext_solutions_df(result)
             result <- new_ext_solutions_df(result)
-            attributes(result)$"solutions_df" <- attributes(x)$"solutions_df"[i, ]
             attributes(result)$"features" <- attributes(x)$"features"
             result
         },

@@ -459,6 +459,7 @@ ext_sol_df <- extend_solutions(
 
 ext_sol_df
 
+# Summary columns of target_dl features tacked on the end
 ext_sol_df[, (ncol(ext_sol_df) - 2):ncol(ext_sol_df)]
 ```
 
@@ -471,7 +472,7 @@ ext_sol_df <- extend_solutions(
     dl = c(input_dl, target_dl)
 )
 
-# Also would work, but now every feature would be part of the summaries
+# Also would work, but now every feature used to calculate summaries
 ext_sol_df <- extend_solutions(
     sol_df,
     target_dl = c(input_dl, target_dl)

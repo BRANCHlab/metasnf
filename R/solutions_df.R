@@ -105,46 +105,23 @@ extend_solutions <- function(sol_df,
     ###########################################################################
     # Calculate vector of all feature names
     ###########################################################################
-    features <- dl |>
-        lapply(
-            function(x) {
-                x$"data" |>
-                    dplyr::select(-"uid") |>
-                    colnames()
-            }
-        ) |>
-        unlist()
+    fts <- as.character(unlist(sapply(dl, function(x) colnames(x$"data")[-1])))
+    n_fts <- length(fts)
     ###########################################################################
     # Calculate vector of all feature types
     ###########################################################################
-    feature_types <- dl |>
-        lapply(
-            function(x) {
-                n_features <- ncol(x$"data") - 1
-                outcome_type <- rep(x$"type", n_features)
-                return(outcome_type)
-            }
-        ) |>
-        unlist()
+    feature_types <- sapply(dl, function(x) rep(x$"type", n_fts))
     ###########################################################################
     # Construct base of extended solutions data frame by adding columns for
-    # p-values of all features
+    # p-values of all fts
     ###########################################################################
     # Specifying the dataframe structure avoids tibble-related errors
-    esm <- data.frame(
-        matrix(NA, nrow = nrow(sol_df), ncol = 1 + length(features))
-    )
-    colnames(esm) <- c("solution", paste0(features, "_pval"))
+    ext_sol_df <- data.frame(matrix(NA, nrow = nrow(sol_df), ncol = 1 + n_fts))
+    colnames(ext_sol_df) <- c("solution", paste0(fts, "_pval"))
     ###########################################################################
     # Single DF to contain all features to calculate p-values for
     ###########################################################################
-    merged_df <- dl |>
-        lapply(
-            function(x) {
-                x[[1]]
-            }
-        ) |>
-        merge_df_list()
+    merged_df <- merge_df_list(lapply(dl, function(x) x$"data"))
     ###########################################################################
     # Sequential extension
     ###########################################################################
@@ -155,9 +132,9 @@ extend_solutions <- function(sol_df,
                 cat("Processing row ", i, " of ", nrow(sol_df), "\n", sep = "")
             }
             clustered_subs <- t(sol_df[i, ])
-            for (j in seq_along(features)) {
+            for (j in seq_along(fts)) {
                 current_component_df <- merged_df[, c(1, j + 1)]
-                current_feature <- colnames(current_component_df)[2]
+                current_ft <- colnames(current_component_df)[2]
                 suppressWarnings({
                     pval <- calc_assoc_pval(
                         clustered_subs[, 2],
@@ -168,9 +145,9 @@ extend_solutions <- function(sol_df,
                     )
                 })
                 target_col <- which(
-                    paste0(current_feature, "_pval") == colnames(esm)
+                    paste0(current_ft, "_pval") == colnames(ext_sol_df)
                 )
-                esm[[target_col]][i] <- pval
+                ext_sol_df[[target_col]][i] <- pval
             }
         }
     } else {
@@ -189,13 +166,13 @@ extend_solutions <- function(sol_df,
         }
         # Iterate across rows of the solutions data frame
         future::plan(future::multisession, workers = processes)
-        esm_rows <- future.apply::future_lapply(
-            seq_len(nrow(esm)),
+        ext_sol_df_rows <- future.apply::future_lapply(
+            seq_len(nrow(ext_sol_df)),
             function(i) {
                 clustered_subs <- t(sol_df[i, ])
-                for (j in seq_along(features)) {
+                for (j in seq_along(fts)) {
                     current_component_df <- merged_df[, c(1, j + 1)]
-                    current_feature <- colnames(current_component_df)[2]
+                    current_ft <- colnames(current_component_df)[2]
                     evaluation_df <- dplyr::inner_join(
                         clustered_subs,
                         current_component_df,
@@ -204,25 +181,25 @@ extend_solutions <- function(sol_df,
                     suppressWarnings({
                         pval <- calc_assoc_pval(
                             evaluation_df[, 2],
-                            evaluation_df[, features[j]],
+                            evaluation_df[, fts[j]],
                             "categorical",
                             feature_types[j],
                             cat_test = cat_test
                         )
                     })
                     target_col <- which(
-                        paste0(current_feature, "_pval") == colnames(esm)
+                        paste0(current_ft, "_pval") == colnames(ext_sol_df)
                     )
-                    esm[[target_col]][i] <- pval
+                    ext_sol_df[[target_col]][i] <- pval
                 }
-                return(esm[i, ])
+                return(ext_sol_df[i, ])
             }
         )
         future::plan(future::sequential)
-        esm <- do.call("rbind", esm_rows)
+        ext_sol_df <- do.call("rbind", ext_sol_df_rows)
     }
-    esm$"solution" <- sol_df$"solution"
-    esm <- esm |> dplyr::select(
+    ext_sol_df$"solution" <- sol_df$"solution"
+    ext_sol_df <- ext_sol_df |> dplyr::select(
         "solution",
         dplyr::everything()
     )
@@ -230,7 +207,7 @@ extend_solutions <- function(sol_df,
     # If min_pval is assigned, use to replace any smaller p-value
     ###########################################################################
     if (!is.null(min_pval)) {
-        esm <- esm |>
+        ext_sol_df <- ext_sol_df |>
             numcol_to_numeric() |>
             dplyr::mutate(
                 dplyr::across(
@@ -243,23 +220,23 @@ extend_solutions <- function(sol_df,
         #######################################################################
         # Identify features present in target list
         #######################################################################
-        target_features <- summary(target_dl, scope = "feature")$"name"
-        target_features <- paste0(target_features, "_pval")
-        target_esm <- dplyr::select(
-            esm,
+        target_fts <- summary(target_dl, scope = "feature")$"name"
+        target_fts <- paste0(target_fts, "_pval")
+        target_ext_sol_df <- dplyr::select(
+            ext_sol_df,
             "solution",
-            dplyr::all_of(target_features)
+            dplyr::all_of(target_fts)
         )
-        target_esm <- summarize_pvals(target_esm)
-        target_esm <- dplyr::select(target_esm, -"solution")
-        esm <- dplyr::select(esm, -dplyr::all_of(target_features))
-        esm <- cbind(esm, target_esm)
+        target_ext_sol_df <- summarize_pvals(target_ext_sol_df)
+        target_ext_sol_df <- dplyr::select(target_ext_sol_df, -"solution")
+        ext_sol_df <- dplyr::select(ext_sol_df, -dplyr::all_of(target_fts))
+        ext_sol_df <- cbind(ext_sol_df, target_ext_sol_df)
     }
-    esm <- numcol_to_numeric(esm)
-    class(esm) <- c("ext_solutions_df", "data.frame")
-    attributes(esm)$"solutions_df" <- sol_df
-    attributes(esm)$"features" <- features
-    return(esm)
+    ext_sol_df <- numcol_to_numeric(ext_sol_df)
+    ext_sol_df <- dplyr::inner_join(sol_df, ext_sol_df, by = "solution")
+    class(ext_sol_df) <- c("ext_solutions_df", "data.frame")
+    attributes(ext_sol_df)$"features" <- fts
+    return(ext_sol_df)
 }
 
 #' Get p-values from an extended solutions data frame
