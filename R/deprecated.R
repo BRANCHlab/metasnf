@@ -111,7 +111,7 @@ collapse_dl <- function(data_list) {
 #' Defunct function for summarizing a data list. Please
 #'  use `summary()` instead.
 #'
-#' @param dl A nested list of input data from `data_list()`.
+#' @param data_list A nested list of input data from `data_list()`.
 #' @param scope The level of detail for the summary. Options are:
 #' - "component" (default): One row per component (dataframe) in the data list.
 #' - "feature": One row for each feature in the data list.

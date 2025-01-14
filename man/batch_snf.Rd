@@ -48,7 +48,7 @@ solutions data frame as well as a list of the final similarity matrices (class
 in the output.
 }
 \description{
-This is the core function of the metaSNF package. Using the information
+This is the core function of the \code{metasnf} package. Using the information
 stored in a settings_df (see ?settings_df) and a data list
 (see ?data_list), run repeated complete SNF pipelines to generate
 a broad space of post-SNF cluster solutions.

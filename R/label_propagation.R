@@ -62,9 +62,6 @@ lp_sol_df <- function(train_sol_df,
     ###########################################################################
     # 1. Reorder data list subjects
     ###########################################################################
-    if (inherits(train_sol_df, "ext_solutions_df")) {
-        train_sol_df <- attributes(train_sol_df)$"solutions_df"
-    }
     train_subjects <- uids(train_sol_df)
     all_subjects <- uids(full_dl)
     # Check to make sure the train subjects are all in the full list

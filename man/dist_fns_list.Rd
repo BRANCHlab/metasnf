@@ -42,7 +42,7 @@ The distance metrics list object (inherits classes \code{dist_fns_list}
 and \code{list}) is a list that stores R functions which can convert a data
 frame of features into a matrix of pairwise distances. The list is a nested
 one, where the first layer of the list can hold up to 5 items (one for each
-of the metaSNF recognized feature types, continuous, discrete, ordinal,
+of the \code{metasnf} recognized feature types, continuous, discrete, ordinal,
 categorical, and mixed), and the second layer can hold an arbitrary number
 of distance functions for each of those types.
 }

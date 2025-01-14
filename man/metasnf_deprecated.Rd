@@ -7,7 +7,7 @@
 metasnf_deprecated(version, alternative, env = 1)
 }
 \arguments{
-\item{version}{Version of metaSNF in which function has been deprecated.}
+\item{version}{Version of \code{metasnf} in which function has been deprecated.}
 
 \item{alternative}{Recommended alternative approach.}
 

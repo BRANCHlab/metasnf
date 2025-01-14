@@ -56,7 +56,7 @@ as_snf_config.solutions_df <- function(x) {
 
 #' @export
 as_snf_config.ext_solutions_df <- function(x) {
-    return(attributes(attributes(x)$"solutions_df")$"snf_config")
+    return(attributes(x)$"snf_config")
 }
 
 #' Convert an object to a weights matrix

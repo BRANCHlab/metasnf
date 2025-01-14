@@ -21,6 +21,8 @@ uids.data_list <- function(x) {
 
 #' @export
 uids.ext_solutions_df <- function(x) {
-    uid_vec <- uids(attributes(x)$"solutions_df")
+    uid_vec <- x |>
+        dplyr::select(dplyr::starts_with("uid_")) |>
+        colnames()
     return(uid_vec)
 }

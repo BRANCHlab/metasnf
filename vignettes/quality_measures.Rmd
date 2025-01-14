@@ -42,7 +42,7 @@ dl <- data_list(
     uid = "unique_id"
 )
 
-# build settings_df
+# build SNF config
 set.seed(42)
 sc <- snf_config(
     dl = dl,

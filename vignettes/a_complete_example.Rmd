@@ -316,7 +316,7 @@ Now that we have access to 20 different clustering solutions, we'll need to find
 In this case, plotting or running stats manually on each of the solutions might be a reasonable way to determine which ones we like the most.
 But when the number of solutions generated goes up into the hundreds (or thousands), we're going to need some more automated approaches.
 
-The main approach we recommend using is the meta clustering approach described in Caruana et al., 2016.
+The main approach we recommend using is the meta clustering approach described in Caruana et al., 2006.
 Meta clustering is a good approach to use when the criterion for what makes one cluster solution better than another is hard to formalize quantitatively (and hence, hard to fully automate).
 
 The idea is to cluster the *clustering solutions themselves* to arrive at a manageable number of qualitatively similar meta clusters.
