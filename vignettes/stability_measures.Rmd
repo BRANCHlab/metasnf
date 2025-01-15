@@ -32,8 +32,6 @@ In this vignette, we will highlight the main stability measure options in the `m
 library(metasnf)
 
 my_dl <- data_list(
-    #list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
-    #list(cort_sa, "cortical_area", "neuroimaging", "continuous"),
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),

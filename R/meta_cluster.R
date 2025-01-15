@@ -24,8 +24,8 @@
 #'     uid = "unique_id"
 #' )
 #' 
-#' sc <- snf_config(input_dl, n_solutions = 3)
-#' sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+#' sc <- snf_config(dl, n_solutions = 3)
+#' sol_df <- batch_snf(dl, sc, return_sim_mats = TRUE)
 #' calc_aris(sol_df)
 calc_aris <- function(sol_df,
                       processes = 1,
@@ -155,6 +155,7 @@ get_representative_solutions <- function(aris,
     mcs <- unique(mc_labels)
     sol_df$"label" <- mc_labels
     aris$"label" <- mc_labels
+    browser()
     ###########################################################################
     # Iterate through the meta clusters and keep the representative solution
     ###########################################################################

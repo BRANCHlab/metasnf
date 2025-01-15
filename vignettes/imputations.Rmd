@@ -31,7 +31,7 @@ A somewhat analogous process is demonstrated in the code below.
 Here, we pretend we've generated two different imputations of the data, `dl_imp1` and `dl_imp2`.
 The mock code below happens to use the base, unimputed data twice for simplicity.
 
-Separate cluster solutions are generated for the two sets of imputed data, which then have their corresponding solutions matrices stacked together and appended with an `imputation` column that indicates which imputed dataset was used to generate that particular cluster solution.
+Separate cluster solutions are generated for the two sets of imputed data, which then have their corresponding solutions data frames stacked together and appended with an `imputation` column that indicates which imputed dataset was used to generate that particular cluster solution.
 
 Moving through the rest of the meta clustering pipeline, the influence of the imputation on meta clustering structure or on separation of other features in the data can be easily visualized in the `adjusted_rand_index_heatmap` function through the use of `ComplexHeatmap` annotations.
 

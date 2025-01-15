@@ -36,3 +36,16 @@ feature-solution combination.
 \description{
 Calculate feature NMIs for a data list and a derived sol_df
 }
+\examples{
+input_dl <- data_list(
+    list(gender_df, "gender", "demographics", "categorical"),
+    list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+    uid = "patient_id"
+)
+
+sc <- snf_config(input_dl, n_solutions = 2)
+
+sol_df <- batch_snf(input_dl, sc)
+
+batch_nmi(input_dl, sol_df)
+}

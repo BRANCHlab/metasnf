@@ -1245,15 +1245,12 @@ generate_annotations_list <- function(df,
 #' Convert a vector of partition indices into meta cluster labels
 #'
 #' @param split_vector A vector of partition indices.
-#'
 #' @param nrow The number of rows in the data being partitioned.
-#'
 #' @return A character vector that expands the split_vector into an nrow-length
-#' sequence of ascending letters of the alphabet. If the split vector is
-#' c(3, 6) and the number of rows is 8, the result will be a vector of two
-#' "A"s (up to the first index, 3), three "B"s (up to the second index, 6),
-#' and three "C"s (up to and including the last index, 8).
-#'
+#'  sequence of ascending letters of the alphabet. If the split vector is
+#'  c(3, 6) and the number of rows is 8, the result will be a vector of two
+#'  "A"s (up to the first index, 3), three "B"s (up to the second index, 6),
+#'  and three "C"s (up to and including the last index, 8).
 #' @export
 label_splits <- function(split_vector, nrow) {
     labels <- rep("A", nrow)
@@ -1271,17 +1268,11 @@ label_splits <- function(split_vector, nrow) {
 #' Save a heatmap object to a file
 #'
 #' @param heatmap The heatmap object to save.
-#'
 #' @param path The path to save the heatmap to.
-#'
 #' @param width The width of the heatmap.
-#'
 #' @param height The height of the heatmap.
-#'
 #' @param res The resolution of the heatmap.
-#'
 #' @return Does not return any value. Saves heatmap to file.
-#'
 #' @export
 save_heatmap <- function(heatmap,
                          path,
@@ -1348,20 +1339,13 @@ get_heatmap_order <- function(heatmap, type = "rows") {
 #' Helper function to determine which row and columns to split on
 #'
 #' @param row_split_vector A vector of row indices to split on.
-#'
 #' @param column_split_vector A vector of column indices to split on.
-#'
 #' @param row_split Standard parameter of `ComplexHeatmap::Heatmap`.
-#'
 #' @param column_split Standard parameter of `ComplexHeatmap::Heatmap`.
-#'
 #' @param n_rows The number of rows in the data.
-#'
 #' @param n_columns The number of columns in the data.
-#'
 #' @return "list"-class object containing row_split and column_split character
-#' vectors to pass into ComplexHeatmap::Heatmap.
-#'
+#'  vectors to pass into ComplexHeatmap::Heatmap.
 #' @export
 split_parser <- function(row_split_vector = NULL,
                          column_split_vector = NULL,

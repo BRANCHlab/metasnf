@@ -31,3 +31,14 @@ om_aris ARIs between clustering solutions of an solutions data frame
 Generate matrix of pairwise cluster-solution similarities by Adjusted Rand
 index calculations.
 }
+\examples{
+dl <- data_list(
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+
+sc <- snf_config(dl, n_solutions = 3)
+sol_df <- batch_snf(dl, sc, return_sim_mats = TRUE)
+calc_aris(sol_df)
+}

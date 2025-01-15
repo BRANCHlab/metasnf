@@ -100,7 +100,7 @@ batch_snf_subsamples <- function(dl_subsamples,
     ###########################################################################
     # Generate a new cluster_solutions dataframe for every data list subsample
     subsample_clusters <- list()
-    subsample_solutions_matrices <- list()
+    subsample_sol_dfs <- list()
     subsample_similarity_matrices <- list()
     for (s in seq_along(dl_subsamples)) {
         if (verbose) {
@@ -123,14 +123,14 @@ batch_snf_subsamples <- function(dl_subsamples,
         index <- length(subsample_clusters) + 1
         subsample_clusters[[index]] <- cluster_solutions
         if (return_solutions) {
-            subsample_solutions_matrices[[index]] <- sol_df
+            subsample_sol_dfs[[index]] <- sol_df
         }
         subsample_similarity_matrices[[index]] <- similarity_matrices
     }
     subsample_ids <- paste0("subsample_", seq_along(dl_subsamples))
     results <- list(
         "cluster_solutions" = subsample_clusters,
-        "solutions_matrices" = subsample_solutions_matrices,
+        "sol_dfs" = subsample_sol_dfs,
         "similarity_matrices" = subsample_similarity_matrices
     )
     # Remove empty lists
@@ -164,7 +164,7 @@ subsample_pairwise_aris <- function(subsample_solutions,
     if (length(subsample_solutions) < 3) {
         metasnf_warning(
             "Fewer than 3 subsamples have been provided. Standard",
-            " deviation of the pairwise ARIs for each settings matrix row",
+            " deviation of the pairwise ARIs for each solution",
             " will not be computed."
         )
     }

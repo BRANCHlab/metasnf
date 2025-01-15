@@ -47,7 +47,7 @@ sol_df <- batch_snf(dl, sc)
 sol_df_row <- sol_df[1, ]
 ```
 
-Note, the row you pick could come directly from a `solutions_matrix`, but could also come from an `extended_solutions_matrix` or from a representative solution picked after `get_representative_solutions()`.
+The row you pick could come from a `solutions_df` or `ext_solutions_df` class object.
 
 ```{r}
 plot_list <- auto_plot(

@@ -17,3 +17,4 @@ or 1.
 Internal function taken from \code{SNFtool} to use for number of cluster
 estimation.
 }
+\keyword{internal}

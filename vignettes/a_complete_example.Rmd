@@ -76,7 +76,6 @@ cort_t[1:5, 1:5]
 
 The first column `unique_id` is the unique identifier (UID) for all subjects in the data.
 
-
 Here's the household income data:
 
 ```{r}
