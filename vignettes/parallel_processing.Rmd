@@ -50,7 +50,7 @@ dl <- data_list(
     uid = "unique_id"
 )
 
-# Specifying 5 different sets of settings for SNF
+# Specifying 10 different sets of settings for SNF
 set.seed(42)
 sc <- snf_config(
     dl = dl,

@@ -310,7 +310,7 @@ sol_df <- batch_snf(
 )
 
 # The first (and only, in this case) final fused network
-similarity_matrix <- attributes(sol_df)$"sim_mats_list"[[1]]
+similarity_matrix <- sim_mats_list(sol_df)[[1]]
 ```
 
 The fused network obtained through this approach is also the same as the one obtained in the original example:

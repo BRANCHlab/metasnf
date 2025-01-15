@@ -3,36 +3,24 @@ set.seed(44)
 library(sloop)
 library(testthat)
 
-z <- get_complete_uids(
-    list(
-        subc_v,
-        income,
-        anxiety,
-        depress
-    ),
-    uid = "unique_id"
-)
-
-input_dl <- data_list(
-    list(dplyr::filter(subc_v, unique_id %in% z), "scv", "neuroimaging", "continuous"),
-    list(dplyr::filter(income, unique_id %in% z), "income", "neuroimaging", "continuous"),
-    uid = "unique_id"
-)
-
-target_dl <- data_list(
-    list(dplyr::filter(anxiety, unique_id %in% z), "anxiety", "behaviour", "ordinal"),
-    list(dplyr::filter(depress, unique_id %in% z), "depressed", "behaviour", "ordinal"),
-    uid = "unique_id"
-)
-
-config <- snf_config(
-    input_dl,
-    n_solutions = 5
-)
-
-sol_df <- batch_snf(input_dl, config)
-
-ext_sol_df <- extend_solutions(
-    sol_df,
-    target_dl = target_dl
-)
+#' input_dl <- data_list(
+#'     list(gender_df, "gender", "demographics", "categorical"),
+#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'     uid = "patient_id"
+#' )
+#' 
+#' sc <- snf_config(input_dl, n_solutions = 1)
+#' 
+#' sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+#' 
+#' clust_fn_sequence <- list(spectral_two, spectral_four)
+#' 
+#' alluvial_cluster_plot(
+#'     cluster_sequence = clust_fn_sequence,
+#'     similarity_matrix = attributes(sol_df)$"sim_mats_list"[[1]],
+#'     dl = input_dl,
+#'     key_outcome = "gender", # the name of the feature of interest
+#'     key_label = "Gender", # how the feature of interest should be displayed
+#'     extra_outcomes = "diagnosis", # more features to plot but not colour by
+#'     title = "Gender Across Cluster Counts"
+#' )

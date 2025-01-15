@@ -30,3 +30,17 @@ new_sim_mats_list <- function(smll) {
     sml <- structure(smll, class = c("sim_mats_list", "list"))
     return(sml)
 }
+
+#' Create or extract a `sim_mats_list` class object
+#'
+#' @param x The object to create or extract a `sim_mats_list` from.
+#' @return A `sim_mats_list` class object.
+#' @export
+sim_mats_list <- function(x) {
+    UseMethod("sim_mats_list")
+}
+
+#' @export
+sim_mats_list.solutions_df <- function(x) {
+    return(attributes(x)$"sim_mats_list")
+}

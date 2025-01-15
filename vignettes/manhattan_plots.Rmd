@@ -63,7 +63,7 @@ sol_df <- batch_snf(dl, sc)
 ext_sol_df <- extend_solutions(
     sol_df,
     dl = dl,
-    tl = target_dl,
+    target = target_dl,
     min_pval = 1e-10 # p-values below 1e-10 will be thresholded to 1e-10
 )
 ```

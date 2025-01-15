@@ -19,7 +19,6 @@ A data list ("list"-class object) with adjusted feature names.
 Rename features in a data list
 }
 \examples{
-
 library(metasnf)
 
 dl <- data_list(

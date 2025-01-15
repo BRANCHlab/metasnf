@@ -22,20 +22,21 @@ weights_matrix <- function(dl = NULL,
     if (is.null(n_solutions)) {
         metasnf_error("`n_solutions` must be specified.")
     }
-    features <- attributes(dl)$"features"
+    fts <- features(dl)
+    n_fts <- n_features(dl)
     if (weights_fill == "ones") {
         weights_fill <- 1
     } else if (weights_fill == "uniform") {
-        weights_fill <- stats::runif(n_solutions * length(features))
+        weights_fill <- stats::runif(n_solutions * n_fts)
     } else if (weights_fill == "exponential") {
-        weights_fill <- stats::rexp(n_solutions * length(features))
+        weights_fill <- stats::rexp(n_solutions * n_fts)
     }
     wml <- matrix(
         nrow = n_solutions,
-        ncol = length(features),
+        ncol = n_fts,
         data = weights_fill
     )
-    colnames(wml) <- features
+    colnames(wml) <- fts
     wml <- validate_weights_matrix(wml)
     wm <- new_weights_matrix(wml)
     return(wm)

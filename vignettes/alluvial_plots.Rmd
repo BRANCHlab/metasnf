@@ -66,7 +66,7 @@ sol_df <- batch_snf(
     return_sim_mats = TRUE
 )
 
-sim_mats <- attributes(sol_df)$"sim_mats_list"
+sim_mats <- sim_mats_list(sol_df)
 
 similarity_matrix <- sim_mats[[1]]
 ```

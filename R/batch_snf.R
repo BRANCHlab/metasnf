@@ -76,7 +76,7 @@ batch_snf <- function(dl,
     }
     # solutions data frame-like object
     sol_dfl <- data.frame(t(sapply(run_snf_results, function(x) x[[1]])))
-    colnames(sol_dfl) <- attributes(dl)$"uids"
+    colnames(sol_dfl) <- uids(dl)
     sol_dfl$"nclust" <- apply(sol_dfl, 1, function(x) length(unique(x)))
     sol_dfl$"solution" <- seq_len(nrow(sol_dfl))
     sol_dfl <- sol_dfl |>
@@ -151,7 +151,7 @@ check_valid_sc <- function(sc) {
 #'  of observations.
 check_valid_k <- function(sdf, dl) {
     max_k <- max(sdf$"k")
-    n_observations <- attributes(dl)$"n_observations"
+    n_observations <- n_observations(dl)
     if (max_k >= n_observations) {
         metasnf_error(
             "Maximum k ({max_k}) cannot exceed number of ({n_observations})."

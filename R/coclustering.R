@@ -528,6 +528,7 @@ calculate_coclustering <- function(subsample_solutions,
     rownames(cocluster_mat) <- subjects
     # Looping over all cluster solutions
     for (idx in seq_len(nrow(sol_df))) {
+        start <- Sys.time()
         # Output current solution for monitoring progress
         if (verbose) {
             cat(
@@ -540,16 +541,8 @@ calculate_coclustering <- function(subsample_solutions,
         # Dataframe storing all pairs of subjects in the full solution
         cocluster_df <- data.frame(t(utils::combn(subjects, 2)))
         colnames(cocluster_df) <- c("sub_1", "sub_2")
-        cocluster_df <- dplyr::left_join(
-            cocluster_df,
-            cluster_solution,
-            dplyr::join_by(sub_1 == uid)
-        )
-        cocluster_df <- dplyr::left_join(
-            cocluster_df,
-            cluster_solution,
-            dplyr::join_by(sub_2 == uid)
-        )
+        cocluster_df <- dplyr::left_join(cocluster_df, cluster_solution, dplyr::join_by(sub_1 == uid))
+        cocluster_df <- dplyr::left_join(cocluster_df, cluster_solution, dplyr::join_by(sub_2 == uid))
         colnames(cocluster_df) <- c("sub_1", "sub_2", "sub_1_clust", "sub_2_clust")
         cocluster_df$"same_solution" <- 0
         cocluster_df$"same_cluster" <- 0
@@ -559,6 +552,7 @@ calculate_coclustering <- function(subsample_solutions,
         cocluster_cf_mat <- cocluster_mat
         # Optionally initialize raw data matrices
         # Iteration through all the clustered pairs
+        browser()
         for (row in seq_len(nrow(cocluster_df))) {
             # Iteration through all the solutions of subsampled data
             for (sub_ind in seq_len(length(subsample_solutions))) {

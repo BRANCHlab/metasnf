@@ -8,12 +8,10 @@
 #' and "uid" (the UID of the observation).
 #'
 #' @param sol_df A sol_df.
-#'
 #' @return cluster_solutions A "data.frame" object where each row is an
-#' observation and each column (apart from the uid column) indicates
-#' the cluster that observation was assigned to for the corresponding
-#' solutions data frame row.
-#'
+#'  observation and each column (apart from the uid column) indicates
+#'  the cluster that observation was assigned to for the corresponding
+#'  solutions data frame row.
 #' @export
 get_cluster_solutions <- function(sol_df) {
     class(sol_df) <- "data.frame"

@@ -163,9 +163,9 @@ sc <- snf_config(
 sc
 
 # custom weights
-features <- attributes(dl)$"features"
-custom_wm <- matrix(nrow = 10, ncol = length(features), rnorm(10 * length(features))^2)
-colnames(custom_wm) <- features
+fts <- features(dl)
+custom_wm <- matrix(nrow = 10, ncol = length(fts), rnorm(10 * length(fts))^2)
+colnames(custom_wm) <- fts
 custom_wm <- as_weights_matrix(custom_wm)
 
 sc <- snf_config(

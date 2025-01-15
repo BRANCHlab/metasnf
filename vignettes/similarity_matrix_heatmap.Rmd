@@ -72,7 +72,7 @@ sol_df <- batch_snf(
     return_sim_mats = TRUE
 )
 
-similarity_matrices <- attributes(sol_df)$"sim_mats_list"
+similarity_matrices <- sim_mats_list(sol_df)
 
 # The first (and only) similarity matrix:
 similarity_matrix <- similarity_matrices[[1]]
@@ -125,7 +125,7 @@ annotated_sm_hm <- similarity_matrix_heatmap(
     cluster_solution = cluster_solution,
     scale_diag = "mean",
     log_graph = TRUE,
-    dl = my_dl,
+    data = my_dl,
     left_hm = list(
         "Diagnosis" = "diagnosis"
     ),

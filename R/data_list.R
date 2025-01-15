@@ -273,9 +273,7 @@ arrange_dll <- function(dll) {
 #' Domains
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @return domain_list list of domains
-#'
 #' @export
 domains <- function(dl) {
     domain_list <- lapply(dl, function(x) x$"domain")
@@ -285,12 +283,9 @@ domains <- function(dl) {
 #' Reorder the uids in a data list
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @param ordered_uids A vector of the uid values in the data list
-#' in the desired order of the sorted data list.
-#'
+#'  in the desired order of the sorted data list.
 #' @return A data list ("list"-class object) with reordered observations.
-#'
 #' @export
 reorder_dl_subs <- function(dl, ordered_uids) {
     dl <- dl |>
@@ -307,15 +302,11 @@ reorder_dl_subs <- function(dl, ordered_uids) {
 #' Rename features in a data list
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @param name_mapping A named vector where the values are the features to be
-#' renamed and the names are the new names for those features.
-#'
+#'  renamed and the names are the new names for those features.
 #' @return A data list ("list"-class object) with adjusted feature names.
-#'
 #' @export
 #' @examples
-#'
 #' library(metasnf)
 #'
 #' dl <- data_list(
@@ -368,9 +359,8 @@ rename_dl <- function(dl, name_mapping) {
 #' Extract uids from a data list
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @param prefix If TRUE, preserves the "uid_" prefix added to UIDs when
-#' creating a data list.
+#'  creating a data list.
 #'
 #' @return A character vector of the UID labels contained in a data list.
 #'
@@ -658,8 +648,6 @@ check_dll_subitem_classes <- function(dll) {
         )
     }
 }
-
-
 
 #' Check if UID columns in a nested list have valid structure for a data list
 #'

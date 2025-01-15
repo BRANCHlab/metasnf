@@ -195,7 +195,7 @@ sol_df <- batch_snf(
 )
 
 # Similarity matrices are in the list below:
-similarity_matrices <- attributes(sol_df)$"sim_mats_list"
+similarity_matrices <- sim_mats_list(sol_df)
 
 length(similarity_matrices)
 
@@ -280,7 +280,7 @@ sol_df <- batch_snf(
     return_sim_mats = TRUE
 )
 
-similarity_matrices <- attributes(sol_df)$"sim_mats_list"
+similarity_matrices <- sim_mats_list(sol_df)
 
 representative_sm <- similarity_matrices[[1]]
 
