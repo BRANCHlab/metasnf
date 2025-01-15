@@ -37,6 +37,21 @@
 #'  `suppress_clustering` is TRUE, the solutions data frame will not be returned
 #'  in the output.
 #' @export
+#' @examples
+#' input_dl <- data_list(
+#'     list(gender_df, "gender", "demographics", "categorical"),
+#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'     uid = "patient_id"
+#' )
+#' 
+#' sc <- snf_config(input_dl, n_solutions = 5)
+#' 
+#' # A solutions data frame without similarity matrices
+#' sol_df <- batch_snf(input_dl, sc)
+#' 
+#' # A solutions data frame with similarity matrices
+#' # (1 NxN matrix per solution)
+#' sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
 batch_snf <- function(dl,
                       sc,
                       processes = 1,
@@ -217,15 +232,13 @@ check_compatible_sdf_dfl <- function(sdf, dfl) {
 #' Execute inclusion
 #'
 #' Given a data list and a settings matrix row, returns a data list of selected
-#' inputs
+#' inputs.
 #'
+#' @keywords internal
 #' @param sdf_row Row of a settings matrix.
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @return A data list (class "list") in which any component with a
-#' corresponding 0 value in the provided settings matrix row has been removed.
-#'
-#' @export
+#'  corresponding 0 value in the provided settings matrix row has been removed.
 drop_inputs <- function(sdf_row, dl) {
     if (!inherits(sdf_row, "settings_df")) {
         metasnf_error(
@@ -255,28 +268,19 @@ drop_inputs <- function(sdf_row, dl) {
 #'
 #' Given a dataframe of numerical features, return a euclidean distance matrix.
 #'
+#' @keywords internal
 #' @param df Raw dataframe with subject IDs in column "uid"
-#'
 #' @param input_type Either "numeric" (resulting in euclidean distances),
-#' "categorical" (resulting in binary distances), or "mixed" (resulting in
-#' gower distances)
-#'
+#'  "categorical" (resulting in binary distances), or "mixed" (resulting in
+#'  gower distances)
 #' @param cnt_dist_fn distance metric function for continuous data
-#'
 #' @param dsc_dist_fn distance metric function for discrete data
-#'
 #' @param ord_dist_fn distance metric function for ordinal data
-#'
 #' @param cat_dist_fn distance metric function for categorical data
-#'
 #' @param mix_dist_fn distance metric function for mixed data
-#'
 #' @param weights_row Single-row dataframe where the column names contain the
-#' column names in df and the row contains the corresponding weights_row.
-#'
+#'  column names in df and the row contains the corresponding weights_row.
 #' @return dist_matrix Matrix of inter-observation distances.
-#'
-#' @export
 get_dist_matrix <- function(df,
                             input_type,
                             cnt_dist_fn,
@@ -309,6 +313,7 @@ get_dist_matrix <- function(df,
 
 #' Helper function for using the correct SNF scheme
 #'
+#' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
 #' @param scheme Which SNF system to use to achieve the final fused network.
 #' @param k k hyperparameter.
@@ -321,7 +326,6 @@ get_dist_matrix <- function(df,
 #' @param mix_dist_fn distance metric function for mixed data.
 #' @param weights_row dataframe row containing feature weights.
 #' @return A fused similarity network (matrix).
-#' @export
 snf_step <- function(dl,
                      scheme,
                      k = 20,
@@ -370,10 +374,11 @@ snf_step <- function(dl,
 #'
 #' @inheritParams snf_step
 #' @name snf_scheme
+#' @keywords internal
 NULL
 
+#' @keywords internal
 #' @rdname snf_scheme
-#' @export
 two_step_merge <- function(dl,
                            k = 20,
                            alpha = 0.5,
@@ -446,8 +451,8 @@ two_step_merge <- function(dl,
     return(fused_network)
 }
 
+#' @keywords internal
 #' @rdname snf_scheme
-#' @export
 domain_merge <- function(dl,
                          cnt_dist_fn,
                          dsc_dist_fn,
@@ -530,8 +535,8 @@ domain_merge <- function(dl,
     return(fused_network)
 }
 
+#' @keywords internal
 #' @rdname snf_scheme
-#' @export
 individual <- function(dl,
                        k = 20,
                        alpha = 0.5,

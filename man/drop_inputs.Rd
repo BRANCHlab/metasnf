@@ -17,5 +17,6 @@ corresponding 0 value in the provided settings matrix row has been removed.
 }
 \description{
 Given a data list and a settings matrix row, returns a data list of selected
-inputs
+inputs.
 }
+\keyword{internal}

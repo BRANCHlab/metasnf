@@ -48,3 +48,4 @@ for parallel processing.
 \description{
 Generate closure function to run batch_snf in an apply-friendly format
 }
+\keyword{internal}

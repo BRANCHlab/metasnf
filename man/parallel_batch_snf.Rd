@@ -47,3 +47,4 @@ The same values as ?batch_snf().
 \description{
 Parallel processing form of batch_snf
 }
+\keyword{internal}

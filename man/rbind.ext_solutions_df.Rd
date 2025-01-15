@@ -2,7 +2,7 @@
 % Please edit documentation in R/rbind.R
 \name{rbind.ext_solutions_df}
 \alias{rbind.ext_solutions_df}
-\title{Row-binding of extended solutions data frame class objects.}
+\title{Row-binding of solutions data frame class objects.}
 \usage{
 \method{rbind}{ext_solutions_df}(...)
 }
@@ -13,5 +13,5 @@
 An \code{ext_solutions_df} class object.
 }
 \description{
-Row-binding of extended solutions data frame class objects.
+Row-binding of solutions data frame class objects.
 }

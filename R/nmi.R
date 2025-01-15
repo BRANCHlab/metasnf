@@ -13,8 +13,19 @@
 #'  in the provided data list and one column for every solution in the provided
 #'  solutions data frame. Populated values show the calculated NMI score for each
 #'  feature-solution combination.
-#'
 #' @export
+#' @examples
+#' input_dl <- data_list(
+#'     list(gender_df, "gender", "demographics", "categorical"),
+#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'     uid = "patient_id"
+#' )
+#' 
+#' sc <- snf_config(input_dl, n_solutions = 2)
+#' 
+#' sol_df <- batch_snf(input_dl, sc)
+#' 
+#' batch_nmi(input_dl, sol_df)
 batch_nmi <- function(dl,
                       sol_df,
                       transpose = TRUE,

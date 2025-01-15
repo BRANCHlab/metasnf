@@ -47,3 +47,4 @@ A fused similarity network (matrix).
 \description{
 Helper function for using the correct SNF scheme
 }
+\keyword{internal}

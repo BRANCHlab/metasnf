@@ -41,3 +41,4 @@ dist_matrix Matrix of inter-observation distances.
 \description{
 Given a dataframe of numerical features, return a euclidean distance matrix.
 }
+\keyword{internal}

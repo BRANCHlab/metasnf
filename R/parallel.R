@@ -1,5 +1,6 @@
 #' Parallel processing form of batch_snf
 #'
+#' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
 #' @param dfl An optional nested list containing which
 #'  distance metric function should be used for the various feature types
@@ -18,7 +19,6 @@
 #'  save all generated similarity matrices.
 #' @param processes Number of parallel processes used when executing SNF.
 #' @return The same values as ?batch_snf().
-#' @export
 parallel_batch_snf <- function(dl,
                                dfl,
                                cfl,
@@ -77,6 +77,7 @@ parallel_batch_snf <- function(dl,
 
 #' Generate closure function to run batch_snf in an apply-friendly format
 #'
+#' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
 #' @param dfl An optional nested list containing which
 #'  distance metric function should be used for the various feature types
@@ -96,7 +97,6 @@ parallel_batch_snf <- function(dl,
 #' @param prog Progressr function to update parallel processing progress
 #' @return A "function" class object used to run `batch_snf` in lapply-form
 #'  for parallel processing.
-#' @export
 batch_row_closure <- function(dl,
                               dfl,
                               cfl,
