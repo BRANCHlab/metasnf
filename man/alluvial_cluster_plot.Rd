@@ -52,11 +52,13 @@ sc <- snf_config(input_dl, n_solutions = 1)
 
 sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
 
+sim_mats <- sim_mats_list(sol_df)
+
 clust_fn_sequence <- list(spectral_two, spectral_four)
 
 alluvial_cluster_plot(
     cluster_sequence = clust_fn_sequence,
-    similarity_matrix = attributes(sol_df)$"sim_mats_list"[[1]],
+    similarity_matrix = sim_mats[[1]],
     dl = input_dl,
     key_outcome = "gender", # the name of the feature of interest
     key_label = "Gender", # how the feature of interest should be displayed
