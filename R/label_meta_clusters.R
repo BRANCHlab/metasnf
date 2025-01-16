@@ -15,7 +15,6 @@
 #'  be obtained by running `get_matrix_order()` on an ARI matrix, which itself
 #'  can be obtained by calling `calc_aris()` on a solutions data frame.
 #' @return A solutions data frame with a populated "meta_clusters" attribute.
-#'
 #' @export
 label_meta_clusters <- function(sol_df, split_vector, order = NULL) {
     n_solutions <- nrow(sol_df)
@@ -31,13 +30,16 @@ label_meta_clusters <- function(sol_df, split_vector, order = NULL) {
     if (is.null(order)) {
         order <- seq_len(nrow(sol_df))
     }
-    sol_df_ordered <- sol_df[order, ]
-    corresponding_solutions <- sol_df_ordered$"solution"
-    sol_df_ordered$"label" <- labels
-    sol_df_ordered <- sol_df_ordered |>
-        dplyr::select(solution, nclust, label, dplyr::everything())
-    return(sol_df_ordered)
-    print(corresponding_solutions)
-    print(labels)
-    return(labels[order])
+    sol_df <- sol_df[order, ]
+    corresponding_solutions <- sol_df$"solution"
+    sol_df$"mc" <- labels
+    sol_df <- dplyr::select(
+        sol_df,
+        "solution",
+        "nclust",
+        "mc",
+        dplyr::everything()
+    )
+    sol_df <- sol_df[sort(sol_df$"solution", index.return = TRUE)$ix, ]
+    return(sol_df)
 }

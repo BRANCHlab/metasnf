@@ -47,7 +47,11 @@ print.data_list <- function(x, ...) {
             cat(data_main[1:5], sep = "\n")
             n_more_fts <- length(data_main) - 5
             grammar <- if (n_more_fts > 1) "s.\n" else ".\n"
-            cat(cli::col_grey("\u2026and ", n_more_fts, " more feature", grammar))
+            cat(
+                cli::col_grey(
+                    "\u2026and ", n_more_fts, " more feature", grammar
+                )
+            )
         }
     }
 }
@@ -288,32 +292,47 @@ print.weights_matrix <- function(x, ...) {
 #' information about feature weights functions to the console.
 #'
 #' @param x A `weights_matrix` class object.
-#' @param ... Other arguments passed to `print` (not used in this function)
+#' @param n Number of rows to print, passed into `tibble::print.tbl_df()`.
+#' @param ... Other arguments passed to `print` (not used in this function).
 #' @return Function prints to console but does not return any value.
 #' @export
-print.solutions_df <- function(x, ...) {
+print.solutions_df <- function(x, n = NULL, ...) {
     cat(
         cli::col_grey(
             nrow(x), " cluster solutions of ", ncol(x) - 2, " observations:\n"
         )
     )
     assignment_df <- tibble::tibble(as.data.frame(x))
-    output <- utils::capture.output(print(assignment_df))
+    output <- utils::capture.output(print(assignment_df, n = n))
     output <- output[-c(1, 3)]
     output <- output[!grepl("^#", output)]
-    if (length(output) >= 11) {
-        output <- output[1:11]
+    # Managing spacing for different row numbers
+    if (length(output) >= 1001) {
+        output <- sub(".....", "", output)
+    } else if (length(output) >= 101) {
+        output <- sub("....", "", output)
+    } else if (length(output) >= 11) {
         output <- sub("...", "", output)
     } else {
         output <- sub("..", "", output)
     }
-    for (sentence in output) {
-        first <- substr(sentence, 1, 8)
-        second <- substr(sentence, 9, 16)
-        rest <- substr(sentence, 17, nchar(sentence))
+    first_line <- output[1]
+    nclust_idx <- regexpr("nclust", first_line)[1]
+    mc_idx <- regexpr("mc", first_line)[1]
+    uid_idx <- regexpr("uid", first_line)[1]
+    for (i in seq_along(output)) {
+        sentence <- output[i]
+        if (i > 1) {
+            sentence <- gsub("<NA>", " .", sentence)
+        }
+        first <- substr(sentence, 1, nchar("solution") + 1)
+        second <- substr(sentence, nclust_idx, nclust_idx + nchar("nclust"))
+        third <- substr(sentence, mc_idx, mc_idx + nchar("mc"))
+        rest <- substr(sentence, uid_idx, nchar(sentence))
         cat(
             cli::col_green(first),
             cli::col_yellow(second),
+            cli::col_blue(third),
             rest, "\n", sep = ""
         )
     }
@@ -346,6 +365,16 @@ print.solutions_df <- function(x, ...) {
             )
         )
     }
+    cat(
+        cli::col_grey(
+            "Use `print(n = ...)` to change the number of rows printed.\n"
+        )
+    )
+    cat(
+        cli::col_grey(
+            "Use `t()` to view compact cluster solution format.\n"
+        )
+    )
 }
 
 #' Print method for class `t_solutions_df`
@@ -407,6 +436,65 @@ print.t_solutions_df <- function(x, ...) {
     }
 }
 
+#' Print method for class `t_ext_solutions_df`
+#'
+#' Custom formatted print for transposed solutions data frame class objects.
+#'
+#' @param x A `t_solutions_df` class object.
+#' @param ... Other arguments passed to `print` (not used in this function)
+#' @return Function prints to console but does not return any value.
+#' @export
+print.t_ext_solutions_df <- function(x, ...) {
+    x <- tibble::tibble(data.frame(x))
+    n_sols <- ncol(x) - 1
+    n_obs <- nrow(x)
+    output <- utils::capture.output(print(x, width = Inf))
+    output <- output[!grepl("^#", output)]
+    output <- sub("...", "", output)
+    output <- output[!grepl("^<", output)]
+    header <- output[1]
+    rest <- output[-1]
+    cat(cli::col_blue(header), "\n")
+    # Calculating shown vs. hidden solutions
+    shown_sols <- length(strsplit(header, "\\s+")[[1]]) - 1
+    hidden_sols <- n_sols - shown_sols
+    if (hidden_sols == 1) {
+        sols_message <- "1 solution"
+    } else if (hidden_sols > 1) {
+        sols_message <- paste0(hidden_sols, " solutions")
+    } else {
+        sols_message <- ""
+    }
+    # Calculating shown vs. hidden observations
+    if (length(rest) > 10) {
+        hidden_obs <- n_obs - 10
+        if (hidden_obs == 1) {
+            obs_message <- "1 observation"
+        } else if (hidden_obs > 1) {
+            obs_message <- paste0(hidden_obs, " observations")
+        }
+    } else {
+        hidden_obs <- 0
+        obs_message <- ""
+    }
+    if (hidden_sols > 0 & hidden_obs > 0) {
+        joiner <- " and "
+    } else {
+        joiner <- ""
+    }
+    if (hidden_obs > 0 | hidden_sols > 0) {
+        cat(rest[1:10], sep = "\n")
+        cat(
+            cli::col_grey(
+                "Not showing ", obs_message, joiner, sols_message, ".\n",
+                sep = ""
+            )
+        )
+    } else {
+        cat(rest, sep = "\n")
+    }
+}
+
 #' Print method for class `ext_solutions_df`
 #'
 #' Custom formatted print for extended solutions data frame class objects.
@@ -416,7 +504,21 @@ print.t_solutions_df <- function(x, ...) {
 #' @return Function prints to console but does not return any value.
 #' @export
 print.ext_solutions_df <- function(x, ...) {
+    common_cols <- c("solution", "nclust", "mc")
+    summary_cols <- c("min_pval", "mean_pval", "max_pval")
     x_nouids <- dplyr::select(x, -dplyr::starts_with("uid"))
+    x_pvals <- dplyr::select(x, dplyr::ends_with("_pval"))
+    if ("min_pval" %in% colnames(x_pvals)) {
+        x_summary_pvals <- dplyr::select(
+            x_pvals,
+            "solution",
+            "nclust",
+            "mc",
+            "min_pval",
+            "mean_pval",
+            "max_pval"
+        )
+    }
     cat(
         cli::col_grey(
             "P-values for ", length(attributes(x)$"features"), " features",
@@ -425,24 +527,64 @@ print.ext_solutions_df <- function(x, ...) {
     )
     cat(cli::col_grey("Cluster assignment columns are present but hidden.\n"))
     assignment_df <- x_nouids
-    class(assignment_df) <- "data.frame"
-    assignment_df <- tibble::tibble(assignment_df)
+    assignment_df <- assignment_df |>
+        tibble::tibble() |>
+        dplyr::mutate(
+            dplyr::across(
+                .cols = dplyr::where(is.numeric) & !dplyr::all_of(c("solution", "nclust", "mc")),
+                .fns = ~ formatC(.x, digits = 4) # Apply scientific notation
+            )
+        )
+    old <- options(
+        #pillar.max_dec_width = 3,
+        #pillar.sigfig = 4,
+        #pillar.print_min = 10,
+        #pillar.advice = FALSE
+        #pillar.min_chars = 4,
+        pillar.max_chars = 4,
+        pillar.bold = FALSE
+    )
     output <- utils::capture.output(print(assignment_df))
+    options(old)
     output <- output[-c(1, 3)]
     output <- output[!grepl("^#", output)]
-    if (length(output) >= 11) {
-        output <- output[1:11]
+    # Managing spacing for different row numbers
+    if (length(output) >= 1001) {
+        output <- sub(".....", "", output)
+    } else if (length(output) >= 101) {
+        output <- sub("....", "", output)
+    } else if (length(output) >= 11) {
         output <- sub("...", "", output)
     } else {
         output <- sub("..", "", output)
     }
-    for (sentence in output) {
-        first <- substr(sentence, 1, 8)
-        second <- substr(sentence, 9, 16)
-        rest <- substr(sentence, 17, nchar(sentence))
+    first_line <- output[1]
+    second_line <- output[2]
+    nclust_idx <- regexpr("nclust", first_line)[1]
+    #
+    mc_idx <- regexpr("mc", first_line)[1]
+    substring_after_mc <- substr(first_line, mc_idx + 2, nchar(first_line))
+    first_line_num_spaces <- regexpr("[^ ]", substring_after_mc)[1] - 1
+    num_spaces <- first_line_num_spaces
+    substring_after_mc2 <- substr(second_line, mc_idx + 2, nchar(second_line))
+    second_line_num_spaces <- regexpr("[^ ]", substring_after_mc2)[1] - 1
+    #
+    rest_idx <- mc_idx + nchar("mc")
+    for (i in seq_along(output)) {
+        sentence <- output[i]
+        if (i > 1) {
+            sentence <- gsub("<NA>", " .  ", sentence)
+            sentence <- gsub("e", cli::col_grey("e"), sentence)
+            sentence <- gsub("-", cli::col_red("-"), sentence)
+        }
+        first <- substr(sentence, 1, nchar("solution") + 1)
+        second <- substr(sentence, nclust_idx, nclust_idx + nchar("nclust"))
+        third <- substr(sentence, mc_idx, mc_idx + nchar("mc"))
+        rest <- substr(sentence, rest_idx + num_spaces, nchar(sentence))
         cat(
             cli::col_green(first),
             cli::col_yellow(second),
+            cli::col_blue(third),
             rest, "\n", sep = ""
         )
     }
@@ -472,6 +614,26 @@ print.ext_solutions_df <- function(x, ...) {
             cli::col_grey(
                 hidden_cols, " column",
                 column_suffix, " not shown.\n"
+            )
+        )
+    }
+}
+
+#' @export
+print.sim_mats_list <- function(x, ...) {
+    if (is.null(x[[1]])) {
+        cat(cli::col_grey("An empty `sim_mats_list`.\n"))
+    } else {
+        len <- length(x)
+        cat(
+            cli::col_grey(
+                "A similarity matrix list storing ", length(x), " ",
+                nrow(x[[1]]), "x", nrow(x[[1]]), " similarity matrices.\n"
+            )
+        )
+        cat(
+            cli::col_grey(
+                "Use `sim_mats_list[[i]]` to view the ith matrix.\n"
             )
         )
     }

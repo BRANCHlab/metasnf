@@ -4,12 +4,14 @@
 \alias{print.solutions_df}
 \title{Print method for class \code{weights_matrix}}
 \usage{
-\method{print}{solutions_df}(x, ...)
+\method{print}{solutions_df}(x, n = NULL, ...)
 }
 \arguments{
 \item{x}{A \code{weights_matrix} class object.}
 
-\item{...}{Other arguments passed to \code{print} (not used in this function)}
+\item{n}{Number of rows to print, passed into \code{tibble::print.tbl_df()}.}
+
+\item{...}{Other arguments passed to \code{print} (not used in this function).}
 }
 \value{
 Function prints to console but does not return any value.

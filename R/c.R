@@ -23,3 +23,11 @@ c.data_list <- function(...) {
     dl <- new_data_list(dll)
     return(dl)
 }
+
+#' @export
+c.sim_mats_list <- function(...) {
+    smll <- NextMethod()
+    smll <- validate_sim_mats_list(smll)
+    sml <- as_sim_mats_list(smll)
+    return(sml)
+}

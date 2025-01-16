@@ -9,7 +9,9 @@ uids <- function(x) {
 
 #' @export
 uids.solutions_df <- function(x) {
-    uid_vec <- colnames(x)[-c(1:2)]
+    uid_vec <- x |>
+        dplyr::select(dplyr::starts_with("uid_")) |>
+        colnames()
     return(uid_vec)
 }
 

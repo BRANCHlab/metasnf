@@ -34,12 +34,6 @@
 #' @return `settings_df` class object of extracted components.
 #' @export
 `[.settings_df` <- function(x, i, j, ...) {
-    #extra_args <- list(...)
-    #if (length(extra_args) > 0) {
-    #   metasnf_error(
-    #       "Incorrect number of dimensions for settings df subsetting."
-    #   )
-    #}
     result <- NextMethod()
     class(result) <- setdiff(class(result), "settings_df")
     result <- tryCatch(
@@ -148,4 +142,12 @@
         }
     )
     return(result)
+}
+
+#' @export
+`[.sim_mats_list` <- function(x, i, ...) {
+    smll <- NextMethod()
+    smll <- validate_sim_mats_list(smll)
+    sml <- as_sim_mats_list(smll)
+    return(sml)
 }
