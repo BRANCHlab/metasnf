@@ -943,7 +943,7 @@ top_row <- ext_sol_df[1, ]
 
 # Use the solutions data frame from the training subjects and the data list from
 # the training and testing subjects to propagate labels to the test subjects
-propagated_labels <- lp_sol_df(top_row, full_dl)
+propagated_labels <- label_propagate(top_row, full_dl)
 
 head(propagated_labels)
 tail(propagated_labels)
@@ -952,7 +952,7 @@ tail(propagated_labels)
 You could, if you wanted, see how *all* of your clustering solutions propagate to the test set, but that would mean reusing your test set and removing the protection against overfitting conferred by this procedure.
 
 ```{r}
-propagated_labels_all <- lp_sol_df(
+propagated_labels_all <- label_propagate(
     ext_sol_df,
     full_dl
 )

@@ -42,7 +42,7 @@ For example, step one could be done by assigning clusters in your training set m
 Step two could be done just by calculating the euclidean distances across all the training and testing subjects for a small subset of features.
 The features used to calculate the similarities in step 2 don't necessarily need to be the same ones used to derive the cluster solution in the training set either.
 
-All that aside, we show here a simple approach that involves assigning the clusters by a call to `batch_snf`, assembling a data list that has the training and testing set subjects, and feeding the results into a simple label propagating function, `lp_sol_df`.
+All that aside, we show here a simple approach that involves assigning the clusters by a call to `batch_snf`, assembling a data list that has the training and testing set subjects, and feeding the results into a simple label propagating function, `label_propagate`.
 
 ```{r}
 library(metasnf)
@@ -116,13 +116,25 @@ sc <- snf_config(
 
 train_sol_df <- batch_snf(
     train_dl,
-    sc
+    sc,
+    return_sim_mats = TRUE
 )
 
 ext_sol_df <- extend_solutions(
     train_sol_df,
     train_target_dl
 )
+
+ext_sol_df[1, ] |> attributes() |> names()
+
+sim_mats_list(ext_sol_df[1, ])
+
+
+ext_sol_df |> attributes() |> names()
+
+attributes(ext_sol_df)$"row.names" <- attributes(ext_sol_df)$"row.names"
+
+ext_sol_df[1, ] |> attributes() |> names()
 
 # Determining solution with the lowest minimum p-value
 lowest_min_pval <- min(ext_sol_df$"min_pval")
@@ -142,7 +154,7 @@ full_dl <- data_list(
 
 # Use the solutions data frame from the training subjects and the data list from
 # the training and testing subjects to propagate labels to the test subjects
-propagated_labels <- lp_sol_df(top_row, full_dl)
+propagated_labels <- label_propagate(top_row, full_dl)
 
 head(propagated_labels)
 tail(propagated_labels)
@@ -151,7 +163,7 @@ tail(propagated_labels)
 You could, if you wanted, see how *all* of your clustering solutions propagate to the test set, but that would mean reusing your test set and removing much of the protection against overfitting provided by this procedure.
 
 ```{r}
-propagated_labels_all <- lp_sol_df(ext_sol_df, full_dl)
+propagated_labels_all <- label_propagate(ext_sol_df, full_dl)
 
 head(propagated_labels_all)
 tail(propagated_labels_all)

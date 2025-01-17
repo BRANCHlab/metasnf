@@ -247,6 +247,7 @@ extend_solutions <- function(sol_df,
             dplyr::everything())
     }
     attributes(ext_sol_df)$"features" <- fts
+    attributes(ext_sol_df)$"snf_config" <- attributes(sol_df)$"snf_config"
     class(ext_sol_df) <- c("ext_solutions_df", "data.frame")
     if (!is.null(target_dl)) {
         attributes(ext_sol_df)$"summary_features" <- features(target_dl)

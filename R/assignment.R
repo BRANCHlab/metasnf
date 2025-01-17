@@ -127,6 +127,7 @@
     return(result)
 }
 
+#' @export
 `[<-.sim_mats_list` <- function(x, i, value) {
     cat("cake")
     NextMethod()

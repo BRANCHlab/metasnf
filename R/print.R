@@ -617,11 +617,11 @@ print.sim_mats_list <- function(x, ...) {
     if (is.null(x[[1]])) {
         cat(cli::col_grey("An empty `sim_mats_list`.\n"))
     } else {
-        len <- length(x)
+        end <- if (length(x) != 1) "matrices.\n" else "matrix.\n"
         cat(
             cli::col_grey(
                 "A similarity matrix list storing ", length(x), " ",
-                nrow(x[[1]]), "x", nrow(x[[1]]), " similarity matrices.\n"
+                nrow(x[[1]]), "x", nrow(x[[1]]), " similarity ", end
             )
         )
         cat(

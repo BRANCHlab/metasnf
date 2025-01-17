@@ -78,7 +78,7 @@ t.ext_solutions_df <- function(x) {
     attributes(x)$"features" <- attributes(ext_sol_df)$"features"
     attributes(x)$"summary_features" <- attributes(ext_sol_df)$"summary_features"
     attributes(x)$"pvals" <- dplyr::select(ext_sol_df, dplyr::ends_with("_pval"))
-    attributes(x)$"mc_labels" <- sol_df$"mc"
+    attributes(x)$"mc_labels" <- ext_sol_df$"mc"
     x <- numcol_to_numeric(x)
     class(x) <- c("t_ext_solutions_df", "data.frame")
     x

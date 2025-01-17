@@ -9,14 +9,12 @@
 #'  data normalization and distance matrix calculations can be chosen by the
 #'  user.
 #'
+#' @keywords internal
 #' @param full_fused_network Network made by running SNF on training and test
 #'  subjects together
 #' @param clusters a vector of training subject assigned clusters in matching
 #'  order as they appear in full_fused_network
-#'
 #' @return new_clusters list of cluster labels for all subjects
-#'
-#' @export
 label_prop <- function(full_fused_network, clusters) {
     num_subjects <- nrow(full_fused_network)
     # The y0 matrix stores which cluster everybody belongs to. It is one-hot
@@ -56,9 +54,9 @@ label_prop <- function(full_fused_network, clusters) {
 #'  (held out) set, and one column per row of the solutions data frame
 #'  indicating the original and propagated clusters.
 #' @export
-lp_sol_df <- function(train_sol_df,
-                      full_dl,
-                      verbose = FALSE) {
+label_propagate <- function(train_sol_df,
+                            full_dl,
+                            verbose = FALSE) {
     ###########################################################################
     # 1. Reorder data list subjects
     ###########################################################################

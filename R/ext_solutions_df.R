@@ -5,13 +5,6 @@
 #'  ext_solutions_df, returns ext_sol_dfl. Otherwise, raises an error.
 #' @export
 validate_ext_solutions_df <- function(ext_sol_dfl) {
-    #class(ext_sol_dfl)  <- setdiff(class(ext_sol_dfl), "ext_solutions_df")
-    #if (!identical(colnames(ext_sol_dfl)[1:2], c("solution", "nclust"))) {
-    #    metasnf_error(
-    #        "First two columns of `ext_solutions_df` must be \"solution\" and",
-    #        " \"nclust\"."
-    #    )
-    #}
     return(ext_sol_dfl)
 }
 

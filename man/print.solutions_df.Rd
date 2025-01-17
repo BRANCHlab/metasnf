@@ -4,12 +4,14 @@
 \alias{print.solutions_df}
 \title{Print method for class \code{weights_matrix}}
 \usage{
-\method{print}{solutions_df}(x, n = NULL, ...)
+\method{print}{solutions_df}(x, n = NULL, tips = TRUE, ...)
 }
 \arguments{
 \item{x}{A \code{weights_matrix} class object.}
 
 \item{n}{Number of rows to print, passed into \code{tibble::print.tbl_df()}.}
+
+\item{tips}{If TRUE, include lines on how to print more rows / transposed.}
 
 \item{...}{Other arguments passed to \code{print} (not used in this function).}
 }
