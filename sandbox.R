@@ -17,9 +17,3 @@ sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
 ext_sol_df <- extend_solutions(sol_df, dl = input_dl)
 
 ext_sol_df2 <- extend_solutions(sol_df, target_dl = input_dl)
-
-# Still working on print
-print(ext_sol_df2, n = 3)
-
-print(ext_sol_df, n = 3)
-
