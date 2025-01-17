@@ -76,6 +76,7 @@ t.ext_solutions_df <- function(x) {
     attributes(x)$"sim_mats_list" <- attributes(ext_sol_df)$"sim_mats_list"
     attributes(x)$"snf_config" <- attributes(ext_sol_df)$"snf_config"
     attributes(x)$"features" <- attributes(ext_sol_df)$"features"
+    attributes(x)$"summary_features" <- attributes(ext_sol_df)$"summary_features"
     attributes(x)$"pvals" <- dplyr::select(ext_sol_df, dplyr::ends_with("_pval"))
     attributes(x)$"mc_labels" <- sol_df$"mc"
     x <- numcol_to_numeric(x)
@@ -106,17 +107,24 @@ t.t_ext_solutions_df <- function(x) {
         apply(1, function(y) length(unique(y))) |>
         as.integer()
     x$"mc" <- as.character(attributes(ext_sol_df)$"mc_labels")
+    x <- cbind(x, attributes(ext_sol_df)$"pvals")
+    if (!is.null(attributes(ext_sol_df)$"summary_features")) {
+        summary_cols <- c("min_pval", "mean_pval", "max_pval")
+    } else {
+        summary_cols <- NULL
+    }
     x <- dplyr::select(
         x,
         "solution",
         "nclust",
         "mc",
+        dplyr::all_of(summary_cols),
         dplyr::everything()
     )
-    x <- cbind(x, attributes(ext_sol_df)$"pvals")
     attributes(x)$"sim_mats_list" <- attributes(ext_sol_df)$"sim_mats_list"
     attributes(x)$"snf_config" <- attributes(ext_sol_df)$"snf_config"
     attributes(x)$"features" <- attributes(ext_sol_df)$"features"
+    attributes(x)$"summary_features" <- attributes(ext_sol_df)$"summary_features"
     rownames(x) <- NULL
     class(x) <- c("ext_solutions_df", "data.frame")
     x

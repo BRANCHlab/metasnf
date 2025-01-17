@@ -235,11 +235,22 @@ extend_solutions <- function(sol_df,
     ext_sol_df <- numcol_to_numeric(ext_sol_df)
     ext_sol_df$"solution" <- as.integer(ext_sol_df$"solution")
     ext_sol_df <- dplyr::inner_join(sol_df, ext_sol_df, by = "solution")
-    attributes(ext_sol_df)$"features" <- fts
     if (!is.null(target_dl)) {
-        ext_sol_df <- dplyr::select(ext_sol_df, "solution", "nclust", "mc", "min_pval", "mean_pval", "max_pval", dplyr::everything())
+        ext_sol_df <- dplyr::select(
+            ext_sol_df,
+            "solution",
+            "nclust",
+            "mc",
+            "min_pval",
+            "mean_pval",
+            "max_pval",
+            dplyr::everything())
     }
+    attributes(ext_sol_df)$"features" <- fts
     class(ext_sol_df) <- c("ext_solutions_df", "data.frame")
+    if (!is.null(target_dl)) {
+        attributes(ext_sol_df)$"summary_features" <- features(target_dl)
+    }
     return(ext_sol_df)
 }
 

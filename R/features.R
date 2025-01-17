@@ -16,6 +16,7 @@ features.data_list <- function(x) {
 features.solutions_df <- function(x) {
     return(attributes(x)$"features")
 }
+
 #' @export
 features.ext_solutions_df <- function(x) {
     return(attributes(x)$"features")

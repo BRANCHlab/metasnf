@@ -293,10 +293,11 @@ print.weights_matrix <- function(x, ...) {
 #'
 #' @param x A `weights_matrix` class object.
 #' @param n Number of rows to print, passed into `tibble::print.tbl_df()`.
+#' @param tips If TRUE, include lines on how to print more rows / transposed.
 #' @param ... Other arguments passed to `print` (not used in this function).
 #' @return Function prints to console but does not return any value.
 #' @export
-print.solutions_df <- function(x, n = NULL, ...) {
+print.solutions_df <- function(x, n = NULL, tips = TRUE, ...) {
     cat(
         cli::col_grey(
             nrow(x), " cluster solutions of ", ncol(x) - 2, " observations:\n"
@@ -323,58 +324,60 @@ print.solutions_df <- function(x, n = NULL, ...) {
     for (i in seq_along(output)) {
         sentence <- output[i]
         if (i > 1) {
-            sentence <- gsub("<NA>", " .", sentence)
+            sentence <- gsub("<NA>", " .  ", sentence)
         }
-        first <- substr(sentence, 1, nchar("solution") + 1)
-        second <- substr(sentence, nclust_idx, nclust_idx + nchar("nclust"))
-        third <- substr(sentence, mc_idx, mc_idx + nchar("mc"))
+        first <- substr(sentence, 1, 8)
+        second <- substr(sentence, nclust_idx, nclust_idx + 5)
+        third <- substr(sentence, mc_idx, mc_idx + 1)
         rest <- substr(sentence, uid_idx, nchar(sentence))
         cat(
             cli::col_green(first),
             cli::col_yellow(second),
             cli::col_blue(third),
-            rest, "\n", sep = ""
+            rest, "\n", sep = " "
         )
     }
-    displayed_observations <- length(strsplit(output[1], "\\s+")[[1]]) - 1
-    displayed_solutions <- length(output) - 1
-    hidden_observations <- ncol(x) - 1 - displayed_observations
-    hidden_solutions <- nrow(x) - displayed_solutions
-    solution_suffix <- if (hidden_solutions == 1) "" else "s"
-    observation_suffix <- if (hidden_observations == 1) "" else "s"
-    if (hidden_solutions > 0 & hidden_observations > 0) {
+    if (tips) {
+        displayed_observations <- length(strsplit(output[1], "\\s+")[[1]]) - 1
+        displayed_solutions <- length(output) - 1
+        hidden_observations <- ncol(x) - 1 - displayed_observations
+        hidden_solutions <- nrow(x) - displayed_solutions
+        solution_suffix <- if (hidden_solutions == 1) "" else "s"
+        observation_suffix <- if (hidden_observations == 1) "" else "s"
+        if (hidden_solutions > 0 & hidden_observations > 0) {
+            cat(
+                cli::col_grey(
+                    hidden_solutions, " solution",
+                    solution_suffix, " and ", hidden_observations,
+                    " observation", observation_suffix, " not shown.\n"
+                )
+            )
+        } else if (hidden_solutions > 0) {
+            cat(
+                cli::col_grey(
+                    hidden_solutions, " solution",
+                    solution_suffix, " not shown.\n"
+                )
+            )
+        } else if (hidden_observations > 0) {
+            cat(
+                cli::col_grey(
+                    hidden_observations, " observation",
+                    observation_suffix, " not shown.\n"
+                )
+            )
+        }
         cat(
             cli::col_grey(
-                hidden_solutions, " solution",
-                solution_suffix, " and ", hidden_observations,
-                " observation", observation_suffix, " not shown.\n"
+                "Use `print(n = ...)` to change the number of rows printed.\n"
             )
         )
-    } else if (hidden_solutions > 0) {
         cat(
             cli::col_grey(
-                hidden_solutions, " solution",
-                solution_suffix, " not shown.\n"
-            )
-        )
-    } else if (hidden_observations > 0) {
-        cat(
-            cli::col_grey(
-                hidden_observations, " observation",
-                observation_suffix, " not shown.\n"
+                "Use `t()` to view compact cluster solution format.\n"
             )
         )
     }
-    cat(
-        cli::col_grey(
-            "Use `print(n = ...)` to change the number of rows printed.\n"
-        )
-    )
-    cat(
-        cli::col_grey(
-            "Use `t()` to view compact cluster solution format.\n"
-        )
-    )
 }
 
 #' Print method for class `t_solutions_df`
@@ -500,51 +503,58 @@ print.t_ext_solutions_df <- function(x, ...) {
 #' Custom formatted print for extended solutions data frame class objects.
 #'
 #' @param x A `ext_solutions_df` class object.
-#' @param ... Other arguments passed to `print` (not used in this function)
+#' @inheritParams print.solutions_df
 #' @return Function prints to console but does not return any value.
 #' @export
-print.ext_solutions_df <- function(x, ...) {
+print.ext_solutions_df <- function(x, n = NULL, ...) {
+    # Establishing column names for the different parts to print
     common_cols <- c("solution", "nclust", "mc")
-    summary_cols <- c("min_pval", "mean_pval", "max_pval")
-    x_nouids <- dplyr::select(x, -dplyr::starts_with("uid"))
-    x_pvals <- dplyr::select(x, dplyr::ends_with("_pval"))
-    if ("min_pval" %in% colnames(x_pvals)) {
-        x_summary_pvals <- dplyr::select(
-            x_pvals,
-            "solution",
-            "nclust",
-            "mc",
+    sol_df <- dplyr::select(
+        x,
+        dplyr::all_of(common_cols),
+        dplyr::starts_with("uid")
+    )
+    pval_df <- dplyr::select(
+        x,
+        dplyr::all_of(common_cols),
+        dplyr::ends_with("_pval")
+    )
+    if ("min_pval" %in% colnames(pval_df)) {
+        summary_df <- dplyr::select(
+            pval_df,
+            dplyr::all_of(common_cols),
             "min_pval",
             "mean_pval",
             "max_pval"
         )
-    }
-    cat(
-        cli::col_grey(
-            "P-values for ", length(attributes(x)$"features"), " features",
-            " over ", nrow(x), " cluster solutions.\n"
+        pval_df <- dplyr::select(
+            pval_df,
+            -"min_pval",
+            -"mean_pval",
+            -"max_pval"
         )
-    )
-    cat(cli::col_grey("Cluster assignment columns are present but hidden.\n"))
-    assignment_df <- x_nouids
+    } else {
+        summary_df <- NULL
+    }
+    class(sol_df) <- c("solutions_df", "data.frame")
+    cat(cli::col_cyan("Cluster assignment columns:\n"))
+    print(sol_df, n = n, tips = FALSE)
+    cat(cli::col_cyan("Association p-value columns:\n"))
+    cat(cli::col_grey("P-values for ", length(features(x)), " features.\n"))
+    assignment_df <- pval_df
     assignment_df <- assignment_df |>
         tibble::tibble() |>
         dplyr::mutate(
             dplyr::across(
                 .cols = dplyr::where(is.numeric) & !dplyr::all_of(c("solution", "nclust", "mc")),
-                .fns = ~ formatC(.x, digits = 4) # Apply scientific notation
+                .fns = ~ formatC(.x, digits = 4, format = "e")
             )
         )
     old <- options(
-        #pillar.max_dec_width = 3,
-        #pillar.sigfig = 4,
-        #pillar.print_min = 10,
-        #pillar.advice = FALSE
-        #pillar.min_chars = 4,
         pillar.max_chars = 4,
         pillar.bold = FALSE
     )
-    output <- utils::capture.output(print(assignment_df))
+    output <- utils::capture.output(print(assignment_df, n = n))
     options(old)
     output <- output[-c(1, 3)]
     output <- output[!grepl("^#", output)]
@@ -559,15 +569,11 @@ print.ext_solutions_df <- function(x, ...) {
         output <- sub("..", "", output)
     }
     first_line <- output[1]
-    second_line <- output[2]
     nclust_idx <- regexpr("nclust", first_line)[1]
     #
     mc_idx <- regexpr("mc", first_line)[1]
     substring_after_mc <- substr(first_line, mc_idx + 2, nchar(first_line))
-    first_line_num_spaces <- regexpr("[^ ]", substring_after_mc)[1] - 1
-    num_spaces <- first_line_num_spaces
-    substring_after_mc2 <- substr(second_line, mc_idx + 2, nchar(second_line))
-    second_line_num_spaces <- regexpr("[^ ]", substring_after_mc2)[1] - 1
+    num_spaces <- regexpr("[^ ]", substring_after_mc)[1] - 1
     #
     rest_idx <- mc_idx + nchar("mc")
     for (i in seq_along(output)) {
@@ -590,16 +596,16 @@ print.ext_solutions_df <- function(x, ...) {
     }
     displayed_cols <- length(strsplit(output[1], "\\s+")[[1]])
     displayed_solutions <- length(output) - 1
-    hidden_cols <- ncol(x) - displayed_cols
+    hidden_fts <- length(features(x)) - displayed_cols + 3
     hidden_solutions <- nrow(x) - displayed_solutions
     solution_suffix <- if (hidden_solutions == 1) "" else "s"
-    column_suffix <- if (hidden_cols == 1) "" else "s"
-    if (hidden_solutions > 0 & hidden_cols > 0) {
+    column_suffix <- if (hidden_fts == 1) "" else "s"
+    if (hidden_solutions > 0 & hidden_fts > 0) {
         cat(
             cli::col_grey(
                 hidden_solutions, " solution",
-                solution_suffix, " and ", hidden_cols,
-                " column", column_suffix, " not shown.\n"
+                solution_suffix, " and ", hidden_fts,
+                " feature", column_suffix, " not shown.\n"
             )
         )
     } else if (hidden_solutions > 0) {
@@ -609,11 +615,67 @@ print.ext_solutions_df <- function(x, ...) {
                 solution_suffix, " not shown.\n"
             )
         )
-    } else if (hidden_cols > 0) {
+    } else if (hidden_fts > 0) {
         cat(
             cli::col_grey(
-                hidden_cols, " column",
+                hidden_fts, " feature",
                 column_suffix, " not shown.\n"
+            )
+        )
+    }
+    if (!is.null(summary_df)) {
+        summary_df <- summary_df |>
+            tibble::tibble() |>
+            dplyr::mutate(
+                dplyr::across(
+                    .cols = dplyr::where(is.numeric) & !dplyr::all_of(c("solution", "nclust", "mc")),
+                    .fns = ~ formatC(.x, digits = 3, format = "e") # Apply scientific notation
+                )
+            )
+        cat(cli::col_cyan("Summary p-value columns:\n"))
+        old <- options(
+            pillar.max_chars = 4,
+            pillar.bold = FALSE
+        )
+        output <- utils::capture.output(print(summary_df, n = n))
+        options(old)
+        output <- output[-c(1, 3)]
+        output <- output[!grepl("^#", output)]
+        # Managing spacing for different row numbers
+        if (length(output) >= 1001) {
+            output <- sub(".....", "", output)
+        } else if (length(output) >= 101) {
+            output <- sub("....", "", output)
+        } else if (length(output) >= 11) {
+            output <- sub("...", "", output)
+        } else {
+            output <- sub("..", "", output)
+        }
+        for (i in seq_along(output)) {
+            sentence <- output[i]
+            #browser()
+            if (i > 1) {
+                sentence <- gsub("<NA>", " .  ", sentence)
+                sentence <- gsub("e", cli::col_grey("e"), sentence)
+                sentence <- gsub("-", cli::col_red("-"), sentence)
+            }
+            first <- substr(sentence, 1, nchar("solution"))
+            second <- substr(sentence, nclust_idx, nclust_idx + nchar("nclust") - 1)
+            third <- substr(sentence, mc_idx, mc_idx + 1)
+            rest <- substr(sentence, rest_idx + num_spaces, nchar(sentence))
+            cat(
+                cli::col_green(first),
+                cli::col_yellow(second),
+                cli::col_blue(third),
+                rest, "\n", sep = " "
+            )
+            summary_fts <- attributes(x)$"summary_features"
+            n_sum_fts <- length(summary_fts)
+        }
+        cat(
+            cli::col_grey(
+                "Summaries calculated from ", n_sum_fts, " features.",
+                " Use `attributes(x)$\"summary_features\"` to see them.\n"
             )
         )
     }
