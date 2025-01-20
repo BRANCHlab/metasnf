@@ -149,3 +149,52 @@ dl_variable_summary <- function(dl) {
     }
 }
 
+#' Heatmap of pairwise adjusted rand indices between solutions
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' Defunct function to create an ARI heatmap. Please use
+#' `meta_cluster_heatmap()` instead.
+#'
+#' @param aris Matrix of adjusted rand indices from `calc_aris()`
+#' @param order Numeric vector containing row order of the heatmap.
+#' @param cluster_rows Whether rows should be clustered.
+#' @param cluster_columns Whether columns should be clustered.
+#' @param log_graph If TRUE, log transforms the graph.
+#' @param scale_diag Method of rescaling matrix diagonals. Can be "none"
+#'  (don't change diagonals), "mean" (replace diagonals with average value of
+#'  off-diagonals), or "zero" (replace diagonals with 0).
+#' @param min_colour Colour used for the lowest value in the heatmap.
+#' @param max_colour Colour used for the highest value in the heatmap.
+#' @param col Colour ramp to use for the heatmap.
+#' @param ... Additional parameters passed to `similarity_matrix_heatmap()`,
+#'  the function that this function wraps.
+#' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
+#'  that displays the pairwise adjusted Rand indices (similarities) between
+#'  the cluster solutions of the provided solutions data frame.
+#' @export
+adjusted_rand_index_heatmap <- function(aris,
+                                        order = NULL,
+                                        cluster_rows = FALSE,
+                                        cluster_columns = FALSE,
+                                        log_graph = FALSE,
+                                        scale_diag = "none",
+                                        min_colour = "#282828",
+                                        max_colour = "firebrick2",
+                                        col = circlize::colorRamp2(
+                                            c(min(aris), max(aris)),
+                                            c(min_colour, max_colour)
+                                        ),
+                                        ...) {
+    heatmap <- meta_cluster_heatmap(
+        aris = aris,
+        order = order,
+        cluster_rows = cluster_rows,
+        cluster_columns = cluster_columns,
+        log_graph = log_graph,
+        scale_diag = scale_diag,
+        col = col,
+        ...
+    )
+    return(heatmap)
+}

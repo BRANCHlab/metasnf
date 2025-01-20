@@ -33,7 +33,7 @@ The mock code below happens to use the base, unimputed data twice for simplicity
 
 Separate cluster solutions are generated for the two sets of imputed data, which then have their corresponding solutions data frames stacked together and appended with an `imputation` column that indicates which imputed dataset was used to generate that particular cluster solution.
 
-Moving through the rest of the meta clustering pipeline, the influence of the imputation on meta clustering structure or on separation of other features in the data can be easily visualized in the `adjusted_rand_index_heatmap` function through the use of `ComplexHeatmap` annotations.
+Moving through the rest of the meta clustering pipeline, the influence of the imputation on meta clustering structure or on separation of other features in the data can be easily visualized in the `meta_cluster_heatmap` function through the use of `ComplexHeatmap` annotations.
 
 ```{r eval = FALSE}
 library(metasnf)
@@ -86,7 +86,7 @@ sol_aris <- calc_aris(sol_df)
 meta_cluster_order <- get_matrix_order(sol_aris)
 
 # Base heatmap for identifying meta clusters
-ari_hm <- adjusted_rand_index_heatmap(
+ari_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order
 )
@@ -95,7 +95,7 @@ ari_hm <- adjusted_rand_index_heatmap(
 shiny_annotator(ari_hm)
 split_vec <- c(7, 13)
 
-ari_mc_hm <- adjusted_rand_index_heatmap(
+ari_mc_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order,
     split_vector = c(7, 13)
@@ -116,7 +116,7 @@ annotation_data <- as.data.frame(ext_sol_df_imp1, keep_attributes = TRUE)
 annotation_data$"imputation" <- c(rep("imp_1", 10), rep("imp_2", 10))
 
 # Visualize influence of imputation on meta clustering results
-annotated_ari_hm <- adjusted_rand_index_heatmap(
+annotated_ari_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order,
     split_vector = split_vec,

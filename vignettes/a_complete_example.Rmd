@@ -351,10 +351,10 @@ meta_cluster_order <- get_matrix_order(sol_aris)
 meta_cluster_order
 ```
 
-This order can be passed into the `adjusted_rand_index_heatmap` function to get a clearer view of existing meta clusters.
+This order can be passed into the `meta_cluster_heatmap` function to get a clearer view of existing meta clusters.
 
 ```{r eval = FALSE}
-ari_hm <- adjusted_rand_index_heatmap(
+ari_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order
 )
@@ -363,7 +363,7 @@ ari_hm <- adjusted_rand_index_heatmap(
 ```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = ari_hm,
-    path = "vignettes/adjusted_rand_index_heatmap.png",
+    path = "vignettes/meta_cluster_heatmap.png",
     width = 330,
     height = 300,
     res = 100
@@ -371,7 +371,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/adjusted_rand_index_heatmap.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/meta_cluster_heatmap.png)
 </center>
 
 The clustering solutions are along the rows and columns of the above figure, and the cells at the intersection between two solutions show how similar (big ARI) those solutions are to each other.
@@ -383,7 +383,7 @@ This heatmap is integral to understanding what meta clusters were created from y
 We will later see how to further customize this heatmap to add in rich information about how each plotted cluster solution differs on various measures of quality, different clustering settings, and different levels of separation on input and out-of-model measures.
 
 First, we'll divide the heatmap into meta clusters by visual inspection.
-The indices of our meta cluster boundaries can be passed into the `adjusted_rand_index_heatmap` function as the `split_vector` parameter.
+The indices of our meta cluster boundaries can be passed into the `meta_cluster_heatmap` function as the `split_vector` parameter.
 You can determine  vector through trial and error or by using the `shiny_annotator` function (a wrapper around functionality from the `InteractiveComplexHeatmap` package).
 
 
@@ -404,7 +404,7 @@ Clicking on cell boundaries and tracking the row/column indices (printed to the 
 ```{r eval = FALSE}
 split_vec <- c(2, 5, 12, 17)
 
-ari_mc_hm <- adjusted_rand_index_heatmap(
+ari_mc_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order,
     split_vector = split_vec
@@ -477,10 +477,10 @@ ext_sol_df <- extend_solutions(
 
 ### Visualizing feature associations with meta clustering results
 
-This `ext_sol_df` we created can be converted into a standard data frame and passed into the `adjusted_rand_index_heatmap` function to easily visualize the level of separation on each of our features for each of our cluster solutions.
+This `ext_sol_df` we created can be converted into a standard data frame and passed into the `meta_cluster_heatmap` function to easily visualize the level of separation on each of our features for each of our cluster solutions.
 
 ```{r eval = FALSE}
-annotated_ari_hm <- adjusted_rand_index_heatmap(
+annotated_ari_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order,
     split_vector = split_vec,
@@ -527,7 +527,7 @@ save_heatmap(
 ![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm_l.png)
 </center>
 
-The `adjusted_rand_index_heatmap` function wraps around a more generic `similarity_matrix_heatmap` function in this package, which itself is a wrapper around `ComplexHeatmap::Heatmap()`.
+The `meta_cluster_heatmap` function wraps around a more generic `similarity_matrix_heatmap` function in this package, which itself is a wrapper around `ComplexHeatmap::Heatmap()`.
 Consequently, anything that can be done in the `ComplexHeatmap` package can be done here.
 This also makes the documentation for the `ComplexHeatmap` package one of the best places to learn more about what can be done for these heatmaps.
 
@@ -548,7 +548,7 @@ annotation_data <- ext_sol_df |>
         )
     )
 
-annotated_ari_hm2 <- adjusted_rand_index_heatmap(
+annotated_ari_hm2 <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order,
     split_vector = split_vec,
@@ -724,7 +724,7 @@ annotation_data <- ext_sol_df |>
         )
     )
 
-annotated_ari_hm3 <- adjusted_rand_index_heatmap(
+annotated_ari_hm3 <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order,
     split_vector = c(11, 14),

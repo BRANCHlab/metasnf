@@ -708,3 +708,42 @@ print_with_t_message <- function() {
         )
     )
 }
+
+#' Print method for class `ari_matrix`
+#'
+#' Custom formatted print for weights matrices that outputs
+#' information about feature weights functions to the console.
+#'
+#' @param x A `ari_matrix` class object.
+#' @param ... Other arguments passed to `print` (not used in this function)
+#' @return Function prints to console but does not return any value.
+#' @export
+print.ari_matrix <- function(x, ...) {
+    all_output <- x |>
+        data.frame() |>
+        dplyr::glimpse() |>
+        utils::capture.output()
+    all_output <- all_output[-c(1:2)]
+    all_output <- gsub("<dbl>", "", all_output)
+    cat(cli::col_grey("ARI matrix for ", nrow(x), " cluster solutions."))
+    cat("\n")
+    if (length(all_output) >= 5) {
+        for (string in all_output[1:5]) {
+            word_vec <- strsplit(string, "\\s+")[[1]]
+            cat(word_vec, "\n")
+        }
+        n_more_fts <- length(all_output) - 5
+        grammar <- if (n_more_fts > 1) "s.\n" else ".\n"
+        if (n_more_fts > 0) {
+            cat(
+                cli::col_grey(
+                    "\u2026and ", n_more_fts, " more feature", grammar
+                )
+            )
+        }
+    } else if (length(all_output) == 0){
+    } else {
+        cat(all_output, sep = "\n")
+    }
+}
+

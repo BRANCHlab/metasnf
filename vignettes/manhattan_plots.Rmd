@@ -112,7 +112,7 @@ sol_aris <- calc_aris(sol_df)
 meta_cluster_order <- get_matrix_order(sol_aris)
 
 # Create a base heatmap for visual meta clustering
-ari_hm <- adjusted_rand_index_heatmap(
+ari_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order
 )
@@ -125,7 +125,7 @@ shiny_annotator(ari_hm)
 split_vec <- c(2, 5, 12, 17)
 
 # Create a base heatmap for visual meta clustering
-ari_hm <- adjusted_rand_index_heatmap(
+ari_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order,
     split_vector = split_vec

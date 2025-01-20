@@ -26,3 +26,4 @@ running SNF internally. This ensures that alternative approaches to
 data normalization and distance matrix calculations can be chosen by the
 user.
 }
+\keyword{internal}

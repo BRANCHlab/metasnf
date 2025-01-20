@@ -10,9 +10,14 @@ input_dl <- data_list(
     uid = "unique_id"
 )
 
-sc <- snf_config(input_dl, n_solutions = 20)
+sc <- snf_config(input_dl, n_solutions = 4)
 
-sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+sol_df <- batch_snf(input_dl, sc)
+
+sol_df
+
+
+calc_aris(sol_df)
 
 ext_sol_df <- extend_solutions(sol_df, dl = input_dl)
 

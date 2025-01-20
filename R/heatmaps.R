@@ -198,46 +198,35 @@ similarity_matrix_heatmap <- function(similarity_matrix,
 #' Heatmap of pairwise adjusted rand indices between solutions
 #'
 #' @param aris Matrix of adjusted rand indices from `calc_aris()`
-#'
 #' @param order Numeric vector containing row order of the heatmap.
-#'
 #' @param cluster_rows Whether rows should be clustered.
-#'
 #' @param cluster_columns Whether columns should be clustered.
-#'
 #' @param log_graph If TRUE, log transforms the graph.
-#'
 #' @param scale_diag Method of rescaling matrix diagonals. Can be "none"
-#' (don't change diagonals), "mean" (replace diagonals with average value of
-#' off-diagonals), or "zero" (replace diagonals with 0).
-#'
+#'  (don't change diagonals), "mean" (replace diagonals with average value of
+#'  off-diagonals), or "zero" (replace diagonals with 0).
 #' @param min_colour Colour used for the lowest value in the heatmap.
-#'
 #' @param max_colour Colour used for the highest value in the heatmap.
-#'
 #' @param col Colour ramp to use for the heatmap.
-#'
 #' @param ... Additional parameters passed to `similarity_matrix_heatmap()`,
-#' the function that this function wraps.
-#'
+#'  the function that this function wraps.
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
-#' that displays the pairwise adjusted Rand indices (similarities) between
-#' the cluster solutions of the provided solutions data frame.
-#'
+#'  that displays the pairwise adjusted Rand indices (similarities) between
+#'  the cluster solutions of the provided solutions data frame.
 #' @export
-adjusted_rand_index_heatmap <- function(aris,
-                                        order = NULL,
-                                        cluster_rows = FALSE,
-                                        cluster_columns = FALSE,
-                                        log_graph = FALSE,
-                                        scale_diag = "none",
-                                        min_colour = "#282828",
-                                        max_colour = "firebrick2",
-                                        col = circlize::colorRamp2(
-                                            c(min(aris), max(aris)),
-                                            c(min_colour, max_colour)
-                                        ),
-                                        ...) {
+meta_cluster_heatmap <- function(aris,
+                                 order = NULL,
+                                 cluster_rows = FALSE,
+                                 cluster_columns = FALSE,
+                                 log_graph = FALSE,
+                                 scale_diag = "none",
+                                 min_colour = "#282828",
+                                 max_colour = "firebrick2",
+                                 col = circlize::colorRamp2(
+                                     c(min(aris), max(aris)),
+                                     c(min_colour, max_colour)
+                                 ),
+                                 ...) {
     heatmap <- similarity_matrix_heatmap(
         aris,
         order = order,
@@ -746,11 +735,9 @@ shiny_annotator <- function(ari_heatmap) {
 #' assoc_pval_heatmap function.
 #'
 #' @param data The matrix containing the cells to base the significance stars
-#' on.
-#'
+#'  on.
 #' @return cell_fn Another function that is well-formatted for usage as the
-#' cell_fun argument in ComplexHeatmap::Heatmap.
-#'
+#'  cell_fun argument in ComplexHeatmap::Heatmap.
 #' @export
 cell_significance_fn <- function(data) {
     cell_fn <- function(j, i, x, y, width, height, fill) {
@@ -795,12 +782,9 @@ cell_significance_fn <- function(data) {
 #' Collapse a dataframe and/or a data list into a single dataframe
 #'
 #' @param data A dataframe.
-#'
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @return A class "data.frame" object containing all the features of the
-#' provided data frame and/or data list.
-#'
+#'  provided data frame and/or data list.
 #' @export
 assemble_data <- function(data, dl) {
     if (!is.null(dl)) {
@@ -843,9 +827,7 @@ assemble_data <- function(data, dl) {
 #' @param show_legend Add legends to the annotations.
 #' @param annotation_colours Named list of heatmap annotations and their
 #'  colours.
-#'
 #' @return annotations_list A named list of all the annotations.
-#'
 #' @export
 generate_annotations_list <- function(df,
                                       left_bar = NULL,
@@ -1292,18 +1274,15 @@ save_heatmap <- function(heatmap,
 #' Return the hierarchical clustering order of a matrix
 #'
 #' @param matrix Matrix to cluster.
-#'
-#' @param dist_method Distance method to apply to the matrix. Argument is
-#' directly passed into stats::dist. Options include "euclidean", "maximum",
-#' "manhattan", "canberra", "binary", or "minkowski".
-#'
-#' @param hclust_method Which agglomerative method to be passed into
-#' stats::hclust. Options include "ward.D", "ward.D2", "single", "complete",
-#' "average", "mcquitty", "median", or "centroid".
-#'
+#' @param dist_method Distance method to use when calculating sorting order to
+#'  of the matrix. Argument is directly passed into stats::dist. Options
+#'  include "euclidean", "maximum", "manhattan", "canberra", "binary", or
+#'  "minkowski".
+#' @param hclust_method Agglomerative method to use when calculating sorting
+#'  order by `stats::hclust`. Options include "ward.D", "ward.D2", "single",
+#'  "complete", "average", "mcquitty", "median", or "centroid".
 #' @return A numeric vector of the ordering derivied by the specified
-#' hierarchical clustering method applied to the provided matrix.
-#'
+#'  hierarchical clustering method applied to the provided matrix.
 #' @export
 get_matrix_order <- function(matrix,
                              dist_method = "euclidean",
@@ -1317,12 +1296,9 @@ get_matrix_order <- function(matrix,
 #' Return the row or column ordering present in a heatmap
 #'
 #' @param heatmap A heatmap object to collect ordering from.
-#'
 #' @param type The type of ordering to return. Either "rows" or "columns".
-#'
 #' @return A numeric vector of the ordering used within the provided
-#' ComplexHeatmap "Heatmap" object.
-#'
+#'  ComplexHeatmap "Heatmap" object.
 #' @export
 get_heatmap_order <- function(heatmap, type = "rows") {
     drawn_heatmap <- ComplexHeatmap::draw(heatmap)
@@ -1384,10 +1360,8 @@ split_parser <- function(row_split_vector = NULL,
 #'
 #' @param data A dataframe with data to build annotations
 #' @param annotation_requests A list of requested annotations
-#'
 #' @return Does not return any value. This function just raises an error when
-#' annotations are requested without any provided data for a heatmap.
-#'
+#'  annotations are requested without any provided data for a heatmap.
 #' @export
 check_dataless_annotations <- function(annotation_requests, data) {
     any_null_annotations <- lapply(annotation_requests, is.null) |>
@@ -1407,8 +1381,7 @@ check_dataless_annotations <- function(annotation_requests, data) {
 #' Check for ComplexHeatmap and circlize dependencies
 #'
 #' @return Does not return any value. This function just checks that the
-#' ComplexHeatmap and circlize packages are installed.
-#'
+#'  ComplexHeatmap and circlize packages are installed.
 #' @export
 check_hm_dependencies <- function() {
     if (!requireNamespace("ComplexHeatmap", quietly = TRUE)) {
