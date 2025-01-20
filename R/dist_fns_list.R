@@ -24,6 +24,7 @@
 #'  standard normalization prior to calculation of any numeric distances. This
 #'  parameter overrides all other distance functions list-related parameters.
 #' @return A distance metrics list object.
+#' @export
 #' @examples
 #' # Using just the base distance metrics  ------------------------------------
 #' dist_fns_list <- dist_fns_list()
@@ -69,7 +70,6 @@
 #'     ),
 #'     use_default_dist_fns = TRUE
 #' )
-#' @export
 dist_fns_list <- function(cnt_dist_fns = NULL,
                           dsc_dist_fns = NULL,
                           ord_dist_fns = NULL,
@@ -287,10 +287,8 @@ check_dfll_fn_names <- function(dfll) {
 #' Summarize metrics contained in a dist_fns_list
 #'
 #' @param dist_fns_list A dist_fns_list.
-#'
 #' @return "data.frame"-class object summarizing items in a distance metrics
-#' list.
-#'
+#'  list.
 #' @export
 summarize_dfl <- function(dist_fns_list) {
     dfl_summary <- lapply(dist_fns_list, names)
@@ -302,9 +300,7 @@ summarize_dfl <- function(dist_fns_list) {
 #' @param df Dataframe containing at least 1 data column
 #' @param weights_row Single-row dataframe where the column names contain the
 #'  column names in df and the row contains the corresponding weights_row.
-#'
 #' @return distance_matrix A distance matrix.
-#'
 #' @export
 euclidean_distance <- function(df, weights_row) {
     weights <- diag(weights_row, nrow = length(weights_row))
@@ -319,9 +315,7 @@ euclidean_distance <- function(df, weights_row) {
 #'
 #' @param df Dataframe containing at least 1 data column.
 #' @param weights_row For compatibility - function does not accept weights.
-#'
 #' @return distance_matrix A distance matrix.
-#'
 #' @export
 gower_distance <- function(df, weights_row) {
     df <- char_to_fac(df)
@@ -336,9 +330,7 @@ gower_distance <- function(df, weights_row) {
 #' @param df Dataframe containing at least 1 data column.
 #' @param weights_row Single-row dataframe where the column names contain the
 #'  column names in df and the row contains the corresponding weights.
-#'
 #' @return distance_matrix A distance matrix.
-#'
 #' @export
 sn_euclidean_distance <- function(df, weights_row) {
     df <- SNFtool::standardNormalization(df)
@@ -355,9 +347,7 @@ sn_euclidean_distance <- function(df, weights_row) {
 #' @param df Dataframe containing at least 1 data column.
 #' @param weights_row Single-row dataframe where the column names contain the
 #'  column names in df and the row contains the corresponding weights.
-#'
 #' @return distance_matrix A distance matrix.
-#'
 #' @export
 siw_euclidean_distance <- function(df, weights_row) {
     weights <- diag(weights_row, nrow = length(weights_row))
@@ -374,9 +364,7 @@ siw_euclidean_distance <- function(df, weights_row) {
 #' @param df Dataframe containing at least 1 data column.
 #' @param weights_row Single-row dataframe where the column names contain the
 #'  column names in df and the row contains the corresponding weights.
-#'
 #' @return distance_matrix A distance matrix.
-#'
 #' @export
 sew_euclidean_distance <- function(df, weights_row) {
     weights <- diag(weights_row, nrow = length(weights_row))
@@ -395,9 +383,7 @@ sew_euclidean_distance <- function(df, weights_row) {
 #'  at least 1 categorical data column. All feature data should be categorical.
 #' @param weights_row Single-row dataframe where the column names contain the
 #'  column names in df and the row contains the corresponding weights.
-#'
 #' @return distance_matrix A distance matrix.
-#'
 #' @export
 hamming_distance <- function(df, weights_row) {
     weights <- t(weights_row)

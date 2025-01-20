@@ -16,3 +16,4 @@ char-type columns
 \description{
 Convert character-type columns of a dataframe to factor-type
 }
+\keyword{internal}

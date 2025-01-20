@@ -15,3 +15,4 @@ mean_pval mean p-value
 \description{
 Given an solutions data frame row containing evaluated p-values, returns mean.
 }
+\keyword{internal}

@@ -16,3 +16,4 @@ the min, mean, and maximum across p-values for each row.
 \description{
 Summarize p-value columns of an extended solutions data frame
 }
+\keyword{internal}

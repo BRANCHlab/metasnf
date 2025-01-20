@@ -9,13 +9,14 @@ get_matrix_order(matrix, dist_method = "euclidean", hclust_method = "complete")
 \arguments{
 \item{matrix}{Matrix to cluster.}
 
-\item{dist_method}{Distance method to apply to the matrix. Argument is
-directly passed into stats::dist. Options include "euclidean", "maximum",
-"manhattan", "canberra", "binary", or "minkowski".}
+\item{dist_method}{Distance method to use when calculating sorting order to
+of the matrix. Argument is directly passed into stats::dist. Options
+include "euclidean", "maximum", "manhattan", "canberra", "binary", or
+"minkowski".}
 
-\item{hclust_method}{Which agglomerative method to be passed into
-stats::hclust. Options include "ward.D", "ward.D2", "single", "complete",
-"average", "mcquitty", "median", or "centroid".}
+\item{hclust_method}{Agglomerative method to use when calculating sorting
+order by \code{stats::hclust}. Options include "ward.D", "ward.D2", "single",
+"complete", "average", "mcquitty", "median", or "centroid".}
 }
 \value{
 A numeric vector of the ordering derivied by the specified

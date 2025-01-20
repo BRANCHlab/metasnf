@@ -13,6 +13,14 @@ solutions_df <- function(sol_dfl, smll, sc, dl) {
     sml <- new_sim_mats_list(smll)
     attributes(sol_dfl)$"sim_mats_list" <- sml
     attributes(sol_dfl)$"snf_config" <- sc
+    sol_dfl$"solution" <- as.factor(sol_dfl$"solution")
+    sol_dfl$"mc" <- as.factor(sol_dfl$"mc")
+    sol_dfl <- dplyr::mutate(
+        sol_dfl,
+        dplyr::across(
+            dplyr::starts_with("uid_"), as.factor
+        )
+    )
     sol_dfl <- validate_solutions_df(sol_dfl)
     sol_df <- new_solutions_df(sol_dfl)
     return(sol_df)
@@ -21,7 +29,8 @@ solutions_df <- function(sol_dfl, smll, sc, dl) {
 #' Validator for `solutions_df` class object
 #'
 #' @inheritParams solutions_df
-#' @return RETURN
+#' @return If sol_dfl has a valid structure for a `solutions_df` class object, 
+#'  returns the input unchanged. Otherwise, raises an error.
 #' @export
 validate_solutions_df <- function(sol_dfl) {
     class(sol_dfl)  <- setdiff(class(sol_dfl), "solutions_df")
@@ -37,7 +46,7 @@ validate_solutions_df <- function(sol_dfl) {
 #' Constructor for `solutions_df` class object
 #'
 #' @inheritParams solutions_df 
-#' @return RETURN
+#' @return A `solutions_df` class object.
 #' @export
 new_solutions_df <- function(sol_dfl) {
     sol_df <- structure(sol_dfl, class = c("solutions_df", "data.frame"))    
@@ -116,8 +125,8 @@ extend_solutions <- function(sol_df,
     # p-values of all fts
     ###########################################################################
     # Specifying the dataframe structure avoids tibble-related errors
-    ext_sol_df <- data.frame(matrix(NA, nrow = nrow(sol_df), ncol = 1 + n_fts))
-    colnames(ext_sol_df) <- c("solution", paste0(fts, "_pval"))
+    ext_sol_dfl <- data.frame(matrix(NA, nrow = nrow(sol_df), ncol = 1 + n_fts))
+    colnames(ext_sol_dfl) <- c("solution", paste0(fts, "_pval"))
     ###########################################################################
     # Single DF to contain all features to calculate p-values for
     ###########################################################################
@@ -145,9 +154,9 @@ extend_solutions <- function(sol_df,
                     )
                 })
                 target_col <- which(
-                    paste0(current_ft, "_pval") == colnames(ext_sol_df)
+                    paste0(current_ft, "_pval") == colnames(ext_sol_dfl)
                 )
-                ext_sol_df[[target_col]][i] <- pval
+                ext_sol_dfl[[target_col]][i] <- pval
             }
         }
     } else {
@@ -166,8 +175,8 @@ extend_solutions <- function(sol_df,
         }
         # Iterate across rows of the solutions data frame
         future::plan(future::multisession, workers = processes)
-        ext_sol_df_rows <- future.apply::future_lapply(
-            seq_len(nrow(ext_sol_df)),
+        ext_sol_dfl_rows <- future.apply::future_lapply(
+            seq_len(nrow(ext_sol_dfl)),
             function(i) {
                 clustered_subs <- t(sol_df[i, ])
                 for (j in seq_along(fts)) {
@@ -188,18 +197,18 @@ extend_solutions <- function(sol_df,
                         )
                     })
                     target_col <- which(
-                        paste0(current_ft, "_pval") == colnames(ext_sol_df)
+                        paste0(current_ft, "_pval") == colnames(ext_sol_dfl)
                     )
-                    ext_sol_df[[target_col]][i] <- pval
+                    ext_sol_dfl[[target_col]][i] <- pval
                 }
-                return(ext_sol_df[i, ])
+                return(ext_sol_dfl[i, ])
             }
         )
         future::plan(future::sequential)
-        ext_sol_df <- do.call("rbind", ext_sol_df_rows)
+        ext_sol_dfl <- do.call("rbind", ext_sol_dfl_rows)
     }
-    ext_sol_df$"solution" <- sol_df$"solution"
-    ext_sol_df <- ext_sol_df |> dplyr::select(
+    ext_sol_dfl$"solution" <- sol_df$"solution"
+    ext_sol_dfl <- ext_sol_dfl |> dplyr::select(
         "solution",
         dplyr::everything()
     )
@@ -207,7 +216,7 @@ extend_solutions <- function(sol_df,
     # If min_pval is assigned, use to replace any smaller p-value
     ###########################################################################
     if (!is.null(min_pval)) {
-        ext_sol_df <- ext_sol_df |>
+        ext_sol_dfl <- ext_sol_dfl |>
             numcol_to_numeric() |>
             dplyr::mutate(
                 dplyr::across(
@@ -222,36 +231,18 @@ extend_solutions <- function(sol_df,
         #######################################################################
         target_fts <- summary(target_dl, scope = "feature")$"name"
         target_fts <- paste0(target_fts, "_pval")
-        target_ext_sol_df <- dplyr::select(
-            ext_sol_df,
+        target_ext_sol_dfl <- dplyr::select(
+            ext_sol_dfl,
             "solution",
             dplyr::all_of(target_fts)
         )
-        target_ext_sol_df <- summarize_pvals(target_ext_sol_df)
-        target_ext_sol_df <- dplyr::select(target_ext_sol_df, -"solution")
-        ext_sol_df <- dplyr::select(ext_sol_df, -dplyr::all_of(target_fts))
-        ext_sol_df <- cbind(ext_sol_df, target_ext_sol_df)
+        target_ext_sol_dfl <- summarize_pvals(target_ext_sol_dfl)
+        target_ext_sol_dfl <- dplyr::select(target_ext_sol_dfl, -"solution")
+        ext_sol_dfl <- dplyr::select(ext_sol_dfl, -dplyr::all_of(target_fts))
+        ext_sol_dfl <- cbind(ext_sol_dfl, target_ext_sol_dfl)
     }
-    ext_sol_df <- numcol_to_numeric(ext_sol_df)
-    ext_sol_df$"solution" <- as.integer(ext_sol_df$"solution")
-    ext_sol_df <- dplyr::inner_join(sol_df, ext_sol_df, by = "solution")
-    if (!is.null(target_dl)) {
-        ext_sol_df <- dplyr::select(
-            ext_sol_df,
-            "solution",
-            "nclust",
-            "mc",
-            "min_pval",
-            "mean_pval",
-            "max_pval",
-            dplyr::everything())
-    }
-    attributes(ext_sol_df)$"features" <- fts
-    attributes(ext_sol_df)$"snf_config" <- attributes(sol_df)$"snf_config"
-    class(ext_sol_df) <- c("ext_solutions_df", "data.frame")
-    if (!is.null(target_dl)) {
-        attributes(ext_sol_df)$"summary_features" <- features(target_dl)
-    }
+    browser()
+    ext_sol_df <- ext_solutions_df(ext_sol_dfl, sol_df, fts, target_dl)
     return(ext_sol_df)
 }
 
@@ -262,16 +253,12 @@ extend_solutions <- function(sol_df,
 #' p-values to make it easier to interpret large-scale differences.
 #'
 #' @param ext_sol_df The output of `extend_solutions`. A
-#' dataframe that contains at least one p-value column ending in "_pval".
-#'
+#'  dataframe that contains at least one p-value column ending in "_pval".
 #' @param negative_log If TRUE, will replace p-values with negative log
-#' p-values.
-#'
+#'  p-values.
 #' @param keep_summaries If FALSE, will remove the mean, min, and max p-value.
-#'
 #' @return A "data.frame" class object Of only the p-value related columns
 #' of the provided ext_sol_df.
-#'
 #' @export
 get_pvals <- function(ext_sol_df,
                       negative_log = FALSE,
@@ -304,12 +291,10 @@ get_pvals <- function(ext_sol_df,
 
 #' Summarize p-value columns of an extended solutions data frame
 #'
+#' @keywords internal
 #' @param ext_sol_df Result of `extend_solutions`
-#'
 #' @return The provided extended solutions data frame along with columns for
-#' the min, mean, and maximum across p-values for each row.
-#'
-#' @export
+#'  the min, mean, and maximum across p-values for each row.
 summarize_pvals <- function(ext_sol_df) {
     # Restrict to just p-value columns
     pval_cols <- dplyr::select(
@@ -351,11 +336,9 @@ summarize_pvals <- function(ext_sol_df) {
 #'
 #' Given an solutions data frame row containing evaluated p-values, returns min.
 #'
+#' @keywords internal
 #' @param sol_df_row row of sol_df object
-#'
 #' @return min_pval minimum p-value
-#'
-#' @export
 get_min_pval <- function(sol_df_row) {
     min_pval <- sol_df_row |>
         dplyr::mutate(
@@ -370,11 +353,9 @@ get_min_pval <- function(sol_df_row) {
 #'
 #' Given an solutions data frame row containing evaluated p-values, returns mean.
 #'
+#' @keywords internal
 #' @param sol_df_row row of sol_df object
-#'
 #' @return mean_pval mean p-value
-#'
-#' @export
 get_mean_pval <- function(sol_df_row) {
     mean_pval <- sol_df_row |>
         dplyr::mutate(
@@ -390,12 +371,10 @@ get_mean_pval <- function(sol_df_row) {
 #' Returns the overall p-value of an ordinal regression on a categorical
 #' predictor and response vetors. If the ordinal response
 #'
+#' @keywords internal
 #' @param predictor A categorical or numeric feature.
-#'
 #' @param response A numeric feature.
-#'
 #' @return pval A p-value (class "numeric").
-#'
 #' @export
 ord_reg_pval <- function(predictor, response) {
     # If there are only 2 tiers to the ordinal scale, just use linear model
@@ -434,12 +413,10 @@ ord_reg_pval <- function(predictor, response) {
 #'
 #' Return p-value for chi-squared test for any two features
 #'
+#' @keywords internal
 #' @param cat_var1 A categorical feature.
 #' @param cat_var2 A categorical feature.
-#'
 #' @return pval A p-value (class "numeric").
-#'
-#' @export
 chi_squared_pval <- function(cat_var1, cat_var2) {
     cat_var1 <- factor(cat_var1)
     cat_var2 <- factor(cat_var2)
@@ -455,12 +432,10 @@ chi_squared_pval <- function(cat_var1, cat_var2) {
 #'
 #' Return p-value for Fisher exact test for any two features
 #'
+#' @keywords internal
 #' @param cat_var1 A categorical feature.
 #' @param cat_var2 A categorical feature.
-#'
 #' @return pval A p-value (class "numeric").
-#'
-#' @export
 fisher_exact_pval <- function(cat_var1, cat_var2) {
     cat_var1 <- factor(cat_var1)
     cat_var2 <- factor(cat_var2)
@@ -474,11 +449,10 @@ fisher_exact_pval <- function(cat_var1, cat_var2) {
 #'
 #' Return p-value of F-test for a linear model of any two features
 #'
+#' @keywords internal
 #' @param predictor A categorical or numeric feature.
 #' @param response A numeric feature.
-#'
 #' @return pval A p-value (class "numeric").
-#'
 #' @export
 linear_model_pval <- function(predictor, response) {
     model <- stats::lm(response ~ predictor)
@@ -490,20 +464,18 @@ linear_model_pval <- function(predictor, response) {
 
 #' Calculate p-values based on feature vectors and their types
 #'
+#' @keywords internal
 #' @param var1 A single vector containing a feature.
 #' @param var2 A single vector containing a feature.
 #' @param type1 The type of var1 (continuous, discrete, ordinal, categorical).
 #' @param type2 The type of var2 (continuous, discrete, ordinal, categorical).
 #' @param cat_test String indicating which statistical test will be used to
-#' associate cluster with a categorical feature. Options are "chi_squared" for
+#'  associate cluster with a categorical feature. Options are "chi_squared" for
 #' the Chi-squared test and "fisher_exact" for Fisher's exact test.
-#'
 #' @return pval A p-value from a statistical test based on the provided types.
 #'  Currently, this will either be the F-test p-value from a linear model
 #'  if at least one feature is non-categorical, or the chi-squared test
 #'  p-value if both features are categorical.
-#'
-#' @export
 calc_assoc_pval <- function(var1,
                             var2,
                             type1,
@@ -586,17 +558,23 @@ calc_assoc_pval <- function(var1,
 #' Calculate p-values for all pairwise associations of features in a data list
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @param verbose If TRUE, output progress to the console.
-#'
 #' @param cat_test String indicating which statistical test will be used to
-#' associate cluster with a categorical feature. Options are "chi_squared" for
-#' the Chi-squared test and "fisher_exact" for Fisher's exact test.
-#'
+#'  associate cluster with a categorical feature. Options are "chi_squared" for
+#'  the Chi-squared test and "fisher_exact" for Fisher's exact test.
 #' @return A "matrix" class object containing pairwise association p-values
-#' between the features in the provided data list.
-#'
+#'  between the features in the provided data list.
 #' @export
+#' @examples
+#' data_list <- data_list(
+#'     list(income, "household_income", "demographics", "ordinal"),
+#'     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'     list(anxiety, "anxiety", "behaviour", "ordinal"),
+#'     list(depress, "depressed", "behaviour", "ordinal"),
+#'     uid = "unique_id"
+#' )
+#' 
+#' assoc_pval_matrix <- calc_assoc_pval_matrix(data_list)
 calc_assoc_pval_matrix <- function(dl,
                                    verbose = FALSE,
                                    cat_test = "chi_squared") {
@@ -681,13 +659,7 @@ calc_assoc_pval_matrix <- function(dl,
         #######################################################################
         # Calculate p-values
         #######################################################################
-        pval <- calc_assoc_pval(
-            var1,
-            var2,
-            var1_type,
-            var2_type,
-            cat_test
-        )
+        pval <- calc_assoc_pval(var1, var2, var1_type, var2_type, cat_test)
         association_matrix[ind1, ind2] <- pval
         association_matrix[ind2, ind1] <- pval
     }

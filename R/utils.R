@@ -2,13 +2,13 @@
 #'
 #' Add new columns to a dataframe by specifying their names and a value to
 #' initialize them with.
+#'
 #' @keywords internal
 #' @param df The dataframe to extend.
 #' @param cols The vector containing new column names.
 #' @param value The values stored in the newly added columns. NA by default.
 #' @return A data frame containing with the same columns as the `df` argument
 #'  as well as the new columns specified in the `cols` argument.
-#' @export
 add_columns <- function(df, cols, value = NA) {
     df[cols] <- value
     return(df)
@@ -19,9 +19,9 @@ add_columns <- function(df, cols, value = NA) {
 #' Converts all columns in a dataframe that can be converted to numeric type to
 #' numeric type.
 #'
+#' @keywords internal
 #' @param df A dataframe
 #' @return df The dataframe with all possible columns converted to type numeric
-#' @export
 numcol_to_numeric <- function(df) {
     df[] <- lapply(df,
         function(x) {
@@ -41,12 +41,10 @@ numcol_to_numeric <- function(df) {
 
 #' Convert character-type columns of a dataframe to factor-type
 #'
+#' @keywords internal
 #' @param df A dataframe
-#'
 #' @return df_converted The dataframe with factor-type columns instead of
 #'  char-type columns
-#'
-#' @export
 char_to_fac <- function(df) {
     # Select all the columns that are character type
     char_cols <- df |>
@@ -59,67 +57,13 @@ char_to_fac <- function(df) {
     return(df)
 }
 
-#' Select all columns of a dataframe not starting with the 'uid_' prefix.
+#' Merge list of data frames into a single data frame
 #'
-#' Removes the 'uid_' prefixed columns from a dataframe.
-#'
-#' @param df A dataframe
-#'
-#' @return df_no_subs Dataframe without subjects
-#'
-#' @export
-no_subs <- function(df) {
-    if (!"solution" %in% colnames(df)) {
-        metasnf_error("Dataframe requires 'solution' column.")
-    }
-    df_no_subs <- df |>
-        dplyr::select(
-            "solution",
-            !(dplyr::starts_with("uid_"))
-        )
-    if (identical(df, df_no_subs)) {
-        metasnf_warning("Provided dataframe had no 'uid_' columns to remove.")
-    }
-    return(df_no_subs)
-}
-
-#' Select all columns of a dataframe starting with a given string prefix.
-#'
-#' Removes the columns that are not prefixed with 'uid_' prefixed columns
-#'  from a dataframe. Useful intermediate step for extracting subject UIDs from
-#'  an sol_df structure.
-#'
-#' @param df Dataframe
-#'
-#' @return df_subs Dataframe with only 'uid_' prefixed columns
-#'
-#' @export
-subs <- function(df) {
-    if (!"solution" %in% colnames(df)) {
-        metasnf_error("Dataframe requires 'solution' column.")
-    }
-    df_subs <- df |> dplyr::select(
-        "solution",
-        dplyr::starts_with("uid_")
-    )
-    if (identical(df, df_subs)) {
-        metasnf_warning("Provided dataframe had no non-'uid_' columns to remove.")
-    }
-    return(df_subs)
-}
-
-#' Merge list of dataframes
-#'
-#' @param df_list list of dataframes
-#'
+#' @param df_list list of data frames
 #' @param join String indicating if join should be "inner" or "full"
-#'
 #' @param uid Column name to join on. Default is "uid"
-#'
 #' @param no_na Whether to remove NA values from the merged dataframe
-#'
-#' @return merged_df inner join of all dataframes in list
-#'
+#' @return merged_df Inner join of all data frames in list
 #' @export
 merge_df_list <- function(df_list,
                           join = "inner",
@@ -147,12 +91,9 @@ merge_df_list <- function(df_list,
 #' Pull complete-data UIDs from a list of dataframes
 #'
 #' @param list_of_dfs List of dataframes.
-#'
 #' @param uid Name of column across dataframes containing UIDs
-#'
 #' @return A character vector of the UIDs of observations that have complete
-#' data across the provided list of dataframes.
-#'
+#'  data across the provided list of dataframes.
 #' @export
 get_complete_uids <- function(list_of_dfs, uid) {
     merged_df <- merge_df_list(
@@ -179,9 +120,7 @@ get_complete_uids <- function(list_of_dfs, uid) {
 #' @param train_frac The fraction (0 to 1) of subjects for training
 #' @param subjects The available subjects for distribution
 #' @param seed Seed used for Jenkins's one_at_a_time hash function
-#'
 #' @return split a named list containing the training and testing uid_ids
-#'
 #' @export
 train_test_assign <- function(train_frac, subjects, seed = 42) {
     train_thresh <- 2147483647 * train_frac
@@ -197,12 +136,10 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
 
 #' Generate a complete path and filename to store an similarity matrix
 #'
+#' @keywords internal
 #' @param similarity_matrix_dir Directory to store similarity matrices
 #' @param i Corresponding settings matrix row
-#'
 #' @return path Complete path and filename to store an similarity matrix
-#'
-#' @export
 similarity_matrix_path <- function(similarity_matrix_dir, i) {
     path <- paste0(
         similarity_matrix_dir,
@@ -223,11 +160,8 @@ similarity_matrix_path <- function(similarity_matrix_dir, i) {
 #'  value instead of a random value from 1 to x.
 #'
 #' @param x Vector or single value to sample from
-#'
 #' @param ... Remaining arguments for base::sample function
-#'
 #' @return Numeric vector result of running base::sample.
-#'
 #' @export
 resample <- function(x, ...) {
     return(x[sample.int(length(x), ...)])
@@ -240,10 +174,8 @@ resample <- function(x, ...) {
 #'  2. Every value in the diagonal is 0.5
 #'
 #' @param similarity_matrices A list of similarity matrices
-#'
 #' @return valid_matrices Boolean indicating if properties are met by all
 #'  similarity matrices
-#'
 #' @export
 check_similarity_matrices <- function(similarity_matrices) {
     invalid_mats <- similarity_matrices |>
@@ -271,17 +203,14 @@ check_similarity_matrices <- function(similarity_matrices) {
 #' Adjust the diagonals of a matrix to reduce contrast with off-diagonals
 #' during plotting.
 #'
+#' @keywords internal
 #' @param matrix Matrix to rescale.
-#'
 #' @param method Method of rescaling. Can be:
 #' * "mean" (replace diagonals with average value of off-diagonals)
 #' * "zero" (replace diagonals with 0)
 #' * "min" (replace diagonals with min value of off-diagonals)
 #' * "max" (replace diagonals with max value of off-diagonals)
-#'
 #' @return A "matrix" class object with rescaled diagonals.
-#'
-#' @export
 scale_diagonals <- function(matrix, method = "mean") {
     if (method == "mean") {
         off_diagonals <- matrix[col(matrix) != row(matrix)]
@@ -307,14 +236,10 @@ scale_diagonals <- function(matrix, method = "mean") {
 #' wrapper for `circlize::colorRamp2`.'
 #'
 #' @param data Vector of numeric values.
-#'
 #' @param min_colour Minimum colour value.
-#'
 #' @param max_colour Maximum colour value.
-#'
 #' @return A "function" class object that can build a circlize-style colour
 #' ramp.
-#'
 #' @export
 colour_scale <- function(data, min_colour, max_colour) {
     colours <- circlize::colorRamp2(

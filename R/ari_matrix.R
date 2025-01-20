@@ -120,7 +120,6 @@ calc_aris <- function(sol_df,
     return(aris)
 }
 
-
 #' Validator for `ari_matrix` class object
 #'
 #' @keywords internal
@@ -128,6 +127,19 @@ calc_aris <- function(sol_df,
 #' @return If aml has a valid structure for a `ari_matrix` class
 #'  object, returns the input unchanged. Otherwise, raises an error.
 validate_ari_matrix <- function(aml) {
+    class(aml) <- setdiff(class(aml), "ari_matrix")
+    # 1. Ensure is matrix
+    if (!inherits(aml, "matrix")) {
+        metasnf_error("`ari_matrix` must inherit from class `matrix`.")
+    }
+    # 2. Ensure is array
+    if (!inherits(aml, "array")) {
+        metasnf_error("`ari_matrix` must inherit from class `array`.")
+    }
+    # 3. Check for NAs
+    if (any(is.na(aml))) {
+        metasnf_error("`ari_matrix` cannot have missing values.")
+    }
     return(aml)
 }
 
@@ -137,29 +149,11 @@ validate_ari_matrix <- function(aml) {
 #' @inheritParams validate_ari_matrix
 #' @return A `ari_matrix` object.
 new_ari_matrix <- function(aml, dist_method, hclust_method) {
-    attributes(am)$"order" <- get_matrix_order(
+    attributes(aml)$"order" <- get_matrix_order(
+        aml,
         dist_method = dist_method,
         hclust_method = hclust_method
     )
     am <- structure(aml, class = c("ari_matrix", "matrix", "array"))    
-    return(wm)
-}
-
-#' Convert an object to a weights matrix
-#'
-#' This function coerces non-`ari_matrix` class objects into
-#' `ari_matrix` class objects.
-#'
-#' @param x The object to convert into a weights matrix.
-#' @return A `ari_matrix` class object.
-#' @export
-as_ari_matrix <- function(x) {
-    UseMethod("as_ari_matrix")
-}
-
-#' @export
-as_ari_matrix.matrix <- function(x) {
-    validate_ari_matrix(x)
-    wm <- new_ari_matrix(x)
-    return(wm)
+    return(am)
 }

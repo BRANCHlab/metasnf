@@ -270,11 +270,11 @@ arrange_dll <- function(dll) {
     return(arranged_dll)
 }
 
-#' Domains
+#' Pull domains from a data list
 #'
+#' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
 #' @return domain_list list of domains
-#' @export
 domains <- function(dl) {
     domain_list <- lapply(dl, function(x) x$"domain")
     return(domain_list)
@@ -282,11 +282,11 @@ domains <- function(dl) {
 
 #' Reorder the uids in a data list
 #'
+#' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
 #' @param ordered_uids A vector of the uid values in the data list
 #'  in the desired order of the sorted data list.
 #' @return A data list ("list"-class object) with reordered observations.
-#' @export
 reorder_dl_subs <- function(dl, ordered_uids) {
     dl <- dl |>
         lapply(
@@ -354,25 +354,6 @@ rename_dl <- function(dl, name_mapping) {
         }
     )
     return(dl)
-}
-
-#' Extract uids from a data list
-#'
-#' @param dl A nested list of input data from `data_list()`.
-#' @param prefix If TRUE, preserves the "uid_" prefix added to UIDs when
-#'  creating a data list.
-#'
-#' @return A character vector of the UID labels contained in a data list.
-#'
-#' @export
-get_dl_uids <- function(dl, prefix = FALSE) {
-    dl_df <- as.data.frame(dl)
-    uids <- dl_df$"uid"
-    if (prefix) {
-        return(uids)
-    }
-    uids <- gsub("uid_", "", uids)
-    return(uids)
 }
 
 #' Make the uid UID columns of a data list first
@@ -761,6 +742,7 @@ check_dll_empty_input <- function(data_list_input) {
 #' @param ... Optional arguments to `FUN`.
 #' @return If FUN applied to each component of X yields a valid data list, a
 #'  data list. Otherwise, a list.
+#' @export
 #' @examples
 #' # Convert all UID values to lowercase
 #' dl <- data_list(
@@ -776,7 +758,6 @@ check_dll_empty_input <- function(data_list_input) {
 #'         return(x)
 #'     }
 #' )
-#' @export
 dlapply <- function(X, FUN, ...) {
     if (!(inherits(X, "list"))) {
         metasnf_error(

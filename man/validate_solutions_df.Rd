@@ -11,7 +11,8 @@ validate_solutions_df(sol_dfl)
 converted into a solutions data frame.}
 }
 \value{
-RETURN
+If sol_dfl has a valid structure for a \code{solutions_df} class object,
+returns the input unchanged. Otherwise, raises an error.
 }
 \description{
 Validator for \code{solutions_df} class object

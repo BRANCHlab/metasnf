@@ -11,6 +11,7 @@
 #'  the number of clusters in the graph) to clust_fns.
 #' @return A list of clustering algorithm functions that can
 #'  be passed into the batch_snf and generate_settings_list functions.
+#' @export
 #' @examples
 #' # Using just the base clustering algorithms --------------------------------
 #' # This will just contain spectral_eigen and spectral_rot
@@ -41,7 +42,6 @@
 #'         "five_cluster_spectral" = spectral_five
 #'     )
 #' )
-#' @export
 clust_fns_list <- function(clust_fns = NULL, use_default_clust_fns = FALSE) {
     cfll <- clust_fns
     if (is.null(cfll) & !use_default_clust_fns) {

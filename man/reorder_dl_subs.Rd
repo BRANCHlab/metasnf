@@ -18,3 +18,4 @@ A data list ("list"-class object) with reordered observations.
 \description{
 Reorder the uids in a data list
 }
+\keyword{internal}

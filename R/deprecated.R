@@ -3,7 +3,7 @@
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #' Deprecated function for building a distance metrics list. Please use
-#' `dist_fns_list()` instead.
+#' `dist_fns_list()` (or better yet, `snf_config()`) instead.
 #'
 #' @param continuous_distances A named list of distance metric functions
 #' @param discrete_distances A named list of distance metric functions
@@ -12,7 +12,6 @@
 #' @param mixed_distances A named list of distance metric functions
 #' @param keep_defaults If TRUE (default), prepend the base distance metrics
 #'  (euclidean and standard normalized euclidean)
-#'
 #' @return A nested and named list of distance metrics functions.
 #' @export
 generate_distance_metrics_list <- function(continuous_distances = NULL,
@@ -40,7 +39,7 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
 #' @description
 #' `r lifecycle::badge("deprecated")`
 #' Deprecated function for building a clustering algorithms list. Please use
-#' `dist_fns_list()` instead.
+#' `clust_fns_list()` (or better yet, `snf_config()`) instead.
 #'
 #' @param ... An arbitrary number of named clustering functions
 #' @param disable_base If TRUE, do not prepend the base clustering algorithms
@@ -52,7 +51,7 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
 generate_clust_algs_list <- function(..., disable_base = FALSE) {
     metasnf_deprecated(
         "2.0.0",
-        "Please use `clust_fns_list()` instead."
+        "Please use `snf_config()` or `clust_fns_list()` instead."
     )
     clust_fns_list(
         clust_fns = list(...),
@@ -186,6 +185,7 @@ adjusted_rand_index_heatmap <- function(aris,
                                             c(min_colour, max_colour)
                                         ),
                                         ...) {
+    metasnf_deprecated("2.0.0", "Please use `meta_cluster_heatmap()` instead.")
     heatmap <- meta_cluster_heatmap(
         aris = aris,
         order = order,
@@ -198,3 +198,97 @@ adjusted_rand_index_heatmap <- function(aris,
     )
     return(heatmap)
 }
+
+#' Extract cluster membership information from a sol_df
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' Deprecated function for building extracting cluster solutions from a
+#' solutions data frame. Please use `t()` instead.
+#'
+#' This function takes in a solutions data frame and returns a dataframe containing
+#' the cluster assignments for each uid. It is similar to
+#' '`get_clusters()`, which takes one solutions data frame row and returns a vector
+#' of cluster assignments' and `get_cluster_df()`, which takes a solutions
+#' matrix with only one row and returns a dataframe with two columns: "cluster"
+#' and "uid" (the UID of the observation).
+#'
+#' @param sol_df A sol_df.
+#' @return A "data.frame" object where each row is an
+#'  observation and each column (apart from the uid column) indicates
+#'  the cluster that observation was assigned to for the corresponding
+#'  solutions data frame row.
+#' @export
+get_cluster_solutions <- function(sol_df) {
+    metasnf_deprecated("2.0.0", "Please use `t()` instead.")
+    if (inherits(sol_df, "solutions_df")) {
+        return(t(sol_df))
+    }
+}
+
+#' Extract cluster membership information from one solutions data frame row
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' Deprecated function for building extracting cluster solutions from a
+#' solutions data frame. Please use `t()` instead.
+#'
+#' This function takes in a single row of a solutions data frame and returns a
+#' dataframe containing the cluster assignments for each uid. It is
+#' similar to `get_clusters()`, which takes one solutions data frame row and
+#' returns a vector of cluster assignments' and `get_cluster_solutions()`,
+#' which takes a solutions data frame with any number of rows and returns a
+#' dataframe indicating the cluster assignments for each of those rows.
+#'
+#' @param sol_df_row One row from a solutions data frame.
+#' @return cluster_df dataframe of cluster and uid.
+#' @export
+get_cluster_df <- function(sol_df_row) {
+    metasnf_deprecated("2.0.0", "Please use `t()` instead.")
+    if (inherits(sol_df_row, "solutions_df")) {
+        return(t(sol_df_row))
+    }
+}
+
+#' Extract cluster membership vector from one solutions data frame row
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' Deprecated function for building extracting cluster solutions from a
+#' solutions data frame. Please use `t()` instead.
+#'
+#' This function takes in a single row of a solutions data frame and returns a
+#' vector containing the cluster assignments for each observation. It is
+#' similar to `get_cluster_df()`, which takes a solutions data frame with only one
+#' row and returns a dataframe with two columns: "cluster" and "uid"
+#' '(the UID of the observation) and `get_cluster_solutions()`, which takes a
+#' solutions data frame with any number of rows and returns a dataframe indicating
+#' the cluster assignments for each of those rows.
+#'
+#' @param sol_df_row Output matrix row.
+#' @return clusters Vector of assigned clusters.
+#' @export
+get_clusters <- function(sol_df_row) {
+    metasnf_deprecated("2.0.0", "Please use `t()` instead.")
+    if (inherits(sol_df_row, "solutions_df")) {
+        return(t(sol_df_row))
+    }
+}
+
+#' Extract UIDs from a data list
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#' Deprecated function for extracting UIDs from a data list.
+#' Please use `uids()` instead.
+#'
+#' @param dl A nested list of input data from `data_list()`.
+#' @param prefix If TRUE, preserves the "uid_" prefix added to UIDs when
+#'  creating a data list.
+#' @return A character vector of the UID labels contained in a data list.
+#' @export
+get_dl_uids <- function(dl, prefix = FALSE) {
+    metasnf_deprecated("2.0.0", "Please use `uids()` instead.")
+    return(uids(dl))
+}
+

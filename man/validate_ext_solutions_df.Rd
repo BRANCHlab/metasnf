@@ -16,3 +16,4 @@ ext_solutions_df, returns ext_sol_dfl. Otherwise, raises an error.
 \description{
 Validator for \code{ext_solutions_df} class object
 }
+\keyword{internal}

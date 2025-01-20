@@ -153,7 +153,7 @@ What kind of clustering results do we get on this data?
 ```{r}
 set.seed(42)
 
-metasnf_data <- player_data |> dplyr::select("id", "assists", "blocks")
+metasnf_data <- dplyr::select(player_data, "id", "assists", "blocks")
 
 dl <- data_list(
     list(
@@ -175,24 +175,16 @@ sc <- snf_config(
 
 sol_df <- batch_snf(dl, sc)
 
-cluster_solutions_df <- get_cluster_solutions(sol_df) |>
-    dplyr::rename(
-        "id" = "uid",
-        "cluster" = `1`
-    )
-
-head(cluster_solutions_df)
-
-cluster_solutions_df$"cluster" <- factor(cluster_solutions_df$"cluster")
+cluster_solution_df <- t(sol_df)
 
 # matching the subject names
-metasnf_data$"id" <- paste0("uid_", metasnf_data$"id")
+metasnf_data$"uid" <- paste0("uid_", metasnf_data$"id")
 
 # merging back the original data
-metasnf_data <- dplyr::inner_join(metasnf_data, cluster_solutions_df, by = "id")
+metasnf_data <- dplyr::inner_join(metasnf_data, cluster_solution_df, by = "uid")
 
 metasnf_data |>
-    ggplot(aes(x = blocks, y = assists, colour = cluster)) +
+    ggplot(aes(x = blocks, y = assists, colour = s1)) +
     geom_point(size = 5, alpha = 0.3) +
     theme_bw()
 ```

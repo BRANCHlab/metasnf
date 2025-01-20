@@ -11,6 +11,70 @@
 #'  data lists. Each of those data lists contains a random `subsample_fraction`
 #'  fraction of the observations of the provided data list.
 #' @export
+#' @examples
+#' # my_dl <- data_list(
+#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#' #     list(income, "household_income", "demographics", "continuous"),
+#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #     uid = "unique_id"
+#' # )
+#' # 
+#' # sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+#' # 
+#' # sol_df <- batch_snf(my_dl, sc)
+#' # 
+#' # my_dl_subsamples <- subsample_dl(
+#' #     my_dl,
+#' #     n_subsamples = 20,
+#' #     subsample_fraction = 0.85
+#' # )
+#' # 
+#' # batch_subsample_results <- batch_snf_subsamples(
+#' #     my_dl_subsamples,
+#' #     sc,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
+#' # 
+#' # pairwise_aris <- subsample_pairwise_aris(
+#' #     subsample_cluster_solutions,
+#' #     return_raw_aris = TRUE,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # coclustering_results <- calculate_coclustering(
+#' #     subsample_cluster_solutions,
+#' #     sol_df,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # coclustering_results$"cocluster_summary"
+#' # 
+#' # cocluster_dfs <- coclustering_results$"cocluster_dfs"
+#' # 
+#' # cocluster_density(cocluster_dfs[[1]])
+#' # 
+#' # cocluster_heatmap(
+#' #     cocluster_dfs[[1]],
+#' #     dl = my_dl,
+#' #     top_hm = list(
+#' #         "Income" = "household_income",
+#' #         "Pubertal Status" = "pubertal_status"
+#' #     ),
+#' #     annotation_colours = list(
+#' #         "Pubertal Status" = colour_scale(
+#' #             c(1, 4),
+#' #             min_colour = "black",
+#' #             max_colour = "purple"
+#' #         ),
+#' #         "Income" = colour_scale(
+#' #             c(0, 4),
+#' #             min_colour = "black",
+#' #             max_colour = "red"
+#' #         )
+#' #     )
+#' # )
 subsample_dl <- function(dl,
                          n_subsamples,
                          subsample_fraction = NULL,
@@ -87,6 +151,70 @@ subsample_dl <- function(dl,
 #'  those cluster solutions, should you require these objects for your own
 #'  stability calculations.
 #' @export
+#' @examples
+#' # my_dl <- data_list(
+#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#' #     list(income, "household_income", "demographics", "continuous"),
+#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #     uid = "unique_id"
+#' # )
+#' # 
+#' # sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+#' # 
+#' # sol_df <- batch_snf(my_dl, sc)
+#' # 
+#' # my_dl_subsamples <- subsample_dl(
+#' #     my_dl,
+#' #     n_subsamples = 20,
+#' #     subsample_fraction = 0.85
+#' # )
+#' # 
+#' # batch_subsample_results <- batch_snf_subsamples(
+#' #     my_dl_subsamples,
+#' #     sc,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
+#' # 
+#' # pairwise_aris <- subsample_pairwise_aris(
+#' #     subsample_cluster_solutions,
+#' #     return_raw_aris = TRUE,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # coclustering_results <- calculate_coclustering(
+#' #     subsample_cluster_solutions,
+#' #     sol_df,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # coclustering_results$"cocluster_summary"
+#' # 
+#' # cocluster_dfs <- coclustering_results$"cocluster_dfs"
+#' # 
+#' # cocluster_density(cocluster_dfs[[1]])
+#' # 
+#' # cocluster_heatmap(
+#' #     cocluster_dfs[[1]],
+#' #     dl = my_dl,
+#' #     top_hm = list(
+#' #         "Income" = "household_income",
+#' #         "Pubertal Status" = "pubertal_status"
+#' #     ),
+#' #     annotation_colours = list(
+#' #         "Pubertal Status" = colour_scale(
+#' #             c(1, 4),
+#' #             min_colour = "black",
+#' #             max_colour = "purple"
+#' #         ),
+#' #         "Income" = colour_scale(
+#' #             c(0, 4),
+#' #             min_colour = "black",
+#' #             max_colour = "red"
+#' #         )
+#' #     )
+#' # )
 batch_snf_subsamples <- function(dl_subsamples,
                                  sc,
                                  processes = 1,
@@ -155,6 +283,70 @@ batch_snf_subsamples <- function(dl_subsamples,
 #' @param verbose If TRUE, output time remaining estimates to console.
 #' @return If return_raw_aris is FALSE, this function will return
 #' @export
+#' @examples
+#' # my_dl <- data_list(
+#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#' #     list(income, "household_income", "demographics", "continuous"),
+#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #     uid = "unique_id"
+#' # )
+#' # 
+#' # sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+#' # 
+#' # sol_df <- batch_snf(my_dl, sc)
+#' # 
+#' # my_dl_subsamples <- subsample_dl(
+#' #     my_dl,
+#' #     n_subsamples = 20,
+#' #     subsample_fraction = 0.85
+#' # )
+#' # 
+#' # batch_subsample_results <- batch_snf_subsamples(
+#' #     my_dl_subsamples,
+#' #     sc,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
+#' # 
+#' # pairwise_aris <- subsample_pairwise_aris(
+#' #     subsample_cluster_solutions,
+#' #     return_raw_aris = TRUE,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # coclustering_results <- calculate_coclustering(
+#' #     subsample_cluster_solutions,
+#' #     sol_df,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # coclustering_results$"cocluster_summary"
+#' # 
+#' # cocluster_dfs <- coclustering_results$"cocluster_dfs"
+#' # 
+#' # cocluster_density(cocluster_dfs[[1]])
+#' # 
+#' # cocluster_heatmap(
+#' #     cocluster_dfs[[1]],
+#' #     dl = my_dl,
+#' #     top_hm = list(
+#' #         "Income" = "household_income",
+#' #         "Pubertal Status" = "pubertal_status"
+#' #     ),
+#' #     annotation_colours = list(
+#' #         "Pubertal Status" = colour_scale(
+#' #             c(1, 4),
+#' #             min_colour = "black",
+#' #             max_colour = "purple"
+#' #         ),
+#' #         "Income" = colour_scale(
+#' #             c(0, 4),
+#' #             min_colour = "black",
+#' #             max_colour = "red"
+#' #         )
+#' #     )
+#' # )
 subsample_pairwise_aris <- function(subsample_solutions,
                                     return_raw_aris = FALSE,
                                     verbose = FALSE) {
@@ -263,6 +455,70 @@ subsample_pairwise_aris <- function(subsample_solutions,
 #' @return Density plot (class "gg", "ggplot") of the distribution of
 #'  coclustering across pairs and subsamples of the data.
 #' @export
+#' @examples
+#' # my_dl <- data_list(
+#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#' #     list(income, "household_income", "demographics", "continuous"),
+#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #     uid = "unique_id"
+#' # )
+#' # 
+#' # sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+#' # 
+#' # sol_df <- batch_snf(my_dl, sc)
+#' # 
+#' # my_dl_subsamples <- subsample_dl(
+#' #     my_dl,
+#' #     n_subsamples = 20,
+#' #     subsample_fraction = 0.85
+#' # )
+#' # 
+#' # batch_subsample_results <- batch_snf_subsamples(
+#' #     my_dl_subsamples,
+#' #     sc,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
+#' # 
+#' # pairwise_aris <- subsample_pairwise_aris(
+#' #     subsample_cluster_solutions,
+#' #     return_raw_aris = TRUE,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # coclustering_results <- calculate_coclustering(
+#' #     subsample_cluster_solutions,
+#' #     sol_df,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # coclustering_results$"cocluster_summary"
+#' # 
+#' # cocluster_dfs <- coclustering_results$"cocluster_dfs"
+#' # 
+#' # cocluster_density(cocluster_dfs[[1]])
+#' # 
+#' # cocluster_heatmap(
+#' #     cocluster_dfs[[1]],
+#' #     dl = my_dl,
+#' #     top_hm = list(
+#' #         "Income" = "household_income",
+#' #         "Pubertal Status" = "pubertal_status"
+#' #     ),
+#' #     annotation_colours = list(
+#' #         "Pubertal Status" = colour_scale(
+#' #             c(1, 4),
+#' #             min_colour = "black",
+#' #             max_colour = "purple"
+#' #         ),
+#' #         "Income" = colour_scale(
+#' #             c(0, 4),
+#' #             min_colour = "black",
+#' #             max_colour = "red"
+#' #         )
+#' #     )
+#' # )
 cocluster_density <- function(cocluster_df) {
     ###########################################################################
     # dplyr warning handling
@@ -335,6 +591,70 @@ cocluster_density <- function(cocluster_df) {
 #' @return Heatmap (class "Heatmap" from ComplexHeatmap) object showing the
 #'  distribution of observation co-clustering across resampled data.
 #' @export
+#' @examples
+#' # my_dl <- data_list(
+#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#' #     list(income, "household_income", "demographics", "continuous"),
+#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #     uid = "unique_id"
+#' # )
+#' # 
+#' # sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+#' # 
+#' # sol_df <- batch_snf(my_dl, sc)
+#' # 
+#' # my_dl_subsamples <- subsample_dl(
+#' #     my_dl,
+#' #     n_subsamples = 20,
+#' #     subsample_fraction = 0.85
+#' # )
+#' # 
+#' # batch_subsample_results <- batch_snf_subsamples(
+#' #     my_dl_subsamples,
+#' #     sc,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
+#' # 
+#' # pairwise_aris <- subsample_pairwise_aris(
+#' #     subsample_cluster_solutions,
+#' #     return_raw_aris = TRUE,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # coclustering_results <- calculate_coclustering(
+#' #     subsample_cluster_solutions,
+#' #     sol_df,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # coclustering_results$"cocluster_summary"
+#' # 
+#' # cocluster_dfs <- coclustering_results$"cocluster_dfs"
+#' # 
+#' # cocluster_density(cocluster_dfs[[1]])
+#' # 
+#' # cocluster_heatmap(
+#' #     cocluster_dfs[[1]],
+#' #     dl = my_dl,
+#' #     top_hm = list(
+#' #         "Income" = "household_income",
+#' #         "Pubertal Status" = "pubertal_status"
+#' #     ),
+#' #     annotation_colours = list(
+#' #         "Pubertal Status" = colour_scale(
+#' #             c(1, 4),
+#' #             min_colour = "black",
+#' #             max_colour = "purple"
+#' #         ),
+#' #         "Income" = colour_scale(
+#' #             c(0, 4),
+#' #             min_colour = "black",
+#' #             max_colour = "red"
+#' #         )
+#' #     )
+#' # )
 cocluster_heatmap <- function(cocluster_df,
                               cluster_rows = TRUE,
                               cluster_columns = TRUE,
@@ -498,6 +818,70 @@ cocluster_heatmap <- function(cocluster_df,
 #'   pairs remained clustered together throughout the subsample solutions. This
 #'   information is formatted as a dataframe with one row per cluster solution.
 #' @export
+#' @examples
+#' # my_dl <- data_list(
+#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#' #     list(income, "household_income", "demographics", "continuous"),
+#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #     uid = "unique_id"
+#' # )
+#' # 
+#' # sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+#' # 
+#' # sol_df <- batch_snf(my_dl, sc)
+#' # 
+#' # my_dl_subsamples <- subsample_dl(
+#' #     my_dl,
+#' #     n_subsamples = 20,
+#' #     subsample_fraction = 0.85
+#' # )
+#' # 
+#' # batch_subsample_results <- batch_snf_subsamples(
+#' #     my_dl_subsamples,
+#' #     sc,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
+#' # 
+#' # pairwise_aris <- subsample_pairwise_aris(
+#' #     subsample_cluster_solutions,
+#' #     return_raw_aris = TRUE,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # coclustering_results <- calculate_coclustering(
+#' #     subsample_cluster_solutions,
+#' #     sol_df,
+#' #     verbose = TRUE
+#' # )
+#' # 
+#' # coclustering_results$"cocluster_summary"
+#' # 
+#' # cocluster_dfs <- coclustering_results$"cocluster_dfs"
+#' # 
+#' # cocluster_density(cocluster_dfs[[1]])
+#' # 
+#' # cocluster_heatmap(
+#' #     cocluster_dfs[[1]],
+#' #     dl = my_dl,
+#' #     top_hm = list(
+#' #         "Income" = "household_income",
+#' #         "Pubertal Status" = "pubertal_status"
+#' #     ),
+#' #     annotation_colours = list(
+#' #         "Pubertal Status" = colour_scale(
+#' #             c(1, 4),
+#' #             min_colour = "black",
+#' #             max_colour = "purple"
+#' #         ),
+#' #         "Income" = colour_scale(
+#' #             c(0, 4),
+#' #             min_colour = "black",
+#' #             max_colour = "red"
+#' #         )
+#' #     )
+#' # )
 calculate_coclustering <- function(subsample_solutions,
                                    sol_df,
                                    verbose = FALSE) {
@@ -627,13 +1011,13 @@ calculate_coclustering <- function(subsample_solutions,
 #' Check if coclustered data has at least one subsample in which every pair
 #' of subjects were a part of simultaneously.
 #'
+#' @keywords internal
 #' @param cocluster_df Dataframe containing coclustering data.
 #' @param action Control if parent function should warn or stop.
 #' @return This function does not return any value. It checks a `cocluster_df`
 #'  for complete coverage (all pairs occur in the same solution at least once).
 #'  Will raise a warning or error if coverage is incomplete depending on the
 #'  value of the action parameter.
-#' @export
 coclustering_coverage_check <- function(cocluster_df, action = "warn") {
     missing_coclustering <- sum(cocluster_df$"same_solution" == 0)
     if (missing_coclustering > 0) {

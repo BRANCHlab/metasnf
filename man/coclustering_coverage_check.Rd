@@ -21,3 +21,4 @@ value of the action parameter.
 Check if coclustered data has at least one subsample in which every pair
 of subjects were a part of simultaneously.
 }
+\keyword{internal}

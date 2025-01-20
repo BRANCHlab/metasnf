@@ -17,3 +17,4 @@ path Complete path and filename to store an similarity matrix
 \description{
 Generate a complete path and filename to store an similarity matrix
 }
+\keyword{internal}

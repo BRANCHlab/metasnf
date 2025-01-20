@@ -299,12 +299,12 @@ print.weights_matrix <- function(x, ...) {
 #' @export
 print.solutions_df <- function(x, n = NULL, tips = TRUE, ...) {
     if (tips) {
-        cat(
-            cli::col_grey(
-                nrow(x), " cluster solutions of ", ncol(x) - 2,
-                " observations:\n"
-            )
-        )
+        if (nrow(x) == 1) {
+            segment <- " cluster solution of "
+        } else {
+            segment <- " cluster solutions of "
+        }
+        cat(cli::col_grey(nrow(x), segment, ncol(x) - 2, " observations:\n"))
     }
     assignment_df <- tibble::tibble(as.data.frame(x))
     output <- utils::capture.output(print(assignment_df, n = n))
@@ -362,12 +362,26 @@ print.solutions_df <- function(x, n = NULL, tips = TRUE, ...) {
 #' @return Function prints to console but does not return any value.
 #' @export
 print.t_solutions_df <- function(x, ...) {
+    if (ncol(x) == 2) {
+        segment <- " cluster solution of "
+    } else {
+        segment <- " cluster solutions of "
+    }
+    cat(cli::col_grey(ncol(x) - 1, segment, nrow(x), " observations:\n"))
     x <- tibble::tibble(data.frame(x))
     n_sols <- ncol(x) - 1
     n_obs <- nrow(x)
     output <- utils::capture.output(print(x, width = Inf))
     output <- output[!grepl("^#", output)]
-    output <- sub("...", "", output)
+    if (length(output) >= 1001) {
+        output <- sub(".....", "", output)
+    } else if (length(output) >= 101) {
+        output <- sub("....", "", output)
+    } else if (length(output) >= 11) {
+        output <- sub("...", "", output)
+    } else {
+        output <- sub("..", "", output)
+    }
     output <- output[!grepl("^<", output)]
     header <- output[1]
     rest <- output[-1]
@@ -375,41 +389,9 @@ print.t_solutions_df <- function(x, ...) {
     # Calculating shown vs. hidden solutions
     shown_sols <- length(strsplit(header, "\\s+")[[1]]) - 1
     hidden_sols <- n_sols - shown_sols
-    if (hidden_sols == 1) {
-        sols_message <- "1 solution"
-    } else if (hidden_sols > 1) {
-        sols_message <- paste0(hidden_sols, " solutions")
-    } else {
-        sols_message <- ""
-    }
-    # Calculating shown vs. hidden observations
-    if (length(rest) > 10) {
-        hidden_obs <- n_obs - 10
-        if (hidden_obs == 1) {
-            obs_message <- "1 observation"
-        } else if (hidden_obs > 1) {
-            obs_message <- paste0(hidden_obs, " observations")
-        }
-    } else {
-        hidden_obs <- 0
-        obs_message <- ""
-    }
-    if (hidden_sols > 0 & hidden_obs > 0) {
-        joiner <- " and "
-    } else {
-        joiner <- ""
-    }
-    if (hidden_obs > 0 | hidden_sols > 0) {
-        cat(rest[1:10], sep = "\n")
-        cat(
-            cli::col_grey(
-                "Not showing ", obs_message, joiner, sols_message, ".\n",
-                sep = ""
-            )
-        )
-    } else {
-        cat(rest, sep = "\n")
-    }
+    hidden_obs <- nrow(x) - length(rest)
+    cat(rest, sep = "\n")
+    not_shown_message(hidden_sols, hidden_obs, NULL) 
 }
 
 #' Print method for class `t_ext_solutions_df`
@@ -682,7 +664,9 @@ not_shown_message <- function(hidden_solutions = NULL,
         message <- paste(message_parts, "not shown.")
     }
     message <- cli::col_grey(message, "\n")
-    cat(message)
+    if (!is.null(message)) {
+        cat(message)
+    }
 }
 
 #' Helper function for outputting tip on changing rows printed
@@ -719,31 +703,12 @@ print_with_t_message <- function() {
 #' @return Function prints to console but does not return any value.
 #' @export
 print.ari_matrix <- function(x, ...) {
-    all_output <- x |>
-        data.frame() |>
-        dplyr::glimpse() |>
-        utils::capture.output()
-    all_output <- all_output[-c(1:2)]
-    all_output <- gsub("<dbl>", "", all_output)
-    cat(cli::col_grey("ARI matrix for ", nrow(x), " cluster solutions."))
-    cat("\n")
-    if (length(all_output) >= 5) {
-        for (string in all_output[1:5]) {
-            word_vec <- strsplit(string, "\\s+")[[1]]
-            cat(word_vec, "\n")
-        }
-        n_more_fts <- length(all_output) - 5
-        grammar <- if (n_more_fts > 1) "s.\n" else ".\n"
-        if (n_more_fts > 0) {
-            cat(
-                cli::col_grey(
-                    "\u2026and ", n_more_fts, " more feature", grammar
-                )
-            )
-        }
-    } else if (length(all_output) == 0){
-    } else {
-        cat(all_output, sep = "\n")
-    }
+    output_matrix <- x
+    attributes(output_matrix)$"order" <- NULL
+    class(output_matrix) <- c("matrix", "array")
+    output <- utils::capture.output(print(output_matrix))
+    cat(cli::col_grey("ARI matrix for ", nrow(x), " cluster solutions.\n"))
+    cat(output, sep = "\n")
+    cat("ARI-based order:", attributes(x)$"order", "\n")
 }
 

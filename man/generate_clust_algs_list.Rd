@@ -21,5 +21,5 @@ be passed into the batch_snf and generate_settings_list functions.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 Deprecated function for building a clustering algorithms list. Please use
-\code{dist_fns_list()} instead.
+\code{clust_fns_list()} (or better yet, \code{snf_config()}) instead.
 }

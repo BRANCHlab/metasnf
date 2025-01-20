@@ -16,3 +16,4 @@ df The dataframe with all possible columns converted to type numeric
 Converts all columns in a dataframe that can be converted to numeric type to
 numeric type.
 }
+\keyword{internal}

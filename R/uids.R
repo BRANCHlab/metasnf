@@ -16,6 +16,11 @@ uids.solutions_df <- function(x) {
 }
 
 #' @export
+uids.t_solutions_df <- function(x) {
+    return(x$"uid")
+}
+
+#' @export
 uids.data_list <- function(x) {
     uid_vec <- attributes(x)$"uids"
     return(uid_vec)

@@ -15,3 +15,4 @@ min_pval minimum p-value
 \description{
 Given an solutions data frame row containing evaluated p-values, returns min.
 }
+\keyword{internal}

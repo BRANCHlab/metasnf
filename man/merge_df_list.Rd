@@ -2,12 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{merge_df_list}
 \alias{merge_df_list}
-\title{Merge list of dataframes}
+\title{Merge list of data frames into a single data frame}
 \usage{
 merge_df_list(df_list, join = "inner", uid = "uid", no_na = FALSE)
 }
 \arguments{
-\item{df_list}{list of dataframes}
+\item{df_list}{list of data frames}
 
 \item{join}{String indicating if join should be "inner" or "full"}
 
@@ -16,8 +16,8 @@ merge_df_list(df_list, join = "inner", uid = "uid", no_na = FALSE)
 \item{no_na}{Whether to remove NA values from the merged dataframe}
 }
 \value{
-merged_df inner join of all dataframes in list
+merged_df Inner join of all data frames in list
 }
 \description{
-Merge list of dataframes
+Merge list of data frames into a single data frame
 }

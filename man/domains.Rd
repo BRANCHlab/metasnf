@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_list.R
 \name{domains}
 \alias{domains}
-\title{Domains}
+\title{Pull domains from a data list}
 \usage{
 domains(dl)
 }
@@ -13,5 +13,6 @@ domains(dl)
 domain_list list of domains
 }
 \description{
-Domains
+Pull domains from a data list
 }
+\keyword{internal}

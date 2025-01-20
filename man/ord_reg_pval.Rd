@@ -18,3 +18,4 @@ pval A p-value (class "numeric").
 Returns the overall p-value of an ordinal regression on a categorical
 predictor and response vetors. If the ordinal response
 }
+\keyword{internal}

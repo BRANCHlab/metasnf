@@ -22,3 +22,14 @@ between the features in the provided data list.
 \description{
 Calculate p-values for all pairwise associations of features in a data list
 }
+\examples{
+data_list <- data_list(
+    list(income, "household_income", "demographics", "ordinal"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+
+assoc_pval_matrix <- calc_assoc_pval_matrix(data_list)
+}

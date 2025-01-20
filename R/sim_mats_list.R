@@ -41,6 +41,11 @@ sim_mats_list <- function(x) {
 }
 
 #' @export
+sim_mats_list.default <- function(x) {
+    return(attributes(x)$"sim_mats_list")
+}
+
+#' @export
 sim_mats_list.solutions_df <- function(x) {
     return(attributes(x)$"sim_mats_list")
 }

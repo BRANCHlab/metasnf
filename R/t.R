@@ -1,7 +1,3 @@
-#' Transpose a solutions data frame
-#'
-#' @param x A `solutions_df` class object.
-#' @return A transposed `solutions_df` class object (class data.frame).
 #' @export
 t.solutions_df <- function(x) {
     sol_df <- x
@@ -17,14 +13,11 @@ t.solutions_df <- function(x) {
     attributes(x)$"snf_config" <- attributes(sol_df)$"snf_config"
     attributes(x)$"mc_labels" <- sol_df$"mc"
     x <- numcol_to_numeric(x)
+    x <- dplyr::mutate(x, dplyr::across(dplyr::starts_with("s"), as.factor))
     class(x) <- c("t_solutions_df", "data.frame")
     x
 }
 
-#' Transpose a transposed solutions data frame
-#'
-#' @param x A `solutions_df` class object.
-#' @return A transposed `solutions_df` class object (class data.frame).
 #' @export
 t.t_solutions_df <- function(x) {
     sol_df <- x
@@ -58,10 +51,6 @@ t.t_solutions_df <- function(x) {
     x
 }
 
-#' Transpose a solutions data frame
-#'
-#' @param x A `solutions_df` class object.
-#' @return A transposed `solutions_df` class object (class data.frame).
 #' @export
 t.ext_solutions_df <- function(x) {
     ext_sol_df <- x
@@ -84,10 +73,6 @@ t.ext_solutions_df <- function(x) {
     x
 }
 
-#' Transpose a transposed solutions data frame
-#'
-#' @param x A `solutions_df` class object.
-#' @return A transposed `solutions_df` class object (class data.frame).
 #' @export
 t.t_ext_solutions_df <- function(x) {
     ext_sol_df <- x

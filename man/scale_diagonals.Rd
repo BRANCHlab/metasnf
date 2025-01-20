@@ -24,3 +24,4 @@ A "matrix" class object with rescaled diagonals.
 Adjust the diagonals of a matrix to reduce contrast with off-diagonals
 during plotting.
 }
+\keyword{internal}
