@@ -55,7 +55,7 @@
 #'   name (as found in dl_summary(dl)$"name") of each dataframe. When
 #'   0, that dataframe will be excluded from that run of the SNF pipeline. When
 #'   1, that dataframe will be included.
-#''
+#'
 #' @param dl A nested list of input data from `data_list()`.
 #' @param n_solutions Number of rows to generate for the settings data frame.
 #' @param min_removed_inputs The smallest number of input dataframes that may be
