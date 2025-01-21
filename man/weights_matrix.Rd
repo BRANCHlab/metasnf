@@ -26,9 +26,9 @@ Function for building a weights matrix independently of an SNF config. The
 weights matrix contains one row corresponding to each row of the settings
 data frame in an SNF config (one row for each resulting cluster solution)
 and one column for each feature in the data list used for clustering. Values
-of the weights matrix are provided to distance metrics functions during the
-conversion of input data frames to distance metrics. There is no typical
-need to use this function directly; instead, users should provide weights
+of the weights matrix are passed to distance metrics functions during the
+conversion of input data frames to distance matrices. Typically, there is no
+need to use this function directly. Instead, users should provide weights
 matrix-building parameters to the \code{snf_config()} function.
 }
 \examples{
@@ -43,5 +43,6 @@ sc <- snf_config(input_dl, n_solutions = 5)
 
 wm <- weights_matrix(input_dl, n_solutions = 5, weights_fill = "uniform")
 
+# updating an SNF config in parts
 sc$"weights_matrix" <- wm
 }

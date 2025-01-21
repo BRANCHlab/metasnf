@@ -22,7 +22,9 @@ fraction of the observations of the provided data list.
 }
 \description{
 Given a data list, return a list of smaller data lists that are generated
-through random sampling (without replacement).
+through random sampling (without replacement). The results of this function
+can be passed into \code{batch_snf_subsamples()} to obtain a list of resampled
+solutions data frames.
 }
 \examples{
 # my_dl <- data_list(
@@ -32,60 +34,9 @@ through random sampling (without replacement).
 #     uid = "unique_id"
 # )
 # 
-# sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
-# 
-# sol_df <- batch_snf(my_dl, sc)
-# 
 # my_dl_subsamples <- subsample_dl(
 #     my_dl,
 #     n_subsamples = 20,
 #     subsample_fraction = 0.85
-# )
-# 
-# batch_subsample_results <- batch_snf_subsamples(
-#     my_dl_subsamples,
-#     sc,
-#     verbose = TRUE
-# )
-# 
-# subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
-# 
-# pairwise_aris <- subsample_pairwise_aris(
-#     subsample_cluster_solutions,
-#     return_raw_aris = TRUE,
-#     verbose = TRUE
-# )
-# 
-# coclustering_results <- calculate_coclustering(
-#     subsample_cluster_solutions,
-#     sol_df,
-#     verbose = TRUE
-# )
-# 
-# coclustering_results$"cocluster_summary"
-# 
-# cocluster_dfs <- coclustering_results$"cocluster_dfs"
-# 
-# cocluster_density(cocluster_dfs[[1]])
-# 
-# cocluster_heatmap(
-#     cocluster_dfs[[1]],
-#     dl = my_dl,
-#     top_hm = list(
-#         "Income" = "household_income",
-#         "Pubertal Status" = "pubertal_status"
-#     ),
-#     annotation_colours = list(
-#         "Pubertal Status" = colour_scale(
-#             c(1, 4),
-#             min_colour = "black",
-#             max_colour = "purple"
-#         ),
-#         "Income" = colour_scale(
-#             c(0, 4),
-#             min_colour = "black",
-#             max_colour = "red"
-#         )
-#     )
 # )
 }

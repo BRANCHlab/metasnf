@@ -38,6 +38,7 @@ RoxygenNote: 7.3.2
 Imports:
     cli,
     cluster,
+    data.table,
     digest,
     dplyr,
     ggplot2,

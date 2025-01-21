@@ -76,9 +76,8 @@ Setting the parameters `return_sim_mats`  and `return_solutions` to `TRUE` will 
 The function `subsample_pairwise_aris` can then be used to calculate the ARIs between cluster solutions across the subsamples.
 
 ```{r eval = FALSE}
-subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
 pairwise_aris <- subsample_pairwise_aris(
-    subsample_cluster_solutions,
+    batch_subsample_results,
     return_raw_aris = TRUE,
     verbose = TRUE
 )
@@ -108,7 +107,7 @@ To calculate information about how often each pair of observations clustered tog
 
 ```{r eval = FALSE}
 coclustering_results <- calculate_coclustering(
-    subsample_cluster_solutions,
+    batch_subsample_results,
     sol_df,
     verbose = TRUE
 )

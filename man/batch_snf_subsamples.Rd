@@ -9,7 +9,7 @@ batch_snf_subsamples(
   sc,
   processes = 1,
   return_sim_mats = FALSE,
-  return_solutions = FALSE,
+  sim_mats_dir = NULL,
   verbose = TRUE
 )
 }
@@ -40,8 +40,8 @@ cores will be used.
 the first element is the solutions data frame and the second element is a list
 of similarity matrices for each row in the sol_df. Default FALSE.}
 
-\item{return_solutions}{If TRUE, includes the solutions data frames
-corresponding to each subsample in the output.}
+\item{sim_mats_dir}{If specified, this directory will be used to
+save all generated similarity matrices.}
 
 \item{verbose}{If TRUE, output progress to console.}
 }
@@ -68,8 +68,6 @@ Run SNF clustering pipeline on a list of subsampled data lists.
 # 
 # sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
 # 
-# sol_df <- batch_snf(my_dl, sc)
-# 
 # my_dl_subsamples <- subsample_dl(
 #     my_dl,
 #     n_subsamples = 20,
@@ -80,46 +78,5 @@ Run SNF clustering pipeline on a list of subsampled data lists.
 #     my_dl_subsamples,
 #     sc,
 #     verbose = TRUE
-# )
-# 
-# subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
-# 
-# pairwise_aris <- subsample_pairwise_aris(
-#     subsample_cluster_solutions,
-#     return_raw_aris = TRUE,
-#     verbose = TRUE
-# )
-# 
-# coclustering_results <- calculate_coclustering(
-#     subsample_cluster_solutions,
-#     sol_df,
-#     verbose = TRUE
-# )
-# 
-# coclustering_results$"cocluster_summary"
-# 
-# cocluster_dfs <- coclustering_results$"cocluster_dfs"
-# 
-# cocluster_density(cocluster_dfs[[1]])
-# 
-# cocluster_heatmap(
-#     cocluster_dfs[[1]],
-#     dl = my_dl,
-#     top_hm = list(
-#         "Income" = "household_income",
-#         "Pubertal Status" = "pubertal_status"
-#     ),
-#     annotation_colours = list(
-#         "Pubertal Status" = colour_scale(
-#             c(1, 4),
-#             min_colour = "black",
-#             max_colour = "purple"
-#         ),
-#         "Income" = colour_scale(
-#             c(0, 4),
-#             min_colour = "black",
-#             max_colour = "red"
-#         )
-#     )
 # )
 }

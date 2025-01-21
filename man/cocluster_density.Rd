@@ -44,44 +44,11 @@ the fractions that those pairs clustered together across subsampled data.
 #     verbose = TRUE
 # )
 # 
-# subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
-# 
-# pairwise_aris <- subsample_pairwise_aris(
-#     subsample_cluster_solutions,
-#     return_raw_aris = TRUE,
-#     verbose = TRUE
-# )
-# 
 # coclustering_results <- calculate_coclustering(
-#     subsample_cluster_solutions,
+#     batch_subsample_results,
 #     sol_df,
 #     verbose = TRUE
 # )
 # 
-# coclustering_results$"cocluster_summary"
-# 
-# cocluster_dfs <- coclustering_results$"cocluster_dfs"
-# 
 # cocluster_density(cocluster_dfs[[1]])
-# 
-# cocluster_heatmap(
-#     cocluster_dfs[[1]],
-#     dl = my_dl,
-#     top_hm = list(
-#         "Income" = "household_income",
-#         "Pubertal Status" = "pubertal_status"
-#     ),
-#     annotation_colours = list(
-#         "Pubertal Status" = colour_scale(
-#             c(1, 4),
-#             min_colour = "black",
-#             max_colour = "purple"
-#         ),
-#         "Income" = colour_scale(
-#             c(0, 4),
-#             min_colour = "black",
-#             max_colour = "red"
-#         )
-#     )
-# )
 }

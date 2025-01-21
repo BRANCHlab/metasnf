@@ -50,16 +50,8 @@ NULL
 #' @rdname quality_measures
 #' @export
 calculate_silhouettes <- function(sol_df) {
-    similarity_matrices <- attributes(sol_df)$"sim_mats_list"
-    all_is_null <- lapply(
-        similarity_matrices,
-        function(x) {
-            is.null(x)
-        }
-    ) |>
-        unlist() |>
-        all()
-    if (all_is_null) {
+    similarity_matrices <- sim_mats_list(sol_df)
+    if (all(sapply(similarity_matrices, is.null))) {
         metasnf_error(
             "Solutions data frame is missing similarity matrices attribute.",
             " Please set `return_sim_mats = TRUE` when calling `batch_snf()`."
@@ -96,7 +88,7 @@ calculate_silhouettes <- function(sol_df) {
             #  package in "Suggests". cluster::daisy is a default distance
             #  measure required for categorical and mixed data.
             silhouette_score <- cluster::silhouette(
-                x = cluster_solution,
+                x = as.integer(cluster_solution),
                 dmatrix = dissimilarity_matrix
             )
             return(silhouette_score)
