@@ -219,17 +219,10 @@ batch_snf_subsamples <- function(dl_subsamples,
                                  sc,
                                  processes = 1,
                                  return_sim_mats = FALSE,
-                                 return_solutions = FALSE,
+                                 sim_mats_dir = NULL,
                                  verbose = TRUE) {
-    # Initialize variables that may get added to end result
-    sol_df <- NULL
-    similarity_matrices <- NULL
-    cluster_solutions <- NULL
-    ###########################################################################
-    # Generate a new cluster_solutions dataframe for every data list subsample
-    subsample_clusters <- list()
+    # Generate a new solutions data frame for every subsampled data list
     subsample_sol_dfs <- list()
-    subsample_similarity_matrices <- list()
     for (s in seq_along(dl_subsamples)) {
         if (verbose) {
             cat(
@@ -237,40 +230,25 @@ batch_snf_subsamples <- function(dl_subsamples,
                 "...\n", sep = ""
             )
         }
+        if (!is.null(sim_mats_dir)) {
+            sim_mats_dir_s <- paste0(sim_mats_dir, "/subsample-", s)
+        } else {
+            sim_mats_dir_s <- NULL
+        }
         invisible(
             sol_df <- batch_snf(
                 dl = dl_subsamples[[s]],
                 sc = sc,
                 processes = processes,
                 return_sim_mats = return_sim_mats,
+                sim_mats_dir = sim_mats_dir_s
             )
         )
         # Partioning results
-        cluster_solutions <- t(sol_df)
-        # Appending results to list
-        index <- length(subsample_clusters) + 1
-        subsample_clusters[[index]] <- cluster_solutions
-        if (return_solutions) {
-            subsample_sol_dfs[[index]] <- sol_df
-        }
-        subsample_similarity_matrices[[index]] <- similarity_matrices
+        subsample_sol_dfs[[s]] <- sol_df
     }
-    subsample_ids <- paste0("subsample_", seq_along(dl_subsamples))
-    results <- list(
-        "cluster_solutions" = subsample_clusters,
-        "sol_dfs" = subsample_sol_dfs,
-        "similarity_matrices" = subsample_similarity_matrices
-    )
-    # Remove empty lists
-    results <- results[unlist(lapply(results, function(x) length(x) != 0))]
-    results <- lapply(
-        results,
-        function(x) {
-            names(x) <- subsample_ids
-            return(x)
-        }
-    )
-    return(results)
+    names(subsample_sol_dfs) <- paste0("subsample_", seq_along(dl_subsamples))
+    return(subsample_sol_dfs)
 }
 
 #' Calculate pairwise adjusted Rand indices across subsamples of data
@@ -374,7 +352,7 @@ subsample_pairwise_aris <- function(subsample_solutions,
     ###########################################################################
     # Loop over all the rows of the sol_df
     ###########################################################################
-    nrows <- ncol(subsample_solutions[[1]]) - 1
+    nrows <- nrow(subsample_solutions[[1]])
     for (row in seq_len(nrows)) {
         subsample_ari_mat <- matrix(
             nrow = length(subsample_solutions),
@@ -390,7 +368,7 @@ subsample_pairwise_aris <- function(subsample_solutions,
         )
         if (verbose) {
             cat(
-                "Calculating pairwise ARIs for row ", row, "/", nrows,
+                "Calculating pairwise ARIs for solution ", row, "/", nrows,
                 "...\n", sep = ""
             )
         }
@@ -400,18 +378,14 @@ subsample_pairwise_aris <- function(subsample_solutions,
             # v1 and v2 are indices of two distinct subsamples
             v1 <- pairwise_indices[1, col]
             v2 <- pairwise_indices[2, col]
-            subsample_a <- subsample_solutions[[v1]]
-            subsample_b <- subsample_solutions[[v2]]
+            subsample_a <- t(subsample_solutions[[v1]])
+            subsample_b <- t(subsample_solutions[[v2]])
             # keep column 1 (uid) and column 1 + row
             #  (the solution corresponding to that row)
             solution_a <- subsample_a[, c(1, row + 1)]
             solution_b <- subsample_b[, c(1, row + 1)]
             # remove any subjects who weren't a part of both subsamples
-            common_df <- dplyr::inner_join(
-                solution_a,
-                solution_b,
-                by = "uid"
-            )
+            common_df <- dplyr::inner_join(solution_a, solution_b, by = "uid")
             # The first column of common_df contains the uid values. The
             #  2nd and 3rd columns store the two sets of cluster solutions.
             ari <- mclust::adjustedRandIndex(common_df[, 2], common_df[, 3])
@@ -420,7 +394,7 @@ subsample_pairwise_aris <- function(subsample_solutions,
             row_adjusted_rand_indices <- c(row_adjusted_rand_indices, ari)
         }
         row_df <- data.frame(
-            "row" = row,
+            "solution" = row,
             "mean_ari" = mean(row_adjusted_rand_indices),
             "ari_sd" = stats::sd(row_adjusted_rand_indices)
         )
@@ -432,7 +406,7 @@ subsample_pairwise_aris <- function(subsample_solutions,
         }
     }
     if (return_raw_aris) {
-        names(subsample_ari_mats) <- paste0("row_", seq_len(nrows))
+        names(subsample_ari_mats) <- paste0("s", seq_len(nrows))
         results <- list(
             "ari_summary" = pairwise_ari_df,
             "raw_aris" = subsample_ari_mats
@@ -885,11 +859,19 @@ cocluster_heatmap <- function(cocluster_df,
 calculate_coclustering <- function(subsample_solutions,
                                    sol_df,
                                    verbose = FALSE) {
+    t_solutions <- lapply(
+        subsample_solutions,
+        function(x) {
+            x <- t(x)
+            rownames(x) <- x$"uid"
+            return(x)
+        }
+    )
     ###########################################################################
     # dplyr warning handling
     cluster <- ""
-    sub_1_clust <- ""
-    sub_2_clust <- ""
+    obs_1_clust <- ""
+    obs_2_clust <- ""
     uid <- ""
     same_cluster <- ""
     same_solution <- ""
@@ -904,73 +886,72 @@ calculate_coclustering <- function(subsample_solutions,
     cocluster_cf_mats <- list()
     # Data frame containing the cluster solutions from the full data list
     cluster_solutions <- t(sol_df)
-    subjects <- cluster_solutions$"uid"
-    nsubs <- length(subjects)
-    cocluster_mat <- matrix(0, ncol = nsubs, nrow = nsubs)
-    diag(cocluster_mat) <- length(subsample_solutions)
-    colnames(cocluster_mat) <- subjects
-    rownames(cocluster_mat) <- subjects
+    uids <- cluster_solutions$"uid"
+    base_cocluster_df <- data.frame(t(utils::combn(uids, 2)))
+    colnames(base_cocluster_df) <- c("obs_1", "obs_2")
+    n_obs <- length(uids)
+    cocluster_mat <- matrix(0, ncol = n_obs, nrow = n_obs)
+    diag(cocluster_mat) <- length(t_solutions)
+    colnames(cocluster_mat) <- uids
+    rownames(cocluster_mat) <- uids
     # Looping over all cluster solutions
     for (idx in seq_len(nrow(sol_df))) {
-        start <- Sys.time()
-        # Output current solution for monitoring progress
         if (verbose) {
-            cat(
-                "Processing solution ", idx, "/", nrow(sol_df), "\n",
-                sep = ""
-            )
+            cat("Processing solution ", idx, "/", nrow(sol_df), "\n", sep = "")
         }
         cluster_solution <- cluster_solutions[, c(1, idx + 1)]
-        colnames(cluster_solution) <- c("uid", "cluster")
-        # Dataframe storing all pairs of subjects in the full solution
-        cocluster_df <- data.frame(t(utils::combn(subjects, 2)))
-        colnames(cocluster_df) <- c("sub_1", "sub_2")
-        cocluster_df <- dplyr::left_join(cocluster_df, cluster_solution, dplyr::join_by(sub_1 == uid))
-        cocluster_df <- dplyr::left_join(cocluster_df, cluster_solution, dplyr::join_by(sub_2 == uid))
-        colnames(cocluster_df) <- c("sub_1", "sub_2", "sub_1_clust", "sub_2_clust")
+        # Dataframe storing all pairs of uids in the full solution
+        cocluster_df <- base_cocluster_df
+        #----------------------------------------------------------------------
+        cocluster_df <- dplyr::left_join(
+            cocluster_df, cluster_solution, dplyr::join_by(obs_1 == uid)
+        )
+        cocluster_df <- dplyr::left_join(
+            cocluster_df, cluster_solution, dplyr::join_by(obs_2 == uid)
+        )
+        colnames(cocluster_df)[3:4] <- c("obs_1_clust", "obs_2_clust")
         cocluster_df$"same_solution" <- 0
         cocluster_df$"same_cluster" <- 0
-        # Matrix templates
-        cocluster_ss_mat <- cocluster_mat
-        cocluster_sc_mat <- cocluster_mat
-        cocluster_cf_mat <- cocluster_mat
-        # Optionally initialize raw data matrices
         # Iteration through all the clustered pairs
-        browser()
         for (row in seq_len(nrow(cocluster_df))) {
             # Iteration through all the solutions of subsampled data
-            for (sub_ind in seq_len(length(subsample_solutions))) {
-                subsample <- subsample_solutions[[sub_ind]]
-                subsample_subjects <- subsample$"uid"
+            for (subsample in t_solutions) {
                 # df with uid and only the current cluster solution
                 current_ss <- subsample[, c(1, idx + 1)]
-                colnames(current_ss) <- c("uid", "cluster")
-                rownames(current_ss) <- current_ss$"uid"
-                sub_1 <- cocluster_df[row, "sub_1"]
-                sub_2 <- cocluster_df[row, "sub_2"]
-                ss_has_sub_1 <- sub_1 %in% current_ss$"uid"
-                ss_has_sub_2 <- sub_2 %in% current_ss$"uid"
-                if (ss_has_sub_1 & ss_has_sub_2) {
+                obs_1 <- cocluster_df[row, "obs_1"]
+                obs_2 <- cocluster_df[row, "obs_2"]
+                if ((obs_1 %in% current_ss$"uid") & (obs_2 %in% current_ss$"uid")) {
                     cocluster_df[row, "same_solution"] <- cocluster_df[row, "same_solution"] + 1
-                    cocluster_ss_mat[sub_1, sub_2] <- cocluster_ss_mat[sub_1, sub_2] + 1
-                    cocluster_ss_mat[sub_2, sub_1] <- cocluster_ss_mat[sub_1, sub_2] + 1
-                    ss_sub_1_c <- current_ss[sub_1, "cluster"]
-                    ss_sub_2_c <- current_ss[sub_2, "cluster"]
-                    if (ss_sub_1_c == ss_sub_2_c) {
+                    if (current_ss[obs_1, 2] == current_ss[obs_2, 2]) {
                         cocluster_df[row, "same_cluster"] <- cocluster_df[row, "same_cluster"] + 1
-                        cocluster_sc_mat[sub_1, sub_2] <- cocluster_sc_mat[sub_1, sub_2] + 1
-                        cocluster_sc_mat[sub_2, sub_1] <- cocluster_sc_mat[sub_1, sub_2] + 1
                     }
                 }
             }
         }
-        cocluster_df <- cocluster_df |> dplyr::mutate(cocluster_frac = same_cluster / same_solution)
+        cocluster_df_selected <- cocluster_df[, c("obs_1", "obs_2", "same_solution", "same_cluster")]
+        new_rows <- data.frame(
+          obs_1 = uids,
+          obs_2 = uids,
+          same_solution = rep(length(t_solutions), length(uids)),
+          same_cluster = rep(length(t_solutions), length(uids))
+        )
+        cocluster_df_full <- rbind(cocluster_df_selected, new_rows)
+        ss_mini <- xtabs(cocluster_df_full[, 3] ~ cocluster_df_full[, 1] + cocluster_df_full[, 2])
+        sc_mini <- xtabs(cocluster_df_full[, 4] ~ cocluster_df_full[, 1] + cocluster_df_full[, 2])
+        cocluster_ss_mat <- unclass(ss_mini + t(ss_mini) - diag(diag(ss_mini)))
+        cocluster_sc_mat <- unclass(sc_mini + t(sc_mini) - diag(diag(sc_mini)))
+        names(dimnames(cocluster_ss_mat)) <- NULL
+        attr(cocluster_ss_mat, "call") <- NULL
+        names(dimnames(cocluster_sc_mat)) <- NULL
+        attr(cocluster_sc_mat, "call") <- NULL
+        cocluster_df$cocluster_frac <- cocluster_df$same_cluster / cocluster_df$same_solution
         cocluster_cf_mat <- cocluster_sc_mat / cocluster_ss_mat
-        avg_cocluster_frac <- cocluster_df |>
-            dplyr::filter(sub_1_clust == sub_2_clust) |>
-            dplyr::select(cocluster_frac) |>
-            unlist() |>
-            mean(na.rm = TRUE)
+        avg_cocluster_frac <- mean(
+            cocluster_df$"cocluster_frac"[
+                cocluster_df$"obs_1_clust" == cocluster_df$"obs_2_clust"
+            ],
+            na.rm = TRUE
+        )
         cocluster_frac_df <- rbind(
             cocluster_frac_df,
             data.frame("row" = idx, "avg_cocluster_frac" = avg_cocluster_frac)

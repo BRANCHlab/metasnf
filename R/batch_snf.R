@@ -136,9 +136,14 @@ run_snf <- function(i, dl, sc, return_sim_mats, sim_mats_dir, p) {
     )
     solution <- sc$"clust_fns_list"[[sdf_row$"clust_alg"]](fused_network)
     if (!is.null(sim_mats_dir)) {
+        path <- similarity_matrix_path(sim_mats_dir, i)
+        if (!dir.exists(sim_mats_dir)) {
+            metasnf_alert("Creating folder ", sim_mats_dir)
+            dir.create(sim_mats_dir, recursive = TRUE)
+        }
         utils::write.csv(
             x = fused_network,
-            file = similarity_matrix_path(sim_mats_dir, i),
+            file = path,
             row.names = TRUE
         )
     }

@@ -205,6 +205,5 @@ formatted as "inc_[]" where the square brackets are replaced with the
 name (as found in dl_summary(dl)$"name") of each dataframe. When
 0, that dataframe will be excluded from that run of the SNF pipeline. When
 1, that dataframe will be included.
-'
 }
 }

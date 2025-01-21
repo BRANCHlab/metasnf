@@ -241,7 +241,6 @@ extend_solutions <- function(sol_df,
         ext_sol_dfl <- dplyr::select(ext_sol_dfl, -dplyr::all_of(target_fts))
         ext_sol_dfl <- cbind(ext_sol_dfl, target_ext_sol_dfl)
     }
-    browser()
     ext_sol_df <- ext_solutions_df(ext_sol_dfl, sol_df, fts, target_dl)
     return(ext_sol_df)
 }
