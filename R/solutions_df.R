@@ -270,7 +270,7 @@ get_pvals <- function(ext_sol_df,
             dplyr::ends_with("_pval")
         ) |>
         data.frame() |>
-        metasnf::numcol_to_numeric()
+        numcol_to_numeric()
     # Convert p-values to negative log p-values if requested
     if (negative_log) {
         # Negative log conversions
