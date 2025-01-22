@@ -8,6 +8,12 @@ uids <- function(x) {
 }
 
 #' @export
+uids.default <- function(x) {
+    uid_vec <- attributes(x)$"uids"
+    return(uid_vec)
+}
+
+#' @export
 uids.solutions_df <- function(x) {
     uid_vec <- x |>
         dplyr::select(dplyr::starts_with("uid_")) |>

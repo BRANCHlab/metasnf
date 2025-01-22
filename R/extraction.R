@@ -72,15 +72,14 @@
 #' @export
 `[.ext_solutions_df` <- function(x, i, j, ...) {
     result <- NextMethod()
-    attributes(result)$"sim_mats_list" <- attributes(result)$"sim_mats_list"[i]
     class(result) <- setdiff(class(result), "ext_solutions_df")
-    if (!identical(colnames(result), colnames(x))) {
-        return(result)
-    }
     result <- tryCatch(
         expr = {
             result <- validate_ext_solutions_df(result)
             result <- new_ext_solutions_df(result)
+            attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"[i]
+            attributes(result)$"snf_config" <- attributes(x)$"snf_config"[i]
+            attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"[i]
             result
         },
         error = function(e) {

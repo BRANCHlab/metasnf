@@ -454,9 +454,6 @@ ext_sol_df <- extend_solutions(
 )
 
 ext_sol_df
-
-# Summary columns of target_dl features tacked on the end
-ext_sol_df[, (ncol(ext_sol_df) - 2):ncol(ext_sol_df)]
 ```
 
 Functionally, the only difference between the data list passed into the `dl` parameter and the one passed into the `target_dl` parameter is that the `target_dl` features are the only ones used for generating the p-value summary columns.

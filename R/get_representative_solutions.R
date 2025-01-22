@@ -42,7 +42,6 @@ get_representative_solutions <- function(aris,
     mcs <- unique(mc_labels)
     sol_df$"label" <- mc_labels
     aris$"label" <- mc_labels
-    browser()
     ###########################################################################
     # Iterate through the meta clusters and keep the representative solution
     ###########################################################################
