@@ -14,9 +14,13 @@ my_dl <- data_list(
 
 sc <- snf_config(my_dl, n_solutions = 10, max_k = 40)
 
+sm_hm <- settings_df_heatmap(settings = sc)
+sm_hm
+
+
 sol_df <- batch_snf(my_dl, sc)
 
-calc_aris(sol_df)
+sol_aris <- calc_aris(sol_df)
 
 ext_sol_df <- extend_solutions(sol_df, dl = my_dl)
 
@@ -48,3 +52,4 @@ class(sol_df)
 critical_cols <- c("solution", "nclust", "mc")
 
 all(critical_cols %in% colnames(sol_df))
+

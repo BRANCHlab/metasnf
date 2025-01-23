@@ -244,56 +244,39 @@ meta_cluster_heatmap <- function(aris,
 #' Heatmap of pairwise associations between features
 #'
 #' @param correlation_matrix Matrix containing all pairwise association
-#' p-values. The recommended way to obtain this matrix is through the
-#' calc_assoc_pval function.
-#'
+#'  p-values. The recommended way to obtain this matrix is through the
+#'  calc_assoc_pval function.
 #' @param scale_diag Parameter that controls how the diagonals of the
-#' correlation_matrix are adjusted in the heatmap. For best viewing, this is
-#' set to "max", which will match the diagonals to whichever pairwise
-#' association has the highest p-value.
-#'
+#'  correlation_matrix are adjusted in the heatmap. For best viewing, this is
+#'  set to "max", which will match the diagonals to whichever pairwise
+#'  association has the highest p-value.
 #' @param cluster_rows Parameter for ComplexHeatmap::Heatmap. Will be ignored
-#' if split_by_domain is also provided.
-#'
+#'  if split_by_domain is also provided.
 #' @param cluster_columns Parameter for ComplexHeatmap::Heatmap. Will be
-#' ignored if split_by_domain is also provided.
-#'
+#'  ignored if split_by_domain is also provided.
 #' @param show_row_names Parameter for ComplexHeatmap::Heatmap.
-#'
 #' @param show_column_names Parameter for ComplexHeatmap::Heatmap.
-#'
 #' @param show_heatmap_legend Parameter for ComplexHeatmap::Heatmap.
-#'
 #' @param confounders A named list where the elements are columns in the
-#' correlation_matrix and the names are the corresponding display names.
-#'
+#'  correlation_matrix and the names are the corresponding display names.
 #' @param out_of_models Like confounders, but a named list of out of model
-#' measures (who are also present as columns in the correlation_matrix).
-#'
+#'  measures (who are also present as columns in the correlation_matrix).
 #' @param annotation_colours Named list of heatmap annotations and their
 #'  colours.
-#'
 #' @param labels_colour Vector of colours to use for the columns and rows
-#' of the heatmap.
-#'
+#'  of the heatmap.
 #' @param split_by_domain The results of `dl_var_summar` - a dataframe that has
-#' the domain of every feature in the plotted data.
-#' columns of the correlation_matrix. Will be used to "slice" the heatmap into
-#' visually separated sections.
-#'
+#'  the domain of every feature in the plotted data.
+#'  columns of the correlation_matrix. Will be used to "slice" the heatmap into
+#'  visually separated sections.
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @param significance_stars If TRUE (default), plots significance stars on
-#' heatmap cells
-#'
+#'  heatmap cells
 #' @param slice_font_size Font size for domain separating labels.
-#'
 #' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
-#'
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
-#' that displays the pairwise associations between features from the provided
-#' correlation_matrix.
-#'
+#'  that displays the pairwise associations between features from the provided
+#'  correlation_matrix.
 #' @export
 assoc_pval_heatmap <- function(correlation_matrix,
                                scale_diag = "max",
@@ -563,6 +546,7 @@ settings_df_heatmap <- function(settings,
     if (!is.null(order)) {
         sdf <- sdf[order, ]
     }
+    sdf <- dplyr::select(sdf, -"solution")
     # Scaling everything to have a max of 1
     col_maxes <- apply(sdf, 2, function(x) 1 / max(x))
     scaled_matrix <- as.matrix(sdf) %*% diag(col_maxes)
@@ -595,6 +579,20 @@ settings_df_heatmap <- function(settings,
     )
     column_split <- split_results$"column_split"
     row_split <- split_results$"row_split"
+    sdf$"snf_scheme" <- as.factor(sdf$"snf_scheme")
+    annotations_list <- generate_annotations_list(
+        df = sdf,
+        left_hm = list(
+            "SNF scheme" = "snf_scheme"
+        ),
+        annotation_colours = list(
+            "SNF scheme" = c(
+                "1" = "#7fc97f",
+                "2" = "#beaed4",
+                "3" = "#fdc086"
+            )
+        )
+    )
     ###########################################################################
     heatmap <- ComplexHeatmap::Heatmap(
         scaled_matrix,
@@ -610,6 +608,7 @@ settings_df_heatmap <- function(settings,
         row_split = row_split,
         column_split = column_split,
         column_title = column_title,
+        left_annotation = annotations_list$"left_annotations",
         ...
     )
     return(heatmap)

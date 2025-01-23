@@ -371,7 +371,10 @@ print.t_solutions_df <- function(x, ...) {
     x <- tibble::tibble(data.frame(x))
     n_sols <- ncol(x) - 1
     n_obs <- nrow(x)
-    output <- utils::capture.output(print(x, width = Inf))
+    x2 <- x
+    spaces <- max(max(nchar(x$"uid")), 3)
+    colnames(x2)[1] <- paste0(paste0(rep(" ", spaces - 3), collapse = ""), "uid")
+    output <- utils::capture.output(print(x2))
     output <- output[!grepl("^#", output)]
     if (length(output) >= 1001) {
         output <- sub(".....", "", output)
@@ -383,11 +386,12 @@ print.t_solutions_df <- function(x, ...) {
         output <- sub("..", "", output)
     }
     output <- output[!grepl("^<", output)]
-    header <- output[1]
+    header <- sub("`", "", output[1])
+    header <- sub("`", "  ", header)
     rest <- output[-1]
     cat(cli::col_blue(header), "\n")
     # Calculating shown vs. hidden solutions
-    shown_sols <- length(strsplit(header, "\\s+")[[1]]) - 1
+    shown_sols <- sum(startsWith(strsplit(header, "\\s+")[[1]], "s"))
     hidden_sols <- n_sols - shown_sols
     hidden_obs <- nrow(x) - length(rest)
     cat(rest, sep = "\n")

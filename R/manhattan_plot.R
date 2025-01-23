@@ -382,27 +382,17 @@ mc_manhattan_plot <- function(ext_sol_df,
 #' and cluster assignments. See `?extend_solutions`.
 #'
 #' @param neg_log_pval_thresh Threshold for negative log p-values.
-#'
 #' @param threshold P-value threshold to plot dashed line at.
-#'
 #' @param point_size Size of points in the plot.
-#'
 #' @param jitter_width Width of jitter.
-#'
 #' @param jitter_height Height of jitter.
-#'
 #' @param text_size Size of text in the plot.
-#'
 #' @param plot_title Title of the plot.
-#'
 #' @param hide_x_labels If TRUE, hides x-axis labels.
-#'
 #' @param bonferroni_line If TRUE, plots a dashed black line at the
 #'  Bonferroni-corrected equivalent of the p-value threshold.
-#'
 #' @return A Manhattan plot (class "gg", "ggplot") showing the association
-#' p-values of features against each solution in the provided solutions data frame.
-#'
+#'  p-values of features against each solution in the provided solutions data frame.
 #' @export
 esm_manhattan_plot <- function(esm,
                                neg_log_pval_thresh = 5,

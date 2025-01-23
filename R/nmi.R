@@ -25,8 +25,8 @@
 #' 
 #' sol_df <- batch_snf(input_dl, sc)
 #' 
-#' batch_nmi(input_dl, sol_df)
-batch_nmi <- function(dl,
+#' calc_nmis(input_dl, sol_df)
+calc_nmis <- function(dl,
                       sol_df,
                       transpose = TRUE,
                       ignore_inclusions = TRUE,

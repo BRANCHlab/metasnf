@@ -31,7 +31,7 @@ In the original `SNFtool` implementation of calculating NMI scores, the cluster 
 
 In contrast, the `metasnf` implementation leverages all the architectural details and hyperparameters supplied in the original SNF config and `batch_snf()` call to make the solo-feature to all-feature solutions as comparable as possible.
 
-The chunk below outlines how the primary NMI calculating function, `batch_nmi()`, can be used.
+The chunk below outlines how the primary NMI calculating function, `calc_nmis()`, can be used.
 
 ```{r}
 library(metasnf)
@@ -58,14 +58,14 @@ sol_df <- batch_snf(dl, sc)
 
 # Let's just calculate NMIs of the anxiety and depression data types for the
 # first 5 cluster solutions to save time:
-feature_nmis <- batch_nmi(dl[4:5], sol_df[1:5, ])
+feature_nmis <- calc_nmis(dl[4:5], sol_df[1:5, ])
 
 print(feature_nmis)
 ```
 
-One important thing to note is that if the cluster space you initially set up when calling `batch_snf` relied on custom distance metrics, clustering algorithms, or the `automatic_standard_normalize` parameter, you should use those same values when calling `batch_nmi()` as well.
+One important thing to note is that if the cluster space you initially set up when calling `batch_snf` relied on custom distance metrics, clustering algorithms, or the `automatic_standard_normalize` parameter, you should use those same values when calling `calc_nmis()` as well.
 
-Another important note is that by default, `batch_nmi` will ignore the `inc_*` columns of the settings data frame, i.e., no data types are dropped during solo feature cluster solution calculations.
+Another important note is that by default, `calc_nmis` will ignore the `inc_*` columns of the settings data frame, i.e., no data types are dropped during solo feature cluster solution calculations.
 This can lead to a bit of an odd interpretation if you view NMI as a direct reflection of contribution to the final SNF output.
 It is possible for a feature that was not a part of a particular cluster solution to still produce its own cluster solution that has a very high NMI score to the prior one.
 If you wish to suppress the calculation of NMIs for features that were not actually included in a particular SNF run due to having a 0 value in the inclusion column, you can set the `ignore_inclusions` parameter to `FALSE`.
