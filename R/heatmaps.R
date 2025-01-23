@@ -495,15 +495,17 @@ assoc_pval_heatmap <- function(correlation_matrix,
     )
 }
 
-#' Heatmap for visualizing a settings matrix
+#' Heatmap for visualizing an SNF config
 #'
-#' Scales settings matrix values between 0 and 1 and plots as a heatmap. Rows
+#' Create a heatmap where each row corresponds to a different set of 
+#' hyperparameters in an SNF config object. Numeric parameters are scaled
+#' normalized and non-numeric parameters are added as heatmap annotations. Rows
 #' can be reordered to match prior meta clustering results.
 #'
-#' @param settings Matrix indicating parameters to iterate SNF through.
+#' @param SNF config indicating parameters to iterate SNF through.
 #' @param remove_fixed_columns Whether columns that have no variation should be
 #'  removed.
-#' @param order Numeric vector indicating row ordering of settings matrix.
+#' @param order Numeric vector indicating row ordering of SNF config.
 #' @param show_column_names Whether column names should be shown.
 #' @param show_row_names Whether row names should be shown.
 #' @param rect_gp Cell border function for `ComplexHeatmap::Heatmap`.
@@ -517,21 +519,21 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #' @param row_split Standard parameter of `ComplexHeatmap::Heatmap`.
 #' @param ... Additional parameters passed to `ComplexHeatmap::Heatmap`.
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
-#'  that displays the scaled values of the provided settings matrix.
+#'  that displays the scaled values of the provided SNF config.
 #' @export
-settings_df_heatmap <- function(settings,
-                                order = NULL,
-                                remove_fixed_columns = TRUE,
-                                show_column_names = TRUE,
-                                show_row_names = TRUE,
-                                rect_gp = grid::gpar(col = "black"),
-                                colour_breaks = c(0, 1),
-                                colours = c("black", "darkseagreen"),
-                                column_split_vector = NULL,
-                                row_split_vector = NULL,
-                                column_split = NULL,
-                                row_split = NULL,
-                                column_title = NULL,
+snf_config_heatmap <- function(sc,
+                               order = NULL,
+                               remove_fixed_columns = TRUE,
+                               show_column_names = TRUE,
+                               show_row_names = TRUE,
+                               rect_gp = grid::gpar(col = "black"),
+                               colour_breaks = c(0, 1),
+                               colours = c("black", "darkseagreen"),
+                               column_split_vector = NULL,
+                               row_split_vector = NULL,
+                               column_split = NULL,
+                               row_split = NULL,
+                               column_title = NULL,
                                 ...) {
     if (inherits(settings, "snf_config")) {
         sdf <- settings$"settings_df"
@@ -558,7 +560,7 @@ settings_df_heatmap <- function(settings,
     fixed_columns <- colnames(scaled_matrix[, unique_values == 1])
     if (length(fixed_columns) > 0 && remove_fixed_columns) {
         message(
-            "Removing columns that had no variation across settings matrix: \n",
+            "Removing settings that had no variation across SNF config: \n",
             paste(
                 paste0(seq_along(fixed_columns), ". ", fixed_columns),
                 collapse = "\n "
