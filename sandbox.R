@@ -12,10 +12,31 @@ my_dl <- data_list(
     uid = "unique_id"
 )
 
-sc <- snf_config(my_dl, n_solutions = 10, max_k = 40)
+sc <- snf_config(
+    my_dl,
+    n_solutions = 10,
+    max_k = 40,
+    weights_fill = "uniform"
+)
+sc
 
-sm_hm <- settings_df_heatmap(settings = sc)
-sm_hm
+config_heatmap(sc = sc)
+
+
+# To do regarding config heatmap
+# - option to drop static columns and annotations
+# - automatic split markers at appropriate points
+# - option to turn ON/OFF for settings_df vs. weights matrix
+
+sc$"settings_df" |> colnames()
+
+
+library(RColorBrewer)
+display.brewer.all(type = "qual")
+
+
+
+
 
 
 sol_df <- batch_snf(my_dl, sc)

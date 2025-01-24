@@ -502,7 +502,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #' normalized and non-numeric parameters are added as heatmap annotations. Rows
 #' can be reordered to match prior meta clustering results.
 #'
-#' @param SNF config indicating parameters to iterate SNF through.
+#' @param sc An `snf_config` class object.
 #' @param remove_fixed_columns Whether columns that have no variation should be
 #'  removed.
 #' @param order Numeric vector indicating row ordering of SNF config.
@@ -521,53 +521,55 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
 #'  that displays the scaled values of the provided SNF config.
 #' @export
-snf_config_heatmap <- function(sc,
-                               order = NULL,
-                               remove_fixed_columns = TRUE,
-                               show_column_names = TRUE,
-                               show_row_names = TRUE,
-                               rect_gp = grid::gpar(col = "black"),
-                               colour_breaks = c(0, 1),
-                               colours = c("black", "darkseagreen"),
-                               column_split_vector = NULL,
-                               row_split_vector = NULL,
-                               column_split = NULL,
-                               row_split = NULL,
-                               column_title = NULL,
+config_heatmap <- function(sc,
+                           order = NULL,
+                           remove_fixed_columns = TRUE,
+                           show_column_names = TRUE,
+                           show_row_names = TRUE,
+                           rect_gp = grid::gpar(col = "black"),
+                           colour_breaks = c(0, 1),
+                           colours = c("black", "darkseagreen"),
+                           column_split_vector = NULL,
+                           row_split_vector = NULL,
+                           column_split = NULL,
+                           row_split = NULL,
+                           column_title = NULL,
                                 ...) {
-    if (inherits(settings, "snf_config")) {
-        sdf <- settings$"settings_df"
-    } else if (inherits(settings, "settings_df")) {
-        sdf <- settings
+    if (inherits(sc, "snf_config")) {
+        sdf <- sc$"settings_df"
     } else {
-        metasnf_error(
-            "`settings` must be either a `snf_config` or `settings_df` class",
-            " object."
-        )
+        metasnf_error("`sc` must be an `snf_config` class object.")
     }
     if (!is.null(order)) {
         sdf <- sdf[order, ]
     }
     sdf <- dplyr::select(sdf, -"solution")
+    wm <- sc$"weights_matrix"
+    sdf <- cbind(sdf, as.data.frame(wm))
     # Scaling everything to have a max of 1
-    col_maxes <- apply(sdf, 2, function(x) 1 / max(x))
-    scaled_matrix <- as.matrix(sdf) %*% diag(col_maxes)
-    colnames(scaled_matrix) <- colnames(sdf)
-    rownames(scaled_matrix) <- rownames(sdf)
+    trimmed_sdf <- sdf |> dplyr::select(
+        -"snf_scheme",
+        -"clust_alg",
+        -dplyr::ends_with("dist")
+    )
+    col_maxes <- apply(trimmed_sdf, 2, function(x) 1 / max(x))
+    scaled_matrix <- as.matrix(trimmed_sdf) %*% diag(col_maxes)
+    colnames(scaled_matrix) <- colnames(trimmed_sdf)
+    rownames(scaled_matrix) <- rownames(trimmed_sdf)
     ###########################################################################
-    # Function to check number of unique values in each column
-    unique_values <- apply(scaled_matrix, 2, function(x) length(unique(x)))
-    fixed_columns <- colnames(scaled_matrix[, unique_values == 1])
-    if (length(fixed_columns) > 0 && remove_fixed_columns) {
-        message(
-            "Removing settings that had no variation across SNF config: \n",
-            paste(
-                paste0(seq_along(fixed_columns), ". ", fixed_columns),
-                collapse = "\n "
-            )
-        )
-        scaled_matrix <- scaled_matrix[, unique_values > 1]
-    }
+    ## Function to check number of unique values in each column
+    #unique_values <- apply(scaled_matrix, 2, function(x) length(unique(x)))
+    #fixed_columns <- colnames(scaled_matrix[, unique_values == 1])
+    #if (length(fixed_columns) > 0 && remove_fixed_columns) {
+    #    message(
+    #        "Removing settings that had no variation across SNF config: \n",
+    #        paste(
+    #            paste0(seq_along(fixed_columns), ". ", fixed_columns),
+    #            collapse = "\n "
+    #        )
+    #    )
+    #    scaled_matrix <- scaled_matrix[, unique_values > 1]
+    #}
     ###########################################################################
     # Assign splits (if any provided)
     ###########################################################################
@@ -581,18 +583,40 @@ snf_config_heatmap <- function(sc,
     )
     column_split <- split_results$"column_split"
     row_split <- split_results$"row_split"
+    #--------------------------------------------------------------------------
     sdf$"snf_scheme" <- as.factor(sdf$"snf_scheme")
+    sdf$"clust_alg" <- as.factor(sdf$"clust_alg")
+    sdf$"cnt_dist" <- as.factor(sdf$"cnt_dist")
+    sdf$"dsc_dist" <- as.factor(sdf$"dsc_dist")
+    sdf$"ord_dist" <- as.factor(sdf$"ord_dist")
+    sdf$"cat_dist" <- as.factor(sdf$"cat_dist")
+    sdf$"mix_dist" <- as.factor(sdf$"mix_dist")
+    clust_alg_colours <- cat_colours(sc$"settings_df"$"clust_alg", "Dark2")
+    cnt_dist_colours <- cat_colours(sc$"settings_df"$"cnt_dist", "Paired")
+    dsc_dist_colours <- cat_colours(sc$"settings_df"$"dsc_dist", "Paired")
+    ord_dist_colours <- cat_colours(sc$"settings_df"$"ord_dist", "Paired")
+    cat_dist_colours <- cat_colours(sc$"settings_df"$"cat_dist", "Paired")
+    mix_dist_colours <- cat_colours(sc$"settings_df"$"mix_dist", "Paired")
+    snf_scheme_colours <- c("1" = "#7fc97f", "2" = "#beaed4", "3" = "#fdc086")
     annotations_list <- generate_annotations_list(
         df = sdf,
         left_hm = list(
-            "SNF scheme" = "snf_scheme"
+            "SNF scheme" = "snf_scheme",
+            "Clustering algorithm" = "clust_alg",
+            "Continuous distance metric" = "cnt_dist",
+            "Discrete distance metric" = "dsc_dist",
+            "Ordinal distance metric" = "ord_dist",
+            "Categorical distance metric" = "cat_dist",
+            "Mixed distance metric" = "mix_dist"
         ),
         annotation_colours = list(
-            "SNF scheme" = c(
-                "1" = "#7fc97f",
-                "2" = "#beaed4",
-                "3" = "#fdc086"
-            )
+            "SNF scheme" = snf_scheme_colours,
+            "Clustering algorithm" = clust_alg_colours,
+            "Continuous distance metric" = cnt_dist_colours,
+            "Discrete distance metric" = dsc_dist_colours,
+            "Ordinal distance metric" = ord_dist_colours,
+            "Categorical distance metric" = cat_dist_colours,
+            "Mixed distance metric" = mix_dist_colours
         )
     )
     ###########################################################################
@@ -1400,4 +1424,13 @@ check_hm_dependencies <- function() {
             " `install.packages(\"circlize\")`."
         )
     }
+}
+
+cat_colours <- function(vector, palette) {
+    vec_names <- as.character(sort(unique(vector)))
+    vec_colours <- suppressWarnings(
+        na.omit(RColorBrewer::brewer.pal(length(vec_names), palette))
+    )
+    names(vec_colours) = vec_names
+    return(vec_colours[1:length(na.omit(names(vec_colours)))])
 }
