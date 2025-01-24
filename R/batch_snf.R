@@ -44,14 +44,14 @@
 #'     uid = "patient_id"
 #' )
 #'
-#' sc <- snf_config(input_dl, n_solutions = 5)
+#' sc <- snf_config(input_dl, n_solutions = 3)
 #'
-#' # A solutions data frame without similarity matrices
+#' # A solutions data frame without similarity matrices:
 #' sol_df <- batch_snf(input_dl, sc)
 #'
-#' # A solutions data frame with similarity matrices
-#' # (1 NxN matrix per solution)
-#' sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+#' # A solutions data frame with similarity matrices:
+#' # sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+#' # sim_mats_list(sol_df)
 batch_snf <- function(dl,
                       sc,
                       processes = 1,

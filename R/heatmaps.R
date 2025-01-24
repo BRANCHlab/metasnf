@@ -503,8 +503,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #' can be reordered to match prior meta clustering results.
 #'
 #' @param sc An `snf_config` class object.
-#' @param remove_fixed_columns Whether columns that have no variation should be
-#'  removed.
+#' @param hide_fixed Whether fixed parameters should be removed.
 #' @param order Numeric vector indicating row ordering of SNF config.
 #' @param show_column_names Whether column names should be shown.
 #' @param show_row_names Whether row names should be shown.
@@ -523,7 +522,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #' @export
 config_heatmap <- function(sc,
                            order = NULL,
-                           remove_fixed_columns = TRUE,
+                           hide_fixed = TRUE,
                            show_column_names = TRUE,
                            show_row_names = TRUE,
                            rect_gp = grid::gpar(col = "black"),
@@ -534,6 +533,7 @@ config_heatmap <- function(sc,
                            column_split = NULL,
                            row_split = NULL,
                            column_title = NULL,
+                           include_weights = TRUE,
                                 ...) {
     if (inherits(sc, "snf_config")) {
         sdf <- sc$"settings_df"
@@ -544,8 +544,10 @@ config_heatmap <- function(sc,
         sdf <- sdf[order, ]
     }
     sdf <- dplyr::select(sdf, -"solution")
-    wm <- sc$"weights_matrix"
-    sdf <- cbind(sdf, as.data.frame(wm))
+    if (include_weights) {
+        wm <- sc$"weights_matrix"
+        sdf <- cbind(sdf, as.data.frame(wm))
+    }
     # Scaling everything to have a max of 1
     trimmed_sdf <- sdf |> dplyr::select(
         -"snf_scheme",
@@ -560,7 +562,7 @@ config_heatmap <- function(sc,
     ## Function to check number of unique values in each column
     #unique_values <- apply(scaled_matrix, 2, function(x) length(unique(x)))
     #fixed_columns <- colnames(scaled_matrix[, unique_values == 1])
-    #if (length(fixed_columns) > 0 && remove_fixed_columns) {
+    #if (length(fixed_columns) > 0 && hide_fixed) {
     #    message(
     #        "Removing settings that had no variation across SNF config: \n",
     #        paste(
@@ -573,6 +575,9 @@ config_heatmap <- function(sc,
     ###########################################################################
     # Assign splits (if any provided)
     ###########################################################################
+    if (is.null(column_split_vector)) {
+        column_split_vector <- which(startsWith(colnames(scaled_matrix), "inc_"))
+    }
     split_results <- split_parser(
         row_split_vector = row_split_vector,
         row_split = row_split,
@@ -598,26 +603,36 @@ config_heatmap <- function(sc,
     cat_dist_colours <- cat_colours(sc$"settings_df"$"cat_dist", "Paired")
     mix_dist_colours <- cat_colours(sc$"settings_df"$"mix_dist", "Paired")
     snf_scheme_colours <- c("1" = "#7fc97f", "2" = "#beaed4", "3" = "#fdc086")
+    left_hm_list <- list()
+    left_hm_colour_list <- list() 
+    full_annotations <- list(
+        list("SNF scheme", "snf_scheme", snf_scheme_colours),
+        list("Clustering algorithm", "clust_alg", clust_alg_colours),
+        list("Continuous metric", "cnt_dist", cnt_dist_colours),
+        list("Discrete metric", "dsc_dist", dsc_dist_colours),
+        list("Ordinal metric", "ord_dist", ord_dist_colours),
+        list("Categorical metric", "cat_dist", cat_dist_colours),
+        list("Mixed metric", "mix_dist", mix_dist_colours)
+    )
+    for (set in full_annotations) {
+        if (hide_fixed) {
+            if (length(set[[3]]) > 1) {
+                left_hm_list <- c(left_hm_list, set[[2]])
+                names(left_hm_list)[length(left_hm_list)] <- set[[1]]
+                left_hm_colour_list <- c(left_hm_colour_list, list(set[[3]]))
+                names(left_hm_colour_list)[length(left_hm_colour_list)] <- set[[1]]
+            }
+        } else {
+            left_hm_list <- c(left_hm_list, set[[2]])
+            names(left_hm_list)[length(left_hm_list)] <- set[[1]]
+            left_hm_colour_list <- c(left_hm_colour_list, list(set[[3]]))
+            names(left_hm_colour_list)[length(left_hm_colour_list)] <- set[[1]]
+        }
+    }
     annotations_list <- generate_annotations_list(
         df = sdf,
-        left_hm = list(
-            "SNF scheme" = "snf_scheme",
-            "Clustering algorithm" = "clust_alg",
-            "Continuous distance metric" = "cnt_dist",
-            "Discrete distance metric" = "dsc_dist",
-            "Ordinal distance metric" = "ord_dist",
-            "Categorical distance metric" = "cat_dist",
-            "Mixed distance metric" = "mix_dist"
-        ),
-        annotation_colours = list(
-            "SNF scheme" = snf_scheme_colours,
-            "Clustering algorithm" = clust_alg_colours,
-            "Continuous distance metric" = cnt_dist_colours,
-            "Discrete distance metric" = dsc_dist_colours,
-            "Ordinal distance metric" = ord_dist_colours,
-            "Categorical distance metric" = cat_dist_colours,
-            "Mixed distance metric" = mix_dist_colours
-        )
+        left_hm = left_hm_list,
+        annotation_colours = left_hm_colour_list
     )
     ###########################################################################
     heatmap <- ComplexHeatmap::Heatmap(
@@ -628,7 +643,7 @@ config_heatmap <- function(sc,
         col = circlize::colorRamp2(colour_breaks, colours),
         heatmap_legend_param = list(
             color_bar = "continuous",
-            title = "Scaled Setting",
+            title = "Normalized\nSetting",
             at = colour_breaks
         ),
         row_split = row_split,
@@ -1426,10 +1441,17 @@ check_hm_dependencies <- function() {
     }
 }
 
+#' Helper function for generating categorical colour palette
+#'
+#' @keywords internal
+#' @param vector Vector of categorical data to generate palette for.
+#' @param palette Which RColorBrewer palette should be used.
+#' @return A named list of colours where the names correspond to the unique
+#'  values of vector and the values correspond to their colours.
 cat_colours <- function(vector, palette) {
     vec_names <- as.character(sort(unique(vector)))
     vec_colours <- suppressWarnings(
-        na.omit(RColorBrewer::brewer.pal(length(vec_names), palette))
+        stats::na.omit(RColorBrewer::brewer.pal(length(vec_names), palette))
     )
     names(vec_colours) = vec_names
     return(vec_colours[1:length(na.omit(names(vec_colours)))])
