@@ -20,17 +20,3 @@ sc <- snf_config(
     weights_fill = "uniform"
 )
 sc
-
-config_heatmap(sc = sc, hide_fixed = FALSE)
-
-config_heatmap(sc = sc)
-
-full_annotations <- list(
-    c(1, 2, 3),
-    c(5, 6, 6)
-)
-
-# To do regarding config heatmap
-# - option to drop static columns and annotations
-# - automatic split markers at appropriate points
-# - option to turn ON/OFF for settings_df vs. weights matrix

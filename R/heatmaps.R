@@ -522,7 +522,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #' @export
 config_heatmap <- function(sc,
                            order = NULL,
-                           hide_fixed = TRUE,
+                           hide_fixed = FALSE,
                            show_column_names = TRUE,
                            show_row_names = TRUE,
                            rect_gp = grid::gpar(col = "black"),
@@ -534,6 +534,7 @@ config_heatmap <- function(sc,
                            row_split = NULL,
                            column_title = NULL,
                            include_weights = TRUE,
+                           include_settings = TRUE,
                                 ...) {
     if (inherits(sc, "snf_config")) {
         sdf <- sc$"settings_df"
@@ -543,40 +544,68 @@ config_heatmap <- function(sc,
     if (!is.null(order)) {
         sdf <- sdf[order, ]
     }
-    sdf <- dplyr::select(sdf, -"solution")
-    if (include_weights) {
+    if (include_settings & include_weights) {
+        sdf <- dplyr::select(sdf, -"solution")
         wm <- sc$"weights_matrix"
         sdf <- cbind(sdf, as.data.frame(wm))
+        trimmed_sdf <- sdf |> dplyr::select(
+            -"snf_scheme",
+            -"clust_alg",
+            -dplyr::ends_with("dist")
+        )
+    } else if (include_weights) {
+        wm <- sc$"weights_matrix"
+        sdf <- as.data.frame(wm)
+        trimmed_sdf <- sdf
+    } else if (include_settings) {
+        sdf <- dplyr::select(sdf, -"solution")
+        trimmed_sdf <- sdf |> dplyr::select(
+            -"snf_scheme",
+            -"clust_alg",
+            -dplyr::ends_with("dist")
+        )
+    } else {
+        metasnf_error(
+            "At least one of `include_weights` and `include_settings` must",
+            " be TRUE."
+        ) 
     }
     # Scaling everything to have a max of 1
-    trimmed_sdf <- sdf |> dplyr::select(
-        -"snf_scheme",
-        -"clust_alg",
-        -dplyr::ends_with("dist")
-    )
     col_maxes <- apply(trimmed_sdf, 2, function(x) 1 / max(x))
     scaled_matrix <- as.matrix(trimmed_sdf) %*% diag(col_maxes)
     colnames(scaled_matrix) <- colnames(trimmed_sdf)
     rownames(scaled_matrix) <- rownames(trimmed_sdf)
     ###########################################################################
-    ## Function to check number of unique values in each column
-    #unique_values <- apply(scaled_matrix, 2, function(x) length(unique(x)))
-    #fixed_columns <- colnames(scaled_matrix[, unique_values == 1])
-    #if (length(fixed_columns) > 0 && hide_fixed) {
-    #    message(
-    #        "Removing settings that had no variation across SNF config: \n",
-    #        paste(
-    #            paste0(seq_along(fixed_columns), ". ", fixed_columns),
-    #            collapse = "\n "
-    #        )
-    #    )
-    #    scaled_matrix <- scaled_matrix[, unique_values > 1]
-    #}
+    # Function to check number of unique values in each column
+    unique_values <- apply(scaled_matrix, 2, function(x) length(unique(x)))
+    fixed_columns <- colnames(scaled_matrix[, unique_values == 1])
+    if (length(fixed_columns) > 0 && hide_fixed) {
+        message(
+            "Removing settings that had no variation across SNF config: \n",
+            paste(
+                paste0(seq_along(fixed_columns), ". ", fixed_columns),
+                collapse = "\n "
+            )
+        )
+        scaled_matrix <- scaled_matrix[, unique_values > 1]
+    }
     ###########################################################################
     # Assign splits (if any provided)
     ###########################################################################
     if (is.null(column_split_vector)) {
-        column_split_vector <- which(startsWith(colnames(scaled_matrix), "inc_"))
+        inc_splits <- which(startsWith(colnames(scaled_matrix), "inc_"))
+        if (length(inc_splits) > 0) {
+            column_split_vector <- c(
+                inc_splits[[1]], # first inclusion column
+                inc_splits[[length(inc_splits)]] + 1 # last inclusion column
+            )
+        }
+    }
+    snf_param_index <- sum(c("alpha", "k", "t") %in% colnames(scaled_matrix)) + 1
+    column_split_vector <- c(snf_param_index, column_split_vector)
+    column_split_vector <- column_split_vector[column_split_vector < ncol(scaled_matrix)]
+    if (length(column_split_vector) == 0) {
+        column_split_vector <- NULL
     }
     split_results <- split_parser(
         row_split_vector = row_split_vector,
@@ -589,51 +618,55 @@ config_heatmap <- function(sc,
     column_split <- split_results$"column_split"
     row_split <- split_results$"row_split"
     #--------------------------------------------------------------------------
-    sdf$"snf_scheme" <- as.factor(sdf$"snf_scheme")
-    sdf$"clust_alg" <- as.factor(sdf$"clust_alg")
-    sdf$"cnt_dist" <- as.factor(sdf$"cnt_dist")
-    sdf$"dsc_dist" <- as.factor(sdf$"dsc_dist")
-    sdf$"ord_dist" <- as.factor(sdf$"ord_dist")
-    sdf$"cat_dist" <- as.factor(sdf$"cat_dist")
-    sdf$"mix_dist" <- as.factor(sdf$"mix_dist")
-    clust_alg_colours <- cat_colours(sc$"settings_df"$"clust_alg", "Dark2")
-    cnt_dist_colours <- cat_colours(sc$"settings_df"$"cnt_dist", "Paired")
-    dsc_dist_colours <- cat_colours(sc$"settings_df"$"dsc_dist", "Paired")
-    ord_dist_colours <- cat_colours(sc$"settings_df"$"ord_dist", "Paired")
-    cat_dist_colours <- cat_colours(sc$"settings_df"$"cat_dist", "Paired")
-    mix_dist_colours <- cat_colours(sc$"settings_df"$"mix_dist", "Paired")
-    snf_scheme_colours <- c("1" = "#7fc97f", "2" = "#beaed4", "3" = "#fdc086")
-    left_hm_list <- list()
-    left_hm_colour_list <- list() 
-    full_annotations <- list(
-        list("SNF scheme", "snf_scheme", snf_scheme_colours),
-        list("Clustering algorithm", "clust_alg", clust_alg_colours),
-        list("Continuous metric", "cnt_dist", cnt_dist_colours),
-        list("Discrete metric", "dsc_dist", dsc_dist_colours),
-        list("Ordinal metric", "ord_dist", ord_dist_colours),
-        list("Categorical metric", "cat_dist", cat_dist_colours),
-        list("Mixed metric", "mix_dist", mix_dist_colours)
-    )
-    for (set in full_annotations) {
-        if (hide_fixed) {
-            if (length(set[[3]]) > 1) {
+    if (include_settings) {
+        sdf$"snf_scheme" <- as.factor(sdf$"snf_scheme")
+        sdf$"clust_alg" <- as.factor(sdf$"clust_alg")
+        sdf$"cnt_dist" <- as.factor(sdf$"cnt_dist")
+        sdf$"dsc_dist" <- as.factor(sdf$"dsc_dist")
+        sdf$"ord_dist" <- as.factor(sdf$"ord_dist")
+        sdf$"cat_dist" <- as.factor(sdf$"cat_dist")
+        sdf$"mix_dist" <- as.factor(sdf$"mix_dist")
+        clust_alg_colours <- cat_colours(sc$"settings_df"$"clust_alg", "Dark2")
+        cnt_dist_colours <- cat_colours(sc$"settings_df"$"cnt_dist", "Paired")
+        dsc_dist_colours <- cat_colours(sc$"settings_df"$"dsc_dist", "Paired")
+        ord_dist_colours <- cat_colours(sc$"settings_df"$"ord_dist", "Paired")
+        cat_dist_colours <- cat_colours(sc$"settings_df"$"cat_dist", "Paired")
+        mix_dist_colours <- cat_colours(sc$"settings_df"$"mix_dist", "Paired")
+        snf_scheme_colours <- c("1" = "#7fc97f", "2" = "#beaed4", "3" = "#fdc086")
+        left_hm_list <- list()
+        left_hm_colour_list <- list() 
+        full_annotations <- list(
+            list("SNF scheme", "snf_scheme", snf_scheme_colours),
+            list("Clustering algorithm", "clust_alg", clust_alg_colours),
+            list("Continuous metric", "cnt_dist", cnt_dist_colours),
+            list("Discrete metric", "dsc_dist", dsc_dist_colours),
+            list("Ordinal metric", "ord_dist", ord_dist_colours),
+            list("Categorical metric", "cat_dist", cat_dist_colours),
+            list("Mixed metric", "mix_dist", mix_dist_colours)
+        )
+        for (set in full_annotations) {
+            if (hide_fixed) {
+                if (length(set[[3]]) > 1) {
+                    left_hm_list <- c(left_hm_list, set[[2]])
+                    names(left_hm_list)[length(left_hm_list)] <- set[[1]]
+                    left_hm_colour_list <- c(left_hm_colour_list, list(set[[3]]))
+                    names(left_hm_colour_list)[length(left_hm_colour_list)] <- set[[1]]
+                }
+            } else {
                 left_hm_list <- c(left_hm_list, set[[2]])
                 names(left_hm_list)[length(left_hm_list)] <- set[[1]]
                 left_hm_colour_list <- c(left_hm_colour_list, list(set[[3]]))
                 names(left_hm_colour_list)[length(left_hm_colour_list)] <- set[[1]]
             }
-        } else {
-            left_hm_list <- c(left_hm_list, set[[2]])
-            names(left_hm_list)[length(left_hm_list)] <- set[[1]]
-            left_hm_colour_list <- c(left_hm_colour_list, list(set[[3]]))
-            names(left_hm_colour_list)[length(left_hm_colour_list)] <- set[[1]]
         }
+        annotations_list <- generate_annotations_list(
+            df = sdf,
+            left_hm = left_hm_list,
+            annotation_colours = left_hm_colour_list
+        )
+    } else {
+        annotations_list <- NULL
     }
-    annotations_list <- generate_annotations_list(
-        df = sdf,
-        left_hm = left_hm_list,
-        annotation_colours = left_hm_colour_list
-    )
     ###########################################################################
     heatmap <- ComplexHeatmap::Heatmap(
         scaled_matrix,
