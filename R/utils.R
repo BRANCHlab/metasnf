@@ -137,9 +137,9 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
 #' Generate a complete path and filename to store an similarity matrix
 #'
 #' @keywords internal
-#' @param similarity_matrix_dir Directory to store similarity matrices
-#' @param i Corresponding settings matrix row
-#' @return path Complete path and filename to store an similarity matrix
+#' @param similarity_matrix_dir Directory to store similarity matrices.
+#' @param i Corresponding solution.
+#' @return Complete path and filename to store an similarity matrix.
 similarity_matrix_path <- function(similarity_matrix_dir, i) {
     path <- paste0(
         similarity_matrix_dir,

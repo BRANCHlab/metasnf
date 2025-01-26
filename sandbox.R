@@ -5,6 +5,7 @@ devtools::load_all()
 library(sloop)
 library(testthat)
 
+set.seed(43)
 my_dl <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
@@ -30,4 +31,3 @@ rep_solutions <- get_representative_solutions(
     order = meta_cluster_order,
     ext_sol_df
 )
-

@@ -78,7 +78,7 @@ calc_nmis <- function(dl,
             }
         )
         #######################################################################
-        # Stripping away other inclusion columns from settings matrix
+        # Stripping away other inclusion columns
         feature_dl <- feature_dl[!sapply(feature_dl, is.null)]
         feature_dl <- as_data_list(feature_dl)
         inc_this_data_type <- paste0("inc_", feature_dl[[1]]$"name")
@@ -90,7 +90,7 @@ calc_nmis <- function(dl,
         # Vector storing this feature's NMIs
         feature_nmis <- c()
         #######################################################################
-        # Loop through the settings matrix and run solo-feature SNFs
+        # Loop through the settings data frame and run solo-feature SNFs
         for (j in seq_len(nrow(feature_settings_df))) {
             this_sc <- sc[j]
             this_inclusion <- this_sc$"settings_df"[, inc_this_data_type]
