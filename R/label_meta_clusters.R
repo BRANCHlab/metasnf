@@ -18,6 +18,7 @@
 #' @export
 label_meta_clusters <- function(sol_df, split_vector, order = NULL) {
     n_solutions <- nrow(sol_df)
+    # label splits ------------------------------------------------------------
     labels <- rep("A", n_solutions)
     if (split_vector[length(split_vector)] != n_solutions) {
         split_vector <- c(split_vector, n_solutions)
@@ -27,6 +28,7 @@ label_meta_clusters <- function(sol_df, split_vector, order = NULL) {
         end <- split_vector[i + 1]
         labels[start:end] <- LETTERS[i + 1]
     }
+    #--------------------------------------------------------------------------
     if (is.null(order)) {
         order <- seq_len(nrow(sol_df))
     }
@@ -39,7 +41,7 @@ label_meta_clusters <- function(sol_df, split_vector, order = NULL) {
         "nclust",
         "mc",
         dplyr::everything()
-    )
-    sol_df <- sol_df[sort(sol_df$"solution", index.return = TRUE)$ix, ]
+    ) |>
+        dplyr::arrange(solution)
     return(sol_df)
 }

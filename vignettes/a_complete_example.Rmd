@@ -397,13 +397,26 @@ shiny_annotator(ari_hm)
 
 A demonstration of the shiny app can be seen here: [Meta Cluster Identification](https://pvelayudhan.shinyapps.io/shiny/)
 
-Note that while the shiny app is running, your R console will be unresponsive.
+While the shiny app is running, your R console will be unresponsive.
+Clicking on meta cluster cell boundaries and tracking the row/column indices (printed to the R console as well as displayed in the app) can get us the following vector:
 
-Clicking on cell boundaries and tracking the row/column indices (printed to the R console as well as displayed in the app) can get us results looking something like this:
+```{r}
+split_vec <- c(2, 5, 12, 17)
+```
+
+Which can be used to populate the meta cluster column in our solutions data frame as well as visualize our meta cluster boundaries more clearly.
+
+```{r}
+mc_sol_df <- label_meta_clusters(
+    sol_df,
+    split_vec,
+    order = meta_cluster_order
+)
+
+mc_sol_df
+```
 
 ```{r eval = FALSE}
-split_vec <- c(2, 5, 12, 17)
-
 ari_mc_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order,
@@ -439,7 +452,7 @@ This function can be quite slow depending on how large your data is; you can mon
 ```{r}
 # Only looking at our out-of-model p-values
 ext_sol_df <- extend_solutions(
-    sol_df,
+    mc_sol_df,
     target_dl = target_dl
 )
 
@@ -448,7 +461,7 @@ ext_sol_df
 # Re-running to calculate the p-value for every single input and out-of-model
 # feature:
 ext_sol_df <- extend_solutions(
-    sol_df,
+    mc_sol_df,
     dl = input_dl,
     target_dl = target_dl
 )
@@ -604,6 +617,17 @@ rep_solutions <- get_representative_solutions(
     order = meta_cluster_order,
     ext_sol_df
 )
+
+rep_solutions2 <- get_representative_solutions2(
+    sol_aris,
+    split_vector = split_vec,
+    order = meta_cluster_order,
+    ext_sol_df
+)
+
+rep_solutions2
+
+rep_solutions
 
 mc_manhattan <- mc_manhattan_plot(
     rep_solutions,

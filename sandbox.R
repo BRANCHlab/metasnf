@@ -14,42 +14,20 @@ my_dl <- data_list(
 
 sc <- snf_config(my_dl, n_solutions = 10, max_k = 40)
 
-sm_hm <- settings_df_heatmap(settings = sc)
-sm_hm
-
-
 sol_df <- batch_snf(my_dl, sc)
 
 sol_aris <- calc_aris(sol_df)
 
+sol_aris
+
 ext_sol_df <- extend_solutions(sol_df, dl = my_dl)
 
-attributes(ext_sol_df)
+ext_sol_df
 
-sol_df |> class()
-
-
-attributes(ext_sol_df)$"snf_config" <- attributes(sol_df)$"snf_config"
-
-attributes(dplyr::select(sol_df, dplyr::everything())) |> names()
-
-dplyr::select(sol_df, dplyr::everything())
-
-dplyr::select(ext_sol_df, dplyr::everything())
-
-attributes(ext_sol_df[, ]) |> names()
-
-class(sol_df) <- c("ext_solutions_df", "data.frame")
-
-attributes(sol_df) |> names()
-
-
-undebug(extend_solutions)
-
-class(sol_df)
-
-
-critical_cols <- c("solution", "nclust", "mc")
-
-all(critical_cols %in% colnames(sol_df))
+rep_solutions <- get_representative_solutions(
+    sol_aris,
+    split_vector = split_vec,
+    order = meta_cluster_order,
+    ext_sol_df
+)
 

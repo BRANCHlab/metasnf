@@ -66,3 +66,50 @@ get_representative_solutions <- function(aris,
     ###########################################################################
     return(rep_solutions)
 }
+
+get_representative_solutions2 <- function(aris,
+                                         split_vector,
+                                         order = NULL,
+                                         sol_df,
+                                         filter_fn = NULL) {
+    #if (is.null(order)) {
+    #    order <- seq_len(nrow(sol_df))
+    #}
+    ############################################################################
+    ## Re-sort the solutions data frame based on the aris
+    ############################################################################
+    #order <- unlist(order)
+    aris <- data.frame(aris)
+    #sol_df <- sol_df[order, ]
+    ############################################################################
+    ## Extract and assign meta cluster labels
+    ############################################################################
+    #mc_labels <- label_splits(split_vector, nrow(sol_df))
+    #mcs <- unique(mc_labels)
+    #sol_df$"label" <- mc_labels
+    aris$"mc" <- sol_df$"mc"
+    mcs <- unique(sol_df$"mc")
+    ###########################################################################
+    # Iterate through the meta clusters and keep the representative solution
+    ###########################################################################
+    rep_solutions <- data.frame()
+    for (mc in mcs) {
+        # Subset to just those solutions and ARIs within the MC
+        mc_sm <- sol_df[sol_df$"mc" == mc, ]
+        mc_ari <- aris[aris$"mc" == mc, ]
+        mc_ari$"mc" <- NULL
+        # The most representative solution based on total ARI within MC
+        mc_sm$"total_aris" <- rowSums(mc_ari)
+        if (!is.null(filter_fn)) {
+            mc_sm <- filter_fn(mc_sm)
+        }
+        rep_mc <- which(mc_sm$"total_aris" == max(mc_sm$"total_aris"))[1]
+        rep_solution <- mc_sm[rep_mc, ]
+        rep_solution$"total_aris" <- NULL
+        rep_solutions <- rbind(rep_solutions, rep_solution)
+    }
+    ###########################################################################
+    # Assign mcs to the representative solutions
+    ###########################################################################
+    return(rep_solutions)
+}

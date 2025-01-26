@@ -7,7 +7,7 @@
     - [x] typo "mixed_dist" inconsistent with "mix_dist" in settings matrix
     - [x] settings matrix snf_scheme column is undocumented?
     - [ ] provide code examples (@examples roxygen tag) for every complex function, especially batch_snf
-    - [ ] p-values should follow unipolar colour palette
+    - [x] p-values should follow unipolar colour palette
     - [x] only run shiny_annotator() `if (interactive())`
     - [ ] add benchmarking code for figure 19
     - [x] strip "save_heatmap" /ggsave /etc. calls in vignettes and instead make a mention of how to use it
@@ -18,48 +18,8 @@
     - [ ] more explicit documentation (nothing like, return settings_matrix A settings matrix)
     - [ ] remove initial noun from @return tags
 - [ ] testing (complete coverage may be overkill?)
-- [ ] data list
-    - [x] validator
-    - [x] constructors
-    - [x] as_object
-    - [ ] print
-        - [ ] resolve <dbl> colouring etc.
-    - [x] c
-    - [ ] summary
-    - [ ] used consistently / S3 methods when needed
-    - [ ] consistent naming throughout docs
-- [ ] snf config
-    - [ ] validator
-    - [ ] constructors
-    - [ ] print
-    - [ ] c
-    - [ ] summary
-- [ ] settings_df
-    - [ ] validator
-    - [ ] constructors
-    - [ ] print
-- [ ] dist_fns_list
-    - [x] validator
-    - [x] constructors
-    - [x] print
-- [ ] clust_algs_list
-    - [x] validator
-    - [x] constructors
-    - [x] print
-- [ ] weights_matrix
-    - [x] validator
-    - [x] constructors
-    - [x] print
-- [ ] snf_solutions (inherits settings_df)
-    - [ ] validator
-    - [ ] constructors
-    - [ ] print
-- [ ] ext_solutions_matrix (inherits settings_matrix, solutions_matrix)
-    - [ ] replace with name "extended_solutions_df" to be more transparent
-    - [ ] define class
-    - [ ] define user/dev constructor
-    - [ ] define validator
-    - [ ] ensure class is used consistently throughout functionality
-    - [ ] convert all dl-related functions to S3 methods (if applicable)
-- [ ] function review
-- [ ] data review
+
+- mc labels functionality
+- [ ] adapt get_representative_solutions to use labels in solutions df?
+- [ ] finish vignette/documentation checks
+
