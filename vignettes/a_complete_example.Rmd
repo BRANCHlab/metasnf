@@ -409,8 +409,8 @@ Which can be used to populate the meta cluster column in our solutions data fram
 ```{r}
 mc_sol_df <- label_meta_clusters(
     sol_df,
-    split_vec,
-    order = meta_cluster_order
+    order = meta_cluster_order,
+    split_vector = split_vec
 )
 
 mc_sol_df
@@ -611,23 +611,34 @@ Now that we've visually delineated our meta clusters, we can get a quick summary
 This can be achieved by the `get_representative_solutions` function, which extracts one cluster solution per meta cluster based on having the highest average ARI with the other solutions in that meta cluster.
 
 ```{r eval = FALSE}
-rep_solutions <- get_representative_solutions(
+
+z1 <- get_representative_solutions(
     sol_aris,
     split_vector = split_vec,
     order = meta_cluster_order,
     ext_sol_df
 )
 
-rep_solutions2 <- get_representative_solutions2(
+z2 <- get_representative_solutions2(
     sol_aris,
     split_vector = split_vec,
     order = meta_cluster_order,
     ext_sol_df
 )
 
-rep_solutions2
+z1
 
-rep_solutions
+z2
+
+
+z1
+
+
+
+z1
+
+z2
+
 
 mc_manhattan <- mc_manhattan_plot(
     rep_solutions,

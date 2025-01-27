@@ -26,9 +26,9 @@ get_representative_solutions <- function(aris,
                                          order = NULL,
                                          sol_df,
                                          filter_fn = NULL) {
-    if (is.null(order)) {
-        order <- seq_len(nrow(sol_df))
-    }
+    #if (is.null(order)) {
+    #    order <- seq_len(nrow(sol_df))
+    #}
     ###########################################################################
     # Re-sort the solutions data frame based on the aris
     ###########################################################################
@@ -68,10 +68,10 @@ get_representative_solutions <- function(aris,
 }
 
 get_representative_solutions2 <- function(aris,
-                                         split_vector,
-                                         order = NULL,
-                                         sol_df,
-                                         filter_fn = NULL) {
+                                          split_vector,
+                                          order = NULL,
+                                          sol_df,
+                                          filter_fn = NULL) {
     #if (is.null(order)) {
     #    order <- seq_len(nrow(sol_df))
     #}
@@ -111,5 +111,7 @@ get_representative_solutions2 <- function(aris,
     ###########################################################################
     # Assign mcs to the representative solutions
     ###########################################################################
+    rep_solutions <- rep_solutions |>
+        dplyr::arrange(mc)
     return(rep_solutions)
 }

@@ -502,20 +502,19 @@ assoc_pval_heatmap <- function(correlation_matrix,
 #' normalized and non-numeric parameters are added as heatmap annotations. Rows
 #' can be reordered to match prior meta clustering results.
 #'
+#' @inheritParams ComplexHeatmap::Heatmap
 #' @param sc An `snf_config` class object.
-#' @param hide_fixed Whether fixed parameters should be removed.
 #' @param order Numeric vector indicating row ordering of SNF config.
-#' @param show_column_names Whether column names should be shown.
-#' @param show_row_names Whether row names should be shown.
-#' @param rect_gp Cell border function for `ComplexHeatmap::Heatmap`.
-#' @param column_title Standard parameter of `ComplexHeatmap::Heatmap`.
-#' @param colour_breaks Numeric vector of breaks for the legend.
+#' @param hide_fixed Whether fixed parameters should be removed.
 #' @param colours Vector of colours to use for the heatmap. Should match the
 #'  length of colour_breaks.
+#' @param colour_breaks Numeric vector of breaks for the legend.
 #' @param column_split_vector Vector of indices to split columns by.
-#' @param column_split Standard parameter of `ComplexHeatmap::Heatmap`.
 #' @param row_split_vector Vector of indices to split rows by.
-#' @param row_split Standard parameter of `ComplexHeatmap::Heatmap`.
+#' @param include_weights If TRUE, includes feature weights of the weights
+#'  matrix into the config heatmap.
+#' @param include_settings If TRUE, includes columns from the settings data
+#'  frame into the config heatmap.
 #' @param ... Additional parameters passed to `ComplexHeatmap::Heatmap`.
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
 #'  that displays the scaled values of the provided SNF config.
@@ -1487,5 +1486,6 @@ cat_colours <- function(vector, palette) {
         stats::na.omit(RColorBrewer::brewer.pal(length(vec_names), palette))
     )
     names(vec_colours) = vec_names
-    return(vec_colours[1:length(na.omit(names(vec_colours)))])
+    vec_colours <- vec_colours[1:length(stats::na.omit(names(vec_colours)))]
+    return(vec_colours)
 }

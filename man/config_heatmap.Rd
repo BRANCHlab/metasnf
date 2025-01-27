@@ -7,7 +7,7 @@
 config_heatmap(
   sc,
   order = NULL,
-  remove_fixed_columns = TRUE,
+  hide_fixed = FALSE,
   show_column_names = TRUE,
   show_row_names = TRUE,
   rect_gp = grid::gpar(col = "black"),
@@ -18,6 +18,8 @@ config_heatmap(
   column_split = NULL,
   row_split = NULL,
   column_title = NULL,
+  include_weights = TRUE,
+  include_settings = TRUE,
   ...
 )
 }
@@ -26,14 +28,13 @@ config_heatmap(
 
 \item{order}{Numeric vector indicating row ordering of SNF config.}
 
-\item{remove_fixed_columns}{Whether columns that have no variation should be
-removed.}
+\item{hide_fixed}{Whether fixed parameters should be removed.}
 
-\item{show_column_names}{Whether column names should be shown.}
+\item{show_column_names}{Whether show column names.}
 
-\item{show_row_names}{Whether row names should be shown.}
+\item{show_row_names}{Whether show row names.}
 
-\item{rect_gp}{Cell border function for \code{ComplexHeatmap::Heatmap}.}
+\item{rect_gp}{Graphic parameters for drawing rectangles (for heatmap body). The value should be specified by \code{\link[grid]{gpar}} and \code{fill} parameter is ignored.}
 
 \item{colour_breaks}{Numeric vector of breaks for the legend.}
 
@@ -44,11 +45,17 @@ length of colour_breaks.}
 
 \item{row_split_vector}{Vector of indices to split rows by.}
 
-\item{column_split}{Standard parameter of \code{ComplexHeatmap::Heatmap}.}
+\item{column_split}{Split on columns. For heatmap splitting, please refer to \url{https://jokergoo.github.io/ComplexHeatmap-reference/book/a-single-heatmap.html#heatmap-split} .}
 
-\item{row_split}{Standard parameter of \code{ComplexHeatmap::Heatmap}.}
+\item{row_split}{Same as \code{split}.}
 
-\item{column_title}{Standard parameter of \code{ComplexHeatmap::Heatmap}.}
+\item{column_title}{Title on the column.}
+
+\item{include_weights}{If TRUE, includes feature weights of the weights
+matrix into the config heatmap.}
+
+\item{include_settings}{If TRUE, includes columns from the settings data
+frame into the config heatmap.}
 
 \item{...}{Additional parameters passed to \code{ComplexHeatmap::Heatmap}.}
 }
