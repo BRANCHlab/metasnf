@@ -32,7 +32,7 @@
 #' # Adding your own metrics --------------------------------------------------
 #' # This will contain only the and user-provided distance function:
 #' cubed_euclidean <- function(df, weights_row) {
-#'     # (your code that converts a dataframe to a distance metric here...)
+#'     # (your code that converts a data frame to a distance metric here...)
 #'     weights <- diag(weights_row, nrow = length(weights_row))
 #'     weighted_df <- as.matrix(df) %*% weights
 #'     distance_matrix <- weighted_df |>
@@ -295,12 +295,34 @@ summarize_dfl <- function(dist_fns_list) {
     return(dfl_summary)
 }
 
-#' Distance metric: Euclidean distance
+#' Built-in distance functions
 #'
-#' @param df Dataframe containing at least 1 data column
-#' @param weights_row Single-row dataframe where the column names contain the
+#' These functions can be used when building a `metasnf` distance functions
+#' list. Each function converts a data frame into to a distance matrix.
+#'
+#' Functions that work for numeric data: 
+#' - euclidean_distance: typical Euclidean distance
+#' - sn_euclidean_distance: Data frame is first standardized and normalized
+#'   before typical Euclidean distance is applied
+#' - siw_euclidean_distance: Squared (including weights) Euclidean distance,
+#'   where the weights are also squared
+#' - sew_euclidean_distance: Squared (excluding weights) Euclidean distance,
+#'   where the weights are not also squared
+#'
+#' Functions that work for binary data: 
+#' - hamming_distance: typical Hamming distance
+#'
+#' Functions that work for any type of data: 
+#' - gower_distance: Gower distance (cluster::daisy)
+#'
+#' @param df Data frame containing at least 1 data column
+#' @param weights_row Single-row data frame where the column names contain the
 #'  column names in df and the row contains the corresponding weights_row.
-#' @return distance_matrix A distance matrix.
+#' @return A matrix class object containing pairwise distances.
+#' @name dist_fns
+NULL
+
+#' @rdname dist_fns
 #' @export
 euclidean_distance <- function(df, weights_row) {
     weights <- diag(weights_row, nrow = length(weights_row))
@@ -311,11 +333,7 @@ euclidean_distance <- function(df, weights_row) {
     return(distance_matrix)
 }
 
-#' Distance metric: Gower distance
-#'
-#' @param df Dataframe containing at least 1 data column.
-#' @param weights_row For compatibility - function does not accept weights.
-#' @return distance_matrix A distance matrix.
+#' @rdname dist_fns
 #' @export
 gower_distance <- function(df, weights_row) {
     df <- char_to_fac(df)
@@ -325,12 +343,7 @@ gower_distance <- function(df, weights_row) {
     return(distance_matrix)
 }
 
-#' Distance metric: Standard normalization then Euclidean
-#'
-#' @param df Dataframe containing at least 1 data column.
-#' @param weights_row Single-row dataframe where the column names contain the
-#'  column names in df and the row contains the corresponding weights.
-#' @return distance_matrix A distance matrix.
+#' @rdname dist_fns
 #' @export
 sn_euclidean_distance <- function(df, weights_row) {
     df <- SNFtool::standardNormalization(df)
@@ -344,8 +357,8 @@ sn_euclidean_distance <- function(df, weights_row) {
 
 #' Squared (including weights) Euclidean distance
 #'
-#' @param df Dataframe containing at least 1 data column.
-#' @param weights_row Single-row dataframe where the column names contain the
+#' @param df data frame containing at least 1 data column.
+#' @param weights_row Single-row data frame where the column names contain the
 #'  column names in df and the row contains the corresponding weights.
 #' @return distance_matrix A distance matrix.
 #' @export
@@ -359,12 +372,7 @@ siw_euclidean_distance <- function(df, weights_row) {
     return(distance_matrix)
 }
 
-#' Squared (excluding weights) Euclidean distance
-#'
-#' @param df Dataframe containing at least 1 data column.
-#' @param weights_row Single-row dataframe where the column names contain the
-#'  column names in df and the row contains the corresponding weights.
-#' @return distance_matrix A distance matrix.
+#' @rdname dist_fns
 #' @export
 sew_euclidean_distance <- function(df, weights_row) {
     weights <- diag(weights_row, nrow = length(weights_row))
@@ -377,13 +385,7 @@ sew_euclidean_distance <- function(df, weights_row) {
     return(distance_matrix)
 }
 
-#' Distance metric: Hamming distance
-#'
-#' @param df Dataframe containing one uid column in the first column and
-#'  at least 1 categorical data column. All feature data should be categorical.
-#' @param weights_row Single-row dataframe where the column names contain the
-#'  column names in df and the row contains the corresponding weights.
-#' @return distance_matrix A distance matrix.
+#' @rdname dist_fns
 #' @export
 hamming_distance <- function(df, weights_row) {
     weights <- t(weights_row)

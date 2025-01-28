@@ -36,6 +36,59 @@
 #' @inheritParams weights_matrix
 #' @return An `snf_config` class object.
 #' @export
+#' @examples
+#' # Simple random config for 5 cluster solutions
+#' input_dl <- data_list(
+#'     list(anxiety, "anxiety", "behaviour", "ordinal"),
+#'     list(depress, "depressed", "behaviour", "ordinal"),
+#'     uid = "unique_id"
+#' )
+#' my_sc <- snf_config(
+#'     dl = input_dl,
+#'     n_solutions = 5
+#' )
+#' 
+#' # specifying possible K range
+#' my_sc <- snf_config(
+#'     dl = input_dl,
+#'     n_solutions = 5,
+#'     min_k = 20,
+#'     max_k = 40
+#' )
+#' 
+#' # Random feature weights across from uniform distribution
+#' my_sc <- snf_config(
+#'     dl = input_dl,
+#'     n_solutions = 5,
+#'     min_k = 20,
+#'     max_k = 40,
+#'     weights_fill = "uniform"
+#' )
+#' 
+#' # Specifying custom pre-built clustering and distance functions
+#' # - Random alternation between 2-cluster and 5-cluster solutions
+#' # - When continuous or discrete data frames are being processed,
+#' #   randomly alternate between standardized/normalized Euclidean
+#' #   distance vs. regular Euclidean distance
+#' my_sc <- snf_config(
+#'     dl = input_dl,
+#'     n_solutions = 5,
+#'     min_k = 20,
+#'     max_k = 40,
+#'     weights_fill = "uniform",
+#'     clust_fns = list(
+#'         "two_cluster_spectral" = spectral_two,
+#'         "five_cluster_spectral" = spectral_five
+#'     ),
+#'     cnt_dist_fns = list(
+#'          "euclidean" = euclidean_distance,
+#'          "std_nrm_euc" = sn_euclidean_distance
+#'     ),
+#'     dsc_dist_fns = list(
+#'          "euclidean" = euclidean_distance,
+#'          "std_nrm_euc" = sn_euclidean_distance
+#'     )
+#' )
 snf_config <- function(dl = NULL,
                        sdf = NULL,
                        dfl = NULL,

@@ -1,5 +1,6 @@
 #' Constructor for `solutions_df` class object
 #'
+#' @keywords internal
 #' @param sol_dfl A solutions data frame-like object to be validated and
 #'  converted into a solutions data frame.
 #' @param smll A similarity matrix list-like object to be validated and used
@@ -7,7 +8,6 @@
 #' @param sc An `snf_config` object used to construct a solutions data frame.
 #' @param dl An `data_list` object used to construct a solutions data frame.
 #' @return A solutions data frame (`solutions_df` class object).
-#' @export
 solutions_df <- function(sol_dfl, smll, sc, dl) {
     smll <- validate_sim_mats_list(smll)
     sml <- new_sim_mats_list(smll)
@@ -60,7 +60,7 @@ new_solutions_df <- function(sol_dfl) {
 #' p-values to make it easier to interpret large-scale differences.
 #'
 #' @param ext_sol_df The output of `extend_solutions`. A
-#'  dataframe that contains at least one p-value column ending in "_pval".
+#'  data frame that contains at least one p-value column ending in "_pval".
 #' @param negative_log If TRUE, will replace p-values with negative log
 #'  p-values.
 #' @param keep_summaries If FALSE, will remove the mean, min, and max p-value.
@@ -443,7 +443,7 @@ calc_assoc_pval_matrix <- function(dl,
     colnames(association_matrix) <- colnames(merged_df)
     rownames(association_matrix) <- colnames(merged_df)
     for (col in seq_len(ncol(pairwise_indices))) {
-        ## The positions of the two features in the merged dataframe
+        ## The positions of the two features in the merged data frame
         ind1 <- pairwise_indices[1, col]
         ind2 <- pairwise_indices[2, col]
         # The actual features

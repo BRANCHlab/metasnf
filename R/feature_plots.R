@@ -177,14 +177,14 @@ auto_plot <- function(sol_df_row = NULL,
         )
     }
     ###########################################################################
-    # Generating the required cluster dataframe
+    # Generating the required cluster data frame
     ###########################################################################
     if (is.null(cluster_df)) {
         sol_df_row <- sol_df_row[1, ]
         cluster_df <- t(sol_df_row)
     }
     ###########################################################################
-    # Generating the feature dataframe
+    # Generating the feature data frame
     ###########################################################################
     dl_df <- as.data.frame(dl)
     ###########################################################################

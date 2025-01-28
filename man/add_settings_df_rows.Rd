@@ -38,18 +38,18 @@ add_settings_df_rows(
 
 \item{n_solutions}{Number of rows to generate for the settings data frame.}
 
-\item{min_removed_inputs}{The smallest number of input dataframes that may be
+\item{min_removed_inputs}{The smallest number of input data frames that may be
 randomly removed. By default, 0.}
 
-\item{max_removed_inputs}{The largest number of input dataframes that may be
+\item{max_removed_inputs}{The largest number of input data frames that may be
 randomly removed. By default, this is 1 less than all the provided input
-dataframes in the data list.}
+data frames in the data list.}
 
 \item{dropout_dist}{Parameter controlling how the random removal of input
-dataframes should occur. Can be "none" (no input dataframes are randomly
+data frames should occur. Can be "none" (no input data frames are randomly
 removed), "uniform" (uniformly sample between min_removed_inputs and
-max_removed_inputs to determine number of input dataframes to remove), or
-"exponential" (pick number of input dataframes to remove by sampling from
+max_removed_inputs to determine number of input data frames to remove), or
+"exponential" (pick number of input data frames to remove by sampling from
 min_removed_inputs to max_removed_inputs with an exponential distribution;
 the default).}
 

@@ -8,7 +8,7 @@ get_pvals(ext_sol_df, negative_log = FALSE, keep_summaries = TRUE)
 }
 \arguments{
 \item{ext_sol_df}{The output of \code{extend_solutions}. A
-dataframe that contains at least one p-value column ending in "_pval".}
+data frame that contains at least one p-value column ending in "_pval".}
 
 \item{negative_log}{If TRUE, will replace p-values with negative log
 p-values.}

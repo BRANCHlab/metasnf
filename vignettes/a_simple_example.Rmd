@@ -50,7 +50,7 @@ T <- 20
 
 ### 3. Load the data
 
-The SNFtool package provides two mock dataframes titled *Data1* and *Data2* for this example.
+The SNFtool package provides two mock data frames titled *Data1* and *Data2* for this example.
 *Data1* contains gene expression values of two genes for 200 patients.
 *Data2* similarly contains methylation data for two genes for those same 200 patients.
 
@@ -169,14 +169,14 @@ library(metasnf)
 ### 2. Store the data in a *data_list*
 
 All the data we're working with will get stored in a single object called the `data_list`.
-The `data_list` is made by passing in each dataframe into the `data_list` function, alongside information about the name of the dataframe, the broader source (referred to in this package as a "domain") of information that dataframe comes from, and the type of features that are stored inside that dataframe (can be continuous, discrete, ordinal, categorical, or mixed).
+The `data_list` is made by passing in each data frame into the `data_list` function, alongside information about the name of the data frame, the broader source (referred to in this package as a "domain") of information that data frame comes from, and the type of features that are stored inside that data frame (can be continuous, discrete, ordinal, categorical, or mixed).
 
 The `data_list` generation process also requires you to specify which column contains information about the ID of the patients.
 In this case, that information isn't there, so we'll have to add it ourselves.
 The added IDs span from 101 onwards (rather than from 1 onwards) purely for convenience: automatic sorting of patient names won't result in patient 199 being placed before patient 2.
 
 ```{r}
-# Add "patient_id" column to each dataframe
+# Add "patient_id" column to each data frame
 Data1$"patient_id" <- 101:(nrow(Data1) + 100)
 Data2$"patient_id" <- 101:(nrow(Data2) + 100)
 
@@ -199,10 +199,10 @@ my_dl <- data_list(
 
 The first entries are all lists which contains the following elements:
 
-1. The actual dataframe
-2. A name for the dataframe (string)
-3. A name for the *domain* of information the dataframe is representative of (string)
-4. The type of feature stored in the dataframe (options are continuous, discrete, ordinal, categorical, and mixed)
+1. The actual data frame
+2. A name for the data frame (string)
+3. A name for the *domain* of information the data frame is representative of (string)
+4. The type of feature stored in the data frame (options are continuous, discrete, ordinal, categorical, and mixed)
 
 Finally, there's an argument for the `uid` (the column name that currently uniquely identifies all the subjects in your data).
 
@@ -210,8 +210,8 @@ Behind the scenes, this function is building a nested list that keeps track of a
 
 - Converting the UID of the data into "uid"
 - Removing all observations that contain any NAs
-- Removing all subjects who are not present in all input dataframes
-- Arranging the subjects in all the dataframe by their UID
+- Removing all subjects who are not present in all input data frames
+- Arranging the subjects in all the data frame by their UID
 - Prefixing the UID values with the string "uid_" to help with cluster result characterization
 
 Any rows containing NAs are removed.
@@ -269,7 +269,7 @@ The columns in the `settings_df` account for the following:
 * snf_scheme: Which "scheme" will be used to transform the inputs into a final fused network. We'll discuss this in more detail in the next vignette.
 * clust_alg: Which clustering function from the `clust_fns_list` will be applied to the final fused network. By default, the `clust_fns_list` has index 1 referencing spectral clustering paired with the eigen-gap heuristic determining the number of clusters, while index 2 references spectral clustering paired with the rotation cost heuristic instead.
 * Columns ending in "dist": Which distance metric function from the `dist_fns_list` should be used. By default, the `dist_fns_list` has index 1 referencing simple Euclidean distance for continuous, discrete, and ordinal data, and Gower's distance for categorical and mixed data.
-* Columns starting with "inc": Component dropout - whether or not the corresponding dataframe will be included for this round of SNF.
+* Columns starting with "inc": Component dropout - whether or not the corresponding data frame will be included for this round of SNF.
 
 More detailed descriptions on all of these columns can also be found in the [the SNF config vignette](https://branchlab.github.io/metasnf/articles/snf_config.html).
 

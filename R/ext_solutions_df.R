@@ -155,7 +155,7 @@ extend_solutions <- function(sol_df,
     # Construct base of extended solutions data frame by adding columns for
     # p-values of all fts
     ###########################################################################
-    # Specifying the dataframe structure avoids tibble-related errors
+    # Specifying the data frame structure avoids tibble-related errors
     ext_sol_dfl <- data.frame(matrix(NA, nrow = nrow(sol_df), ncol = 1 + n_fts))
     colnames(ext_sol_dfl) <- c("solution", paste0(fts, "_pval"))
     ###########################################################################

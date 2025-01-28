@@ -23,7 +23,7 @@ algorithm varied over different numbers of clusters).}
 
 \item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{data}{A dataframe that contains features to include in the plot.}
+\item{data}{A data frame that contains features to include in the plot.}
 
 \item{key_outcome}{The name of the feature that determines how each patient
 stream is coloured in the alluvial plot.}
@@ -39,7 +39,8 @@ An alluvial plot (class "gg" and "ggplot") showing distribution of
 a feature across varying number cluster solutions.
 }
 \description{
-Alluvial plot of patients across cluster counts and important features
+This alluvial plot can show how observations in a similarity matrix could
+be distributed over a range of clustering functions.
 }
 \examples{
 input_dl <- data_list(

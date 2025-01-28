@@ -136,9 +136,9 @@ The bottom of this vignette outlines the available distance metric functions gro
 You can examine the documentation of those weighted functions to learn more about how the weights you provide will be used.
 
 An important note on providing weights for a run of SNF is that the specific form of the data may not be what you expect by the time it is ready to be converted into a distance metric function.
-The "individual" and "two-step" SNF schemes involve distance metrics only being applied to the input dataframes in the data list as they are.
-The "domain" scheme, however, concatenates data within a domain before converting that larger dataframe into a distance matrix.
-Anytime you have more than one dataframe with the same domain label and you use the domain SNF scheme, all the columns associated with that domain will be in a single dataframe when the distance metric function is applied.
+The "individual" and "two-step" SNF schemes involve distance metrics only being applied to the input data frames in the data list as they are.
+The "domain" scheme, however, concatenates data within a domain before converting that larger data frame into a distance matrix.
+Anytime you have more than one data frame with the same domain label and you use the domain SNF scheme, all the columns associated with that domain will be in a single data frame when the distance metric function is applied.
 
 By default, `snf_config()` also defines the `weights_matrix` class object that stores feature weights.
 Without any user provided weights, these weights are just initialized to 1.
@@ -275,9 +275,9 @@ They are all capable of accepting and applying custom weights provided by a `wei
 * `gower_distance` (Gower's distance)
     * applies to any data
 * `siw_euclidean_distance` (Squared (including weights) Euclidean distance)
-    * Apply weights to dataframe, then calculate Euclidean distance, then square the results
+    * Apply weights to data frame, then calculate Euclidean distance, then square the results
 * `sew_euclidean_distance` (Squared (excluding weights) Euclidean distance)
-    * Apply *square root* of weights to dataframe, then calculate Euclidean distance, then square the results
+    * Apply *square root* of weights to data frame, then calculate Euclidean distance, then square the results
 * `hamming_distance` (Hamming distance)
     * Distance between patients is (1 * feature weight) summed over all features
 

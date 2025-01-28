@@ -37,13 +37,10 @@ rbind.solutions_df <- function(...) {
             attributes(x)$"sim_mats_list"
         }
     )
-    #metasnf_alert("Resetting solutions indices during `rbind`.")
     result <- rbind.data.frame(...)
     merged_sdf <- do.call(rbind, sdfs)
     merged_wm <- do.call(rbind, wms)
     merged_sml <- do.call(c, smls)
-    #result$"solution" <- seq_len(nrow(result))
-    #merged_sdf$"solution" <- seq_len(nrow(result))
     attributes(result)$"sim_mats_list" <- merged_sml
     attributes(result)$"snf_config"$"settings_df" <- merged_sdf
     attributes(result)$"snf_config"$"weights_matrix" <- merged_wm
@@ -89,13 +86,10 @@ rbind.ext_solutions_df <- function(...) {
             attributes(x)$"sim_mats_list"
         }
     )
-    metasnf_alert("Resettings solutions indices during `rbind`.")
     result <- rbind.data.frame(...)
     merged_sdf <- do.call(rbind, sdfs)
     merged_wm <- do.call(rbind, wms)
     merged_sml <- do.call(c, smls)
-    result$"solution" <- seq_len(nrow(result))
-    merged_sdf$"solution" <- seq_len(nrow(result))
     attributes(result)$"sim_mats_list" <- merged_sml
     attributes(result)$"snf_config"$"settings_df" <- merged_sdf
     attributes(result)$"snf_config"$"weights_matrix" <- merged_wm

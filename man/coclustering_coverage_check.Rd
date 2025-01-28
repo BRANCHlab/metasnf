@@ -7,7 +7,7 @@
 coclustering_coverage_check(cocluster_df, action = "warn")
 }
 \arguments{
-\item{cocluster_df}{Dataframe containing coclustering data.}
+\item{cocluster_df}{data frame containing coclustering data.}
 
 \item{action}{Control if parent function should warn or stop.}
 }

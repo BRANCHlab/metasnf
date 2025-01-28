@@ -10,7 +10,7 @@ get_cluster_df(sol_df_row)
 \item{sol_df_row}{One row from a solutions data frame.}
 }
 \value{
-cluster_df dataframe of cluster and uid.
+cluster_df data frame of cluster and uid.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
@@ -18,9 +18,9 @@ Deprecated function for building extracting cluster solutions from a
 solutions data frame. Please use \code{t()} instead.
 
 This function takes in a single row of a solutions data frame and returns a
-dataframe containing the cluster assignments for each uid. It is
+data frame containing the cluster assignments for each uid. It is
 similar to \code{get_clusters()}, which takes one solutions data frame row and
 returns a vector of cluster assignments' and \code{get_cluster_solutions()},
 which takes a solutions data frame with any number of rows and returns a
-dataframe indicating the cluster assignments for each of those rows.
+data frame indicating the cluster assignments for each of those rows.
 }

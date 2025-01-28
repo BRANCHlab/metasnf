@@ -97,7 +97,7 @@ alluvial_cluster_plot(
 )
 ```
 
-Or in an external dataframe:
+Or in an external data frame:
 
 ```{r fig.width = 7, fig.height = 5.5}
 extra_data <- dplyr::inner_join(

@@ -174,7 +174,7 @@
 
 #' Mock ABCD anxiety data
 #'
-#' Like the mock dataframe "abcd_colour", but with "unique_id" as the "uid".
+#' Like the mock data frame "abcd_colour", but with "unique_id" as the "uid".
 #'
 #' @format ## `anxiety`
 #' A data frame with 275 rows and 2 columns:
@@ -190,7 +190,7 @@
 
 #' Mock ABCD depression data
 #'
-#' Like the mock dataframe "abcd_depress", but with "unique_id" as the "uid".
+#' Like the mock data frame "abcd_depress", but with "unique_id" as the "uid".
 #'
 #' @format ## `depress`
 #' A data frame with 275 rows and 2 columns:
@@ -207,7 +207,7 @@
 
 #' Mock ABCD subcortical volumes data
 #'
-#' Like the mock dataframe "abcd_subc_v", but with "unique_id" as the "uid".
+#' Like the mock data frame "abcd_subc_v", but with "unique_id" as the "uid".
 #'
 #' @format ## `subc_v`
 #' A data frame with 174 rows and 31 columns:
@@ -224,7 +224,7 @@
 
 #' Mock ABCD cortical thickness data
 #'
-#' Like the mock dataframe "abcd_cort_t", but with "unique_id" as the "uid".
+#' Like the mock data frame "abcd_cort_t", but with "unique_id" as the "uid".
 #'
 #' @format ## `cort_t`
 #' A data frame with 188 rows and 152 columns:
@@ -241,7 +241,7 @@
 
 #' Mock ABCD cortical surface area data
 #'
-#' Like the mock dataframe "abcd_cort_sa", but with "unique_id" as the "uid".
+#' Like the mock data frame "abcd_cort_sa", but with "unique_id" as the "uid".
 #'
 #' @format ## `cort_sa`
 #' A data frame with 188 rows and 152 columns:
@@ -257,7 +257,7 @@
 
 #' Mock ABCD income data
 #'
-#' Like the mock dataframe "abcd_h_income", but with "unique_id" as the "uid".
+#' Like the mock data frame "abcd_h_income", but with "unique_id" as the "uid".
 #'
 #' @format ## `income`
 #' A data frame with 300 rows and 2 columns:
@@ -273,7 +273,7 @@
 
 #' Mock ABCD income data
 #'
-#' Like the mock dataframe "abcd_cort_sa", but with "unique_id" as the "uid".
+#' Like the mock data frame "abcd_cort_sa", but with "unique_id" as the "uid".
 #'
 #' @format ## `income`
 #' A data frame with 300 rows and 2 columns:
@@ -290,7 +290,7 @@
 
 #' Mock ABCD pubertal status data
 #'
-#' Like the mock dataframe "abcd_pubertal", but with "unique_id" as the "uid".
+#' Like the mock data frame "abcd_pubertal", but with "unique_id" as the "uid".
 #'
 #' @format ## `pubertal`
 #' A data frame with 275 rows and 2 columns:
@@ -306,7 +306,7 @@
 
 #' Mock ABCD "colour" data
 #'
-#' Like the mock dataframe "abcd_colour", but with "unique_id" as the "uid".
+#' Like the mock data frame "abcd_colour", but with "unique_id" as the "uid".
 #'
 #' @format ## `fav_colour`
 #' A data frame with 275 rows and 2 columns:
@@ -333,7 +333,7 @@
 
 
 
-#' Modification of SNFtool mock dataframe "Data1"
+#' Modification of SNFtool mock data frame "Data1"
 #'
 #' @format ## `expression_df`
 #' A data frame with 200 rows and 3 columns:
@@ -346,7 +346,7 @@
 #' This data came from the SNFtool package, with slight modifications.
 "expression_df"
 
-#' Modification of SNFtool mock dataframe "Data2"
+#' Modification of SNFtool mock data frame "Data2"
 #'
 #' @format ## `methylation_df`
 #' A data frame with 200 rows and 3 columns:

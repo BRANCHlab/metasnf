@@ -5,10 +5,10 @@
 #' be used along the `metasnf` clustering pipeline are stored. The data list is
 #' fundamentally a 2-level nested list object where each inner list contains a
 #' data frame and associated metadata for that data frame. The metadata
-#' includes the name of the dataframe, the 'domain' of that dataframe (the
-#' broader source of information that the input dataframe is capturing,
+#' includes the name of the data frame, the 'domain' of that data frame (the
+#' broader source of information that the input data frame is capturing,
 #' determined by user's domain knowledge), and the type of feature stored in
-#' the dataframe (continuous, discrete, ordinal, categorical, or mixed).
+#' the data frame (continuous, discrete, ordinal, categorical, or mixed).
 #'
 #' @param ... Any number of lists formatted as (df, "df_name", "df_domain",
 #'  "df_type") and/or any number of lists of lists formatted as (df, "df_name",
@@ -130,7 +130,7 @@ data_list <- function(...,
     }
     # Additional formatting
     dll <- dll |>
-        ensure_dll_dataframe() |> # format the "data" subitem as a data frame
+        ensure_dll_df() |> # format the "data" subitem as a data frame
         convert_uids(uid) |> # Convert data frame UID column to "uid"
         remove_dll_incomplete() |> # drop observations without complete data
         prefix_dll_uid() |> # append "uid_" to the literal UID values
@@ -150,7 +150,7 @@ data_list <- function(...,
 #' @param dll A data list-like `list` class object.
 #' @return The provided dll with the data subitem of each component as a 
 #'  data frame.
-ensure_dll_dataframe <- function(dll) {
+ensure_dll_df <- function(dll) {
     lapply(
         dll,
         function(x) {
@@ -163,7 +163,7 @@ ensure_dll_dataframe <- function(dll) {
 #' Convert unique identifiers of data list to "uid"
 #'
 #' Column name "uid" is reserved for the unique identifier of observations.
-#' This function ensures all dataframes have their UID set as "uid".
+#' This function ensures all data frames have their UID set as "uid".
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
@@ -378,7 +378,7 @@ dll_uid_first_col <- function(dll) {
 
 #' Horizontally merge compatible data lists
 #'
-#' Join two data lists with the same components (dataframes) but separate
+#' Join two data lists with the same components (data frames) but separate
 #' observations. To instead merge two data lists that have the same
 #' observations but different components, simply use `c()`.
 #'

@@ -19,7 +19,7 @@ generate_annotations_list(
 )
 }
 \arguments{
-\item{df}{Dataframe containing all the data that is specified in the
+\item{df}{data frame containing all the data that is specified in the
 remaining arguments.}
 
 \item{left_bar}{Named list of strings, where the strings are features in

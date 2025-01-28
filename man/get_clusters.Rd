@@ -20,8 +20,8 @@ solutions data frame. Please use \code{t()} instead.
 This function takes in a single row of a solutions data frame and returns a
 vector containing the cluster assignments for each observation. It is
 similar to \code{get_cluster_df()}, which takes a solutions data frame with only one
-row and returns a dataframe with two columns: "cluster" and "uid"
+row and returns a data frame with two columns: "cluster" and "uid"
 '(the UID of the observation) and \code{get_cluster_solutions()}, which takes a
-solutions data frame with any number of rows and returns a dataframe indicating
+solutions data frame with any number of rows and returns a data frame indicating
 the cluster assignments for each of those rows.
 }

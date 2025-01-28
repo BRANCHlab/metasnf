@@ -72,7 +72,7 @@ The columns in a `settings_df` class object include:
 * `alpha`: The alpha (also referred to as sigma or eta in the original SNF paper) hyperparameter in SNF. This hyperparameter plays a role in converting distance matrices into similarity matrices. The process by which `SNFtool::affinityMatrix()` does this conversion essentially involves plugging the distance value as the x-coordinate of a normal distribution and pulling out the density at that point as the similarity. The thickness of the normal distribution is regulated by alpha, where a larger alpha leads to a broader normal distribution and a greater sensitivity to discriminating distances.
 * `k`: The k (nearest neighbours) hyperparameter in the distance matrix to similarity matrix conversion as well as in similarity network fusion. In the distance matrix to similarity matrix conversion (`SNFtool::affinityMatrix()`), k controls how many nearest neighbours to consider when calculating how similar each observation is to its nearest neighbours. The closer an observation is to its k nearest neighbours, the broader the normal distribution that is used for the distance to similarity conversion. For the similarity network fusion step (`SNFtool::SNF()`), k controls how intensely all the matrices should be sparsified before information is passed between them. With a very small k, say, k = 1, all the values in all the matrices will be reduced to 0 with the exception of one value between each observation and that observation's most similar neighbour.
 * `t`: The T (number of iterations) hyperparameter used in SNF. A larger `t` results in more rounds of information passing between similarity matrices. SNF eventually converges, so overshooting this value offers no benefit but undershooting can yield inaccurate results. The original SNF developers recommend leaving this value at 20.
-* `snf_scheme`: Which SNF "scheme" is being used to convert the initial provided dataframes into a final fused network (more on this in the [SNF schemes vignette](https://branchlab.github.io/metasnf/articles/snf_schemes.html))
+* `snf_scheme`: Which SNF "scheme" is being used to convert the initial provided data frames into a final fused network (more on this in the [SNF schemes vignette](https://branchlab.github.io/metasnf/articles/snf_schemes.html))
 * `clust_alg`: Which clustering algorithm function from the *clustering functions list* of the config will be applied to the final fused network. You can learn more about using this parameter in the [clustering algorithnms vignette](https://branchlab.github.io/metasnf/articles/clustering_algorithms.html).
 * Columns ending in `dist`: Which distance metric function from the *distance functions list* of the config will be used for each of the various types of features in the data list (more on this in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html))
 * Columns starting with `inc`: Whether or not the corresponding data frame will be included (1) or excluded (0) from this row
@@ -183,7 +183,7 @@ Bounds on the number of input data frames removed as well as the way in which th
 By default, the `settings_df` generated during the call to `snf_config()` will pick a random value between 0 (printed as a red X) and 1 (printed as a green checkmark) less than the total number of available data frames in the data list based on an exponential probability distribution.
 The exponential distribution makes it so that it is very likely that a small number of data frames will be dropped and much less likely that a large number of data frames will be dropped.
 
-You can control the distribution by changing the `dropout_dist` value to "uniform" (which will result in a much higher number of dataframes being dropped on average) or "none" (which will result in no dataframes being dropped).
+You can control the distribution by changing the `dropout_dist` value to "uniform" (which will result in a much higher number of data frames being dropped on average) or "none" (which will result in no data frames being dropped).
 
 ```{r}
 # Exponential dropping
@@ -214,7 +214,7 @@ sc <- snf_config(
 sc
 ```
 
-The bounds on the number of dataframes that can be dropped can be controlled using the `min_removed_inputs` and `max_removed_inputs`:
+The bounds on the number of data frames that can be dropped can be controlled using the `min_removed_inputs` and `max_removed_inputs`:
 
 ```{r}
 sc <- snf_config(
@@ -223,7 +223,7 @@ sc <- snf_config(
     min_removed_inputs = 3
 )
 
-# No row will exclude fewer than 3 dataframes during SNF
+# No row will exclude fewer than 3 data frames during SNF
 sc
 ```
 

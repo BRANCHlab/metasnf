@@ -79,7 +79,6 @@
             result <- new_ext_solutions_df(result)
             attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"[i]
             attributes(result)$"snf_config" <- attributes(x)$"snf_config"[i]
-            attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"[i]
             result
         },
         error = function(e) {

@@ -14,19 +14,19 @@ random_removal(
 \arguments{
 \item{columns}{Columns of the settings_df that are passed in}
 
-\item{min_removed_inputs}{The smallest number of input dataframes that may
+\item{min_removed_inputs}{The smallest number of input data frames that may
 be randomly removed.}
 
-\item{max_removed_inputs}{The largest number of input dataframes that may be
+\item{max_removed_inputs}{The largest number of input data frames that may be
 randomly removed.}
 
-\item{dropout_dist}{Indication of how input dataframes should be dropped.
+\item{dropout_dist}{Indication of how input data frames should be dropped.
 can be "none" (no dropout), "uniform" (uniformly draw number between min
 and max removed inputs), or "exponential" (like uniform, but using an
 exponential distribution; default).}
 }
 \value{
-inclusions_df Dataframe that can be rbind'ed to the settings_df
+inclusions_df data frame that can be rbind'ed to the settings_df
 }
 \description{
 Helper function to contribute to rows within the settings data frame. Number

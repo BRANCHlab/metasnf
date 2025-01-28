@@ -19,7 +19,6 @@
     - [ ] remove initial noun from @return tags
 - [ ] testing (complete coverage may be overkill?)
 
-- mc labels functionality
-- [ ] adapt get_representative_solutions to use labels in solutions df?
-- [ ] finish vignette/documentation checks
-
+- subjects -> observations
+- more examples for all the functions
+- vignette checks

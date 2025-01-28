@@ -10,7 +10,7 @@ dl_variable_summary(dl)
 \item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
-variable_level_summary A dataframe containing the name, type, and
+variable_level_summary A data frame containing the name, type, and
 domain of every variable in a data list.
 }
 \description{

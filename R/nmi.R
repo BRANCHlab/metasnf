@@ -1,18 +1,30 @@
-#' Calculate feature NMIs for a data list and a derived sol_df
+#' Calculate feature NMIs for a data list and a solutions data frame
+#'
+#' Normalized mutual information scores can be used to indirectly measure how
+#' important a feature may have been in producing a cluster solution. This
+#' function will calculate the normalized mutual information between cluster
+#' solutions in a solutions data frame as well as cluster solutions created
+#' by including only a single feature from a provided data list, but otherwise
+#' using all the same hyperparameters as specified in the original SNF config.
+#' Note that NMIs can be calculated between two cluster solutions regardless
+#' of what features were actually used to create those cluster solutions. For
+#' example, a feature that was not involved in producing a particular cluster
+#' solution may still have a high NMI with that cluster solution (typically
+#' because it was highly correlated with a different feature that was used).
 #'
 #' @inheritParams batch_snf
 #' @param sol_df Result of `batch_snf` storing cluster solutions and
 #'  the settings that were used to generate them. Use the same value as was used
 #'  in the original call to `batch_snf()`.
-#' @param transpose If TRUE, will transpose the output dataframe.
+#' @param transpose If TRUE, will transpose the output data frame.
 #' @param ignore_inclusions If TRUE, will ignore the inclusion columns in the
-#'  solutions data frame and calculate NMIs for all features. If FALSE, will give
-#'  NAs for features that were dropped on a given settings_df row.
+#'  solutions data frame and calculate NMIs for all features. If FALSE, will
+#'  give NAs for features that were dropped on a given settings_df row.
 #' @param verbose If TRUE, output progress to console.
 #' @return A "data.frame" class object containing one row for every feature
 #'  in the provided data list and one column for every solution in the provided
-#'  solutions data frame. Populated values show the calculated NMI score for each
-#'  feature-solution combination.
+#'  solutions data frame. Populated values show the calculated NMI score for
+#'  each feature-solution combination.
 #' @export
 #' @examples
 #' input_dl <- data_list(
@@ -122,7 +134,7 @@ calc_nmis <- function(dl,
             }
         }
         #######################################################################
-        # Combine this feature's NMIs with the overall NMI dataframe
+        # Combine this feature's NMIs with the overall NMI data frame
         nmi_df <- data.frame(nmi_df, new_feature = feature_nmis)
         colnames(nmi_df)[ncol(nmi_df)] <- feature
     }

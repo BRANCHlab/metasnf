@@ -7,13 +7,10 @@
 #' floating point-related errors.
 #'
 #' @param W Similarity matrix to calculate number of clusters for.
-#'
 #' @param NUMC Range of cluster counts to consider among when picking best
-#' number of clusters.
-#'
+#'  number of clusters.
 #' @return A list containing the top two eigengap and rotation-cost estimates
-#' for the number of clusters in a given similarity matrix.
-#'
+#'  for the number of clusters in a given similarity matrix.
 #' @export
 #' @examples
 #' input_dl <- data_list(

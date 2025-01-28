@@ -21,7 +21,7 @@ correspond to those in the subsample solutions.}
 \value{
 A list containing the following components:
 \itemize{
-\item cocluster_dfs: A list of dataframes, one per cluster solution, that shows
+\item cocluster_dfs: A list of data frames, one per cluster solution, that shows
 the number of times that every pair of subjects in the original cluster
 solution occurred in the same subsample, the number of times that every
 pair clustered together in a subsample, and the corresponding fraction
@@ -35,7 +35,7 @@ in the same cluster, formatted as a pairwise matrix.
 \item cocluster_summary: Specifically among pairs of subjects that clustered
 together in the original full cluster solution, what fraction of those
 pairs remained clustered together throughout the subsample solutions. This
-information is formatted as a dataframe with one row per cluster solution.
+information is formatted as a data frame with one row per cluster solution.
 }
 }
 \description{

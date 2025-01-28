@@ -25,3 +25,27 @@ to linearly adjust for, corrects the first data list based on the residuals
 of the linear model relating the numeric features in the first data list
 to the unwanted signal features in the second data list.
 }
+\examples{
+has_tutor <- sample(c(1, 0), size = 9, replace = TRUE)
+math_score <- 70 + 30 * has_tutor + rnorm(9, mean = 0, sd = 5)
+
+math_df <- data.frame(uid = paste0("id_", 1:9), math = math_score)
+tutor_df <- data.frame(uid = paste0("id_", 1:9), tutor = has_tutor)
+
+dl <- data_list(
+    list(math_df, "math_score", "school", "continuous"),
+    uid = "uid"
+)
+
+adjustment_dl <- data_list(
+    list(tutor_df, "tutoring", "school", "categorical"),
+    uid = "uid"
+)
+
+adjusted_dl <- linear_adjust(dl, adjustment_dl)
+
+adjusted_dl[[1]]$"data"$"math"
+
+# Equivalent to:
+as.numeric(resid(lm(math_score ~ has_tutor)))
+}

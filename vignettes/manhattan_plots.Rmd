@@ -32,7 +32,7 @@ The example below is taken from the ["complete example" vignette](https://branch
 ```{r eval = FALSE}
 library(metasnf)
 
-# Start by making a data list containing all our dataframes to more easily
+# Start by making a data list containing all our data frames to more easily
 # identify subjects without missing data
 full_dl <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),

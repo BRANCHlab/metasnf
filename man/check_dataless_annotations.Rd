@@ -9,7 +9,7 @@ check_dataless_annotations(annotation_requests, data)
 \arguments{
 \item{annotation_requests}{A list of requested annotations}
 
-\item{data}{A dataframe with data to build annotations}
+\item{data}{A data frame with data to build annotations}
 }
 \value{
 Does not return any value. This function just raises an error when

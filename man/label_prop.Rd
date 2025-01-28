@@ -17,12 +17,12 @@ order as they appear in full_fused_network}
 new_clusters list of cluster labels for all subjects
 }
 \description{
-Given a full fused network (one containing both pre-labeled training subjects
-and unlabeled test-subjects) and the clusters of the pre-labeled subjects,
-return a label propagated list of clusters for all subjects. This function
-is derived from SNFtool::groupPredict. Modifications are made to take a
-full fused network as input, rather than taking input dataframes and
-running SNF internally. This ensures that alternative approaches to
+Given a full fused network (one containing both pre-clustered observations
+and to-be-clustered observations) and the clusters of the pre-clustered
+observations, return a label propagated list of clusters for all subjects.
+This function is derived from SNFtool::groupPredict. Modifications are made
+to take a full fused network as input, rather than taking input data frames
+and running SNF internally. This ensures that alternative approaches to
 data normalization and distance matrix calculations can be chosen by the
 user.
 }

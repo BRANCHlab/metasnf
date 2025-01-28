@@ -4,20 +4,10 @@
 \alias{get_representative_solutions}
 \title{Extract representative solutions from a matrix of ARIs}
 \usage{
-get_representative_solutions(
-  aris,
-  split_vector,
-  order = NULL,
-  sol_df,
-  filter_fn = NULL
-)
+get_representative_solutions(aris, sol_df, filter_fn = NULL)
 }
 \arguments{
 \item{aris}{Matrix of adjusted rand indices from \code{calc_aris()}}
-
-\item{split_vector}{A vector of partition indices.}
-
-\item{order}{Numeric vector indicating row ordering of solutions data frame.}
 
 \item{sol_df}{Output of \code{batch_snf} containing cluster solutions.}
 

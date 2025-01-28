@@ -2,7 +2,7 @@
 % Please edit documentation in R/nmi.R
 \name{calc_nmis}
 \alias{calc_nmis}
-\title{Calculate feature NMIs for a data list and a derived sol_df}
+\title{Calculate feature NMIs for a data list and a solutions data frame}
 \usage{
 calc_nmis(
   dl,
@@ -19,22 +19,32 @@ calc_nmis(
 the settings that were used to generate them. Use the same value as was used
 in the original call to \code{batch_snf()}.}
 
-\item{transpose}{If TRUE, will transpose the output dataframe.}
+\item{transpose}{If TRUE, will transpose the output data frame.}
 
 \item{ignore_inclusions}{If TRUE, will ignore the inclusion columns in the
-solutions data frame and calculate NMIs for all features. If FALSE, will give
-NAs for features that were dropped on a given settings_df row.}
+solutions data frame and calculate NMIs for all features. If FALSE, will
+give NAs for features that were dropped on a given settings_df row.}
 
 \item{verbose}{If TRUE, output progress to console.}
 }
 \value{
 A "data.frame" class object containing one row for every feature
 in the provided data list and one column for every solution in the provided
-solutions data frame. Populated values show the calculated NMI score for each
-feature-solution combination.
+solutions data frame. Populated values show the calculated NMI score for
+each feature-solution combination.
 }
 \description{
-Calculate feature NMIs for a data list and a derived sol_df
+Normalized mutual information scores can be used to indirectly measure how
+important a feature may have been in producing a cluster solution. This
+function will calculate the normalized mutual information between cluster
+solutions in a solutions data frame as well as cluster solutions created
+by including only a single feature from a provided data list, but otherwise
+using all the same hyperparameters as specified in the original SNF config.
+Note that NMIs can be calculated between two cluster solutions regardless
+of what features were actually used to create those cluster solutions. For
+example, a feature that was not involved in producing a particular cluster
+solution may still have a high NMI with that cluster solution (typically
+because it was highly correlated with a different feature that was used).
 }
 \examples{
 input_dl <- data_list(

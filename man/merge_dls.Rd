@@ -16,7 +16,7 @@ A data list ("list"-class object) containing the observations of
 both provided data lists.
 }
 \description{
-Join two data lists with the same components (dataframes) but separate
+Join two data lists with the same components (data frames) but separate
 observations. To instead merge two data lists that have the same
 observations but different components, simply use \code{c()}.
 }

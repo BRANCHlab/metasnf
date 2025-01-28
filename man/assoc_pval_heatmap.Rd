@@ -57,7 +57,7 @@ colours.}
 \item{labels_colour}{Vector of colours to use for the columns and rows
 of the heatmap.}
 
-\item{split_by_domain}{The results of \code{dl_var_summar} - a dataframe that has
+\item{split_by_domain}{The results of \code{dl_var_summar} - a data frame that has
 the domain of every feature in the plotted data.
 columns of the correlation_matrix. Will be used to "slice" the heatmap into
 visually separated sections.}

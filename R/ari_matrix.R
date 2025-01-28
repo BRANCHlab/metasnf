@@ -42,7 +42,7 @@ calc_aris <- function(sol_df,
         )
     }
     ###########################################################################
-    # Prepare dataframe containing 1 cluster solution per row
+    # Prepare data frame containing 1 cluster solution per row
     # Row id and uid columns
     subjects <- dplyr::select(sol_df, -"solution", -"nclust")
     # Only subject label cols

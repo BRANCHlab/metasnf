@@ -23,7 +23,7 @@ This vignette outlines the importance, structure, and creation of the data_list 
 You can find much of this info by running `?data_list` after loading the `metasnf` package.
 
 The data_list is the main object used in the `metasnf` package to store data.
-It is a named and nested list containing input dataframes (data), the name of that input dataframe (for the user's reference), the 'domain' of that dataframe (the broader source of information that the input dataframe is capturing, determined by user's domain knowledge), and the type of feature stored in the dataframe (continuous, discrete, ordinal, categorical, or mixed).
+It is a named and nested list containing input data frames (data), the name of that input data frame (for the user's reference), the 'domain' of that data frame (the broader source of information that the input data frame is capturing, determined by user's domain knowledge), and the type of feature stored in the data frame (continuous, discrete, ordinal, categorical, or mixed).
 
 Some examples of data_list generation and usage are below:
 

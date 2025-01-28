@@ -125,17 +125,6 @@ ext_sol_df <- extend_solutions(
     train_target_dl
 )
 
-ext_sol_df[1, ] |> attributes() |> names()
-
-sim_mats_list(ext_sol_df[1, ])
-
-
-ext_sol_df |> attributes() |> names()
-
-attributes(ext_sol_df)$"row.names" <- attributes(ext_sol_df)$"row.names"
-
-ext_sol_df[1, ] |> attributes() |> names()
-
 # Determining solution with the lowest minimum p-value
 lowest_min_pval <- min(ext_sol_df$"min_pval")
 which(ext_sol_df$"min_pval" == lowest_min_pval)

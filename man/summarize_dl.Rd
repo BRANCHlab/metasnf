@@ -11,7 +11,7 @@ summarize_dl(data_list, scope = "component")
 
 \item{scope}{The level of detail for the summary. Options are:
 \itemize{
-\item "component" (default): One row per component (dataframe) in the data list.
+\item "component" (default): One row per component (data frame) in the data list.
 \item "feature": One row for each feature in the data list.
 }}
 }

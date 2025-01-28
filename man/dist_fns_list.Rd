@@ -57,7 +57,7 @@ dist_fns_list <- dist_fns_list()
 # Adding your own metrics --------------------------------------------------
 # This will contain only the and user-provided distance function:
 cubed_euclidean <- function(df, weights_row) {
-    # (your code that converts a dataframe to a distance metric here...)
+    # (your code that converts a data frame to a distance metric here...)
     weights <- diag(weights_row, nrow = length(weights_row))
     weighted_df <- as.matrix(df) \%*\% weights
     distance_matrix <- weighted_df |>

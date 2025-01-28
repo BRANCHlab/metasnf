@@ -2,12 +2,12 @@
 % Please edit documentation in R/heatmaps.R
 \name{assemble_data}
 \alias{assemble_data}
-\title{Collapse a dataframe and/or a data list into a single dataframe}
+\title{Collapse a data frame and/or a data list into a single data frame}
 \usage{
 assemble_data(data, dl)
 }
 \arguments{
-\item{data}{A dataframe.}
+\item{data}{A data frame.}
 
 \item{dl}{A nested list of input data from \code{data_list()}.}
 }
@@ -16,5 +16,5 @@ A class "data.frame" object containing all the features of the
 provided data frame and/or data list.
 }
 \description{
-Collapse a dataframe and/or a data list into a single dataframe
+Collapse a data frame and/or a data list into a single data frame
 }

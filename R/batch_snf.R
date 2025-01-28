@@ -180,7 +180,8 @@ check_valid_k <- function(sdf, dl) {
     n_observations <- n_observations(dl)
     if (max_k >= n_observations) {
         metasnf_error(
-            "Maximum k ({max_k}) cannot exceed number of ({n_observations})."
+            "Maximum k ({max_k}) cannot exceed number of observations",
+            " ({n_observations})."
         )
     }
 }
@@ -257,7 +258,7 @@ drop_inputs <- function(sdf_row, dl) {
             " object."
         )
     }
-    # Dataframe just of the inclusion features
+    # data frame just of the inclusion features
     inc_df <- sdf_row |>
         data.frame() |>
         dplyr::select(dplyr::starts_with("inc"))
@@ -277,10 +278,10 @@ drop_inputs <- function(sdf_row, dl) {
 
 #' Calculate distance matrices
 #'
-#' Given a dataframe of numerical features, return a euclidean distance matrix.
+#' Given a data frame of numerical features, return a euclidean distance matrix.
 #'
 #' @keywords internal
-#' @param df Raw dataframe with subject IDs in column "uid"
+#' @param df Raw data frame with subject IDs in column "uid"
 #' @param input_type Either "numeric" (resulting in euclidean distances),
 #'  "categorical" (resulting in binary distances), or "mixed" (resulting in
 #'  gower distances)
@@ -289,7 +290,7 @@ drop_inputs <- function(sdf_row, dl) {
 #' @param ord_dist_fn distance metric function for ordinal data
 #' @param cat_dist_fn distance metric function for categorical data
 #' @param mix_dist_fn distance metric function for mixed data
-#' @param weights_row Single-row dataframe where the column names contain the
+#' @param weights_row Single-row data frame where the column names contain the
 #'  column names in df and the row contains the corresponding weights_row.
 #' @return dist_matrix Matrix of inter-observation distances.
 get_dist_matrix <- function(df,
@@ -300,7 +301,7 @@ get_dist_matrix <- function(df,
                             cat_dist_fn,
                             mix_dist_fn,
                             weights_row) {
-    # Move subject keys into dataframe rownames
+    # Move subject keys into data frame rownames
     df <- data.frame(df, row.names = "uid")
     # Trim down of the full weights row
     weights_row_trim <-
@@ -335,7 +336,7 @@ get_dist_matrix <- function(df,
 #' @param ord_dist_fn distance metric function for ordinal data.
 #' @param cat_dist_fn distance metric function for categorical data.
 #' @param mix_dist_fn distance metric function for mixed data.
-#' @param weights_row dataframe row containing feature weights.
+#' @param weights_row data frame row containing feature weights.
 #' @return A fused similarity network (matrix).
 snf_step <- function(dl,
                      scheme,
@@ -380,7 +381,7 @@ snf_step <- function(dl,
 #' domain_merge: Given a data list, returns a new data list where all data objects of
 #' a particlar domain have been concatenated.
 #'
-#' two_step_merge: Individual dataframes into individual similarity matrices into one fused
+#' two_step_merge: Individual data frames into individual similarity matrices into one fused
 #' network per domain into one final fused network.
 #'
 #' @inheritParams snf_step

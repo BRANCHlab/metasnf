@@ -54,7 +54,7 @@ off-diagonals), or "zero" (replace diagonals with 0).}
 
 \item{show_column_names}{Parameter for ComplexHeatmap::Heatmap.}
 
-\item{data}{A dataframe containing elements requested for annotation.}
+\item{data}{A data frame containing elements requested for annotation.}
 
 \item{left_bar}{Named list of strings, where the strings are features in
 df that should be used for a barplot annotation on the left of the plot and

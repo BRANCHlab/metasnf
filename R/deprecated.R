@@ -112,7 +112,7 @@ collapse_dl <- function(data_list) {
 #'
 #' @param data_list A nested list of input data from `data_list()`.
 #' @param scope The level of detail for the summary. Options are:
-#' - "component" (default): One row per component (dataframe) in the data list.
+#' - "component" (default): One row per component (data frame) in the data list.
 #' - "feature": One row for each feature in the data list.
 #' @return data.frame class object summarizing all components (or features if
 #' scope == "component").
@@ -133,7 +133,7 @@ summarize_dl <- function(data_list, scope = "component") {
 #' argument `scope = "feature"` instead.
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#' @return variable_level_summary A dataframe containing the name, type, and
+#' @return variable_level_summary A data frame containing the name, type, and
 #' domain of every variable in a data list.
 #'
 #' @export
@@ -206,11 +206,11 @@ adjusted_rand_index_heatmap <- function(aris,
 #' Deprecated function for building extracting cluster solutions from a
 #' solutions data frame. Please use `t()` instead.
 #'
-#' This function takes in a solutions data frame and returns a dataframe containing
+#' This function takes in a solutions data frame and returns a data frame containing
 #' the cluster assignments for each uid. It is similar to
 #' '`get_clusters()`, which takes one solutions data frame row and returns a vector
 #' of cluster assignments' and `get_cluster_df()`, which takes a solutions
-#' matrix with only one row and returns a dataframe with two columns: "cluster"
+#' matrix with only one row and returns a data frame with two columns: "cluster"
 #' and "uid" (the UID of the observation).
 #'
 #' @param sol_df A sol_df.
@@ -234,14 +234,14 @@ get_cluster_solutions <- function(sol_df) {
 #' solutions data frame. Please use `t()` instead.
 #'
 #' This function takes in a single row of a solutions data frame and returns a
-#' dataframe containing the cluster assignments for each uid. It is
+#' data frame containing the cluster assignments for each uid. It is
 #' similar to `get_clusters()`, which takes one solutions data frame row and
 #' returns a vector of cluster assignments' and `get_cluster_solutions()`,
 #' which takes a solutions data frame with any number of rows and returns a
-#' dataframe indicating the cluster assignments for each of those rows.
+#' data frame indicating the cluster assignments for each of those rows.
 #'
 #' @param sol_df_row One row from a solutions data frame.
-#' @return cluster_df dataframe of cluster and uid.
+#' @return cluster_df data frame of cluster and uid.
 #' @export
 get_cluster_df <- function(sol_df_row) {
     metasnf_deprecated("2.0.0", "Please use `t()` instead.")
@@ -260,9 +260,9 @@ get_cluster_df <- function(sol_df_row) {
 #' This function takes in a single row of a solutions data frame and returns a
 #' vector containing the cluster assignments for each observation. It is
 #' similar to `get_cluster_df()`, which takes a solutions data frame with only one
-#' row and returns a dataframe with two columns: "cluster" and "uid"
+#' row and returns a data frame with two columns: "cluster" and "uid"
 #' '(the UID of the observation) and `get_cluster_solutions()`, which takes a
-#' solutions data frame with any number of rows and returns a dataframe indicating
+#' solutions data frame with any number of rows and returns a data frame indicating
 #' the cluster assignments for each of those rows.
 #'
 #' @param sol_df_row Output matrix row.

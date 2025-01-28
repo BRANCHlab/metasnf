@@ -45,12 +45,12 @@ Your data should be loaded into the R environment in the following format:
 
 1. The data is in one or more *data.frame* objects
 2. The data is in wide form (one row per observation to cluster)
-3. All dataframes should have exactly one column that uniquely identifies each observation
+3. All data frames should have exactly one column that uniquely identifies each observation
 4. All data should be complete (no missing values)
 
 If you wish to use imputation to handle missingness in your data, you can take a look at the [imputation vignette](https://branchlab.github.io/metasnf/articles/imputations.html) which outlines a basic workflow for meta clustering across multiple imputations of the same dataset.
 
-The package comes with a few mock dataframes based on real data from the Adolescent Brain Cognitive Development study:
+The package comes with a few mock data frames based on real data from the Adolescent Brain Cognitive Development study:
 
 - `anxiety` (anxiety scores from the CBCL)
 - `depress` (depression scores from the CBCL)
@@ -99,10 +99,10 @@ df_list <- list(
     pubertal
 )
 
-# The number of rows in each dataframe:
+# The number of rows in each data frame:
 lapply(df_list, dim)
 
-# Whether or not each dataframe has missing values:
+# Whether or not each data frame has missing values:
 lapply(df_list,
     function(x) {
         any(is.na(x))
@@ -110,11 +110,11 @@ lapply(df_list,
 )
 ```
 
-Some of our data has missing values and not all of our dataframes have the same number of participants.
+Some of our data has missing values and not all of our data frames have the same number of participants.
 SNF can only be run with complete data, so you'll need to either use complete case analysis (removal of observations with any missing values) or impute the missing values to proceed with the clustering.
 As mentioned above, `metasnf` can be used to visualize changes in clustering results across different imputations of the data.
 
-For now, we'll just examine the simpler complete-case analysis approach by reducing our dataframes to only common and complete observations.
+For now, we'll just examine the simpler complete-case analysis approach by reducing our data frames to only common and complete observations.
 This can be made easier using the `get_complete_uids` function.
 
 ```{r}
@@ -122,7 +122,7 @@ complete_uids <- get_complete_uids(df_list, uid = "unique_id")
 
 print(length(complete_uids))
 
-# Reducing dataframes to only common subjects with no missing data
+# Reducing data frames to only common subjects with no missing data
 anxiety <- anxiety[anxiety$"unique_id" %in% complete_uids, ]
 depress <- depress[depress$"unique_id" %in% complete_uids, ]
 cort_t <- cort_t[cort_t$"unique_id" %in% complete_uids, ]
@@ -178,11 +178,11 @@ input_dl <- data_list(
 )
 ```
 
-This process removes any observations that did not have complete data across all provided input dataframes.
+This process removes any observations that did not have complete data across all provided input data frames.
 The structure of the data list is a nested list tracking the data, the name of the data frame, what domain (broader source of information) the data frame belongs to, and the type of feature stored in that data frame.
 Options for feature type include "continuous", "discrete", "ordinal", "categorical", and "mixed".
 
-The "uid" parameter is the name of the column in the dataframes that uniquely identifies each observation.
+The "uid" parameter is the name of the column in the data frames that uniquely identifies each observation.
 Upon data list creation, the UID will be converted to "uid" for consistency across other functions in the package.
 
 We can get a summary of our constructed `data_list` with the `summary` function:
@@ -626,20 +626,6 @@ z2 <- get_representative_solutions2(
     ext_sol_df
 )
 
-z1
-
-z2
-
-
-z1
-
-
-
-z1
-
-z2
-
-
 mc_manhattan <- mc_manhattan_plot(
     rep_solutions,
     dl = input_dl,
@@ -841,9 +827,9 @@ You can learn more about running stability calculations in the [stability and co
 If you can specify a metric or objective function that may tell you how useful a clustering solution will be for your purposes in advance, that makes the cluster selection process much less arbitrary.
 
 There are many ways to go about doing this, but this package offers one way through a `target_list`.
-The `target_list` contains dataframes what we can examine our clustering results over through linear regression (continuous data), ordinal regression (ordinal data), or the Chi-squared test (categorical data).
+The `target_list` contains data frames what we can examine our clustering results over through linear regression (continuous data), ordinal regression (ordinal data), or the Chi-squared test (categorical data).
 
-Just like when generating the initial `data_list`, we need to specify the name of the column in the provided dataframes that is originally being used to uniquely identify the different observations from each other with the `uid` parameter.
+Just like when generating the initial `data_list`, we need to specify the name of the column in the provided data frames that is originally being used to uniquely identify the different observations from each other with the `uid` parameter.
 
 We will next extend our `sol_df` with p-values from regressing the `target_list` features onto our generated clusters.
 
@@ -885,7 +871,7 @@ Here's a quick step through of the complete procedure, from the beginning, with 
 The `metasnf` package comes equipped with the function `train_test_assign` to provide random splitting for you.
 
 ```{r}
-# All the subjects present in all dataframes with no NAs
+# All the subjects present in all data frames with no NAs
 all_subjects <- uids(input_dl)
 
 all_subjects
@@ -893,7 +879,7 @@ all_subjects
 # Remove the "uid_" prefix to allow merges with the original data
 all_subjects <- gsub("uid_", "", all_subjects)
 
-# Dataframe assigning 80% of subjects to train and 20% to test
+# data frame assigning 80% of subjects to train and 20% to test
 assigned_splits <- train_test_assign(train_frac = 0.8, subjects = all_subjects)
 
 # Pulling the training and testing subjects specifically

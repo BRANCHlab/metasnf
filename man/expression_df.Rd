@@ -3,7 +3,7 @@
 \docType{data}
 \name{expression_df}
 \alias{expression_df}
-\title{Modification of SNFtool mock dataframe "Data1"}
+\title{Modification of SNFtool mock data frame "Data1"}
 \format{
 \subsection{\code{expression_df}}{
 
@@ -22,6 +22,6 @@ This data came from the SNFtool package, with slight modifications.
 expression_df
 }
 \description{
-Modification of SNFtool mock dataframe "Data1"
+Modification of SNFtool mock data frame "Data1"
 }
 \keyword{datasets}

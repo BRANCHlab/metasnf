@@ -3,7 +3,7 @@
 \docType{data}
 \name{methylation_df}
 \alias{methylation_df}
-\title{Modification of SNFtool mock dataframe "Data2"}
+\title{Modification of SNFtool mock data frame "Data2"}
 \format{
 \subsection{\code{methylation_df}}{
 
@@ -22,6 +22,6 @@ This data came from the SNFtool package, with slight modifications.
 methylation_df
 }
 \description{
-Modification of SNFtool mock dataframe "Data2"
+Modification of SNFtool mock data frame "Data2"
 }
 \keyword{datasets}

@@ -20,10 +20,10 @@ solutions data frame row.
 Deprecated function for building extracting cluster solutions from a
 solutions data frame. Please use \code{t()} instead.
 
-This function takes in a solutions data frame and returns a dataframe containing
+This function takes in a solutions data frame and returns a data frame containing
 the cluster assignments for each uid. It is similar to
 '\code{get_clusters()}, which takes one solutions data frame row and returns a vector
 of cluster assignments' and \code{get_cluster_df()}, which takes a solutions
-matrix with only one row and returns a dataframe with two columns: "cluster"
+matrix with only one row and returns a data frame with two columns: "cluster"
 and "uid" (the UID of the observation).
 }
