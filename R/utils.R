@@ -155,21 +155,22 @@ get_complete_uids <- function(list_of_dfs, uid) {
 #'  one_at_a_time hash function exceeds the maximum possible value
 #'  (2147483647) multiplied by the threshold.
 #'
-#' @param train_frac The fraction (0 to 1) of subjects for training
-#' @param subjects The available subjects for distribution
-#' @param seed Seed used for Jenkins's one_at_a_time hash function
-#' @return split a named list containing the training and testing uid_ids
+#' @param train_frac The fraction (0 to 1) of observations for training
+#' @param uids A character vector of UIDs to be distributed into training and
+#'  test sets.
+#' @param seed Seed used for Jenkins's one_at_a_time hash function.
+#' @return A named list containing the training and testing uid_ids.
 #' @export
-train_test_assign <- function(train_frac, subjects, seed = 42) {
+train_test_assign <- function(train_frac, uids, seed = 42) {
     train_thresh <- 2147483647 * train_frac
-    hash <- abs(digest::digest2int(subjects, seed = seed))
-    train <- subjects[hash < train_thresh]
-    test <- subjects[hash >= train_thresh]
-    assigned_subs <- list(train = train, test = test)
+    hash <- abs(digest::digest2int(uids, seed = seed))
+    train <- uids[hash < train_thresh]
+    test <- uids[hash >= train_thresh]
+    assigned_obs <- list(train = train, test = test)
     if (length(train) == 0 || length(test) == 0) {
         metasnf_warning("Empty train or test set.")
     }
-    return(assigned_subs)
+    return(assigned_obs)
 }
 
 #' Generate a complete path and filename to store an similarity matrix

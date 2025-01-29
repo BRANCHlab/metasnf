@@ -190,12 +190,12 @@ auto_plot <- function(sol_df_row = NULL,
     ###########################################################################
     # Ensure sol_df and dl_df have the same uid column
     ###########################################################################
-    sol_df_subjects <- sort(cluster_df$"uid")
-    dl_subjects <- sort(dl_df$"uid")
-    if (!identical(sol_df_subjects, dl_subjects)) {
+    sol_df_uids <- sort(cluster_df$"uid")
+    dl_uids <- sort(dl_df$"uid")
+    if (!identical(sol_df_uids, dl_uids)) {
         metasnf_error(
-            "The UIDs in the provided solutions data frame row and data list must",
-            " match."
+            "The UIDs in the provided solutions data frame row and data list ",
+            "must match."
         )
     }
     ###########################################################################

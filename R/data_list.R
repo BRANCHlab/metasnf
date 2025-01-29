@@ -287,7 +287,7 @@ domains <- function(dl) {
 #' @param ordered_uids A vector of the uid values in the data list
 #'  in the desired order of the sorted data list.
 #' @return A data list ("list"-class object) with reordered observations.
-reorder_dl_subs <- function(dl, ordered_uids) {
+reorder_dl_uids <- function(dl, ordered_uids) {
     dl <- dl |>
         lapply(
             function(x) {

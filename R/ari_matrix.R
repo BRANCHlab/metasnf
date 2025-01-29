@@ -44,11 +44,11 @@ calc_aris <- function(sol_df,
     ###########################################################################
     # Prepare data frame containing 1 cluster solution per row
     # Row id and uid columns
-    subjects <- dplyr::select(sol_df, -"solution", -"nclust")
+    uids <- dplyr::select(sol_df, -"solution", -"nclust")
     # Only subject label cols
-    subjects_no_id <- as.matrix(subjects[, 2:length(subjects)])
+    uids_no_id <- as.matrix(uids[, 2:length(uids)])
     # The skeleton of the inter-cluster similarity matrix
-    aris <- matrix(1, nrow(subjects), nrow(subjects))
+    aris <- matrix(1, nrow(uids), nrow(uids))
     ###########################################################################
     # Indices of all pairwise comparisons to calculate ARIs for
     ###########################################################################
@@ -67,8 +67,8 @@ calc_aris <- function(sol_df,
             v1 <- pairwise_indices[1, col]
             v2 <- pairwise_indices[2, col]
             ari <- mclust::adjustedRandIndex(
-                subjects_no_id[v1, ],
-                subjects_no_id[v2, ]
+                uids_no_id[v1, ],
+                uids_no_id[v2, ]
             )
             aris[v1, v2] <- ari
             aris[v2, v1] <- ari
@@ -96,8 +96,8 @@ calc_aris <- function(sol_df,
             MARGIN = 2,
             FUN = function(col) {
                 mclust::adjustedRandIndex(
-                    subjects_no_id[col[1], ],
-                    subjects_no_id[col[2], ]
+                    uids_no_id[col[1], ],
+                    uids_no_id[col[2], ]
                 )
             }
         )

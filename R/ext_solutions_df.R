@@ -132,13 +132,13 @@ extend_solutions <- function(sol_df,
         }
     }
     ###########################################################################
-    # Check to see if the dl and sol_df have matching subjects
+    # Check to see if the dl and sol_df have matching observations
     ###########################################################################
-    solution_subs <- uids(sol_df)
-    dl_subs <- uids(dl)
-    if (!identical(solution_subs, dl_subs)) {
+    solution_obs <- uids(sol_df)
+    dl_obs <- uids(dl)
+    if (!identical(solution_obs, dl_obs)) {
         metasnf_error(
-            "Subjects in data list/target list do not match those in",
+            "Observations in data list/target list do not match those in",
             " sol_df."
         )
     }
@@ -171,13 +171,13 @@ extend_solutions <- function(sol_df,
             if (verbose) {
                 cat("Processing row ", i, " of ", nrow(sol_df), "\n", sep = "")
             }
-            clustered_subs <- t(sol_df[i, ])
+            clustered_obs <- t(sol_df[i, ])
             for (j in seq_along(fts)) {
                 current_component_df <- merged_df[, c(1, j + 1)]
                 current_ft <- colnames(current_component_df)[2]
                 suppressWarnings({
                     pval <- calc_assoc_pval(
-                        clustered_subs[, 2],
+                        clustered_obs[, 2],
                         current_component_df[, 2],
                         "categorical",
                         feature_types[j],
@@ -209,12 +209,12 @@ extend_solutions <- function(sol_df,
         ext_sol_dfl_rows <- future.apply::future_lapply(
             seq_len(nrow(ext_sol_dfl)),
             function(i) {
-                clustered_subs <- t(sol_df[i, ])
+                clustered_obs <- t(sol_df[i, ])
                 for (j in seq_along(fts)) {
                     current_component_df <- merged_df[, c(1, j + 1)]
                     current_ft <- colnames(current_component_df)[2]
                     evaluation_df <- dplyr::inner_join(
-                        clustered_subs,
+                        clustered_obs,
                         current_component_df,
                         by = "uid"
                     )

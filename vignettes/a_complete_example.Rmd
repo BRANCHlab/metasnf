@@ -74,7 +74,7 @@ str(cort_t[1:5, 1:5])
 cort_t[1:5, 1:5]
 ```
 
-The first column `unique_id` is the unique identifier (UID) for all subjects in the data.
+The first column `unique_id` is the unique identifier (UID) for all observations in the data.
 
 Here's the household income data:
 
@@ -122,7 +122,7 @@ complete_uids <- get_complete_uids(df_list, uid = "unique_id")
 
 print(length(complete_uids))
 
-# Reducing data frames to only common subjects with no missing data
+# Reducing data frames to only common observations with no missing data
 anxiety <- anxiety[anxiety$"unique_id" %in% complete_uids, ]
 depress <- depress[depress$"unique_id" %in% complete_uids, ]
 cort_t <- cort_t[cort_t$"unique_id" %in% complete_uids, ]
@@ -136,7 +136,7 @@ pubertal <- pubertal[pubertal$"unique_id" %in% complete_uids, ]
 
 The `data_list` class is a structured list of data frames (like the one already created), but with some additional metadata about each data frame.
 It should only contain the data frames we want to directly use as inputs for the clustering.
-Let's say we are working in a context where the anxiety and depression data are especially important outcomes and we want to know if we can find subtypes using the other data which still do a good job of separating out subjects by their anxiety and depression scores.
+Let's say we are working in a context where the anxiety and depression data are especially important outcomes and we want to know if we can find subtypes using the other data which still do a good job of separating out observations by their anxiety and depression scores.
 
 We'll start by initializing a data list that stores our input features.
 
@@ -191,7 +191,7 @@ We can get a summary of our constructed `data_list` with the `summary` function:
 summary(input_dl)
 ```
 
-Each input data frame now has the same 87 subjects with complete data.
+Each input data frame now has the same 87 observations with complete data.
 The width refers to the number of features in each data frame (not including the UID column).
 
 `data_list` now stores all the features we intend on using for the clustering.
@@ -862,7 +862,7 @@ Here, they are just a tool to find clustering solutions that are well-separated 
 Finding a cluster solution like this is similar to a supervised learning approach, but where the optimization method is just random sampling.
 The risk for overfitting your data with this approach is considerable, so make sure you have some rigorous external validation before reporting your findings.
 
-We recommend using *label propagation* (provided by the SNFtool package in the `groupPredict` function) for validation: take the top clustering solutions found in some training data, assign predicted clusters to some held out test subjects, and then characterize those test subjects to see how well the clustering solution seemed to have worked.
+We recommend using *label propagation* (provided by the SNFtool package in the `groupPredict` function) for validation: take the top clustering solutions found in some training data, assign predicted clusters to some held out test observations, and then characterize those test observations to see how well the clustering solution seemed to have worked.
 
 ## Validating results with label propagation
 
@@ -871,40 +871,40 @@ Here's a quick step through of the complete procedure, from the beginning, with 
 The `metasnf` package comes equipped with the function `train_test_assign` to provide random splitting for you.
 
 ```{r}
-# All the subjects present in all data frames with no NAs
-all_subjects <- uids(input_dl)
+# All the observations present in all data frames with no NAs
+all_observations <- uids(input_dl)
 
-all_subjects
+all_observations
 
 # Remove the "uid_" prefix to allow merges with the original data
-all_subjects <- gsub("uid_", "", all_subjects)
+all_observations <- gsub("uid_", "", all_observations)
 
-# data frame assigning 80% of subjects to train and 20% to test
-assigned_splits <- train_test_assign(train_frac = 0.8, subjects = all_subjects)
+# data frame assigning 80% of observations to train and 20% to test
+assigned_splits <- train_test_assign(train_frac = 0.8, uids = all_observations)
 
-# Pulling the training and testing subjects specifically
-train_subs <- assigned_splits$"train"
-test_subs <- assigned_splits$"test"
+# Pulling the training and testing observations specifically
+train_obs <- assigned_splits$"train"
+test_obs <- assigned_splits$"test"
 
 # Partition a training set
-train_cort_t <- cort_t[cort_t$"unique_id" %in% train_subs, ]
-train_cort_sa <- cort_sa[cort_sa$"unique_id" %in% train_subs, ]
-train_subc_v <- subc_v[subc_v$"unique_id" %in% train_subs, ]
-train_income <- income[income$"unique_id" %in% train_subs, ]
-train_pubertal <- pubertal[pubertal$"unique_id" %in% train_subs, ]
-train_anxiety <- anxiety[anxiety$"unique_id" %in% train_subs, ]
-train_depress <- depress[depress$"unique_id" %in% train_subs, ]
+train_cort_t <- cort_t[cort_t$"unique_id" %in% train_obs, ]
+train_cort_sa <- cort_sa[cort_sa$"unique_id" %in% train_obs, ]
+train_subc_v <- subc_v[subc_v$"unique_id" %in% train_obs, ]
+train_income <- income[income$"unique_id" %in% train_obs, ]
+train_pubertal <- pubertal[pubertal$"unique_id" %in% train_obs, ]
+train_anxiety <- anxiety[anxiety$"unique_id" %in% train_obs, ]
+train_depress <- depress[depress$"unique_id" %in% train_obs, ]
 
 # Partition a test set
-test_cort_t <- cort_t[cort_t$"unique_id" %in% test_subs, ]
-test_cort_sa <- cort_sa[cort_sa$"unique_id" %in% test_subs, ]
-test_subc_v <- subc_v[subc_v$"unique_id" %in% test_subs, ]
-test_income <- income[income$"unique_id" %in% test_subs, ]
-test_pubertal <- pubertal[pubertal$"unique_id" %in% test_subs, ]
-test_anxiety <- anxiety[anxiety$"unique_id" %in% test_subs, ]
-test_depress <- depress[depress$"unique_id" %in% test_subs, ]
+test_cort_t <- cort_t[cort_t$"unique_id" %in% test_obs, ]
+test_cort_sa <- cort_sa[cort_sa$"unique_id" %in% test_obs, ]
+test_subc_v <- subc_v[subc_v$"unique_id" %in% test_obs, ]
+test_income <- income[income$"unique_id" %in% test_obs, ]
+test_pubertal <- pubertal[pubertal$"unique_id" %in% test_obs, ]
+test_anxiety <- anxiety[anxiety$"unique_id" %in% test_obs, ]
+test_depress <- depress[depress$"unique_id" %in% test_obs, ]
 
-# A data list with just training subjects
+# A data list with just training observations
 train_dl <- data_list(
     list(train_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(train_cort_sa, "cortical_sa", "neuroimaging", "continuous"),
@@ -914,7 +914,7 @@ train_dl <- data_list(
     uid = "unique_id"
 )
 
-# A data list with training and testing subjects
+# A data list with training and testing observations
 full_dl <- data_list(
     list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
@@ -959,8 +959,8 @@ which(ext_sol_df$"min_pval" == lowest_min_pval)
 # Keep track of your top solution
 top_row <- ext_sol_df[1, ]
 
-# Use the solutions data frame from the training subjects and the data list from
-# the training and testing subjects to propagate labels to the test subjects
+# Use the solutions data frame from the training observations and the data list from
+# the training and testing observations to propagate labels to the test observations
 propagated_labels <- label_propagate(top_row, full_dl)
 
 head(propagated_labels)

@@ -19,6 +19,5 @@
     - [ ] remove initial noun from @return tags
 - [ ] testing (complete coverage may be overkill?)
 
-- subjects -> observations
 - more examples for all the functions
 - vignette checks

@@ -204,14 +204,14 @@ The first entries are all lists which contains the following elements:
 3. A name for the *domain* of information the data frame is representative of (string)
 4. The type of feature stored in the data frame (options are continuous, discrete, ordinal, categorical, and mixed)
 
-Finally, there's an argument for the `uid` (the column name that currently uniquely identifies all the subjects in your data).
+Finally, there's an argument for the `uid` (the column name that currently uniquely identifies all the observations in your data).
 
 Behind the scenes, this function is building a nested list that keeps track of all this information, but it is also:
 
 - Converting the UID of the data into "uid"
 - Removing all observations that contain any NAs
-- Removing all subjects who are not present in all input data frames
-- Arranging the subjects in all the data frame by their UID
+- Removing all observations who are not present in all input data frames
+- Arranging the observations in all the data frame by their UID
 - Prefixing the UID values with the string "uid_" to help with cluster result characterization
 
 Any rows containing NAs are removed.

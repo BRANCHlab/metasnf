@@ -2,7 +2,7 @@
 % Please edit documentation in R/heatmaps.R
 \name{shiny_annotator}
 \alias{shiny_annotator}
-\title{Launch shiny app to identify meta cluster boundaries}
+\title{Launch a shiny app to identify meta cluster boundaries}
 \usage{
 shiny_annotator(ari_heatmap)
 }
@@ -13,5 +13,13 @@ shiny_annotator(ari_heatmap)
 Does not return any value. Launches interactive shiny applet.
 }
 \description{
-Launch shiny app to identify meta cluster boundaries
+This function calls the \code{htShiny()} function from the package
+InteractiveComplexHeatmap to assist users in identifying the indices of the
+boundaries between meta clusters in a meta cluster heatmap. By providing a
+heatmap of inter-solution similarities (obtained through
+meta_cluster_heatmap()), users can click on positions within the heatmap
+that appear to meaningfully separate major sets of similar cluster
+solutions by visual inspection. The corresponding indices of the clicked
+positions are printed to the console and also shown within the app. This
+function can only run from an interactive session of R.
 }

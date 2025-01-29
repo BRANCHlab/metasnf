@@ -117,11 +117,11 @@ coclustering_results$"cocluster_summary"
 
 Note that the runtime of this function scales quadratically with the number of observations and linearly with the number of subsamples.
 The output of `calculate_coclustering` is a list containing the following components:
- - `cocluster_dfs`: A list of data frames, one per cluster solution, that shows the number of times that every pair of subjects in the original cluster solution occurred in the same subsample, the number of times that every pair clustered together in a subsample, and the corresponding fraction of times that every pair clustered together in a subsample.
- - `cocluster_ss_mats`: The number of times every pair of subjects occurred in the same subsample, formatted as a pairwise matrix.
- - `cocluster_sc_mats`: The number of times every pair of subjects occurred in the same cluster, formatted as a pairwise matrix.
- - `cocluster_cf_mats`: The fraction of times every pair of subjects occurred in the same cluster, formatted as a pairwise matrix.
- - `cocluster_summary`: Among pairs of subjects that clustered together in the original cluster solution, the mean fraction those pairs remained clustered together across the subsample-derived solutions. This information is formatted as a data frame with one row per cluster solution.
+ - `cocluster_dfs`: A list of data frames, one per cluster solution, that shows the number of times that every pair of observations in the original cluster solution occurred in the same subsample, the number of times that every pair clustered together in a subsample, and the corresponding fraction of times that every pair clustered together in a subsample.
+ - `cocluster_ss_mats`: The number of times every pair of observations occurred in the same subsample, formatted as a pairwise matrix.
+ - `cocluster_sc_mats`: The number of times every pair of observations occurred in the same cluster, formatted as a pairwise matrix.
+ - `cocluster_cf_mats`: The fraction of times every pair of observations occurred in the same cluster, formatted as a pairwise matrix.
+ - `cocluster_summary`: Among pairs of observations that clustered together in the original cluster solution, the mean fraction those pairs remained clustered together across the subsample-derived solutions. This information is formatted as a data frame with one row per cluster solution.
 
 The `cocluster_dfs` component can be used to visualize co-clustering across subsamples as a density plot:
 

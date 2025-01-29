@@ -341,6 +341,7 @@ meta_cluster_heatmap <- function(aris,
 #'  that displays the pairwise associations between features from the provided
 #'  correlation_matrix.
 #' @export
+#' @examples
 #' #data_list <- data_list(
 #' #    list(income, "household_income", "demographics", "ordinal"),
 #' #    list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -780,7 +781,8 @@ config_heatmap <- function(sc,
 
 #' Heatmap of p-values
 #'
-#' @param pvals A matrix of p-values.
+#' @param ext_sol_df An ext_solutions_df class object (produced from
+#'  the function `extend_solutions`.
 #' @param order Numeric vector containing row order of the heatmap.
 #' @param cluster_columns Whether columns should be sorted by hierarchical
 #'  clustering.

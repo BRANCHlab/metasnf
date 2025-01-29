@@ -69,3 +69,21 @@ hyperparameters in an SNF config object. Numeric parameters are scaled
 normalized and non-numeric parameters are added as heatmap annotations. Rows
 can be reordered to match prior meta clustering results.
 }
+\examples{
+dl <- data_list(
+    list(income, "household_income", "demographics", "ordinal"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(fav_colour, "favourite_colour", "demographics", "categorical"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+
+sc <- snf_config(
+    dl,
+    n_solutions = 10,
+    dropout_dist = "uniform"
+)
+
+config_heatmap(sc)
+}

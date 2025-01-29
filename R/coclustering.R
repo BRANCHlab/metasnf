@@ -8,7 +8,7 @@
 #' @param dl A nested list of input data from `data_list()`.
 #' @param n_subsamples Number of subsamples to create.
 #' @param subsample_fraction Percentage of patients to include per subsample.
-#' @param n_subjects Number of patients to include per subsample.
+#' @param n_observations Number of patients to include per subsample.
 #' @return A "list" class object containing `n_subsamples` number of
 #'  data lists. Each of those data lists contains a random `subsample_fraction`
 #'  fraction of the observations of the provided data list.
@@ -29,29 +29,29 @@
 subsample_dl <- function(dl,
                          n_subsamples,
                          subsample_fraction = NULL,
-                         n_subjects = NULL) {
-    # Make sure that only one parameter was used to specify how many subjects
+                         n_observations = NULL) {
+    # Make sure that only one parameter was used to specify how many observations
     #  to keep in each subsample
-    both_null <- is.null(subsample_fraction) & is.null(n_subjects)
-    neither_null <- !is.null(subsample_fraction) & !is.null(n_subjects)
+    both_null <- is.null(subsample_fraction) & is.null(n_observations)
+    neither_null <- !is.null(subsample_fraction) & !is.null(n_observations)
     if (both_null | neither_null) {
         metasnf_error(
             "Either the subsample_fraction parameter (fraction of",
-            " subjects) or n_subjects (number of subjects) must be",
+            " observations) or n_observations (number of observations) must be",
             " provided. Not both (or neither)."
         )
     }
-    # Calculate number of subjects to keep if fraction parameter was used
-    all_subjects <- dl[[1]]$"data"$"uid"
-    # Ensure n_subjects is within 0 and the total number of subjects
-    if (!is.null(n_subjects)) {
-        if (n_subjects < 0 | n_subjects > length(all_subjects)) {
+    # Calculate number of observations to keep if fraction parameter was used
+    all_observations <- dl[[1]]$"data"$"uid"
+    # Ensure n_observations is within 0 and the total number of observations
+    if (!is.null(n_observations)) {
+        if (n_observations < 0 | n_observations > length(all_observations)) {
             metasnf_error(
-                "n_subjects must be between 0 and the total number of",
-                " subjects."
+                "n_observations must be between 0 and the total number of",
+                " observations."
             )
-        } else if (as.integer(n_subjects) != n_subjects) {
-            metasnf_error("n_subjects must be an integer.")
+        } else if (as.integer(n_observations) != n_observations) {
+            metasnf_error("n_observations must be an integer.")
         }
     }
     # Ensure sample fraction is a real fraction
@@ -59,13 +59,13 @@ subsample_dl <- function(dl,
         if (subsample_fraction > 1 | subsample_fraction < 0) {
             metasnf_error("subsample_fraction must be between 0 and 1.")
         } else {
-            n_subjects <- round(subsample_fraction * length(all_subjects))
+            n_observations <- round(subsample_fraction * length(all_observations))
         }
     }
     uid_subsamples <- lapply(
-        rep(n_subjects, n_subsamples),
+        rep(n_observations, n_subsamples),
         function(x) {
-            return(sample(all_subjects, x))
+            return(sample(all_observations, x))
         }
     )
     dl_subsamples <- uid_subsamples |> lapply(
@@ -270,7 +270,7 @@ subsample_pairwise_aris <- function(subsample_solutions,
             #  (the solution corresponding to that row)
             solution_a <- subsample_a[, c(1, row + 1)]
             solution_b <- subsample_b[, c(1, row + 1)]
-            # remove any subjects who weren't a part of both subsamples
+            # remove any observations who weren't a part of both subsamples
             common_df <- dplyr::inner_join(solution_a, solution_b, by = "uid")
             # The first column of common_df contains the uid values. The
             #  2nd and 3rd columns store the two sets of cluster solutions.
@@ -612,17 +612,17 @@ cocluster_heatmap <- function(cocluster_df,
 #' @param verbose If TRUE, output time remaining estimates to console.
 #' @return A list containing the following components:
 #' - cocluster_dfs: A list of data frames, one per cluster solution, that shows
-#'   the number of times that every pair of subjects in the original cluster
+#'   the number of times that every pair of observations in the original cluster
 #'   solution occurred in the same subsample, the number of times that every
 #'   pair clustered together in a subsample, and the corresponding fraction
 #'   of times that every pair clustered together in a subsample.
-#' - cocluster_ss_mats: The number of times every pair of subjects occurred
+#' - cocluster_ss_mats: The number of times every pair of observations occurred
 #'   in the same subsample, formatted as a pairwise matrix.
-#' - cocluster_sc_mats: The number of times every pair of subjects occurred
+#' - cocluster_sc_mats: The number of times every pair of observations occurred
 #'   in the same cluster, formatted as a pairwise matrix.
-#' - cocluster_cf_mats: The fraction of times every pair of subjects occurred
+#' - cocluster_cf_mats: The fraction of times every pair of observations occurred
 #'   in the same cluster, formatted as a pairwise matrix.
-#' - cocluster_summary: Specifically among pairs of subjects that clustered
+#' - cocluster_summary: Specifically among pairs of observations that clustered
 #'   together in the original full cluster solution, what fraction of those
 #'   pairs remained clustered together throughout the subsample solutions. This
 #'   information is formatted as a data frame with one row per cluster solution.
@@ -788,7 +788,7 @@ calculate_coclustering <- function(subsample_solutions,
 #' Coclustering coverage check
 #'
 #' Check if coclustered data has at least one subsample in which every pair
-#' of subjects were a part of simultaneously.
+#' of observations were a part of simultaneously.
 #'
 #' @keywords internal
 #' @param cocluster_df data frame containing coclustering data.
@@ -814,7 +814,7 @@ coclustering_coverage_check <- function(cocluster_df, action = "warn") {
                 missing_coclustering, " out of ", nrow(cocluster_df),
                 " pairs of observations did not appear in",
                 " any of the data list subsamples together. This function",
-                " requires all pairs of subjects to have occurred",
+                " requires all pairs of observations to have occurred",
                 " in at least 1 subsampled cluster solution.",
                 " Try increasing the value of the `subsample_fraction` or",
                 " `n_subsamples` when calling `subsample_dl()`."

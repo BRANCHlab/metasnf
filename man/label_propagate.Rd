@@ -2,12 +2,12 @@
 % Please edit documentation in R/label_propagation.R
 \name{label_propagate}
 \alias{label_propagate}
-\title{Label propagate cluster solutions to unclustered subjects}
+\title{Label propagate cluster solutions to unclustered observations}
 \usage{
-label_propagate(train_sol_df, full_dl, verbose = FALSE)
+label_propagate(partial_sol_df, full_dl, verbose = FALSE)
 }
 \arguments{
-\item{train_sol_df}{A solutions data frame derived from the training set.}
+\item{partial_sol_df}{A solutions data frame derived from the training set.}
 
 \item{full_dl}{A data list containing subjects from both the training
 and testing sets.}
@@ -21,8 +21,96 @@ UIDs, a column for whether the subject was in the train (original) or test
 indicating the original and propagated clusters.
 }
 \description{
-Given a sol_df derived from training subjects and a full_data_list
-containing both training and test subjects, re-run SNF to generate a total
-affinity matrix of both train and subjects and use the label propagation
-algorithm to assigned predicted clusters to test subjects.
+Given a solutions data frame containing clustered observations and a
+data list containing those clustered observations as well as additional
+to-be-clustered observations, this function will re-run SNF to generate a
+similarity matrix of all observations and use the label propagation
+algorithm to assigned predicted clusters to the unclustered observations.
+}
+\examples{
+## Function to identify obervations with complete data
+#uids_with_complete_obs <- get_complete_uids(
+#    list(subc_v, income, pubertal, anxiety, depress),
+#    uid = "unique_id"
+#)
+#
+## Dataframe assigning 80\% of subjects to train and 20\% to test
+#train_test_split <- train_test_assign(
+#    train_frac = 0.8,
+#    subjects = uids_with_complete_obs
+#)
+#
+## Pulling the training and testing subjects specifically
+#train_subs <- train_test_split$"train"
+#test_subs <- train_test_split$"test"
+#
+## Partition a training set
+#train_subc_v <- subc_v[subc_v$"unique_id" \%in\% train_subs, ]
+#train_income <- income[income$"unique_id" \%in\% train_subs, ]
+#train_pubertal <- pubertal[pubertal$"unique_id" \%in\% train_subs, ]
+#train_anxiety <- anxiety[anxiety$"unique_id" \%in\% train_subs, ]
+#train_depress <- depress[depress$"unique_id" \%in\% train_subs, ]
+#
+## Partition a test set
+#test_subc_v <- subc_v[subc_v$"unique_id" \%in\% test_subs, ]
+#test_income <- income[income$"unique_id" \%in\% test_subs, ]
+#test_pubertal <- pubertal[pubertal$"unique_id" \%in\% test_subs, ]
+#test_anxiety <- anxiety[anxiety$"unique_id" \%in\% test_subs, ]
+#test_depress <- depress[depress$"unique_id" \%in\% test_subs, ]
+#
+## Find cluster solutions in the training set
+#train_dl <- data_list(
+#    list(train_subc_v, "subc_v", "neuroimaging", "continuous"),
+#    list(train_income, "household_income", "demographics", "continuous"),
+#    list(train_pubertal, "pubertal_status", "demographics", "continuous"),
+#    uid = "unique_id"
+#)
+#
+## We'll pick a solution that has good separation over our target features
+#train_target_dl <- data_list(
+#    list(train_anxiety, "anxiety", "behaviour", "ordinal"),
+#    list(train_depress, "depressed", "behaviour", "ordinal"),
+#    uid = "unique_id"
+#)
+#
+#sc <- snf_config(
+#    train_dl,
+#    n_solutions = 5,
+#    min_k = 10,
+#    max_k = 30
+#)
+#
+#train_sol_df <- batch_snf(
+#    train_dl,
+#    sc,
+#    return_sim_mats = TRUE
+#)
+#
+#ext_sol_df <- extend_solutions(
+#    train_sol_df,
+#    train_target_dl
+#)
+#
+## Determining solution with the lowest minimum p-value
+#lowest_min_pval <- min(ext_sol_df$"min_pval")
+#which(ext_sol_df$"min_pval" == lowest_min_pval)
+#top_row <- ext_sol_df[1, ]
+#
+## Propagate that solution to the subjects in the test set
+## data list below has both training and testing subjects
+#full_dl <- data_list(
+#    list(subc_v, "subc_v", "neuroimaging", "continuous"),
+#    list(income, "household_income", "demographics", "continuous"),
+#    list(pubertal, "pubertal_status", "demographics", "continuous"),
+#    uid = "unique_id"
+#)
+#
+## Use the solutions data frame from the training subjects and the data list
+## from the training and testing subjects to propagate labels to the test subjects
+#propagated_labels <- label_propagate(top_row, full_dl)
+#
+#propagated_labels_all <- label_propagate(ext_sol_df, full_dl)
+#
+#head(propagated_labels_all)
+#tail(propagated_labels_all)
 }
