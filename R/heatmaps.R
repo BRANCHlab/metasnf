@@ -900,6 +900,41 @@ pval_heatmap <- function(ext_sol_df,
 #' @param ari_heatmap Heatmap of ARIs to divide into meta clusters.
 #' @return Does not return any value. Launches interactive shiny applet.
 #' @export
+#' @examples
+#' #dl <- data_list(
+#' #    list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+#' #    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#' #    list(income, "household_income", "demographics", "continuous"),
+#' #    list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #    uid = "unique_id"
+#' #)
+#' #
+#' #set.seed(42)
+#' #my_sc <- snf_config(
+#' #    dl = dl,
+#' #    n_solutions = 20,
+#' #    min_k = 20,
+#' #    max_k = 50
+#' #)
+#' #
+#' #sol_df <- batch_snf(dl, my_sc)
+#' #
+#' #sol_aris <- calc_aris(sol_df)
+#' #
+#' #meta_cluster_order <- get_matrix_order(sol_aris)
+#' #
+#' #ari_hm <- meta_cluster_heatmap(sol_aris, order = meta_cluster_order)
+#' #
+#' ## Click on meta cluster boundaries to obtain `split_vec` values
+#' #shiny_annotator(ari_hm)
+#' #
+#' #split_vec <- c(7, 11, 17)
+#' #
+#' #ari_hm <- meta_cluster_heatmap(
+#' #    sol_aris,
+#' #    order = meta_cluster_order,
+#' #    split_vector = split_vec
+#' #)
 shiny_annotator <- function(ari_heatmap) {
     if (interactive()) {
         drawn_heatmap <- ComplexHeatmap::draw(ari_heatmap)
@@ -1005,6 +1040,7 @@ assemble_data <- function(data, dl) {
 #'  annotations they should be viewed through and returns annotation objects
 #'  usable by ComplexHeatmap::Heatmap.
 #'
+#' @keywords internal
 #' @param df data frame containing all the data that is specified in the
 #'  remaining arguments.
 #' @param left_bar Named list of strings, where the strings are features in
@@ -1023,7 +1059,6 @@ assemble_data <- function(data, dl) {
 #' @param annotation_colours Named list of heatmap annotations and their
 #'  colours.
 #' @return annotations_list A named list of all the annotations.
-#' @export
 generate_annotations_list <- function(df,
                                       left_bar = NULL,
                                       right_bar = NULL,
@@ -1421,6 +1456,7 @@ generate_annotations_list <- function(df,
 
 #' Convert a vector of partition indices into meta cluster labels
 #'
+#' @keywords internal
 #' @param split_vector A vector of partition indices.
 #' @param nrow The number of rows in the data being partitioned.
 #' @return A character vector that expands the split_vector into an nrow-length
@@ -1428,7 +1464,6 @@ generate_annotations_list <- function(df,
 #'  c(3, 6) and the number of rows is 8, the result will be a vector of two
 #'  "A"s (up to the first index, 3), three "B"s (up to the second index, 6),
 #'  and three "C"s (up to and including the last index, 8).
-#' @export
 label_splits <- function(split_vector, nrow) {
     labels <- rep("A", nrow)
     if (split_vector[length(split_vector)] != nrow) {

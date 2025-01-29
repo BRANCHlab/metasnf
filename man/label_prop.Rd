@@ -7,19 +7,19 @@
 label_prop(full_fused_network, clusters)
 }
 \arguments{
-\item{full_fused_network}{Network made by running SNF on training and test
-subjects together}
+\item{full_fused_network}{A network made by running SNF on training and test
+observations together.}
 
-\item{clusters}{a vector of training subject assigned clusters in matching
-order as they appear in full_fused_network}
+\item{clusters}{A vector of assigned clusters for training observations in
+matching order as they appear in full_fused_network.}
 }
 \value{
-new_clusters list of cluster labels for all subjects
+A list of cluster labels for all observations.
 }
 \description{
 Given a full fused network (one containing both pre-clustered observations
 and to-be-clustered observations) and the clusters of the pre-clustered
-observations, return a label propagated list of clusters for all subjects.
+observations, return a label propagated list of clusters for all observations.
 This function is derived from SNFtool::groupPredict. Modifications are made
 to take a full fused network as input, rather than taking input data frames
 and running SNF internally. This ensures that alternative approaches to

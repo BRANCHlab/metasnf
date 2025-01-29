@@ -58,8 +58,13 @@
         expr = {
             result <- validate_solutions_df(result)
             result <- new_solutions_df(result)
-            attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"[i]
-            attributes(result)$"snf_config" <- attributes(x)$"snf_config"[i]
+            if (!missing(i)) {
+                attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"[i]
+                attributes(result)$"snf_config" <- attributes(x)$"snf_config"[i]
+            } else {
+                attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"
+                attributes(result)$"snf_config" <- attributes(x)$"snf_config"
+            }
             result
         },
         error = function(e) {
@@ -77,8 +82,13 @@
         expr = {
             result <- validate_ext_solutions_df(result)
             result <- new_ext_solutions_df(result)
-            attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"[i]
-            attributes(result)$"snf_config" <- attributes(x)$"snf_config"[i]
+            if (!missing(i)) {
+                attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"[i]
+                attributes(result)$"snf_config" <- attributes(x)$"snf_config"[i]
+            } else {
+                attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"
+                attributes(result)$"snf_config" <- attributes(x)$"snf_config"
+            }
             result
         },
         error = function(e) {

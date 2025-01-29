@@ -22,17 +22,17 @@ correspond to those in the subsample solutions.}
 A list containing the following components:
 \itemize{
 \item cocluster_dfs: A list of data frames, one per cluster solution, that shows
-the number of times that every pair of subjects in the original cluster
+the number of times that every pair of observations in the original cluster
 solution occurred in the same subsample, the number of times that every
 pair clustered together in a subsample, and the corresponding fraction
 of times that every pair clustered together in a subsample.
-\item cocluster_ss_mats: The number of times every pair of subjects occurred
+\item cocluster_ss_mats: The number of times every pair of observations occurred
 in the same subsample, formatted as a pairwise matrix.
-\item cocluster_sc_mats: The number of times every pair of subjects occurred
+\item cocluster_sc_mats: The number of times every pair of observations occurred
 in the same cluster, formatted as a pairwise matrix.
-\item cocluster_cf_mats: The fraction of times every pair of subjects occurred
+\item cocluster_cf_mats: The fraction of times every pair of observations occurred
 in the same cluster, formatted as a pairwise matrix.
-\item cocluster_summary: Specifically among pairs of subjects that clustered
+\item cocluster_summary: Specifically among pairs of observations that clustered
 together in the original full cluster solution, what fraction of those
 pairs remained clustered together throughout the subsample solutions. This
 information is formatted as a data frame with one row per cluster solution.

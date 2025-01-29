@@ -19,6 +19,6 @@ value of the action parameter.
 }
 \description{
 Check if coclustered data has at least one subsample in which every pair
-of subjects were a part of simultaneously.
+of observations were a part of simultaneously.
 }
 \keyword{internal}

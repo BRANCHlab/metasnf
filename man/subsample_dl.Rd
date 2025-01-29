@@ -4,7 +4,12 @@
 \alias{subsample_dl}
 \title{Create subsamples of a data list}
 \usage{
-subsample_dl(dl, n_subsamples, subsample_fraction = NULL, n_subjects = NULL)
+subsample_dl(
+  dl,
+  n_subsamples,
+  subsample_fraction = NULL,
+  n_observations = NULL
+)
 }
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}
@@ -13,7 +18,7 @@ subsample_dl(dl, n_subsamples, subsample_fraction = NULL, n_subjects = NULL)
 
 \item{subsample_fraction}{Percentage of patients to include per subsample.}
 
-\item{n_subjects}{Number of patients to include per subsample.}
+\item{n_observations}{Number of patients to include per subsample.}
 }
 \value{
 A "list" class object containing \code{n_subsamples} number of

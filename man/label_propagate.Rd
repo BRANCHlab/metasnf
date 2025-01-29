@@ -9,14 +9,14 @@ label_propagate(partial_sol_df, full_dl, verbose = FALSE)
 \arguments{
 \item{partial_sol_df}{A solutions data frame derived from the training set.}
 
-\item{full_dl}{A data list containing subjects from both the training
+\item{full_dl}{A data list containing observations from both the training
 and testing sets.}
 
 \item{verbose}{If TRUE, output progress to console.}
 }
 \value{
 A data frame with one row per observation containing a column for
-UIDs, a column for whether the subject was in the train (original) or test
+UIDs, a column for whether the observation was in the train (original) or test
 (held out) set, and one column per row of the solutions data frame
 indicating the original and propagated clusters.
 }
@@ -34,29 +34,29 @@ algorithm to assigned predicted clusters to the unclustered observations.
 #    uid = "unique_id"
 #)
 #
-## Dataframe assigning 80\% of subjects to train and 20\% to test
+## Dataframe assigning 80\% of observations to train and 20\% to test
 #train_test_split <- train_test_assign(
 #    train_frac = 0.8,
-#    subjects = uids_with_complete_obs
+#    uids = uids_with_complete_obs
 #)
 #
-## Pulling the training and testing subjects specifically
-#train_subs <- train_test_split$"train"
-#test_subs <- train_test_split$"test"
+## Pulling the training and testing observations specifically
+#train_obs <- train_test_split$"train"
+#test_obs <- train_test_split$"test"
 #
 ## Partition a training set
-#train_subc_v <- subc_v[subc_v$"unique_id" \%in\% train_subs, ]
-#train_income <- income[income$"unique_id" \%in\% train_subs, ]
-#train_pubertal <- pubertal[pubertal$"unique_id" \%in\% train_subs, ]
-#train_anxiety <- anxiety[anxiety$"unique_id" \%in\% train_subs, ]
-#train_depress <- depress[depress$"unique_id" \%in\% train_subs, ]
+#train_subc_v <- subc_v[subc_v$"unique_id" \%in\% train_obs, ]
+#train_income <- income[income$"unique_id" \%in\% train_obs, ]
+#train_pubertal <- pubertal[pubertal$"unique_id" \%in\% train_obs, ]
+#train_anxiety <- anxiety[anxiety$"unique_id" \%in\% train_obs, ]
+#train_depress <- depress[depress$"unique_id" \%in\% train_obs, ]
 #
 ## Partition a test set
-#test_subc_v <- subc_v[subc_v$"unique_id" \%in\% test_subs, ]
-#test_income <- income[income$"unique_id" \%in\% test_subs, ]
-#test_pubertal <- pubertal[pubertal$"unique_id" \%in\% test_subs, ]
-#test_anxiety <- anxiety[anxiety$"unique_id" \%in\% test_subs, ]
-#test_depress <- depress[depress$"unique_id" \%in\% test_subs, ]
+#test_subc_v <- subc_v[subc_v$"unique_id" \%in\% test_obs, ]
+#test_income <- income[income$"unique_id" \%in\% test_obs, ]
+#test_pubertal <- pubertal[pubertal$"unique_id" \%in\% test_obs, ]
+#test_anxiety <- anxiety[anxiety$"unique_id" \%in\% test_obs, ]
+#test_depress <- depress[depress$"unique_id" \%in\% test_obs, ]
 #
 ## Find cluster solutions in the training set
 #train_dl <- data_list(
@@ -96,8 +96,8 @@ algorithm to assigned predicted clusters to the unclustered observations.
 #which(ext_sol_df$"min_pval" == lowest_min_pval)
 #top_row <- ext_sol_df[1, ]
 #
-## Propagate that solution to the subjects in the test set
-## data list below has both training and testing subjects
+## Propagate that solution to the observations in the test set
+## data list below has both training and testing observations
 #full_dl <- data_list(
 #    list(subc_v, "subc_v", "neuroimaging", "continuous"),
 #    list(income, "household_income", "demographics", "continuous"),
@@ -105,8 +105,8 @@ algorithm to assigned predicted clusters to the unclustered observations.
 #    uid = "unique_id"
 #)
 #
-## Use the solutions data frame from the training subjects and the data list
-## from the training and testing subjects to propagate labels to the test subjects
+## Use the solutions data frame from the training observations and the data list
+## from the training and testing observations to propagate labels to the test observations
 #propagated_labels <- label_propagate(top_row, full_dl)
 #
 #propagated_labels_all <- label_propagate(ext_sol_df, full_dl)

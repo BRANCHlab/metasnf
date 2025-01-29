@@ -55,3 +55,4 @@ Intermediate function that takes in formatted lists of features and the
 annotations they should be viewed through and returns annotation objects
 usable by ComplexHeatmap::Heatmap.
 }
+\keyword{internal}

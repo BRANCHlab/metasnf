@@ -20,16 +20,12 @@ ext_solutions_df <- function(ext_sol_dfl, sol_df, fts, target_dl) {
     ext_sol_dfl$"solution" <- as.factor(ext_sol_dfl$"solution")
     ext_sol_dfl <- dplyr::inner_join(sol_df, ext_sol_dfl, by = "solution")
     if (!is.null(target_dl)) {
-        ext_sol_dfl <- dplyr::select(
-            ext_sol_dfl,
-            "solution",
-            "nclust",
-            "mc",
-            "min_pval",
-            "mean_pval",
-            "max_pval",
-            dplyr::everything()
-        )
+        ordered_cols <- c(
+            "solution", "nclust", "mc", "min_pval", "mean_pval", "max_pval",
+            colnames(ext_sol_dfl)
+        ) |>
+            unique()
+        ext_sol_dfl <- ext_sol_dfl[, ordered_cols]
         attributes(ext_sol_dfl)$"summary_features" <- features(target_dl)
     } else {
         attributes(ext_sol_dfl)$"summary_features" <- as.character()
@@ -50,7 +46,8 @@ ext_solutions_df <- function(ext_sol_dfl, sol_df, fts, target_dl) {
 #'  ext_solutions_df, returns ext_sol_dfl. Otherwise, raises an error.
 validate_ext_solutions_df <- function(ext_sol_dfl) {
     class(ext_sol_dfl)  <- setdiff(class(ext_sol_dfl), "ext_solutions_df")
-    pval_cols <- dplyr::select(ext_sol_dfl, dplyr::ends_with("_pval"))
+    pval_cols <- grep("_pval$", names(ext_sol_dfl), value = TRUE)
+    pval_cols <- ext_sol_dfl[, pval_cols]
     if (!(length(pval_cols) > 1)) {
         metasnf_error(
             "Extended solutions data frame must have at least one p-value",
@@ -239,7 +236,8 @@ extend_solutions <- function(sol_df,
         ext_sol_dfl <- do.call("rbind", ext_sol_dfl_rows)
     }
     ext_sol_dfl$"solution" <- sol_df$"solution"
-    ext_sol_dfl <- dplyr::select(ext_sol_dfl, "solution", dplyr::everything())
+    col_order <- unique(c("solution", colnames(ext_sol_dfl)))
+    ext_sol_dfl <- ext_sol_dfl[, col_order]
     ###########################################################################
     # If min_pval is assigned, use to replace any smaller p-value
     ###########################################################################
@@ -259,17 +257,12 @@ extend_solutions <- function(sol_df,
         #######################################################################
         target_fts <- summary(target_dl, scope = "feature")$"name"
         target_fts <- paste0(target_fts, "_pval")
-        target_ext_sol_dfl <- dplyr::select(
-            ext_sol_dfl,
-            "solution",
-            dplyr::all_of(target_fts)
-        )
+        target_ext_sol_dfl <- target_ext_sol_dfl[, unique(c("solution", target_fts))]
         target_ext_sol_dfl <- summarize_pvals(target_ext_sol_dfl)
-        target_ext_sol_dfl <- dplyr::select(target_ext_sol_dfl, -"solution")
-        ext_sol_dfl <- dplyr::select(ext_sol_dfl, -dplyr::all_of(target_fts))
+        target_ext_sol_dfl <- target_ext_sol_dfl[, !(colnames(target_ext_sol_dfl) %in% "solution")]
+        ext_sol_dfl <- ext_sol_dfl[, !(colnames(ext_sol_dfl) %in% target_fts)]
         ext_sol_dfl <- cbind(ext_sol_dfl, target_ext_sol_dfl)
     }
     ext_sol_df <- ext_solutions_df(ext_sol_dfl, sol_df, fts, target_dl)
     return(ext_sol_df)
 }
-
