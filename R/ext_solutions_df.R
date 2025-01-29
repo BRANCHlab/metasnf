@@ -236,8 +236,8 @@ extend_solutions <- function(sol_df,
         ext_sol_dfl <- do.call("rbind", ext_sol_dfl_rows)
     }
     ext_sol_dfl$"solution" <- sol_df$"solution"
-    col_order <- unique(c("solution", colnames(ext_sol_dfl)))
-    ext_sol_dfl <- ext_sol_dfl[, col_order]
+    reordered_cols <- unique(c("solution", colnames(ext_sol_dfl)))
+    ext_sol_dfl <- ext_sol_dfl[, reordered_cols]
     ###########################################################################
     # If min_pval is assigned, use to replace any smaller p-value
     ###########################################################################
@@ -257,10 +257,10 @@ extend_solutions <- function(sol_df,
         #######################################################################
         target_fts <- summary(target_dl, scope = "feature")$"name"
         target_fts <- paste0(target_fts, "_pval")
-        target_ext_sol_dfl <- target_ext_sol_dfl[, unique(c("solution", target_fts))]
+        target_ext_sol_dfl <- ext_sol_dfl[, unique(c("solution", target_fts))]
         target_ext_sol_dfl <- summarize_pvals(target_ext_sol_dfl)
-        target_ext_sol_dfl <- target_ext_sol_dfl[, !(colnames(target_ext_sol_dfl) %in% "solution")]
-        ext_sol_dfl <- ext_sol_dfl[, !(colnames(ext_sol_dfl) %in% target_fts)]
+        target_ext_sol_dfl <- target_ext_sol_dfl[, !colnames(target_ext_sol_dfl) == "solution"]
+        ext_sol_dfl <- ext_sol_dfl[, !colnames(ext_sol_dfl) %in% target_fts, drop = FALSE]
         ext_sol_dfl <- cbind(ext_sol_dfl, target_ext_sol_dfl)
     }
     ext_sol_df <- ext_solutions_df(ext_sol_dfl, sol_df, fts, target_dl)

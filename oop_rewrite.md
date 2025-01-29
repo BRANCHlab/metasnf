@@ -21,3 +21,4 @@
 
 - more examples for all the functions
 - vignette checks
+- remove dplyr::select and dplyr::filter where possible, those things work in mysterious ways for custom subsetting on params i,j

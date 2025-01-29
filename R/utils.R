@@ -287,3 +287,25 @@ colour_scale <- function(data, min_colour, max_colour) {
     )
     return(colours)
 }
+
+#' Helper function to remove columns from a data frame
+#'
+#' @keywords internal
+#' @param x A data frame
+#' @param cols Vector of column names to be removed
+#' @return x without columns in cols
+drop_cols <- function(x, cols) {
+    x <- x[, !(colnames(x) %in% cols), drop = FALSE]
+    return(x)
+}
+
+#' Helper function to pick columns from a data frame
+#'
+#' @keywords internal
+#' @param x A data frame
+#' @param cols Vector of column names to be picked
+#' @return x with only columns in cols
+pick_cols <- function(x, cols) {
+    x <- x[, colnames(x) %in% cols, drop = FALSE]
+    return(x)
+}

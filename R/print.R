@@ -37,7 +37,7 @@ print.data_list <- function(x, ...) {
         )
         # Capture tibble formatted data for additional manipulations
         data_out <- component$"data" |>
-            dplyr::select(-"uid") |>
+            drop_cols("uid") |>
             dplyr::glimpse() |>
             utils::capture.output()
         data_main <- data_out[-c(1:2)]
@@ -473,15 +473,14 @@ print.ext_solutions_df <- function(x, n = NULL, ...) {
         )
     )
     # Establishing column names for the different parts to print
-    sol_df <- x |>
-        dplyr::select("solution", "nclust", "mc", dplyr::starts_with("uid"))
-    pval_df <- x |>
-        dplyr::select("solution", dplyr::ends_with("_pval"))
+    key_cols <- c("solution", "nclust", "mc")
+    uid_sol_df_columns <- grep("^uid", names(x), value = TRUE)
+    all_columns <- c(key_cols, uid_sol_df_columns)
+    sol_df <- x[, all_columns]
+    pval_df <- x[ , c("solution", grep("_pval$", names(x), value = TRUE))]
     if ("min_pval" %in% colnames(pval_df)) {
-        summary_df <- pval_df |>
-            dplyr::select("solution", "min_pval", "mean_pval", "max_pval")
-        pval_df <- pval_df |>
-            dplyr::select(-"min_pval", -"mean_pval", -"max_pval")
+        summary_df <- pick_cols(pval_df, c("solution", "min_pval", "mean_pval", "max_pval"))
+        pval_df <- drop_cols(pval_df, c("min_pval", "mean_pval", "max_pval"))
     } else {
         summary_df <- NULL
     }

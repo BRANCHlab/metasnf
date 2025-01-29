@@ -15,9 +15,7 @@ uids.default <- function(x) {
 
 #' @export
 uids.solutions_df <- function(x) {
-    uid_vec <- x |>
-        dplyr::select(dplyr::starts_with("uid_")) |>
-        colnames()
+    uid_vec <- colnames(x)[grepl("^uid_", colnames(x))]
     return(uid_vec)
 }
 
@@ -34,8 +32,6 @@ uids.data_list <- function(x) {
 
 #' @export
 uids.ext_solutions_df <- function(x) {
-    uid_vec <- x |>
-        dplyr::select(dplyr::starts_with("uid_")) |>
-        colnames()
+    uid_vec <- colnames(x)[grepl("^uid_", colnames(x))]
     return(uid_vec)
 }
