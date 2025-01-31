@@ -79,7 +79,7 @@ alluvial_cluster_plot <- function(cluster_sequence,
         by = "uid"
     )
     alluvial_df <- alluvial_df |>
-        dplyr::select(-dplyr::contains("uid")) |>
+        drop_cols("uid") |>
         dplyr::group_by(dplyr::across(0:(ncol(alluvial_df) - 1))) |>
         dplyr::summarize("frequency" = dplyr::n(), .groups = "keep") |>
         data.frame()

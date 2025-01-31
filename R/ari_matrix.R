@@ -44,7 +44,7 @@ calc_aris <- function(sol_df,
     ###########################################################################
     # Prepare data frame containing 1 cluster solution per row
     # Row id and uid columns
-    uids <- dplyr::select(sol_df, -"solution", -"nclust")
+    uids <- drop_cols(sol_df, c("solution", "nclust", "mc"))
     # Only subject label cols
     uids_no_id <- as.matrix(uids[, 2:length(uids)])
     # The skeleton of the inter-cluster similarity matrix

@@ -95,13 +95,7 @@ batch_snf <- function(dl,
     sol_dfl$"nclust" <- apply(sol_dfl, 1, function(x) length(unique(x)))
     sol_dfl$"solution" <- as.integer(seq_len(nrow(sol_dfl)))
     sol_dfl$"mc" <- NA_character_
-    sol_dfl <- sol_dfl |>
-        dplyr::select(
-            "solution",
-            "nclust",
-            "mc",
-            dplyr::everything()
-        )
+    sol_dfl <- sol_df_col_order(sol_dfl)
     # similarity matrix list-like object
     smll <- lapply(run_snf_results, function(x) x[[2]])
     # initialize and return solutions data frame
@@ -260,8 +254,8 @@ drop_inputs <- function(sdf_row, dl) {
     }
     # data frame just of the inclusion features
     inc_df <- sdf_row |>
-        data.frame() |>
-        dplyr::select(dplyr::starts_with("inc"))
+        data.frame()
+    inc_df <- inc_df[, grepl("^uid_", colnames(x))]
     # The subset of columns that are in 'keep' (1) mode
     keepcols <- colnames(inc_df)[inc_df[1, ] == 1]
     # The list of data list elements that are to be selected

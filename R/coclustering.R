@@ -514,15 +514,13 @@ cocluster_heatmap <- function(cocluster_df,
     coclustering_coverage_check(cocluster_df, action = "stop")
     ###########################################################################
     # Reconstructing the original cluster solution
-    cluster_solution_s1 <- dplyr::select(cocluster_df, sub_1, sub_1_clust)
-    cluster_solution_s2 <- dplyr::select(cocluster_df, sub_2, sub_2_clust)
+    cluster_solution_s1 <- pick_cols(cocluster_df, c("sub_1", "sub_1_clust"))
+    cluster_solution_s2 <- pick_cols(cocluster_df, c("sub_2", "sub_2_clust"))
     colnames(cluster_solution_s1) <- c("uid", "cluster")
     colnames(cluster_solution_s2) <- c("uid", "cluster")
-    cluster_solution <- rbind(
-        cluster_solution_s1,
-        cluster_solution_s2
-    ) |>
+    cluster_solution <- rbind(cluster_solution_s1, cluster_solution_s2) |>
         dplyr::distinct() |>
+        data.frame() |>
         dplyr::arrange(cluster, uid)
     if (!is.null(dl)) {
         cluster_solution <- dplyr::left_join(

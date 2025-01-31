@@ -42,7 +42,7 @@
 #' #meta_cluster_order <- get_matrix_order(sol_aris)
 #' #
 #' ## `split_vec` found by iteratively plotting ari_hm or by ?shiny_annotator()
-#' #split_vec <- c(7, 11, 17)
+#' #split_vec <- c(6, 10, 16)
 #' #ari_hm <- meta_cluster_heatmap(
 #' #    sol_aris,
 #' #    order = meta_cluster_order,
@@ -72,16 +72,7 @@ label_meta_clusters <- function(sol_df, split_vector, order = NULL) {
     if (is.null(order)) {
         order <- seq_len(nrow(sol_df))
     }
-    sol_df <- sol_df[order, ]
-    corresponding_solutions <- sol_df$"solution"
-    sol_df$"mc" <- labels
-    sol_df <- dplyr::select(
-        sol_df,
-        "solution",
-        "nclust",
-        "mc",
-        dplyr::everything()
-    ) |>
-        dplyr::arrange(sol_df$"solution")
+    sol_df$"mc" <- labels[order(order)]
+    sol_df <- sol_df[, unique(c("solution", "nclust", "mc", colnames(sol_df)))]
     return(sol_df)
 }

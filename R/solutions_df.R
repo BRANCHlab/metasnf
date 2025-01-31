@@ -72,10 +72,7 @@ get_pvals <- function(ext_sol_df,
                       keep_summaries = TRUE) {
     # Select p-value columns and convert to numeric
     pval_df <- ext_sol_df |>
-        dplyr::select(
-            "solution",
-            dplyr::ends_with("_pval")
-        ) |>
+        gselect(c("^solution$", "_pval$")) |>
         data.frame() |>
         numcol_to_numeric()
     # Convert p-values to negative log p-values if requested
@@ -86,12 +83,7 @@ get_pvals <- function(ext_sol_df,
         return(neg_log_pval_df)
     }
     if (!keep_summaries) {
-        pval_df <- dplyr::select(
-            pval_df,
-            -"mean_pval",
-            -"min_pval",
-            -"max_pval"
-        )
+        pval_df <- drop_cols(pval_df, c("mean_pval", "min_pval", "max_pval"))
     }
     return(pval_df)
 }
@@ -104,10 +96,7 @@ get_pvals <- function(ext_sol_df,
 #'  the min, mean, and maximum across p-values for each row.
 summarize_pvals <- function(ext_sol_df) {
     # Restrict to just p-value columns
-    pval_cols <- dplyr::select(
-        ext_sol_df,
-        dplyr::ends_with("_pval")
-    ) |>
+    pval_cols <- gselect(ext_sol_df, "_pval$") |>
         numcol_to_numeric()
     # Calculate summary statistics
     mean_pvals <- apply(
@@ -151,7 +140,7 @@ get_min_pval <- function(sol_df_row) {
         dplyr::mutate(
             dplyr::across(dplyr::ends_with("_pval"), ~ as.numeric(.))
         ) |>
-        dplyr::select(dplyr::ends_with("_pval")) |>
+        gselect("_pval$") |>
         min()
     return(min_pval)
 }
@@ -168,7 +157,7 @@ get_mean_pval <- function(sol_df_row) {
         dplyr::mutate(
             dplyr::across(dplyr::ends_with("_pval"), ~ as.numeric(.))
         ) |>
-        dplyr::select(dplyr::ends_with("_pval")) |>
+        gselect("_pval$") |>
         rowMeans()
     return(mean_pval)
 }
@@ -471,4 +460,16 @@ calc_assoc_pval_matrix <- function(dl,
         association_matrix[ind2, ind1] <- pval
     }
     return(association_matrix)
+}
+
+#' Helper function for organizing solutions df-like column order
+#'
+#' Reorders columns of a solutions data frame to "solution", "nclust", "mc",
+#' then all other column names.
+#'
+#' @keywords internal
+#' @param x Object with columns "solution", "nclust", and "mc".
+#' @return x with column names reordered.
+sol_df_col_order <- function(x) {
+    x <- x[, unique(c("solution", "nclust", "mc", colnames(x)))]
 }

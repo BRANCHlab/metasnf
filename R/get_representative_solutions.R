@@ -45,7 +45,6 @@ get_representative_solutions <- function(aris,
         rep_solutions <- rbind(rep_solutions, rep_solution)
     }
     # Assign mcs to the representative solutions
-    rep_solutions <- rep_solutions |>
-        dplyr::arrange(mc)
+    rep_solutions <- rep_solutions[order(rep_solutions$"solution"), ]
     return(rep_solutions)
 }

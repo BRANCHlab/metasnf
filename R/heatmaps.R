@@ -271,7 +271,7 @@ similarity_matrix_heatmap <- function(similarity_matrix,
 #' #meta_cluster_order <- get_matrix_order(sol_aris)
 #' #
 #' ## `split_vec` found by iteratively plotting ari_hm or by ?shiny_annotator()
-#' #split_vec <- c(7, 11, 17)
+#' #split_vec <- c(6, 10, 16)
 #' #ari_hm <- meta_cluster_heatmap(
 #' #    sol_aris,
 #' #    order = meta_cluster_order,
@@ -636,25 +636,17 @@ config_heatmap <- function(sc,
         sdf <- sdf[order, ]
     }
     if (include_settings & include_weights) {
-        sdf <- dplyr::select(sdf, -"solution")
+        sdf <- drop_cols(sdf, "solution")
         wm <- sc$"weights_matrix"
         sdf <- cbind(sdf, as.data.frame(wm))
-        trimmed_sdf <- sdf |> dplyr::select(
-            -"snf_scheme",
-            -"clust_alg",
-            -dplyr::ends_with("dist")
-        )
+        trimmed_sdf <- agselect(sdf, c("^snf_scheme$", "^clust_alg$", "dist$" ))
     } else if (include_weights) {
         wm <- sc$"weights_matrix"
         sdf <- as.data.frame(wm)
         trimmed_sdf <- sdf
     } else if (include_settings) {
-        sdf <- dplyr::select(sdf, -"solution")
-        trimmed_sdf <- sdf |> dplyr::select(
-            -"snf_scheme",
-            -"clust_alg",
-            -dplyr::ends_with("dist")
-        )
+        sdf <- drop_cols(sdf, "solution")
+        trimmed_sdf <- agselect(sdf, c("^snf_scheme$", "^clust_alg$", "dist$" ))
     } else {
         metasnf_error(
             "At least one of `include_weights` and `include_settings` must",
@@ -851,7 +843,7 @@ pval_heatmap <- function(ext_sol_df,
                          row_split = NULL,
                          ...) {
     rownames(ext_sol_df) <- ext_sol_df$"solutions"
-    pvals <- dplyr::select(ext_sol_df, dplyr::ends_with("_pval"))
+    pvals <- agselect(ext_sol_df, "_pval$")
     if (!is.null(order)) {
         pvals <- pvals[order, ]
     }
@@ -928,7 +920,7 @@ pval_heatmap <- function(ext_sol_df,
 #' ## Click on meta cluster boundaries to obtain `split_vec` values
 #' #shiny_annotator(ari_hm)
 #' #
-#' #split_vec <- c(7, 11, 17)
+#' #split_vec <- c(6, 10, 16)
 #' #
 #' #ari_hm <- meta_cluster_heatmap(
 #' #    sol_aris,

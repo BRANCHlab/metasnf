@@ -51,7 +51,7 @@ function can only run from an interactive session of R.
 ## Click on meta cluster boundaries to obtain `split_vec` values
 #shiny_annotator(ari_hm)
 #
-#split_vec <- c(7, 11, 17)
+#split_vec <- c(6, 10, 16)
 #
 #ari_hm <- meta_cluster_heatmap(
 #    sol_aris,

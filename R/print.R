@@ -75,18 +75,6 @@ print.snf_config <- function(x, ...) {
     print(x$"weights_matrix")
 }
 
-#' Print method for class `snf_results`
-#'
-#' Custom formatted print for SNF results
-#'
-#' @param x A `snf_results` class object.
-#' @param ... Other arguments passed to `print` (not used in this function)
-#' @return Function prints to console but does not return any value.
-#' @export
-print.snf_results <- function(x, ...) {
-    NextMethod()
-}
-
 #' Print method for class `settings_df`
 #'
 #' Custom formatted print for settings data frame that outputs information
@@ -714,4 +702,3 @@ print.ari_matrix <- function(x, ...) {
     cat(output, sep = "\n")
     cat("ARI-based order:", attributes(x)$"order", "\n")
 }
-

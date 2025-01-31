@@ -281,7 +281,7 @@ check_sdfl_colnames <- function(sdfl) {
         "mix_dist"
     )
     has_non_inc_cols <- all(sdf_cols %in% colnames(sdfl))
-    n_inc_cols <- ncol(dplyr::select(sdfl, dplyr::starts_with("inc_")))
+    n_inc_cols <- sum(startsWith(colnames(sdfl), "inc_"))
     has_inc_cols <- n_inc_cols > 0
     valid_cols <- has_non_inc_cols & has_inc_cols
     if (!valid_cols) {

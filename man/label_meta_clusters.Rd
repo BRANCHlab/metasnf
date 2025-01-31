@@ -54,7 +54,7 @@ attribute of the data frame.
 #meta_cluster_order <- get_matrix_order(sol_aris)
 #
 ## `split_vec` found by iteratively plotting ari_hm or by ?shiny_annotator()
-#split_vec <- c(7, 11, 17)
+#split_vec <- c(6, 10, 16)
 #ari_hm <- meta_cluster_heatmap(
 #    sol_aris,
 #    order = meta_cluster_order,

@@ -242,31 +242,19 @@ mc_manhattan_plot <- function(ext_sol_df,
     if (!"label" %in% colnames(ext_sol_df)) {
         ext_sol_df$"label" <- ext_sol_df$"solution"
     }
-    ext_sol_df <- ext_sol_df |>
-        dplyr::select(
-            "solution",
-            "label",
-            dplyr::ends_with("_pval")
-        )
+    ext_sol_df <- gselect(ext_sol_df, c("^solution$", "^label$", "_pval$"))
     if (ncol(ext_sol_df) == 2) {
         metasnf_error(
             "ext_sol_df is missing p-value columns. Did you",
             " provide an unextended solutions data frame instead?"
         )
     }
-    ext_sol_df <- dplyr::select(
-        ext_sol_df,
-        -dplyr::contains(c("min_pval", "mean_pval", "max_pval"))
-    )
+    ext_sol_df <- drop_cols(ext_sol_df, c("min_pval", "mean_pval", "max_pval"))
     ###########################################################################
     # Convert solution and label to factors
     ###########################################################################
-    ext_sol_df$"solution" <- factor(
-        ext_sol_df$"solution"
-    )
-    ext_sol_df$"label" <- factor(
-        ext_sol_df$"label"
-    )
+    ext_sol_df$"solution" <- factor(ext_sol_df$"solution")
+    ext_sol_df$"label" <- factor(ext_sol_df$"label")
     ###########################################################################
     # Re-assign names to the data list and target list
     ###########################################################################
@@ -321,7 +309,7 @@ mc_manhattan_plot <- function(ext_sol_df,
     ###########################################################################
     # Merge the summmary plot with domain information from the data list
     ###########################################################################
-    dl_metadata <- summary(dl, "feature") |> dplyr::select(-"type")
+    dl_metadata <- summary(dl, "feature") |> drop_cols("type")
     summary_data <- merge(
         summary_data,
         dl_metadata,
@@ -386,7 +374,11 @@ mc_manhattan_plot <- function(ext_sol_df,
     # Assigning colours to domains
     ###########################################################################
     prefixed_domains <- unique(summary_data$"domain")
-    domains <- substr(prefixed_domains, 3, nchar(prefixed_domains))
+    if (!is.null(target_dl)) {
+        domains <- substr(prefixed_domains, 3, nchar(prefixed_domains))
+    } else {
+        domains <- prefixed_domains
+    }
     if (is.null(domain_colours)) {
         plot <- plot + ggplot2::scale_color_brewer(
             labels = domains,

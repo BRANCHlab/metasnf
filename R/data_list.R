@@ -366,11 +366,7 @@ dll_uid_first_col <- function(dll) {
     dll <- lapply(
         dll,
         function(x) {
-            x$"data" <- x$"data" |>
-                dplyr::select(
-                    "uid",
-                    dplyr::everything()
-                )
+            x$"data" <- x$"data"[, unique(c("uid", colnames(x$"data")))]
             return(x)
         }
     )
@@ -440,7 +436,7 @@ new_data_list <- function(dll) {
     # 3. Stored features
     attr(dl, "features") <- dl |>
         as.data.frame() |>
-       dplyr::select(-"uid") |>
+        drop_cols("uid") |>
         colnames()
     # 4. Number of features
     attr(dl, "n_features") <- length(attributes(dl)$"features")

@@ -5,7 +5,7 @@ t.solutions_df <- function(x) {
     x <- data.frame(x)
     x$"uid" <- rownames(x)
     rownames(x) <- NULL
-    x <- dplyr::select(x, "uid", dplyr::everything())
+    x <- x[, "uid", colnames(x)]
     colnames(x) <- c("uid", paste0("s", sol_df$"solution"))
     # Remove transposed solution, nclust, and mc labels
     x <- x[-c(1:3), ]
@@ -33,17 +33,11 @@ t.t_solutions_df <- function(x) {
         )
     x$"solution" <- as.integer(as.numeric(sub("s", "", rownames(x))))
     x$"nclust" <- x |>
-        dplyr::select(-"solution") |>
+        drop_cols("solution") |>
         apply(1, function(y) length(unique(y))) |>
         as.integer()
     x$"mc" <- as.character(attributes(sol_df)$"mc_labels")
-    x <- dplyr::select(
-        x,
-        "solution",
-        "nclust",
-        "mc",
-        dplyr::everything()
-    )
+    x <- sol_df_col_order(x)
     class(x) <- c("solutions_df", "data.frame")
     attributes(x)$"sim_mats_list" <- attributes(sol_df)$"sim_mats_list"
     attributes(x)$"snf_config" <- attributes(sol_df)$"snf_config"
@@ -54,19 +48,19 @@ t.t_solutions_df <- function(x) {
 #' @export
 t.ext_solutions_df <- function(x) {
     ext_sol_df <- x
-    x <- dplyr::select(x, -dplyr::ends_with("_pval"))
+    x <- agselect(x, "_pval$")
     x <- NextMethod()
     x <- data.frame(x)
     x$"uid" <- rownames(x)
     rownames(x) <- NULL
-    x <- dplyr::select(x, "uid", dplyr::everything())
+    x <- x[, "uid", colnames(x)]
     colnames(x) <- c("uid", paste0("s", ext_sol_df$"solution"))
     x <- x[-c(1:3), ]
     attributes(x)$"sim_mats_list" <- attributes(ext_sol_df)$"sim_mats_list"
     attributes(x)$"snf_config" <- attributes(ext_sol_df)$"snf_config"
     attributes(x)$"features" <- attributes(ext_sol_df)$"features"
     attributes(x)$"summary_features" <- attributes(ext_sol_df)$"summary_features"
-    attributes(x)$"pvals" <- dplyr::select(ext_sol_df, dplyr::ends_with("_pval"))
+    attributes(x)$"pvals" <- agselect(ext_sol_df, "_pval$")
     attributes(x)$"mc_labels" <- ext_sol_df$"mc"
     x <- numcol_to_numeric(x)
     class(x) <- c("t_ext_solutions_df", "data.frame")
@@ -88,7 +82,7 @@ t.t_ext_solutions_df <- function(x) {
         )
     x$"solution" <- as.integer(as.numeric(sub("s", "", rownames(x))))
     x$"nclust" <- x |>
-        dplyr::select(-"solution") |>
+        drop_cols("solution") |>
         apply(1, function(y) length(unique(y))) |>
         as.integer()
     x$"mc" <- as.character(attributes(ext_sol_df)$"mc_labels")
@@ -98,15 +92,7 @@ t.t_ext_solutions_df <- function(x) {
     } else {
         summary_cols <- NULL
     }
-    x <- dplyr::select(
-        x,
-        "solution",
-        "nclust",
-        "mc",
-        dplyr::all_of(summary_cols),
-        dplyr::everything()
-    )
-    attributes(x)$"sim_mats_list" <- attributes(ext_sol_df)$"sim_mats_list"
+    x <- x[, unique(c("solution", "nclust", "mc", summary_cols, colnames(x)))]
     attributes(x)$"snf_config" <- attributes(ext_sol_df)$"snf_config"
     attributes(x)$"features" <- attributes(ext_sol_df)$"features"
     attributes(x)$"summary_features" <- attributes(ext_sol_df)$"summary_features"

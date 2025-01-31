@@ -14,10 +14,7 @@ jitter_plot <- function(df, feature) {
     df$"cluster" <- as.factor(df$"cluster")
     df <- df |> dplyr::rename("keycol" = !!feature)
     plot <- df |>
-        dplyr::select(
-            cluster,
-            keycol
-        ) |>
+        pick_cols(c("cluster", "keycol")) |>
         ggplot2::ggplot(
             ggplot2::aes(
                 x = cluster,
@@ -76,7 +73,7 @@ bar_plot <- function(df, feature) {
     df$"cluster" <- as.factor(df$"cluster")
     df <- df |>
         dplyr::rename("keycol" = !!feature) |>
-        dplyr::select(cluster, keycol) |>
+        pick_cols(c("cluster", "keycol")) |>
         dplyr::group_by(cluster) |>
         dplyr::count(keycol) |>
         dplyr::mutate(percent = n / sum(n) * 100)

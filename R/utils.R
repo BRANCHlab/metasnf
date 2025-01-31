@@ -309,3 +309,28 @@ pick_cols <- function(x, cols) {
     x <- x[, colnames(x) %in% cols, drop = FALSE]
     return(x)
 }
+
+#' Helper function to pick columns from a data frame by grepl search
+#'
+#' @keywords internal
+#' @param x Data frame to select columns from.
+#' @param pattern Pattern used to match columns to select.
+#' @return x with only columns matching pattern.
+gselect <- function(x, pattern) {
+    keep_cols <- unlist(
+        lapply(pattern, function(p) colnames(x)[grepl(p, colnames(x))])
+    )
+    x <- x[ , keep_cols, drop = FALSE]
+    return(x)
+}
+
+#' Helper function to drop columns from a data frame by grepl search
+#'
+#' @keywords internal
+#' @param x Data frame to drop columns from.
+#' @param pattern Pattern used to match columns to drop.
+#' @return x without columns matching pattern.
+agselect <- function(x, apattern) {
+    x <- x[ , !grepl(apattern, colnames(x)), drop = FALSE]
+    return(x)
+}

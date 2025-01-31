@@ -76,15 +76,7 @@ calc_nmis <- function(dl,
             dl,
             function(component) {
                 if (feature %in% colnames(component$"data")) {
-                    component$"data" <- component$"data" |>
-                        dplyr::select(
-                            dplyr::all_of(
-                                c(
-                                    "uid",
-                                    feature
-                                )
-                            )
-                        )
+                    component$"data" <- component$"data"[, c("uid", feature)]
                     return(component)
                 }
             }
