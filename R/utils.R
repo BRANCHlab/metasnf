@@ -329,7 +329,11 @@ gselect <- function(x, pattern) {
 #' @param x Data frame to drop columns from.
 #' @param apattern Pattern used to match columns to drop.
 #' @return x without columns matching pattern.
-agselect <- function(x, apattern) {
-    x <- x[ , !grepl(apattern, colnames(x)), drop = FALSE]
+gexclude <- function(x, pattern) {
+    drop_cols <- unlist(
+        lapply(pattern, function(p) colnames(x)[grepl(p, colnames(x))])
+    )
+    keep_cols <- setdiff(colnames(x), drop_cols)
+    x <- x[ , keep_cols, drop = FALSE]
     return(x)
 }

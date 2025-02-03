@@ -639,14 +639,14 @@ config_heatmap <- function(sc,
         sdf <- drop_cols(sdf, "solution")
         wm <- sc$"weights_matrix"
         sdf <- cbind(sdf, as.data.frame(wm))
-        trimmed_sdf <- agselect(sdf, c("^snf_scheme$", "^clust_alg$", "dist$" ))
+        trimmed_sdf <- gexclude(sdf, c("^snf_scheme$", "^clust_alg$", "dist$" ))
     } else if (include_weights) {
         wm <- sc$"weights_matrix"
         sdf <- as.data.frame(wm)
         trimmed_sdf <- sdf
     } else if (include_settings) {
         sdf <- drop_cols(sdf, "solution")
-        trimmed_sdf <- agselect(sdf, c("^snf_scheme$", "^clust_alg$", "dist$" ))
+        trimmed_sdf <- gexclude(sdf, c("^snf_scheme$", "^clust_alg$", "dist$" ))
     } else {
         metasnf_error(
             "At least one of `include_weights` and `include_settings` must",
@@ -663,12 +663,8 @@ config_heatmap <- function(sc,
     unique_values <- apply(scaled_matrix, 2, function(x) length(unique(x)))
     fixed_columns <- colnames(scaled_matrix[, unique_values == 1])
     if (length(fixed_columns) > 0 && hide_fixed) {
-        message(
-            "Removing settings that had no variation across SNF config: \n",
-            paste(
-                paste0(seq_along(fixed_columns), ". ", fixed_columns),
-                collapse = "\n "
-            )
+        metasnf_alert(
+            "Removing settings that had no variation across SNF config.\n"
         )
         scaled_matrix <- scaled_matrix[, unique_values > 1]
     }
@@ -843,7 +839,7 @@ pval_heatmap <- function(ext_sol_df,
                          row_split = NULL,
                          ...) {
     rownames(ext_sol_df) <- ext_sol_df$"solutions"
-    pvals <- agselect(ext_sol_df, "_pval$")
+    pvals <- gexclude(ext_sol_df, "_pval$")
     if (!is.null(order)) {
         pvals <- pvals[order, ]
     }

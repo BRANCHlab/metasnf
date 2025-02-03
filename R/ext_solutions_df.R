@@ -17,7 +17,6 @@
 #' @return An `ext_solutions_df` class object.
 ext_solutions_df <- function(ext_sol_dfl, sol_df, fts, target_dl) {
     ext_sol_dfl <- numcol_to_numeric(ext_sol_dfl)
-    ext_sol_dfl$"solution" <- as.factor(ext_sol_dfl$"solution")
     ext_sol_dfl <- dplyr::inner_join(sol_df, ext_sol_dfl, by = "solution")
     if (!is.null(target_dl)) {
         ordered_cols <- c(

@@ -12,7 +12,6 @@ sol_df <- batch_snf(input_dl, sc)
 
 ext_sol_df <- extend_solutions(sol_df, input_dl)
 
-
 attributes(ext_sol_df) |> names()
 
 attributes(ext_sol_df[1, ]) |> names()

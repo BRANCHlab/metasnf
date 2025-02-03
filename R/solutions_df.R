@@ -13,12 +13,12 @@ solutions_df <- function(sol_dfl, smll, sc, dl) {
     sml <- new_sim_mats_list(smll)
     attributes(sol_dfl)$"sim_mats_list" <- sml
     attributes(sol_dfl)$"snf_config" <- sc
-    sol_dfl$"solution" <- as.character(sol_dfl$"solution")
+    sol_dfl$"solution" <- as.numeric(sol_dfl$"solution")
     sol_dfl$"mc" <- as.character(sol_dfl$"mc")
     sol_dfl <- dplyr::mutate(
         sol_dfl,
         dplyr::across(
-            dplyr::starts_with("uid_"), as.factor
+            dplyr::starts_with("uid_"), as.numeric
         )
     )
     sol_dfl <- validate_solutions_df(sol_dfl)

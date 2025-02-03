@@ -64,6 +64,14 @@
 get_representative_solutions <- function(aris,
                                          sol_df,
                                          filter_fn = NULL) {
+    # Ensure solutions data frame is mc-labeled
+    if (any(is.na(sol_df$"mc"))) {
+        metasnf_error(
+            "Identifying representative solutions can only be done for meta",
+            " cluster labeled solutions data frames. See ?label_meta_clusters",
+            " to assign meta cluster labels to a solutions data frame."
+        )
+    }
     ## Re-sort the solutions data frame based on the aris
     aris <- data.frame(aris)
     ## Extract and assign meta cluster labels

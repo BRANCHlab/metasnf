@@ -467,15 +467,15 @@ ext_sol_df
 Functionally, the only difference between the data list passed into the `dl` parameter and the one passed into the `target_dl` parameter is that the `target_dl` features are the only ones used for generating the p-value summary columns.
 
 ```{r eval = FALSE}
-# Also would work, but without any summary p-values
-ext_sol_df <- extend_solutions(
-    sol_df,
+# No features are used to calculate summary p-values
+ext_sol_df_no_summaries <- extend_solutions(
+    mc_sol_df,
     dl = c(input_dl, target_dl)
 )
 
-# Also would work, but now every feature used to calculate summaries
-ext_sol_df <- extend_solutions(
-    sol_df,
+# Every features are used to calculate summary p-values
+ext_sol_df_all_summaries <- extend_solutions(
+    mc_sol_df,
     target_dl = c(input_dl, target_dl)
 )
 ```
@@ -543,20 +543,6 @@ By converting an `ext_solutions_df` class object into a data frame with the para
 Then, we can use `dplyr::mutate()` to create a new column flagging when two observations co-cluster.
 
 ```{r eval = FALSE}
-
-annotation_data <- ext_sol_df |>
-    as.data.frame(keep_attributes = TRUE)
-
-ext_sol_df$"uid_NDAR_INVLDQH8ATK"
-ext_sol_df$"uid_NDAR_INVLF3TNDUZ"
-
-annotation_data |> 
-dplyr::mutate(
-        a = uid_NDAR_INVLDQH8ATK == uid_NDAR_INVLF3TNDUZ
-    )
-
-ext_sol_df$"uid_NDAR_INV0567T2Y9" <- as.character(ext_sol_df$"uid_NDAR_INV0567T2Y9")
-
 annotation_data <- ext_sol_df |>
     as.data.frame(keep_attributes = TRUE) |>
     dplyr::mutate(
@@ -619,20 +605,7 @@ Now that we've visually delineated our meta clusters, we can get a quick summary
 This can be achieved by the `get_representative_solutions` function, which extracts one cluster solution per meta cluster based on having the highest average ARI with the other solutions in that meta cluster.
 
 ```{r eval = FALSE}
-
-z1 <- get_representative_solutions(
-    sol_aris,
-    split_vector = split_vec,
-    order = meta_cluster_order,
-    ext_sol_df
-)
-
-z2 <- get_representative_solutions2(
-    sol_aris,
-    split_vector = split_vec,
-    order = meta_cluster_order,
-    ext_sol_df
-)
+rep_solutions <- get_representative_solutions(sol_aris, ext_sol_df)
 
 mc_manhattan <- mc_manhattan_plot(
     rep_solutions,
@@ -665,12 +638,11 @@ Let's take out the cortical thickness and surface area measures to make the plot
 We'll also be able to read some feature measures more clearly when we dial the number of features plotted back a bit, as well.
 
 ```{r eval = FALSE}
-# Note that removing columns from an `ext_solutions_df` class object turns
-# it into a regular data frame.
-rep_solutions_no_cort <- dplyr::select(
-    rep_solutions,
-    -dplyr::contains("mrisdp")
-)
+rep_solutions_no_cort <- rep_solutions[, !grepl("mrisdp", colnames(rep_solutions))]
+rep_solutions_no_cort
+
+mtcars[c(1, 3)]
+
 
 mc_manhattan2 <- mc_manhattan_plot(
     ext_sol_df = rep_solutions_no_cort,
@@ -713,10 +685,16 @@ Another option is to start by taking a first look at entire `settings_df`, sorte
 The settings can be passed in through either an `snf_config` or `settings_df` class object.
 
 ```{r eval = FALSE}
-sm_hm <- settings_df_heatmap(
-    settings = my_sc,
-    order = meta_cluster_order
+
+
+config_hm <- config_heatmap(
+    sc = my_sc,
+    order = meta_cluster_order,
+    hide_fixed = TRUE
 )
+
+
+
 ```
 
 ```{r eval = FALSE, echo = FALSE}
