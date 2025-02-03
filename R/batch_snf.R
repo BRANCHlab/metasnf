@@ -255,7 +255,7 @@ drop_inputs <- function(sdf_row, dl) {
     # data frame just of the inclusion features
     inc_df <- sdf_row |>
         data.frame()
-    inc_df <- inc_df[, grepl("^uid_", colnames(x))]
+    inc_df <- gselect(inc_df, "^inc_")
     # The subset of columns that are in 'keep' (1) mode
     keepcols <- colnames(inc_df)[inc_df[1, ] == 1]
     # The list of data list elements that are to be selected

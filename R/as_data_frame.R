@@ -79,6 +79,8 @@ as.data.frame.ext_solutions_df <- function(x,
         sdf <- attributes(x)$"snf_config"$"settings_df"
         wm <- attributes(x)$"snf_config"$"weights_matrix"
         sdf_wm <- cbind(data.frame(sdf), data.frame(wm))
+        sdf_wm$"solution" <- as.numeric(sdf_wm$"solution")
+        x$"solution" <- as.numeric(x$"solution")
         df <- dplyr::inner_join(
             sdf_wm,
             x,

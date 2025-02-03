@@ -1,7 +1,7 @@
 #' Parallel processing form of batch_snf
 #'
 #' @keywords internal
-#' @param dl A nested list of input data from `data_list()`.
+#' @param dl A data list.
 #' @param dfl An optional nested list containing which
 #'  distance metric function should be used for the various feature types
 #'  (continuous, discrete, ordinal, categorical, and mixed). See

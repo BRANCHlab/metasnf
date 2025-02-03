@@ -5,7 +5,7 @@ t.solutions_df <- function(x) {
     x <- data.frame(x)
     x$"uid" <- rownames(x)
     rownames(x) <- NULL
-    x <- x[, "uid", colnames(x)]
+    x <- x[, unique(c("uid", colnames(x)))]
     colnames(x) <- c("uid", paste0("s", sol_df$"solution"))
     # Remove transposed solution, nclust, and mc labels
     x <- x[-c(1:3), ]
@@ -53,7 +53,7 @@ t.ext_solutions_df <- function(x) {
     x <- data.frame(x)
     x$"uid" <- rownames(x)
     rownames(x) <- NULL
-    x <- x[, "uid", colnames(x)]
+    x <- x[, unique(c("uid", colnames(x)))]
     colnames(x) <- c("uid", paste0("s", ext_sol_df$"solution"))
     x <- x[-c(1:3), ]
     attributes(x)$"sim_mats_list" <- attributes(ext_sol_df)$"sim_mats_list"

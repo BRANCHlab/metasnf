@@ -16,14 +16,13 @@ alluvial_cluster_plot(
 )
 }
 \arguments{
-\item{cluster_sequence}{A list of clustering algorithms (typically, the same
-algorithm varied over different numbers of clusters).}
+\item{cluster_sequence}{A list of clustering algorithms.}
 
 \item{similarity_matrix}{A similarity matrix.}
 
-\item{dl}{A nested list of input data from \code{data_list()}.}
+\item{dl}{A data list.}
 
-\item{data}{A data frame that contains features to include in the plot.}
+\item{data}{A data frame that contains any features to include in the plot.}
 
 \item{key_outcome}{The name of the feature that determines how each patient
 stream is coloured in the alluvial plot.}
@@ -39,8 +38,8 @@ An alluvial plot (class "gg" and "ggplot") showing distribution of
 a feature across varying number cluster solutions.
 }
 \description{
-This alluvial plot can show how observations in a similarity matrix could
-be distributed over a range of clustering functions.
+This alluvial plot shows how observations in a similarity matrix could
+have been clustered over a set of clustering functions.
 }
 \examples{
 input_dl <- data_list(

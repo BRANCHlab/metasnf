@@ -16,7 +16,7 @@ parallel_batch_snf(
 )
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{data_list()}.}
+\item{dl}{A data list.}
 
 \item{dfl}{An optional nested list containing which
 distance metric function should be used for the various feature types

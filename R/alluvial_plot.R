@@ -1,13 +1,12 @@
 #' Alluvial plot of patients across cluster counts and important features
 #'
-#' This alluvial plot can show how observations in a similarity matrix could
-#' be distributed over a range of clustering functions.
+#' This alluvial plot shows how observations in a similarity matrix could
+#' have been clustered over a set of clustering functions.
 #'
-#' @param cluster_sequence A list of clustering algorithms (typically, the same
-#' algorithm varied over different numbers of clusters).
+#' @param cluster_sequence A list of clustering algorithms.
 #' @param similarity_matrix A similarity matrix.
-#' @param dl A nested list of input data from `data_list()`.
-#' @param data A data frame that contains features to include in the plot.
+#' @param dl A data list.
+#' @param data A data frame that contains any features to include in the plot.
 #' @param key_outcome The name of the feature that determines how each patient
 #'  stream is coloured in the alluvial plot.
 #' @param key_label Name of key outcome to be used for the plot legend.

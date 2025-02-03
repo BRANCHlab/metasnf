@@ -102,6 +102,18 @@ new_ext_solutions_df <- function(ext_sol_dfl) {
 #'  that contains p-value columns for each outcome in the provided data lists
 #' @param verbose If TRUE, output progress to console.
 #' @export
+#' @examples
+#' input_dl <- data_list(
+#'     list(gender_df, "gender", "demographics", "categorical"),
+#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'     uid = "patient_id"
+#' )
+#' 
+#' sc <- snf_config(input_dl, n_solutions = 2)
+#' 
+#' sol_df <- batch_snf(input_dl, sc)
+#' 
+#' ext_sol_df <- extend_solutions(sol_df, input_dl)
 extend_solutions <- function(sol_df,
                              target_dl = NULL,
                              dl = NULL,

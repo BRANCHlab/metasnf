@@ -13,8 +13,8 @@ solutions_df <- function(sol_dfl, smll, sc, dl) {
     sml <- new_sim_mats_list(smll)
     attributes(sol_dfl)$"sim_mats_list" <- sml
     attributes(sol_dfl)$"snf_config" <- sc
-    sol_dfl$"solution" <- as.factor(sol_dfl$"solution")
-    sol_dfl$"mc" <- as.factor(sol_dfl$"mc")
+    sol_dfl$"solution" <- as.character(sol_dfl$"solution")
+    sol_dfl$"mc" <- as.character(sol_dfl$"mc")
     sol_dfl <- dplyr::mutate(
         sol_dfl,
         dplyr::across(

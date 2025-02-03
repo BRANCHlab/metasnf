@@ -7,10 +7,10 @@
 numcol_to_numeric(df)
 }
 \arguments{
-\item{df}{A data frame}
+\item{df}{A data frame.}
 }
 \value{
-df The data frame with all possible columns converted to type numeric
+The data frame coercible columns converted to type numeric.
 }
 \description{
 Converts all columns in a data frame that can be converted to numeric type to

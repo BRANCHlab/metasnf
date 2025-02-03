@@ -4,12 +4,12 @@
 \alias{arrange}
 \title{Arrange rows in an object}
 \usage{
-arrange(.data, ..., .by_group = FALSE)
+arrange(.data, ...)
 }
 \arguments{
 \item{.data}{The object to arrange columns from.}
 
-\item{...}{Additional arguments for arrangeion.}
+\item{...}{Additional arguments for arranging.}
 }
 \value{
 Object with arrangeed columns.

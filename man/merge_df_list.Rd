@@ -7,16 +7,16 @@
 merge_df_list(df_list, join = "inner", uid = "uid", no_na = FALSE)
 }
 \arguments{
-\item{df_list}{list of data frames}
+\item{df_list}{list of data frames.}
 
-\item{join}{String indicating if join should be "inner" or "full"}
+\item{join}{String indicating if join should be "inner" or "full".}
 
-\item{uid}{Column name to join on. Default is "uid"}
+\item{uid}{Column name to join on. Default is "uid".}
 
-\item{no_na}{Whether to remove NA values from the merged data frame}
+\item{no_na}{Whether to remove NA values from the merged data frame.}
 }
 \value{
-merged_df Inner join of all data frames in list
+Inner join of all data frames in list.
 }
 \description{
 This helper function combines all data frames in a single-level list into a

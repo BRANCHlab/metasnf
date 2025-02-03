@@ -20,8 +20,8 @@ add_columns <- function(df, cols, value = NA) {
 #' numeric type.
 #'
 #' @keywords internal
-#' @param df A data frame
-#' @return df The data frame with all possible columns converted to type numeric
+#' @param df A data frame.
+#' @return The data frame coercible columns converted to type numeric.
 numcol_to_numeric <- function(df) {
     df[] <- lapply(df,
         function(x) {
@@ -42,9 +42,8 @@ numcol_to_numeric <- function(df) {
 #' Convert character-type columns of a data frame to factor-type
 #'
 #' @keywords internal
-#' @param df A data frame
-#' @return df_converted The data frame with factor-type columns instead of
-#'  char-type columns
+#' @param df A data frame.
+#' @return The data frame with factor columns instead of char columns.
 char_to_fac <- function(df) {
     # Select all the columns that are character type
     char_cols <- df |>
@@ -62,11 +61,11 @@ char_to_fac <- function(df) {
 #' This helper function combines all data frames in a single-level list into a
 #' single data frame.
 #'
-#' @param df_list list of data frames
-#' @param join String indicating if join should be "inner" or "full"
-#' @param uid Column name to join on. Default is "uid"
-#' @param no_na Whether to remove NA values from the merged data frame
-#' @return merged_df Inner join of all data frames in list
+#' @param df_list list of data frames.
+#' @param join String indicating if join should be "inner" or "full".
+#' @param uid Column name to join on. Default is "uid".
+#' @param no_na Whether to remove NA values from the merged data frame.
+#' @return Inner join of all data frames in list.
 #' @export
 #' @examples
 #' merge_df_list(list(income, pubertal), uid = "unique_id")
@@ -328,7 +327,7 @@ gselect <- function(x, pattern) {
 #'
 #' @keywords internal
 #' @param x Data frame to drop columns from.
-#' @param pattern Pattern used to match columns to drop.
+#' @param apattern Pattern used to match columns to drop.
 #' @return x without columns matching pattern.
 agselect <- function(x, apattern) {
     x <- x[ , !grepl(apattern, colnames(x)), drop = FALSE]

@@ -9,7 +9,7 @@ agselect(x, apattern)
 \arguments{
 \item{x}{Data frame to drop columns from.}
 
-\item{pattern}{Pattern used to match columns to drop.}
+\item{apattern}{Pattern used to match columns to drop.}
 }
 \value{
 x without columns matching pattern.
