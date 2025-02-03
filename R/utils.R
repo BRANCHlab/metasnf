@@ -327,7 +327,7 @@ gselect <- function(x, pattern) {
 #'
 #' @keywords internal
 #' @param x Data frame to drop columns from.
-#' @param apattern Pattern used to match columns to drop.
+#' @param pattern Pattern used to match columns to drop.
 #' @return x without columns matching pattern.
 gexclude <- function(x, pattern) {
     drop_cols <- unlist(

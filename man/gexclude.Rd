@@ -9,7 +9,7 @@ gexclude(x, pattern)
 \arguments{
 \item{x}{Data frame to drop columns from.}
 
-\item{apattern}{Pattern used to match columns to drop.}
+\item{pattern}{Pattern used to match columns to drop.}
 }
 \value{
 x without columns matching pattern.

@@ -40,6 +40,11 @@ validate_solutions_df <- function(sol_dfl) {
             " \"nclust\", and \"mc\"."
         )
     }
+    if (sum(grepl("^uid_", colnames(sol_dfl))) == 0) {
+        metasnf_error(
+            "`solutions_df` must have at least one observation (uid) column."
+        )
+    }
     return(sol_dfl)
 }
 

@@ -66,6 +66,11 @@ validate_ext_solutions_df <- function(ext_sol_dfl) {
             " \"nclust\", and \"mc\"."
         )
     }
+    if (sum(grepl("^uid_", colnames(ext_sol_dfl))) == 0) {
+        metasnf_error(
+            "`ext_solutions_df` must have at least one observation (uid) column."
+        )
+    }
     return(ext_sol_dfl)
 }
 

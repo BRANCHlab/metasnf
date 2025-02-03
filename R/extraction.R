@@ -38,28 +38,44 @@
             "Incorrect number of dimensions for SNF config subsetting."
         )
     }
-    x$"settings_df" <- x$"settings_df"[i, , drop = FALSE]
-    x$"weights_matrix" <- x$"weights_matrix"[i, , drop = FALSE]
-    x
+    if (!missing(i)) {
+        x$"settings_df" <- x$"settings_df"[i, , drop = FALSE]
+        x$"weights_matrix" <- x$"weights_matrix"[i, , drop = FALSE]
+    }
+    attr(x, "n_solutions") <- nrow(x$"settings_df")
+    class(x) <- setdiff(class(x), "snf_config")
+    x <- tryCatch(
+        expr = {
+            x <- validate_snf_config(x)
+            x <- new_snf_config(x)
+            return(x)
+        },
+        error = function(e) {
+            return(x)
+        }
+    )
+    return(x)
 }
 
 #' @export
 `[.weights_matrix` <- function(x, i, j, ...) {
     result <- NextMethod("[")
-    class(result) <- class(x)
-    result
+    return(result)
 }
 
 #' @export
 `[.solutions_df` <- function(x, i, j, ...) {
     result <- NextMethod()
     class(result) <- setdiff(class(result), "solutions_df")
-    if (!missing(i)) {
-        attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"[i]
-        attributes(result)$"snf_config" <- attributes(x)$"snf_config"[i]
+    if (nargs() == 2 && !missing(i)) {
+        attr(result, "sim_mats_list") <- attr(x, "sim_mats_list")
+        attr(result, "snf_config") <- attr(x, "snf_config")
+    } else if (!missing(i)) {
+        attr(result, "sim_mats_list") <- attr(x, "sim_mats_list")[i]
+        attr(result, "snf_config") <- attr(x, "snf_config")[i]
     } else {
-        attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"
-        attributes(result)$"snf_config" <- attributes(x)$"snf_config"
+        attr(result, "sim_mats_list") <- attr(x, "sim_mats_list")
+        attr(result, "snf_config") <- attr(x, "snf_config")
     }
     result <- tryCatch(
         expr = {
@@ -78,12 +94,15 @@
 `[.ext_solutions_df` <- function(x, i, j, ...) {
     result <- NextMethod()
     class(result) <- setdiff(class(result), "ext_solutions_df")
-    if (!missing(i)) {
-        attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"[i]
-        attributes(result)$"snf_config" <- attributes(x)$"snf_config"[i]
+    if (nargs() == 2 && !missing(i)) {
+        attr(result, "sim_mats_list") <- attr(x, "sim_mats_list")
+        attr(result, "snf_config") <- attr(x, "snf_config")
+    } else if (!missing(i)) {
+        attr(result, "sim_mats_list") <- attr(x, "sim_mats_list")[i]
+        attr(result, "snf_config") <- attr(x, "snf_config")[i]
     } else {
-        attributes(result)$"sim_mats_list" <- attributes(x)$"sim_mats_list"
-        attributes(result)$"snf_config" <- attributes(x)$"snf_config"
+        attr(result, "sim_mats_list") <- attr(x, "sim_mats_list")
+        attr(result, "snf_config") <- attr(x, "snf_config")
     }
     result <- tryCatch(
         expr = {
