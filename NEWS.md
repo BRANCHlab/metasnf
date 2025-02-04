@@ -1,3 +1,38 @@
+# metasnf 2.0.0
+
+## Breaking changes
+
+* Extensive changes as a result of a transition to making use of R's S3 OOP system.
+
+### Name changes and new classes
+
+- data list (class `list`) -> (class `data_list`, `list`)
+- solutions matrix (class `data.frame`) -> solutions data frame (class `solutions_df`, `data.frame`)
+- extended solutions matrix (class `data.frame`) -> extended solutions data frame (class `ext_solutions_df`, `data.frame`)
+- settings matrix -> settings data frame (class `data.frame`) -> (class `ext_solutions_df`, `data.frame`)
+- distance metrics list (class `list`) -> distance functions list (class `dist_fns_list`, `list`)
+- clustering algorithms list (class `list`) -> clustering functions list (class `clust_fns_list`, `list`)
+- weights matrix (class `matrix`, `array`) -> (class `weights_matrix`, `matrix`, `array`)
+
+### Function changes
+
+- `generate_data_list()` -> `data_list()`
+- Functions related to converting a solutions matrix into a data frame of cluster solutions (`get_cluster_df()`, `get_clusters()`, `get_cluster_solutions()`) now all superseded by custom transposition of `solutions_df` class objects (i.e., simply call `t()`)
+
+### Workflow changes
+
+- Functionality offered by the settings matrix, distance metrics list, clustering algorithms list, weights matrix, and corresponding functions (`generate_settings_matrix()`, `generate_distance_metrics_list()`, `generate_weights_matrix()`, `generate_clust_algs_list()`) now all superseded by single function `snf_config()` and the `snf_config` class object it produces
+- Following derivation of a `split_vector`, either by `adjusted_rand_index_heatmap()` or `shiny_annotator()`, `solutions_df` and `ext_solutions_df` class objects can be annotated with their meta cluster labels using the function `label_meta_clusters()`. This is necessary prior to usage of `get_representative_solutions()`.
+- Functions that convert non-data frame objects, like a data list, to a data frame, have been replaced with `as.data.frame()`
+- Requesting similarity matrices are returned during `batch_snf` no longer changes the output structure from a solutions data frame to a list of a solutions data frame and a similarity matrix list. Instead, the similarity matrix list is added to the solutions data frame as an attribute and can be extracted using the function `sim_mats_list()`.
+
+### Improvements
+
+- Significant speed improvement to `calculate_coclustering()` function
+- The p-value heatmap now follows a uni-color palette.
+- Customized `print()` functions have been defined for all major metasnf objects.
+- Examples have been added to all major metasnf functions.
+
 # metasnf 1.1.2
 
 * update settings matrix vignette to avoid convergence error on some seeds
