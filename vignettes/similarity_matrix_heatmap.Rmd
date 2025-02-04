@@ -15,6 +15,10 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r echo = FALSE}
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+```
+
 Download a copy of the vignette to follow along here: [similarity_matrix_heatmaps.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/refs/heads/main/vignettes/similarity_matrix_heatmap.Rmd)
 
 This vignette walks through usage of `similarity_matrix_heatmap` to visualize the final similarity matrix produced by a run of SNF and how that matrix associates with other patient attributes.

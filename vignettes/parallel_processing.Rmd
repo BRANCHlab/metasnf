@@ -26,6 +26,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r echo = FALSE}
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+```
+
 Download a copy of the vignette to follow along here: [parallel_processing.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/parallel_processing.Rmd)
 
 metasnf can use [future apply](https://future.apply.futureverse.org/) to run the rows of a settings data frame in parallel.

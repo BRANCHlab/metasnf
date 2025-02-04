@@ -22,6 +22,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r echo = FALSE}
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+```
+
 Download a copy of the vignette to follow along here: [a_simple_example.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/a_simple_example.Rmd)
 
 In this vignette, we will show how `metasnf` can be used for a very simple SNF workflow.
@@ -80,7 +84,7 @@ gene_expression_hm
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/gene_expression_heatmap_l.png)
+![Heatmap of gene expression values.](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/gene_expression_heatmap_l.png)
 </center>
 
 ```{r eval = FALSE}
@@ -100,7 +104,7 @@ methylation_hm
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/methylation_heatmap.png)
+![Heatmap of methylation values.](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/methylation_heatmap.png)
 </center>
 
 The "ground truth" of how this data was generated was that patients 1 to 100 were drawn from one distribution and patients 101 to 200 were drawn from another.

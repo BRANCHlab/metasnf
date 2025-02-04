@@ -15,6 +15,10 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r echo = FALSE}
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+```
+
 Download a copy of the vignette to follow along here: [snf_config.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/snf_config.Rmd)
 
 This vignette outlines how to construct and use the SNF config, an object storing all the settings and hyperparameters required to convert data in a `data_list` class object into a space of cluster solutions.

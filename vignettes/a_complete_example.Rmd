@@ -22,6 +22,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r echo = FALSE}
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+```
+
 Download a copy of the vignette to follow along here: [a_complete_example.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/a_complete_example.Rmd)
 
 We recommend you go through the [simple example](https://branchlab.github.io/metasnf/articles/a_simple_example.html) before working through this one.

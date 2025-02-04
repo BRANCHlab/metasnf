@@ -26,6 +26,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r echo = FALSE}
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+```
+
 Download a copy of the vignette to follow along here: [confounders.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/confounders.Rmd)
 
 This vignette walks through handling confounding features and features introducing unwanted signal using the `metasnf` package.

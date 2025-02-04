@@ -26,6 +26,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r echo = FALSE}
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+```
+
 Download a copy of the vignette to follow along here: [snf_schemes.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/snf_schemes.Rmd)
 
 This vignette describes how individual input data frames are converted into a final fused network in different ways using the `snf_scheme` parameter.

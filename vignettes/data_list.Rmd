@@ -15,6 +15,10 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r echo = FALSE}
+options(crayon.enabled = FALSE, cli.num_colors = 0)
+```
+
 Download a copy of the vignette to follow along here: [data_list.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/data_list.Rmd)
 
 ## The data_list
