@@ -23,6 +23,6 @@ Data used in the preparation of this article were obtained from the Adolescent B
 cort_t
 }
 \description{
-Like the mock dataframe "abcd_cort_t", but with "unique_id" as the "uid".
+Like the mock data frame "abcd_cort_t", but with "unique_id" as the "uid".
 }
 \keyword{datasets}

@@ -7,15 +7,16 @@
 drop_inputs(sdf_row, dl)
 }
 \arguments{
-\item{sdf_row}{Row of a settings matrix.}
+\item{sdf_row}{Row of a settings data frame.}
 
 \item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
 A data list (class "list") in which any component with a
-corresponding 0 value in the provided settings matrix row has been removed.
+corresponding 0 value in the provided settings data frame row has been removed.
 }
 \description{
-Given a data list and a settings matrix row, returns a data list of selected
-inputs
+Given a data list and a settings data frame row, returns a data list of
+selected inputs.
 }
+\keyword{internal}

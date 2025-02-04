@@ -2,7 +2,7 @@
 % Please edit documentation in R/manhattan_plot.R
 \name{var_manhattan_plot}
 \alias{var_manhattan_plot}
-\title{Manhattan plot of feature-feature associaiton p-values}
+\title{Manhattan plot of feature-feature association p-values}
 \usage{
 var_manhattan_plot(
   dl,
@@ -17,7 +17,7 @@ var_manhattan_plot(
 )
 }
 \arguments{
-\item{dl}{List of dataframes containing data information.}
+\item{dl}{List of data frames containing data information.}
 
 \item{key_var}{Feature for which the association p-values of all other
 features are plotted.}
@@ -42,5 +42,24 @@ A Manhattan plot (class "gg", "ggplot") showing the association
 p-values of features against one key feature in a data list.
 }
 \description{
-Manhattan plot of feature-feature associaiton p-values
+Manhattan plot of feature-feature association p-values
+}
+\examples{
+dl <- data_list(
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+
+var_manhattan <- var_manhattan_plot(
+    dl,
+    key_var = "household_income",
+    plot_title = "Correlation of Features with Household Income",
+    text_size = 16,
+    neg_log_pval_thresh = 3,
+    threshold = 0.05
+)
 }

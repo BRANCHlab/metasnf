@@ -38,18 +38,18 @@ settings_df(
 
 \item{n_solutions}{Number of rows to generate for the settings data frame.}
 
-\item{min_removed_inputs}{The smallest number of input dataframes that may be
+\item{min_removed_inputs}{The smallest number of input data frames that may be
 randomly removed. By default, 0.}
 
-\item{max_removed_inputs}{The largest number of input dataframes that may be
+\item{max_removed_inputs}{The largest number of input data frames that may be
 randomly removed. By default, this is 1 less than all the provided input
-dataframes in the data list.}
+data frames in the data list.}
 
 \item{dropout_dist}{Parameter controlling how the random removal of input
-dataframes should occur. Can be "none" (no input dataframes are randomly
+data frames should occur. Can be "none" (no input data frames are randomly
 removed), "uniform" (uniformly sample between min_removed_inputs and
-max_removed_inputs to determine number of input dataframes to remove), or
-"exponential" (pick number of input dataframes to remove by sampling from
+max_removed_inputs to determine number of input data frames to remove), or
+"exponential" (pick number of input data frames to remove by sampling from
 min_removed_inputs to max_removed_inputs with an exponential distribution;
 the default).}
 
@@ -147,9 +147,9 @@ non-duplicate rows.}
 A settings data frame
 }
 \description{
-The settings_df is a dataframe whose rows completely specify the
+The settings_df is a data frame whose rows completely specify the
 hyperparameters and decisions required to transform individual input
-dataframes (found in a data list, see ?data_list) into a single
+data frames (found in a data list, see ?data_list) into a single
 similarity matrix through SNF. The format of the settings data frame is as
 follows:
 \itemize{
@@ -191,19 +191,19 @@ eigen-gap or rotation cost heuristic respectively. You can learn more
 about this parameter here:
 https://branchlab.github.io/metasnf/articles/clustering_algorithms.html.
 \item A column named "cnt_dist": Specification of which distance metric will be
-used for dataframes of purely continuous data. You can learn about this
+used for data frames of purely continuous data. You can learn about this
 metric and its defaults here:
 https://branchlab.github.io/metasnf/articles/distance_metrics.html
-\item A column named "dsc_dist": Like above, but for discrete dataframes.
-\item A column named "ord_dist": Like above, but for ordinal dataframes.
-\item A column named "cat_dist": Like above, but for categorical dataframes.
+\item A column named "dsc_dist": Like above, but for discrete data frames.
+\item A column named "ord_dist": Like above, but for ordinal data frames.
+\item A column named "cat_dist": Like above, but for categorical data frames.
 \item A column named "mix_dist": Like above, but for mixed-type (e.g.,
-both categorical and discrete) dataframes.
-\item One column for every input dataframe in the corresponding data list which
+both categorical and discrete) data frames.
+\item One column for every input data frame in the corresponding data list which
 can either have the value of 0 or 1. The name of the column should be
 formatted as "inc_[]" where the square brackets are replaced with the
-name (as found in dl_summary(dl)$"name") of each dataframe. When
-0, that dataframe will be excluded from that run of the SNF pipeline. When
-1, that dataframe will be included.
+name (as found in dl_summary(dl)$"name") of each data frame. When
+0, that data frame will be excluded from that run of the SNF pipeline. When
+1, that data frame will be included.
 }
 }

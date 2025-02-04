@@ -7,13 +7,14 @@
 similarity_matrix_path(similarity_matrix_dir, i)
 }
 \arguments{
-\item{similarity_matrix_dir}{Directory to store similarity matrices}
+\item{similarity_matrix_dir}{Directory to store similarity matrices.}
 
-\item{i}{Corresponding settings matrix row}
+\item{i}{Corresponding solution.}
 }
 \value{
-path Complete path and filename to store an similarity matrix
+Complete path and filename to store an similarity matrix.
 }
 \description{
 Generate a complete path and filename to store an similarity matrix
 }
+\keyword{internal}

@@ -28,7 +28,7 @@ Download a copy of the vignette to follow along here: [clustering_algorithms.Rmd
 
 SNF produces a single similarity matrix that is meant to describe how similar all the observations are to each other across all the provided input features.
 Dividing that similarity matrix into subtypes requires can be done using clustering algorithms.
-Within the metasnf package, clustering is done by default using the spectral clustering algorithm (as implemented by the original SNFtool package).
+Within the `metasnf` package, clustering is done by default using the spectral clustering algorithm (as implemented by the original SNFtool package).
 The code below goes over what the default clustering looks like.
 
 ### Default clustering
@@ -54,10 +54,14 @@ sc <- snf_config(
 )
 ```
 
-Information about the clustering used by default is stored in the settings matrix:
+The clustering functions that can be used are stored within the *clustering functions list* (`clust_fns_list` object) of the config, while the reference to which of those functions will be used for a particular solution is stored in the *settings data frame* (`settings_df` object) of the config:
 
 ```{r}
+# Available functions
 sc$"clust_fns_list"
+
+# Which functions will be used
+sc$"settings_df"$"clust_alg"
 ```
 
 The "1" corresponds to spectral clustering using the eigen-gap heuristic to determine the number of clusters, while the "2" corresponds to spectral clustering using the rotation cost heuristic to determine the number of clusters.
@@ -184,7 +188,7 @@ spectral_rot <- function(similarity_matrix) {
 
 ### Non-automated clustering
 
-You can also extract the similarity matrices for each computed row of the settings matrix and perform the clustering more "manually".
+You can also extract the similarity matrices for each computed row of the settings data frame and perform the clustering more "manually".
 This is particularly useful for clustering procedures where the transition from a similarity matrix to the final solution requires human intervention (e.g., judgement for clustering hyperparameters).
 
 ```{r}
@@ -195,7 +199,7 @@ sol_df <- batch_snf(
 )
 
 # Similarity matrices are in the list below:
-similarity_matrices <- attributes(sol_df)$"sim_mats_list"
+similarity_matrices <- sim_mats_list(sol_df)
 
 length(similarity_matrices)
 
@@ -280,7 +284,7 @@ sol_df <- batch_snf(
     return_sim_mats = TRUE
 )
 
-similarity_matrices <- attributes(sol_df)$"sim_mats_list"
+similarity_matrices <- sim_mats_list(sol_df)
 
 representative_sm <- similarity_matrices[[1]]
 
@@ -294,7 +298,6 @@ kNNdistplot(
     distance_matrix1,
     minPts = 10
 )
-
 ## Maybe there?
 abline(h=0.4872, col = "red", lty = 2)
 
@@ -328,4 +331,4 @@ for (i in seq(0.485, 0.488, by = 0.0001)) {
 
 In this specific instance, those hyperparameters are incredibly sensitive - a slight change will get very different results.
 That is likely due to the shape of the actual data being clustered.
-Your mileage may vary!
+Your mileage may vary.

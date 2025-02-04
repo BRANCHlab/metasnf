@@ -1,6 +1,7 @@
 #' Parallel processing form of batch_snf
 #'
-#' @param dl A nested list of input data from `data_list()`.
+#' @keywords internal
+#' @param dl A data list.
 #' @param dfl An optional nested list containing which
 #'  distance metric function should be used for the various feature types
 #'  (continuous, discrete, ordinal, categorical, and mixed). See
@@ -12,13 +13,12 @@
 #'  distance matrix calculation. See ?weights_matrix for details on
 #'  how to build this.
 #' @param return_sim_mats If TRUE, function will return a list where
-#'  the first element is the solutions matrix and the second element is a list
+#'  the first element is the solutions data frame and the second element is a list
 #'  of similarity matrices for each row in the sol_df. Default FALSE.
 #' @param similarity_matrix_dir If specified, this directory will be used to
 #'  save all generated similarity matrices.
 #' @param processes Number of parallel processes used when executing SNF.
 #' @return The same values as ?batch_snf().
-#' @export
 parallel_batch_snf <- function(dl,
                                dfl,
                                cfl,
@@ -77,6 +77,7 @@ parallel_batch_snf <- function(dl,
 
 #' Generate closure function to run batch_snf in an apply-friendly format
 #'
+#' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
 #' @param dfl An optional nested list containing which
 #'  distance metric function should be used for the various feature types
@@ -89,14 +90,13 @@ parallel_batch_snf <- function(dl,
 #'  distance matrix calculation. See ?weights_matrix for details on
 #'  how to build this.
 #' @param return_sim_mats If TRUE, function will return a list where
-#'  the first element is the solutions matrix and the second element is a list
+#'  the first element is the solutions data frame and the second element is a list
 #'  of similarity matrices for each row in the sol_df. Default FALSE.
 #' @param similarity_matrix_dir If specified, this directory will be used to
 #'  save all generated similarity matrices.
 #' @param prog Progressr function to update parallel processing progress
 #' @return A "function" class object used to run `batch_snf` in lapply-form
 #'  for parallel processing.
-#' @export
 batch_row_closure <- function(dl,
                               dfl,
                               cfl,

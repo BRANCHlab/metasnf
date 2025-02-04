@@ -11,9 +11,3 @@
     - [x] only run shiny_annotator() `if (interactive())`
     - [ ] add benchmarking code for figure 19
     - [x] strip "save_heatmap" /ggsave /etc. calls in vignettes and instead make a mention of how to use it
-- [ ] general
-    - [x] replace stops/warnings/alerts with cli wrapper functions
-    - [x] replace "subjectkey" and "subject" phrasing with more generic "uid" and "observation"
-    - [x] typo checking
-    - [x] more explicit documentation (nothing like, return settings_matrix A settings matrix)
-    - [x] remove initial noun from @return tags

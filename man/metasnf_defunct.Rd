@@ -7,7 +7,7 @@
 metasnf_defunct(version, alternative, env = 1)
 }
 \arguments{
-\item{version}{Version of metasnf in which function has been made defunct.}
+\item{version}{Version of \code{metasnf} in which function has been made defunct.}
 
 \item{alternative}{Recommended alternative approach.}
 

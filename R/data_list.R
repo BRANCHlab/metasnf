@@ -2,13 +2,13 @@
 #'
 #' `data_list()` constructs a data list object which inherits from classes
 #' `data_list` and `list`. This object is the primary way in which features to
-#' be used along the metasnf clustering pipeline are stored. The data list is
+#' be used along the `metasnf` clustering pipeline are stored. The data list is
 #' fundamentally a 2-level nested list object where each inner list contains a
 #' data frame and associated metadata for that data frame. The metadata
-#' includes the name of the dataframe, the 'domain' of that dataframe (the
-#' broader source of information that the input dataframe is capturing,
+#' includes the name of the data frame, the 'domain' of that data frame (the
+#' broader source of information that the input data frame is capturing,
 #' determined by user's domain knowledge), and the type of feature stored in
-#' the dataframe (continuous, discrete, ordinal, categorical, or mixed).
+#' the data frame (continuous, discrete, ordinal, categorical, or mixed).
 #'
 #' @param ... Any number of lists formatted as (df, "df_name", "df_domain",
 #'  "df_type") and/or any number of lists of lists formatted as (df, "df_name",
@@ -79,7 +79,7 @@
 #' )
 #'
 #' # Printing data list summaries
-#' summarize_dl(dl)
+#' summary(dl)
 #'
 #' # Alternative loading: providing a single list of lists
 #' list_of_lists <- list(
@@ -130,15 +130,14 @@ data_list <- function(...,
     }
     # Additional formatting
     dll <- dll |>
-        ensure_dll_dataframe() |> # format the "data" subitem as a data frame
-        remove_dll_na() |> # remove NAs
+        ensure_dll_df() |> # format the "data" subitem as a data frame
         convert_uids(uid) |> # Convert data frame UID column to "uid"
-        reduce_dll_to_common() |> # only keep common subjects
+        remove_dll_incomplete() |> # drop observations without complete data
         prefix_dll_uid() |> # append "uid_" to the literal UID values
         arrange_dll() |> # sort observations in contained data frames by UID
         dll_uid_first_col() # position "uid" column at start of each data frame
     # Name the components of the data list
-    names(dll) <- summarize_dl(dll)$"name"
+    names(dll) <- sapply(dll, function(x) x$"name")
     # Class management
     dll <- validate_data_list(dll)
     dl <- new_data_list(dll)
@@ -151,7 +150,7 @@ data_list <- function(...,
 #' @param dll A data list-like `list` class object.
 #' @return The provided dll with the data subitem of each component as a 
 #'  data frame.
-ensure_dll_dataframe <- function(dll) {
+ensure_dll_df <- function(dll) {
     lapply(
         dll,
         function(x) {
@@ -164,7 +163,7 @@ ensure_dll_dataframe <- function(dll) {
 #' Convert unique identifiers of data list to "uid"
 #'
 #' Column name "uid" is reserved for the unique identifier of observations.
-#' This function ensures all dataframes have their UID set as "uid".
+#' This function ensures all data frames have their UID set as "uid".
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
@@ -182,7 +181,9 @@ convert_uids <- function(dll, uid) {
             }
             colnames(x$"data")[colnames(x$"data") == uid] <- "uid"
             # Stop if UID isn't actually unique
-            if (length(x$"data"$"uid") != length(unique(x$"data"$"uid"))) {
+            len_uids <- length(stats::na.omit(x$"data")$"uid")
+            len_unique_uids <- length(unique(stats::na.omit(x$"data")$"uid"))
+            if (len_uids != len_unique_uids) {
                 metasnf_error(
                     "Column ", uid, " does not uniquely ID",
                     " all observations in at least one provided",
@@ -197,24 +198,39 @@ convert_uids <- function(dll, uid) {
     return(dll)
 }
 
-#' Remove NA values from a data list-like list object
+#' Remove observations with incomplete data from a data list-like list object
 #'
-#' Helper function during `data_list` class initialization. Applies
+#' Helper function during `data_list` class initialization. First applies 
 #' `stats::na.omit()` to the data frames named "data" within a nested list.
+#' Then removes any observations that are not present across all data frames.
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
 #' @return dll The provided data list-like object with missing observations
 #'  removed.
-remove_dll_na <- function(dll) {
-    dll <- lapply(
-        dll,
-        function(x) {
-            x$"data" <- stats::na.omit(x$"data")
-            return(x)
-        }
-    )
-    return(dll)
+remove_dll_incomplete <- function(dll) {
+    all_uids <- unique(unlist(lapply(dll, function(x) x$"data"$"uid")))
+    uids_no_na <- lapply(dll, function(x) stats::na.omit(x$"data")$"uid")
+    common_uids <- Reduce(intersect, uids_no_na)
+    reduced_dll <- dll |>
+        lapply(
+            function(x) {
+                x$"data"  <- x$"data" |>
+                    dplyr::filter(
+                        x$"data"$"uid" %in% common_uids
+                    )
+                x
+            }
+        )
+    dropped_uids <- length(all_uids) - length(common_uids)
+    if (dropped_uids > 0) {
+        grammar <- if (dropped_uids == 1) "" else "s"
+        metasnf_alert(
+            dropped_uids, " observation", grammar, " dropped due to",
+            " incomplete data."
+        )
+    }
+    return(reduced_dll)
 }
 
 #' Add "uid_" prefix to all UID values in uid column
@@ -231,32 +247,6 @@ prefix_dll_uid <- function(dll) {
         }
     )
     return(dll_prefixed)
-}
-
-#' Reduce data list-like object to common observations
-#'
-#' Given a data list-like list object, reduce each nested dataframe to contain
-#' only the set of UIDs that are shared by all nested dataframes.
-#'
-#' @keywords internal
-#' @param dll A data list-like `list` class object.
-#' @return reduced_dl The data list object subsetted only to uids shared across
-#'  all nested dataframes.
-reduce_dll_to_common <- function(dll) {
-    uids <- lapply(dll, function(x) x[[1]]$"uid")
-    data_objects <- lapply(dll, function(x) x[[1]])
-    common_uids <- Reduce(intersect, uids)
-    filtered_data_objects <- data_objects |>
-        lapply(
-            function(x) {
-                dplyr::filter(x, x$"uid" %in% common_uids)
-            }
-        )
-    reduced_dll <- dll
-    for (i in seq_along(dll)) {
-        reduced_dll[[i]][[1]] <- filtered_data_objects[[i]]
-    }
-    return(reduced_dll)
 }
 
 #' Sort data frames in a data list by their unique ID values.
@@ -280,112 +270,24 @@ arrange_dll <- function(dll) {
     return(arranged_dll)
 }
 
-#' Summarize a data list
+#' Pull domains from a data list
 #'
+#' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
-#'
-#' @param scope The level of detail for the summary. Options are:
-#' - "component" (default): One row per component (dataframe) in the data list.
-#' - "feature": One row for each feature in the data list.
-#'
-#' @return "data.frame"-class object summarizing all components (or features if
-#' scope == "component").
-#'
-#' @export
-summarize_dl <- function(dl, scope = "component") {
-    if (scope == "component") {
-        dl_summary <- data.frame(
-            name = unlist(lapply(dl, function(x) x$"name")),
-            type = unlist(lapply(dl, function(x) x$"type")),
-            domain = unlist(domains(dl)),
-            length = unlist(lapply(dl, function(x) dim(x$"data")[1])),
-            width = unlist(lapply(dl, function(x) dim(x$"data")[2]))
-        )
-    } else if (scope == "feature") {
-        dl_df <- as.data.frame(dl)
-        dl_df <- dl_df[, colnames(dl_df) != "uid"]
-        types <- dl |>
-            lapply(
-                function(x) {
-                    rep(x$"type", ncol(x$"data") - 1)
-                }
-            ) |>
-            unlist()
-        domains <- dl |>
-            lapply(
-                function(x) {
-                    rep(x$"domain", ncol(x$"data") - 1)
-                }
-            ) |>
-            unlist()
-        var_names <- colnames(dl_df[, colnames(dl_df) != "uid"])
-        dl_summary <- data.frame(
-            name = var_names,
-            type = types,
-            domain = domains
-        )
-    }
-    rownames(dl_summary) <- seq_len(nrow(dl_summary))
-    return(dl_summary)
-}
-
-#' Domains
-#'
-#' @param dl A nested list of input data from `data_list()`.
-#'
 #' @return domain_list list of domains
-#'
-#' @export
 domains <- function(dl) {
     domain_list <- lapply(dl, function(x) x$"domain")
     return(domain_list)
 }
 
-#' Variable-level summary of a data list
-#'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @return variable_level_summary A dataframe containing the name, type, and
-#' domain of every variable in a data list.
-#'
-#' @export
-dl_variable_summary <- function(dl) {
-    types <- dl |>
-        lapply(
-            function(x) {
-                rep(x$"type", ncol(x$"data") - 1)
-            }
-        ) |>
-        unlist()
-    domains <- dl |>
-        lapply(
-            function(x) {
-                rep(x$"domain", ncol(x$"data") - 1)
-            }
-        ) |>
-        unlist()
-    merged_df <- dl |>
-        as.data.frame()
-    var_names <- colnames(merged_df[, colnames(merged_df) != "uid"])
-    variable_level_summary <- data.frame(
-        name = var_names,
-        type = types,
-        domain = domains
-    )
-    return(variable_level_summary)
-}
-
 #' Reorder the uids in a data list
 #'
+#' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @param ordered_uids A vector of the uid values in the data list
-#' in the desired order of the sorted data list.
-#'
+#'  in the desired order of the sorted data list.
 #' @return A data list ("list"-class object) with reordered observations.
-#'
-#' @export
-reorder_dl_subs <- function(dl, ordered_uids) {
+reorder_dl_uids <- function(dl, ordered_uids) {
     dl <- dl |>
         lapply(
             function(x) {
@@ -400,15 +302,11 @@ reorder_dl_subs <- function(dl, ordered_uids) {
 #' Rename features in a data list
 #'
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @param name_mapping A named vector where the values are the features to be
-#' renamed and the names are the new names for those features.
-#'
+#'  renamed and the names are the new names for those features.
 #' @return A data list ("list"-class object) with adjusted feature names.
-#'
 #' @export
 #' @examples
-#'
 #' library(metasnf)
 #'
 #' dl <- data_list(
@@ -418,7 +316,7 @@ reorder_dl_subs <- function(dl, ordered_uids) {
 #'     uid = "unique_id"
 #' )
 #'
-#' summarize_dl(dl, "feature")
+#' summary(dl, "feature")
 #'
 #' name_changes <- c(
 #'     "anxiety_score" = "cbcl_anxiety_r",
@@ -427,9 +325,9 @@ reorder_dl_subs <- function(dl, ordered_uids) {
 #'
 #' dl <- rename_dl(dl, name_changes)
 #'
-#' summarize_dl(dl, "feature")
+#' summary(dl, "feature")
 rename_dl <- function(dl, name_mapping) {
-    dl_features <- summarize_dl(dl, "feature")$"name"
+    dl_features <- summary(dl, "feature")$"name"
     mismatches <- which(!name_mapping %in% dl_features)
     if (length(mismatches) > 0) {
         metasnf_warning(
@@ -458,26 +356,6 @@ rename_dl <- function(dl, name_mapping) {
     return(dl)
 }
 
-#' Extract uids from a data list
-#'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @param prefix If TRUE, preserves the "uid_" prefix added to UIDs when
-#' creating a data list.
-#'
-#' @return A character vector of the UID labels contained in a data list.
-#'
-#' @export
-get_dl_uids <- function(dl, prefix = FALSE) {
-    dl_df <- as.data.frame(dl)
-    uids <- dl_df$"uid"
-    if (prefix) {
-        return(uids)
-    }
-    uids <- gsub("uid_", "", uids)
-    return(uids)
-}
-
 #' Make the uid UID columns of a data list first
 #'
 #' @keywords internal
@@ -488,11 +366,7 @@ dll_uid_first_col <- function(dll) {
     dll <- lapply(
         dll,
         function(x) {
-            x$"data" <- x$"data" |>
-                dplyr::select(
-                    "uid",
-                    dplyr::everything()
-                )
+            x$"data" <- x$"data"[, unique(c("uid", colnames(x$"data")))]
             return(x)
         }
     )
@@ -500,7 +374,7 @@ dll_uid_first_col <- function(dll) {
 
 #' Horizontally merge compatible data lists
 #'
-#' Join two data lists with the same components (dataframes) but separate
+#' Join two data lists with the same components (data frames) but separate
 #' observations. To instead merge two data lists that have the same
 #' observations but different components, simply use `c()`.
 #'
@@ -510,8 +384,8 @@ dll_uid_first_col <- function(dll) {
 #'  both provided data lists.
 #' @export
 merge_dls <- function(dl_1, dl_2) {
-    dl_1_names <- summarize_dl(dl_1)$"name"
-    dl_2_names <- summarize_dl(dl_2)$"name"
+    dl_1_names <- summary(dl_1)$"name"
+    dl_2_names <- summary(dl_2)$"name"
     names(dl_1) <- dl_1_names
     names(dl_2) <- dl_2_names
     if (!identical(sort(dl_1_names), sort(dl_2_names))) {
@@ -562,7 +436,7 @@ new_data_list <- function(dll) {
     # 3. Stored features
     attr(dl, "features") <- dl |>
         as.data.frame() |>
-       dplyr::select(-"uid") |>
+        drop_cols("uid") |>
         colnames()
     # 4. Number of features
     attr(dl, "n_features") <- length(attributes(dl)$"features")
@@ -752,8 +626,6 @@ check_dll_subitem_classes <- function(dll) {
     }
 }
 
-
-
 #' Check if UID columns in a nested list have valid structure for a data list
 #'
 #' @keywords internal
@@ -866,6 +738,7 @@ check_dll_empty_input <- function(data_list_input) {
 #' @param ... Optional arguments to `FUN`.
 #' @return If FUN applied to each component of X yields a valid data list, a
 #'  data list. Otherwise, a list.
+#' @export
 #' @examples
 #' # Convert all UID values to lowercase
 #' dl <- data_list(
@@ -881,7 +754,6 @@ check_dll_empty_input <- function(data_list_input) {
 #'         return(x)
 #'     }
 #' )
-#' @export
 dlapply <- function(X, FUN, ...) {
     if (!(inherits(X, "list"))) {
         metasnf_error(
@@ -903,53 +775,4 @@ dlapply <- function(X, FUN, ...) {
         }
     )
     return(validation)
-}
-
-#' Summarize a data list
-#'
-#' @param dl A nested list of input data from `data_list()`.
-#'
-#' @param scope The level of detail for the summary. Options are:
-#' - "component" (default): One row per component (dataframe) in the data list.
-#' - "feature": One row for each feature in the data list.
-#'
-#' @return "data.frame"-class object summarizing all components (or features if
-#' scope == "component").
-#'
-#' @export
-summarize_dl <- function(dl, scope = "component") {
-    if (scope == "component") {
-        dl_summary <- data.frame(
-            name = unlist(lapply(dl, function(x) x$"name")),
-            type = unlist(lapply(dl, function(x) x$"type")),
-            domain = unlist(domains(dl)),
-            length = unlist(lapply(dl, function(x) dim(x$"data")[1])),
-            width = unlist(lapply(dl, function(x) dim(x$"data")[2]))
-        )
-    } else if (scope == "feature") {
-        dl_df <- as.data.frame(dl)
-        dl_df <- dl_df[, colnames(dl_df) != "uid"]
-        types <- dl |>
-            lapply(
-                function(x) {
-                    rep(x$"type", ncol(x$"data") - 1)
-                }
-            ) |>
-            unlist()
-        domains <- dl |>
-            lapply(
-                function(x) {
-                    rep(x$"domain", ncol(x$"data") - 1)
-                }
-            ) |>
-            unlist()
-        var_names <- colnames(dl_df[, colnames(dl_df) != "uid"])
-        dl_summary <- data.frame(
-            name = var_names,
-            type = types,
-            domain = domains
-        )
-    }
-    rownames(dl_summary) <- seq_len(nrow(dl_summary))
-    return(dl_summary)
 }

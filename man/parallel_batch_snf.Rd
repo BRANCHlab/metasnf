@@ -16,7 +16,7 @@ parallel_batch_snf(
 )
 }
 \arguments{
-\item{dl}{A nested list of input data from \code{data_list()}.}
+\item{dl}{A data list.}
 
 \item{dfl}{An optional nested list containing which
 distance metric function should be used for the various feature types
@@ -36,7 +36,7 @@ how to build this.}
 save all generated similarity matrices.}
 
 \item{return_sim_mats}{If TRUE, function will return a list where
-the first element is the solutions matrix and the second element is a list
+the first element is the solutions data frame and the second element is a list
 of similarity matrices for each row in the sol_df. Default FALSE.}
 
 \item{processes}{Number of parallel processes used when executing SNF.}
@@ -47,3 +47,4 @@ The same values as ?batch_snf().
 \description{
 Parallel processing form of batch_snf
 }
+\keyword{internal}

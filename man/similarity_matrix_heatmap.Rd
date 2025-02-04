@@ -38,7 +38,8 @@ similarity_matrix_heatmap(
 \item{order}{Vector of numbers to reorder the similarity matrix (and data
 if provided). Overwrites ordering specified by cluster_solution param.}
 
-\item{cluster_solution}{Vector containing cluster assignments.}
+\item{cluster_solution}{Row of a solutions data frame or column of a
+transposed solutions data frame.}
 
 \item{scale_diag}{Method of rescaling matrix diagonals. Can be "none"
 (don't change diagonals), "mean" (replace diagonals with average value of
@@ -54,7 +55,7 @@ off-diagonals), or "zero" (replace diagonals with 0).}
 
 \item{show_column_names}{Parameter for ComplexHeatmap::Heatmap.}
 
-\item{data}{A dataframe containing elements requested for annotation.}
+\item{data}{A data frame containing elements requested for annotation.}
 
 \item{left_bar}{Named list of strings, where the strings are features in
 df that should be used for a barplot annotation on the left of the plot and
@@ -97,4 +98,32 @@ that displays the similarities between observations in the provided matrix.
 }
 \description{
 Plot heatmap of similarity matrix
+}
+\examples{
+#my_dl <- data_list(
+#    list(
+#        data = expression_df,
+#        name = "expression_data",
+#        domain = "gene_expression",
+#        type = "continuous"
+#    ),
+#    list(
+#        data = methylation_df,
+#        name = "methylation_data",
+#        domain = "gene_methylation",
+#        type = "continuous"
+#    ),
+#    uid = "patient_id"
+#)
+#
+#sc <- snf_config(my_dl, n_solutions = 10)
+#
+#sol_df <- batch_snf(my_dl, sc, return_sim_mats = TRUE)
+#
+#sim_mats <- sim_mats_list(sol_df)
+#
+#similarity_matrix_heatmap(
+#    sim_mats[[1]],
+#    cluster_solution = sol_df[1, ]
+#)
 }

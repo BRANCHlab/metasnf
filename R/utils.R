@@ -1,14 +1,14 @@
-#' Add columns to a dataframe
+#' Add columns to a data frame
 #'
-#' Add new columns to a dataframe by specifying their names and a value to
+#' Add new columns to a data frame by specifying their names and a value to
 #' initialize them with.
+#'
 #' @keywords internal
-#' @param df The dataframe to extend.
+#' @param df The data frame to extend.
 #' @param cols The vector containing new column names.
 #' @param value The values stored in the newly added columns. NA by default.
 #' @return A data frame containing with the same columns as the `df` argument
 #'  as well as the new columns specified in the `cols` argument.
-#' @export
 add_columns <- function(df, cols, value = NA) {
     df[cols] <- value
     return(df)
@@ -16,12 +16,12 @@ add_columns <- function(df, cols, value = NA) {
 
 #' Convert columns of a data frame to numeric type (if possible)
 #'
-#' Converts all columns in a dataframe that can be converted to numeric type to
+#' Converts all columns in a data frame that can be converted to numeric type to
 #' numeric type.
 #'
-#' @param df A dataframe
-#' @return df The dataframe with all possible columns converted to type numeric
-#' @export
+#' @keywords internal
+#' @param df A data frame.
+#' @return The data frame coercible columns converted to type numeric.
 numcol_to_numeric <- function(df) {
     df[] <- lapply(df,
         function(x) {
@@ -39,14 +39,11 @@ numcol_to_numeric <- function(df) {
     return(df)
 }
 
-#' Convert character-type columns of a dataframe to factor-type
+#' Convert character-type columns of a data frame to factor-type
 #'
-#' @param df A dataframe
-#'
-#' @return df_converted The dataframe with factor-type columns instead of
-#'  char-type columns
-#'
-#' @export
+#' @keywords internal
+#' @param df A data frame.
+#' @return The data frame with factor columns instead of char columns.
 char_to_fac <- function(df) {
     # Select all the columns that are character type
     char_cols <- df |>
@@ -59,68 +56,19 @@ char_to_fac <- function(df) {
     return(df)
 }
 
-#' Select all columns of a dataframe not starting with the 'uid_' prefix.
+#' Merge list of data frames into a single data frame
 #'
-#' Removes the 'uid_' prefixed columns from a dataframe.
+#' This helper function combines all data frames in a single-level list into a
+#' single data frame.
 #'
-#' @param df A dataframe
-#'
-#' @return df_no_subs Dataframe without subjects
-#'
+#' @param df_list list of data frames.
+#' @param join String indicating if join should be "inner" or "full".
+#' @param uid Column name to join on. Default is "uid".
+#' @param no_na Whether to remove NA values from the merged data frame.
+#' @return Inner join of all data frames in list.
 #' @export
-no_subs <- function(df) {
-    if (!"solution" %in% colnames(df)) {
-        metasnf_error("Dataframe requires 'solution' column.")
-    }
-    df_no_subs <- df |>
-        dplyr::select(
-            "solution",
-            !(dplyr::starts_with("uid_"))
-        )
-    if (identical(df, df_no_subs)) {
-        metasnf_warning("Provided dataframe had no 'uid_' columns to remove.")
-    }
-    return(df_no_subs)
-}
-
-#' Select all columns of a dataframe starting with a given string prefix.
-#'
-#' Removes the columns that are not prefixed with 'uid_' prefixed columns
-#'  from a dataframe. Useful intermediate step for extracting subject UIDs from
-#'  an sol_df structure.
-#'
-#' @param df Dataframe
-#'
-#' @return df_subs Dataframe with only 'uid_' prefixed columns
-#'
-#' @export
-subs <- function(df) {
-    if (!"solution" %in% colnames(df)) {
-        metasnf_error("Dataframe requires 'solution' column.")
-    }
-    df_subs <- df |> dplyr::select(
-        "solution",
-        dplyr::starts_with("uid_")
-    )
-    if (identical(df, df_subs)) {
-        metasnf_warning("Provided dataframe had no non-'uid_' columns to remove.")
-    }
-    return(df_subs)
-}
-
-#' Merge list of dataframes
-#'
-#' @param df_list list of dataframes
-#'
-#' @param join String indicating if join should be "inner" or "full"
-#'
-#' @param uid Column name to join on. Default is "uid"
-#'
-#' @param no_na Whether to remove NA values from the merged dataframe
-#'
-#' @return merged_df inner join of all dataframes in list
-#'
-#' @export
+#' @examples
+#' merge_df_list(list(income, pubertal), uid = "unique_id")
 merge_df_list <- function(df_list,
                           join = "inner",
                           uid = "uid",
@@ -136,7 +84,9 @@ merge_df_list <- function(df_list,
             by = uid
         )
     } else {
-        metasnf_error("Invalid join type specified. Options are 'inner' and 'full'.")
+        metasnf_error(
+            "Invalid join type specified. Options are 'inner' and 'full'."
+        )
     }
     if (no_na) {
         merged_df <- stats::na.omit(merged_df)
@@ -144,16 +94,44 @@ merge_df_list <- function(df_list,
     return(merged_df)
 }
 
-#' Pull complete-data UIDs from a list of dataframes
+#' Pull complete-data UIDs from a list of data frames
 #'
-#' @param list_of_dfs List of dataframes.
+#' This function identifies all observations within a list of data frames that
+#' have no missing data across all data frames. This function is useful when
+#' constructing data lists of distinct feature sets from the same sample of
+#' observations. As `data_list()` strips away observations with any missing
+#' data, distinct sets of observations may be generated by building a data
+#' list from the same group of observations over different sets of features.
+#' Reducing the pool of observations to only those with complete UIDs first
+#' will avoid downstream generation of data lists of differing sizes.
 #'
-#' @param uid Name of column across dataframes containing UIDs
-#'
+#' @param list_of_dfs List of data frames.
+#' @param uid Name of column across data frames containing UIDs
 #' @return A character vector of the UIDs of observations that have complete
-#' data across the provided list of dataframes.
-#'
+#'  data across the provided list of data frames.
 #' @export
+#' @examples
+#' complete_uids <- get_complete_uids(
+#'     list(income, pubertal, anxiety, depress),
+#'     uid = "unique_id"
+#' )
+#' 
+#' income <- income[income$"unique_id" %in% complete_uids, ]
+#' pubertal <- pubertal[pubertal$"unique_id" %in% complete_uids, ]
+#' anxiety <- anxiety[anxiety$"unique_id" %in% complete_uids, ]
+#' depress <- depress[depress$"unique_id" %in% complete_uids, ]
+#' 
+#' input_dl <- data_list(
+#'     list(income, "income", "demographics", "ordinal"),
+#'     list(pubertal, "pubertal", "demographics", "continuous"),
+#'     uid = "unique_id"
+#' )
+#' 
+#' target_dl <- data_list(
+#'     list(anxiety, "anxiety", "behaviour", "ordinal"),
+#'     list(depress, "depressed", "behaviour", "ordinal"),
+#'     uid = "unique_id"
+#' )
 get_complete_uids <- function(list_of_dfs, uid) {
     merged_df <- merge_df_list(
         list_of_dfs,
@@ -176,63 +154,30 @@ get_complete_uids <- function(list_of_dfs, uid) {
 #'  one_at_a_time hash function exceeds the maximum possible value
 #'  (2147483647) multiplied by the threshold.
 #'
-#' @param train_frac The fraction (0 to 1) of subjects for training
-#' @param subjects The available subjects for distribution
-#' @param seed Seed used for Jenkins's one_at_a_time hash function
-#'
-#' @return split a named list containing the training and testing uid_ids
-#'
+#' @param train_frac The fraction (0 to 1) of observations for training
+#' @param uids A character vector of UIDs to be distributed into training and
+#'  test sets.
+#' @param seed Seed used for Jenkins's one_at_a_time hash function.
+#' @return A named list containing the training and testing uid_ids.
 #' @export
-train_test_assign <- function(train_frac, subjects, seed = 42) {
+train_test_assign <- function(train_frac, uids, seed = 42) {
     train_thresh <- 2147483647 * train_frac
-    hash <- abs(digest::digest2int(subjects, seed = seed))
-    train <- subjects[hash < train_thresh]
-    test <- subjects[hash >= train_thresh]
-    assigned_subs <- list(train = train, test = test)
+    hash <- abs(digest::digest2int(uids, seed = seed))
+    train <- uids[hash < train_thresh]
+    test <- uids[hash >= train_thresh]
+    assigned_obs <- list(train = train, test = test)
     if (length(train) == 0 || length(test) == 0) {
         metasnf_warning("Empty train or test set.")
     }
-    return(assigned_subs)
-}
-
-#' Remove items from a data list
-#'
-#' Removes specified elements from a provided data list
-#'
-#' @param dl The data list containing components to be removed
-#'
-#' @param ... Any number of components to remove from the list object, passed as
-#' strings
-#'
-#' @return A "list"-class object in which any specified elements have been
-#' removed.
-#'
-#' @export
-list_remove <- function(dl, ...) {
-    to_remove <- list(...)
-    # Check to make sure all items to remove are components in dl
-    list_names <- summarize_dl(dl)$"name"
-    invalid_names <- to_remove[!to_remove %in% list_names]
-    if (length(invalid_names) > 0) {
-        metasnf_warning(
-            paste0(
-                "Did you make a typo? The following names are not present in",
-                " your data list: ", invalid_names
-            )
-        )
-    }
-    pruned_list <- dl[!list_names %in% to_remove]
-    return(pruned_list)
+    return(assigned_obs)
 }
 
 #' Generate a complete path and filename to store an similarity matrix
 #'
-#' @param similarity_matrix_dir Directory to store similarity matrices
-#' @param i Corresponding settings matrix row
-#'
-#' @return path Complete path and filename to store an similarity matrix
-#'
-#' @export
+#' @keywords internal
+#' @param similarity_matrix_dir Directory to store similarity matrices.
+#' @param i Corresponding solution.
+#' @return Complete path and filename to store an similarity matrix.
 similarity_matrix_path <- function(similarity_matrix_dir, i) {
     path <- paste0(
         similarity_matrix_dir,
@@ -253,11 +198,8 @@ similarity_matrix_path <- function(similarity_matrix_dir, i) {
 #'  value instead of a random value from 1 to x.
 #'
 #' @param x Vector or single value to sample from
-#'
 #' @param ... Remaining arguments for base::sample function
-#'
 #' @return Numeric vector result of running base::sample.
-#'
 #' @export
 resample <- function(x, ...) {
     return(x[sample.int(length(x), ...)])
@@ -270,10 +212,8 @@ resample <- function(x, ...) {
 #'  2. Every value in the diagonal is 0.5
 #'
 #' @param similarity_matrices A list of similarity matrices
-#'
 #' @return valid_matrices Boolean indicating if properties are met by all
 #'  similarity matrices
-#'
 #' @export
 check_similarity_matrices <- function(similarity_matrices) {
     invalid_mats <- similarity_matrices |>
@@ -301,17 +241,14 @@ check_similarity_matrices <- function(similarity_matrices) {
 #' Adjust the diagonals of a matrix to reduce contrast with off-diagonals
 #' during plotting.
 #'
+#' @keywords internal
 #' @param matrix Matrix to rescale.
-#'
 #' @param method Method of rescaling. Can be:
 #' * "mean" (replace diagonals with average value of off-diagonals)
 #' * "zero" (replace diagonals with 0)
 #' * "min" (replace diagonals with min value of off-diagonals)
 #' * "max" (replace diagonals with max value of off-diagonals)
-#'
 #' @return A "matrix" class object with rescaled diagonals.
-#'
-#' @export
 scale_diagonals <- function(matrix, method = "mean") {
     if (method == "mean") {
         off_diagonals <- matrix[col(matrix) != row(matrix)]
@@ -337,14 +274,10 @@ scale_diagonals <- function(matrix, method = "mean") {
 #' wrapper for `circlize::colorRamp2`.'
 #'
 #' @param data Vector of numeric values.
-#'
 #' @param min_colour Minimum colour value.
-#'
 #' @param max_colour Maximum colour value.
-#'
 #' @return A "function" class object that can build a circlize-style colour
 #' ramp.
-#'
 #' @export
 colour_scale <- function(data, min_colour, max_colour) {
     colours <- circlize::colorRamp2(
@@ -352,4 +285,55 @@ colour_scale <- function(data, min_colour, max_colour) {
         c(min_colour, max_colour)
     )
     return(colours)
+}
+
+#' Helper function to remove columns from a data frame
+#'
+#' @keywords internal
+#' @param x A data frame
+#' @param cols Vector of column names to be removed
+#' @return x without columns in cols
+drop_cols <- function(x, cols) {
+    x <- x[, !(colnames(x) %in% cols), drop = FALSE]
+    return(x)
+}
+
+#' Helper function to pick columns from a data frame
+#'
+#' @keywords internal
+#' @param x A data frame
+#' @param cols Vector of column names to be picked
+#' @return x with only columns in cols
+pick_cols <- function(x, cols) {
+    x <- x[, colnames(x) %in% cols, drop = FALSE]
+    return(x)
+}
+
+#' Helper function to pick columns from a data frame by grepl search
+#'
+#' @keywords internal
+#' @param x Data frame to select columns from.
+#' @param pattern Pattern used to match columns to select.
+#' @return x with only columns matching pattern.
+gselect <- function(x, pattern) {
+    keep_cols <- unlist(
+        lapply(pattern, function(p) colnames(x)[grepl(p, colnames(x))])
+    )
+    x <- x[ , keep_cols, drop = FALSE]
+    return(x)
+}
+
+#' Helper function to drop columns from a data frame by grepl search
+#'
+#' @keywords internal
+#' @param x Data frame to drop columns from.
+#' @param pattern Pattern used to match columns to drop.
+#' @return x without columns matching pattern.
+gexclude <- function(x, pattern) {
+    drop_cols <- unlist(
+        lapply(pattern, function(p) colnames(x)[grepl(p, colnames(x))])
+    )
+    keep_cols <- setdiff(colnames(x), drop_cols)
+    x <- x[ , keep_cols, drop = FALSE]
+    return(x)
 }

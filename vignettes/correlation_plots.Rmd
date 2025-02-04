@@ -38,7 +38,7 @@ city <- city |> dplyr::select(-"colour")
 
 # Make sure to throw in all the data you're interested in visualizing for this
 # data_list, including out-of-model measures and confounding features.
-data_list <- data_list(
+dl <- data_list(
     list(cort_sa_minimal, "cortical_sa", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "ordinal"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -49,10 +49,10 @@ data_list <- data_list(
     uid = "unique_id"
 )
 
-summarize_dl(data_list)
+summary(dl)
 
 # This matrix contains all the pairwise association p-values
-assoc_pval_matrix <- calc_assoc_pval_matrix(data_list)
+assoc_pval_matrix <- calc_assoc_pval_matrix(dl)
 
 assoc_pval_matrix[1:3, 1:3]
 ```
@@ -62,9 +62,7 @@ assoc_pval_matrix[1:3, 1:3]
 Here's what a basic heatmap looks like:
 
 ```{r eval = FALSE}
-ap_heatmap <- assoc_pval_heatmap(
-    assoc_pval_matrix
-)
+ap_heatmap <- assoc_pval_heatmap(assoc_pval_matrix)
 ```
 
 ```{r eval = FALSE, echo = FALSE}

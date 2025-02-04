@@ -36,7 +36,7 @@ how to build this.}
 save all generated similarity matrices.}
 
 \item{return_sim_mats}{If TRUE, function will return a list where
-the first element is the solutions matrix and the second element is a list
+the first element is the solutions data frame and the second element is a list
 of similarity matrices for each row in the sol_df. Default FALSE.}
 
 \item{prog}{Progressr function to update parallel processing progress}
@@ -48,3 +48,4 @@ for parallel processing.
 \description{
 Generate closure function to run batch_snf in an apply-friendly format
 }
+\keyword{internal}

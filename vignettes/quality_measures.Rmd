@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 
 Download a copy of the vignette to follow along here: [quality_measures.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/quality_measures.Rmd)
 
-This vignette walks through calculation of silhouette scores, Dunn indices, and Davies-Boulding indices a we will highlight the main stability measure options in the metasnf package.
+This vignette walks through calculation of silhouette scores, Dunn indices, and Davies-Boulding indices a we will highlight the main stability measure options in the `metasnf` package.
 
 To use these functions, you will need to have the `clv` package installed.
 
@@ -42,14 +42,14 @@ dl <- data_list(
     uid = "unique_id"
 )
 
-# build settings_df
+# build SNF config
 set.seed(42)
 sc <- snf_config(
     dl = dl,
     n_solutions = 15
 )
 
-# collect similarity matrices and solutions matrix from batch_snf
+# collect similarity matrices and solutions data frame from batch_snf
 sol_df <- batch_snf(
     dl = dl,
     sc,

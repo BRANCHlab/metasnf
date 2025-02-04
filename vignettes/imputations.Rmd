@@ -31,9 +31,9 @@ A somewhat analogous process is demonstrated in the code below.
 Here, we pretend we've generated two different imputations of the data, `dl_imp1` and `dl_imp2`.
 The mock code below happens to use the base, unimputed data twice for simplicity.
 
-Separate cluster solutions are generated for the two sets of imputed data, which then have their corresponding solutions matrices stacked together and appended with an `imputation` column that indicates which imputed dataset was used to generate that particular cluster solution.
+Separate cluster solutions are generated for the two sets of imputed data, which then have their corresponding solutions data frames stacked together and appended with an `imputation` column that indicates which imputed dataset was used to generate that particular cluster solution.
 
-Moving through the rest of the meta clustering pipeline, the influence of the imputation on meta clustering structure or on separation of other features in the data can be easily visualized in the `adjusted_rand_index_heatmap` function through the use of `ComplexHeatmap` annotations.
+Moving through the rest of the meta clustering pipeline, the influence of the imputation on meta clustering structure or on separation of other features in the data can be easily visualized in the `meta_cluster_heatmap` function through the use of `ComplexHeatmap` annotations.
 
 ```{r eval = FALSE}
 library(metasnf)
@@ -70,17 +70,14 @@ sc <- snf_config(
 sol_df_imp1 <- batch_snf(dl_imp1, sc)
 sol_df_imp2 <- batch_snf(dl_imp2, sc)
 
-attributes(sol_df_imp1)$"snf_config"$"settings_df"
-
-sol_df_imp2$"solution" <- 11:20
-attributes(sol_df_imp2)$"snf_config"$"settings_df"$"solution" <- 11:20
-
 nrow(sol_df_imp1)
 nrow(sol_df_imp1)
 
 # Create a stacked solution matrix that stores solutions from both imputations
 # Solutions 1:10 are for imputation 1, 11:20 are for imputation 2
-sol_df <- rbind(sol_df_imp1, sol_df_imp2)
+sol_df <- rbind(sol_df_imp1, sol_df_imp2, reset_indices = TRUE)
+
+sol_df
 
 # Calculate pairwise similarities across all solutions
 # (Including across imputations)
@@ -89,19 +86,20 @@ sol_aris <- calc_aris(sol_df)
 meta_cluster_order <- get_matrix_order(sol_aris)
 
 # Base heatmap for identifying meta clusters
-ari_hm <- adjusted_rand_index_heatmap(
+ari_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order
 )
 
 # Identify meta cluster boundaries
 shiny_annotator(ari_hm)
+
 split_vec <- c(7, 13)
 
-ari_mc_hm <- adjusted_rand_index_heatmap(
+ari_mc_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order,
-    split_vector = c(7, 13)
+    split_vector = split_vec
 )
 
 # Calculate how features are distributed across solutions
@@ -119,7 +117,7 @@ annotation_data <- as.data.frame(ext_sol_df_imp1, keep_attributes = TRUE)
 annotation_data$"imputation" <- c(rep("imp_1", 10), rep("imp_2", 10))
 
 # Visualize influence of imputation on meta clustering results
-annotated_ari_hm <- adjusted_rand_index_heatmap(
+annotated_ari_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order,
     split_vector = split_vec,

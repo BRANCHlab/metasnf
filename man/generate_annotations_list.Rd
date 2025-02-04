@@ -19,7 +19,7 @@ generate_annotations_list(
 )
 }
 \arguments{
-\item{df}{Dataframe containing all the data that is specified in the
+\item{df}{data frame containing all the data that is specified in the
 remaining arguments.}
 
 \item{left_bar}{Named list of strings, where the strings are features in
@@ -55,3 +55,4 @@ Intermediate function that takes in formatted lists of features and the
 annotations they should be viewed through and returns annotation objects
 usable by ComplexHeatmap::Heatmap.
 }
+\keyword{internal}

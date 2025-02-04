@@ -2,16 +2,19 @@
 % Please edit documentation in R/rbind.R
 \name{rbind.ext_solutions_df}
 \alias{rbind.ext_solutions_df}
-\title{Row-binding of extended solutions data frame class objects.}
+\title{Row-binding of solutions data frame class objects.}
 \usage{
-\method{rbind}{ext_solutions_df}(...)
+\method{rbind}{ext_solutions_df}(reset_indices = FALSE, ...)
 }
 \arguments{
+\item{reset_indices}{If TRUE, re-labels the "solutions" indices in
+the solutions data frame from 1 to the number of defined settings.}
+
 \item{...}{An arbitrary number of \code{ext_solutions_df} class objects.}
 }
 \value{
 An \code{ext_solutions_df} class object.
 }
 \description{
-Row-binding of extended solutions data frame class objects.
+Row-binding of solutions data frame class objects.
 }

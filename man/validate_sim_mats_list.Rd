@@ -16,3 +16,4 @@ returns smll. Otherwise, raises an error.
 \description{
 Validator for \code{similarity_matrix_list} class object
 }
+\keyword{internal}

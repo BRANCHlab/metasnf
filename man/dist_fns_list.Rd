@@ -42,7 +42,7 @@ The distance metrics list object (inherits classes \code{dist_fns_list}
 and \code{list}) is a list that stores R functions which can convert a data
 frame of features into a matrix of pairwise distances. The list is a nested
 one, where the first layer of the list can hold up to 5 items (one for each
-of the metasnf recognized feature types, continuous, discrete, ordinal,
+of the \code{metasnf} recognized feature types, continuous, discrete, ordinal,
 categorical, and mixed), and the second layer can hold an arbitrary number
 of distance functions for each of those types.
 }
@@ -57,7 +57,7 @@ dist_fns_list <- dist_fns_list()
 # Adding your own metrics --------------------------------------------------
 # This will contain only the and user-provided distance function:
 cubed_euclidean <- function(df, weights_row) {
-    # (your code that converts a dataframe to a distance metric here...)
+    # (your code that converts a data frame to a distance metric here...)
     weights <- diag(weights_row, nrow = length(weights_row))
     weighted_df <- as.matrix(df) \%*\% weights
     distance_matrix <- weighted_df |>

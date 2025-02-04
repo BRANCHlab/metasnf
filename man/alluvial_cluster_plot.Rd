@@ -16,14 +16,13 @@ alluvial_cluster_plot(
 )
 }
 \arguments{
-\item{cluster_sequence}{A list of clustering algorithms (typically, the same
-algorithm varied over different numbers of clusters).}
+\item{cluster_sequence}{A list of clustering algorithms.}
 
 \item{similarity_matrix}{A similarity matrix.}
 
-\item{dl}{A nested list of input data from \code{data_list()}.}
+\item{dl}{A data list.}
 
-\item{data}{A dataframe that contains features to include in the plot.}
+\item{data}{A data frame that contains any features to include in the plot.}
 
 \item{key_outcome}{The name of the feature that determines how each patient
 stream is coloured in the alluvial plot.}
@@ -39,5 +38,31 @@ An alluvial plot (class "gg" and "ggplot") showing distribution of
 a feature across varying number cluster solutions.
 }
 \description{
-Alluvial plot of patients across cluster counts and important features
+This alluvial plot shows how observations in a similarity matrix could
+have been clustered over a set of clustering functions.
+}
+\examples{
+input_dl <- data_list(
+    list(gender_df, "gender", "demographics", "categorical"),
+    list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+    uid = "patient_id"
+)
+
+sc <- snf_config(input_dl, n_solutions = 1)
+
+sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+
+sim_mats <- sim_mats_list(sol_df)
+
+clust_fn_sequence <- list(spectral_two, spectral_four)
+
+alluvial_cluster_plot(
+    cluster_sequence = clust_fn_sequence,
+    similarity_matrix = sim_mats[[1]],
+    dl = input_dl,
+    key_outcome = "gender", # the name of the feature of interest
+    key_label = "Gender", # how the feature of interest should be displayed
+    extra_outcomes = "diagnosis", # more features to plot but not colour by
+    title = "Gender Across Cluster Counts"
+)
 }

@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 
 Download a copy of the vignette to follow along here: [confounders.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/confounders.Rmd)
 
-This vignette walks through handling confounding features and features introducing unwanted signal using the metasnf package.
+This vignette walks through handling confounding features and features introducing unwanted signal using the `metasnf` package.
 
 A confounding feature is one that influences both a dependent and independent feature, making it appear as though there is a stronger association between the two than there mechanistically is.
 
@@ -153,7 +153,7 @@ What kind of clustering results do we get on this data?
 ```{r}
 set.seed(42)
 
-metasnf_data <- player_data |> dplyr::select("id", "assists", "blocks")
+metasnf_data <- dplyr::select(player_data, "id", "assists", "blocks")
 
 dl <- data_list(
     list(
@@ -175,24 +175,16 @@ sc <- snf_config(
 
 sol_df <- batch_snf(dl, sc)
 
-cluster_solutions_df <- get_cluster_solutions(sol_df) |>
-    dplyr::rename(
-        "id" = "uid",
-        "cluster" = `1`
-    )
-
-head(cluster_solutions_df)
-
-cluster_solutions_df$"cluster" <- factor(cluster_solutions_df$"cluster")
+cluster_solution_df <- t(sol_df)
 
 # matching the subject names
-metasnf_data$"id" <- paste0("uid_", metasnf_data$"id")
+metasnf_data$"uid" <- paste0("uid_", metasnf_data$"id")
 
 # merging back the original data
-metasnf_data <- dplyr::inner_join(metasnf_data, cluster_solutions_df, by = "id")
+metasnf_data <- dplyr::inner_join(metasnf_data, cluster_solution_df, by = "uid")
 
 metasnf_data |>
-    ggplot(aes(x = blocks, y = assists, colour = cluster)) +
+    ggplot(aes(x = blocks, y = assists, colour = s1)) +
     geom_point(size = 5, alpha = 0.3) +
     theme_bw()
 ```
@@ -239,8 +231,7 @@ player_data |>
 That's looking much more like what we want to see.
 Following this correction, you'll have a much easier identifying the clustering structure that exists independently of the variance you don't care about from pro-status.
 
-
-## Procedure using the metasnf package
+## Procedure using the `metasnf` package
 
 Note that you can only adjust out signal from categorical features, the adjustment will be linear, it will only be applied to numeric (continuous, discrete, ordinal) data, and that the adjustment can lead to some major information loss (see the section below)!
 

@@ -33,5 +33,5 @@ A nested and named list of distance metrics functions.
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 Deprecated function for building a distance metrics list. Please use
-\code{dist_fns_list()} instead.
+\code{dist_fns_list()} (or better yet, \code{snf_config()}) instead.
 }

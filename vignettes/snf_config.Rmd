@@ -1,0 +1,267 @@
+---
+title: "The SNF Config"
+output:
+    rmarkdown::html_vignette:
+        toc: true
+description: >
+  The object that controls all settings for converting data into a set of cluster solutions.
+vignette: >
+  %\VignetteIndexEntry{The SNF Config}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Download a copy of the vignette to follow along here: [snf_config.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/snf_config.Rmd)
+
+This vignette outlines how to construct and use the SNF config, an object storing all the settings and hyperparameters required to convert data in a `data_list` class object into a space of cluster solutions.
+
+## Creating a default SNF config
+
+The most minimal SNF config (`snf_config` class object) can be obtained by providing a data list into the `snf_config()` function.
+
+```{r}
+library(metasnf)
+
+dl <- data_list(
+    list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+
+sc <- snf_config(dl, n_solutions = 5)
+
+sc
+```
+
+Similarity network fusion-based clustering pipelines require the following steps:
+
+1. Selecting a set of data frames to integrate
+2. Converting those data frames into distance matrices using a distance function
+3. Converting those distance matrices to similarity matrices using the `SNFtool` package's `affinityMatrix()` function
+4. Integrating the similarity matrices into one final similarity matrix using the `SNFtool` package's `SNF()` function
+5. Converting that final similarity matrix into a cluster solution using a clustering function
+
+The SNF config is made up of four parts that all address various parts of that pipeline:
+
+1. The *settings data frame* (class `settings_df`, extends class `data.frame`), which contains information about SNF-specific hyperparameters (step 4), which distance and clustering functions will be used (steps 2 and 5), and if any components of the data list (data frames) will be excluded on a particular run (step 1). Each row of the data frame corresponds to a complete set of settings that can yield a single cluster solution from the data list.
+2. The *distance functions list* (class `dist_fns_list`, extends class `list`), which stores the actual distance functions that are referenced in the settings data frame (step 2)
+3. The *clustering functions list* (class `clust_fns_list`, extends class `list`), which similarly stores clustering functions (step 5)
+4. The *weights matrix* (class `weights_matrix`, extends classes `matrix`, `array`), which contains feature weights to account for during the data to distance matrix conversion step (step 2).
+
+### The settings data frame
+
+You can view the settings data frame in closer detail as follows:
+
+```{r}
+sc$"settings_df"
+
+# Printed as a regular data frame
+sc$"settings_df" |> as.data.frame()
+```
+
+The columns in a `settings_df` class object include:
+
+* `solution`: A label to keep track of each generated cluster solution.
+* `alpha`: The alpha (also referred to as sigma or eta in the original SNF paper) hyperparameter in SNF. This hyperparameter plays a role in converting distance matrices into similarity matrices. The process by which `SNFtool::affinityMatrix()` does this conversion essentially involves plugging the distance value as the x-coordinate of a normal distribution and pulling out the density at that point as the similarity. The thickness of the normal distribution is regulated by alpha, where a larger alpha leads to a broader normal distribution and a greater sensitivity to discriminating distances.
+* `k`: The k (nearest neighbours) hyperparameter in the distance matrix to similarity matrix conversion as well as in similarity network fusion. In the distance matrix to similarity matrix conversion (`SNFtool::affinityMatrix()`), k controls how many nearest neighbours to consider when calculating how similar each observation is to its nearest neighbours. The closer an observation is to its k nearest neighbours, the broader the normal distribution that is used for the distance to similarity conversion. For the similarity network fusion step (`SNFtool::SNF()`), k controls how intensely all the matrices should be sparsified before information is passed between them. With a very small k, say, k = 1, all the values in all the matrices will be reduced to 0 with the exception of one value between each observation and that observation's most similar neighbour.
+* `t`: The T (number of iterations) hyperparameter used in SNF. A larger `t` results in more rounds of information passing between similarity matrices. SNF eventually converges, so overshooting this value offers no benefit but undershooting can yield inaccurate results. The original SNF developers recommend leaving this value at 20.
+* `snf_scheme`: Which SNF "scheme" is being used to convert the initial provided data frames into a final fused network (more on this in the [SNF schemes vignette](https://branchlab.github.io/metasnf/articles/snf_schemes.html)).
+* `clust_alg`: Which clustering algorithm function from the *clustering functions list* of the config will be applied to the final fused network. You can learn more about using this parameter in the [clustering algorithnms vignette](https://branchlab.github.io/metasnf/articles/clustering_algorithms.html).
+* Columns ending in `dist`: Which distance metric function from the *distance functions list* of the config will be used for each of the various types of features in the data list (more on this in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html)).
+* Columns starting with `inc`: Whether or not the corresponding data frame will be included (1) or excluded (0) from this row.
+
+By default, the `alpha` and `k` hyperparameters are randomly varied from 0.3 to 0.8 and 10 to 100 respectively based on suggestions from the original SNF paper.
+The `t` hyperparameter by default stays fixed at 20.
+The `snf_scheme` column varies randomly from 1 to 3, corresponding to each of the three differente schemes that are available.
+The `clust_alg` randomly varies between 1 and 2 for the two default clustering algoritm functions: (1) spectral clustering using the eigen-gap heuristic to calculate the number of clusters and (2) spectral clustering using the rotation cost heuristic.
+The distance columns will always be 1 by default, as there is only one default distance metric function per variable type:  simple Euclidean for anything numeric and Gower's distance for anything mixed or categorical.
+
+### The distance functions list
+
+The distance functions list is simply a list of functions capable of converting a data frame into a distance matrix.
+Distance functions within the list are organized based on what type of variable they deal with: continuous, discrete, ordinal, categorical, or mixed (any combination of the former 4).
+
+```{r}
+dfl <- sc$"dist_fns_list"
+
+dfl
+
+names(dfl)
+
+dfl$"cnt_dist_fns"[[1]]
+```
+
+You can learn more about customizing distance metrics in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html).
+
+### The clustering functions list
+
+The clustering functions list is similarly a list of functions capable of converting a similarity matrix into a cluster solution (numeric vector).
+
+```{r}
+cfl <- sc$"clust_fns_list"
+
+cfl
+
+names(cfl)
+
+cfl[[1]]
+```
+
+You can learn more about customizing clustering functions in the [clustering algorithnms vignette](https://branchlab.github.io/metasnf/articles/clustering_algorithms.html).
+
+### The weights matrix
+
+```{r}
+wm <- sc$"weights_matrix"
+
+wm
+
+class(wm) <- "matrix"
+
+wm[1:5, 1:5]
+```
+
+There's one row in the weights matrix corresponding to every row in the settings data frame and one column for every feature in the data list.
+By default, all the weights are set to 1, so no weighting occurs.
+
+## Customizing an SNF config
+
+When not specifying any parameters beyond the number of rows that are created, the function will randomly vary the values in the matrix.
+
+```{r}
+# Through minimums and maximums
+sc <- snf_config(
+    dl,
+    n_solutions = 100
+)
+
+sc
+```
+
+### Alpha, k, and t
+
+You can control any of these parameters either by providing a vector of values you'd like to randomly sample from or by specifying a minimum and maximum range.
+
+```{r}
+# Through minimums and maximums
+sc <- snf_config(
+    dl,
+    n_solutions = 100,
+    min_k = 10,
+    max_k = 60,
+    min_alpha = 0.3,
+    max_alpha = 0.8
+)
+
+# Through specific value sampling
+sc <- snf_config(
+    dl,
+    n_solutions = 20,
+    k_values = c(10, 25, 50),
+    alpha_values = c(0.4, 0.8)
+)
+```
+
+### Inclusion columns and data frame dropout
+
+Bounds on the number of input data frames removed as well as the way in which the number removed is chosen can be controlled.
+
+By default, the `settings_df` generated during the call to `snf_config()` will pick a random value between 0 (printed as a red X) and 1 (printed as a green checkmark) less than the total number of available data frames in the data list based on an exponential probability distribution.
+The exponential distribution makes it so that it is very likely that a small number of data frames will be dropped and much less likely that a large number of data frames will be dropped.
+
+You can control the distribution by changing the `dropout_dist` value to "uniform" (which will result in a much higher number of data frames being dropped on average) or "none" (which will result in no data frames being dropped).
+
+```{r}
+# Exponential dropping
+sc <- snf_config(
+    dl,
+    n_solutions = 20,
+    dropout_dist = "exponential" # the default behaviour
+)
+
+sc
+
+# Uniform dropping
+sc <- snf_config(
+    dl,
+    n_solutions = 20,
+    dropout_dist = "uniform"
+)
+
+sc
+
+# No dropping
+sc <- snf_config(
+    dl,
+    n_solutions = 20,
+    dropout_dist = "none"
+)
+
+sc
+```
+
+The bounds on the number of data frames that can be dropped can be controlled using the `min_removed_inputs` and `max_removed_inputs`:
+
+```{r}
+sc <- snf_config(
+    dl,
+    n_solutions = 20,
+    min_removed_inputs = 3
+)
+
+# No row will exclude fewer than 3 data frames during SNF
+sc
+```
+
+## Grid searching
+
+If you are interested in grid searching over perhaps just a specific set of alpha and k values, you may want to consider varying those parameters and keeping everything else fixed:
+
+```{r}
+sc <- snf_config(
+    dl,
+    n_solutions = 10,
+    alpha_values = c(0.3, 0.5, 0.8),
+    k_values = c(20, 40, 60),
+    dropout_dist = "none"
+)
+
+sc
+```
+
+## Assembling an SNF config in pieces
+
+Rather than varying everything equally all at once, you may be interested in looking at "chunks" of solution spaces that are based on distinct SNF configs.
+For example, you may want to look at 25 solutions generated with k = 50 and look at another 25 solutions generated with k = 80.
+You can build two separate SNF configs and join them using the `merge()` function.
+
+```{r}
+set.seed(42)
+sc_1 <- snf_config(
+    dl,
+    n_solutions = 25,
+    k_values = 50
+)
+
+sc_2 <- snf_config(
+    dl,
+    n_solutions = 25,
+    k_values = 80
+)
+
+full_sc <- merge(sc_1, sc_2)
+```
+
+## "`settings_df` building failed to converge"
+
+`snf_config()` will never build duplicate rows.
+A consequence of this is that if you request a very large number of rows over a very small range of possible values to vary over, it will be impossible for the matrix to be built.
+For example, there's no way to generate 10 unique rows when the only varying parameter is which of two clustering algorithms is used - only 2 rows could ever be created.
+If you encounter the error "Matrix building failed", try to generate fewer rows or to be a little less strict with what values are allowed.

@@ -1,21 +1,44 @@
-#' Calculate feature NMIs for a data list and a derived sol_df
+#' Calculate feature NMIs for a data list and a solutions data frame
+#'
+#' Normalized mutual information scores can be used to indirectly measure how
+#' important a feature may have been in producing a cluster solution. This
+#' function will calculate the normalized mutual information between cluster
+#' solutions in a solutions data frame as well as cluster solutions created
+#' by including only a single feature from a provided data list, but otherwise
+#' using all the same hyperparameters as specified in the original SNF config.
+#' Note that NMIs can be calculated between two cluster solutions regardless
+#' of what features were actually used to create those cluster solutions. For
+#' example, a feature that was not involved in producing a particular cluster
+#' solution may still have a high NMI with that cluster solution (typically
+#' because it was highly correlated with a different feature that was used).
 #'
 #' @inheritParams batch_snf
 #' @param sol_df Result of `batch_snf` storing cluster solutions and
 #'  the settings that were used to generate them. Use the same value as was used
 #'  in the original call to `batch_snf()`.
-#' @param transpose If TRUE, will transpose the output dataframe.
+#' @param transpose If TRUE, will transpose the output data frame.
 #' @param ignore_inclusions If TRUE, will ignore the inclusion columns in the
-#'  solutions matrix and calculate NMIs for all features. If FALSE, will give
-#'  NAs for features that were dropped on a given settings_df row.
+#'  solutions data frame and calculate NMIs for all features. If FALSE, will
+#'  give NAs for features that were dropped on a given settings_df row.
 #' @param verbose If TRUE, output progress to console.
 #' @return A "data.frame" class object containing one row for every feature
 #'  in the provided data list and one column for every solution in the provided
-#'  solutions matrix. Populated values show the calculated NMI score for each
-#'  feature-solution combination.
-#'
+#'  solutions data frame. Populated values show the calculated NMI score for
+#'  each feature-solution combination.
 #' @export
-batch_nmi <- function(dl,
+#' @examples
+#' input_dl <- data_list(
+#'     list(gender_df, "gender", "demographics", "categorical"),
+#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'     uid = "patient_id"
+#' )
+#' 
+#' sc <- snf_config(input_dl, n_solutions = 2)
+#' 
+#' sol_df <- batch_snf(input_dl, sc)
+#' 
+#' calc_nmis(input_dl, sol_df)
+calc_nmis <- function(dl,
                       sol_df,
                       transpose = TRUE,
                       ignore_inclusions = TRUE,
@@ -53,21 +76,13 @@ batch_nmi <- function(dl,
             dl,
             function(component) {
                 if (feature %in% colnames(component$"data")) {
-                    component$"data" <- component$"data" |>
-                        dplyr::select(
-                            dplyr::all_of(
-                                c(
-                                    "uid",
-                                    feature
-                                )
-                            )
-                        )
+                    component$"data" <- component$"data"[, c("uid", feature)]
                     return(component)
                 }
             }
         )
         #######################################################################
-        # Stripping away other inclusion columns from settings matrix
+        # Stripping away other inclusion columns
         feature_dl <- feature_dl[!sapply(feature_dl, is.null)]
         feature_dl <- as_data_list(feature_dl)
         inc_this_data_type <- paste0("inc_", feature_dl[[1]]$"name")
@@ -79,7 +94,7 @@ batch_nmi <- function(dl,
         # Vector storing this feature's NMIs
         feature_nmis <- c()
         #######################################################################
-        # Loop through the settings matrix and run solo-feature SNFs
+        # Loop through the settings data frame and run solo-feature SNFs
         for (j in seq_len(nrow(feature_settings_df))) {
             this_sc <- sc[j]
             this_inclusion <- this_sc$"settings_df"[, inc_this_data_type]
@@ -111,7 +126,7 @@ batch_nmi <- function(dl,
             }
         }
         #######################################################################
-        # Combine this feature's NMIs with the overall NMI dataframe
+        # Combine this feature's NMIs with the overall NMI data frame
         nmi_df <- data.frame(nmi_df, new_feature = feature_nmis)
         colnames(nmi_df)[ncol(nmi_df)] <- feature
     }

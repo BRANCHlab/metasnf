@@ -4,17 +4,18 @@
 \alias{train_test_assign}
 \title{Training and testing split}
 \usage{
-train_test_assign(train_frac, subjects, seed = 42)
+train_test_assign(train_frac, uids, seed = 42)
 }
 \arguments{
-\item{train_frac}{The fraction (0 to 1) of subjects for training}
+\item{train_frac}{The fraction (0 to 1) of observations for training}
 
-\item{subjects}{The available subjects for distribution}
+\item{uids}{A character vector of UIDs to be distributed into training and
+test sets.}
 
-\item{seed}{Seed used for Jenkins's one_at_a_time hash function}
+\item{seed}{Seed used for Jenkins's one_at_a_time hash function.}
 }
 \value{
-split a named list containing the training and testing uid_ids
+A named list containing the training and testing uid_ids.
 }
 \description{
 Given a vector of uid_id and a threshold, returns a list of which members

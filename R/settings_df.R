@@ -1,8 +1,8 @@
 #' Build a settings data frame
 #'
-#' The settings_df is a dataframe whose rows completely specify the
+#' The settings_df is a data frame whose rows completely specify the
 #' hyperparameters and decisions required to transform individual input
-#' dataframes (found in a data list, see ?data_list) into a single
+#' data frames (found in a data list, see ?data_list) into a single
 #' similarity matrix through SNF. The format of the settings data frame is as
 #' follows:
 #' * A column named "solution": This column is used to keep
@@ -41,32 +41,33 @@
 #'   about this parameter here:
 #'   https://branchlab.github.io/metasnf/articles/clustering_algorithms.html.
 #' * A column named "cnt_dist": Specification of which distance metric will be
-#'   used for dataframes of purely continuous data. You can learn about this
+#'   used for data frames of purely continuous data. You can learn about this
 #'   metric and its defaults here:
 #'   https://branchlab.github.io/metasnf/articles/distance_metrics.html
-#' * A column named "dsc_dist": Like above, but for discrete dataframes.
-#' * A column named "ord_dist": Like above, but for ordinal dataframes.
-#' * A column named "cat_dist": Like above, but for categorical dataframes.
+#' * A column named "dsc_dist": Like above, but for discrete data frames.
+#' * A column named "ord_dist": Like above, but for ordinal data frames.
+#' * A column named "cat_dist": Like above, but for categorical data frames.
 #' * A column named "mix_dist": Like above, but for mixed-type (e.g.,
-#'   both categorical and discrete) dataframes.
-#' * One column for every input dataframe in the corresponding data list which
+#'   both categorical and discrete) data frames.
+#' * One column for every input data frame in the corresponding data list which
 #'   can either have the value of 0 or 1. The name of the column should be
 #'   formatted as "inc_[]" where the square brackets are replaced with the
-#'   name (as found in dl_summary(dl)$"name") of each dataframe. When
-#'   0, that dataframe will be excluded from that run of the SNF pipeline. When
-#'   1, that dataframe will be included.
+#'   name (as found in dl_summary(dl)$"name") of each data frame. When
+#'   0, that data frame will be excluded from that run of the SNF pipeline. When
+#'   1, that data frame will be included.
+#'
 #' @param dl A nested list of input data from `data_list()`.
 #' @param n_solutions Number of rows to generate for the settings data frame.
-#' @param min_removed_inputs The smallest number of input dataframes that may be
+#' @param min_removed_inputs The smallest number of input data frames that may be
 #'  randomly removed. By default, 0.
-#' @param max_removed_inputs The largest number of input dataframes that may be
+#' @param max_removed_inputs The largest number of input data frames that may be
 #'  randomly removed. By default, this is 1 less than all the provided input
-#'  dataframes in the data list.
+#'  data frames in the data list.
 #' @param dropout_dist Parameter controlling how the random removal of input
-#'  dataframes should occur. Can be "none" (no input dataframes are randomly
+#'  data frames should occur. Can be "none" (no input data frames are randomly
 #'  removed), "uniform" (uniformly sample between min_removed_inputs and
-#'  max_removed_inputs to determine number of input dataframes to remove), or
-#'  "exponential" (pick number of input dataframes to remove by sampling from
+#'  max_removed_inputs to determine number of input data frames to remove), or
+#'  "exponential" (pick number of input data frames to remove by sampling from
 #'  min_removed_inputs to max_removed_inputs with an exponential distribution;
 #'  the default).
 #' @param min_alpha The minimum value that the alpha hyperparameter can have.
@@ -178,7 +179,7 @@ settings_df <- function(dl,
         "ord_dist",
         "cat_dist",
         "mix_dist",
-        paste0("inc_", summarize_dl(dl)$"name")
+        paste0("inc_", summary(dl)$"name")
     )
     sdfl_base <- as.data.frame(
         matrix(
@@ -280,7 +281,7 @@ check_sdfl_colnames <- function(sdfl) {
         "mix_dist"
     )
     has_non_inc_cols <- all(sdf_cols %in% colnames(sdfl))
-    n_inc_cols <- ncol(dplyr::select(sdfl, dplyr::starts_with("inc_")))
+    n_inc_cols <- sum(startsWith(colnames(sdfl), "inc_"))
     has_inc_cols <- n_inc_cols > 0
     valid_cols <- has_non_inc_cols & has_inc_cols
     if (!valid_cols) {
@@ -541,7 +542,7 @@ add_settings_df_rows <- function(sdf,
             mix_dist <- resample(mixed_distances, 1)
         }
         #######################################################################
-        # 7. Combine selected values to a single dataframe row
+        # 7. Combine selected values to a single data frame row
         #######################################################################
         new_row <- cbind(
             solution,
@@ -582,9 +583,9 @@ add_settings_df_rows <- function(sdf,
         # Limit how many times a new row ended up already existing
         if (num_retries > retry_limit) {
            metasnf_error(
-                "Matrix building failed to converge. To keep adding rows, try",
-                " raising the retry_limit parameter or specifying a larger",
-                " range of tunable parameters."
+                "`settings_df` building failed to converge. To keep adding ro",
+                "ws, try raising the retry_limit parameter or specifying a la",
+                "rger range of tunable parameters."
             )
         }
     }
@@ -599,15 +600,15 @@ add_settings_df_rows <- function(sdf,
 #'  distribution.
 #'
 #' @param columns Columns of the settings_df that are passed in
-#' @param min_removed_inputs The smallest number of input dataframes that may
+#' @param min_removed_inputs The smallest number of input data frames that may
 #'  be randomly removed.
-#' @param max_removed_inputs The largest number of input dataframes that may be
+#' @param max_removed_inputs The largest number of input data frames that may be
 #'  randomly removed.
-#' @param dropout_dist Indication of how input dataframes should be dropped.
+#' @param dropout_dist Indication of how input data frames should be dropped.
 #'  can be "none" (no dropout), "uniform" (uniformly draw number between min
 #'  and max removed inputs), or "exponential" (like uniform, but using an
 #'  exponential distribution; default).
-#' @return inclusions_df Dataframe that can be rbind'ed to the settings_df
+#' @return inclusions_df data frame that can be rbind'ed to the settings_df
 #' @export
 random_removal <- function(columns,
                            min_removed_inputs,
@@ -616,15 +617,15 @@ random_removal <- function(columns,
     ###########################################################################
     # 1. Define features used by all dropout_dist values
     ###########################################################################
-    # vector containing names of the input dataframes that may be dropped
+    # vector containing names of the input data frames that may be dropped
     inclusion_columns <- columns[startsWith(columns, "inc")]
-    # number of droppable input dataframes
+    # number of droppable input data frames
     num_cols <- length(inclusion_columns)
     ###########################################################################
-    # 2. "none" (no) random input dataframe dropout
+    # 2. "none" (no) random input data frame dropout
     ###########################################################################
-    # If the user requests no random dropout, just return a dataframe row that
-    #  has 1 (include) for every input dataframe
+    # If the user requests no random dropout, just return a data frame row that
+    #  has 1 (include) for every input data frame
     if (dropout_dist == "none") {
         inclusions_df <- rep(1, num_cols) |>
             t() |>
@@ -672,7 +673,7 @@ random_removal <- function(columns,
         rand_vals <- rand_vals / max(rand_vals)
         # Difference indicates how many possible inputs may be dropped
         difference <- max_removed_inputs - min_removed_inputs
-        #  E.g. if we are dropping between 5 and 20 input dataframes, this will
+        #  E.g. if we are dropping between 5 and 20 input data frames, this will
         #  ensure the largest value is 15. Because of the large amount of
         #  numbers, the smallest value will still be quite close to 0.
         rand_vals <- rand_vals * difference
@@ -687,7 +688,7 @@ random_removal <- function(columns,
         # There very likely could be a much simpler way to achieve this goal.
     }
     ###########################################################################
-    # 6. Randomly remove the calculated number of input dataframes to remove
+    # 6. Randomly remove the calculated number of input data frames to remove
     ###########################################################################
     # Vector of 0s the size of the number of inputs to remove
     remove_placeholders <- rep(0, num_removed)
@@ -696,7 +697,7 @@ random_removal <- function(columns,
     # Concatenate the two and shuffle them
     unshuffled_removals <- c(remove_placeholders, keep_placeholders)
     shuffled_removals <- sample(unshuffled_removals)
-    # Turn that shuffled vector into a dataframe row and return that row to be
+    # Turn that shuffled vector into a data frame row and return that row to be
     #  merged into the rest of the settings_df
     inclusions_df <- shuffled_removals |>
         data.frame() |>

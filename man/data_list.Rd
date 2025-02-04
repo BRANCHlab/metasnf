@@ -17,13 +17,13 @@ data frame.}
 \description{
 \code{data_list()} constructs a data list object which inherits from classes
 \code{data_list} and \code{list}. This object is the primary way in which features to
-be used along the metasnf clustering pipeline are stored. The data list is
+be used along the \code{metasnf} clustering pipeline are stored. The data list is
 fundamentally a 2-level nested list object where each inner list contains a
 data frame and associated metadata for that data frame. The metadata
-includes the name of the dataframe, the 'domain' of that dataframe (the
-broader source of information that the input dataframe is capturing,
+includes the name of the data frame, the 'domain' of that data frame (the
+broader source of information that the input data frame is capturing,
 determined by user's domain knowledge), and the type of feature stored in
-the dataframe (continuous, discrete, ordinal, categorical, or mixed).
+the data frame (continuous, discrete, ordinal, categorical, or mixed).
 }
 \examples{
 heart_rate_df <- data.frame(
@@ -88,7 +88,7 @@ dl <- data_list(
 )
 
 # Printing data list summaries
-summarize_dl(dl)
+summary(dl)
 
 # Alternative loading: providing a single list of lists
 list_of_lists <- list(

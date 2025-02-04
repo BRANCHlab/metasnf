@@ -7,14 +7,22 @@
 #' floating point-related errors.
 #'
 #' @param W Similarity matrix to calculate number of clusters for.
-#'
 #' @param NUMC Range of cluster counts to consider among when picking best
-#' number of clusters.
-#'
+#'  number of clusters.
 #' @return A list containing the top two eigengap and rotation-cost estimates
-#' for the number of clusters in a given similarity matrix.
-#'
+#'  for the number of clusters in a given similarity matrix.
 #' @export
+#' @examples
+#' input_dl <- data_list(
+#'     list(gender_df, "gender", "demographics", "categorical"),
+#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'     uid = "patient_id"
+#' )
+#' 
+#' sc <- snf_config(input_dl, n_solutions = 1)
+#' sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+#' sim_mat <- sim_mats_list(sol_df)[[1]]
+#' estimate_nclust_given_graph(sim_mat)
 estimate_nclust_given_graph <- function(W, NUMC = 2:10) {
     # Symmetrize
     W <- (W + t(W))/2
@@ -76,11 +84,9 @@ estimate_nclust_given_graph <- function(W, NUMC = 2:10) {
 #' Internal function taken from `SNFtool` to use for number of cluster
 #' estimation.
 #'
+#' @keywords internal
 #' @param eigenvectors Matrix of eigenvectors.
-#'
 #' @return "Matrix" class object, intermediate product in spectral clustering.
-#'
-#' @export
 discretisation <- function(eigenvectors) {
     normalize <- function(x) x / sqrt(sum(x^2))
     eigenvectors = t(apply(eigenvectors,1,normalize))
@@ -119,12 +125,10 @@ discretisation <- function(eigenvectors) {
 #' Internal function taken from `SNFtool` to use for number of cluster
 #' estimation.
 #'
+#' @keywords internal
 #' @param eigenvector Matrix of eigenvectors
-#'
 #' @return "Matrix" class object discretizing provided eigenvector to values 0
-#' or 1.
-#'
-#' @export
+#'  or 1.
 discretisation_evec_data <- function(eigenvector) {
     Y <- matrix(0, nrow(eigenvector), ncol(eigenvector))
     maxi <- function(x) {

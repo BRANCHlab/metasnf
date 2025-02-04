@@ -23,3 +23,4 @@ A solutions data frame (\code{solutions_df} class object).
 \description{
 Constructor for \code{solutions_df} class object
 }
+\keyword{internal}

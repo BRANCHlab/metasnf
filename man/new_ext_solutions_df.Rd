@@ -10,8 +10,10 @@ new_ext_solutions_df(ext_sol_dfl)
 \item{ext_sol_dfl}{An extended solutions data frame-like object.}
 }
 \value{
-RETURN
+An \code{ext_solutions_df} object, which is a data frame with class
+\code{ext_solutions_df}.
 }
 \description{
 Constructor for \code{ext_solutions_df} class object
 }
+\keyword{internal}

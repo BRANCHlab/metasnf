@@ -1,29 +1,37 @@
-#' Manhattan plot of feature-feature associaiton p-values
+#' Manhattan plot of feature-feature association p-values
 #'
-#' @param dl List of dataframes containing data information.
-#'
+#' @param dl List of data frames containing data information.
 #' @param key_var Feature for which the association p-values of all other
-#' features are plotted.
-#'
+#'  features are plotted.
 #' @param neg_log_pval_thresh Threshold for negative log p-values.
-#'
 #' @param threshold p-value threshold to plot dashed line at.
-#'
 #' @param point_size Size of points in the plot.
-#'
 #' @param text_size Size of text in the plot.
-#'
 #' @param plot_title Title of the plot.
-#'
 #' @param hide_x_labels If TRUE, hides x-axis labels.
-#'
 #' @param bonferroni_line If TRUE, plots a dashed black line at the
-#' Bonferroni-corrected equivalent of the p-value threshold.
-#'
+#'  Bonferroni-corrected equivalent of the p-value threshold.
 #' @return A Manhattan plot (class "gg", "ggplot") showing the association
-#' p-values of features against one key feature in a data list.
-#'
+#'  p-values of features against one key feature in a data list.
 #' @export
+#' @examples
+#' dl <- data_list(
+#'     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#'     list(income, "household_income", "demographics", "continuous"),
+#'     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'     list(anxiety, "anxiety", "behaviour", "ordinal"),
+#'     list(depress, "depressed", "behaviour", "ordinal"),
+#'     uid = "unique_id"
+#' )
+#' 
+#' var_manhattan <- var_manhattan_plot(
+#'     dl,
+#'     key_var = "household_income",
+#'     plot_title = "Correlation of Features with Household Income",
+#'     text_size = 16,
+#'     neg_log_pval_thresh = 3,
+#'     threshold = 0.05
+#' )
 var_manhattan_plot <- function(dl,
                                key_var,
                                neg_log_pval_thresh = 5,
@@ -57,7 +65,7 @@ var_manhattan_plot <- function(dl,
     )
     summary_data <- dplyr::inner_join(
         pval_df,
-        dl_variable_summary(dl),
+        summary(dl, scope = "feature"),
         by = dplyr::join_by("variable" == "name")
     )
     summary_data <- dplyr::arrange(summary_data, domain)
@@ -123,15 +131,15 @@ var_manhattan_plot <- function(dl,
 
 #' Manhattan plot of feature-meta cluster associaiton p-values
 #'
-#' Given a dataframe of representative meta cluster solutions (see
+#' Given a data frame of representative meta cluster solutions (see
 #' `get_representative_solutions()`, returns a Manhattan plot for showing
 #' feature separation across all features in provided data/target lists.
 #'
 #' @param ext_sol_df A sol_df that contains "_pval"
 #'  columns containing the values to be plotted. This object is the output of
 #'  `extend_solutions()`.
-#' @param dl List of dataframes containing data information.
-#' @param target_dl List of dataframes containing target information.
+#' @param dl List of data frames containing data information.
+#' @param target_dl List of data frames containing target information.
 #' @param variable_order Order of features to be displayed in the plot.
 #' @param neg_log_pval_thresh Threshold for negative log p-values.
 #' @param threshold p-value threshold to plot horizontal dashed line at.
@@ -143,9 +151,63 @@ var_manhattan_plot <- function(dl,
 #' @param hide_x_labels If TRUE, hides x-axis labels.
 #' @param domain_colours Named vector of colours for domains.
 #' @return A Manhattan plot (class "gg", "ggplot") showing the association
-#'  p-values of features against each solution in the provided solutions matrix,
+#'  p-values of features against each solution in the provided solutions data frame,
 #'  stratified by meta cluster label.
 #' @export
+#' @examples
+#' # dl <- data_list(
+#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#' #     list(income, "household_income", "demographics", "continuous"),
+#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #     list(anxiety, "anxiety", "behaviour", "ordinal"),
+#' #     list(depress, "depressed", "behaviour", "ordinal"),
+#' #     uid = "unique_id"
+#' # )
+#' # 
+#' # sc <- snf_config(
+#' #     dl = dl,
+#' #     n_solutions = 20,
+#' #     min_k = 20,
+#' #     max_k = 50
+#' # )
+#' # 
+#' # sol_df <- batch_snf(dl, sc)
+#' # 
+#' # ext_sol_df <- extend_solutions(
+#' #     sol_df,
+#' #     dl = dl,
+#' #     min_pval = 1e-10 # p-values below 1e-10 will be thresholded to 1e-10
+#' # )
+#' # 
+#' # # Calculate pairwise similarities between cluster solutions
+#' # sol_aris <- calc_aris(sol_df)
+#' # 
+#' # # Extract hierarchical clustering order of the cluster solutions
+#' # meta_cluster_order <- get_matrix_order(sol_aris)
+#' # 
+#' # # Identify meta cluster boundaries with shiny app or trial and error
+#' # # ari_hm <- meta_cluster_heatmap(sol_aris, order = meta_cluster_order)
+#' # # shiny_annotator(ari_hm)
+#' # 
+#' # # Result of meta cluster examination
+#' # split_vec <- c(2, 5, 12, 17)
+#' # 
+#' # ext_sol_df <- label_meta_clusters(ext_sol_df, split_vec, meta_cluster_order)
+#' # 
+#' # # Extracting representative solutions from each defined meta cluster
+#' # rep_solutions <- get_representative_solutions(sol_aris, ext_sol_df)
+#' # 
+#' # mc_manhattan <- mc_manhattan_plot(
+#' #     rep_solutions,
+#' #     dl = dl,
+#' #     point_size = 3,
+#' #     text_size = 12,
+#' #     plot_title = "Feature-Meta Cluster Associations",
+#' #     threshold = 0.05,
+#' #     neg_log_pval_thresh = 5
+#' # )
+#' # 
+#' # mc_manhattan
 mc_manhattan_plot <- function(ext_sol_df,
                               dl = NULL,
                               target_dl = NULL,
@@ -171,40 +233,25 @@ mc_manhattan_plot <- function(ext_sol_df,
     domain <- ""
     neg_log_pval <- ""
     ###########################################################################
-    # Formatting ext_sol_df as dataframe
+    # Formatting ext_sol_df as data frame
     ###########################################################################
     ext_sol_df <- data.frame(ext_sol_df)
     ###########################################################################
     # Select solution, label, and p-value related columns only
     ###########################################################################
-    if (!"label" %in% colnames(ext_sol_df)) {
-        ext_sol_df$"label" <- ext_sol_df$"solution"
-    }
-    ext_sol_df <- ext_sol_df |>
-        dplyr::select(
-            "solution",
-            "label",
-            dplyr::ends_with("_pval")
-        )
+    ext_sol_df <- gselect(ext_sol_df, c("^solution$", "^mc$", "_pval$"))
     if (ncol(ext_sol_df) == 2) {
         metasnf_error(
             "ext_sol_df is missing p-value columns. Did you",
-            " provide an unextended solutions matrix instead?"
+            " provide an unextended solutions data frame instead?"
         )
     }
-    ext_sol_df <- dplyr::select(
-        ext_sol_df,
-        -dplyr::contains(c("min_pval", "mean_pval", "max_pval"))
-    )
+    ext_sol_df <- drop_cols(ext_sol_df, c("min_pval", "mean_pval", "max_pval"))
     ###########################################################################
-    # Convert solution and label to factors
+    # Convert solution and mc to factors
     ###########################################################################
-    ext_sol_df$"solution" <- factor(
-        ext_sol_df$"solution"
-    )
-    ext_sol_df$"label" <- factor(
-        ext_sol_df$"label"
-    )
+    ext_sol_df$"solution" <- factor(ext_sol_df$"solution")
+    ext_sol_df$"mc" <- factor(ext_sol_df$"mc")
     ###########################################################################
     # Re-assign names to the data list and target list
     ###########################################################################
@@ -250,7 +297,7 @@ mc_manhattan_plot <- function(ext_sol_df,
     ext_sol_df[, var_cols] <- cutoff_var_cols
     summary_data <- ext_sol_df |>
         tidyr::pivot_longer(
-            !(c("solution", "label")),
+            !(c("solution", "mc")),
             names_to = "variable",
             values_to = "neg_log_pval"
         ) |>
@@ -259,7 +306,7 @@ mc_manhattan_plot <- function(ext_sol_df,
     ###########################################################################
     # Merge the summmary plot with domain information from the data list
     ###########################################################################
-    dl_metadata <- summary(dl, "feature") |> dplyr::select(-"type")
+    dl_metadata <- summary(dl, "feature") |> drop_cols("type")
     summary_data <- merge(
         summary_data,
         dl_metadata,
@@ -319,12 +366,16 @@ mc_manhattan_plot <- function(ext_sol_df,
             plot.title = ggplot2::element_text(hjust = 0.5),
             text = ggplot2::element_text(size = text_size)
         ) +
-        ggplot2::facet_grid(label ~ .)
+        ggplot2::facet_grid(mc ~ .)
     ###########################################################################
     # Assigning colours to domains
     ###########################################################################
     prefixed_domains <- unique(summary_data$"domain")
-    domains <- substr(prefixed_domains, 3, nchar(prefixed_domains))
+    if (!is.null(target_dl)) {
+        domains <- substr(prefixed_domains, 3, nchar(prefixed_domains))
+    } else {
+        domains <- prefixed_domains
+    }
     if (is.null(domain_colours)) {
         plot <- plot + ggplot2::scale_color_brewer(
             labels = domains,
@@ -378,32 +429,63 @@ mc_manhattan_plot <- function(ext_sol_df,
 
 #' Manhattan plot of feature-cluster association p-values
 #'
-#' @param esm Extended solutions matrix storing associations between features
+#' @param esm Extended solutions data frame storing associations between features
 #' and cluster assignments. See `?extend_solutions`.
 #'
 #' @param neg_log_pval_thresh Threshold for negative log p-values.
-#'
 #' @param threshold P-value threshold to plot dashed line at.
-#'
 #' @param point_size Size of points in the plot.
-#'
 #' @param jitter_width Width of jitter.
-#'
 #' @param jitter_height Height of jitter.
-#'
 #' @param text_size Size of text in the plot.
-#'
 #' @param plot_title Title of the plot.
-#'
 #' @param hide_x_labels If TRUE, hides x-axis labels.
-#'
 #' @param bonferroni_line If TRUE, plots a dashed black line at the
 #'  Bonferroni-corrected equivalent of the p-value threshold.
-#'
 #' @return A Manhattan plot (class "gg", "ggplot") showing the association
-#' p-values of features against each solution in the provided solutions matrix.
-#'
+#'  p-values of features against each solution in the provided solutions data frame.
 #' @export
+#' @examples
+#' # full_dl <- data_list(
+#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#' #     list(income, "household_income", "demographics", "continuous"),
+#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #     list(anxiety, "anxiety", "behaviour", "ordinal"),
+#' #     list(depress, "depressed", "behaviour", "ordinal"),
+#' #     uid = "unique_id"
+#' # )
+#' # 
+#' # dl <- full_dl[1:3]
+#' # target_dl <- full_dl[4:5]
+#' # 
+#' # set.seed(42)
+#' # sc <- snf_config(
+#' #     dl = dl,
+#' #     n_solutions = 20,
+#' #     min_k = 20,
+#' #     max_k = 50
+#' # )
+#' # 
+#' # sol_df <- batch_snf(dl, sc)
+#' # 
+#' # ext_sol_df <- extend_solutions(
+#' #     sol_df,
+#' #     dl = dl,
+#' #     target = target_dl,
+#' #     min_pval = 1e-10 # p-values below 1e-10 will be thresholded to 1e-10
+#' # )
+#' # 
+#' # esm_manhattan <- esm_manhattan_plot(
+#' #     ext_sol_df[1:5, ],
+#' #     neg_log_pval_thresh = 5,
+#' #     threshold = 0.05,
+#' #     point_size = 3,
+#' #     jitter_width = 0.1,
+#' #     jitter_height = 0.1,
+#' #     plot_title = "Feature-Solution Associations",
+#' #     text_size = 14,
+#' #     bonferroni_line = TRUE
+#' # )
 esm_manhattan_plot <- function(esm,
                                neg_log_pval_thresh = 5,
                                threshold = NULL,

@@ -8,9 +8,20 @@ uids <- function(x) {
 }
 
 #' @export
-uids.solutions_df <- function(x) {
-    uid_vec <- colnames(x)[-c(1:2)]
+uids.default <- function(x) {
+    uid_vec <- attributes(x)$"uids"
     return(uid_vec)
+}
+
+#' @export
+uids.solutions_df <- function(x) {
+    uid_vec <- colnames(x)[grepl("^uid_", colnames(x))]
+    return(uid_vec)
+}
+
+#' @export
+uids.t_solutions_df <- function(x) {
+    return(x$"uid")
 }
 
 #' @export
@@ -21,6 +32,6 @@ uids.data_list <- function(x) {
 
 #' @export
 uids.ext_solutions_df <- function(x) {
-    uid_vec <- uids(attributes(x)$"solutions_df")
+    uid_vec <- colnames(x)[grepl("^uid_", colnames(x))]
     return(uid_vec)
 }

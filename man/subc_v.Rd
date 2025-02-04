@@ -23,6 +23,6 @@ Data used in the preparation of this article were obtained from the Adolescent B
 subc_v
 }
 \description{
-Like the mock dataframe "abcd_subc_v", but with "unique_id" as the "uid".
+Like the mock data frame "abcd_subc_v", but with "unique_id" as the "uid".
 }
 \keyword{datasets}

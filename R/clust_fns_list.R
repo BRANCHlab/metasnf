@@ -11,6 +11,7 @@
 #'  the number of clusters in the graph) to clust_fns.
 #' @return A list of clustering algorithm functions that can
 #'  be passed into the batch_snf and generate_settings_list functions.
+#' @export
 #' @examples
 #' # Using just the base clustering algorithms --------------------------------
 #' # This will just contain spectral_eigen and spectral_rot
@@ -41,7 +42,6 @@
 #'         "five_cluster_spectral" = spectral_five
 #'     )
 #' )
-#' @export
 clust_fns_list <- function(clust_fns = NULL, use_default_clust_fns = FALSE) {
     cfll <- clust_fns
     if (is.null(cfll) & !use_default_clust_fns) {
@@ -174,7 +174,7 @@ summarize_clust_fns_list <- function(cfl) {
 
 #' Built-in clustering algorithms
 #'
-#' These functions can be used when building a metasnf clustering functions
+#' These functions can be used when building a `metasnf` clustering functions
 #' list. Each function converts a similarity matrix (matrix class object) to a
 #' cluster solution (numeric vector). Note that these functions (or custom
 #' clustering functions) cannot accept number of clusters as a parameter; this

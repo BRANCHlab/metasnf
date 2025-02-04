@@ -57,7 +57,7 @@ colours.}
 \item{labels_colour}{Vector of colours to use for the columns and rows
 of the heatmap.}
 
-\item{split_by_domain}{The results of \code{dl_var_summar} - a dataframe that has
+\item{split_by_domain}{The results of \code{dl_var_summar} - a data frame that has
 the domain of every feature in the plotted data.
 columns of the correlation_matrix. Will be used to "slice" the heatmap into
 visually separated sections.}
@@ -78,4 +78,17 @@ correlation_matrix.
 }
 \description{
 Heatmap of pairwise associations between features
+}
+\examples{
+#data_list <- data_list(
+#    list(income, "household_income", "demographics", "ordinal"),
+#    list(pubertal, "pubertal_status", "demographics", "continuous"),
+#    list(fav_colour, "favourite_colour", "demographics", "categorical"),
+#    list(anxiety, "anxiety", "behaviour", "ordinal"),
+#    list(depress, "depressed", "behaviour", "ordinal"),
+#    uid = "unique_id"
+#)
+#
+#assoc_pval_matrix <- calc_assoc_pval_matrix(data_list)
+#ap_heatmap <- assoc_pval_heatmap(assoc_pval_matrix)
 }

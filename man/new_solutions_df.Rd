@@ -11,7 +11,7 @@ new_solutions_df(sol_dfl)
 converted into a solutions data frame.}
 }
 \value{
-RETURN
+A \code{solutions_df} class object.
 }
 \description{
 Constructor for \code{solutions_df} class object

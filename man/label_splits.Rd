@@ -21,3 +21,4 @@ and three "C"s (up to and including the last index, 8).
 \description{
 Convert a vector of partition indices into meta cluster labels
 }
+\keyword{internal}

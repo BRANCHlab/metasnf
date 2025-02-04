@@ -72,7 +72,7 @@ sol_df <- batch_snf(
     return_sim_mats = TRUE
 )
 
-similarity_matrices <- attributes(sol_df)$"sim_mats_list"
+similarity_matrices <- sim_mats_list(sol_df)
 
 # The first (and only) similarity matrix:
 similarity_matrix <- similarity_matrices[[1]]
@@ -92,11 +92,12 @@ similarity_matrix_hm <- similarity_matrix_heatmap(
     heatmap_height = grid::unit(10, "cm"),
     heatmap_width = grid::unit(10, "cm")
 )
+```
 
-# Export heatmaps using the `save_heatmap` function
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = similarity_matrix_hm,
-    path = "similarity_matrix_heatmap.png",
+    path = "vignettes/similarity_matrix_heatmap.png",
     width = 410,
     height = 330,
     res = 80
@@ -112,12 +113,12 @@ Additionally, the similarity matrix gets reordered according to the provided clu
 
 ## Annotations
 
-One piece of functionality provided by `ComplexHeatmap::Heatmap` is the ability to supply visual annotations along the rows and columns of a heatmap.
+One piece of functionality provided by `ComplexHeatmap::Heatmap()` is the ability to supply visual annotations along the rows and columns of a heatmap.
 
 You can always build annotations using the standard approaches outline in the [ComplexHeatmap Complete Reference](https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html).
-In addition to that, this package offers some convenient functionality to specify regular heatmap annotations and barplot annotations directly through a provided dataframe or data_list (or both).
+In addition to that, this package offers some convenient functionality to specify regular heatmap annotations and barplot annotations directly through a provided data frame or data_list (or both).
 
-In the example below, we make use of data supplied through a data_list.
+In the example below, we make use of data supplied through a data list.
 
 ```{r eval = FALSE}
 annotated_sm_hm <- similarity_matrix_heatmap(
@@ -125,7 +126,7 @@ annotated_sm_hm <- similarity_matrix_heatmap(
     cluster_solution = cluster_solution,
     scale_diag = "mean",
     log_graph = TRUE,
-    dl = my_dl,
+    data = my_dl,
     left_hm = list(
         "Diagnosis" = "diagnosis"
     ),
@@ -154,7 +155,7 @@ annotated_sm_hm <- similarity_matrix_heatmap(
 ```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = annotated_sm_hm,
-    path = "./annotated_sm_heatmap.png",
+    path = "vignettes/annotated_sm_heatmap.png",
     width = 500,
     height = 440,
     res = 80
@@ -215,4 +216,4 @@ Take a look at the [ComplexHeatmap Complete Reference](https://jokergoo.github.i
 
 Be aware that the ordering of both your data and your similarity matrix will be influenced if you supply values for the `cluster_solution` or `order` parameters.
 If you don't think your data is lining up properly, consider manually making sure your `similarity_matrix` rows and columns are sorted to your preference (e.g., based on cluster) and that the order of your data matches.
-This will be easier to do with a `dataframe` than with a `data_list`, as the `data_list` forces patients to be sorted by their unique IDs upon generation.
+This will be easier to do with a `data frame` than with a `data_list`, as the `data_list` forces patients to be sorted by their unique IDs upon generation.

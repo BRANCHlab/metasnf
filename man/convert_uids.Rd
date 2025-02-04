@@ -16,6 +16,6 @@ dll The provided nested list with "uid" as UID.
 }
 \description{
 Column name "uid" is reserved for the unique identifier of observations.
-This function ensures all dataframes have their UID set as "uid".
+This function ensures all data frames have their UID set as "uid".
 }
 \keyword{internal}

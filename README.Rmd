@@ -16,20 +16,20 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Meta clustering with Similarity Network Fusion
+# metaSNF: Meta clustering with Similarity Network Fusion
 
 <!-- badges: start -->
 <!-- badges: end -->
 
 ## Brief Overview
 
-*metasnf* is a package that facilitates usage of the meta clustering paradigm described in [@caruanaMeta2006] with the similarity network fusion (SNF) data integration procedure developed in [@wangSimilarity2014].
+metaSNF is an R package that facilitates usage of the meta clustering paradigm described in [@caruanaMeta2006] with the similarity network fusion (SNF) data integration procedure developed in [@wangSimilarity2014].
 The package offers a comprehensive suite of tools to assist users in transforming multi-modal tabular data into cluster solutions, decision making in the clustering process, and visualization along the way with a strong emphasis on context-specific utility and principled validation of results.
 
 ## Installation
 
 You will need R version 4.1.0 or higher to install this package.
-`metasnf` can be installed from CRAN:
+metaSNF can be installed from CRAN:
 
 ```{r eval = FALSE}
 install.packages("metasnf")

@@ -15,3 +15,4 @@ A \code{similarity_matrix_list} class object.
 \description{
 Constructor for \code{similarity_matrix_list} class object
 }
+\keyword{internal}

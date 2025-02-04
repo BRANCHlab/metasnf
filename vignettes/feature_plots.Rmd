@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Download a copy of the vignette to follow along here: [feature_plots.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/feature_plots.Rmd)
 
-Given a cluster solution formatted as a row of a solutions matrix (or extended solutions matrix) and a data list containing features to plot, the `auto_plot()` function can automatically generate `ggplot`-based bar and jitter plots showing how that particular feature was divided across clusters.
+Given a cluster solution formatted as a row of a solutions data frame (or extended solutions data frame) and a data list containing features to plot, the `auto_plot()` function can automatically generate `ggplot`-based bar and jitter plots showing how that particular feature was divided across clusters.
 
 ```{r}
 library(metasnf)
@@ -47,7 +47,7 @@ sol_df <- batch_snf(dl, sc)
 sol_df_row <- sol_df[1, ]
 ```
 
-Note, the row you pick could come directly from a `solutions_matrix`, but could also come from an `extended_solutions_matrix` or from a representative solution picked after `get_representative_solutions()`.
+The row you pick could come from a `solutions_df` or `ext_solutions_df` class object.
 
 ```{r}
 plot_list <- auto_plot(

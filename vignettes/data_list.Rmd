@@ -4,7 +4,7 @@ output:
     rmarkdown::html_vignette:
         toc: true
 description: >
-  The main object used to store data in the metasnf package.
+  The main object used to store data in the `metasnf` package.
 vignette: >
   %\VignetteIndexEntry{The Data List}
   %\VignetteEngine{knitr::rmarkdown}
@@ -20,10 +20,10 @@ Download a copy of the vignette to follow along here: [data_list.Rmd](https://ra
 ## The data_list
 
 This vignette outlines the importance, structure, and creation of the data_list object.
-You can find much of this info by running `?data_list` after loading the metasnf package.
+You can find much of this info by running `?data_list` after loading the `metasnf` package.
 
-The data_list is the main object used in the metasnf package to store data.
-It is a named and nested list containing input dataframes (data), the name of that input dataframe (for the user's reference), the 'domain' of that dataframe (the broader source of information that the input dataframe is capturing, determined by user's domain knowledge), and the type of feature stored in the dataframe (continuous, discrete, ordinal, categorical, or mixed).
+The data_list is the main object used in the `metasnf` package to store data.
+It is a named and nested list containing input data frames (data), the name of that input data frame (for the user's reference), the 'domain' of that data frame (the broader source of information that the input data frame is capturing, determined by user's domain knowledge), and the type of feature stored in the data frame (continuous, discrete, ordinal, categorical, or mixed).
 
 Some examples of data_list generation and usage are below:
 
@@ -55,7 +55,7 @@ city_df <- data.frame(
 )
 
 # Generating a data_list explicitly (Name each nested list element):
-data_list <- data_list(
+dl <- data_list(
     list(
         data = heart_rate_df,
         name = "heart_rate",
@@ -84,7 +84,7 @@ data_list <- data_list(
 )
 
 # Achieving the same result compactly:
-data_list <- data_list(
+dl <- data_list(
     list(heart_rate_df, "heart_rate", "clinical", "continuous"),
     list(personality_test_df, "personality_test", "surveys", "continuous"),
     list(survey_response_df, "survey_response", "surveys", "ordinal"),
@@ -93,7 +93,7 @@ data_list <- data_list(
 )
 
 # Printing data_list summaries
-summarize_dl(data_list)
+summary(dl)
 ```
 
 Depending on your data preprocessing, it may be more convenient to you to assemble the components of your data_list in an automated way and then provide that result to `data_list`.
@@ -115,5 +115,5 @@ dl <- data_list(
     uid = "patient_id"
 )
 
-summarize_dl(dl)
+summary(dl)
 ```

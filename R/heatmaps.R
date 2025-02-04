@@ -3,7 +3,8 @@
 #' @param similarity_matrix A similarity matrix
 #' @param order Vector of numbers to reorder the similarity matrix (and data
 #'  if provided). Overwrites ordering specified by cluster_solution param.
-#' @param cluster_solution Vector containing cluster assignments.
+#' @param cluster_solution Row of a solutions data frame or column of a
+#'  transposed solutions data frame.
 #' @param scale_diag Method of rescaling matrix diagonals. Can be "none"
 #'  (don't change diagonals), "mean" (replace diagonals with average value of
 #'  off-diagonals), or "zero" (replace diagonals with 0).
@@ -12,7 +13,7 @@
 #' @param cluster_columns Parameter for ComplexHeatmap::Heatmap.
 #' @param show_row_names Parameter for ComplexHeatmap::Heatmap.
 #' @param show_column_names Parameter for ComplexHeatmap::Heatmap.
-#' @param data A dataframe containing elements requested for annotation.
+#' @param data A data frame containing elements requested for annotation.
 #' @param left_bar Named list of strings, where the strings are features in
 #'  df that should be used for a barplot annotation on the left of the plot and
 #'  the names are the names that will be used to caption the plots and their
@@ -36,6 +37,33 @@
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
 #'  that displays the similarities between observations in the provided matrix.
 #' @export
+#' @examples
+#' #my_dl <- data_list(
+#' #    list(
+#' #        data = expression_df,
+#' #        name = "expression_data",
+#' #        domain = "gene_expression",
+#' #        type = "continuous"
+#' #    ),
+#' #    list(
+#' #        data = methylation_df,
+#' #        name = "methylation_data",
+#' #        domain = "gene_methylation",
+#' #        type = "continuous"
+#' #    ),
+#' #    uid = "patient_id"
+#' #)
+#' #
+#' #sc <- snf_config(my_dl, n_solutions = 10)
+#' #
+#' #sol_df <- batch_snf(my_dl, sc, return_sim_mats = TRUE)
+#' #
+#' #sim_mats <- sim_mats_list(sol_df)
+#' #
+#' #similarity_matrix_heatmap(
+#' #    sim_mats[[1]],
+#' #    cluster_solution = sol_df[1, ]
+#' #)
 similarity_matrix_heatmap <- function(similarity_matrix,
                                       order = NULL,
                                       cluster_solution = NULL,
@@ -93,11 +121,14 @@ similarity_matrix_heatmap <- function(similarity_matrix,
     #  - nowhere (reorder by similarity?)
     #  - cluster_solution (just sort by cluster_solution)
     #  - hard specified (sort the similarity_matrix by the order provided)
+    if (inherits(cluster_solution, "solutions_df")) {
+        cluster_solution <- t(cluster_solution)
+    }
     if (is.null(order)) {
         # Order was not provided
         if (!is.null(cluster_solution)) {
             # Cluster solution was provided
-            order <- sort(cluster_solution[, 2], index.return = TRUE)$"ix"
+            order <- sort.int(cluster_solution[, 2], index.return = TRUE)$"ix"
             message("Sorting by cluster solution.")
         } else {
             # Neither order nor cluster solution was provided
@@ -198,46 +229,67 @@ similarity_matrix_heatmap <- function(similarity_matrix,
 #' Heatmap of pairwise adjusted rand indices between solutions
 #'
 #' @param aris Matrix of adjusted rand indices from `calc_aris()`
-#'
 #' @param order Numeric vector containing row order of the heatmap.
-#'
 #' @param cluster_rows Whether rows should be clustered.
-#'
 #' @param cluster_columns Whether columns should be clustered.
-#'
 #' @param log_graph If TRUE, log transforms the graph.
-#'
 #' @param scale_diag Method of rescaling matrix diagonals. Can be "none"
-#' (don't change diagonals), "mean" (replace diagonals with average value of
-#' off-diagonals), or "zero" (replace diagonals with 0).
-#'
+#'  (don't change diagonals), "mean" (replace diagonals with average value of
+#'  off-diagonals), or "zero" (replace diagonals with 0).
 #' @param min_colour Colour used for the lowest value in the heatmap.
-#'
 #' @param max_colour Colour used for the highest value in the heatmap.
-#'
 #' @param col Colour ramp to use for the heatmap.
-#'
 #' @param ... Additional parameters passed to `similarity_matrix_heatmap()`,
-#' the function that this function wraps.
-#'
+#'  the function that this function wraps.
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
-#' that displays the pairwise adjusted Rand indices (similarities) between
-#' the cluster solutions of the provided solutions matrix.
-#'
+#'  that displays the pairwise adjusted Rand indices (similarities) between
+#'  the cluster solutions of the provided solutions data frame.
 #' @export
-adjusted_rand_index_heatmap <- function(aris,
-                                        order = NULL,
-                                        cluster_rows = FALSE,
-                                        cluster_columns = FALSE,
-                                        log_graph = FALSE,
-                                        scale_diag = "none",
-                                        min_colour = "#282828",
-                                        max_colour = "firebrick2",
-                                        col = circlize::colorRamp2(
-                                            c(min(aris), max(aris)),
-                                            c(min_colour, max_colour)
-                                        ),
-                                        ...) {
+#' @examples
+#' #dl <- data_list(
+#' #    list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+#' #    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#' #    list(income, "household_income", "demographics", "continuous"),
+#' #    list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #    uid = "unique_id"
+#' #)
+#' #
+#' #set.seed(42)
+#' #my_sc <- snf_config(
+#' #    dl = dl,
+#' #    n_solutions = 20,
+#' #    min_k = 20,
+#' #    max_k = 50
+#' #)
+#' #
+#' #sol_df <- batch_snf(dl, my_sc)
+#' #
+#' #sol_df
+#' #
+#' #sol_aris <- calc_aris(sol_df)
+#' #
+#' #meta_cluster_order <- get_matrix_order(sol_aris)
+#' #
+#' ## `split_vec` found by iteratively plotting ari_hm or by ?shiny_annotator()
+#' #split_vec <- c(6, 10, 16)
+#' #ari_hm <- meta_cluster_heatmap(
+#' #    sol_aris,
+#' #    order = meta_cluster_order,
+#' #    split_vector = split_vec
+#' #)
+meta_cluster_heatmap <- function(aris,
+                                 order = NULL,
+                                 cluster_rows = FALSE,
+                                 cluster_columns = FALSE,
+                                 log_graph = FALSE,
+                                 scale_diag = "none",
+                                 min_colour = "#282828",
+                                 max_colour = "firebrick2",
+                                 col = circlize::colorRamp2(
+                                     c(min(aris), max(aris)),
+                                     c(min_colour, max_colour)
+                                 ),
+                                 ...) {
     heatmap <- similarity_matrix_heatmap(
         aris,
         order = order,
@@ -255,57 +307,52 @@ adjusted_rand_index_heatmap <- function(aris,
 #' Heatmap of pairwise associations between features
 #'
 #' @param correlation_matrix Matrix containing all pairwise association
-#' p-values. The recommended way to obtain this matrix is through the
-#' calc_assoc_pval function.
-#'
+#'  p-values. The recommended way to obtain this matrix is through the
+#'  calc_assoc_pval function.
 #' @param scale_diag Parameter that controls how the diagonals of the
-#' correlation_matrix are adjusted in the heatmap. For best viewing, this is
-#' set to "max", which will match the diagonals to whichever pairwise
-#' association has the highest p-value.
-#'
+#'  correlation_matrix are adjusted in the heatmap. For best viewing, this is
+#'  set to "max", which will match the diagonals to whichever pairwise
+#'  association has the highest p-value.
 #' @param cluster_rows Parameter for ComplexHeatmap::Heatmap. Will be ignored
-#' if split_by_domain is also provided.
-#'
+#'  if split_by_domain is also provided.
 #' @param cluster_columns Parameter for ComplexHeatmap::Heatmap. Will be
-#' ignored if split_by_domain is also provided.
-#'
+#'  ignored if split_by_domain is also provided.
 #' @param show_row_names Parameter for ComplexHeatmap::Heatmap.
-#'
 #' @param show_column_names Parameter for ComplexHeatmap::Heatmap.
-#'
 #' @param show_heatmap_legend Parameter for ComplexHeatmap::Heatmap.
-#'
 #' @param confounders A named list where the elements are columns in the
-#' correlation_matrix and the names are the corresponding display names.
-#'
+#'  correlation_matrix and the names are the corresponding display names.
 #' @param out_of_models Like confounders, but a named list of out of model
-#' measures (who are also present as columns in the correlation_matrix).
-#'
+#'  measures (who are also present as columns in the correlation_matrix).
 #' @param annotation_colours Named list of heatmap annotations and their
 #'  colours.
-#'
 #' @param labels_colour Vector of colours to use for the columns and rows
-#' of the heatmap.
-#'
-#' @param split_by_domain The results of `dl_var_summar` - a dataframe that has
-#' the domain of every feature in the plotted data.
-#' columns of the correlation_matrix. Will be used to "slice" the heatmap into
-#' visually separated sections.
-#'
+#'  of the heatmap.
+#' @param split_by_domain The results of `dl_var_summar` - a data frame that has
+#'  the domain of every feature in the plotted data.
+#'  columns of the correlation_matrix. Will be used to "slice" the heatmap into
+#'  visually separated sections.
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @param significance_stars If TRUE (default), plots significance stars on
-#' heatmap cells
-#'
+#'  heatmap cells
 #' @param slice_font_size Font size for domain separating labels.
-#'
 #' @param ... Additional parameters passed into ComplexHeatmap::Heatmap.
-#'
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
-#' that displays the pairwise associations between features from the provided
-#' correlation_matrix.
-#'
+#'  that displays the pairwise associations between features from the provided
+#'  correlation_matrix.
 #' @export
+#' @examples
+#' #data_list <- data_list(
+#' #    list(income, "household_income", "demographics", "ordinal"),
+#' #    list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #    list(fav_colour, "favourite_colour", "demographics", "categorical"),
+#' #    list(anxiety, "anxiety", "behaviour", "ordinal"),
+#' #    list(depress, "depressed", "behaviour", "ordinal"),
+#' #    uid = "unique_id"
+#' #)
+#' #
+#' #assoc_pval_matrix <- calc_assoc_pval_matrix(data_list)
+#' #ap_heatmap <- assoc_pval_heatmap(assoc_pval_matrix)
 assoc_pval_heatmap <- function(correlation_matrix,
                                scale_diag = "max",
                                cluster_rows = TRUE,
@@ -447,7 +494,7 @@ assoc_pval_heatmap <- function(correlation_matrix,
                 "You must provide a data list to split the heatmap by domain."
             )
         }
-        dl_var_summary <- dl_variable_summary(dl)
+        dl_var_summary <- summary(dl, scope = "feature")
         keep_vars <- dl_var_summary$"name" %in% colnames(correlation_matrix)
         dl_var_summary <- dl_var_summary[keep_vars, ]
         args_list$"cluster_rows" <- FALSE
@@ -523,79 +570,122 @@ assoc_pval_heatmap <- function(correlation_matrix,
     )
 }
 
-#' Heatmap for visualizing a settings matrix
+#' Heatmap for visualizing an SNF config
 #'
-#' Scales settings matrix values between 0 and 1 and plots as a heatmap. Rows
+#' Create a heatmap where each row corresponds to a different set of 
+#' hyperparameters in an SNF config object. Numeric parameters are scaled
+#' normalized and non-numeric parameters are added as heatmap annotations. Rows
 #' can be reordered to match prior meta clustering results.
 #'
-#' @param settings Matrix indicating parameters to iterate SNF through.
-#' @param remove_fixed_columns Whether columns that have no variation should be
-#'  removed.
-#' @param order Numeric vector indicating row ordering of settings matrix.
-#' @param show_column_names Whether column names should be shown.
-#' @param show_row_names Whether row names should be shown.
-#' @param rect_gp Cell border function for `ComplexHeatmap::Heatmap`.
-#' @param column_title Standard parameter of `ComplexHeatmap::Heatmap`.
-#' @param colour_breaks Numeric vector of breaks for the legend.
+#' @inheritParams ComplexHeatmap::Heatmap
+#' @param sc An `snf_config` class object.
+#' @param order Numeric vector indicating row ordering of SNF config.
+#' @param hide_fixed Whether fixed parameters should be removed.
 #' @param colours Vector of colours to use for the heatmap. Should match the
 #'  length of colour_breaks.
+#' @param colour_breaks Numeric vector of breaks for the legend.
 #' @param column_split_vector Vector of indices to split columns by.
-#' @param column_split Standard parameter of `ComplexHeatmap::Heatmap`.
 #' @param row_split_vector Vector of indices to split rows by.
-#' @param row_split Standard parameter of `ComplexHeatmap::Heatmap`.
+#' @param include_weights If TRUE, includes feature weights of the weights
+#'  matrix into the config heatmap.
+#' @param include_settings If TRUE, includes columns from the settings data
+#'  frame into the config heatmap.
 #' @param ... Additional parameters passed to `ComplexHeatmap::Heatmap`.
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
-#'  that displays the scaled values of the provided settings matrix.
+#'  that displays the scaled values of the provided SNF config.
 #' @export
-settings_df_heatmap <- function(settings,
-                                order = NULL,
-                                remove_fixed_columns = TRUE,
-                                show_column_names = TRUE,
-                                show_row_names = TRUE,
-                                rect_gp = grid::gpar(col = "black"),
-                                colour_breaks = c(0, 1),
-                                colours = c("black", "darkseagreen"),
-                                column_split_vector = NULL,
-                                row_split_vector = NULL,
-                                column_split = NULL,
-                                row_split = NULL,
-                                column_title = NULL,
+#' @examples
+#' dl <- data_list(
+#'     list(income, "household_income", "demographics", "ordinal"),
+#'     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'     list(fav_colour, "favourite_colour", "demographics", "categorical"),
+#'     list(anxiety, "anxiety", "behaviour", "ordinal"),
+#'     list(depress, "depressed", "behaviour", "ordinal"),
+#'     uid = "unique_id"
+#' )
+#' 
+#' sc <- snf_config(
+#'     dl,
+#'     n_solutions = 10,
+#'     dropout_dist = "uniform"
+#' )
+#' 
+#' config_heatmap(sc)
+config_heatmap <- function(sc,
+                           order = NULL,
+                           hide_fixed = FALSE,
+                           show_column_names = TRUE,
+                           show_row_names = TRUE,
+                           rect_gp = grid::gpar(col = "black"),
+                           colour_breaks = c(0, 1),
+                           colours = c("black", "darkseagreen"),
+                           column_split_vector = NULL,
+                           row_split_vector = NULL,
+                           column_split = NULL,
+                           row_split = NULL,
+                           column_title = NULL,
+                           include_weights = TRUE,
+                           include_settings = TRUE,
                                 ...) {
-    if (inherits(settings, "snf_config")) {
-        sdf <- settings$"settings_df"
-    } else if (inherits(settings, "settings_df")) {
-        sdf <- settings
+    if (inherits(sc, "snf_config")) {
+        sdf <- sc$"settings_df"
     } else {
-        metasnf_error(
-            "`settings` must be either a `snf_config` or `settings_df` class",
-            " object."
-        )
+        metasnf_error("`sc` must be an `snf_config` class object.")
     }
     if (!is.null(order)) {
         sdf <- sdf[order, ]
     }
+    if (include_settings & include_weights) {
+        sdf <- drop_cols(sdf, "solution")
+        wm <- sc$"weights_matrix"
+        sdf <- cbind(sdf, as.data.frame(wm))
+        trimmed_sdf <- gexclude(sdf, c("^snf_scheme$", "^clust_alg$", "dist$" ))
+    } else if (include_weights) {
+        wm <- sc$"weights_matrix"
+        sdf <- as.data.frame(wm)
+        trimmed_sdf <- sdf
+    } else if (include_settings) {
+        sdf <- drop_cols(sdf, "solution")
+        trimmed_sdf <- gexclude(sdf, c("^snf_scheme$", "^clust_alg$", "dist$" ))
+    } else {
+        metasnf_error(
+            "At least one of `include_weights` and `include_settings` must",
+            " be TRUE."
+        ) 
+    }
     # Scaling everything to have a max of 1
-    col_maxes <- apply(sdf, 2, function(x) 1 / max(x))
-    scaled_matrix <- as.matrix(sdf) %*% diag(col_maxes)
-    colnames(scaled_matrix) <- colnames(sdf)
-    rownames(scaled_matrix) <- rownames(sdf)
+    col_maxes <- apply(trimmed_sdf, 2, function(x) 1 / max(x))
+    scaled_matrix <- as.matrix(trimmed_sdf) %*% diag(col_maxes)
+    colnames(scaled_matrix) <- colnames(trimmed_sdf)
+    rownames(scaled_matrix) <- rownames(trimmed_sdf)
     ###########################################################################
     # Function to check number of unique values in each column
     unique_values <- apply(scaled_matrix, 2, function(x) length(unique(x)))
     fixed_columns <- colnames(scaled_matrix[, unique_values == 1])
-    if (length(fixed_columns) > 0 && remove_fixed_columns) {
-        message(
-            "Removing columns that had no variation across settings matrix: \n",
-            paste(
-                paste0(seq_along(fixed_columns), ". ", fixed_columns),
-                collapse = "\n "
-            )
+    if (length(fixed_columns) > 0 && hide_fixed) {
+        metasnf_alert(
+            "Removing settings that had no variation across SNF config.\n"
         )
         scaled_matrix <- scaled_matrix[, unique_values > 1]
     }
     ###########################################################################
     # Assign splits (if any provided)
     ###########################################################################
+    if (is.null(column_split_vector)) {
+        inc_splits <- which(startsWith(colnames(scaled_matrix), "inc_"))
+        if (length(inc_splits) > 0) {
+            column_split_vector <- c(
+                inc_splits[[1]], # first inclusion column
+                inc_splits[[length(inc_splits)]] + 1 # last inclusion column
+            )
+        }
+    }
+    snf_param_index <- sum(c("alpha", "k", "t") %in% colnames(scaled_matrix)) + 1
+    column_split_vector <- c(snf_param_index, column_split_vector)
+    column_split_vector <- column_split_vector[column_split_vector < ncol(scaled_matrix)]
+    if (length(column_split_vector) == 0) {
+        column_split_vector <- NULL
+    }
     split_results <- split_parser(
         row_split_vector = row_split_vector,
         row_split = row_split,
@@ -606,6 +696,56 @@ settings_df_heatmap <- function(settings,
     )
     column_split <- split_results$"column_split"
     row_split <- split_results$"row_split"
+    #--------------------------------------------------------------------------
+    if (include_settings) {
+        sdf$"snf_scheme" <- as.factor(sdf$"snf_scheme")
+        sdf$"clust_alg" <- as.factor(sdf$"clust_alg")
+        sdf$"cnt_dist" <- as.factor(sdf$"cnt_dist")
+        sdf$"dsc_dist" <- as.factor(sdf$"dsc_dist")
+        sdf$"ord_dist" <- as.factor(sdf$"ord_dist")
+        sdf$"cat_dist" <- as.factor(sdf$"cat_dist")
+        sdf$"mix_dist" <- as.factor(sdf$"mix_dist")
+        clust_alg_colours <- cat_colours(sc$"settings_df"$"clust_alg", "Dark2")
+        cnt_dist_colours <- cat_colours(sc$"settings_df"$"cnt_dist", "Paired")
+        dsc_dist_colours <- cat_colours(sc$"settings_df"$"dsc_dist", "Paired")
+        ord_dist_colours <- cat_colours(sc$"settings_df"$"ord_dist", "Paired")
+        cat_dist_colours <- cat_colours(sc$"settings_df"$"cat_dist", "Paired")
+        mix_dist_colours <- cat_colours(sc$"settings_df"$"mix_dist", "Paired")
+        snf_scheme_colours <- c("1" = "#7fc97f", "2" = "#beaed4", "3" = "#fdc086")
+        left_hm_list <- list()
+        left_hm_colour_list <- list() 
+        full_annotations <- list(
+            list("SNF scheme", "snf_scheme", snf_scheme_colours),
+            list("Clustering algorithm", "clust_alg", clust_alg_colours),
+            list("Continuous metric", "cnt_dist", cnt_dist_colours),
+            list("Discrete metric", "dsc_dist", dsc_dist_colours),
+            list("Ordinal metric", "ord_dist", ord_dist_colours),
+            list("Categorical metric", "cat_dist", cat_dist_colours),
+            list("Mixed metric", "mix_dist", mix_dist_colours)
+        )
+        for (set in full_annotations) {
+            if (hide_fixed) {
+                if (length(set[[3]]) > 1) {
+                    left_hm_list <- c(left_hm_list, set[[2]])
+                    names(left_hm_list)[length(left_hm_list)] <- set[[1]]
+                    left_hm_colour_list <- c(left_hm_colour_list, list(set[[3]]))
+                    names(left_hm_colour_list)[length(left_hm_colour_list)] <- set[[1]]
+                }
+            } else {
+                left_hm_list <- c(left_hm_list, set[[2]])
+                names(left_hm_list)[length(left_hm_list)] <- set[[1]]
+                left_hm_colour_list <- c(left_hm_colour_list, list(set[[3]]))
+                names(left_hm_colour_list)[length(left_hm_colour_list)] <- set[[1]]
+            }
+        }
+        annotations_list <- generate_annotations_list(
+            df = sdf,
+            left_hm = left_hm_list,
+            annotation_colours = left_hm_colour_list
+        )
+    } else {
+        annotations_list <- NULL
+    }
     ###########################################################################
     heatmap <- ComplexHeatmap::Heatmap(
         scaled_matrix,
@@ -615,12 +755,13 @@ settings_df_heatmap <- function(settings,
         col = circlize::colorRamp2(colour_breaks, colours),
         heatmap_legend_param = list(
             color_bar = "continuous",
-            title = "Scaled Setting",
+            title = "Normalized\nSetting",
             at = colour_breaks
         ),
         row_split = row_split,
         column_split = column_split,
         column_title = column_title,
+        left_annotation = annotations_list$"left_annotations",
         ...
     )
     return(heatmap)
@@ -628,7 +769,8 @@ settings_df_heatmap <- function(settings,
 
 #' Heatmap of p-values
 #'
-#' @param pvals A matrix of p-values.
+#' @param ext_sol_df An ext_solutions_df class object (produced from
+#'  the function `extend_solutions`.
 #' @param order Numeric vector containing row order of the heatmap.
 #' @param cluster_columns Whether columns should be sorted by hierarchical
 #'  clustering.
@@ -650,7 +792,29 @@ settings_df_heatmap <- function(settings,
 #' @return Returns a heatmap (class "Heatmap" from package ComplexHeatmap)
 #'  that displays the provided p-values.
 #' @export
-pval_heatmap <- function(pvals,
+#' @examples
+#' #dl <- data_list(
+#' #    list(income, "household_income", "demographics", "ordinal"),
+#' #    list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #    list(fav_colour, "favourite_colour", "demographics", "categorical"),
+#' #    list(anxiety, "anxiety", "behaviour", "ordinal"),
+#' #    list(depress, "depressed", "behaviour", "ordinal"),
+#' #    uid = "unique_id"
+#' #)
+#' #
+#' #sc <- snf_config(
+#' #    dl,
+#' #    n_solutions = 4,
+#' #    dropout_dist = "uniform",
+#' #    max_k = 50
+#' #)
+#' #
+#' #sol_df <- batch_snf(dl, sc)
+#' #
+#' #ext_sol_df <- extend_solutions(sol_df, dl)
+#' #
+#' #pval_heatmap(ext_sol_df)
+pval_heatmap <- function(ext_sol_df,
                          order = NULL,
                          cluster_columns = TRUE,
                          cluster_rows = FALSE,
@@ -674,10 +838,8 @@ pval_heatmap <- function(pvals,
                          column_split = NULL,
                          row_split = NULL,
                          ...) {
-    if ("solution" %in% colnames(pvals)) {
-        rownames(pvals) <- pvals$"solution"
-        pvals <- pvals |> dplyr::select(-"solution")
-    }
+    rownames(ext_sol_df) <- ext_sol_df$"solutions"
+    pvals <- gselect(ext_sol_df, "_pval$")
     if (!is.null(order)) {
         pvals <- pvals[order, ]
     }
@@ -711,11 +873,56 @@ pval_heatmap <- function(pvals,
     return(heatmap)
 }
 
-#' Launch shiny app to identify meta cluster boundaries
+#' Launch a shiny app to identify meta cluster boundaries
+#'
+#' This function calls the `htShiny()` function from the package 
+#' InteractiveComplexHeatmap to assist users in identifying the indices of the
+#' boundaries between meta clusters in a meta cluster heatmap. By providing a
+#' heatmap of inter-solution similarities (obtained through
+#' meta_cluster_heatmap()), users can click on positions within the heatmap
+#' that appear to meaningfully separate major sets of similar cluster
+#' solutions by visual inspection. The corresponding indices of the clicked
+#' positions are printed to the console and also shown within the app. This
+#' function can only run from an interactive session of R.
 #'
 #' @param ari_heatmap Heatmap of ARIs to divide into meta clusters.
 #' @return Does not return any value. Launches interactive shiny applet.
 #' @export
+#' @examples
+#' #dl <- data_list(
+#' #    list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+#' #    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#' #    list(income, "household_income", "demographics", "continuous"),
+#' #    list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #    uid = "unique_id"
+#' #)
+#' #
+#' #set.seed(42)
+#' #my_sc <- snf_config(
+#' #    dl = dl,
+#' #    n_solutions = 20,
+#' #    min_k = 20,
+#' #    max_k = 50
+#' #)
+#' #
+#' #sol_df <- batch_snf(dl, my_sc)
+#' #
+#' #sol_aris <- calc_aris(sol_df)
+#' #
+#' #meta_cluster_order <- get_matrix_order(sol_aris)
+#' #
+#' #ari_hm <- meta_cluster_heatmap(sol_aris, order = meta_cluster_order)
+#' #
+#' ## Click on meta cluster boundaries to obtain `split_vec` values
+#' #shiny_annotator(ari_hm)
+#' #
+#' #split_vec <- c(6, 10, 16)
+#' #
+#' #ari_hm <- meta_cluster_heatmap(
+#' #    sol_aris,
+#' #    order = meta_cluster_order,
+#' #    split_vector = split_vec
+#' #)
 shiny_annotator <- function(ari_heatmap) {
     if (interactive()) {
         drawn_heatmap <- ComplexHeatmap::draw(ari_heatmap)
@@ -746,11 +953,9 @@ shiny_annotator <- function(ari_heatmap) {
 #' assoc_pval_heatmap function.
 #'
 #' @param data The matrix containing the cells to base the significance stars
-#' on.
-#'
+#'  on.
 #' @return cell_fn Another function that is well-formatted for usage as the
-#' cell_fun argument in ComplexHeatmap::Heatmap.
-#'
+#'  cell_fun argument in ComplexHeatmap::Heatmap.
 #' @export
 cell_significance_fn <- function(data) {
     cell_fn <- function(j, i, x, y, width, height, fill) {
@@ -792,15 +997,12 @@ cell_significance_fn <- function(data) {
     return(cell_fn)
 }
 
-#' Collapse a dataframe and/or a data list into a single dataframe
+#' Collapse a data frame and/or a data list into a single data frame
 #'
-#' @param data A dataframe.
-#'
+#' @param data A data frame.
 #' @param dl A nested list of input data from `data_list()`.
-#'
 #' @return A class "data.frame" object containing all the features of the
-#' provided data frame and/or data list.
-#'
+#'  provided data frame and/or data list.
 #' @export
 assemble_data <- function(data, dl) {
     if (!is.null(dl)) {
@@ -826,7 +1028,8 @@ assemble_data <- function(data, dl) {
 #'  annotations they should be viewed through and returns annotation objects
 #'  usable by ComplexHeatmap::Heatmap.
 #'
-#' @param df Dataframe containing all the data that is specified in the
+#' @keywords internal
+#' @param df data frame containing all the data that is specified in the
 #'  remaining arguments.
 #' @param left_bar Named list of strings, where the strings are features in
 #'  df that should be used for a barplot annotation on the left of the plot and
@@ -843,10 +1046,7 @@ assemble_data <- function(data, dl) {
 #' @param show_legend Add legends to the annotations.
 #' @param annotation_colours Named list of heatmap annotations and their
 #'  colours.
-#'
 #' @return annotations_list A named list of all the annotations.
-#'
-#' @export
 generate_annotations_list <- function(df,
                                       left_bar = NULL,
                                       right_bar = NULL,
@@ -859,7 +1059,7 @@ generate_annotations_list <- function(df,
                                       show_legend = TRUE,
                                       annotation_colours = NULL) {
     ###########################################################################
-    # Make sure dataframe is actually a dataframe and not a tibble etc.
+    # Make sure data frame is actually a data frame and not a tibble etc.
     df <- data.frame(df)
     ###########################################################################
     # Ensure all the features specified are in the provided data
@@ -1244,17 +1444,14 @@ generate_annotations_list <- function(df,
 
 #' Convert a vector of partition indices into meta cluster labels
 #'
+#' @keywords internal
 #' @param split_vector A vector of partition indices.
-#'
 #' @param nrow The number of rows in the data being partitioned.
-#'
 #' @return A character vector that expands the split_vector into an nrow-length
-#' sequence of ascending letters of the alphabet. If the split vector is
-#' c(3, 6) and the number of rows is 8, the result will be a vector of two
-#' "A"s (up to the first index, 3), three "B"s (up to the second index, 6),
-#' and three "C"s (up to and including the last index, 8).
-#'
-#' @export
+#'  sequence of ascending letters of the alphabet. If the split vector is
+#'  c(3, 6) and the number of rows is 8, the result will be a vector of two
+#'  "A"s (up to the first index, 3), three "B"s (up to the second index, 6),
+#'  and three "C"s (up to and including the last index, 8).
 label_splits <- function(split_vector, nrow) {
     labels <- rep("A", nrow)
     if (split_vector[length(split_vector)] != nrow) {
@@ -1271,17 +1468,11 @@ label_splits <- function(split_vector, nrow) {
 #' Save a heatmap object to a file
 #'
 #' @param heatmap The heatmap object to save.
-#'
 #' @param path The path to save the heatmap to.
-#'
 #' @param width The width of the heatmap.
-#'
 #' @param height The height of the heatmap.
-#'
 #' @param res The resolution of the heatmap.
-#'
 #' @return Does not return any value. Saves heatmap to file.
-#'
 #' @export
 save_heatmap <- function(heatmap,
                          path,
@@ -1301,19 +1492,46 @@ save_heatmap <- function(heatmap,
 #' Return the hierarchical clustering order of a matrix
 #'
 #' @param matrix Matrix to cluster.
-#'
-#' @param dist_method Distance method to apply to the matrix. Argument is
-#' directly passed into stats::dist. Options include "euclidean", "maximum",
-#' "manhattan", "canberra", "binary", or "minkowski".
-#'
-#' @param hclust_method Which agglomerative method to be passed into
-#' stats::hclust. Options include "ward.D", "ward.D2", "single", "complete",
-#' "average", "mcquitty", "median", or "centroid".
-#'
+#' @param dist_method Distance method to use when calculating sorting order to
+#'  of the matrix. Argument is directly passed into stats::dist. Options
+#'  include "euclidean", "maximum", "manhattan", "canberra", "binary", or
+#'  "minkowski".
+#' @param hclust_method Agglomerative method to use when calculating sorting
+#'  order by `stats::hclust`. Options include "ward.D", "ward.D2", "single",
+#'  "complete", "average", "mcquitty", "median", or "centroid".
 #' @return A numeric vector of the ordering derivied by the specified
-#' hierarchical clustering method applied to the provided matrix.
-#'
+#'  hierarchical clustering method applied to the provided matrix.
 #' @export
+#' @examples
+#' # dl <- data_list(
+#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#' #     list(income, "household_income", "demographics", "continuous"),
+#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#' #     list(anxiety, "anxiety", "behaviour", "ordinal"),
+#' #     list(depress, "depressed", "behaviour", "ordinal"),
+#' #     uid = "unique_id"
+#' # )
+#' # 
+#' # sc <- snf_config(
+#' #     dl = dl,
+#' #     n_solutions = 20,
+#' #     min_k = 20,
+#' #     max_k = 50
+#' # )
+#' # 
+#' # sol_df <- batch_snf(dl, sc)
+#' # 
+#' # ext_sol_df <- extend_solutions(
+#' #     sol_df,
+#' #     dl = dl,
+#' #     min_pval = 1e-10 # p-values below 1e-10 will be thresholded to 1e-10
+#' # )
+#' # 
+#' # # Calculate pairwise similarities between cluster solutions
+#' # sol_aris <- calc_aris(sol_df)
+#' # 
+#' # # Extract hierarchical clustering order of the cluster solutions
+#' # meta_cluster_order <- get_matrix_order(sol_aris)
 get_matrix_order <- function(matrix,
                              dist_method = "euclidean",
                              hclust_method = "complete") {
@@ -1326,12 +1544,9 @@ get_matrix_order <- function(matrix,
 #' Return the row or column ordering present in a heatmap
 #'
 #' @param heatmap A heatmap object to collect ordering from.
-#'
 #' @param type The type of ordering to return. Either "rows" or "columns".
-#'
 #' @return A numeric vector of the ordering used within the provided
-#' ComplexHeatmap "Heatmap" object.
-#'
+#'  ComplexHeatmap "Heatmap" object.
 #' @export
 get_heatmap_order <- function(heatmap, type = "rows") {
     drawn_heatmap <- ComplexHeatmap::draw(heatmap)
@@ -1348,20 +1563,13 @@ get_heatmap_order <- function(heatmap, type = "rows") {
 #' Helper function to determine which row and columns to split on
 #'
 #' @param row_split_vector A vector of row indices to split on.
-#'
 #' @param column_split_vector A vector of column indices to split on.
-#'
 #' @param row_split Standard parameter of `ComplexHeatmap::Heatmap`.
-#'
 #' @param column_split Standard parameter of `ComplexHeatmap::Heatmap`.
-#'
 #' @param n_rows The number of rows in the data.
-#'
 #' @param n_columns The number of columns in the data.
-#'
 #' @return "list"-class object containing row_split and column_split character
-#' vectors to pass into ComplexHeatmap::Heatmap.
-#'
+#'  vectors to pass into ComplexHeatmap::Heatmap.
 #' @export
 split_parser <- function(row_split_vector = NULL,
                          column_split_vector = NULL,
@@ -1398,12 +1606,10 @@ split_parser <- function(row_split_vector = NULL,
 
 #' Helper function to stop annotation building when no data was provided
 #'
-#' @param data A dataframe with data to build annotations
+#' @param data A data frame with data to build annotations
 #' @param annotation_requests A list of requested annotations
-#'
 #' @return Does not return any value. This function just raises an error when
-#' annotations are requested without any provided data for a heatmap.
-#'
+#'  annotations are requested without any provided data for a heatmap.
 #' @export
 check_dataless_annotations <- function(annotation_requests, data) {
     any_null_annotations <- lapply(annotation_requests, is.null) |>
@@ -1413,7 +1619,7 @@ check_dataless_annotations <- function(annotation_requests, data) {
         if (is.null(data)) {
             metasnf_error(
                 "You must provide data, either through a data list or a",
-                " dataframe passed in with the 'data' parameter to use",
+                " data frame passed in with the 'data' parameter to use",
                 " annotations."
             )
         }
@@ -1423,8 +1629,7 @@ check_dataless_annotations <- function(annotation_requests, data) {
 #' Check for ComplexHeatmap and circlize dependencies
 #'
 #' @return Does not return any value. This function just checks that the
-#' ComplexHeatmap and circlize packages are installed.
-#'
+#'  ComplexHeatmap and circlize packages are installed.
 #' @export
 check_hm_dependencies <- function() {
     if (!requireNamespace("ComplexHeatmap", quietly = TRUE)) {
@@ -1442,4 +1647,21 @@ check_hm_dependencies <- function() {
             " `install.packages(\"circlize\")`."
         )
     }
+}
+
+#' Helper function for generating categorical colour palette
+#'
+#' @keywords internal
+#' @param vector Vector of categorical data to generate palette for.
+#' @param palette Which RColorBrewer palette should be used.
+#' @return A named list of colours where the names correspond to the unique
+#'  values of vector and the values correspond to their colours.
+cat_colours <- function(vector, palette) {
+    vec_names <- as.character(sort(unique(vector)))
+    vec_colours <- suppressWarnings(
+        stats::na.omit(RColorBrewer::brewer.pal(length(vec_names), palette))
+    )
+    names(vec_colours) = vec_names
+    vec_colours <- vec_colours[1:length(stats::na.omit(names(vec_colours)))]
+    return(vec_colours)
 }

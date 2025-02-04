@@ -2,7 +2,7 @@
 % Please edit documentation in R/solutions_df.R
 \name{summarize_pvals}
 \alias{summarize_pvals}
-\title{Summarize p-value columns of an extended solutions matrix}
+\title{Summarize p-value columns of an extended solutions data frame}
 \usage{
 summarize_pvals(ext_sol_df)
 }
@@ -10,9 +10,10 @@ summarize_pvals(ext_sol_df)
 \item{ext_sol_df}{Result of \code{extend_solutions}}
 }
 \value{
-The provided extended solutions matrix along with columns for
+The provided extended solutions data frame along with columns for
 the min, mean, and maximum across p-values for each row.
 }
 \description{
-Summarize p-value columns of an extended solutions matrix
+Summarize p-value columns of an extended solutions data frame
 }
+\keyword{internal}

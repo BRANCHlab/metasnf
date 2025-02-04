@@ -7,7 +7,7 @@
 coclustering_coverage_check(cocluster_df, action = "warn")
 }
 \arguments{
-\item{cocluster_df}{Dataframe containing coclustering data.}
+\item{cocluster_df}{data frame containing coclustering data.}
 
 \item{action}{Control if parent function should warn or stop.}
 }
@@ -19,5 +19,6 @@ value of the action parameter.
 }
 \description{
 Check if coclustered data has at least one subsample in which every pair
-of subjects were a part of simultaneously.
+of observations were a part of simultaneously.
 }
+\keyword{internal}

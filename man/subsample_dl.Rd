@@ -4,7 +4,12 @@
 \alias{subsample_dl}
 \title{Create subsamples of a data list}
 \usage{
-subsample_dl(dl, n_subsamples, subsample_fraction = NULL, n_subjects = NULL)
+subsample_dl(
+  dl,
+  n_subsamples,
+  subsample_fraction = NULL,
+  n_observations = NULL
+)
 }
 \arguments{
 \item{dl}{A nested list of input data from \code{data_list()}.}
@@ -13,7 +18,7 @@ subsample_dl(dl, n_subsamples, subsample_fraction = NULL, n_subjects = NULL)
 
 \item{subsample_fraction}{Percentage of patients to include per subsample.}
 
-\item{n_subjects}{Number of patients to include per subsample.}
+\item{n_observations}{Number of patients to include per subsample.}
 }
 \value{
 A "list" class object containing \code{n_subsamples} number of
@@ -22,5 +27,21 @@ fraction of the observations of the provided data list.
 }
 \description{
 Given a data list, return a list of smaller data lists that are generated
-through random sampling (without replacement).
+through random sampling (without replacement). The results of this function
+can be passed into \code{batch_snf_subsamples()} to obtain a list of resampled
+solutions data frames.
+}
+\examples{
+# my_dl <- data_list(
+#     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#     list(income, "household_income", "demographics", "continuous"),
+#     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#     uid = "unique_id"
+# )
+# 
+# my_dl_subsamples <- subsample_dl(
+#     my_dl,
+#     n_subsamples = 20,
+#     subsample_fraction = 0.85
+# )
 }

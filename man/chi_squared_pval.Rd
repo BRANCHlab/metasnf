@@ -17,3 +17,4 @@ pval A p-value (class "numeric").
 \description{
 Return p-value for chi-squared test for any two features
 }
+\keyword{internal}

@@ -65,7 +65,7 @@ individual(
 
 \item{mix_dist_fn}{distance metric function for mixed data.}
 
-\item{weights_row}{dataframe row containing feature weights.}
+\item{weights_row}{data frame row containing feature weights.}
 }
 \description{
 These functions manage the way in which input data frames are passed into
@@ -79,6 +79,7 @@ fused network.
 domain_merge: Given a data list, returns a new data list where all data objects of
 a particlar domain have been concatenated.
 
-two_step_merge: Individual dataframes into individual similarity matrices into one fused
+two_step_merge: Individual data frames into individual similarity matrices into one fused
 network per domain into one final fused network.
 }
+\keyword{internal}

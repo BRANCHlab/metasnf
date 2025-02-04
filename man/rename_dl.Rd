@@ -19,7 +19,6 @@ A data list ("list"-class object) with adjusted feature names.
 Rename features in a data list
 }
 \examples{
-
 library(metasnf)
 
 dl <- data_list(
@@ -29,7 +28,7 @@ dl <- data_list(
     uid = "unique_id"
 )
 
-summarize_dl(dl, "feature")
+summary(dl, "feature")
 
 name_changes <- c(
     "anxiety_score" = "cbcl_anxiety_r",
@@ -38,5 +37,5 @@ name_changes <- c(
 
 dl <- rename_dl(dl, name_changes)
 
-summarize_dl(dl, "feature")
+summary(dl, "feature")
 }

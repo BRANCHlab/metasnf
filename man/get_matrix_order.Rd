@@ -9,13 +9,14 @@ get_matrix_order(matrix, dist_method = "euclidean", hclust_method = "complete")
 \arguments{
 \item{matrix}{Matrix to cluster.}
 
-\item{dist_method}{Distance method to apply to the matrix. Argument is
-directly passed into stats::dist. Options include "euclidean", "maximum",
-"manhattan", "canberra", "binary", or "minkowski".}
+\item{dist_method}{Distance method to use when calculating sorting order to
+of the matrix. Argument is directly passed into stats::dist. Options
+include "euclidean", "maximum", "manhattan", "canberra", "binary", or
+"minkowski".}
 
-\item{hclust_method}{Which agglomerative method to be passed into
-stats::hclust. Options include "ward.D", "ward.D2", "single", "complete",
-"average", "mcquitty", "median", or "centroid".}
+\item{hclust_method}{Agglomerative method to use when calculating sorting
+order by \code{stats::hclust}. Options include "ward.D", "ward.D2", "single",
+"complete", "average", "mcquitty", "median", or "centroid".}
 }
 \value{
 A numeric vector of the ordering derivied by the specified
@@ -23,4 +24,35 @@ hierarchical clustering method applied to the provided matrix.
 }
 \description{
 Return the hierarchical clustering order of a matrix
+}
+\examples{
+# dl <- data_list(
+#     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#     list(income, "household_income", "demographics", "continuous"),
+#     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#     list(anxiety, "anxiety", "behaviour", "ordinal"),
+#     list(depress, "depressed", "behaviour", "ordinal"),
+#     uid = "unique_id"
+# )
+# 
+# sc <- snf_config(
+#     dl = dl,
+#     n_solutions = 20,
+#     min_k = 20,
+#     max_k = 50
+# )
+# 
+# sol_df <- batch_snf(dl, sc)
+# 
+# ext_sol_df <- extend_solutions(
+#     sol_df,
+#     dl = dl,
+#     min_pval = 1e-10 # p-values below 1e-10 will be thresholded to 1e-10
+# )
+# 
+# # Calculate pairwise similarities between cluster solutions
+# sol_aris <- calc_aris(sol_df)
+# 
+# # Extract hierarchical clustering order of the cluster solutions
+# meta_cluster_order <- get_matrix_order(sol_aris)
 }

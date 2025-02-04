@@ -88,7 +88,7 @@ data_list <- data_list(
 ```
 
 ```{r}
-summarize_dl(data_list)
+summary(data_list)
 ```
 
 ### Target lists
@@ -99,7 +99,7 @@ target_list <- data_list(
     list(depress_df, "depressed", "behaviour", "ordinal"),
     uid = "unique_id"
 )
-summarize_dl(target_list)
+summary(target_list)
 ```
 
 ## Defining hyperparameters for clustering 
@@ -962,11 +962,11 @@ var_manhattan <- var_manhattan_plot(
 ### Data list management
 
 ```{r}
-summarize_dl(data_list)
+summary(data_list)
 ```
 
 ```{r}
-summarize_dl(data_list, scope = "feature")
+summary(data_list, scope = "feature")
 ```
 
 ```{r}

@@ -17,3 +17,4 @@ pval A p-value (class "numeric").
 \description{
 Return p-value of F-test for a linear model of any two features
 }
+\keyword{internal}

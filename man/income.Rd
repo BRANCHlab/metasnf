@@ -38,8 +38,8 @@ income
 income
 }
 \description{
-Like the mock dataframe "abcd_h_income", but with "unique_id" as the "uid".
+Like the mock data frame "abcd_h_income", but with "unique_id" as the "uid".
 
-Like the mock dataframe "abcd_cort_sa", but with "unique_id" as the "uid".
+Like the mock data frame "abcd_cort_sa", but with "unique_id" as the "uid".
 }
 \keyword{datasets}

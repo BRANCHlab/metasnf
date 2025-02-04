@@ -62,18 +62,18 @@ related parameters.}
 
 \item{n_solutions}{Number of rows to generate for the settings data frame.}
 
-\item{min_removed_inputs}{The smallest number of input dataframes that may be
+\item{min_removed_inputs}{The smallest number of input data frames that may be
 randomly removed. By default, 0.}
 
-\item{max_removed_inputs}{The largest number of input dataframes that may be
+\item{max_removed_inputs}{The largest number of input data frames that may be
 randomly removed. By default, this is 1 less than all the provided input
-dataframes in the data list.}
+data frames in the data list.}
 
 \item{dropout_dist}{Parameter controlling how the random removal of input
-dataframes should occur. Can be "none" (no input dataframes are randomly
+data frames should occur. Can be "none" (no input data frames are randomly
 removed), "uniform" (uniformly sample between min_removed_inputs and
-max_removed_inputs to determine number of input dataframes to remove), or
-"exponential" (pick number of input dataframes to remove by sampling from
+max_removed_inputs to determine number of input data frames to remove), or
+"exponential" (pick number of input data frames to remove by sampling from
 min_removed_inputs to max_removed_inputs with an exponential distribution;
 the default).}
 
@@ -215,4 +215,58 @@ frame can point to.
 calculations. Each column of the weights matrix corresponds to a
 different feature in the data list and each row corresponds to a
 different row in the settings data frame.
+}
+\examples{
+# Simple random config for 5 cluster solutions
+input_dl <- data_list(
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+my_sc <- snf_config(
+    dl = input_dl,
+    n_solutions = 5
+)
+
+# specifying possible K range
+my_sc <- snf_config(
+    dl = input_dl,
+    n_solutions = 5,
+    min_k = 20,
+    max_k = 40
+)
+
+# Random feature weights across from uniform distribution
+my_sc <- snf_config(
+    dl = input_dl,
+    n_solutions = 5,
+    min_k = 20,
+    max_k = 40,
+    weights_fill = "uniform"
+)
+
+# Specifying custom pre-built clustering and distance functions
+# - Random alternation between 2-cluster and 5-cluster solutions
+# - When continuous or discrete data frames are being processed,
+#   randomly alternate between standardized/normalized Euclidean
+#   distance vs. regular Euclidean distance
+my_sc <- snf_config(
+    dl = input_dl,
+    n_solutions = 5,
+    min_k = 20,
+    max_k = 40,
+    weights_fill = "uniform",
+    clust_fns = list(
+        "two_cluster_spectral" = spectral_two,
+        "five_cluster_spectral" = spectral_five
+    ),
+    cnt_dist_fns = list(
+         "euclidean" = euclidean_distance,
+         "std_nrm_euc" = sn_euclidean_distance
+    ),
+    dsc_dist_fns = list(
+         "euclidean" = euclidean_distance,
+         "std_nrm_euc" = sn_euclidean_distance
+    )
+)
 }

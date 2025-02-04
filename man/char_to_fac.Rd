@@ -2,17 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{char_to_fac}
 \alias{char_to_fac}
-\title{Convert character-type columns of a dataframe to factor-type}
+\title{Convert character-type columns of a data frame to factor-type}
 \usage{
 char_to_fac(df)
 }
 \arguments{
-\item{df}{A dataframe}
+\item{df}{A data frame.}
 }
 \value{
-df_converted The dataframe with factor-type columns instead of
-char-type columns
+The data frame with factor columns instead of char columns.
 }
 \description{
-Convert character-type columns of a dataframe to factor-type
+Convert character-type columns of a data frame to factor-type
 }
+\keyword{internal}

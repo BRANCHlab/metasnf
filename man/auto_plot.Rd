@@ -18,7 +18,7 @@ auto_plot(
 )
 }
 \arguments{
-\item{sol_df_row}{A single row of a solutions matrix.}
+\item{sol_df_row}{A single row of a solutions data frame.}
 
 \item{dl}{A data list containing data to plot.}
 
@@ -50,7 +50,7 @@ object containing every provided feature for every observation in long
 format.
 }
 \description{
-Given a single row of a solutions matrix and data provided through
+Given a single row of a solutions data frame and data provided through
 a data list, this function will return a series of bar and/or
 jitter plots based on feature types.
 }

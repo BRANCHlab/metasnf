@@ -28,3 +28,4 @@ p-value if both features are categorical.
 \description{
 Calculate p-values based on feature vectors and their types
 }
+\keyword{internal}

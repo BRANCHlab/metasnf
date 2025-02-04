@@ -1,30 +1,23 @@
 devtools::load_all()
-set.seed(44)
-library(sloop)
-library(testthat)
 
 input_dl <- data_list(
-    list(subc_v, "scv", "neuroimaging", "continuous"),
-    list(income, "income", "neuroimaging", "continuous"),
-    uid = "unique_id"
+    list(gender_df, "gender", "demographics", "categorical"),
+    list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+    uid = "patient_id"
 )
 
-target_dl <- data_list(
-    list(anxiety, "anxiety", "behaviour", "ordinal"),
-    list(depress, "depressed", "behaviour", "ordinal"),
-    uid = "unique_id"
-)
+sc <- snf_config(input_dl, n_solutions = 10)
 
-config <- snf_config(
-    input_dl,
-    n_solutions = 5
-)
+sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
 
-sol_df <- batch_snf(input_dl, config)
+sol_df |> dplyr::select(solution, mc)
 
-debug(extend_solutions)
+attributes(sc[1:3])
 
-ext_sol_df <- extend_solutions(
-    sol_df,
-    target_dl = target_dl
-)
+sol_df[1, ]
+
+ext_sol_df <- extend_solutions(sol_df, input_dl)
+
+attributes(ext_sol_df) |> names()
+
+attributes(ext_sol_df[1, ]) |> names()

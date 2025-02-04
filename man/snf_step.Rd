@@ -39,7 +39,7 @@ snf_step(
 
 \item{mix_dist_fn}{distance metric function for mixed data.}
 
-\item{weights_row}{dataframe row containing feature weights.}
+\item{weights_row}{data frame row containing feature weights.}
 }
 \value{
 A fused similarity network (matrix).
@@ -47,3 +47,4 @@ A fused similarity network (matrix).
 \description{
 Helper function for using the correct SNF scheme
 }
+\keyword{internal}

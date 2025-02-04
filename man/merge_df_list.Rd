@@ -2,22 +2,26 @@
 % Please edit documentation in R/utils.R
 \name{merge_df_list}
 \alias{merge_df_list}
-\title{Merge list of dataframes}
+\title{Merge list of data frames into a single data frame}
 \usage{
 merge_df_list(df_list, join = "inner", uid = "uid", no_na = FALSE)
 }
 \arguments{
-\item{df_list}{list of dataframes}
+\item{df_list}{list of data frames.}
 
-\item{join}{String indicating if join should be "inner" or "full"}
+\item{join}{String indicating if join should be "inner" or "full".}
 
-\item{uid}{Column name to join on. Default is "uid"}
+\item{uid}{Column name to join on. Default is "uid".}
 
-\item{no_na}{Whether to remove NA values from the merged dataframe}
+\item{no_na}{Whether to remove NA values from the merged data frame.}
 }
 \value{
-merged_df inner join of all dataframes in list
+Inner join of all data frames in list.
 }
 \description{
-Merge list of dataframes
+This helper function combines all data frames in a single-level list into a
+single data frame.
+}
+\examples{
+merge_df_list(list(income, pubertal), uid = "unique_id")
 }

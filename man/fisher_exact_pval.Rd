@@ -17,3 +17,4 @@ pval A p-value (class "numeric").
 \description{
 Return p-value for Fisher exact test for any two features
 }
+\keyword{internal}

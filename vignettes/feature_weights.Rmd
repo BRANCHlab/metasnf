@@ -26,15 +26,15 @@ Download a copy of the vignette to follow along here: [feature_weights.Rmd](http
 
 ## Generating and Using the Weights Matrix
 
-The [distance metrics](https://branchlab.github.io/metasnf/articles/distance_metrics.html) used in metasnf are all capable of applying custom weights to included features.
-The code below outlines how to generate and use a weights_matrix (dataframe containing feature weights) object.
+The [distance metrics](https://branchlab.github.io/metasnf/articles/distance_metrics.html) used in `metasnf` are all capable of applying custom weights to included features.
+The code below outlines how to generate and use a weights_matrix (data frame containing feature weights) object.
 
 ```{r}
 library(metasnf)
 
 # Make sure to throw in all the data you're interested in visualizing for this
 # data_list, including out-of-model measures and confounding features.
-data_list <- data_list(
+dl <- data_list(
     list(income, "household_income", "demographics", "ordinal"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
     list(fav_colour, "favourite_colour", "demographics", "categorical"),
@@ -43,56 +43,55 @@ data_list <- data_list(
     uid = "unique_id"
 )
 
-summarize_dl(data_list)
+summary(dl)
 
 set.seed(42)
-sdf <- settings_df(
-    data_list,
+sc <- snf_config(
+    dl,
     n_solutions = 20,
     min_k = 20,
     max_k = 50
 )
 
-wm <- weights_matrix(
-    data_list,
-    n_solutions = 20
-)
-
-head(wm)
+sc$"weights_matrix"
 ```
 
 By default, the weights are all 1.
 This is what `batch_snf` uses when no weights_matrix is supplied.
 
-If you have custom feature weights you'd like to be used you can manually populate this dataframe.
-There's one column per feature (no need to worry about column orders) and the number of rows should match the number of rows in the settings_df.
+If you have custom feature weights you'd like to be used you can manually populate this data frame.
+There's one column per feature (no need to worry about column orders) and the number of rows should match the number of rows in the SNF config.
 
 If you are just looking to broaden the space of cluster solutions you generate, you can use some of the built-in randomization options for the weights:
 
 ```{r}
 # Random uniformly distributed values
-weights_matrix(
-    data_list,
+sc <- snf_config(
+    dl,
     n_solutions = 20,
+    min_k = 20,
+    max_k = 50,
     weights_fill = "uniform"
 )
 
+sc$"weights_matrix"
+
 # Random exponentially distributed values
-weights_matrix(
-    data_list,
+sc <- snf_config(
+    dl,
     n_solutions = 20,
+    min_k = 20,
+    max_k = 50,
     weights_fill = "exponential"
 )
+
+sc$"weights_matrix"
 ```
 
 Once you're happy with your weights_matrix, you can pass it into batch_snf:
 
 ```{r eval = FALSE}
-batch_snf(
-    dl = data_list,
-    sdf = sdf,
-    wm = wm
-)
+batch_snf(dl = dl, sc = sc)
 ```
 
 ## The Nitty Gritty of How Weights are Used
@@ -100,12 +99,12 @@ batch_snf(
 The specific implementation of the weights during distance matrix calculations is dependent on the distance metric used, which you can learn more about in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html).
 
 The other aspect to understand if you want to know precisely how your weights are being used is related to the SNF schemes.
-Depending on which scheme is specified in the settings_df row, the feature columns that are involved at each distance matrix calculation can differ substantially.
+Depending on which scheme is specified in the corresponding `settings_df` of the SNF config, the feature columns that are involved at each distance matrix calculation can differ substantially.
 
 For example, in the domain scheme, all features of the same domain are concatenated prior to distance matrix calculation.
 If you have any domains with multiple types of features (e.g., continuous and categorical), that will mean that the mixed distance metric (Gower's method by default) will be used, and weights will be applied but only on a per-domain basis.
 
-Here's a more concrete example on how data set-up and SNF scheme can influence the feature weighting process: consider generating a data_list where every single input dataframe contains only 1 input feature.
-If that data_list is processed exclusively using the "individual" SNF scheme, *feature weights won't matter*.
-This is because the individual SNF scheme calculates individual distance metrics for every input dataframe separately before fusing them together with SNF.
+Here's a more concrete example on how data set-up and SNF scheme can influence the feature weighting process: consider generating a data list where every single input data frame contains only 1 input feature.
+If that data list is processed exclusively using the "individual" SNF scheme in this set-up, *feature weights won't matter*.
+This is because the individual SNF scheme calculates individual distance metrics for every input data frame separately before fusing them together with SNF.
 Anytime a distance matrix is calculated, it'll be for a single feature only, and the purpose of feature weighting (changing the relative contributions of input features during the distance matrix calculations) will be lost.
