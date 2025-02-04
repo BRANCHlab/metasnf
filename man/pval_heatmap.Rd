@@ -12,12 +12,10 @@ pval_heatmap(
   show_row_names = FALSE,
   show_column_names = TRUE,
   min_colour = "red2",
-  mid_colour = "lightyellow",
-  max_colour = "slateblue4",
-  legend_breaks = c(0, 0.5, 1),
-  col = circlize::colorRamp2(legend_breaks, c(min_colour, mid_colour, max_colour)),
-  heatmap_legend_param = list(color_bar = "continuous", title = "p-value", at = c(0, 0.5,
-    1)),
+  max_colour = "white",
+  legend_breaks = c(0, 1),
+  col = circlize::colorRamp2(legend_breaks, c(min_colour, max_colour)),
+  heatmap_legend_param = list(color_bar = "continuous", title = "p-value", at = c(0, 1)),
   rect_gp = grid::gpar(col = "black"),
   column_split_vector = NULL,
   row_split_vector = NULL,
@@ -42,8 +40,6 @@ clustering.}
 \item{show_column_names}{Whether column names should be shown.}
 
 \item{min_colour}{Colour used for the lowest value in the heatmap.}
-
-\item{mid_colour}{Colour used for the middle value in the heatmap.}
 
 \item{max_colour}{Colour used for the highest value in the heatmap.}
 

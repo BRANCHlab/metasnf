@@ -1,52 +1,3 @@
-#library(metasnf)
-#library(testthat)
-
-# add_columns ##################################################################
-test_that(
-    "extend a dataframe with columns in `newcols` containing the `fill` value",
-    {
-        df <- data.frame(A = c(1, 2, 3))
-        newcols <- c("B", "C", "D")
-        fill <- "apple"
-        expect_equal(
-            add_columns(df, newcols, fill),
-            data.frame(
-                A = c(1, 2, 3),
-                B = c("apple", "apple", "apple"),
-                C = c("apple", "apple", "apple"),
-                D = c("apple", "apple", "apple")
-            )
-        )
-    }
-)
-
-test_that(
-    "error if the fill parameter is NULL",
-    {
-        df <- data.frame(A = c(1, 2, 3))
-        newcols <- c("B", "C", "D")
-        fill <- NULL
-        expect_error(
-            add_columns(df, newcols, fill),
-            regexp = "`fill` parameter"
-        )
-    }
-)
-
-test_that(
-    "warn if the newcols are not provided as a character vector",
-    {
-        df <- data.frame(A = c(1, 2, 3))
-        newcols <- c(1, 2, 3)
-        fill <- "apple"
-        expect_warning(
-            add_columns(df, newcols, fill),
-            regexp = "`newcols` parameter"
-        )
-    }
-)
-################################################################################
-
 # numcol_to_numeric ############################################################
 test_that(
     "ensure that a non-numeric column of numbers can be converted to numeric",
@@ -106,17 +57,17 @@ test_that(
 
 # no_subs ######################################################################
 test_that(
-    "ensure that columns starting with subject_ are removed from a dataframe",
+    "ensure that columns starting with uid_ are removed from a dataframe",
     {
         df1 <- data.frame(
-            row_id = c(1, 2, 3),
+            solution = c(1, 2, 3),
             A = c(1, 2, 3),
             B = c(1, 2, 3),
-            subject_1 = c(1, 2, 3),
-            subject_2 = c(1, 2, 3)
+            uid_1 = c(1, 2, 3),
+            uid_2 = c(1, 2, 3)
         )
         df2 <- data.frame(
-            row_id = c(1, 2, 3),
+            solution = c(1, 2, 3),
             A = c(1, 2, 3),
             B = c(1, 2, 3)
         )
@@ -128,16 +79,16 @@ test_that(
 )
 
 test_that(
-    "ensure that dataframes without any 'subject_' columns raise a warning",
+    "ensure that dataframes without any 'uid_' columns raise a warning",
     {
         df <- data.frame(
-            row_id = c(1, 2, 3),
+            solution = c(1, 2, 3),
             A = c(1, 2, 3),
             B = c(1, 2, 3)
         )
         expect_warning(
             no_subs(df),
-            regexp = "no 'subject_'"
+            regexp = "no 'uid_'"
         )
     }
 )
@@ -145,19 +96,19 @@ test_that(
 
 # subs ######################################################################
 test_that(
-    "ensure columns not starting with subject_ are removed from a dataframe",
+    "ensure columns not starting with uid_ are removed from a dataframe",
     {
         df1 <- data.frame(
-            row_id = c(1, 2, 3),
+            solution = c(1, 2, 3),
             A = c(1, 2, 3),
             B = c(1, 2, 3),
-            subject_1 = c(1, 2, 3),
-            subject_2 = c(1, 2, 3)
+            uid_1 = c(1, 2, 3),
+            uid_2 = c(1, 2, 3)
         )
         df2 <- data.frame(
-            row_id = c(1, 2, 3),
-            subject_1 = c(1, 2, 3),
-            subject_2 = c(1, 2, 3)
+            solution = c(1, 2, 3),
+            uid_1 = c(1, 2, 3),
+            uid_2 = c(1, 2, 3)
         )
         expect_equal(
             subs(df1),
@@ -167,32 +118,32 @@ test_that(
 )
 
 test_that(
-    "ensure dataframes without 'row_id' column raises error",
+    "ensure dataframes without 'solution' column raises error",
     {
         df <- data.frame(
             A = c(1, 2, 3),
             B = c(1, 2, 3),
-            subject_1 = c(1, 2, 3),
-            subject_2 = c(1, 2, 3)
+            uid_1 = c(1, 2, 3),
+            uid_2 = c(1, 2, 3)
         )
         expect_error(
             subs(df),
-            regexp = "row_id"
+            regexp = "solution"
         )
     }
 )
 
 test_that(
-    "ensure that dataframes with only 'subject_' columns raise a warning",
+    "ensure that dataframes with only 'uid_' columns raise a warning",
     {
         df <- data.frame(
-            row_id = c(1, 2, 3),
-            subject_A = c(1, 2, 3),
-            subject_B = c(1, 2, 3)
+            solution = c(1, 2, 3),
+            uid_A = c(1, 2, 3),
+            uid_B = c(1, 2, 3)
         )
         expect_warning(
             subs(df),
-            regexp = "no non-'subject_'"
+            regexp = "no non-'uid_'"
         )
     }
 )
@@ -203,15 +154,15 @@ test_that(
     "ensure that two dataframes can be inner joined properly",
     {
         df1 <- data.frame(
-            subjectkey = c("a", "b", "c"),
+            uid = c("a", "b", "c"),
             var1 = c(1, 2, 3)
         )
         df2 <- data.frame(
-            subjectkey = c("a", "b"),
+            uid = c("a", "b"),
             var2 = c(4, 5)
         )
         df3 <- data.frame(
-            subjectkey = c("a", "b"),
+            uid = c("a", "b"),
             var1 = c(1, 2),
             var2 = c(4, 5)
         )
@@ -226,15 +177,15 @@ test_that(
     "ensure that two dataframes can be full joined properly",
     {
         df1 <- data.frame(
-            subjectkey = c("a", "b", "c"),
+            uid = c("a", "b", "c"),
             var1 = c(1, 2, 3)
         )
         df2 <- data.frame(
-            subjectkey = c("a", "b"),
+            uid = c("a", "b"),
             var2 = c(4, 5)
         )
         df3 <- data.frame(
-            subjectkey = c("a", "b", "c"),
+            uid = c("a", "b", "c"),
             var1 = c(1, 2, 3),
             var2 = c(4, 5, NA)
         )
@@ -283,6 +234,21 @@ test_that(
 )
 ################################################################################
 
-# keep_split ###################################################################
-# No test needed - this is a very straight forward utility function
-################################################################################
+# add_columns
+test_that(
+    "extend a dataframe with new columns",
+    {
+        df <- data.frame(A = c(1, 2, 3))
+        newcols <- c("B", "C", "D")
+        fill <- "apple"
+        expect_equal(
+            add_columns(df, newcols, fill),
+            data.frame(
+                A = c(1, 2, 3),
+                B = c("apple", "apple", "apple"),
+                C = c("apple", "apple", "apple"),
+                D = c("apple", "apple", "apple")
+            )
+        )
+    }
+)

@@ -5,7 +5,7 @@
 \title{Manhattan plot of feature-feature associaiton p-values}
 \usage{
 var_manhattan_plot(
-  data_list,
+  dl,
   key_var,
   neg_log_pval_thresh = 5,
   threshold = NULL,
@@ -17,7 +17,7 @@ var_manhattan_plot(
 )
 }
 \arguments{
-\item{data_list}{List of dataframes containing data information.}
+\item{dl}{List of dataframes containing data information.}
 
 \item{key_var}{Feature for which the association p-values of all other
 features are plotted.}

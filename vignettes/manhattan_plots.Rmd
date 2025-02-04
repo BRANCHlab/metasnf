@@ -34,7 +34,7 @@ library(metasnf)
 
 # Start by making a data list containing all our dataframes to more easily
 # identify subjects without missing data
-full_data_list <- generate_data_list(
+full_data_list <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -49,21 +49,21 @@ target_list <- full_data_list[4:5]
 
 # Build space of settings to cluster over
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
+settings_df <- settings_df(
     data_list,
-    nrow = 20,
+    n_solutions = 20,
     min_k = 20,
     max_k = 50
 )
 
 # Clustering
-solutions_matrix <- batch_snf(data_list, settings_matrix)
+solutions_matrix <- batch_snf(data_list, settings_df)
 
 # Calculate p-values between cluster solutions and features
 extended_solutions_matrix <- extend_solutions(
     solutions_matrix,
-    data_list = data_list,
-    target_list = target_list,
+    dl = data_list,
+    tl = target_list,
     min_pval = 1e-10 # p-values below 1e-10 will be thresholded to 1e-10
 )
 ```
@@ -82,7 +82,9 @@ esm_manhattan <- esm_manhattan_plot(
     text_size = 14,
     bonferroni_line = TRUE
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
     "esm_manhattan.png",
     esm_manhattan,
@@ -139,15 +141,17 @@ rep_solutions <- get_representative_solutions(
 
 mc_manhattan <- mc_manhattan_plot(
     rep_solutions,
-    data_list = data_list,
-    target_list = target_list,
+    dl = data_list,
+    tl = target_list,
     point_size = 3,
     text_size = 12,
     plot_title = "Feature-Meta Cluster Associations",
     threshold = 0.05,
     neg_log_pval_thresh = 5
 )
+```
 
+```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
     "mc_manhattan_clean.png",
     mc_manhattan,
@@ -176,6 +180,9 @@ var_manhattan <- var_manhattan_plot(
     neg_log_pval_thresh = 3,
     threshold = 0.05
 )
+```
+
+```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
     "var_manhattan.png",
     var_manhattan,

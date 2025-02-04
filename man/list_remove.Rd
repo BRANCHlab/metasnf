@@ -2,12 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{list_remove}
 \alias{list_remove}
-\title{Remove items from a data_list}
+\title{Remove items from a data list}
 \usage{
-list_remove(list_object, ...)
+list_remove(dl, ...)
 }
 \arguments{
-\item{list_object}{The data_list containing components to be removed}
+\item{dl}{The data list containing components to be removed}
 
 \item{...}{Any number of components to remove from the list object, passed as
 strings}
@@ -17,5 +17,5 @@ A "list"-class object in which any specified elements have been
 removed.
 }
 \description{
-Removes specified elements from a provided data_list
+Removes specified elements from a provided data list
 }

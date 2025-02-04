@@ -2,24 +2,24 @@
 % Please edit documentation in R/cluster_extraction.R
 \name{get_cluster_solutions}
 \alias{get_cluster_solutions}
-\title{Extract cluster membership information from a solutions_matrix}
+\title{Extract cluster membership information from a sol_df}
 \usage{
-get_cluster_solutions(solutions_matrix)
+get_cluster_solutions(sol_df)
 }
 \arguments{
-\item{solutions_matrix}{A solutions_matrix.}
+\item{sol_df}{A sol_df.}
 }
 \value{
 cluster_solutions A "data.frame" object where each row is an
-observation and each column (apart from the subjectkey column) indicates
+observation and each column (apart from the uid column) indicates
 the cluster that observation was assigned to for the corresponding
 solutions matrix row.
 }
 \description{
 This function takes in a solutions matrix and returns a dataframe containing
-the cluster assignments for each subjectkey. It is similar to
+the cluster assignments for each uid. It is similar to
 '\code{get_clusters()}, which takes one solutions matrix row and returns a vector
 of cluster assignments' and \code{get_cluster_df()}, which takes a solutions
 matrix with only one row and returns a dataframe with two columns: "cluster"
-and "subjectkey" (the UID of the observation).
+and "uid" (the UID of the observation).
 }

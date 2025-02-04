@@ -5,9 +5,9 @@
 \title{Manhattan plot of feature-meta cluster associaiton p-values}
 \usage{
 mc_manhattan_plot(
-  extended_solutions_matrix,
-  data_list = NULL,
-  target_list = NULL,
+  ext_sol_df,
+  dl = NULL,
+  target_dl = NULL,
   variable_order = NULL,
   neg_log_pval_thresh = 5,
   threshold = NULL,
@@ -20,13 +20,13 @@ mc_manhattan_plot(
 )
 }
 \arguments{
-\item{extended_solutions_matrix}{A solutions_matrix that contains "_pval"
+\item{ext_sol_df}{A sol_df that contains "_pval"
 columns containing the values to be plotted. This object is the output of
 \code{extend_solutions()}.}
 
-\item{data_list}{List of dataframes containing data information.}
+\item{dl}{List of dataframes containing data information.}
 
-\item{target_list}{List of dataframes containing target information.}
+\item{target_dl}{List of dataframes containing target information.}
 
 \item{variable_order}{Order of features to be displayed in the plot.}
 
@@ -55,5 +55,5 @@ stratified by meta cluster label.
 \description{
 Given a dataframe of representative meta cluster solutions (see
 \code{get_representative_solutions()}, returns a Manhattan plot for showing
-feature separation across all features in provided data/target_lists.
+feature separation across all features in provided data/target lists.
 }

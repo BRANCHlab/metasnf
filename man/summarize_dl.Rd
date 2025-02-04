@@ -4,21 +4,28 @@
 \alias{summarize_dl}
 \title{Summarize a data list}
 \usage{
-summarize_dl(data_list, scope = "component")
+summarize_dl(dl, scope = "component")
+
+summarize_dl(dl, scope = "component")
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{scope}{The level of detail for the summary. Options are:
 \itemize{
-\item "component" (default): One row per component (dataframe) in the data_list.
-\item "feature": One row for each feature in the data_list.
+\item "component" (default): One row per component (dataframe) in the data list.
+\item "feature": One row for each feature in the data list.
 }}
 }
 \value{
 "data.frame"-class object summarizing all components (or features if
 scope == "component").
+
+"data.frame"-class object summarizing all components (or features if
+scope == "component").
 }
 \description{
+Summarize a data list
+
 Summarize a data list
 }

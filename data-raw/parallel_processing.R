@@ -11,7 +11,7 @@ proc_path <- path_maker(here(paste0("data/abcd/results/processed")))
 fig_path <- path_maker(here(paste0("data/abcd/results/figures")))
 
 # Setting up the data
-data_list <- generate_data_list(
+data_list <- data_list(
     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -94,7 +94,7 @@ library(metasnf)
 library(abcdutils)
 
 # Setting up the data
-data_list <- generate_data_list(
+data_list <- data_list(
     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),

@@ -5,39 +5,39 @@
 \title{Generate closure function to run batch_snf in an apply-friendly format}
 \usage{
 batch_row_closure(
-  data_list,
-  distance_metrics_list,
-  clust_algs_list,
-  settings_matrix,
-  weights_matrix,
+  dl,
+  dfl,
+  cfl,
+  sdf,
+  wm,
   similarity_matrix_dir,
-  return_similarity_matrices,
+  return_sim_mats,
   prog
 )
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{distance_metrics_list}{An optional nested list containing which
+\item{dfl}{An optional nested list containing which
 distance metric function should be used for the various feature types
 (continuous, discrete, ordinal, categorical, and mixed). See
-?generate_distance_metrics_list for details on how to build this.}
+?dist_fns_list for details on how to build this.}
 
-\item{clust_algs_list}{List of custom clustering algorithms to apply
-to the final fused network. See ?generate_clust_algs_list.}
+\item{cfl}{List of custom clustering algorithms to apply
+to the final fused network. See ?clust_fns_list.}
 
-\item{settings_matrix}{matrix indicating parameters to iterate SNF through.}
+\item{sdf}{matrix indicating parameters to iterate SNF through.}
 
-\item{weights_matrix}{A matrix containing feature weights to use during
-distance matrix calculation. See ?generate_weights_matrix for details on
+\item{wm}{A matrix containing feature weights to use during
+distance matrix calculation. See ?weights_matrix for details on
 how to build this.}
 
 \item{similarity_matrix_dir}{If specified, this directory will be used to
 save all generated similarity matrices.}
 
-\item{return_similarity_matrices}{If TRUE, function will return a list where
+\item{return_sim_mats}{If TRUE, function will return a list where
 the first element is the solutions matrix and the second element is a list
-of similarity matrices for each row in the solutions_matrix. Default FALSE.}
+of similarity matrices for each row in the sol_df. Default FALSE.}
 
 \item{prog}{Progressr function to update parallel processing progress}
 }

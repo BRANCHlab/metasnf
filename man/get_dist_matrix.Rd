@@ -7,8 +7,8 @@
 get_dist_matrix(
   df,
   input_type,
-  cont_dist_fn,
-  disc_dist_fn,
+  cnt_dist_fn,
+  dsc_dist_fn,
   ord_dist_fn,
   cat_dist_fn,
   mix_dist_fn,
@@ -16,15 +16,15 @@ get_dist_matrix(
 )
 }
 \arguments{
-\item{df}{Raw dataframe with subject IDs in column "subjectkey"}
+\item{df}{Raw dataframe with subject IDs in column "uid"}
 
 \item{input_type}{Either "numeric" (resulting in euclidean distances),
 "categorical" (resulting in binary distances), or "mixed" (resulting in
 gower distances)}
 
-\item{cont_dist_fn}{distance metric function for continuous data}
+\item{cnt_dist_fn}{distance metric function for continuous data}
 
-\item{disc_dist_fn}{distance metric function for discrete data}
+\item{dsc_dist_fn}{distance metric function for discrete data}
 
 \item{ord_dist_fn}{distance metric function for ordinal data}
 

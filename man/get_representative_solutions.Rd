@@ -8,7 +8,7 @@ get_representative_solutions(
   aris,
   split_vector,
   order,
-  solutions_matrix,
+  sol_df,
   filter_fn = NULL
 )
 }
@@ -19,7 +19,7 @@ get_representative_solutions(
 
 \item{order}{Numeric vector indicating row ordering of settings matrix.}
 
-\item{solutions_matrix}{Output of \code{batch_snf} containing cluster solutions.}
+\item{sol_df}{Output of \code{batch_snf} containing cluster solutions.}
 
 \item{filter_fn}{Optional function to filter the meta-cluster by prior to
 maximum average ARI determination. This can be useful if you are explicitly

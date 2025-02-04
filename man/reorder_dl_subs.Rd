@@ -2,19 +2,19 @@
 % Please edit documentation in R/data_list.R
 \name{reorder_dl_subs}
 \alias{reorder_dl_subs}
-\title{Reorder the subjects in a data_list}
+\title{Reorder the uids in a data list}
 \usage{
-reorder_dl_subs(data_list, ordered_subjects)
+reorder_dl_subs(dl, ordered_uids)
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{ordered_subjects}{A vector of the subjectkey values in the data_list
-in the desired order of the sorted data_list.}
+\item{ordered_uids}{A vector of the uid values in the data list
+in the desired order of the sorted data list.}
 }
 \value{
 A data list ("list"-class object) with reordered observations.
 }
 \description{
-Reorder the subjects in a data_list
+Reorder the uids in a data list
 }

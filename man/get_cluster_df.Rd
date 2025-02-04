@@ -4,17 +4,17 @@
 \alias{get_cluster_df}
 \title{Extract cluster membership information from one solutions matrix row}
 \usage{
-get_cluster_df(solutions_matrix_row)
+get_cluster_df(sol_df_row)
 }
 \arguments{
-\item{solutions_matrix_row}{One row from a solutions matrix.}
+\item{sol_df_row}{One row from a solutions matrix.}
 }
 \value{
-cluster_df dataframe of cluster and subjectkey.
+cluster_df dataframe of cluster and uid.
 }
 \description{
 This function takes in a single row of a solutions matrix and returns a
-dataframe containing the cluster assignments for each subjectkey. It is
+dataframe containing the cluster assignments for each uid. It is
 similar to \code{get_clusters()}, which takes one solutions matrix row and
 returns a vector of cluster assignments' and \code{get_cluster_solutions()},
 which takes a solutions matrix with any number of rows and returns a

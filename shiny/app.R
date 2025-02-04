@@ -133,7 +133,7 @@ ht_shiny <- function(ht_list = ComplexHeatmap:::.ENV$last,
 
 ###############################################################################
 
-data_list <- generate_data_list(
+data_list <- data_list(
     list(
         data = abcd_cort_t,
         name = "cortical_thickness",
@@ -167,7 +167,7 @@ data_list <- generate_data_list(
     uid = "patient"
 )
 
-settings_matrix <- generate_settings_matrix(
+settings_matrix <- settings_df(
     data_list,
     nrow = 20,
     min_k = 20,

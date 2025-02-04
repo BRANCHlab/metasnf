@@ -41,7 +41,7 @@ However, if you have access to multiple cores and each integration you are runni
 library(metasnf)
 
 # Setting up the data
-data_list <- generate_data_list(
+dl <- data_list(
     list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -52,15 +52,15 @@ data_list <- generate_data_list(
 
 # Specifying 5 different sets of settings for SNF
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
-    data_list,
-    nrow = 10,
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 10,
     max_k = 40
 )
 
-solutions_matrix <- batch_snf(
-    data_list,
-    settings_matrix,
+sol_df <- batch_snf(
+    dl,
+    sc,
     processes = "max" # Can also be a specific integer
 )
 ```
@@ -70,10 +70,10 @@ solutions_matrix <- batch_snf(
 Use the progressr package to visualize the progress of parallel batch_snf.
 
 ```{r eval = FALSE}
-progressr::with_progress({
-    solutions_matrix <- batch_snf(
-        data_list,
-        settings_matrix,
+with_progress({
+    sol_df <- batch_snf(
+        dl,
+        sc,
         processes = "max"
     )
 })
@@ -86,9 +86,9 @@ Setting processes to "max" will make use of as many cores as R can find.
 If you want to dial things back a little, you can specify more precisely the number of processes you want:
 
 ```{r eval = FALSE}
-solutions_matrix <- batch_snf(
-    data_list,
-    settings_matrix,
+sol_df <- batch_snf(
+    dl,
+    sc,
     processes = 4
 )
 ```

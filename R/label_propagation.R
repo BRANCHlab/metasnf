@@ -42,148 +42,87 @@ label_prop <- function(full_fused_network, clusters) {
 
 #' Label propagate cluster solutions to unclustered subjects
 #'
-#' Given a solutions_matrix derived from training subjects and a full_data_list
+#' Given a sol_df derived from training subjects and a full_data_list
 #' containing both training and test subjects, re-run SNF to generate a total
 #' affinity matrix of both train and subjects and use the label propagation
 #' algorithm to assigned predicted clusters to test subjects.
 #'
-#' @param train_solutions_matrix A solutions_matrix derived from the training
-#' set. The propagation algorithm is slow and should be used for validating a
-#' top or top few meaningful chosen clustering solutions. It is advisable to
-#' use only a small subset of rows from the original training solutions_matrix
-#' for label propagation.
-#'
-#' @param full_data_list A data_list containing subjects from both the training
-#' and testing sets.
-#'
-#' @param distance_metrics_list Like above - the distance_metrics_list (if any)
-#' that was used for the original batch_snf call.
-#'
-#' @param weights_matrix Like above.
-#'
-#' @param verbose If TRUE, print progress to console.
-#'
-#' @return labeled_df a dataframe containing a column for subjectkeys,
-#' a column for whether the subject was in the train (original) or test (held
-#' out) set, and one column per row of the solutions matrix indicating the
-#' original and propagated clusters.
-#'
+#' @param train_sol_df A solutions data frame derived from the training set. 
+#' @param full_dl A data list containing subjects from both the training
+#'  and testing sets.
+#' @param verbose If TRUE, output progress to console.
+#' @return A data frame with one row per observation containing a column for
+#'  UIDs, a column for whether the subject was in the train (original) or test
+#'  (held out) set, and one column per row of the solutions data frame
+#'  indicating the original and propagated clusters.
 #' @export
-lp_solutions_matrix <- function(train_solutions_matrix,
-                                full_data_list,
-                                distance_metrics_list = NULL,
-                                weights_matrix = NULL,
-                                verbose = FALSE) {
+lp_sol_df <- function(train_sol_df,
+                      full_dl,
+                      verbose = FALSE) {
     ###########################################################################
-    # 1. Reorder data_list subjects
+    # 1. Reorder data list subjects
     ###########################################################################
-    train_subjects <- colnames(subs(train_solutions_matrix))[-1]
-    all_subjects <- full_data_list[[1]][[1]]$"subjectkey"
-    # Quick check to make sure the train subjects are all in the full list
+    if (inherits(train_sol_df, "ext_solutions_df")) {
+        train_sol_df <- attributes(train_sol_df)$"solutions_df"
+    }
+    train_subjects <- uids(train_sol_df)
+    all_subjects <- uids(full_dl)
+    # Check to make sure the train subjects are all in the full list
     if (!all(train_subjects %in% all_subjects)) {
-        stop(
-            "\n\nAt least one subject from the `train_solutions_matrix`",
-            "argument is missing from the `full_data_list` argument.",
-            " Please ensure that all subjects in the given solutions matrix",
-            " are present in your full data list. E.g., ensure that:",
-            "\n\nall(get_cluster_df(train_solutions_matrix)$\"subjectkey\"",
-            " %in% collapse_dl(full_data_list)$\"subjectkey\")"
+        metasnf_error(
+            "Not all subjects in the provided solutions matrix are present in",
+            " the provided data list."
         )
     }
     test_subjects <- all_subjects[!all_subjects %in% train_subjects]
     lp_ordered_subjects <- c(train_subjects, test_subjects)
-    full_data_list <- reorder_dl_subs(full_data_list, lp_ordered_subjects)
+    full_dl <- reorder_dl_subs(full_dl, lp_ordered_subjects)
     ###########################################################################
     # 2. Prepare vectors containing the names of the train and test subjects
-    ###########################################################################
     n_train <- length(train_subjects)
     n_test <- length(test_subjects)
     group_vec <- c(rep("train", n_train), rep("test", n_test))
     ###########################################################################
-    # 3. SNF of the full data list
-    ###########################################################################
-    ###########################################################################
-    ## 3-1. Creation of distance_metrics_list, if it does not already exist
-    ###########################################################################
-    if (is.null(distance_metrics_list)) {
-        distance_metrics_list <- generate_distance_metrics_list()
-    }
-    ###########################################################################
-    ## 3-2. Create (or check) weights_matrix
-    ###########################################################################
-    if (is.null(weights_matrix)) {
-        weights_matrix <- generate_weights_matrix(
-            full_data_list,
-            nrow = nrow(train_solutions_matrix)
-        )
-    } else {
-        if (nrow(weights_matrix) != nrow(train_solutions_matrix)) {
-            stop(
-                paste0(
-                    "Weights_matrix and train_solutions_matrix",
-                    " should have the same number of rows."
-                )
-            )
-        }
-    }
-    ###########################################################################
-    ## 3-3. SNF one row at a time
-    ###########################################################################
-    for (i in seq_len(nrow(train_solutions_matrix))) {
+    sc <- as_snf_config(train_sol_df)
+    for (i in seq_len(nrow(train_sol_df))) {
         if (verbose) {
-            print(
-                paste0(
-                    "Processing row ", i, " of ",
-                    nrow(train_solutions_matrix), "..."
-                )
+            cat(
+                "Processing row ", i, " of ", nrow(train_sol_df), "...\n",
+                sep = ""
             )
         }
-        current_row <- train_solutions_matrix[i, ]
-        sig <- paste0(current_row$"row_id")
-        reduced_dl <- drop_inputs(current_row, full_data_list)
-        scheme <- current_row$"snf_scheme"
-        k <- current_row$"k"
-        alpha <- current_row$"alpha"
-        t <- current_row$"t"
-        cont_dist <- current_row$"cont_dist"
-        disc_dist <- current_row$"disc_dist"
-        ord_dist <- current_row$"ord_dist"
-        cat_dist <- current_row$"cat_dist"
-        mix_dist <- current_row$"mix_dist"
-        cont_dist_fn <- distance_metrics_list$"continuous_distance"[[cont_dist]]
-        disc_dist_fn <- distance_metrics_list$"discrete_distance"[[disc_dist]]
-        ord_dist_fn <- distance_metrics_list$"ordinal_distance"[[ord_dist]]
-        cat_dist_fn <- distance_metrics_list$"categorical_distance"[[cat_dist]]
-        mix_dist_fn <- distance_metrics_list$"mixed_distance"[[mix_dist]]
-        weights_row <- weights_matrix[i, , drop = FALSE]
+        current_row <- train_sol_df[i, ]
+        sig <- paste0(current_row$"solution")
         #######################################################################
         # The actual SNF
         #######################################################################
+        # 1. Run SNF using the full data list
+        sdf_row <- sc$"settings_df"[i, ]
         full_fused_network <- snf_step(
-            reduced_dl,
-            scheme = scheme,
-            k = k,
-            alpha = alpha,
-            t = t,
-            cont_dist_fn = cont_dist_fn,
-            disc_dist_fn = disc_dist_fn,
-            ord_dist_fn = ord_dist_fn,
-            cat_dist_fn = cat_dist_fn,
-            mix_dist_fn = mix_dist_fn,
-            weights_row = weights_row
+            dl = drop_inputs(sdf_row, full_dl),
+            scheme = sdf_row$"snf_scheme",
+            k = sdf_row$"k",
+            alpha = sdf_row$"alpha",
+            t = sdf_row$"t",
+            cnt_dist_fn = sc$"dist_fns_list"$"cnt_dist_fns"[[sdf_row$"cnt_dist"]],
+            dsc_dist_fn = sc$"dist_fns_list"$"dsc_dist_fns"[[sdf_row$"dsc_dist"]],
+            ord_dist_fn = sc$"dist_fns_list"$"ord_dist_fns"[[sdf_row$"ord_dist"]],
+            cat_dist_fn = sc$"dist_fns_list"$"cat_dist_fns"[[sdf_row$"cat_dist"]],
+            mix_dist_fn = sc$"dist_fns_list"$"mix_dist_fns"[[sdf_row$"mix_dist"]],
+            weights_row = sc$"weights_matrix"[i, , drop = FALSE]
         )
         full_fused_network <- full_fused_network[
             lp_ordered_subjects,
             lp_ordered_subjects
         ]
-        clusters <- get_clusters(current_row)
+        clusters <- t(train_sol_df[i, ])[, 2]
         #######################################################################
         # Label propagation
         #######################################################################
         propagated_labels <- label_prop(full_fused_network, clusters)
         if (i == 1) {
             labeled_df <- data.frame(
-                subjectkey = c(train_subjects, test_subjects),
+                uid = c(train_subjects, test_subjects),
                 group = group_vec,
                 cluster = propagated_labels
             )
@@ -192,7 +131,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
             colnames(labeled_df) <- names
         } else {
             current_df <- data.frame(
-                subjectkey = c(train_subjects, test_subjects),
+                uid = c(train_subjects, test_subjects),
                 group = group_vec,
                 cluster = propagated_labels
             )
@@ -202,7 +141,7 @@ lp_solutions_matrix <- function(train_solutions_matrix,
             labeled_df <- dplyr::inner_join(
                 labeled_df,
                 current_df,
-                by = c("subjectkey", "group")
+                by = c("uid", "group")
             )
         }
     }

@@ -1,12 +1,9 @@
 #' Jitter plot separating a feature by cluster
 #'
 #' @param df A data.frame containing cluster column and the feature to plot.
-#'
 #' @param feature The feature to plot.
-#'
 #' @return A jitter+violin plot (class "gg", "ggplot") showing the
-#' distribution of a feature across clusters.
-#'
+#'  distribution of a feature across clusters.
 #' @export
 jitter_plot <- function(df, feature) {
     ###########################################################################
@@ -127,17 +124,15 @@ bar_plot <- function(df, feature) {
 #' Automatically plot features across clusters
 #'
 #' Given a single row of a solutions matrix and data provided through
-#' `data_list` and/or `target_list` arguments, this function will
-#' return a series of bar and/or jitter plots based on feature types.
+#' a data list, this function will return a series of bar and/or
+#' jitter plots based on feature types.
 #'
-#' @param solutions_matrix_row A single row of a solutions matrix.
+#' @param sol_df_row A single row of a solutions matrix.
 #'
-#' @param data_list A data_list containing data to plot.
+#' @param dl A data list containing data to plot.
 #'
 #' @param cluster_df Directly provide a cluster_df rather than a solutions
 #' matrix. Useful if plotting data from label propagated results.
-#'
-#' @param target_list A target_list containing data to plot.
 #'
 #' @param return_plots If `TRUE`, the function will return a list of plots.
 #' If FALSE, the function will instead return the full data frame used for
@@ -154,7 +149,7 @@ bar_plot <- function(df, feature) {
 #'
 #' @param bar_height Height of bar plots if save is specified.
 #'
-#' @param verbose If TRUE, print progress to console.
+#' @param verbose If TRUE, output progress to console.
 #'
 #' @return By default, returns a list of plots (class "gg", "ggplot") with
 #' one plot for every feature in the provided data list and/or target list.
@@ -163,10 +158,9 @@ bar_plot <- function(df, feature) {
 #' format.
 #'
 #' @export
-auto_plot <- function(solutions_matrix_row = NULL,
-                      data_list = NULL,
+auto_plot <- function(sol_df_row = NULL,
+                      dl = NULL,
                       cluster_df = NULL,
-                      target_list = NULL,
                       return_plots = TRUE,
                       save = NULL,
                       jitter_width = 6,
@@ -174,11 +168,11 @@ auto_plot <- function(solutions_matrix_row = NULL,
                       bar_width = 6,
                       bar_height = 6,
                       verbose = FALSE) {
-    null_data_count <- is.null(solutions_matrix_row) + is.null(cluster_df)
+    null_data_count <- is.null(sol_df_row) + is.null(cluster_df)
     if (null_data_count != 1) {
-        stop(
+        metasnf_error(
             "This function requires cluster membership information to be",
-            " provided through exactly one of the `solutions_matrix_row` or",
+            " provided through exactly one of the `sol_df_row` or",
             " `cluster_df` arguments."
         )
     }
@@ -186,48 +180,45 @@ auto_plot <- function(solutions_matrix_row = NULL,
     # Generating the required cluster dataframe
     ###########################################################################
     if (is.null(cluster_df)) {
-        solutions_matrix_row <- data.frame(solutions_matrix_row[1, ])
-        cluster_df <- get_cluster_df(solutions_matrix_row)
+        sol_df_row <- sol_df_row[1, ]
+        cluster_df <- t(sol_df_row)
     }
     ###########################################################################
     # Generating the feature dataframe
     ###########################################################################
-    if (is.null(data_list) && is.null(target_list)) {
-        stop("Please provide either `data_list` or `target_list`.")
-    }
-    dl_df <- metasnf::collapse_dl(c(data_list, target_list))
+    dl_df <- as.data.frame(dl)
     ###########################################################################
-    # Ensure solutions_matrix and dl_df have the same subjectkey column
+    # Ensure sol_df and dl_df have the same uid column
     ###########################################################################
-    solutions_matrix_subjects <- sort(cluster_df$"subjectkey")
-    dl_subjects <- sort(dl_df$"subjectkey")
-    if (!identical(solutions_matrix_subjects, dl_subjects)) {
-        stop(
-            "The subjectkeys in the solutions_matrix and DL do not match."
+    sol_df_subjects <- sort(cluster_df$"uid")
+    dl_subjects <- sort(dl_df$"uid")
+    if (!identical(sol_df_subjects, dl_subjects)) {
+        metasnf_error(
+            "The UIDs in the provided solutions matrix row and data list must",
+            " match."
         )
     }
     ###########################################################################
     # Merge cluster solution and dl_df to get full data for plotting
     ###########################################################################
-    full_data <- dplyr::inner_join(cluster_df, dl_df, by = "subjectkey")
-    full_data$"cluster" <- factor(full_data$"cluster")
+    full_data <- dplyr::inner_join(cluster_df, dl_df, by = "uid")
+    # Second column contains the cluster column
+    full_data$"cluster" <- factor(full_data[, 2])
     if (return_plots == FALSE) {
         return(full_data)
     }
-    # Identifying features to plot (first cols are cluster and subjectkey)
-    features <- colnames(full_data)[3:length(colnames(full_data))]
+    # Identifying features to plot (first cols are cluster and uid)
+    features <- attributes(dl)$"features"
     # Generating plot for every feature
     plot_list <- list()
     for (i in seq_along(features)) {
         feature <- features[[i]]
         feature_col <- unlist(full_data[, feature])
         if (verbose) {
-            print(
-                paste0(
-                    "Generating plot ",
-                    i, "/", length(features), ": ",
-                    feature
-                )
+            cat(
+                "Generating plot ",
+                i, "/", length(features), ": ",
+                feature, "\n", sep = ""
             )
         }
         if (is.numeric(feature_col) && length(unique(feature_col)) > 2) {

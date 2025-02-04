@@ -7,7 +7,7 @@
 alluvial_cluster_plot(
   cluster_sequence,
   similarity_matrix,
-  data_list = NULL,
+  dl = NULL,
   data = NULL,
   key_outcome,
   key_label = key_outcome,
@@ -21,7 +21,7 @@ algorithm varied over different numbers of clusters).}
 
 \item{similarity_matrix}{A similarity matrix.}
 
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{data}{A dataframe that contains features to include in the plot.}
 

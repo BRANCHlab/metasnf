@@ -1,51 +1,26 @@
 #' Add columns to a dataframe
 #'
-#' Add new columns to a dataframe by providing a character vector of column
-#'  names (param `newcols`) and a value to occupy each row of the new columns
-#'  (param `fill`, NA by default).
-#'
-#' @param df The dataframe to extend
-#' @param newcols The vector containing new column names
-#' @param fill The values of the elements of the newly added columns. NA by
-#'  default.
-#'
-#' @return extended_df The dataframe containing the added columns
-#'
+#' Add new columns to a dataframe by specifying their names and a value to
+#' initialize them with.
+#' @keywords internal
+#' @param df The dataframe to extend.
+#' @param cols The vector containing new column names.
+#' @param value The values stored in the newly added columns. NA by default.
+#' @return A data frame containing with the same columns as the `df` argument
+#'  as well as the new columns specified in the `cols` argument.
 #' @export
-add_columns <- function(df, newcols, fill = NA) {
-    # ensure that `fill` is not NULL
-    if (is.null(fill)) {
-        stop("The `fill` parameter must be non-null. Consider NA or \"\".")
-    }
-    # ensure `newcols` is a character vector
-    if (!identical(newcols, as.character(newcols))) {
-        warning(
-            "`newcols` parameter should be a character vector."
-        )
-        newcols <- as.character(newcols)
-    }
-    # generate blank dataframe with the colnames in `newcols`
-    newcol_df <- data.frame(t(data.frame(newcols)))
-    colnames(newcol_df) <- newcol_df[1, ]
-    # populate blank dataframe with fill value
-    newcol_df[1, ] <- fill
-    # expand original dataframe with `newcol_df`
-    extended_df <- dplyr::cross_join(
-        df,
-        newcol_df,
-    )
-    return(extended_df)
+add_columns <- function(df, cols, value = NA) {
+    df[cols] <- value
+    return(df)
 }
 
-#' Convert dataframe columns to numeric type
+#' Convert columns of a data frame to numeric type (if possible)
 #'
 #' Converts all columns in a dataframe that can be converted to numeric type to
-#'  numeric type.
+#' numeric type.
 #'
 #' @param df A dataframe
-#'
 #' @return df The dataframe with all possible columns converted to type numeric
-#'
 #' @export
 numcol_to_numeric <- function(df) {
     df[] <- lapply(df,
@@ -84,10 +59,9 @@ char_to_fac <- function(df) {
     return(df)
 }
 
-#' Select all columns of a dataframe not starting with the 'subject_' prefix.
+#' Select all columns of a dataframe not starting with the 'uid_' prefix.
 #'
-#' Removes the 'subject_' prefixed columns from a dataframe. Useful for printing
-#'  solutions_matrix structures to the console.
+#' Removes the 'uid_' prefixed columns from a dataframe.
 #'
 #' @param df A dataframe
 #'
@@ -95,41 +69,41 @@ char_to_fac <- function(df) {
 #'
 #' @export
 no_subs <- function(df) {
-    if (!"row_id" %in% colnames(df)) {
-        stop("Dataframe requires 'row_id' column.")
+    if (!"solution" %in% colnames(df)) {
+        metasnf_error("Dataframe requires 'solution' column.")
     }
     df_no_subs <- df |>
         dplyr::select(
-            "row_id",
-            !(dplyr::starts_with("subject_"))
+            "solution",
+            !(dplyr::starts_with("uid_"))
         )
     if (identical(df, df_no_subs)) {
-        warning("Provided dataframe had no 'subject_' columns to remove.")
+        metasnf_warning("Provided dataframe had no 'uid_' columns to remove.")
     }
     return(df_no_subs)
 }
 
 #' Select all columns of a dataframe starting with a given string prefix.
 #'
-#' Removes the columns that are not prefixed with 'subject_' prefixed columns
+#' Removes the columns that are not prefixed with 'uid_' prefixed columns
 #'  from a dataframe. Useful intermediate step for extracting subject UIDs from
-#'  an solutions_matrix structure.
+#'  an sol_df structure.
 #'
 #' @param df Dataframe
 #'
-#' @return df_subs Dataframe with only 'subject_' prefixed columns
+#' @return df_subs Dataframe with only 'uid_' prefixed columns
 #'
 #' @export
 subs <- function(df) {
-    if (!"row_id" %in% colnames(df)) {
-        stop("Dataframe requires 'row_id' column.")
+    if (!"solution" %in% colnames(df)) {
+        metasnf_error("Dataframe requires 'solution' column.")
     }
     df_subs <- df |> dplyr::select(
-        "row_id",
-        dplyr::starts_with("subject_")
+        "solution",
+        dplyr::starts_with("uid_")
     )
     if (identical(df, df_subs)) {
-        warning("Provided dataframe had no non-'subject_' columns to remove.")
+        metasnf_warning("Provided dataframe had no non-'uid_' columns to remove.")
     }
     return(df_subs)
 }
@@ -140,7 +114,7 @@ subs <- function(df) {
 #'
 #' @param join String indicating if join should be "inner" or "full"
 #'
-#' @param uid Column name to join on. Default is "subjectkey"
+#' @param uid Column name to join on. Default is "uid"
 #'
 #' @param no_na Whether to remove NA values from the merged dataframe
 #'
@@ -149,7 +123,7 @@ subs <- function(df) {
 #' @export
 merge_df_list <- function(df_list,
                           join = "inner",
-                          uid = "subjectkey",
+                          uid = "uid",
                           no_na = FALSE) {
     if (join == "inner") {
         merged_df <- df_list |> purrr::reduce(
@@ -162,7 +136,7 @@ merge_df_list <- function(df_list,
             by = uid
         )
     } else {
-        stop("Invalid join type specified. Options are 'inner' and 'full'.")
+        metasnf_error("Invalid join type specified. Options are 'inner' and 'full'.")
     }
     if (no_na) {
         merged_df <- stats::na.omit(merged_df)
@@ -196,7 +170,7 @@ get_complete_uids <- function(list_of_dfs, uid) {
 
 #' Training and testing split
 #'
-#' Given a vector of subject_id and a threshold, returns a list of which members
+#' Given a vector of uid_id and a threshold, returns a list of which members
 #'  should be in the training set and which should be in the testing set. The
 #'  function relies on whether or not the absolute value of the Jenkins's
 #'  one_at_a_time hash function exceeds the maximum possible value
@@ -206,7 +180,7 @@ get_complete_uids <- function(list_of_dfs, uid) {
 #' @param subjects The available subjects for distribution
 #' @param seed Seed used for Jenkins's one_at_a_time hash function
 #'
-#' @return split a named list containing the training and testing subject_ids
+#' @return split a named list containing the training and testing uid_ids
 #'
 #' @export
 train_test_assign <- function(train_frac, subjects, seed = 42) {
@@ -216,16 +190,16 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
     test <- subjects[hash >= train_thresh]
     assigned_subs <- list(train = train, test = test)
     if (length(train) == 0 || length(test) == 0) {
-        warning("Empty train or test set.")
+        metasnf_warning("Empty train or test set.")
     }
     return(assigned_subs)
 }
 
-#' Remove items from a data_list
+#' Remove items from a data list
 #'
-#' Removes specified elements from a provided data_list
+#' Removes specified elements from a provided data list
 #'
-#' @param list_object The data_list containing components to be removed
+#' @param dl The data list containing components to be removed
 #'
 #' @param ... Any number of components to remove from the list object, passed as
 #' strings
@@ -234,20 +208,20 @@ train_test_assign <- function(train_frac, subjects, seed = 42) {
 #' removed.
 #'
 #' @export
-list_remove <- function(list_object, ...) {
+list_remove <- function(dl, ...) {
     to_remove <- list(...)
-    # Check to make sure all items to remove are components in list_object
-    list_names <- summarize_dl(list_object)$"name"
+    # Check to make sure all items to remove are components in dl
+    list_names <- summarize_dl(dl)$"name"
     invalid_names <- to_remove[!to_remove %in% list_names]
     if (length(invalid_names) > 0) {
-        warning(
+        metasnf_warning(
             paste0(
                 "Did you make a typo? The following names are not present in",
                 " your data list: ", invalid_names
             )
         )
     }
-    pruned_list <- list_object[!list_names %in% to_remove]
+    pruned_list <- dl[!list_names %in% to_remove]
     return(pruned_list)
 }
 
@@ -302,22 +276,24 @@ resample <- function(x, ...) {
 #'
 #' @export
 check_similarity_matrices <- function(similarity_matrices) {
-    valid_matrices <- similarity_matrices |>
+    invalid_mats <- similarity_matrices |>
         lapply(
             function(x) {
-                max_along_diags <- diag(x) == max(x)
-                max_diag_pt_5 <- diag(x) == 0.5
-                return(max_along_diags & max_diag_pt_5)
+                length(unique(diag(x))) != 1 | max(diag(x)) != 0.5
             }
         ) |>
         unlist() |>
-        all()
-    if (!valid_matrices) {
-        warning(
-            "Generated similarity matrices did not meet validity parameters."
+        which()
+    if (length(invalid_mats) > 0) {
+        metasnf_warning(
+            length(invalid_mats), "/", length(similarity_matrices),
+            " SNF runs yielded irregularly structured similarity matrices: ",
+            cli::col_red(invalid_mats)
         )
+        return(FALSE)
+    } else {
+        return(TRUE)
     }
-    return(valid_matrices)
 }
 
 #' Adjust the diagonals of a matrix
@@ -349,7 +325,7 @@ scale_diagonals <- function(matrix, method = "mean") {
         off_diagonals <- matrix[col(matrix) != row(matrix)]
         diag(matrix) <- max(off_diagonals)
     } else if (method != "none") {
-        stop("Invalid scaling method specified.")
+        metasnf_error("Invalid scaling method specified.")
     }
     return(matrix)
 }

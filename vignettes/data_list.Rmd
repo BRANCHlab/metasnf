@@ -20,7 +20,7 @@ Download a copy of the vignette to follow along here: [data_list.Rmd](https://ra
 ## The data_list
 
 This vignette outlines the importance, structure, and creation of the data_list object.
-You can find much of this info by running `?generate_data_list` after loading the metasnf package.
+You can find much of this info by running `?data_list` after loading the metasnf package.
 
 The data_list is the main object used in the metasnf package to store data.
 It is a named and nested list containing input dataframes (data), the name of that input dataframe (for the user's reference), the 'domain' of that dataframe (the broader source of information that the input dataframe is capturing, determined by user's domain knowledge), and the type of feature stored in the dataframe (continuous, discrete, ordinal, categorical, or mixed).
@@ -55,7 +55,7 @@ city_df <- data.frame(
 )
 
 # Generating a data_list explicitly (Name each nested list element):
-data_list <- generate_data_list(
+data_list <- data_list(
     list(
         data = heart_rate_df,
         name = "heart_rate",
@@ -84,7 +84,7 @@ data_list <- generate_data_list(
 )
 
 # Achieving the same result compactly:
-data_list <- generate_data_list(
+data_list <- data_list(
     list(heart_rate_df, "heart_rate", "clinical", "continuous"),
     list(personality_test_df, "personality_test", "surveys", "continuous"),
     list(survey_response_df, "survey_response", "surveys", "ordinal"),
@@ -96,7 +96,7 @@ data_list <- generate_data_list(
 summarize_dl(data_list)
 ```
 
-Depending on your data preprocessing, it may be more convenient to you to assemble the components of your data_list in an automated way and then provide that result to `generate_data_list`.
+Depending on your data preprocessing, it may be more convenient to you to assemble the components of your data_list in an automated way and then provide that result to `data_list`.
 
 For example, your code could have generated a list like the one below:
 
@@ -107,10 +107,10 @@ list_of_lists <- list(
 )
 ```
 
-If `generate_data_list` receives only a single list, it'll treat that list as containing all the components required to construct a properly formatted data_list:
+If `data_list` receives only a single list, it'll treat that list as containing all the components required to construct a properly formatted data_list:
 
 ```{r}
-dl <- generate_data_list(
+dl <- data_list(
     list_of_lists,
     uid = "patient_id"
 )

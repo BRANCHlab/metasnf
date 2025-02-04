@@ -2,47 +2,30 @@
 % Please edit documentation in R/nmi.R
 \name{batch_nmi}
 \alias{batch_nmi}
-\title{Calculate feature NMIs for a data_list and a derived solutions_matrix}
+\title{Calculate feature NMIs for a data list and a derived sol_df}
 \usage{
 batch_nmi(
-  data_list,
-  solutions_matrix,
-  clust_algs_list = NULL,
-  distance_metrics_list = NULL,
-  automatic_standard_normalize = FALSE,
+  dl,
+  sol_df,
   transpose = TRUE,
   ignore_inclusions = TRUE,
   verbose = FALSE
 )
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.
-Use the same value as was used in the original call to \code{batch_snf()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
-\item{solutions_matrix}{Result of \code{batch_snf} storing cluster solutions and
+\item{sol_df}{Result of \code{batch_snf} storing cluster solutions and
 the settings that were used to generate them. Use the same value as was used
 in the original call to \code{batch_snf()}.}
-
-\item{clust_algs_list}{List of custom clustering algorithms to apply
-to the final fused network. See ?generate_clust_algs_list. Use the same
-value as was used in the original call to \code{batch_snf()}.}
-
-\item{distance_metrics_list}{An optional nested list containing which
-distance metric function should be used for the various feature types
-(continuous, discrete, ordinal, categorical, and mixed). Use the same value
-as was used in the original call to \code{batch_snf()}.}
-
-\item{automatic_standard_normalize}{If TRUE, will automatically apply
-standard normalization prior to calculation of any distance matrices. Use
-the same value as was used in the original call to \code{batch_snf()}.}
 
 \item{transpose}{If TRUE, will transpose the output dataframe.}
 
 \item{ignore_inclusions}{If TRUE, will ignore the inclusion columns in the
 solutions matrix and calculate NMIs for all features. If FALSE, will give
-NAs for features that were dropped on a given settings_matrix row.}
+NAs for features that were dropped on a given settings_df row.}
 
-\item{verbose}{If TRUE, print progress to console.}
+\item{verbose}{If TRUE, output progress to console.}
 }
 \value{
 A "data.frame" class object containing one row for every feature
@@ -51,5 +34,5 @@ solutions matrix. Populated values show the calculated NMI score for each
 feature-solution combination.
 }
 \description{
-Calculate feature NMIs for a data_list and a derived solutions_matrix
+Calculate feature NMIs for a data list and a derived sol_df
 }

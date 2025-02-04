@@ -1,6 +1,6 @@
 #' Manhattan plot of feature-feature associaiton p-values
 #'
-#' @param data_list List of dataframes containing data information.
+#' @param dl List of dataframes containing data information.
 #'
 #' @param key_var Feature for which the association p-values of all other
 #' features are plotted.
@@ -24,7 +24,7 @@
 #' p-values of features against one key feature in a data list.
 #'
 #' @export
-var_manhattan_plot <- function(data_list,
+var_manhattan_plot <- function(dl,
                                key_var,
                                neg_log_pval_thresh = 5,
                                threshold = NULL,
@@ -33,7 +33,7 @@ var_manhattan_plot <- function(data_list,
                                plot_title = NULL,
                                hide_x_labels = FALSE,
                                bonferroni_line = FALSE) {
-    pval_matrix <- calc_assoc_pval_matrix(data_list)
+    pval_matrix <- calc_assoc_pval_matrix(dl)
     ###########################################################################
     # Suppress warnings related to non-standard evaluation
     ###########################################################################
@@ -57,7 +57,7 @@ var_manhattan_plot <- function(data_list,
     )
     summary_data <- dplyr::inner_join(
         pval_df,
-        dl_variable_summary(data_list),
+        dl_variable_summary(dl),
         by = dplyr::join_by("variable" == "name")
     )
     summary_data <- dplyr::arrange(summary_data, domain)
@@ -125,43 +125,30 @@ var_manhattan_plot <- function(data_list,
 #'
 #' Given a dataframe of representative meta cluster solutions (see
 #' `get_representative_solutions()`, returns a Manhattan plot for showing
-#' feature separation across all features in provided data/target_lists.
+#' feature separation across all features in provided data/target lists.
 #'
-#' @param extended_solutions_matrix A solutions_matrix that contains "_pval"
-#' columns containing the values to be plotted. This object is the output of
-#' `extend_solutions()`.
-#'
-#' @param data_list List of dataframes containing data information.
-#'
-#' @param target_list List of dataframes containing target information.
-#'
+#' @param ext_sol_df A sol_df that contains "_pval"
+#'  columns containing the values to be plotted. This object is the output of
+#'  `extend_solutions()`.
+#' @param dl List of dataframes containing data information.
+#' @param target_dl List of dataframes containing target information.
 #' @param variable_order Order of features to be displayed in the plot.
-#'
 #' @param neg_log_pval_thresh Threshold for negative log p-values.
-#'
 #' @param threshold p-value threshold to plot horizontal dashed line at.
-#'
 #' @param point_size Size of points in the plot.
-#'
 #' @param text_size Size of text in the plot.
-#'
 #' @param plot_title Title of the plot.
-#'
 #' @param xints Either "outcomes" or a vector of numeric values to plot
-#' vertical lines at.
-#'
+#'  vertical lines at.
 #' @param hide_x_labels If TRUE, hides x-axis labels.
-#'
 #' @param domain_colours Named vector of colours for domains.
-#'
 #' @return A Manhattan plot (class "gg", "ggplot") showing the association
-#' p-values of features against each solution in the provided solutions matrix,
-#' stratified by meta cluster label.
-#'
+#'  p-values of features against each solution in the provided solutions matrix,
+#'  stratified by meta cluster label.
 #' @export
-mc_manhattan_plot <- function(extended_solutions_matrix,
-                              data_list = NULL,
-                              target_list = NULL,
+mc_manhattan_plot <- function(ext_sol_df,
+                              dl = NULL,
+                              target_dl = NULL,
                               variable_order = NULL,
                               neg_log_pval_thresh = 5,
                               threshold = NULL,
@@ -172,10 +159,10 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
                               hide_x_labels = FALSE,
                               domain_colours = NULL) {
     ###########################################################################
-    # Ensure one of data_list or target_list is not NULL
+    # Ensure one of data list or target list is not NULL
     ###########################################################################
-    if (is.null(data_list) && is.null(target_list)) {
-        stop("At least one of data_list or target_list must be provided.")
+    if (is.null(dl) && is.null(target_dl)) {
+        metasnf_error("At least one of `dl` or `target_dl` must be provided.")
     }
     ###########################################################################
     # Suppress warnings related to non-standard evaluation
@@ -184,64 +171,64 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
     domain <- ""
     neg_log_pval <- ""
     ###########################################################################
-    # Formatting extended_solutions_matrix as dataframe
+    # Formatting ext_sol_df as dataframe
     ###########################################################################
-    extended_solutions_matrix <- data.frame(extended_solutions_matrix)
+    ext_sol_df <- data.frame(ext_sol_df)
     ###########################################################################
-    # Select row_id, label, and p-value related columns only
+    # Select solution, label, and p-value related columns only
     ###########################################################################
-    if (!"label" %in% colnames(extended_solutions_matrix)) {
-        extended_solutions_matrix$"label" <- extended_solutions_matrix$"row_id"
+    if (!"label" %in% colnames(ext_sol_df)) {
+        ext_sol_df$"label" <- ext_sol_df$"solution"
     }
-    extended_solutions_matrix <- extended_solutions_matrix |>
+    ext_sol_df <- ext_sol_df |>
         dplyr::select(
-            "row_id",
+            "solution",
             "label",
             dplyr::ends_with("_pval")
         )
-    if (ncol(extended_solutions_matrix) == 2) {
-        stop(
-            "extended_solutions_matrix is missing p-value columns. Did you",
+    if (ncol(ext_sol_df) == 2) {
+        metasnf_error(
+            "ext_sol_df is missing p-value columns. Did you",
             " provide an unextended solutions matrix instead?"
         )
     }
-    extended_solutions_matrix <- dplyr::select(
-        extended_solutions_matrix,
+    ext_sol_df <- dplyr::select(
+        ext_sol_df,
         -dplyr::contains(c("min_pval", "mean_pval", "max_pval"))
     )
     ###########################################################################
-    # Convert row_id and label to factors
+    # Convert solution and label to factors
     ###########################################################################
-    extended_solutions_matrix$"row_id" <- factor(
-        extended_solutions_matrix$"row_id"
+    ext_sol_df$"solution" <- factor(
+        ext_sol_df$"solution"
     )
-    extended_solutions_matrix$"label" <- factor(
-        extended_solutions_matrix$"label"
+    ext_sol_df$"label" <- factor(
+        ext_sol_df$"label"
     )
     ###########################################################################
     # Re-assign names to the data list and target list
     ###########################################################################
-    if (!is.null(target_list)) {
-        data_list_renamed <- data_list |> lapply(
+    if (!is.null(target_dl)) {
+        dl_renamed <- dl |> dlapply(
             function(x) {
                 x$"domain" <- paste0("I-", x$"domain")
                 return(x)
             }
         )
-        target_list_renamed <- target_list |> lapply(
+        tl_renamed <- target_dl |> dlapply(
             function(x) {
                 x$"domain" <- paste0("O-", x$"domain")
                 return(x)
             }
         )
-        data_list <- c(data_list_renamed, target_list_renamed)
+        dl <- c(dl_renamed, tl_renamed)
     }
     ###########################################################################
     # Columns that end with _pval are truncated by neg_log_pval_thresh
     ###########################################################################
-    var_cols_idx <- endsWith(colnames(extended_solutions_matrix), "_pval")
-    var_cols <- colnames(extended_solutions_matrix)[var_cols_idx]
-    cutoff_var_cols <- extended_solutions_matrix[, var_cols] |>
+    var_cols_idx <- endsWith(colnames(ext_sol_df), "_pval")
+    var_cols <- colnames(ext_sol_df)[var_cols_idx]
+    cutoff_var_cols <- ext_sol_df[, var_cols] |>
         apply(
             MARGIN = 2,
             FUN = function(x) {
@@ -260,19 +247,19 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
     if (dim(cutoff_var_cols)[2] == 1) {
         cutoff_var_cols <- t(cutoff_var_cols)
     }
-    extended_solutions_matrix[, var_cols] <- cutoff_var_cols
-    summary_data <- extended_solutions_matrix |>
+    ext_sol_df[, var_cols] <- cutoff_var_cols
+    summary_data <- ext_sol_df |>
         tidyr::pivot_longer(
-            !(c("row_id", "label")),
+            !(c("solution", "label")),
             names_to = "variable",
             values_to = "neg_log_pval"
         ) |>
         data.frame()
     summary_data$"variable" <- sub("_pval$", "", summary_data$"variable")
     ###########################################################################
-    # Merge the summmary plot with domain information from the data_list
+    # Merge the summmary plot with domain information from the data list
     ###########################################################################
-    dl_metadata <- summarize_dl(data_list, "feature") |> dplyr::select(-"type")
+    dl_metadata <- summary(dl, "feature") |> dplyr::select(-"type")
     summary_data <- merge(
         summary_data,
         dl_metadata,
@@ -366,7 +353,7 @@ mc_manhattan_plot <- function(extended_solutions_matrix,
     n_vars <- length(unique(summary_data$"variable"))
     target_rows <- startsWith(summary_data$"domain", "O")
     n_outcomes <- length(unique(summary_data[target_rows, "variable"]))
-    if (is.null(xints) && !is.null(data_list) && !is.null(target_list)) {
+    if (is.null(xints) && !is.null(dl) && !is.null(target_dl)) {
         plot <- plot + ggplot2::geom_vline(
             xintercept = n_vars - n_outcomes + 0.5
         )
@@ -454,13 +441,13 @@ esm_manhattan_plot <- function(esm,
     pval_df[, var_cols] <- cutoff_var_cols
     ###########################################################################
     # Suppress global visible binding errors during building
-    row_id <- ""
+    solution <- ""
     variable <- ""
     pval <- ""
-    pval_df$"row_id" <- factor(pval_df$"row_id")
+    pval_df$"solution" <- factor(pval_df$"solution")
     pval_df <- pval_df |>
         tidyr::pivot_longer(
-            !row_id,
+            !solution,
             names_to = "variable",
             values_to = "pval"
         ) |>
@@ -472,7 +459,7 @@ esm_manhattan_plot <- function(esm,
             mapping = ggplot2::aes(
                 x = variable,
                 y = pval,
-                colour = row_id
+                colour = solution
             ),
             width = jitter_width,
             height = jitter_height,

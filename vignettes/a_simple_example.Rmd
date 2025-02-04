@@ -173,7 +173,7 @@ library(metasnf)
 ### 2. Store the data in a *data_list*
 
 All the data we're working with will get stored in a single object called the `data_list`.
-The `data_list` is made by passing in each dataframe into the `generate_data_list` function, alongside information about the name of the dataframe, the broader source (referred to in this package as a "domain") of information that dataframe comes from, and the type of features that are stored inside that dataframe (can be continuous, discrete, ordinal, categorical, or mixed).
+The `data_list` is made by passing in each dataframe into the `data_list` function, alongside information about the name of the dataframe, the broader source (referred to in this package as a "domain") of information that dataframe comes from, and the type of features that are stored inside that dataframe (can be continuous, discrete, ordinal, categorical, or mixed).
 
 The `data_list` generation process also requires you to specify which column contains information about the ID of the patients.
 In this case, that information isn't there, so we'll have to add it ourselves.
@@ -184,7 +184,7 @@ The added IDs span from 101 onwards (rather than from 1 onwards) purely for conv
 Data1$"patient_id" <- 101:(nrow(Data1) + 100)
 Data2$"patient_id" <- 101:(nrow(Data2) + 100)
 
-data_list <- generate_data_list(
+my_dl <- data_list(
     list(
         data = Data1,
         name = "genes_1_and_2_exp",
@@ -199,7 +199,6 @@ data_list <- generate_data_list(
     ),
     uid = "patient_id"
 )
-
 ```
 
 The first entries are all lists which contains the following elements:
@@ -213,11 +212,11 @@ Finally, there's an argument for the `uid` (the column name that currently uniqu
 
 Behind the scenes, this function is building a nested list that keeps track of all this information, but it is also:
 
-- Converting the UID of the data into "subjectkey"
+- Converting the UID of the data into "uid"
 - Removing all observations that contain any NAs
 - Removing all subjects who are not present in all input dataframes
 - Arranging the subjects in all the dataframe by their UID
-- Prefixing the UID values with the string "subject_" to help with cluster result characterization
+- Prefixing the UID values with the string "uid_" to help with cluster result characterization
 
 Any rows containing NAs are removed.
 If you don't want a bunch of your data to get removed because there are a few NAs sprinkled around here and there, consider using [imputation](https://en.wikipedia.org/wiki/Imputation_(statistics)).
@@ -228,26 +227,27 @@ As long as you provide the objects within each list in the correct order (data, 
 
 ```{r eval = FALSE}
 # Compactly:
-data_list <- generate_data_list(
+my_dl <- data_list(
     list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
     list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
     uid = "patient_id"
 )
 ```
 
-### 3. Store all the settings of the desired SNF runs in a *settings_matrix*
+### 3. Store all the settings of the desired SNF runs in an *SNF config*
 
-The `settings_matrix` is a dataframe where each row contains all the information required to convert the raw data into a final cluster solution.
+The `snf_config` is an object storing all the information required to convert the raw data into a final cluster solution.
+It is composed of multiple parts, including a *settings data frame* which tracks one set of SNF hyperparameters per row, a *weights matrix* which 
 By varying the rows in this matrix, we can access a broader space of possible solutions and hopefully get closer to something that will be as useful as possible for our context.
 
 In this case, we're going to create only a single cluster solution using the same process outlined in the original SNFtool example above.
 
-An explanation for the parameters in the `settings_matrix` can be found at [the settings_matrix vignette](https://branchlab.github.io/metasnf/articles/settings_matrix.html).
+An explanation for the parameters in the `settings_df` can be found at [the settings_df vignette](https://branchlab.github.io/metasnf/articles/settings_df.html).
 
 ```{r}
-settings_matrix <- generate_settings_matrix(
-    data_list,
-    nrow = 1,
+sc <- snf_config(
+    dl = my_dl,
+    n_solutions = 1,
     alpha_values = 0.5,
     k_values = 20,
     t_values = 20,
@@ -255,67 +255,61 @@ settings_matrix <- generate_settings_matrix(
     possible_snf_schemes = 1
 )
 
-settings_matrix
+sc
 ```
 
-The columns in this `settings_matrix` mean the following:
+The columns in this `settings_df` mean the following:
 
-* row_id: A way to keep track of the different rows
+* solution: A way to keep track of the different rows
 * alpha, k, t: The hyperparameters seen above
 * snf_scheme: Which "scheme" will be used to transform the inputs into a final fused network. We'll discuss this in more detail in the next vignette.
 * clust_alg: Which clustering algorithm will be applied to the final fused network. By default, one of two possible base options are randomly chosen. A value of 2 indicates that spectral clustering will be used and that the number of clusters will be determined by the rotation cost heuristic.
 * Columns ending in "dist": Which distance metric should be used. By default, 1 refers to Euclidean distance for continuous, discrete, and ordinal data, and 1 refers to Gower's distance for categorical and mixed data.
 * Columns starting with "inc": Whether or not the corresponding dataframe will be included for this round of SNF.
 
-More detailed descriptions on all of these columns can also be found in the settings_matrix vignette.
+More detailed descriptions on all of these columns can also be found in the settings_df vignette.
 
 ### 4. Run SNF
 
-The `batch_snf` function will apply each row of the `settings_matrix` (in this case, just one row) to the `data_list`.
+The `batch_snf` function will apply each row of the `settings_df` (in this case, just one row) to the `data_list`.
 
 ```{r}
-solutions_matrix <- batch_snf(
-    data_list,
-    settings_matrix
+sol_df <- batch_snf(
+    my_dl,
+    sc
 )
 
-solutions_matrix[, 1:20] # it goes on like this for some time...
-
+sol_df
 ```
-The `solutions_matrix` is essentially an augmented `settings_matrix`, where new columns have been added for each included patient.
+
+The solutions data frame (`solutions_df` class object) is a data frame that contains one cluster solution per row. essentially an augmented , where new columns have been added for each included patient.
 On each row, those new columns show what cluster that patient ended up in.
 
 A friendlier format of the clustering results can be obtained:
 
 ```{r}
-cluster_solution <- get_cluster_df(solutions_matrix)
+cluster_solution <- t(sol_df)
 
-head(cluster_solution)
+cluster_solution
 ```
 
 These cluster results are exactly the same as in the original SNF example:
 
 ```{r}
-identical(cluster_solution$"cluster", true_label)
+all.equal(cluster_solution$"s1", true_label)
 ```
 
-Running `batch_snf` with the `return_similarity_matrices` parameter set to `TRUE` will let us also take a look at the final fused networks from SNF rather than just the results of applying spectral clustering to those networks:
+Running `batch_snf` with the `return_sim_mats` parameter set to `TRUE` will let us also take a look at the final fused networks from SNF rather than just the results of applying spectral clustering to those networks:
 
 ```{r}
-
-batch_snf_results <- batch_snf(
-    data_list,
-    settings_matrix,
-    return_similarity_matrices = TRUE
+sol_df <- batch_snf(
+    dl = my_dl,
+    sc,
+    return_sim_mats = TRUE
 )
 
-names(batch_snf_results)
-
-# The solutions_matrix
-solutions_matrix <- batch_snf_results$"solutions_matrix"
-
 # The first (and only, in this case) final fused network
-similarity_matrix <- batch_snf_results$"similarity_matrices"[[1]]
+similarity_matrix <- attributes(sol_df)$"sim_mats_list"[[1]]
 ```
 
 The fused network obtained through this approach is also the same as the one obtained in the original example:
@@ -325,7 +319,7 @@ max(similarity_matrix - fused_network)
 ```
 
 And now we've completed a basic example of using this package.
-The subsequent vignettes provide guidance on how you can leverage the `settings_matrix` to access a wide range of clustering solutions from your data, how you can use other tools in this package to pick a best solution for your purposes, and how to validate the generalizability.
+The subsequent vignettes provide guidance on how you can leverage the `settings_df` to access a wide range of clustering solutions from your data, how you can use other tools in this package to pick a best solution for your purposes, and how to validate the generalizability.
 
 Go give the [less simple example](https://branchlab.github.io/metasnf/articles/a_complete_example.html) a try!
 

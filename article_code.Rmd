@@ -1,0 +1,1330 @@
+---
+title: "metasnf: Meta Clustering with Similarity Network Fusion in R"
+output:
+    html_document:
+        toc: true
+        toc_depth: 4
+        theme: united
+---
+
+## Installation
+
+```{r}
+install.packages("metasnf")
+```
+
+## Package overview
+
+```{r}
+#library("metasnf")
+
+devtools::load_all()
+
+abcd_dl <- data_list(
+    list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(cort_sa, "cortical_area", "neuroimaging", "continuous"),
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+
+set.seed(42)
+abcd_sdf <- settings_df(
+    abcd_dl,
+    n_solutions = 100,
+    max_k = 40
+)
+
+solutions_matrix <- batch_snf(abcd_dl, abcd_sdf, verbose = TRUE)
+```
+
+## Data set-up
+
+### Formatting raw data
+
+```{r}
+library("metasnf")
+
+dim(cort_t)
+str(cort_t[1:4, 1:5])
+```
+
+```{r}
+library("metasnf")
+
+all_dfs <- list(
+    anxiety,
+    depress,
+    cort_t,
+    cort_sa,
+    subc_v,
+    income,
+    pubertal
+)
+complete_uids <- get_complete_uids(all_dfs, uid = "unique_id")
+head(complete_uids)
+length(complete_uids)
+anxiety_df <- dplyr::filter(anxiety, unique_id %in% complete_uids)
+depress_df <- dplyr::filter(depress, unique_id %in% complete_uids)
+cort_t_df <- dplyr::filter(cort_t, unique_id %in% complete_uids)
+cort_sa_df <- dplyr::filter(cort_sa, unique_id %in% complete_uids)
+subc_v_df <- dplyr::filter(subc_v, unique_id %in% complete_uids)
+income_df <- dplyr::filter(income, unique_id %in% complete_uids)
+pubertal_df <- dplyr::filter(pubertal, unique_id %in% complete_uids)
+```
+
+### Creating a data list 
+
+```{r}
+data_list <- data_list(
+    list(cort_t_df, "cortical_thickness", "neuroimaging", "continuous"),
+    list(cort_sa_df, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(subc_v_df, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income_df, "household_income", "demographics", "continuous"),
+    list(pubertal_df, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+```
+
+```{r}
+summarize_dl(data_list)
+```
+
+### Target lists
+
+```{r}
+target_list <- data_list(
+    list(anxiety_df, "anxiety", "behaviour", "ordinal"),
+    list(depress_df, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+summarize_dl(target_list)
+```
+
+## Defining hyperparameters for clustering 
+
+### An overview of the settings matrix
+
+```{r}
+library("metasnf")
+data_list <- data_list(
+    list(cort_t_df, "cortical_thickness", "neuroimaging", "continuous"),
+    list(cort_sa_df, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(subc_v_df, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income_df, "household_income", "demographics", "continuous"),
+    list(pubertal_df, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+settings_matrix <- settings_df(data_list)
+head(settings_matrix)
+```
+
+### Building the settings matrix
+
+#### Basic random population
+
+```{r}
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 100
+)
+head(settings_matrix)
+```
+
+#### Specifying ranges of variation
+
+```{r}
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 100,
+    min_k = 10,
+    max_k = 60,
+    min_alpha = 0.3,
+    max_alpha = 0.8
+)
+```
+
+```{r}
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 20,
+    k_values = c(10, 25, 50),
+    alpha_values = c(0.4, 0.8)
+)
+```
+
+#### Controlling data type dropout
+
+```{r}
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 20,
+    dropout_dist = "uniform"
+)
+head(settings_matrix)
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 20,
+    dropout_dist = "none"
+)
+
+head(settings_matrix)
+```
+
+```{r}
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 20,
+    min_removed_inputs = 3
+)
+```
+
+#### Piecewise construction and manual editing
+
+```{r}
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 50,
+    k_values = 50
+)
+settings_matrix <- add_settings_matrix_rows(
+    settings_matrix,
+    nrow = 10,
+    k_values = 80
+)
+```
+
+## Generating cluster solutions
+
+### Batch SNF
+
+```{r}
+set.seed(42)
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 20,
+    min_k = 20,
+    max_k = 50
+)
+```
+
+```{r}
+solutions_matrix <- batch_snf(data_list, settings_matrix)
+```
+
+```{r}
+progressr::with_progress({
+    solutions_matrix <- batch_snf(
+        data_list,
+        settings_matrix,
+        processes = "max"
+    )
+})
+```
+
+### The solutions matrix
+
+```{r}
+colnames(solutions_matrix)[1:30]
+solutions_matrix[1:5, "subject_NDAR_INVMIWOSHJN"]
+```
+
+```{r}
+cluster_solutions <- get_cluster_solutions(solutions_matrix)
+head(cluster_solutions)
+```
+
+## Meta clustering
+
+### Defining and visualizing meta clusters
+
+```{r}
+solutions_matrix_aris <- calc_aris(solutions_matrix)
+solutions_matrix_aris[1:3, 1:3]
+dim(solutions_matrix_aris)
+```
+
+```{r}
+meta_cluster_order <- get_matrix_order(solutions_matrix_aris)
+meta_cluster_order
+```
+
+```{r}
+ari_hm <- adjusted_rand_index_heatmap(
+    solutions_matrix_aris,
+    order = meta_cluster_order,
+    show_row_names = TRUE,
+    show_column_names = TRUE
+)
+save_heatmap(
+   heatmap = ari_hm,
+   path = "figures/ari_hm.png",
+   width = 550,
+   height = 500,
+   res = 100
+)
+```
+
+```{r}
+shiny_annotator(ari_hm)
+```
+
+```{r}
+split_vec <- c(2, 5, 12, 17)
+ari_mc_hm <- adjusted_rand_index_heatmap(
+   solutions_matrix_aris,
+   order = meta_cluster_order,
+   split_vector = split_vec
+)
+save_heatmap(
+   heatmap = ari_mc_hm,
+   path = "./ari_mc_hm.png",
+   width = 550,
+   height = 500,
+   res = 100
+)
+```
+
+### Identifying representative solutions
+
+```{r}
+rep_solutions <- get_representative_solutions(
+    solutions_matrix_aris,
+    split_vector = split_vec,
+    order = meta_cluster_order,
+    solutions_matrix
+)
+nrow(rep_solutions)
+```
+
+## Evaluating cluster separation across features
+
+### Extending the solutions matrix
+
+```{r}
+extended_solutions_matrix <- extend_solutions(
+    solutions_matrix,
+    target_list = target_list
+)
+```
+
+```{r}
+esm_cols <- colnames(extended_solutions_matrix)
+sm_cols <- colnames(solutions_matrix)
+new_cols <- esm_cols[!esm_cols %in% sm_cols]
+head(extended_solutions_matrix[, new_cols])
+```
+
+```{r}
+extended_solutions_matrix <- extend_solutions(
+    solutions_matrix,
+    data_list = data_list,
+    target_list = target_list
+)
+```
+
+### Heatmap annotations 
+
+```{r}
+annotated_ari_hm <- adjusted_rand_index_heatmap(
+    solutions_matrix_aris,
+    order = meta_cluster_order,
+    split_vector = split_vec,
+    data = extended_solutions_matrix,
+    top_hm = list(
+        "Depression p-value" = "cbcl_depress_r_pval",
+        "Anxiety p-value" = "cbcl_anxiety_r_pval",
+        "Overall outcomes p-value" = "mean_pval"
+    ),
+    bottom_bar = list(
+        "Number of Clusters" = "nclust"
+    ),
+    annotation_colours = list(
+        "Depression p-value" = colour_scale(
+            extended_solutions_matrix[, "cbcl_depress_r_pval"],
+            min_colour = "purple",
+            max_colour = "black"
+        ),
+        "Anxiety p-value" = colour_scale(
+            extended_solutions_matrix[, "cbcl_anxiety_r_pval"],
+            min_colour = "green",
+            max_colour = "black"
+        ),
+        "Overall outcomes p-value" = colour_scale(
+            extended_solutions_matrix[, "mean_pval"],
+            min_colour = "lightblue",
+            max_colour = "black"
+        )
+    )
+)
+save_heatmap(
+    heatmap = annotated_ari_hm,
+    path = "figures/annotated_ari_hm.png",
+    width = 700,
+    height = 500,
+    res = 100
+)
+```
+
+```{r}
+extended_solutions_matrix2 <- extended_solutions_matrix |>
+    dplyr::mutate(
+        key_subjects_cluster_together = dplyr::case_when(
+            subject_NDAR_INVLF3TNDUZ == subject_NDAR_INVLDQH8ATK ~ TRUE,
+            TRUE ~ FALSE
+        )
+    )
+annotated_ari_hm2 <- adjusted_rand_index_heatmap(
+    solutions_matrix_aris,
+    order = meta_cluster_order,
+    split_vector = split_vec,
+    data = extended_solutions_matrix2,
+    top_hm = list(
+        "Depression p-value" = "cbcl_depress_r_pval",
+        "Anxiety p-value" = "cbcl_anxiety_r_pval",
+        "Key Subjects Clustered Together" = "key_subjects_cluster_together"
+    ),
+    bottom_bar = list(
+        "Number of Clusters" = "nclust"
+    ),
+    annotation_colours = list(
+        "Depression p-value" = colour_scale(
+            extended_solutions_matrix[, "cbcl_depress_r_pval"],
+            min_colour = "purple",
+            max_colour = "black"
+        ),
+        "Anxiety p-value" = colour_scale(
+            extended_solutions_matrix[, "cbcl_anxiety_r_pval"],
+            min_colour = "green",
+            max_colour = "black"
+        ),
+        "Key Subjects Clustered Together" = c(
+            "TRUE" = "blue",
+            "FALSE" = "black"
+        )
+    )
+)
+```
+
+### Meta cluster manhattan plots 
+
+```{r}
+extended_solutions_matrix <- extend_solutions(
+    solutions_matrix,
+    target_list = target_list,
+    data_list = data_list,
+    verbose = TRUE
+)
+rep_solutions <- get_representative_solutions(
+    solutions_matrix_aris,
+    split_vector = split_vec,
+    order = meta_cluster_order,
+    extended_solutions_matrix
+)
+mc_manhattan <- mc_manhattan_plot(
+    rep_solutions,
+    data_list = data_list,
+    target_list = target_list,
+    hide_x_labels = TRUE,
+    point_size = 2,
+    text_size = 12,
+    threshold = 0.05,
+    neg_log_pval_thresh = 5
+)
+ggplot2::ggsave(
+    "figures/mc_manhattan.png",
+    mc_manhattan,
+    height = 6,
+    width = 12
+)
+```
+
+```{r}
+rep_solutions_no_cort <- dplyr::select(
+    rep_solutions,
+    -dplyr::contains("mrisdp")
+)
+mc_manhattan2 <- mc_manhattan_plot(
+    rep_solutions_no_cort,
+    data_list = data_list,
+    target_list = target_list,
+    point_size = 4,
+    threshold = 0.01,
+    text_size = 12,
+    domain_colours = c(
+        "neuroimaging" = "cadetblue",
+        "demographics" = "purple",
+        "behaviour" = "firebrick"
+    )
+)
+ggplot2::ggsave(
+    "figures/mc_manhattan2.png",
+    mc_manhattan2,
+    height = 8,
+    width = 12
+)
+```
+
+### P-value heatmaps
+
+```{r}
+extended_solutions_matrix <- extend_solutions(solutions_matrix, target_list)
+target_pvals <- get_pvals(extended_solutions_matrix)
+head(target_pvals)
+pval_hm <- pval_heatmap(target_pvals, order = meta_cluster_order)
+save_heatmap(
+    heatmap = pval_hm,
+    path = "./pval_hm.png",
+    width = 400,
+    height = 500,
+    res = 100
+)
+```
+
+### Normalized mutual information
+
+```{r}
+feature_nmis <- batch_nmi(data_list[4:5], solutions_matrix, verbose = TRUE)
+feature_nmis
+```
+
+## Identifying settings driving meta cluster formation
+
+```{r}
+sm_hm <- settings_matrix_heatmap(
+   settings_matrix,
+   order = meta_cluster_order
+)
+save_heatmap(
+   heatmap = sm_hm,
+   path = "./settings_matrix_heatmap_ordered.png",
+   width = 400,
+   height = 500,
+   res = 75
+)
+```
+
+## Measures of quality and stability
+
+### Quality measures
+
+```{r}
+batch_snf_results <- batch_snf(
+   data_list,
+   settings_matrix,
+   return_similarity_matrices = TRUE
+)
+solutions_matrix <- batch_snf_results[["solutions_matrix"]]
+similarity_matrices <- batch_snf_results[["similarity_matrices"]]
+silhouette_scores <- calculate_silhouettes(
+   solutions_matrix,
+   similarity_matrices
+)
+dunn_indices <- calculate_dunn_indices(
+   solutions_matrix,
+   similarity_matrices
+)
+db_indices <- calculate_db_indices(
+   solutions_matrix,
+   similarity_matrices
+)
+```
+
+### Stability measures
+
+```{r}
+library("metasnf")
+
+data_list <- data_list(
+    list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(cort_sa, "cortical_area", "neuroimaging", "continuous"),
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+
+set.seed(42)
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 4,
+    max_k = 40
+)
+
+solutions_matrix <- batch_snf(data_list, settings_matrix)
+
+set.seed(42)
+data_list_subsamples <- subsample_data_list(
+    data_list,
+    n_subsamples = 100,
+    subsample_fraction = 0.85
+)
+
+batch_subsample_results <- batch_snf_subsamples(
+    data_list_subsamples,
+    settings_matrix,
+    verbose = TRUE
+)
+names(batch_subsample_results)
+```
+
+```{r}
+subsample_cluster_solutions <- batch_subsample_results[["cluster_solutions"]]
+pairwise_aris <- subsample_pairwise_aris(
+    subsample_cluster_solutions,
+    return_raw_aris = TRUE,
+    verbose = TRUE
+)
+names(pairwise_aris)
+ari_summary <- pairwise_aris[["ari_summary"]]
+print(ari_summary)
+
+raw_aris <- pairwise_aris[["raw_aris"]]
+print(length(raw_aris))
+raw_aris[[1]][1:5, 1:5]
+```
+
+```{r}
+ComplexHeatmap::Heatmap(
+    raw_aris[[1]],
+    heatmap_legend_param = list(
+        color_bar = "continuous",
+        title = "Inter-Subsample\nARI",
+        at = c(0, 0.5, 1)
+    ),
+    show_column_names = FALSE,
+    show_row_names = FALSE
+)
+```
+
+```{r}
+coclustering_results <- calculate_coclustering(
+    subsample_cluster_solutions,
+    solutions_matrix,
+    verbose = TRUE
+)
+names(coclustering_results)
+```
+
+```{r}
+cocluster_dfs <- coclustering_results[["cocluster_dfs"]]
+head(cocluster_dfs[[1]])
+```
+
+```{r}
+cocluster_summary <- coclustering_results[["cocluster_summary"]]
+print(cocluster_summary)
+```
+
+```{r}
+cocluster_density(cocluster_dfs[[1]])
+```
+
+```{r}
+cocluster_heatmap(
+    cocluster_dfs[[1]],
+    data_list = data_list,
+    top_hm = list(
+        "Income" = "household_income",
+        "Pubertal Status" = "pubertal_status"
+    ),
+    annotation_colours = list(
+        "Pubertal Status" = colour_scale(
+            c(1, 4),
+            min_colour = "black",
+            max_colour = "purple"
+        ),
+        "Income" = colour_scale(
+            c(0, 4),
+            min_colour = "black",
+            max_colour = "red"
+        )
+    )
+)
+```
+
+## Evaluating generalizability through label propagation
+
+```{r}
+ assigned_splits <- train_test_assign(
+    train_frac = 0.8,
+    subjects = complete_uids
+)
+train_subs <- assigned_splits[["train"]]
+test_subs <- assigned_splits[["test"]]
+train_cort_t_df <- dplyr::filter(cort_t_df, unique_id %in% train_subs)
+train_cort_sa_df <- dplyr::filter(cort_sa_df, unique_id %in% train_subs)
+train_subc_v_df <- dplyr::filter(subc_v_df, unique_id %in% train_subs)
+train_income_df <- dplyr::filter(income_df, unique_id %in% train_subs)
+train_pubertal_df <- dplyr::filter(pubertal_df, unique_id %in% train_subs)
+train_anxiety_df <- dplyr::filter(anxiety_df, unique_id %in% train_subs)
+train_depress_df <- dplyr::filter(depress_df, unique_id %in% train_subs)
+test_cort_t_df <- dplyr::filter(cort_t_df, unique_id %in% test_subs)
+test_cort_sa_df <- dplyr::filter(cort_sa_df, unique_id %in% test_subs)
+test_subc_v_df <- dplyr::filter(subc_v_df, unique_id %in% test_subs)
+test_income_df <- dplyr::filter(income_df, unique_id %in% test_subs)
+test_pubertal_df <- dplyr::filter(pubertal_df, unique_id %in% test_subs)
+test_anxiety_df <- dplyr::filter(anxiety_df, unique_id %in% test_subs)
+test_depress_df <- dplyr::filter(depress_df, unique_id %in% test_subs)
+full_cort_t_df <- rbind(train_cort_t_df, test_cort_t_df) 
+full_cort_sa_df <- rbind(train_cort_sa_df, test_cort_sa_df) 
+full_subc_v_df <- rbind(train_subc_v_df, test_subc_v_df) 
+full_income_df <- rbind(train_income_df, test_income_df) 
+full_pubertal_df <- rbind(train_pubertal_df, test_pubertal_df) 
+full_anxiety_df <- rbind(train_anxiety_df, test_anxiety_df) 
+full_depress_df <- rbind(train_depress_df, test_depress_df) 
+# A data list with just training subjects
+train_data_list <- data_list(
+    list(train_cort_t_df, "cort_thick", "neuro", "continuous"),
+    list(train_cort_sa_df, "cort_sa", "neuro", "continuous"),
+    list(train_subc_v_df, "subcort_vol", "neuro", "continuous"),
+    list(train_income_df, "income", "demo", "continuous"),
+    list(train_pubertal_df, "pubertal_status", "demo", "continuous"),
+    uid = "unique_id"
+)
+# A data list with training and testing subjects
+full_data_list <- data_list(
+    list(full_cort_t_df, "cort_thickness", "neuro", "continuous"),
+    list(full_cort_sa_df, "cort_surface_area", "neuro", "continuous"),
+    list(full_subc_v_df, "subcort_volume", "neuro", "continuous"),
+    list(full_income_df, "income", "demo", "continuous"),
+    list(full_pubertal_df, "pubertal_status", "demo", "continuous"),
+    uid = "unique_id"
+)
+# Construct the target lists
+train_target_list <- data_list(
+    list(train_anxiety_df, "anxiety", "behav", "ordinal"),
+    list(train_depress_df, "depressed", "behav", "ordinal"),
+    uid = "unique_id"
+)
+# Find a clustering solution in your training data
+set.seed(42)
+settings_matrix <- settings_df(
+    train_data_list,
+    nrow = 5,
+    min_k = 10,
+    max_k = 30
+)
+train_solutions_matrix <- batch_snf(
+    train_data_list,
+    settings_matrix
+)
+extended_solutions_matrix <- extend_solutions(
+    train_solutions_matrix,
+    train_target_list
+)
+```
+
+```{r}
+propagated_labels <- lp_solutions_matrix(
+    extended_solutions_matrix,
+    full_data_list
+)
+head(propagated_labels)
+tail(propagated_labels)
+```
+
+## Additional plots
+
+### Feature plots
+
+```{r}
+library("metasnf")
+data_list <- data_list(
+    list(subc_v, "subc_v", "neuro", "continuous"),
+    list(income, "income", "demo", "continuous"),
+    list(fav_colour, "colour", "misc", "categorical"),
+    list(pubertal, "pubert", "demo", "continuous"),
+    list(anxiety, "anxiety", "behav", "ordinal"),
+    list(depress, "depressed", "behav", "ordinal"),
+    uid = "unique_id"
+)
+set.seed(42)
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 2,
+    min_k = 20,
+    max_k = 50
+)
+solutions_matrix <- batch_snf(data_list, settings_matrix)
+sm_row <- solutions_matrix[1, ]
+plot_list <- auto_plot(
+    solutions_matrix_row = sm_row,
+    data_list = data_list
+)
+```
+
+```{r}
+# Plot A
+plot_list[["smri_vol_scs_csf"]]
+# Plot B
+plot_list[["colour"]]
+# Plot C
+plot_list[["colour"]] +
+    ggplot2::labs(
+        fill = "Favourite Colour",
+        x = "Cluster",
+        title = " Favourite Colour by Cluster"
+    ) +
+    ggplot2::scale_fill_manual(
+        values = c(
+            "green" = "forestgreen",
+            "red" = "firebrick3",
+            "yellow" = "darkgoldenrod1"
+        )
+    )
+```
+
+### Correlation plots
+
+```{r}
+library("metasnf")
+cort_sa_minimal <- cort_sa[, 1:5]
+data_list <- data_list(
+    list(cort_sa_minimal, "cortical_sa", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "ordinal"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(fav_colour, "favourite_colour", "demographics", "categorical"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+assoc_pval_matrix <- calc_assoc_pval_matrix(data_list)
+ap_heatmap <- assoc_pval_heatmap(assoc_pval_matrix)
+save_heatmap(
+    ap_heatmap,
+    "figures/ap_hm.png",
+    width = 650,
+    height = 500,
+    res = 100
+)
+```
+
+```{r}
+ap_heatmap2 <- assoc_pval_heatmap(
+    assoc_pval_matrix,
+    confounders = list(
+        "Colour" = "colour",
+        "Pubertal Status" = "pubertal_status"
+    ),
+    out_of_models = list(
+        "Income" = "household_income"
+    ),
+    data_list = data_list,
+    split_by_domain = TRUE
+)
+save_heatmap(
+    ap_heatmap2,
+    "figures/ap_hm2.png",
+    width = 700,
+    height = 500,
+    res = 100
+)
+```
+
+### Alluvial plots 
+
+```{r}
+library("metasnf")
+data_list <- data_list(
+    list(
+        data = expression_df,
+        name = "genes_1_and_2_exp",
+        domain = "gene_expression",
+        type = "continuous"
+    ),
+    list(
+        data = methylation_df,
+        name = "genes_1_and_2_meth",
+        domain = "gene_methylation",
+        type = "continuous"
+    ),
+    list(
+        data = gender_df,
+        name = "gender",
+        domain = "demographics",
+        type = "categorical"
+    ),
+    list(
+        data = diagnosis_df,
+        name = "diagnosis",
+        domain = "clinical",
+        type = "categorical"
+    ),
+    uid = "patient_id"
+)
+set.seed(42)
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 1,
+    max_k = 40
+)
+batch_snf_results <- batch_snf(
+    data_list,
+    settings_matrix,
+    return_similarity_matrices = TRUE
+)
+solutions_matrix <- batch_snf_results[["solutions_matrix"]]
+similarity_matrices <- batch_snf_results[["similarity_matrices"]]
+similarity_matrix <- similarity_matrices[[1]]
+cluster_solution <- get_cluster_solutions(solutions_matrix)[["1"]]
+cluster_sequence <- list(
+    spectral_two,
+    spectral_three,
+    spectral_four
+)
+alluvial_cluster_plot(
+    cluster_sequence = cluster_sequence,
+    similarity_matrix = similarity_matrix,
+    data_list = data_list,
+    key_outcome = "gender", # the name of the feature of interest
+    key_label = "Gender", # how the feature of interest should be displayed
+    extra_outcomes = "diagnosis", # more features to plot but not colour by
+    title = "Gender Across Cluster Counts"
+)
+```
+
+### Similarity matrix heatmaps
+
+```{r}
+similarity_matrix_hm <- similarity_matrix_heatmap(
+    similarity_matrix = similarity_matrix,
+    cluster_solution = cluster_solution,
+    heatmap_height = grid::unit(10, "cm"),
+    heatmap_width = grid::unit(10, "cm")
+)
+similarity_matrix_hm
+save_heatmap(
+    heatmap = similarity_matrix_hm,
+    path = "figures/similarity_matrix_hm.png",
+    width = 410,
+    height = 330,
+    res = 80
+)
+```
+
+### Other manhattan plots
+
+```{r}
+full_data_list <- data_list(
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+data_list <- full_data_list[1:3]
+target_list <- full_data_list[4:5]
+
+set.seed(42)
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 20,
+    min_k = 20,
+    max_k = 50
+)
+
+solutions_matrix <- batch_snf(data_list, settings_matrix)
+
+extended_solutions_matrix <- extend_solutions(
+    solutions_matrix,
+    data_list = data_list,
+    target_list = target_list,
+    min_pval = 1e-10
+)
+
+esm_manhattan <- esm_manhattan_plot(
+    extended_solutions_matrix[1:5, ],
+    neg_log_pval_thresh = 5,
+    threshold = 0.05,
+    point_size = 3,
+    jitter_width = 0.1,
+    jitter_height = 0.1,
+    plot_title = "Feature-Solution Associations",
+    text_size = 14,
+    bonferroni_line = TRUE
+)
+
+var_manhattan <- var_manhattan_plot(
+    data_list,
+    key_var = "household_income",
+    plot_title = "Correlation of Features with Household Income",
+    text_size = 16,
+    neg_log_pval_thresh = 3,
+    threshold = 0.05
+)
+```
+
+## Helper functions 
+
+### Data list management
+
+```{r}
+summarize_dl(data_list)
+```
+
+```{r}
+summarize_dl(data_list, scope = "feature")
+```
+
+```{r}
+class(collapse_dl(data_list))
+```
+
+## Alternative formats for data list generation 
+
+### Named nested components
+
+```{r}
+library("metasnf")
+heart_rate_df <- data.frame(
+    unique_id = c("1", "2", "3"),
+    var1 = c(0.04, 0.1, 0.3),
+    var2 = c(30, 2, 0.3)
+)
+personality_test_df <- data.frame(
+    unique_id = c("1", "2", "3"),
+    var3 = c(900, 1990, 373),
+    var4 = c(509, 2209, 83)
+)
+survey_response_df <- data.frame(
+    unique_id = c("1", "2", "3"),
+    var5 = c(1, 3, 3),
+    var6 = c(2, 3, 3)
+)
+city_df <- data.frame(
+    unique_id = c("1", "2", "3"),
+    var7 = c("toronto", "montreal", "vancouver")
+)
+data_list <- data_list(
+    list(
+        data = heart_rate_df,
+        name = "heart_rate",
+        domain = "clinical",
+        type = "continuous"
+    ),
+    list(
+        data = personality_test_df,
+        name = "personality_test",
+        domain = "surveys",
+        type = "continuous"
+    ),
+    list(
+        data = survey_response_df,
+        name = "survey_response",
+        domain = "surveys",
+        type = "ordinal"
+    ),
+    list(
+        data = city_df,
+        name = "city",
+        domain = "location",
+        type = "categorical"
+    ),
+    uid = "unique_id"
+)
+```
+
+### List of lists
+
+```{r}
+list_of_lists <- list(
+    list(heart_rate_df, "data1", "domain1", "continuous"),
+    list(personality_test_df, "data2", "domain2", "continuous")
+)
+data_list <- data_list(
+    list_of_lists,
+    uid = "unique_id"
+)
+```
+
+## Clustering algorithms 
+
+### The default clustering algorithms list
+
+```{r}
+clust_algs_list <- generate_clust_algs_list()
+summarize_clust_algs_list(clust_algs_list)
+```
+
+```{r}
+spectral_eigen <- function(similarity_matrix) {
+    estimated_n <- estimate_nclust_given_graph(
+        W = similarity_matrix,
+        NUMC = 2:10
+    )
+    number_of_clusters <- estimated_n[["Eigen-gap best"]]
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        number_of_clusters
+    )
+    solution_data <- list(
+        "solution" = solution,
+        "nclust" = number_of_clusters
+    )
+    return(solution_data)
+}
+```
+
+### Customizing the clustering algorithms list
+
+#### Pre-defined algorithms
+
+```{r}
+clust_algs_list <- generate_clust_algs_list(
+    "two_cluster_spectral" = spectral_two,
+    "five_cluster_spectral" = spectral_five
+)
+summarize_clust_algs_list(clust_algs_list)
+```
+
+```{r}
+clust_algs_list <- generate_clust_algs_list(
+    "two_cluster_spectral" = spectral_two,
+    "five_cluster_spectral" = spectral_five,
+    disable_base = TRUE
+)
+summarize_clust_algs_list(clust_algs_list)
+```
+
+```{r}
+set.seed(42)
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 10,
+    max_k = 40,
+    clustering_algorithms = clust_algs_list
+)
+```
+
+### Using a custom clustering algorithms list
+
+```{r}
+data_list <- data_list(
+    list(subc_v, "subc_v", "neuro", "continuous"),
+    list(income, "income", "demo", "continuous"),
+    list(fav_colour, "colour", "misc", "categorical"),
+    list(pubertal, "pubert", "demo", "continuous"),
+    list(anxiety, "anxiety", "behav", "ordinal"),
+    list(depress, "depressed", "behav", "ordinal"),
+    uid = "unique_id"
+)
+set.seed(42)
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 2,
+    min_k = 20,
+    max_k = 50
+)
+solutions_matrix <- batch_snf(
+    data_list,
+    settings_matrix,
+    clust_algs_list = clust_algs_list
+)
+```
+
+### Non-automated clustering
+
+```{r}
+batch_snf_results <- batch_snf(
+    data_list,
+    settings_matrix,
+    clust_algs_list = clust_algs_list,
+    return_similarity_matrices = TRUE
+)
+solutions_matrix <- batch_snf_results[["solutions_matrix"]]
+similarity_matrices <- batch_snf_results[["similarity_matrices"]]
+```
+
+## Distance metrics 
+
+```{r}
+library("metasnf")
+distance_metrics_list <- generate_distance_metrics_list()
+summarize_dml(distance_metrics_list)
+```
+
+### Using custom distance metrics
+
+#### Pre-defined distance metrics functions
+
+```{r}
+my_distance_metrics <- generate_distance_metrics_list(
+    continuous_distances = list(
+        "standard_norm_euclidean" = sn_euclidean_distance
+    ),
+    discrete_distances = list(
+        "standard_norm_euclidean" = sn_euclidean_distance
+    )
+)
+summarize_dml(my_distance_metrics)
+```
+
+#### User-defined distance metrics functions
+
+### Using a custom distance metrics list
+
+```{r}
+library(SNFtool)
+
+data(Data1)
+data(Data2)
+
+Data1$"patient_id" <- 101:(nrow(Data1) + 100)
+Data2$"patient_id" <- 101:(nrow(Data2) + 100)
+
+data_list <- data_list(
+    list(Data1, "genes_1_and_2_exp", "gene_expression", "continuous"),
+    list(Data2, "genes_1_and_2_meth", "gene_methylation", "continuous"),
+    uid = "patient_id"
+)
+
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 10,
+    distance_metrics_list = my_distance_metrics
+)
+
+solutions_matrix <- batch_snf(
+    data_list,
+    settings_matrix,
+    distance_metrics_list = my_distance_metrics
+)
+```
+
+## Feature weighting 
+
+```{r}
+library("metasnf")
+data_list <- data_list(
+    list(income_df, "household_income", "demographics", "ordinal"),
+    list(pubertal_df, "pubertal_status", "demographics", "continuous"),
+    list(fav_colour, "favourite_colour", "demographics", "categorical"),
+    list(anxiety_df, "anxiety", "behaviour", "ordinal"),
+    list(depress_df, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+my_weights <- generate_weights_matrix(
+    data_list,
+    nrow = 20
+)
+head(my_weights)
+```
+
+```{r}
+uniform_weights <- generate_weights_matrix(
+    data_list,
+    nrow = 5,
+    fill = "uniform"
+)
+exp_weights <- generate_weights_matrix(
+    data_list,
+    nrow = 5,
+    fill = "exponential"
+)
+```
+
+```{r}
+set.seed(42)
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 5,
+    min_k = 20,
+    max_k = 50
+)
+batch_snf(
+    data_list = data_list,
+    settings_matrix = settings_matrix,
+    weights_matrix = exp_weights
+)
+```
+
+## Association boosted similarity network fusion 
+
+```{r}
+library("metasnf")
+# Build data list with held-out feature just for p-value calculations
+data_list_with_held_out_f <- data_list(
+    list(income, "income", "demographics", "ordinal"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(fav_colour, "favourite_colour", "demographics", "categorical"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+# Calculation of all pairwise p-values
+assoc_pval_matrix <- calc_assoc_pval_matrix(
+    data_list_with_held_out_f
+)
+# Extract the relevant row
+colour_pk <- assoc_pval_matrix["colour", ]
+# Drop self p-value
+colour_pk <- colour_pk[!names(colour_pk) == "colour"]
+# Convert p-values to feature weights
+feature_weights <- -log10(colour_pk)/sum(-log10(colour_pk))
+# Drop held-out component from data list
+data_list <- data_list_with_held_out_f
+data_list["favourite_colour"] <- NULL
+# Build custom distance metrics list using sew_euclidean_distance
+my_distance_metrics <- generate_distance_metrics_list(
+    continuous_distances = list(
+         "sew_euclidean" = sew_euclidean_distance
+    ),
+    discrete_distances = list(
+         "sew_euclidean" = sew_euclidean_distance
+    ),
+    ordinal_distances = list(
+         "sew_euclidean" = sew_euclidean_distance
+    ),
+    categorical_distances = list(
+         "gower" = gower_distance
+    ),
+    mixed_distances = list(
+         "gower" = gower_distance
+    ),
+    keep_defaults = FALSE
+)
+# Build custom weights matrix using the generated feature weights
+my_weights <- generate_weights_matrix(
+    data_list,
+    nrow = 20
+)
+for (row in seq_len(nrow(my_weights))) {
+    my_weights[row, ] <- feature_weights
+}
+```
+
+## Imputation of missing data as a meta clustering parameter 
+
+```{r}
+library("metasnf")
+data_list_imp1 <- data_list(
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+data_list_imp2 <- data_list(
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+set.seed(42)
+settings_matrix <- settings_df(
+    data_list,
+    nrow = 10,
+    min_k = 20,
+    max_k = 50
+)
+solutions_matrix_imp1 <- batch_snf(data_list_imp1, settings_matrix)
+solutions_matrix_imp2 <- batch_snf(data_list_imp2, settings_matrix)
+solutions_matrix_imp1[, "imputation"] <- 1
+solutions_matrix_imp2[, "imputation"] <- 2
+solutions_matrix <- rbind(solutions_matrix_imp1, solutions_matrix_imp2)
+```

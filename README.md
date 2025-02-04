@@ -23,17 +23,17 @@ You will need R version 4.1.0 or higher to install this package.
 `metasnf` can be installed from CRAN:
 
 ``` r
-install.packages("metasnf")
+#install.packages("metasnf")
 ```
 
 Development versions can be installed from GitHub:
 
 ``` r
 # Latest development version
-devtools::install_github("BRANCHlab/metasnf")
-
-# Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v1.1.2")
+#devtools::install_github("BRANCHlab/metasnf")
+#
+## Install a specific tagged version
+#devtools::install_github("BRANCHlab/metasnf@v1.1.2")
 ```
 
 ## Quick Start
@@ -45,7 +45,7 @@ Minimal usage of the package looks like this:
 library(metasnf)
 
 # Setting up the data
-data_list <- generate_data_list(
+data_list <- data_list(
     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -53,8 +53,6 @@ data_list <- generate_data_list(
     list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
     uid = "patient"
 )
-#> Warning in generate_data_list(list(abcd_cort_t, "cortical_thickness",
-#> "neuroimaging", : 200 subject(s) dropped due to incomplete data.
 
 # Specifying 5 different sets of settings for SNF
 set.seed(42)

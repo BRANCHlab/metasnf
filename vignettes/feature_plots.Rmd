@@ -17,12 +17,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Download a copy of the vignette to follow along here: [feature_plots.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/feature_plots.Rmd)
 
-Given a cluster solution formatted as a row of a solutions matrix (or extended solutions matrix) and a `data_list` and/or `target_list` containing features to plot, the `auto_plot()` function can automatically generate `ggplot`-based bar and jitter plots showing how that particular feature was divided across clusters.
+Given a cluster solution formatted as a row of a solutions matrix (or extended solutions matrix) and a data list containing features to plot, the `auto_plot()` function can automatically generate `ggplot`-based bar and jitter plots showing how that particular feature was divided across clusters.
 
 ```{r}
 library(metasnf)
 
-data_list <- generate_data_list(
+dl <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(fav_colour, "favourite_colour", "misc", "categorical"),
@@ -34,28 +34,27 @@ data_list <- generate_data_list(
 
 # Build space of settings to cluster over
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
-    data_list,
-    nrow = 2,
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 2,
     min_k = 20,
     max_k = 50
 )
 
 # Clustering
-solutions_matrix <- batch_snf(data_list, settings_matrix)
+sol_df <- batch_snf(dl, sc)
 
-sm_row <- solutions_matrix[1, ]
+sol_df_row <- sol_df[1, ]
 ```
 
 Note, the row you pick could come directly from a `solutions_matrix`, but could also come from an `extended_solutions_matrix` or from a representative solution picked after `get_representative_solutions()`.
 
 ```{r}
 plot_list <- auto_plot(
-    solutions_matrix_row = sm_row,
-    data_list = data_list
+    sol_df_row = sol_df_row,
+    dl = dl,
+    verbose = TRUE
 )
-
-names(plot_list)
 
 plot_list$"household_income"
 

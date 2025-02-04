@@ -17,7 +17,7 @@ assoc_pval_heatmap(
   annotation_colours = NULL,
   labels_colour = NULL,
   split_by_domain = FALSE,
-  data_list = NULL,
+  dl = NULL,
   significance_stars = TRUE,
   slice_font_size = 8,
   ...
@@ -62,7 +62,7 @@ the domain of every feature in the plotted data.
 columns of the correlation_matrix. Will be used to "slice" the heatmap into
 visually separated sections.}
 
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 
 \item{significance_stars}{If TRUE (default), plots significance stars on
 heatmap cells}

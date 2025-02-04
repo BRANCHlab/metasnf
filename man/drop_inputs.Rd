@@ -4,12 +4,12 @@
 \alias{drop_inputs}
 \title{Execute inclusion}
 \usage{
-drop_inputs(settings_matrix_row, data_list)
+drop_inputs(sdf_row, dl)
 }
 \arguments{
-\item{settings_matrix_row}{Row of a settings matrix.}
+\item{sdf_row}{Row of a settings matrix.}
 
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
 A data list (class "list") in which any component with a

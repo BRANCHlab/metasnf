@@ -4,14 +4,14 @@
 \alias{merge_df_list}
 \title{Merge list of dataframes}
 \usage{
-merge_df_list(df_list, join = "inner", uid = "subjectkey", no_na = FALSE)
+merge_df_list(df_list, join = "inner", uid = "uid", no_na = FALSE)
 }
 \arguments{
 \item{df_list}{list of dataframes}
 
 \item{join}{String indicating if join should be "inner" or "full"}
 
-\item{uid}{Column name to join on. Default is "subjectkey"}
+\item{uid}{Column name to join on. Default is "uid"}
 
 \item{no_na}{Whether to remove NA values from the merged dataframe}
 }

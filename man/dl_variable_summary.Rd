@@ -2,17 +2,17 @@
 % Please edit documentation in R/data_list.R
 \name{dl_variable_summary}
 \alias{dl_variable_summary}
-\title{Variable-level summary of a data_list}
+\title{Variable-level summary of a data list}
 \usage{
-dl_variable_summary(data_list)
+dl_variable_summary(dl)
 }
 \arguments{
-\item{data_list}{A nested list of input data from \code{generate_data_list()}.}
+\item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
 variable_level_summary A dataframe containing the name, type, and
-domain of every variable in a data_list.
+domain of every variable in a data list.
 }
 \description{
-Variable-level summary of a data_list
+Variable-level summary of a data list
 }

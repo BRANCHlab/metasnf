@@ -10,7 +10,7 @@ cocluster_heatmap(
   cluster_columns = TRUE,
   show_row_names = FALSE,
   show_column_names = FALSE,
-  data_list = NULL,
+  dl = NULL,
   data = NULL,
   left_bar = NULL,
   right_bar = NULL,
@@ -39,7 +39,7 @@ function.}
 
 \item{show_column_names}{Argument passed to \code{ComplexHeatmap::Heatmap()}.}
 
-\item{data_list}{See ?similarity_matrix_heatmap.}
+\item{dl}{See ?similarity_matrix_heatmap.}
 
 \item{data}{See ?similarity_matrix_heatmap.}
 

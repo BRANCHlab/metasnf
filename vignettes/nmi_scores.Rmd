@@ -29,14 +29,14 @@ The premise of this approach is that if a feature was very important, clustering
 
 In the original `SNFtool` implementation of calculating NMI scores, the cluster solution based on the individual feature being assessed was restricted to necessarily being generated using squared Euclidean distance, a K hyperparameter value of 20, an alpha hyperparameter value of 0.5, and spectral clustering with the number of clusters based on the best eigen-gap value of possible solutions spanning from 2 to 5 clusters.
 
-In contrast, the `metasnf` implementation leverages all the architectural details and hyperparameters supplied in the original `settings_matrix` and `batch_snf()` call to make the solo-feature to all-feature solutions as comparable as possible.
+In contrast, the `metasnf` implementation leverages all the architectural details and hyperparameters supplied in the original `settings_df` and `batch_snf()` call to make the solo-feature to all-feature solutions as comparable as possible.
 
 The chunk below outlines how the primary NMI calculating function, `batch_nmi()`, can be used.
 
 ```{r}
 library(metasnf)
 
-data_list <- generate_data_list(
+dl <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
     list(pubertal, "pubertal_status", "demographics", "continuous"),
@@ -46,19 +46,19 @@ data_list <- generate_data_list(
 )
 
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
-    data_list,
-    nrow = 20,
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 20,
     min_k = 20,
     max_k = 50
 )
 
 # Generation of 20 cluster solutions
-solutions_matrix <- batch_snf(data_list, settings_matrix)
+sol_df <- batch_snf(dl, sc)
 
 # Let's just calculate NMIs of the anxiety and depression data types for the
 # first 5 cluster solutions to save time:
-feature_nmis <- batch_nmi(data_list[4:5], solutions_matrix[1:5, ])
+feature_nmis <- batch_nmi(dl[4:5], sol_df[1:5, ])
 
 print(feature_nmis)
 ```
