@@ -8,8 +8,8 @@
 <title>A Simple Example • metasnf</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="A Simple Example">
 <meta name="description" content="A minimal example of generating cluster solutions.
 ">
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,8 +78,8 @@
 div.aside { background-color:#fff2e6; }
 </style>
 <p>Download a copy of the vignette to follow along here: <a href="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/a_simple_example.Rmd" class="external-link">a_simple_example.Rmd</a></p>
-<p>In this vignette, we will show how metasnf can be used for a very
-simple SNF workflow.</p>
+<p>In this vignette, we will show how <code>metasnf</code> can be used
+for a very simple SNF workflow.</p>
 <p>This simple workflow is the example of SNF provided in the original
 <em>SNFtool</em> package. You can find the example by loading the
 <em>SNFtool</em> package and then viewing the documentation for the main
@@ -109,7 +109,7 @@ references).</p>
 <div class="section level3">
 <h3 id="load-the-data">3. Load the data<a class="anchor" aria-label="anchor" href="#load-the-data"></a>
 </h3>
-<p>The SNFtool package provides two mock dataframes titled
+<p>The SNFtool package provides two mock data frames titled
 <em>Data1</em> and <em>Data2</em> for this example. <em>Data1</em>
 contains gene expression values of two genes for 200 patients.
 <em>Data2</em> similarly contains methylation data for two genes for
@@ -192,11 +192,7 @@ gene expression and methylation data.</p>
 <h3 id="integrate-similarity-matrices-with-snf">5. Integrate similarity matrices with SNF<a class="anchor" aria-label="anchor" href="#integrate-similarity-matrices-with-snf"></a>
 </h3>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fused_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/SNF.html" class="external-link">SNF</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">similarity_matrix_1</span>, <span class="va">similarity_matrix_2</span><span class="op">)</span>,</span>
-<span>    <span class="va">K</span>,</span>
-<span>    <span class="cn">T</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fused_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SNFtool/man/SNF.html" class="external-link">SNF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">similarity_matrix_1</span>, <span class="va">similarity_matrix_2</span><span class="op">)</span>, <span class="va">K</span>, <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="find-clusters-in-the-integrated-matrix">6. Find clusters in the integrated matrix<a class="anchor" aria-label="anchor" href="#find-clusters-in-the-integrated-matrix"></a>
@@ -216,10 +212,11 @@ patients.</p>
 <div class="section level2">
 <h2 id="the-same-example-using-metasnf">The same example using metasnf<a class="anchor" aria-label="anchor" href="#the-same-example-using-metasnf"></a>
 </h2>
-<p>The purpose of metasnf is primarily to aid users explore a wide
-possible range of solutions. Recreating the example provided with the
-original <code>SNF</code> function will be an extremely restricted usage
-of the package, but will reveal, broadly, how metasnf works.</p>
+<p>The purpose of <code>metasnf</code> is primarily to aid users explore
+a wide possible range of solutions. Recreating the example provided with
+the original <code>SNF</code> function will be an extremely restricted
+usage of the package, but will reveal, broadly, how <code>metasnf</code>
+works.</p>
 <div class="section level3">
 <h3 id="load-the-package-1">1. Load the package<a class="anchor" aria-label="anchor" href="#load-the-package-1"></a>
 </h3>
@@ -227,28 +224,27 @@ of the package, but will reveal, broadly, how metasnf works.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="store-the-data-in-a-data_list">2. Store the data in a <em>data_list</em><a class="anchor" aria-label="anchor" href="#store-the-data-in-a-data_list"></a>
+<h3 id="store-the-data-in-a-data-list">2. Store the data in a <em>data list</em><a class="anchor" aria-label="anchor" href="#store-the-data-in-a-data-list"></a>
 </h3>
-<p>All the data we’re working with will get stored in a single object
-called the <code>data_list</code>. The <code>data_list</code> is made by
-passing in each dataframe into the <code>generate_data_list</code>
-function, alongside information about the name of the dataframe, the
-broader source (referred to in this package as a “domain”) of
-information that dataframe comes from, and the type of features that are
-stored inside that dataframe (can be continuous, discrete, ordinal,
-categorical, or mixed).</p>
-<p>The <code>data_list</code> generation process also requires you to
-specify which column contains information about the ID of the patients.
-In this case, that information isn’t there, so we’ll have to add it
-ourselves. The added IDs span from 101 onwards (rather than from 1
-onwards) purely for convenience: automatic sorting of patient names
-won’t result in patient 199 being placed before patient 2.</p>
+<p>Data used for clustering will be stored in a <code>data_list</code>
+class object. The data list is made by passing each data frame into the
+<code><a href="../reference/data_list.html">data_list()</a></code> function, alongside information about the name
+of the data frame, the broader source (referred to in this package as a
+“domain”) of information that data frame comes from, and the type of
+features that are stored inside that data frame (can be continuous,
+discrete, ordinal, categorical, or mixed). The <code><a href="../reference/data_list.html">data_list()</a></code>
+function also requires you to specify which column contains information
+about the ID of the patients. In this case, that information isn’t
+there, so we’ll have to add it ourselves. The added IDs span from 101
+onwards (rather than from 1 onwards) purely for convenience: automatic
+sorting of patient names won’t result in patient 199 being placed before
+patient 2.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Add "patient_id" column to each dataframe</span></span>
+<code class="sourceCode R"><span><span class="co"># Add "patient_id" column to each data frame</span></span>
 <span><span class="va">Data1</span><span class="op">$</span><span class="st">"patient_id"</span> <span class="op">&lt;-</span> <span class="fl">101</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Data1</span><span class="op">)</span> <span class="op">+</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">Data2</span><span class="op">$</span><span class="st">"patient_id"</span> <span class="op">&lt;-</span> <span class="fl">101</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Data2</span><span class="op">)</span> <span class="op">+</span> <span class="fl">100</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span><span class="va">my_dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_list.html">data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        data <span class="op">=</span> <span class="va">Data1</span>,</span>
 <span>        name <span class="op">=</span> <span class="st">"genes_1_and_2_exp"</span>,</span>
@@ -263,171 +259,239 @@ won’t result in patient 199 being placed before patient 2.</p>
 <span>    <span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient_id"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>The first entries are all lists which contains the following
-elements:</p>
+<p>The entries are lists which contain the following elements:</p>
 <ol style="list-style-type: decimal">
-<li>The actual dataframe</li>
-<li>A name for the dataframe (string)</li>
-<li>A name for the <em>domain</em> of information the dataframe is
-representative of (string)</li>
-<li>The type of feature stored in the dataframe (options are continuous,
-discrete, ordinal, categorical, and mixed)</li>
+<li>The data frame</li>
+<li>A user-determined name for the data frame (character)</li>
+<li>A user-determined name for the <em>domain</em> of information the
+data frame is representative of (character)</li>
+<li>The type of feature stored in the data frame (character; options are
+continuous, discrete, ordinal, categorical, and mixed)</li>
 </ol>
 <p>Finally, there’s an argument for the <code>uid</code> (the column
-name that currently uniquely identifies all the subjects in your
+name that currently uniquely identifies all the observations in your
 data).</p>
-<p>Behind the scenes, this function is building a nested list that keeps
-track of all this information, but it is also:</p>
+<p>In the process of formatting the provided data frames, this
+function:</p>
 <ul>
-<li>Converting the UID of the data into “subjectkey”</li>
-<li>Removing all observations that contain any NAs</li>
-<li>Removing all subjects who are not present in all input
-dataframes</li>
-<li>Arranging the subjects in all the dataframe by their UID</li>
-<li>Prefixing the UID values with the string “subject_” to help with
-cluster result characterization</li>
+<li>Converts the UID of the data into “uid”</li>
+<li>Prefixing the UID values with the string “uid_” to help with cluster
+result characterization</li>
+<li>Removes all observations that contain any missing values</li>
+<li>Removes all observations that are not present in all data
+frames</li>
+<li>Arranges the observations in all data frames by their UID</li>
 </ul>
-<p>Any rows containing NAs are removed. If you don’t want a bunch of
-your data to get removed because there are a few NAs sprinkled around
-here and there, consider using <a href="https://en.wikipedia.org/wiki/Imputation_(statistics)" class="external-link">imputation</a>.
-The <code>mice</code> package in R is nice for this.</p>
-<p>Note that you do not need to name out every element explicitly. As
-long as you provide the objects within each list in the correct order
+<p>To avoid losing a considerable amount of data during data list
+generation, consider using <a href="https://en.wikipedia.org/wiki/Imputation_(statistics)" class="external-link">imputation</a>
+first. The <code>mice</code> package in R is helpful for this.</p>
+<p>Also note that you do not need to name out every element explicitly;
+as long as you provide the objects within each list in the correct order
 (data, name, domain, type), you’ll get the correct result:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compactly:</span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span><span class="va">my_dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_list.html">data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">Data1</span>, <span class="st">"genes_1_and_2_exp"</span>, <span class="st">"gene_expression"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">Data2</span>, <span class="st">"genes_1_and_2_meth"</span>, <span class="st">"gene_methylation"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient_id"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="store-all-the-settings-of-the-desired-snf-runs-in-a-settings_matrix">3. Store all the settings of the desired SNF runs in a
-<em>settings_matrix</em><a class="anchor" aria-label="anchor" href="#store-all-the-settings-of-the-desired-snf-runs-in-a-settings_matrix"></a>
+<h3 id="store-all-the-settings-of-the-desired-snf-runs-in-an-snf-config">3. Store all the settings of the desired SNF runs in an <em>SNF
+config</em><a class="anchor" aria-label="anchor" href="#store-all-the-settings-of-the-desired-snf-runs-in-an-snf-config"></a>
 </h3>
-<p>The <code>settings_matrix</code> is a dataframe where each row
-contains all the information required to convert the raw data into a
-final cluster solution. By varying the rows in this matrix, we can
-access a broader space of possible solutions and hopefully get closer to
-something that will be as useful as possible for our context.</p>
+<p>The SNF config is an object storing all the information required to
+convert the raw data into a final cluster solution. It is composed of
+multiple parts, including a <em>settings data frame</em> which tracks
+one set of SNF hyperparameters per row, a <em>weights matrix</em> which
+tracks one set of all the feature weights per row, a <em>distance
+functions list</em> which stores all the functions that will be uesd to
+convert raw data into a intermediate distance matrices, and a
+<em>clustering algorithms list</em> which stores all the functions that
+will be used to convert final SNF-fused networks into cluster solutions.
+By varying the elements in the SNF config, we can access a broader space
+of possible solutions and hopefully get closer to something that will be
+as useful as possible for our context.</p>
 <p>In this case, we’re going to create only a single cluster solution
 using the same process outlined in the original SNFtool example
 above.</p>
-<p>An explanation for the parameters in the <code>settings_matrix</code>
-can be found at <a href="https://branchlab.github.io/metasnf/articles/settings_matrix.html">the
-settings_matrix vignette</a>.</p>
+<p>A full explanation of all the parameters in the
+<code><a href="../reference/snf_config.html">snf_config()</a></code> function can be found at <a href="https://branchlab.github.io/metasnf/articles/snf_config.html">the
+SNF config vignette</a>.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">1</span>,</span>
+<code class="sourceCode R"><span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">my_dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    alpha_values <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>    k_values <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    t_values <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    dropout_dist <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>    possible_snf_schemes <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
 <span></span>
-<span><span class="va">settings_matrix</span></span>
-<span><span class="co">#&gt;   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
-<span><span class="co">#&gt; 1      1   0.5 20 20          1         2         1         1        1        1</span></span>
+<span><span class="va">sc</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">                        1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<span><span class="co">#&gt; alpha                 0.5</span></span>
+<span><span class="co">#&gt; k                      20  </span></span>
+<span><span class="co">#&gt; t                      20  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">#&gt;                         1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">#&gt;                         2  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">#&gt; CNT                     1  </span></span>
+<span><span class="co">#&gt; DSC                     1  </span></span>
+<span><span class="co">#&gt; ORD                     1  </span></span>
+<span><span class="co">#&gt; CAT                     1  </span></span>
+<span><span class="co">#&gt; MIX                     1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Component dropout:</span></span></span>
+<span><span class="co">#&gt; genes_1_and_2_exp      <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; genes_1_and_2_meth     <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Distance Functions List:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #BBBB00;">Continuous (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Discrete (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Categorical (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Mixed (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Weights Matrix:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">Weights defined for 1 cluster solutions.</span></span></span>
+<span><span class="co">#&gt; $ V1  1</span></span>
+<span><span class="co">#&gt; $ V2  1</span></span>
+<span><span class="co">#&gt; $ V3  1</span></span>
+<span><span class="co">#&gt; $ V4  1</span></span></code></pre></div>
+<p>We can more clearly examine the settings data frame within the config
+as follows:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">sc</span><span class="op">$</span><span class="st">"settings_df"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   solution alpha  k  t snf_scheme clust_alg cnt_dist dsc_dist ord_dist cat_dist</span></span>
+<span><span class="co">#&gt; 1        1   0.5 20 20          1         2        1        1        1        1</span></span>
 <span><span class="co">#&gt;   mix_dist inc_genes_1_and_2_exp inc_genes_1_and_2_meth</span></span>
 <span><span class="co">#&gt; 1        1                     1                      1</span></span></code></pre></div>
-<p>The columns in this <code>settings_matrix</code> mean the
-following:</p>
+<p>The columns in this <code>settings_df</code>-class object account for
+the following:</p>
 <ul>
-<li>row_id: A way to keep track of the different rows</li>
+<li>solution: A way to keep track of the different rows</li>
 <li>alpha, k, t: The hyperparameters seen above</li>
 <li>snf_scheme: Which “scheme” will be used to transform the inputs into
 a final fused network. We’ll discuss this in more detail in the next
 vignette.</li>
-<li>clust_alg: Which clustering algorithm will be applied to the final
-fused network. By default, one of two possible base options are randomly
-chosen. A value of 2 indicates that spectral clustering will be used and
-that the number of clusters will be determined by the rotation cost
-heuristic.</li>
-<li>Columns ending in “dist”: Which distance metric should be used. By
-default, 1 refers to Euclidean distance for continuous, discrete, and
-ordinal data, and 1 refers to Gower’s distance for categorical and mixed
-data.</li>
-<li>Columns starting with “inc”: Whether or not the corresponding
-dataframe will be included for this round of SNF.</li>
+<li>clust_alg: Which clustering function from the
+<code>clust_fns_list</code> will be applied to the final fused network.
+By default, the <code>clust_fns_list</code> has index 1 referencing
+spectral clustering paired with the eigen-gap heuristic determining the
+number of clusters, while index 2 references spectral clustering paired
+with the rotation cost heuristic instead.</li>
+<li>Columns ending in “dist”: Which distance metric function from the
+<code>dist_fns_list</code> should be used. By default, the
+<code>dist_fns_list</code> has index 1 referencing simple Euclidean
+distance for continuous, discrete, and ordinal data, and Gower’s
+distance for categorical and mixed data.</li>
+<li>Columns starting with “inc”: Component dropout - whether or not the
+corresponding data frame will be included for this round of SNF.</li>
 </ul>
 <p>More detailed descriptions on all of these columns can also be found
-in the settings_matrix vignette.</p>
+in the <a href="https://branchlab.github.io/metasnf/articles/snf_config.html">the
+SNF config vignette</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="run-snf">4. Run SNF<a class="anchor" aria-label="anchor" href="#run-snf"></a>
 </h3>
-<p>The <code>batch_snf</code> function will apply each row of the
-<code>settings_matrix</code> (in this case, just one row) to the
-<code>data_list</code>.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    <span class="va">settings_matrix</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">solutions_matrix</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span> <span class="co"># it goes on like this for some time...</span></span>
-<span><span class="co">#&gt;   row_id alpha  k  t snf_scheme clust_alg cont_dist disc_dist ord_dist cat_dist</span></span>
-<span><span class="co">#&gt; 1      1   0.5 20 20          1         2         1         1        1        1</span></span>
-<span><span class="co">#&gt;   mix_dist inc_genes_1_and_2_exp inc_genes_1_and_2_meth nclust subject_101</span></span>
-<span><span class="co">#&gt; 1        1                     1                      1      2           1</span></span>
-<span><span class="co">#&gt;   subject_102 subject_103 subject_104 subject_105 subject_106</span></span>
-<span><span class="co">#&gt; 1           1           1           1           1           1</span></span></code></pre></div>
-<p>The <code>solutions_matrix</code> is essentially an augmented
-<code>settings_matrix</code>, where new columns have been added for each
-included patient. On each row, those new columns show what cluster that
-patient ended up in.</p>
-<p>A friendlier format of the clustering results can be obtained:</p>
+<p>The <code>batch_snf</code> function will use all of the
+hyperparameters and functions stored in the SNF config to the create
+cluster solutions from the <code>data_list</code>.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cluster_solution</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_cluster_df.html">get_cluster_df</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span>dl <span class="op">=</span> <span class="va">my_dl</span>, sc <span class="op">=</span> <span class="va">sc</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cluster_solution</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    subjectkey cluster</span></span>
-<span><span class="co">#&gt; 1 subject_101       1</span></span>
-<span><span class="co">#&gt; 2 subject_102       1</span></span>
-<span><span class="co">#&gt; 3 subject_103       1</span></span>
-<span><span class="co">#&gt; 4 subject_104       1</span></span>
-<span><span class="co">#&gt; 5 subject_105       1</span></span>
-<span><span class="co">#&gt; 6 subject_106       1</span></span></code></pre></div>
+<span><span class="va">sol_df</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">1 cluster solution of 201 observations:</span></span></span>
+<span><span class="co"><span style="color: #555555;">#&gt; </span><span style="color: #00BB00;">solution</span> <span style="color: #BBBB00;">nclust</span> <span style="color: #0000BB;">mc</span> uid_101 uid_102 uid_103 uid_104 uid_105 uid_106 uid_107 </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">38;5;250</span> <span style="color: #BBBB00;">1</span> <span style="color: #0000BB;">  </span>  1      2 <span style="color: #BB0000;">NA</span>          1       1       1       1       1       1       1 </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">38;5;246</span> <span style="color: #BBBB00;"># ℹ 19</span> <span style="color: #0000BB;"> m</span> variables: uid_108 &lt;dbl&gt;, uid_109 &lt;dbl&gt;, uid_110 &lt;dbl&gt;, </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">38;5;246</span> <span style="color: #BBBB00;">#   ui</span> <span style="color: #0000BB;">_1</span> dbl&gt;, uid_112 &lt;dbl&gt;, uid_113 &lt;dbl&gt;, uid_114 &lt;dbl&gt;, uid_115 &lt;dbl&gt;, </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">38;5;246</span> <span style="color: #BBBB00;">#   ui</span> <span style="color: #0000BB;">_1</span> dbl&gt;, uid_117 &lt;dbl&gt;, uid_118 &lt;dbl&gt;, uid_119 &lt;dbl&gt;, uid_120 &lt;dbl&gt;, </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">38;5;246</span> <span style="color: #BBBB00;">#   ui</span> <span style="color: #0000BB;">_1</span> dbl&gt;, uid_122 &lt;dbl&gt;, uid_123 &lt;dbl&gt;, uid_124 &lt;dbl&gt;, uid_125 &lt;dbl&gt;, </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">38;5;246</span> <span style="color: #BBBB00;">#   ui</span> <span style="color: #0000BB;">_1</span> dbl&gt;, uid_127 &lt;dbl&gt;, uid_128 &lt;dbl&gt;, uid_129 &lt;dbl&gt;, uid_130 &lt;dbl&gt;, </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">38;5;246</span> <span style="color: #BBBB00;">#   ui</span> <span style="color: #0000BB;">_1</span> dbl&gt;, uid_132 &lt;dbl&gt;, uid_133 &lt;dbl&gt;, uid_134 &lt;dbl&gt;, uid_135 &lt;dbl&gt;, </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">38;5;246</span> <span style="color: #BBBB00;">#   ui</span> <span style="color: #0000BB;">_1</span> dbl&gt;, uid_137 &lt;dbl&gt;, uid_138 &lt;dbl&gt;, uid_139 &lt;dbl&gt;, … </span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">-7 solutions and 193 observations not shown.</span></span></span>
+<span><span class="co"><span style="color: #555555;">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span></span>
+<span><span class="co"><span style="color: #555555;">#&gt; Use `t()` to view compact cluster solution format.</span></span></span>
+<span><span class="co"><span style="color: #555555;">#&gt; </span></span></span></code></pre></div>
+<p>The solutions data frame (<code>solutions_df</code> class object) is
+a data frame that contains one cluster solution per row. essentially an
+augmented , where new columns have been added for each included patient.
+On each row, those new columns show what cluster that patient ended up
+in.</p>
+<p>A friendlier format of the clustering results can be obtained:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cluster_solution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">cluster_solution</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">1 cluster solution of 200 observations:</span></span></span>
+<span><span class="co"><span style="color: #555555;">#&gt; </span><span style="color: #0000BB;">8;5;246m# A tibble: 200 × 2</span> </span></span>
+<span><span class="co">#&gt; `    uid`    s1</span></span>
+<span><span class="co">#&gt; <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; 8;5;250m 1 uid_101       1</span></span>
+<span><span class="co">#&gt; 8;5;250m 2 uid_102       1</span></span>
+<span><span class="co">#&gt; 8;5;250m 3 uid_103       1</span></span>
+<span><span class="co">#&gt; 8;5;250m 4 uid_104       1</span></span>
+<span><span class="co">#&gt; 8;5;250m 5 uid_105       1</span></span>
+<span><span class="co">#&gt; 8;5;250m 6 uid_106       1</span></span>
+<span><span class="co">#&gt; 8;5;250m 7 uid_107       1</span></span>
+<span><span class="co">#&gt; 8;5;250m 8 uid_108       1</span></span>
+<span><span class="co">#&gt; 8;5;250m 9 uid_109       1</span></span>
+<span><span class="co">#&gt; 8;5;250m10 uid_110       1</span></span>
+<span><span class="co">#&gt; 8;5;246m# ℹ 190 more rows</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">1 solution and 187 observations not shown.</span></span></span>
+<span><span class="co"><span style="color: #555555;">#&gt; </span></span></span></code></pre></div>
 <p>These cluster results are exactly the same as in the original SNF
 example:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">cluster_solution</span><span class="op">$</span><span class="st">"cluster"</span>, <span class="va">true_label</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>Running <code>batch_snf</code> with the
-<code>return_similarity_matrices</code> parameter set to
-<code>TRUE</code> will let us also take a look at the final fused
-networks from SNF rather than just the results of applying spectral
-clustering to those networks:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    <span class="va">settings_matrix</span>,</span>
-<span>    return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">cluster_solution</span><span class="op">$</span><span class="st">"s1"</span>, <span class="va">true_label</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<p>Running <code>batch_snf</code> with the <code>return_sim_mats</code>
+parameter set to <code>TRUE</code> will let us also take a look at the
+final fused networks from SNF rather than just the results of applying
+spectral clustering to those networks:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">my_dl</span>,</span>
+<span>    <span class="va">sc</span>,</span>
+<span>    return_sim_mats <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">batch_snf_results</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "solutions_matrix"    "similarity_matrices"</span></span>
-<span></span>
-<span><span class="co"># The solutions_matrix</span></span>
-<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
-<span></span>
 <span><span class="co"># The first (and only, in this case) final fused network</span></span>
-<span><span class="va">similarity_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<span><span class="va">similarity_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_mats_list.html">sim_mats_list</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>The fused network obtained through this approach is also the same as
 the one obtained in the original example:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">similarity_matrix</span> <span class="op">-</span> <span class="va">fused_network</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0</span></span></code></pre></div>
 <p>And now we’ve completed a basic example of using this package. The
-subsequent vignettes provide guidance on how you can leverage the
-<code>settings_matrix</code> to access a wide range of clustering
-solutions from your data, how you can use other tools in this package to
-pick a best solution for your purposes, and how to validate the
-generalizability.</p>
+subsequent vignettes provide guidance on how you can leverage the SNF
+config to access a wide range of clustering solutions from your data,
+how you can use other tools in this package to pick a best solution for
+your purposes, and how to validate the generalizability of your
+results.</p>
 <p>Go give the <a href="https://branchlab.github.io/metasnf/articles/a_complete_example.html">less
 simple example</a> a try!</p>
 </div>

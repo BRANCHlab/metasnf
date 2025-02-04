@@ -8,8 +8,8 @@
 <title>Clustering Algorithms • metasnf</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Clustering Algorithms">
 <meta name="description" content="Vary clustering algorithm to expand or refine the space of generated cluster solutions.
 ">
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,10 +84,10 @@ div.aside { background-color:#fff2e6; }
 <p>SNF produces a single similarity matrix that is meant to describe how
 similar all the observations are to each other across all the provided
 input features. Dividing that similarity matrix into subtypes requires
-can be done using clustering algorithms. Within the metasnf package,
-clustering is done by default using the spectral clustering algorithm
-(as implemented by the original SNFtool package). The code below goes
-over what the default clustering looks like.</p>
+can be done using clustering algorithms. Within the <code>metasnf</code>
+package, clustering is done by default using the spectral clustering
+algorithm (as implemented by the original SNFtool package). The code
+below goes over what the default clustering looks like.</p>
 <div class="section level3">
 <h3 id="default-clustering">Default clustering<a class="anchor" aria-label="anchor" href="#default-clustering"></a>
 </h3>
@@ -95,9 +95,7 @@ over what the default clustering looks like.</p>
 <code class="sourceCode R"><span><span class="co"># Load the package</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Start by making a data list containing all our dataframes to more easily</span></span>
-<span><span class="co"># identify subjects without missing data</span></span>
-<span><span class="va">full_data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_list.html">data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
@@ -105,59 +103,37 @@ over what the default clustering looks like.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in generate_data_list(list(subc_v, "subcortical_volume",</span></span>
-<span><span class="co">#&gt; "neuroimaging", : 188 subject(s) dropped due to incomplete data.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> 188 observations dropped due to incomplete data.</span></span>
 <span></span>
-<span><span class="co"># Partition into a data and target list (optional)</span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="va">full_data_list</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
-<span><span class="va">target_list</span> <span class="op">&lt;-</span> <span class="va">full_data_list</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
-<span></span>
-<span><span class="co"># Specifying 5 different sets of settings for SNF</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">5</span>,</span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># This matrix has clustering solutions for each of the 5 SNF runs!</span></span>
-<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">extended_solutions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
-<span>    <span class="va">solutions_matrix</span>,</span>
-<span>    <span class="va">target_list</span>,</span>
-<span>    cat_test <span class="op">=</span> <span class="st">"fisher_exact"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre></div>
+<p>The clustering functions that can be used are stored within the
+<em>clustering functions list</em> (<code>clust_fns_list</code> object)
+of the config, while the reference to which of those functions will be
+used for a particular solution is stored in the <em>settings data
+frame</em> (<code>settings_df</code> object) of the config:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">clust_esm_manhattan</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/esm_manhattan_plot.html">esm_manhattan_plot</a></span><span class="op">(</span></span>
-<span>    <span class="va">extended_solutions</span>,</span>
-<span>    threshold <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>    bonferroni_line <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Available functions</span></span>
+<span><span class="va">sc</span><span class="op">$</span><span class="st">"clust_fns_list"</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
+<span><span class="co">#&gt; </span></span>
 <span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
-<span>    <span class="st">"clust_esm_manhattan.png"</span>,</span>
-<span>    <span class="va">clust_esm_manhattan</span>,</span>
-<span>    width <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>    height <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>    dpi <span class="op">=</span> <span class="fl">100</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<center>
-<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/clust_esm_manhattan_l.png">
-</center>
-<p>The Manhattan plot shows the p-values (y-axis) of the associations
-between our target features (x-axis) and each cluster solution we
-calculated (colour) for each row of the settings matrix.</p>
-<p>The information about the clustering used is tucked away in the
-settings matrix:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">settings_matrix</span><span class="op">$</span><span class="st">"clust_alg"</span></span>
-<span><span class="co">#&gt; [1] 2 1 2 1 1</span></span></code></pre></div>
+<span><span class="co"># Which functions will be used</span></span>
+<span><span class="va">sc</span><span class="op">$</span><span class="st">"settings_df"</span><span class="op">$</span><span class="st">"clust_alg"</span></span>
+<span><span class="co">#&gt; [1] 1 1 2 1 2</span></span></code></pre></div>
 <p>The “1” corresponds to spectral clustering using the eigen-gap
 heuristic to determine the number of clusters, while the “2” corresponds
 to spectral clustering using the rotation cost heuristic to determine
 the number of clusters. You can find this information by running
-<code><a href="../reference/generate_settings_matrix.html">?generate_settings_matrix</a></code>.</p>
+<code><a href="../reference/snf_config.html">?snf_config</a></code>.</p>
 </div>
 <div class="section level3">
 <h3 id="other-built-in-clustering-options">Other built-in clustering options<a class="anchor" aria-label="anchor" href="#other-built-in-clustering-options"></a>
@@ -178,107 +154,128 @@ the number of clusters. You can find this information by running
 use 2, 3, 4, … and so on as their number of clusters rather than
 whatever is calculated by a separate heuristic function.</p>
 <p>To make use of any of these alternative algorithms, you’ll need to
-provide <code>batch_snf</code> with a custom
-<code>clust_algs_list</code>. Here’s what that looks like:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">clust_algs_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_clust_algs_list.html">generate_clust_algs_list</a></span><span class="op">(</span><span class="op">)</span></span>
+customize the <code>clust_fns_list</code> generated during the call to
+<code><a href="../reference/snf_config.html">snf_config()</a></code>. Here’s what that looks like:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># The default list:</span></span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>    use_default_clust_fns <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
 <span></span>
-<span><span class="co"># The default list:</span></span>
-<span><span class="va">clust_algs_list</span></span>
-<span><span class="co">#&gt; $spectral_eigen</span></span>
-<span><span class="co">#&gt; function (similarity_matrix) </span></span>
-<span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     estimated_n &lt;- estimate_nclust_given_graph(W = similarity_matrix, </span></span>
-<span><span class="co">#&gt;         NUMC = 2:10)</span></span>
-<span><span class="co">#&gt;     nclust_estimate &lt;- estimated_n$`Eigen-gap best`</span></span>
-<span><span class="co">#&gt;     solution &lt;- SNFtool::spectralClustering(similarity_matrix, </span></span>
-<span><span class="co">#&gt;         nclust_estimate)</span></span>
-<span><span class="co">#&gt;     nclust &lt;- length(unique(solution))</span></span>
-<span><span class="co">#&gt;     solution_data &lt;- list(solution = solution, nclust = nclust)</span></span>
-<span><span class="co">#&gt;     return(solution_data)</span></span>
-<span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x558d8171b350&gt;</span></span>
-<span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span>
+<span><span class="va">sc</span><span class="op">$</span><span class="st">"clust_fns_list"</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $spectral_rot</span></span>
-<span><span class="co">#&gt; function (similarity_matrix) </span></span>
-<span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     estimated_n &lt;- estimate_nclust_given_graph(W = similarity_matrix, </span></span>
-<span><span class="co">#&gt;         NUMC = 2:10)</span></span>
-<span><span class="co">#&gt;     nclust_estimate &lt;- estimated_n$`Rotation cost best`</span></span>
-<span><span class="co">#&gt;     solution &lt;- SNFtool::spectralClustering(similarity_matrix, </span></span>
-<span><span class="co">#&gt;         nclust_estimate)</span></span>
-<span><span class="co">#&gt;     nclust &lt;- length(unique(solution))</span></span>
-<span><span class="co">#&gt;     solution_data &lt;- list(solution = solution, nclust = nclust)</span></span>
-<span><span class="co">#&gt;     return(solution_data)</span></span>
-<span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x558d8171f9a8&gt;</span></span>
-<span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span>
-<span></span>
-<span><span class="co"># A prettier format:</span></span>
-<span><span class="fu"><a href="../reference/summarize_clust_algs_list.html">summarize_clust_algs_list</a></span><span class="op">(</span><span class="va">clust_algs_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   alg_number      algorithm</span></span>
-<span><span class="co">#&gt; 1          1 spectral_eigen</span></span>
-<span><span class="co">#&gt; 2          2   spectral_rot</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
+<span><span class="co">#&gt; </span></span>
 <span></span>
 <span><span class="co"># Adding algorithms provided by the package</span></span>
-<span><span class="va">clust_algs_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_clust_algs_list.html">generate_clust_algs_list</a></span><span class="op">(</span></span>
-<span>    <span class="st">"two_cluster_spectral"</span> <span class="op">=</span> <span class="va">spectral_two</span>,</span>
-<span>    <span class="st">"five_cluster_spectral"</span> <span class="op">=</span> <span class="va">spectral_five</span></span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>    clust_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        <span class="st">"two_cluster_spectral"</span> <span class="op">=</span> <span class="va">spectral_two</span>,</span>
+<span>        <span class="st">"five_cluster_spectral"</span> <span class="op">=</span> <span class="va">spectral_five</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    use_default_clust_fns <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
 <span></span>
 <span><span class="co"># Note that this one has the default algorithms as well as the newly added ones</span></span>
-<span><span class="fu"><a href="../reference/summarize_clust_algs_list.html">summarize_clust_algs_list</a></span><span class="op">(</span><span class="va">clust_algs_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   alg_number             algorithm</span></span>
-<span><span class="co">#&gt; 1          1        spectral_eigen</span></span>
-<span><span class="co">#&gt; 2          2          spectral_rot</span></span>
-<span><span class="co">#&gt; 3          3  two_cluster_spectral</span></span>
-<span><span class="co">#&gt; 4          4 five_cluster_spectral</span></span>
+<span><span class="va">sc</span><span class="op">$</span><span class="st">"clust_fns_list"</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[3] two_cluster_spectral</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">…and 3 more functions.</span></span></span>
+<span><span class="co"><span style="color: #555555;">#&gt; </span></span></span>
 <span></span>
-<span><span class="co"># This list has only the newly added ones, thanks to the disable_base parameter</span></span>
-<span><span class="va">clust_algs_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_clust_algs_list.html">generate_clust_algs_list</a></span><span class="op">(</span></span>
-<span>    <span class="st">"two_cluster_spectral"</span> <span class="op">=</span> <span class="va">spectral_two</span>,</span>
-<span>    <span class="st">"five_cluster_spectral"</span> <span class="op">=</span> <span class="va">spectral_five</span>,</span>
-<span>    disable_base <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="co"># This list has only the newly added ones</span></span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>    clust_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        <span class="st">"two_cluster_spectral"</span> <span class="op">=</span> <span class="va">spectral_two</span>,</span>
+<span>        <span class="st">"five_cluster_spectral"</span> <span class="op">=</span> <span class="va">spectral_five</span></span>
+<span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/summarize_clust_algs_list.html">summarize_clust_algs_list</a></span><span class="op">(</span><span class="va">clust_algs_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   alg_number             algorithm</span></span>
-<span><span class="co">#&gt; 1          1  two_cluster_spectral</span></span>
-<span><span class="co">#&gt; 2          2 five_cluster_spectral</span></span></code></pre></div>
-<p><strong>By default, the settings matrix only varies over the values 1
-and 2</strong>. This is because, by default, it only expects you to use
-the default clustering algorithms. If your custom list is two algorithms
-long, that’s fine, but if it isn’t, it’s imperative that you either
-manually adjust the numbers in <code>settings_matrix$"clust_algs"</code>
-or (more easily) you supply your custom list during settings matrix
-generation:</p>
+<span><span class="va">sc</span><span class="op">$</span><span class="st">"clust_fns_list"</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[1] two_cluster_spectral</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] five_cluster_spectral</span></span></span>
+<span><span class="co">#&gt; </span></span></code></pre></div>
+<p>When looking at the clustering functions values in the settings part
+of an SNF config, you can see that there is some random fluctuation
+between 1 and 2:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sc</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">                        1    2    3    4    5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<span><span class="co">#&gt; alpha                 0.4  0.8  0.4  0.7  0.3</span></span>
+<span><span class="co">#&gt; k                      46   75   18   64   16  </span></span>
+<span><span class="co">#&gt; t                      20   20   20   20   20  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">#&gt;                         2    3    3    1    1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">#&gt;                         2    2    2    1    1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">#&gt; CNT                     1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; DSC                     1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; ORD                     1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; CAT                     1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; MIX                     1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Component dropout:</span></span></span>
+<span><span class="co">#&gt; subcortical_volume     <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; household_income       <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; pubertal_status        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; anxiety                <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span> </span></span>
+<span><span class="co">#&gt; depressed              <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Distance Functions List:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #BBBB00;">Continuous (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Discrete (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Categorical (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Mixed (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #00BB00;">[1] two_cluster_spectral</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] five_cluster_spectral</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Weights Matrix:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">Weights defined for 5 cluster solutions.</span></span></span>
+<span><span class="co">#&gt; $ smri_vol_scs_cbwmatterlh  1, 1, 1, 1, 1 </span></span>
+<span><span class="co">#&gt; $ smri_vol_scs_ltventriclelh  1, 1, 1, 1, 1 </span></span>
+<span><span class="co">#&gt; $ smri_vol_scs_inflatventlh  1, 1, 1, 1, 1 </span></span>
+<span><span class="co">#&gt; $ smri_vol_scs_crbwmatterlh  1, 1, 1, 1, 1 </span></span>
+<span><span class="co">#&gt; $ smri_vol_scs_crbcortexlh  1, 1, 1, 1, 1 </span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">…and 29 more features.</span></span></span>
+<span><span class="co"><span style="color: #555555;">#&gt; </span></span></span></code></pre></div>
+<p>The settings segment contains pointers to which clustering function
+to use, while the clustering functions list stores the actual
+functions.</p>
+<p>When you are satisfied with the clustering functions you’ve
+specified, you can try them out with a typical call to
+<code><a href="../reference/batch_snf.html">batch_snf()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># This list has only the newly added ones, thanks to the disable_base parameter</span></span>
-<span><span class="va">clust_algs_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_clust_algs_list.html">generate_clust_algs_list</a></span><span class="op">(</span></span>
-<span>    <span class="st">"two_cluster_spectral"</span> <span class="op">=</span> <span class="va">spectral_two</span>,</span>
-<span>    <span class="st">"three_cluster_spectral"</span> <span class="op">=</span> <span class="va">spectral_three</span>,</span>
-<span>    <span class="st">"five_cluster_spectral"</span> <span class="op">=</span> <span class="va">spectral_five</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Specifying 5 different sets of settings for SNF</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>    max_k <span class="op">=</span> <span class="fl">40</span>,</span>
-<span>    clustering_algorithms <span class="op">=</span> <span class="va">clust_algs_list</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">settings_matrix</span><span class="op">$</span><span class="st">"clust_alg"</span></span>
-<span><span class="co">#&gt;  [1] 3 1 1 5 2 2 4 1 3 3</span></span></code></pre></div>
-<p>Then, make sure to provide the <code>clust_algs_list</code> once more
-during the call to <code>batch_snf</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    <span class="va">settings_matrix</span>,</span>
-<span>    clust_algs_list <span class="op">=</span> <span class="va">clust_algs_list</span></span>
+<code class="sourceCode R"><span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    sc <span class="op">=</span> <span class="va">sc</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -309,7 +306,7 @@ clusters as an argument - if you want to explore the same clustering
 algorithm with a varying number of clusters, you’ll need to provide a
 separate function for each number of clusters you’re interested in.</p>
 <p>The source code for the two default functions are shown below:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Default clustering algorithm #1</span></span>
 <span><span class="va">spectral_eigen</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">similarity_matrix</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">estimated_n</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_nclust_given_graph.html">estimate_nclust_given_graph</a></span><span class="op">(</span></span>
@@ -321,16 +318,7 @@ separate function for each number of clusters you’re interested in.</p>
 <span>        <span class="va">similarity_matrix</span>,</span>
 <span>        <span class="va">nclust_estimate</span></span>
 <span>    <span class="op">)</span></span>
-<span>    <span class="va">nclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">solution</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="va">solution_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"solution"</span> <span class="op">=</span> <span class="va">solution</span>, <span class="st">"nclust"</span> <span class="op">=</span> <span class="va">nclust</span><span class="op">)</span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">nclust_estimate</span> <span class="op">!=</span> <span class="va">nclust</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span></span>
-<span>            <span class="st">"Spectral clustering provided a solution of size "</span>, <span class="va">nclust</span>,</span>
-<span>            <span class="st">" when the number requested based on the eigen-gap heuristic"</span>,</span>
-<span>            <span class="st">" was "</span>, <span class="va">nclust_estimate</span>, <span class="st">"."</span></span>
-<span>        <span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">solution_data</span><span class="op">)</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">solution</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Default clustering algorithm #2</span></span>
@@ -344,44 +332,29 @@ separate function for each number of clusters you’re interested in.</p>
 <span>        <span class="va">similarity_matrix</span>,</span>
 <span>        <span class="va">nclust_estimate</span></span>
 <span>    <span class="op">)</span></span>
-<span>    <span class="va">nclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">solution</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="va">solution_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"solution"</span> <span class="op">=</span> <span class="va">solution</span>, <span class="st">"nclust"</span> <span class="op">=</span> <span class="va">nclust</span><span class="op">)</span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">nclust_estimate</span> <span class="op">!=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">solution</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span></span>
-<span>            <span class="st">"Spectral clustering provided a solution of size "</span>, <span class="va">nclust</span>,</span>
-<span>            <span class="st">" when the number requested based on the rotation cost heuristic"</span>,</span>
-<span>            <span class="st">" was "</span>, <span class="va">nclust_estimate</span>, <span class="st">"."</span></span>
-<span>        <span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">solution_data</span><span class="op">)</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">solution</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="non-automated-clustering">Non-automated clustering<a class="anchor" aria-label="anchor" href="#non-automated-clustering"></a>
 </h3>
 <p>You can also extract the similarity matrices for each computed row of
-the settings matrix and perform the clustering more “manually”. This is
-particularly useful for clustering procedures where the transition from
-a similarity matrix to the final solution requires human intervention
-(e.g., judgement for clustering hyperparameters).</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    <span class="va">settings_matrix</span>,</span>
-<span>    clust_algs_list <span class="op">=</span> <span class="va">clust_algs_list</span>,</span>
-<span>    return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
+the settings data frame and perform the clustering more “manually”. This
+is particularly useful for clustering procedures where the transition
+from a similarity matrix to the final solution requires human
+intervention (e.g., judgement for clustering hyperparameters).</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    <span class="va">dl</span>,</span>
+<span>    <span class="va">sc</span>,</span>
+<span>    return_sim_mats <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">batch_snf_results</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "solutions_matrix"    "similarity_matrices"</span></span>
-<span></span>
-<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
-<span></span>
 <span><span class="co"># Similarity matrices are in the list below:</span></span>
-<span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span></span>
+<span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_mats_list.html">sim_mats_list</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">similarity_matrices</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 10</span></span>
+<span><span class="co">#&gt; [1] 5</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">similarity_matrices</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 87 87</span></span>
@@ -401,7 +374,7 @@ to involve human intervention and the function itself operates on
 dissimilarity (distance) matrices rather than similarity matrices.</p>
 <p>Below is a slightly adjusted form of their <code>dbscan</code>
 example. You can work through this on your own.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mhahsler/dbscan" class="external-link">dbscan</a></span><span class="op">)</span></span>
 <span><span class="co">## Example 1: use dbscan on the iris data set</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span>
@@ -445,7 +418,7 @@ values had the maximum similarity will now have a distance of 0, and
 whichever matrix values had the lowest amount of similarity will have
 distance values that are the closest to the former maximum similarity
 value.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mhahsler/dbscan" class="external-link">dbscan</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'dbscan'</span></span>
@@ -454,7 +427,7 @@ value.</p>
 <span><span class="co">#&gt;     as.dendrogram</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_list.html">data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        data <span class="op">=</span> <span class="va">expression_df</span>,</span>
 <span>        name <span class="op">=</span> <span class="st">"genes_1_and_2_exp"</span>,</span>
@@ -471,20 +444,20 @@ value.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">5</span></span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">5</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
+<span></span>
+<span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    sc <span class="op">=</span> <span class="va">sc</span>,</span>
+<span>    return_sim_mats <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    <span class="va">settings_matrix</span>,</span>
-<span>    return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span></span>
-<span></span>
-<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
+<span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_mats_list.html">sim_mats_list</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">representative_sm</span> <span class="op">&lt;-</span> <span class="va">similarity_matrices</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span></span>
@@ -498,15 +471,14 @@ value.</p>
 <span>    <span class="va">distance_matrix1</span>,</span>
 <span>    minPts <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
-<span></span>
 <span><span class="co">## Maybe there?</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>h<span class="op">=</span><span class="fl">0.4872</span>, col <span class="op">=</span> <span class="st">"red"</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="clustering_algorithms_files/figure-html/unnamed-chunk-11-1.png" width="480"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p><img src="clustering_algorithms_files/figure-html/unnamed-chunk-10-1.png" width="480"></p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">dbscan_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/dbscan/man/dbscan.html" class="external-link">dbscan</a></span><span class="op">(</span><span class="va">distance_matrix1</span>, eps <span class="op">=</span> <span class="fl">0.4872</span>, minPts <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">$</span><span class="st">"cluster"</span></span>
 <span></span>
-<span><span class="va">spectral_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_clusters.html">get_clusters</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">spectral_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span></span>
 <span></span>
 <span><span class="va">dbscan_vs_spectral</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>    dbscan <span class="op">=</span> <span class="va">dbscan_results</span>,</span>
@@ -516,14 +488,14 @@ value.</p>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">dbscan_vs_spectral</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dbscan</span>, y <span class="op">=</span> <span class="va">spectral</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html" class="external-link">geom_jitter</a></span><span class="op">(</span>height <span class="op">=</span> <span class="fl">0.1</span>, width <span class="op">=</span> <span class="fl">0.1</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="clustering_algorithms_files/figure-html/unnamed-chunk-11-2.png" width="480"></p>
+<p><img src="clustering_algorithms_files/figure-html/unnamed-chunk-10-2.png" width="480"></p>
 <p>There’s one bold lie in the code chunk above, which is how easy it
 was to find that magic hyperparameter combination of
 <code>minPts = 10</code> and <code>eps = 0.487</code> parameter value of
 0.4872. It wasn’t based off of the visual inspection of the kNNdistplot,
 but rather through a lot of trial and error.</p>
 <p>Something along the lines of:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.485</span>, <span class="fl">0.488</span>, by <span class="op">=</span> <span class="fl">0.0001</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/dbscan/man/dbscan.html" class="external-link">dbscan</a></span><span class="op">(</span><span class="va">distance_matrix1</span>, eps <span class="op">=</span> <span class="va">i</span>, minPts <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="st">"cluster"</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span> <span class="op">{</span></span>
@@ -533,7 +505,7 @@ but rather through a lot of trial and error.</p>
 <p>In this specific instance, those hyperparameters are incredibly
 sensitive - a slight change will get very different results. That is
 likely due to the shape of the actual data being clustered. Your mileage
-may vary!</p>
+may vary.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

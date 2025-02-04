@@ -8,8 +8,8 @@
 <title>Distance Metrics • metasnf</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Distance Metrics">
 <meta name="description" content="Vary distance metrics to expand or refine the space of generated cluster solutions.
 ">
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,41 +79,52 @@ div.aside { background-color:#fff2e6; }
 </style>
 <p>Download a copy of the vignette to follow along here: <a href="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/distance_metrics.Rmd" class="external-link">distance_metrics.Rmd</a></p>
 <div class="section level2">
-<h2 id="the-distance_metrics_list">The distance_metrics_list<a class="anchor" aria-label="anchor" href="#the-distance_metrics_list"></a>
+<h2 id="distance-functions">Distance functions<a class="anchor" aria-label="anchor" href="#distance-functions"></a>
 </h2>
 <p>metasnf enables users to customize what distance metrics are used in
 the SNF pipeline. All information about distance metrics are stored in a
-<code>distance_metrics_list</code> object.</p>
-<p>By default, <code>batch_snf</code> will create its own
-<code>distance_metrics_list</code> by calling the
-<code>generate_distance_metrics_list</code> function with no additional
-arguments.</p>
+<code>dist_fns_list</code> object.</p>
+<p>When no relevant arguments are provided, <code><a href="../reference/snf_config.html">snf_config()</a></code>
+will create its own <code>dist_fns_list</code> class object by calling
+the <code><a href="../reference/dist_fns_list.html">dist_fns_list()</a></code> function with an argument indicating
+that the list should be populated with default distance functions.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">distance_metrics_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_distance_metrics_list.html">generate_distance_metrics_list</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>The list is a list of functions (<code><a href="../reference/euclidean_distance.html">euclidean_distance()</a></code>
-and <code><a href="../reference/gower_distance.html">gower_distance()</a></code>), and printing them out directly can
-be messy. The <code><a href="../reference/summarize_dml.html">summarize_dml()</a></code> function prints the object
-with a nicer format.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/summarize_dml.html">summarize_dml</a></span><span class="op">(</span><span class="va">distance_metrics_list</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $continuous_distances</span></span>
-<span><span class="co">#&gt; [1] "euclidean_distance"</span></span>
+<span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_list.html">data_list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
+<span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> 38 observations dropped due to incomplete data.</span></span>
+<span></span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">5</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
+<span></span>
+<span><span class="va">sc</span><span class="op">$</span><span class="st">"dist_fns_list"</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Continuous (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $discrete_distances</span></span>
-<span><span class="co">#&gt; [1] "euclidean_distance"</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Discrete (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $ordinal_distances</span></span>
-<span><span class="co">#&gt; [1] "euclidean_distance"</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $categorical_distances</span></span>
-<span><span class="co">#&gt; [1] "gower_distance"</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Categorical (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $mixed_distances</span></span>
-<span><span class="co">#&gt; [1] "gower_distance"</span></span></code></pre></div>
-<p>These lists must always contain at least 1 distance metric for each
-of the 5 recognized types of features: continuous, discrete, ordinal,
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Mixed (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
+<span><span class="co">#&gt; </span></span></code></pre></div>
+<p>The list is a list of functions (<code><a href="../reference/dist_fns.html">euclidean_distance()</a></code>
+and <code><a href="../reference/dist_fns.html">gower_distance()</a></code> in this case).</p>
+<p>These lists can contain any number of distance metrics for each of
+the 5 recognized types of features: continuous, discrete, ordinal,
 categorical, and mixed (any combination of the previous four).</p>
 <p>By default, continuous, discrete, and ordinal data are converted to
 distance matrices using simple Euclidean distance. Categorical and mixed
@@ -121,247 +132,224 @@ data are handled using Gower’s formula as implemented by the cluster
 package (see <code><a href="https://rdrr.io/pkg/cluster/man/daisy.html" class="external-link">?cluster::daisy</a></code>).</p>
 </div>
 <div class="section level2">
-<h2 id="how-the-distance_metrics_list-is-used">How the distance_metrics_list is used<a class="anchor" aria-label="anchor" href="#how-the-distance_metrics_list-is-used"></a>
+<h2 id="how-the-dist_fns_list-is-used">How the dist_fns_list is used<a class="anchor" aria-label="anchor" href="#how-the-dist_fns_list-is-used"></a>
 </h2>
-<p>To show how the distance_metrics_list is used, we’ll start by
-extending our distance_metrics_list beyond just the default options.
-metasnf provides a Euclidean distance function that applies standard
-normalization first, <code><a href="../reference/sn_euclidean_distance.html">sn_euclidean_distance()</a></code> (a wrapper
-around <code><a href="https://rdrr.io/pkg/SNFtool/man/standardNormalization.html" class="external-link">SNFtool::standardNormalization</a></code> +
-<code><a href="https://rdrr.io/r/stats/dist.html" class="external-link">stats::dist</a></code>). Here’s how we can create a custom
-distance_metrics_list that includes this metric for continuous and
-discrete features.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_distance_metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_distance_metrics_list.html">generate_distance_metrics_list</a></span><span class="op">(</span></span>
-<span>    continuous_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    discrete_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span></span>
-<span>    <span class="op">)</span></span>
+<p>To show how the dist_fns_list is used, we’ll start by extending our
+dist_fns_list beyond just the default options. metasnf provides a
+Euclidean distance function that applies standard normalization first,
+<code><a href="../reference/dist_fns.html">sn_euclidean_distance()</a></code> (a wrapper around
+<code><a href="https://rdrr.io/pkg/SNFtool/man/standardNormalization.html" class="external-link">SNFtool::standardNormalization</a></code> + <code><a href="https://rdrr.io/r/stats/dist.html" class="external-link">stats::dist</a></code>).
+Here’s how we can create a custom dist_fns_list that includes this
+metric for continuous and discrete features.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    cnt_dist_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span><span class="op">)</span>,</span>
+<span>    dsc_dist_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span><span class="op">)</span>,</span>
+<span>    use_default_dist_fns <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/summarize_dml.html">summarize_dml</a></span><span class="op">(</span><span class="va">my_distance_metrics</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $continuous_distances</span></span>
-<span><span class="co">#&gt; [1] "euclidean_distance"      "standard_norm_euclidean"</span></span>
+<span><span class="va">sc</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">               1    2    3    4    5    6    7    8    9   10</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<span><span class="co">#&gt; alpha        0.5  0.7  0.8  0.4  0.7  0.5  0.7  0.4  0.3  0.6</span></span>
+<span><span class="co">#&gt; k             70   81   16   33   81   69   22   21   30   25  </span></span>
+<span><span class="co">#&gt; t             20   20   20   20   20   20   20   20   20   20  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">#&gt;                3    1    2    3    3    1    3    3    1    2  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">#&gt;                2    2    2    1    2    2    1    2    1    1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">#&gt; CNT            1    2    2    1    1    1    1    1    2    1  </span></span>
+<span><span class="co">#&gt; DSC            1    1    2    1    2    1    1    2    2    2  </span></span>
+<span><span class="co">#&gt; ORD            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; CAT            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; MIX            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Component dropout:</span></span></span>
+<span><span class="co">#&gt; anxiety       <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; depressed     <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Distance Functions List:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #BBBB00;">Continuous (2):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $discrete_distances</span></span>
-<span><span class="co">#&gt; [1] "euclidean_distance"      "standard_norm_euclidean"</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] standard_norm_euclidean</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $ordinal_distances</span></span>
-<span><span class="co">#&gt; [1] "euclidean_distance"</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Discrete (2):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $categorical_distances</span></span>
-<span><span class="co">#&gt; [1] "gower_distance"</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] standard_norm_euclidean</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $mixed_distances</span></span>
-<span><span class="co">#&gt; [1] "gower_distance"</span></span></code></pre></div>
-<p>Now, during settings_matrix generation, we can provide our
-distance_metrics_list to ensure our new distance metrics will be used on
-some of our SNF runs.</p>
-<p>Before making the settings_matrix, we’ll quickly need to setup some
-data (as was done in <a href="https://branchlab.github.io/metasnf/articles/a_simple_example.html">A
-Simple Example</a>).</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">SNFtool</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Data1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Data2</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">Data1</span><span class="op">$</span><span class="st">"patient_id"</span> <span class="op">&lt;-</span> <span class="fl">101</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Data1</span><span class="op">)</span> <span class="op">+</span> <span class="fl">100</span><span class="op">)</span> <span class="co"># nolint</span></span>
-<span><span class="va">Data2</span><span class="op">$</span><span class="st">"patient_id"</span> <span class="op">&lt;-</span> <span class="fl">101</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Data2</span><span class="op">)</span> <span class="op">+</span> <span class="fl">100</span><span class="op">)</span> <span class="co"># nolint</span></span>
-<span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">Data1</span>, <span class="st">"genes_1_and_2_exp"</span>, <span class="st">"gene_expression"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">Data2</span>, <span class="st">"genes_1_and_2_meth"</span>, <span class="st">"gene_methylation"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
-<span>    uid <span class="op">=</span> <span class="st">"patient_id"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>And then the settings_matrix can be generated:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># showing just the columns that are related to distances</span></span>
-<span><span class="va">settings_matrix</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">"dist"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    cont_dist disc_dist ord_dist cat_dist mix_dist</span></span>
-<span><span class="co">#&gt; 1          2         2        1        1        1</span></span>
-<span><span class="co">#&gt; 2          1         1        1        1        1</span></span>
-<span><span class="co">#&gt; 3          2         2        1        1        1</span></span>
-<span><span class="co">#&gt; 4          2         1        1        1        1</span></span>
-<span><span class="co">#&gt; 5          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 6          1         1        1        1        1</span></span>
-<span><span class="co">#&gt; 7          2         1        1        1        1</span></span>
-<span><span class="co">#&gt; 8          2         2        1        1        1</span></span>
-<span><span class="co">#&gt; 9          1         1        1        1        1</span></span>
-<span><span class="co">#&gt; 10         1         2        1        1        1</span></span></code></pre></div>
-<p>The continuous and discrete distance metrics values randomly
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Categorical (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Mixed (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Weights Matrix:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">Weights defined for 10 cluster solutions.</span></span></span>
+<span><span class="co">#&gt; $ cbcl_anxiety_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1</span></span>
+<span><span class="co">#&gt; $ cbcl_depress_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1</span></span></code></pre></div>
+<p>The rows in the settings data frame part of the SNF config show the
+continuous (CNT) and discrete (DSTC) distance metrics values randomly
 fluctuate between 1 and 2, where 1 means that the first metric
-(<code><a href="../reference/euclidean_distance.html">euclidean_distance()</a></code>) will be used and 2 means that the
+(<code><a href="../reference/dist_fns.html">euclidean_distance()</a></code>) will be used and 2 means that the
 second metric (<code>sn_euclidean_distance</code>) will be used.</p>
-<p>It’s important to note that the settings_matrix itself <strong>does
-not store the distance metrics</strong>, just the pointers to which
-position metric in the distance_metrics_list should be used for that SNF
-run. Because of that, you’ll need to supply the distance_metrics_list
-once again when calling <code><a href="../reference/batch_snf.html">batch_snf()</a></code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    <span class="va">settings_matrix</span>,</span>
-<span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<p>The settings data frame within the config stores pointers to which
+function should be used, while the distance functions list in the config
+stores the actual functions.</p>
+<p>Once you have an SNF config that contains a distance functions list
+to your liking, you can call <code><a href="../reference/batch_snf.html">batch_snf()</a></code> as usual:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">dl</span>, <span class="va">sc</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="removing-the-default-distance_metrics">Removing the default distance_metrics<a class="anchor" aria-label="anchor" href="#removing-the-default-distance_metrics"></a>
 </h2>
-<p>There are two ways to avoid using the default distance metrics if you
-don’t want to ever use them.</p>
-<p>The first way is to use the <code>keep_defaults</code> parameter in
-<code><a href="../reference/generate_distance_metrics_list.html">generate_distance_metrics_list()</a></code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">no_default_metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_distance_metrics_list.html">generate_distance_metrics_list</a></span><span class="op">(</span></span>
-<span>    continuous_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    discrete_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    ordinal_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    categorical_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">gower_distance</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    mixed_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">gower_distance</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    keep_defaults <span class="op">=</span> <span class="cn">FALSE</span></span>
+<p>There are two ways to avoid using the default distance metrics.</p>
+<p>The first way is to use the <code>use_default_dist_fns</code>
+parameter:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    cnt_dist_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span><span class="op">)</span>,</span>
+<span>    dsc_dist_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span><span class="op">)</span>,</span>
+<span>    ord_dist_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span><span class="op">)</span>,</span>
+<span>    mix_dist_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">gower_distance</span><span class="op">)</span>,</span>
+<span>    use_default_dist_fns <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/summarize_dml.html">summarize_dml</a></span><span class="op">(</span><span class="va">no_default_metrics</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $continuous_distances</span></span>
-<span><span class="co">#&gt; [1] "standard_norm_euclidean"</span></span>
+<span><span class="va">sc</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">               1    2    3    4    5    6    7    8    9   10</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<span><span class="co">#&gt; alpha        0.4  0.7  0.7  0.6  0.7  0.8  0.7  0.5  0.3  0.8</span></span>
+<span><span class="co">#&gt; k             36   89   87   79   43   50   97   74   41   25  </span></span>
+<span><span class="co">#&gt; t             20   20   20   20   20   20   20   20   20   20  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">#&gt;                2    3    2    3    1    2    2    1    3    1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">#&gt;                1    1    1    2    2    2    1    2    1    2  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">#&gt; CNT            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; DSC            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; ORD            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; CAT            0    0    0    0    0    0    0    0    0    0  </span></span>
+<span><span class="co">#&gt; MIX            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Component dropout:</span></span></span>
+<span><span class="co">#&gt; anxiety       <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; depressed     <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Distance Functions List:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #BBBB00;">Continuous (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] standard_norm_euclidean</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $discrete_distances</span></span>
-<span><span class="co">#&gt; [1] "standard_norm_euclidean"</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Discrete (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] standard_norm_euclidean</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $ordinal_distances</span></span>
-<span><span class="co">#&gt; [1] "standard_norm_euclidean"</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] standard_norm_euclidean</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $categorical_distances</span></span>
-<span><span class="co">#&gt; [1] "standard_norm_euclidean"</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Categorical (0):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; Mixed (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] standard_norm_euclidean</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $mixed_distances</span></span>
-<span><span class="co">#&gt; [1] "standard_norm_euclidean"</span></span></code></pre></div>
-<p>For this option, it is necessary to provide at least one distance
-metric for every feature type. A distance_metrics_list cannot have any
-of its feature types be completely empty (even if you have no data for
-that feature type in the first place).</p>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Weights Matrix:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">Weights defined for 10 cluster solutions.</span></span></span>
+<span><span class="co">#&gt; $ cbcl_anxiety_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1</span></span>
+<span><span class="co">#&gt; $ cbcl_depress_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1</span></span></code></pre></div>
 <p>The second way is to explicitly specify which indices you want to
-sample from during settings_matrix generation:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_distance_metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_distance_metrics_list.html">generate_distance_metrics_list</a></span><span class="op">(</span></span>
-<span>    continuous_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+sample from during SNF config generation:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    cnt_dist_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span>,</span>
 <span>        <span class="st">"some_other_metric"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    discrete_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    dsc_dist_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="st">"standard_norm_euclidean"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span>,</span>
 <span>        <span class="st">"some_other_metric"</span> <span class="op">=</span> <span class="va">sn_euclidean_distance</span></span>
-<span>    <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/summarize_dml.html">summarize_dml</a></span><span class="op">(</span><span class="va">my_distance_metrics</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $continuous_distances</span></span>
-<span><span class="co">#&gt; [1] "euclidean_distance"      "standard_norm_euclidean"</span></span>
-<span><span class="co">#&gt; [3] "some_other_metric"      </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $discrete_distances</span></span>
-<span><span class="co">#&gt; [1] "euclidean_distance"      "standard_norm_euclidean"</span></span>
-<span><span class="co">#&gt; [3] "some_other_metric"      </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $ordinal_distances</span></span>
-<span><span class="co">#&gt; [1] "euclidean_distance"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $categorical_distances</span></span>
-<span><span class="co">#&gt; [1] "gower_distance"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $mixed_distances</span></span>
-<span><span class="co">#&gt; [1] "gower_distance"</span></span>
-<span></span>
-<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span>,</span>
+<span>    <span class="op">)</span>,</span>
+<span>    use_default_dist_fns <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    continuous_distances <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    discrete_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
 <span></span>
-<span><span class="va">settings_matrix</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">"dist"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    cont_dist disc_dist ord_dist cat_dist mix_dist</span></span>
-<span><span class="co">#&gt; 1          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 2          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 3          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 4          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 5          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 6          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 7          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 8          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 9          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 10         1         2        1        1        1</span></span></code></pre></div>
-<p>The second option can be quite useful when paired with
-<code><a href="../reference/add_settings_matrix_rows.html">add_settings_matrix_rows()</a></code>, enabling you to build up
-distinct blocks of rows in the settings matrix that have different
-combinations of distance metrics. This can save you the trouble of
-needing to manage several distinct distance metrics lists or manage your
-solution space over separate runs of <code>batch_snf</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span>,</span>
-<span>    continuous_distances <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    discrete_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_settings_matrix_rows.html">add_settings_matrix_rows</a></span><span class="op">(</span></span>
-<span>    <span class="va">settings_matrix</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span>,</span>
-<span>    continuous_distances <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>    discrete_distances <span class="op">=</span> <span class="fl">1</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">settings_matrix</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">"dist"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    cont_dist disc_dist ord_dist cat_dist mix_dist</span></span>
-<span><span class="co">#&gt; 1          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 2          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 3          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 4          1         3        1        1        1</span></span>
-<span><span class="co">#&gt; 5          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 6          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 7          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 8          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 9          1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 10         1         2        1        1        1</span></span>
-<span><span class="co">#&gt; 11         3         1        1        1        1</span></span>
-<span><span class="co">#&gt; 12         3         1        1        1        1</span></span>
-<span><span class="co">#&gt; 13         3         1        1        1        1</span></span>
-<span><span class="co">#&gt; 14         3         1        1        1        1</span></span>
-<span><span class="co">#&gt; 15         3         1        1        1        1</span></span>
-<span><span class="co">#&gt; 16         3         1        1        1        1</span></span>
-<span><span class="co">#&gt; 17         3         1        1        1        1</span></span>
-<span><span class="co">#&gt; 18         3         1        1        1        1</span></span>
-<span><span class="co">#&gt; 19         3         1        1        1        1</span></span>
-<span><span class="co">#&gt; 20         3         1        1        1        1</span></span></code></pre></div>
-<p>In rows 1 to 10, only continuous data will always be handled by the
-first continuous distance metric while discrete data will be handled by
-the second and third discrete distance metrics. In rows 11 to 20,
-continuous data will always be handled by the third continuous distance
-metric while discrete data will only be handled by the first distance
-metric.</p>
+<span><span class="va">sc</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">               1    2    3    4    5    6    7    8    9   10</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<span><span class="co">#&gt; alpha        0.5  0.5  0.6  0.8  0.8  0.4  0.8  0.5  0.4  0.3</span></span>
+<span><span class="co">#&gt; k             14   23   62   35   80   80   19   64   35   60  </span></span>
+<span><span class="co">#&gt; t             20   20   20   20   20   20   20   20   20   20  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">#&gt;                2    2    3    2    3    1    3    1    3    2  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">#&gt;                2    1    1    2    2    1    1    2    1    2  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">#&gt; CNT            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; DSC            2    2    2    2    3    2    2    3    3    3  </span></span>
+<span><span class="co">#&gt; ORD            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; CAT            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; MIX            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Component dropout:</span></span></span>
+<span><span class="co">#&gt; anxiety       <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; depressed     <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Distance Functions List:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #BBBB00;">Continuous (3):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] standard_norm_euclidean</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[3] some_other_metric</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">…and 1 more function.</span></span></span>
+<span><span class="co"><span style="color: #555555;">#&gt; </span><span style="color: #BBBB00;">Discrete (3):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] standard_norm_euclidean</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[3] some_other_metric</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">…and 1 more function.</span></span></span>
+<span><span class="co"><span style="color: #555555;">#&gt; </span><span style="color: #BBBB00;">Ordinal (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Categorical (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Mixed (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Weights Matrix:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">Weights defined for 10 cluster solutions.</span></span></span>
+<span><span class="co">#&gt; $ cbcl_anxiety_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1</span></span>
+<span><span class="co">#&gt; $ cbcl_depress_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1</span></span></code></pre></div>
+<p>This can save you the trouble of needing to manage several distinct
+distance metrics lists or manage your solution space over separate runs
+of <code>batch_snf</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="supplying-weights-to-distance-metrics">Supplying weights to distance metrics<a class="anchor" aria-label="anchor" href="#supplying-weights-to-distance-metrics"></a>
@@ -378,80 +366,50 @@ be used.</p>
 specific form of the data may not be what you expect by the time it is
 ready to be converted into a distance metric function. The “individual”
 and “two-step” SNF schemes involve distance metrics only being applied
-to the input dataframes in the <code>data_list</code> as they are. The
-“domain” scheme, however, concatenates data within a domain before
-converting that larger dataframe into a distance matrix. Anytime you
-have more than one dataframe with the same domain label and you use the
-domain SNF scheme, all the columns associated with that domain will be
-in a single dataframe when the distance metric function is applied.</p>
-<p>The first step in providing custom weights is to generate a
-<code>weights_matrix</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">weights_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">weights_matrix</span></span>
-<span><span class="co">#&gt;      V1 V2 V3 V4</span></span>
-<span><span class="co">#&gt; [1,]  1  1  1  1</span></span></code></pre></div>
-<p>By default, this function will return a dataframe containing all the
-columns in the <code>data_list</code> and a single row of 1s, which are
-the weights that will be used for a single run of SNF.</p>
+to the input data frames in the data list as they are. The “domain”
+scheme, however, concatenates data within a domain before converting
+that larger data frame into a distance matrix. Anytime you have more
+than one data frame with the same domain label and you use the domain
+SNF scheme, all the columns associated with that domain will be in a
+single data frame when the distance metric function is applied.</p>
+<p>By default, <code><a href="../reference/snf_config.html">snf_config()</a></code> also defines the
+<code>weights_matrix</code> class object that stores feature weights.
+Without any user provided weights, these weights are just initialized to
+1.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sc</span><span class="op">$</span><span class="st">"weights_matrix"</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Weights defined for 10 cluster solutions.</span></span></span>
+<span><span class="co">#&gt; $ cbcl_anxiety_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1</span></span>
+<span><span class="co">#&gt; $ cbcl_depress_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1</span></span></code></pre></div>
 <p>To actually use the matrix during SNF, you’ll need to make sure that
 the number of rows in the weights matrix is the same as the number of
-rows in your settings matrix.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span>,</span>
-<span>    continuous_distances <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    discrete_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
+rows in your settings data frame.</p>
+<p>You can either replace the 1s with your own weights that you’ve
+calculated outside of the package, or use some random weights following
+a uniform or exponential distribution.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># random weights:</span></span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    weights_fill <span class="op">=</span> <span class="st">"uniform"</span> <span class="co"># or fill = "exponential"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">weights_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">settings_matrix</span><span class="op">)</span></span>
+<span><span class="va">sc</span></span>
+<span></span>
+<span><span class="co"># custom weights</span></span>
+<span><span class="va">fts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/features.html">features</a></span><span class="op">(</span><span class="va">dl</span><span class="op">)</span></span>
+<span><span class="va">custom_wm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="fl">10</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">fts</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">fts</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">custom_wm</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">fts</span></span>
+<span><span class="va">custom_wm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_weights_matrix.html">as_weights_matrix</a></span><span class="op">(</span><span class="va">custom_wm</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    wm <span class="op">=</span> <span class="va">custom_wm</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">weights_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span></span>
-<span><span class="co">#&gt;      V1 V2 V3 V4</span></span>
-<span><span class="co">#&gt; [1,]  1  1  1  1</span></span>
-<span><span class="co">#&gt; [2,]  1  1  1  1</span></span>
-<span><span class="co">#&gt; [3,]  1  1  1  1</span></span>
-<span><span class="co">#&gt; [4,]  1  1  1  1</span></span>
-<span><span class="co">#&gt; [5,]  1  1  1  1</span></span>
-<span></span>
-<span><span class="va">solutions_matrix_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    <span class="va">settings_matrix</span>,</span>
-<span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span>,</span>
-<span>    weights_matrix <span class="op">=</span> <span class="va">weights_matrix</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">solutions_matrix_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    <span class="va">settings_matrix</span>,</span>
-<span>    distance_metrics_list <span class="op">=</span> <span class="va">my_distance_metrics</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span></span>
-<span>    <span class="va">solutions_matrix_1</span>,</span>
-<span>    <span class="va">solutions_matrix_2</span></span>
-<span><span class="op">)</span> <span class="co"># Try this on your machine - It'll evaluate to TRUE</span></span>
-<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>A <code>weights_matrix</code> of all 1s (the default
-<code>weights_matrix</code> used when you don’t supply one yourself)
-’won’t actually do anything to the data. You can either replace the 1s
-with your own weights that you’ve calculated outside of the package, or
-use some random weights following a uniform or exponential
-distribution.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">weights_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">settings_matrix</span><span class="op">)</span>,</span>
-<span>    fill <span class="op">=</span> <span class="st">"uniform"</span> <span class="co"># or fill = "exponential"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">sc</span></span></code></pre></div>
 <p>The default metrics (simple Euclidean for continuous, discrete, and
 ordinal data and Gower’s distance for categorical and mixed data) are
 both capable of applying weights to data before distance matrix
@@ -467,7 +425,7 @@ functions in R.</p>
 <p>You can also supply your own custom distance metrics. Looking at the
 code from one of the package-provided distance functions shows some of
 the essential aspects of a well-formated distance function.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">euclidean_distance</span></span>
 <span><span class="co">#&gt; function (df, weights_row) </span></span>
 <span><span class="co">#&gt; {</span></span>
@@ -476,7 +434,7 @@ the essential aspects of a well-formated distance function.</p>
 <span><span class="co">#&gt;     distance_matrix &lt;- as.matrix(stats::dist(weighted_df, method = "euclidean"))</span></span>
 <span><span class="co">#&gt;     return(distance_matrix)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x559fef08ca28&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x561dbdf3e398&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:metasnf&gt;</span></span></code></pre></div>
 <p>The function should accept two arguments: <code>df</code> and
 <code>weights_row</code>, and only give one output,
@@ -494,7 +452,7 @@ use of those weights if you don’t want it to.</p>
 when they were loaded into the data_list.</p>
 <p>For example, consider the <code>anxiety</code> raw data supplied by
 metasnf:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">anxiety</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 2</span></span></span>
 <span><span class="co">#&gt;   unique_id        cbcl_anxiety_r</span></span>
@@ -507,11 +465,11 @@ metasnf:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> NDAR_INV0SM1JLXQ              2</span></span></code></pre></div>
 <p>Here’s how to make it look more like what the distance metric
 functions will expect to see:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_anxiety</span> <span class="op">&lt;-</span> <span class="va">anxiety</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># no NAs</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="st">"subjectkey"</span> <span class="op">=</span> <span class="st">"unique_id"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>row.names <span class="op">=</span> <span class="st">"subjectkey"</span><span class="op">)</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="st">"uid"</span> <span class="op">=</span> <span class="st">"unique_id"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>row.names <span class="op">=</span> <span class="st">"uid"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_anxiety</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                  cbcl_anxiety_r</span></span>
@@ -524,7 +482,7 @@ functions will expect to see:</p>
 <p>If we want to have a distance metric that calculates Euclidean
 distance, but also scales the resulting matrix down such that the
 biggest allowed distance is a 1, it would look like this:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_scaled_euclidean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">df</span>, <span class="va">weights_row</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="co"># this function won't apply the weights it is given</span></span>
 <span>    <span class="va">distance_matrix</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span></span>
@@ -540,7 +498,7 @@ situation ever happens, there’s probably something quite wrong with the
 data.</p>
 <p>Once you’re happy that you distance function is working as you’d like
 it to:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">my_scaled_euclidean</span><span class="op">(</span><span class="va">processed_anxiety</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt;                  NDAR_INV0567T2Y9 NDAR_INV0GLZNC2W NDAR_INV0J4PYA5F</span></span>
 <span><span class="co">#&gt; NDAR_INV0567T2Y9              0.0              0.2              0.3</span></span>
@@ -554,13 +512,66 @@ it to:</p>
 <span><span class="co">#&gt; NDAR_INV0J4PYA5F              0.2              0.2</span></span>
 <span><span class="co">#&gt; NDAR_INV0OYE291Q              0.0              0.0</span></span>
 <span><span class="co">#&gt; NDAR_INV0SM1JLXQ              0.0              0.0</span></span></code></pre></div>
-<p>You can load it into a custom distance_metrics_list:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_distance_metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_distance_metrics_list.html">generate_distance_metrics_list</a></span><span class="op">(</span></span>
-<span>    continuous_distances <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<p>You can load it into the distance functions list during SNF config
+construction:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    cnt_dist_fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="st">"my_scaled_euclidean"</span> <span class="op">=</span> <span class="va">my_scaled_euclidean</span></span>
-<span>    <span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="op">)</span>,</span>
+<span>    use_default_dist_fns <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
+<span></span>
+<span><span class="va">sc</span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">               1    2    3    4    5    6    7    8    9   10</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<span><span class="co">#&gt; alpha        0.3  0.4  0.7  0.6  0.5  0.6  0.3  0.4  0.6  0.7</span></span>
+<span><span class="co">#&gt; k             12   18   29   47   23   93   93   84   61   41  </span></span>
+<span><span class="co">#&gt; t             20   20   20   20   20   20   20   20   20   20  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">#&gt;                2    3    3    1    3    1    2    1    1    2  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">#&gt;                1    1    2    1    2    2    2    1    1    1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">#&gt; CNT            1    1    1    1    1    2    2    1    1    2  </span></span>
+<span><span class="co">#&gt; DSC            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; ORD            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; CAT            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; MIX            1    1    1    1    1    1    1    1    1    1  </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Component dropout:</span></span></span>
+<span><span class="co">#&gt; anxiety       <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; depressed     <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Distance Functions List:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #BBBB00;">Continuous (2):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] my_scaled_euclidean</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Discrete (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Categorical (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">Mixed (1):</span></span></span>
+<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #0000BB;">Weights Matrix:</span></span></span>
+<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">Weights defined for 10 cluster solutions.</span></span></span>
+<span><span class="co">#&gt; $ cbcl_anxiety_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1</span></span>
+<span><span class="co">#&gt; $ cbcl_depress_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="requesting-metrics">Requesting metrics<a class="anchor" aria-label="anchor" href="#requesting-metrics"></a>
@@ -600,7 +611,7 @@ distance)
 <code>siw_euclidean_distance</code> (Squared (including weights)
 Euclidean distance)
 <ul>
-<li>Apply weights to dataframe, then calculate Euclidean distance, then
+<li>Apply weights to data frame, then calculate Euclidean distance, then
 square the results</li>
 </ul>
 </li>
@@ -608,7 +619,7 @@ square the results</li>
 <code>sew_euclidean_distance</code> (Squared (excluding weights)
 Euclidean distance)
 <ul>
-<li>Apply <em>square root</em> of weights to dataframe, then calculate
+<li>Apply <em>square root</em> of weights to data frame, then calculate
 Euclidean distance, then square the results</li>
 </ul>
 </li>

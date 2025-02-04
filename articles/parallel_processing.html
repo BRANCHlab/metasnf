@@ -8,12 +8,12 @@
 <title>Parallel Processing • metasnf</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Parallel Processing">
-<meta name="description" content="Leverage parallel processing to speed up the metasnf pipeline.
+<meta name="description" content="Leverage parallel processing to speed up the `metasnf` pipeline.
 ">
-<meta property="og:description" content="Leverage parallel processing to speed up the metasnf pipeline.
+<meta property="og:description" content="Leverage parallel processing to speed up the `metasnf` pipeline.
 ">
 <meta name="google-site-verification" content="Xzz1SIDqvPwru_mXKCXAkX2pNfOz5PO_QO02QG98tZI">
 </head>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,7 +79,7 @@ div.aside { background-color:#fff2e6; }
 </style>
 <p>Download a copy of the vignette to follow along here: <a href="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/parallel_processing.Rmd" class="external-link">parallel_processing.Rmd</a></p>
 <p>metasnf can use <a href="https://future.apply.futureverse.org/" class="external-link">future apply</a> to run the
-rows of a settings matrix in parallel.</p>
+rows of a settings data frame in parallel.</p>
 <p>Parallel processing has some overhead cost, so it’s possible that
 your particular situation won’t greatly benefit (or may even run slower)
 with parallel processing enabled.</p>
@@ -94,7 +94,7 @@ help speed things up quite a lot.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Setting up the data</span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_list.html">data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
@@ -103,17 +103,17 @@ help speed things up quite a lot.</p>
 <span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Specifying 5 different sets of settings for SNF</span></span>
+<span><span class="co"># Specifying 10 different sets of settings for SNF</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">10</span>,</span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    <span class="va">settings_matrix</span>,</span>
+<span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    <span class="va">dl</span>,</span>
+<span>    <span class="va">sc</span>,</span>
 <span>    processes <span class="op">=</span> <span class="st">"max"</span> <span class="co"># Can also be a specific integer</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -124,9 +124,9 @@ help speed things up quite a lot.</p>
 batch_snf.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">progressr</span><span class="fu">::</span><span class="fu"><a href="https://progressr.futureverse.org/reference/with_progress.html" class="external-link">with_progress</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>    <span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>        <span class="va">data_list</span>,</span>
-<span>        <span class="va">settings_matrix</span>,</span>
+<span>    <span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>        <span class="va">dl</span>,</span>
+<span>        <span class="va">sc</span>,</span>
 <span>        processes <span class="op">=</span> <span class="st">"max"</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
@@ -139,18 +139,16 @@ find.</p>
 <p>If you want to dial things back a little, you can specify more
 precisely the number of processes you want:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    <span class="va">settings_matrix</span>,</span>
+<code class="sourceCode R"><span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    <span class="va">dl</span>,</span>
+<span>    <span class="va">sc</span>,</span>
 <span>    processes <span class="op">=</span> <span class="fl">4</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>To find out how many processes you have access to (or at least, how
-many metasnf will think you have access to), use the
-<code><a href="https://parallelly.futureverse.org/reference/availableCores.html" class="external-link">availableCores()</a></code> function from the future package:</p>
+many <code>metasnf</code> will think you have access to), use the
+<code>availableCores()</code> function from the future package:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://parallelly.futureverse.org/reference/availableCores.html" class="external-link">availableCores</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://parallelly.futureverse.org/reference/availableCores.html" class="external-link">availableCores</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

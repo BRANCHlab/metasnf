@@ -8,8 +8,8 @@
 <title>Meta Clustering with Similarity Network Fusion • metasnf</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Meta Clustering with Similarity Network Fusion">
 <meta name="description" content="Framework to facilitate patient subtyping with similarity network fusion and meta clustering. The similarity network fusion (SNF) algorithm was introduced by Wang et al. (2014) in &lt;doi:10.1038/nmeth.2810&gt;. SNF is a data integration approach that can transform high-dimensional and diverse data types into a single similarity network suitable for clustering with minimal loss of information from each initial data source. The meta clustering approach was introduced by Caruana et al. (2006) in &lt;doi:10.1109/ICDM.2006.103&gt;. Meta clustering involves generating a wide range of cluster solutions by adjusting clustering hyperparameters, then clustering the solutions themselves into a manageable number of qualitatively similar solutions, and finally characterizing representative solutions to find ones that are best for the user's specific context. This package provides a framework to easily transform multi-modal data into a wide range of similarity network fusion-derived cluster solutions as well as to visualize, characterize, and validate those solutions. Core package functionality includes easy customization of distance metrics, clustering algorithms, and SNF hyperparameters to generate diverse clustering solutions; calculation and plotting of associations between features, between patients, and between cluster solutions; and standard cluster validation approaches including resampled measures of cluster stability, standard metrics of cluster quality, and label propagation to evaluate generalizability in unseen data. Associated vignettes guide the user through using the package to identify patient subtypes while adhering to best practices for unsupervised learning.">
 <meta property="og:description" content="Framework to facilitate patient subtyping with similarity network fusion and meta clustering. The similarity network fusion (SNF) algorithm was introduced by Wang et al. (2014) in &lt;doi:10.1038/nmeth.2810&gt;. SNF is a data integration approach that can transform high-dimensional and diverse data types into a single similarity network suitable for clustering with minimal loss of information from each initial data source. The meta clustering approach was introduced by Caruana et al. (2006) in &lt;doi:10.1109/ICDM.2006.103&gt;. Meta clustering involves generating a wide range of cluster solutions by adjusting clustering hyperparameters, then clustering the solutions themselves into a manageable number of qualitatively similar solutions, and finally characterizing representative solutions to find ones that are best for the user's specific context. This package provides a framework to easily transform multi-modal data into a wide range of similarity network fusion-derived cluster solutions as well as to visualize, characterize, and validate those solutions. Core package functionality includes easy customization of distance metrics, clustering algorithms, and SNF hyperparameters to generate diverse clustering solutions; calculation and plotting of associations between features, between patients, and between cluster solutions; and standard cluster validation approaches including resampled measures of cluster stability, standard metrics of cluster quality, and label propagation to evaluate generalizability in unseen data. Associated vignettes guide the user through using the package to identify patient subtypes while adhering to best practices for unsupervised learning.">
@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,19 +58,19 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="meta-clustering-with-similarity-network-fusion">Meta clustering with Similarity Network Fusion<a class="anchor" aria-label="anchor" href="#meta-clustering-with-similarity-network-fusion"></a>
+<div class="page-header"><h1 id="metasnf-meta-clustering-with-similarity-network-fusion">metaSNF: Meta clustering with Similarity Network Fusion<a class="anchor" aria-label="anchor" href="#metasnf-meta-clustering-with-similarity-network-fusion"></a>
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
 <div class="section level2">
 <h2 id="brief-overview">Brief Overview<a class="anchor" aria-label="anchor" href="#brief-overview"></a>
 </h2>
-<p><em>metasnf</em> is a package that facilitates usage of the meta clustering paradigm described in (<a href="#ref-caruanaMeta2006">Caruana et al. 2006</a>) with the similarity network fusion (SNF) data integration procedure developed in (<a href="#ref-wangSimilarity2014">Wang et al. 2014</a>). The package offers a comprehensive suite of tools to assist users in transforming multi-modal tabular data into cluster solutions, decision making in the clustering process, and visualization along the way with a strong emphasis on context-specific utility and principled validation of results.</p>
+<p>metaSNF is an R package that facilitates usage of the meta clustering paradigm described in (<a href="#ref-caruanaMeta2006">Caruana et al. 2006</a>) with the similarity network fusion (SNF) data integration procedure developed in (<a href="#ref-wangSimilarity2014">Wang et al. 2014</a>). The package offers a comprehensive suite of tools to assist users in transforming multi-modal tabular data into cluster solutions, decision making in the clustering process, and visualization along the way with a strong emphasis on context-specific utility and principled validation of results.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You will need R version 4.1.0 or higher to install this package. <code>metasnf</code> can be installed from CRAN:</p>
+<p>You will need R version 4.1.0 or higher to install this package. metaSNF can be installed from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"metasnf"</span><span class="op">)</span></span></code></pre></div>
 <p>Development versions can be installed from GitHub:</p>
@@ -79,7 +79,7 @@
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Install a specific tagged version</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf@v1.1.2"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"BRANCHlab/metasnf@v2.0.0"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
@@ -90,7 +90,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Setting up the data</span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/data_list.html">data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_t</span>, <span class="st">"cortical_thickness"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
@@ -98,19 +98,47 @@
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">abcd_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in generate_data_list(list(abcd_cort_t, "cortical_thickness",</span></span>
-<span><span class="co">#&gt; "neuroimaging", : 200 subject(s) dropped due to incomplete data.</span></span>
+<span><span class="co">#&gt; ℹ 176 observations dropped due to incomplete data.</span></span>
 <span></span>
 <span><span class="co"># Specifying 5 different sets of settings for SNF</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">5</span>,</span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; ℹ No clustering functions specified. Using defaults.</span></span>
 <span></span>
 <span><span class="co"># This matrix has clustering solutions for each of the 5 SNF runs!</span></span>
-<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">dl</span>, <span class="va">sc</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sol_df</span></span>
+<span><span class="co">#&gt; 5 cluster solutions of 101 observations:</span></span>
+<span><span class="co">#&gt; solution nclust mc uid_NDAR_INV0567T2Y9 uid_NDAR_INV0IZ157F8 </span></span>
+<span><span class="co">#&gt;        1      2  .                    1                    2 </span></span>
+<span><span class="co">#&gt;        2      2  .                    2                    1 </span></span>
+<span><span class="co">#&gt;        3     10  .                    1                    9 </span></span>
+<span><span class="co">#&gt;        4      2  .                    2                    1 </span></span>
+<span><span class="co">#&gt;        5      8  .                    1                    7 </span></span>
+<span><span class="co">#&gt; 98 observations not shown.</span></span>
+<span><span class="co">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span>
+<span><span class="co">#&gt; Use `t()` to view compact cluster solution format.</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 5 cluster solutions of 100 observations:</span></span>
+<span><span class="co">#&gt;                  uid      s1    s2    s3    s4    s5 </span></span>
+<span><span class="co">#&gt; uid_NDAR_INV0567T2Y9       1     2     1     2     1</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV0IZ157F8       2     1     9     1     7</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV0J4PYA5F       1     2     7     2     3</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV10OMKVLE       2     1     8     1     4</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV15FPCW4O       1     2     2     2     5</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV19NB4RJK       1     2     9     2     7</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV1HLGR738       1     2     9     2     7</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV1KR0EZFU       2     1     9     2     7</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV1L3Y9EOP       1     2     2     2     5</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV1TCP5GNM       1     2     8     2     4</span></span>
+<span><span class="co">#&gt; 90 observations not shown.</span></span></code></pre></div>
 <p>Check out the tutorial vignettes below to learn about how the package can be used:</p>
 <ul>
 <li><a href="https://branchlab.github.io/metasnf/articles/a_simple_example.html">Simple usage of the package</a></li>
@@ -142,7 +170,7 @@
 <h3 id="essential-objects">Essential objects<a class="anchor" aria-label="anchor" href="#essential-objects"></a>
 </h3>
 <ul>
-<li><a href="https://branchlab.github.io/metasnf/articles/settings_matrix.html">Settings matrix</a></li>
+<li><a href="https://branchlab.github.io/metasnf/articles/snf_config.html">SNF config</a></li>
 <li><a href="https://branchlab.github.io/metasnf/articles/data_list.html">Data list</a></li>
 </ul>
 </div>

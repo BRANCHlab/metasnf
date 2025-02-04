@@ -8,8 +8,8 @@
 <title>Similarity Matrices • metasnf</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Similarity Matrices">
 <meta name="description" content="Visualize the affinity matrices produced by SNF and how they associate with other data attributes.
 ">
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,7 +86,7 @@ other patient attributes.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Generate data_list</span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span><span class="va">my_dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_list.html">data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        data <span class="op">=</span> <span class="va">expression_df</span>,</span>
 <span>        name <span class="op">=</span> <span class="st">"expression_data"</span>,</span>
@@ -120,29 +120,28 @@ other patient attributes.</p>
 <span>    uid <span class="op">=</span> <span class="st">"patient_id"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Generate settings_matrix</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">1</span>,</span>
+<span><span class="va">my_sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    <span class="va">my_dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">40</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
+<span>    <span class="va">my_dl</span>,</span>
+<span>    <span class="va">my_sc</span>,</span>
+<span>    return_sim_mats <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Run SNF and clustering</span></span>
-<span><span class="va">batch_snf_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    <span class="va">settings_matrix</span>,</span>
-<span>    return_similarity_matrices <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"solutions_matrix"</span></span>
-<span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="va">batch_snf_results</span><span class="op">$</span><span class="st">"similarity_matrices"</span></span>
+<span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_mats_list.html">sim_mats_list</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># The first (and only) similarity matrix:</span></span>
 <span><span class="va">similarity_matrix</span> <span class="op">&lt;-</span> <span class="va">similarity_matrices</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># The first (and only) cluster solution:</span></span>
-<span><span class="va">cluster_solution</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_cluster_solutions.html">get_cluster_solutions</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span><span class="op">$</span><span class="st">"1"</span></span></code></pre></div>
+<span><span class="va">cluster_solution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="visualize-similarity-matrices-sorted-by-cluster-label">Visualize similarity matrices sorted by cluster label<a class="anchor" aria-label="anchor" href="#visualize-similarity-matrices-sorted-by-cluster-label"></a>
@@ -150,21 +149,12 @@ other patient attributes.</p>
 <p><code>similarity_matrix_heatmap</code> is a wrapper for
 <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code>, but with some convenient default
 transformations and parameters for viewing a similarity matrix.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">similarity_matrix_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/similarity_matrix_heatmap.html">similarity_matrix_heatmap</a></span><span class="op">(</span></span>
 <span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>
 <span>    cluster_solution <span class="op">=</span> <span class="va">cluster_solution</span>,</span>
 <span>    heatmap_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
 <span>    heatmap_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"cm"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Export heatmaps using the `save_heatmap` function</span></span>
-<span><span class="fu"><a href="../reference/save_heatmap.html">save_heatmap</a></span><span class="op">(</span></span>
-<span>    heatmap <span class="op">=</span> <span class="va">similarity_matrix_hm</span>,</span>
-<span>    path <span class="op">=</span> <span class="st">"./similarity_matrix_heatmap.png"</span>,</span>
-<span>    width <span class="op">=</span> <span class="fl">410</span>,</span>
-<span>    height <span class="op">=</span> <span class="fl">330</span>,</span>
-<span>    res <span class="op">=</span> <span class="fl">80</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <center>
 <img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/similarity_matrix_heatmap.png">
@@ -179,23 +169,23 @@ solution.</p>
 <h2 id="annotations">Annotations<a class="anchor" aria-label="anchor" href="#annotations"></a>
 </h2>
 <p>One piece of functionality provided by
-<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap</a></code> is the ability to supply visual
+<code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">ComplexHeatmap::Heatmap()</a></code> is the ability to supply visual
 annotations along the rows and columns of a heatmap.</p>
 <p>You can always build annotations using the standard approaches
 outline in the <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html" class="external-link">ComplexHeatmap
 Complete Reference</a>. In addition to that, this package offers some
 convenient functionality to specify regular heatmap annotations and
-barplot annotations directly through a provided dataframe or data_list
+barplot annotations directly through a provided data frame or data_list
 (or both).</p>
-<p>In the example below, we make use of data supplied through a
-data_list.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>In the example below, we make use of data supplied through a data
+list.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">annotated_sm_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/similarity_matrix_heatmap.html">similarity_matrix_heatmap</a></span><span class="op">(</span></span>
 <span>    similarity_matrix <span class="op">=</span> <span class="va">similarity_matrix</span>,</span>
 <span>    cluster_solution <span class="op">=</span> <span class="va">cluster_solution</span>,</span>
 <span>    scale_diag <span class="op">=</span> <span class="st">"mean"</span>,</span>
 <span>    log_graph <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    data_list <span class="op">=</span> <span class="va">data_list</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">my_dl</span>,</span>
 <span>    left_hm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="st">"Diagnosis"</span> <span class="op">=</span> <span class="st">"diagnosis"</span></span>
 <span>    <span class="op">)</span>,</span>
@@ -218,14 +208,6 @@ data_list.</p>
 <span>    <span class="op">)</span>,</span>
 <span>    heatmap_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
 <span>    heatmap_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"cm"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/save_heatmap.html">save_heatmap</a></span><span class="op">(</span></span>
-<span>    heatmap <span class="op">=</span> <span class="va">annotated_sm_hm</span>,</span>
-<span>    path <span class="op">=</span> <span class="st">"./annotated_sm_heatmap.png"</span>,</span>
-<span>    width <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>    height <span class="op">=</span> <span class="fl">440</span>,</span>
-<span>    res <span class="op">=</span> <span class="fl">80</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <center>
 <img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_sm_heatmap.png">
@@ -234,9 +216,9 @@ data_list.</p>
 R colours that you can browse by calling <code><a href="https://rdrr.io/r/grDevices/colors.html" class="external-link">colours()</a></code>.</p>
 <p>For reference, the code below shows how you would achieve these
 annotations using standard <code>ComplexHeatmap</code> syntax.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">merged_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/collapse_dl.html">collapse_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
-<span><span class="va">order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">cluster_solution</span>, index.return <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="st">"ix"</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">merged_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">my_dl</span><span class="op">)</span></span>
+<span><span class="va">order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">cluster_solution</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>, index.return <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="st">"ix"</span></span>
 <span><span class="va">merged_df</span> <span class="op">&lt;-</span> <span class="va">merged_df</span><span class="op">[</span><span class="va">order</span>, <span class="op">]</span></span>
 <span></span>
 <span><span class="va">top_annotations</span> <span class="op">&lt;-</span> <span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/HeatmapAnnotation.html" class="external-link">HeatmapAnnotation</a></span><span class="op">(</span></span>
@@ -285,7 +267,7 @@ matrix will be influenced if you supply values for the
 don’t think your data is lining up properly, consider manually making
 sure your <code>similarity_matrix</code> rows and columns are sorted to
 your preference (e.g., based on cluster) and that the order of your data
-matches. This will be easier to do with a <code>dataframe</code> than
+matches. This will be easier to do with a <code>data frame</code> than
 with a <code>data_list</code>, as the <code>data_list</code> forces
 patients to be sorted by their unique IDs upon generation.</p>
 </div>

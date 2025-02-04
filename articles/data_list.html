@@ -8,12 +8,12 @@
 <title>The Data List • metasnf</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="The Data List">
-<meta name="description" content="The main object used to store data in the metasnf package.
+<meta name="description" content="The main object used to store data in the `metasnf` package.
 ">
-<meta property="og:description" content="The main object used to store data in the metasnf package.
+<meta property="og:description" content="The main object used to store data in the `metasnf` package.
 ">
 <meta name="google-site-verification" content="Xzz1SIDqvPwru_mXKCXAkX2pNfOz5PO_QO02QG98tZI">
 </head>
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,14 +80,15 @@
 </h2>
 <p>This vignette outlines the importance, structure, and creation of the
 data_list object. You can find much of this info by running
-<code><a href="../reference/generate_data_list.html">?generate_data_list</a></code> after loading the metasnf package.</p>
-<p>The data_list is the main object used in the metasnf package to store
-data. It is a named and nested list containing input dataframes (data),
-the name of that input dataframe (for the user’s reference), the
-‘domain’ of that dataframe (the broader source of information that the
-input dataframe is capturing, determined by user’s domain knowledge),
-and the type of feature stored in the dataframe (continuous, discrete,
-ordinal, categorical, or mixed).</p>
+<code><a href="../reference/data_list.html">?data_list</a></code> after loading the <code>metasnf</code>
+package.</p>
+<p>The data_list is the main object used in the <code>metasnf</code>
+package to store data. It is a named and nested list containing input
+data frames (data), the name of that input data frame (for the user’s
+reference), the ‘domain’ of that data frame (the broader source of
+information that the input data frame is capturing, determined by user’s
+domain knowledge), and the type of feature stored in the data frame
+(continuous, discrete, ordinal, categorical, or mixed).</p>
 <p>Some examples of data_list generation and usage are below:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
@@ -117,7 +118,7 @@ ordinal, categorical, or mixed).</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Generating a data_list explicitly (Name each nested list element):</span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_list.html">data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        data <span class="op">=</span> <span class="va">heart_rate_df</span>,</span>
 <span>        name <span class="op">=</span> <span class="st">"heart_rate"</span>,</span>
@@ -146,7 +147,7 @@ ordinal, categorical, or mixed).</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Achieving the same result compactly:</span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_list.html">data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">heart_rate_df</span>, <span class="st">"heart_rate"</span>, <span class="st">"clinical"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">personality_test_df</span>, <span class="st">"personality_test"</span>, <span class="st">"surveys"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">survey_response_df</span>, <span class="st">"survey_response"</span>, <span class="st">"surveys"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
@@ -155,15 +156,15 @@ ordinal, categorical, or mixed).</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Printing data_list summaries</span></span>
-<span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">dl</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##               name        type   domain length width</span></span>
-<span><span class="co">## 1       heart_rate  continuous clinical      3     3</span></span>
-<span><span class="co">## 2 personality_test  continuous  surveys      3     3</span></span>
-<span><span class="co">## 3  survey_response     ordinal  surveys      3     3</span></span>
-<span><span class="co">## 4             city categorical location      3     2</span></span></code></pre>
+<span><span class="co">## 1       heart_rate  continuous clinical      3     2</span></span>
+<span><span class="co">## 2 personality_test  continuous  surveys      3     2</span></span>
+<span><span class="co">## 3  survey_response     ordinal  surveys      3     2</span></span>
+<span><span class="co">## 4             city categorical location      3     1</span></span></code></pre>
 <p>Depending on your data preprocessing, it may be more convenient to
 you to assemble the components of your data_list in an automated way and
-then provide that result to <code>generate_data_list</code>.</p>
+then provide that result to <code>data_list</code>.</p>
 <p>For example, your code could have generated a list like the one
 below:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -171,19 +172,19 @@ below:</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">heart_rate_df</span>, <span class="st">"data1"</span>, <span class="st">"domain1"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">personality_test_df</span>, <span class="st">"data2"</span>, <span class="st">"domain2"</span>, <span class="st">"continuous"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>If <code>generate_data_list</code> receives only a single list, it’ll
-treat that list as containing all the components required to construct a
+<p>If <code>data_list</code> receives only a single list, it’ll treat
+that list as containing all the components required to construct a
 properly formatted data_list:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_list.html">data_list</a></span><span class="op">(</span></span>
 <span>    <span class="va">list_of_lists</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"patient_id"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">dl</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">dl</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##    name       type  domain length width</span></span>
-<span><span class="co">## 1 data1 continuous domain1      3     3</span></span>
-<span><span class="co">## 2 data2 continuous domain2      3     3</span></span></code></pre>
+<span><span class="co">## 1 data1 continuous domain1      3     2</span></span>
+<span><span class="co">## 2 data2 continuous domain2      3     2</span></span></code></pre>
 </div>
   </main>
 </div>

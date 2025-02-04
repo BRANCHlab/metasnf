@@ -19,12 +19,12 @@ articles:
   nmi_scores: nmi_scores.html
   parallel_processing: parallel_processing.html
   quality_measures: quality_measures.html
-  settings_matrix: settings_matrix.html
   similarity_matrix_heatmap: similarity_matrix_heatmap.html
+  snf_config: snf_config.html
   snf_schemes: snf_schemes.html
   stability_measures: stability_measures.html
   troubleshooting: troubleshooting.html
-last_built: 2024-11-08T17:45Z
+last_built: 2025-02-04T18:45Z
 urls:
   reference: https://branchlab.github.io/metasnf/reference
   article: https://branchlab.github.io/metasnf/articles

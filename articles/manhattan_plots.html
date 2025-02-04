@@ -8,8 +8,8 @@
 <title>Manhattan Plots • metasnf</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Manhattan Plots">
 <meta name="description" content="Visualize a summary of the association between cluster-feature and feature-feature relationships.
 ">
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,9 +100,9 @@ example” vignette</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Start by making a data list containing all our dataframes to more easily</span></span>
-<span><span class="co"># identify subjects without missing data</span></span>
-<span><span class="va">full_data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span><span class="co"># Start by making a data list containing all our data frames to more easily</span></span>
+<span><span class="co"># identify observations without missing data</span></span>
+<span><span class="va">full_dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_list.html">data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
@@ -112,26 +112,26 @@ example” vignette</a>.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Partition into a data and target list (optional)</span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="va">full_data_list</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
-<span><span class="va">target_list</span> <span class="op">&lt;-</span> <span class="va">full_data_list</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
+<span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="va">full_dl</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
+<span><span class="va">target_dl</span> <span class="op">&lt;-</span> <span class="va">full_dl</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Build space of settings to cluster over</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">20</span>,</span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    min_k <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">50</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Clustering</span></span>
-<span><span class="va">solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="va">settings_matrix</span><span class="op">)</span></span>
+<span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">dl</span>, <span class="va">sc</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate p-values between cluster solutions and features</span></span>
-<span><span class="va">extended_solutions_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
-<span>    <span class="va">solutions_matrix</span>,</span>
-<span>    data_list <span class="op">=</span> <span class="va">data_list</span>,</span>
-<span>    target_list <span class="op">=</span> <span class="va">target_list</span>,</span>
+<span><span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
+<span>    <span class="va">sol_df</span>,</span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    target <span class="op">=</span> <span class="va">target_dl</span>,</span>
 <span>    min_pval <span class="op">=</span> <span class="fl">1e-10</span> <span class="co"># p-values below 1e-10 will be thresholded to 1e-10</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -141,7 +141,7 @@ example” vignette</a>.</p>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">esm_manhattan</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/esm_manhattan_plot.html">esm_manhattan_plot</a></span><span class="op">(</span></span>
-<span>    <span class="va">extended_solutions_matrix</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span>,</span>
+<span>    <span class="va">ext_sol_df</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span>,</span>
 <span>    neg_log_pval_thresh <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>    threshold <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>    point_size <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -150,14 +150,6 @@ example” vignette</a>.</p>
 <span>    plot_title <span class="op">=</span> <span class="st">"Feature-Solution Associations"</span>,</span>
 <span>    text_size <span class="op">=</span> <span class="fl">14</span>,</span>
 <span>    bonferroni_line <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
-<span>    <span class="st">"esm_manhattan.png"</span>,</span>
-<span>    <span class="va">esm_manhattan</span>,</span>
-<span>    height <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>    width <span class="op">=</span> <span class="fl">8</span>,</span>
-<span>    dpi <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <center>
 <img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/esm_manhattan_l.png">
@@ -175,14 +167,14 @@ clustering to more efficiently examine the entire space of generated
 cluster solutions.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Calculate pairwise similarities between cluster solutions</span></span>
-<span><span class="va">solutions_matrix_aris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_aris.html">calc_aris</a></span><span class="op">(</span><span class="va">solutions_matrix</span><span class="op">)</span></span>
+<span><span class="va">sol_aris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_aris.html">calc_aris</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Extract hierarchical clustering order of the cluster solutions</span></span>
-<span><span class="va">meta_cluster_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_matrix_order.html">get_matrix_order</a></span><span class="op">(</span><span class="va">solutions_matrix_aris</span><span class="op">)</span></span>
+<span><span class="va">meta_cluster_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_matrix_order.html">get_matrix_order</a></span><span class="op">(</span><span class="va">sol_aris</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a base heatmap for visual meta clustering</span></span>
-<span><span class="va">ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjusted_rand_index_heatmap.html">adjusted_rand_index_heatmap</a></span><span class="op">(</span></span>
-<span>    <span class="va">solutions_matrix_aris</span>,</span>
+<span><span class="va">ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/meta_cluster_heatmap.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
+<span>    <span class="va">sol_aris</span>,</span>
 <span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -191,40 +183,36 @@ cluster solutions.</p>
 <span><span class="fu"><a href="../reference/shiny_annotator.html">shiny_annotator</a></span><span class="op">(</span><span class="va">ari_hm</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Result of meta cluster examination</span></span>
-<span><span class="va">split_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">5</span>, <span class="fl">12</span>, <span class="fl">17</span><span class="op">)</span></span>
+<span><span class="va">split_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">5</span>, <span class="fl">12</span>, <span class="fl">16</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a base heatmap for visual meta clustering</span></span>
-<span><span class="va">ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjusted_rand_index_heatmap.html">adjusted_rand_index_heatmap</a></span><span class="op">(</span></span>
-<span>    <span class="va">solutions_matrix_aris</span>,</span>
+<span><span class="va">ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/meta_cluster_heatmap.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
+<span>    <span class="va">sol_aris</span>,</span>
 <span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span>,</span>
 <span>    split_vector <span class="op">=</span> <span class="va">split_vec</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Extracting representative solutions from each defined meta cluster</span></span>
-<span><span class="va">rep_solutions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_representative_solutions.html">get_representative_solutions</a></span><span class="op">(</span></span>
-<span>    <span class="va">solutions_matrix_aris</span>,</span>
+<span><span class="va">ari_hm</span></span>
+<span></span>
+<span><span class="co"># Label meta clusters based on the split vector</span></span>
+<span><span class="va">mc_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/label_meta_clusters.html">label_meta_clusters</a></span><span class="op">(</span></span>
+<span>    sol_df <span class="op">=</span> <span class="va">ext_sol_df</span>,</span>
 <span>    split_vector <span class="op">=</span> <span class="va">split_vec</span>,</span>
-<span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span>,</span>
-<span>    <span class="va">extended_solutions_matrix</span></span>
+<span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span></span>
 <span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Extracting representative solutions from each defined meta cluster</span></span>
+<span><span class="va">rep_solutions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_representative_solutions.html">get_representative_solutions</a></span><span class="op">(</span><span class="va">sol_aris</span>, <span class="va">mc_sol_df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mc_manhattan</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mc_manhattan_plot.html">mc_manhattan_plot</a></span><span class="op">(</span></span>
 <span>    <span class="va">rep_solutions</span>,</span>
-<span>    data_list <span class="op">=</span> <span class="va">data_list</span>,</span>
-<span>    target_list <span class="op">=</span> <span class="va">target_list</span>,</span>
+<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
+<span>    target_dl <span class="op">=</span> <span class="va">target_dl</span>,</span>
 <span>    point_size <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>    text_size <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>    plot_title <span class="op">=</span> <span class="st">"Feature-Meta Cluster Associations"</span>,</span>
 <span>    threshold <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>    neg_log_pval_thresh <span class="op">=</span> <span class="fl">5</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
-<span>    <span class="st">"mc_manhattan_clean.png"</span>,</span>
-<span>    <span class="va">mc_manhattan</span>,</span>
-<span>    height <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>    width <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>    dpi <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <center>
 <img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/mc_manhattan_clean_l.png">
@@ -239,22 +227,15 @@ interest rather than cluster solutions.</p>
 necessary.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">var_manhattan</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_manhattan_plot.html">var_manhattan_plot</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
+<span>    <span class="va">dl</span>,</span>
 <span>    key_var <span class="op">=</span> <span class="st">"household_income"</span>,</span>
 <span>    plot_title <span class="op">=</span> <span class="st">"Correlation of Features with Household Income"</span>,</span>
 <span>    text_size <span class="op">=</span> <span class="fl">16</span>,</span>
 <span>    neg_log_pval_thresh <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>    threshold <span class="op">=</span> <span class="fl">0.05</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
-<span>    <span class="st">"var_manhattan.png"</span>,</span>
-<span>    <span class="va">var_manhattan</span>,</span>
-<span>    height <span class="op">=</span> <span class="fl">7</span>,</span>
-<span>    width <span class="op">=</span> <span class="fl">12</span>,</span>
-<span>    dpi <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <center>
-<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/var_manhattan_l.png">
+<img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/var_manhattan.png">
 </center>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

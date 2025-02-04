@@ -8,8 +8,8 @@
 <title>Feature Weighting • metasnf</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Feature Weighting">
 <meta name="description" content="Vary feature weights to expand or refine the space of generated cluster solutions.
 ">
@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,15 +82,16 @@ div.aside { background-color:#fff2e6; }
 <h2 id="generating-and-using-the-weights-matrix">Generating and Using the Weights Matrix<a class="anchor" aria-label="anchor" href="#generating-and-using-the-weights-matrix"></a>
 </h2>
 <p>The <a href="https://branchlab.github.io/metasnf/articles/distance_metrics.html">distance
-metrics</a> used in metasnf are all capable of applying custom weights
-to included features. The code below outlines how to generate and use a
-weights_matrix (dataframe containing feature weights) object.</p>
+metrics</a> used in <code>metasnf</code> are all capable of applying
+custom weights to included features. The code below outlines how to
+generate and use a weights_matrix (data frame containing feature
+weights) object.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://branchlab.github.io/metasnf/">metasnf</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Make sure to throw in all the data you're interested in visualizing for this</span></span>
 <span><span class="co"># data_list, including out-of-model measures and confounding features.</span></span>
-<span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_data_list.html">generate_data_list</a></span><span class="op">(</span></span>
+<span><span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_list.html">data_list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">fav_colour</span>, <span class="st">"favourite_colour"</span>, <span class="st">"demographics"</span>, <span class="st">"categorical"</span><span class="op">)</span>,</span>
@@ -98,81 +99,84 @@ weights_matrix (dataframe containing feature weights) object.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in generate_data_list(list(income, "household_income", "demographics",</span></span>
-<span><span class="co">#&gt; : 139 subject(s) dropped due to incomplete data.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> 139 observations dropped due to incomplete data.</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/summarize_dl.html">summarize_dl</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">dl</span><span class="op">)</span></span>
 <span><span class="co">#&gt;               name        type       domain length width</span></span>
-<span><span class="co">#&gt; 1 household_income     ordinal demographics    136     2</span></span>
-<span><span class="co">#&gt; 2  pubertal_status  continuous demographics    136     2</span></span>
-<span><span class="co">#&gt; 3 favourite_colour categorical demographics    136     2</span></span>
-<span><span class="co">#&gt; 4          anxiety     ordinal    behaviour    136     2</span></span>
-<span><span class="co">#&gt; 5        depressed     ordinal    behaviour    136     2</span></span>
+<span><span class="co">#&gt; 1 household_income     ordinal demographics    136     1</span></span>
+<span><span class="co">#&gt; 2  pubertal_status  continuous demographics    136     1</span></span>
+<span><span class="co">#&gt; 3 favourite_colour categorical demographics    136     1</span></span>
+<span><span class="co">#&gt; 4          anxiety     ordinal    behaviour    136     1</span></span>
+<span><span class="co">#&gt; 5        depressed     ordinal    behaviour    136     1</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">settings_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_settings_matrix.html">generate_settings_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">20</span>,</span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    min_k <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">50</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
 <span></span>
-<span><span class="va">weights_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">20</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">weights_matrix</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      household_income pubertal_status colour cbcl_anxiety_r cbcl_depress_r</span></span>
-<span><span class="co">#&gt; [1,]                1               1      1              1              1</span></span>
-<span><span class="co">#&gt; [2,]                1               1      1              1              1</span></span>
-<span><span class="co">#&gt; [3,]                1               1      1              1              1</span></span>
-<span><span class="co">#&gt; [4,]                1               1      1              1              1</span></span>
-<span><span class="co">#&gt; [5,]                1               1      1              1              1</span></span>
-<span><span class="co">#&gt; [6,]                1               1      1              1              1</span></span></code></pre></div>
+<span><span class="va">sc</span><span class="op">$</span><span class="st">"weights_matrix"</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Weights defined for 20 cluster solutions.</span></span></span>
+<span><span class="co">#&gt; $ household_income  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
+<span><span class="co">#&gt; $ pubertal_status  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
+<span><span class="co">#&gt; $ colour  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
+<span><span class="co">#&gt; $ cbcl_anxiety_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
+<span><span class="co">#&gt; $ cbcl_depress_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…</span></span></code></pre></div>
 <p>By default, the weights are all 1. This is what
 <code>batch_snf</code> uses when no weights_matrix is supplied.</p>
 <p>If you have custom feature weights you’d like to be used you can
-manually populate this dataframe. There’s one column per feature (no
+manually populate this data frame. There’s one column per feature (no
 need to worry about column orders) and the number of rows should match
-the number of rows in the settings_matrix.</p>
+the number of rows in the SNF config.</p>
 <p>If you are just looking to broaden the space of cluster solutions you
 generate, you can use some of the built-in randomization options for the
 weights:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Random uniformly distributed values</span></span>
-<span><span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>    fill <span class="op">=</span> <span class="st">"uniform"</span></span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    min_k <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    max_k <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>    weights_fill <span class="op">=</span> <span class="st">"uniform"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;      household_income pubertal_status    colour cbcl_anxiety_r cbcl_depress_r</span></span>
-<span><span class="co">#&gt; [1,]       0.08161542       0.3198375 0.8328815      0.9943410      0.3955367</span></span>
-<span><span class="co">#&gt; [2,]       0.40378037       0.4627980 0.3132912      0.7119147      0.9593465</span></span>
-<span><span class="co">#&gt; [3,]       0.83551451       0.9353873 0.2794196      0.4951427      0.1132382</span></span>
-<span><span class="co">#&gt; [4,]       0.59499701       0.5917005 0.7100717      0.8079317      0.2355968</span></span>
-<span><span class="co">#&gt; [5,]       0.35140389       0.5460431 0.3481677      0.5611197      0.5104740</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
+<span></span>
+<span><span class="va">sc</span><span class="op">$</span><span class="st">"weights_matrix"</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Weights defined for 20 cluster solutions.</span></span></span>
+<span><span class="co">#&gt; $ household_income  0.08161542, 0.40378037, 0.83551451, 0.59499701, 0.351… </span></span>
+<span><span class="co">#&gt; $ pubertal_status  0.39553669, 0.95934650, 0.11323819, 0.23559680, 0.510… </span></span>
+<span><span class="co">#&gt; $ colour  0.07772700, 0.76282288, 0.15224422, 0.93752397, 0.745… </span></span>
+<span><span class="co">#&gt; $ cbcl_anxiety_r  0.15473680, 0.20350748, 0.14351450, 0.61093017, 0.516… </span></span>
+<span><span class="co">#&gt; $ cbcl_depress_r  0.02428327, 0.60967042, 0.47194860, 0.10858025, 0.864…</span></span>
 <span></span>
 <span><span class="co"># Random exponentially distributed values</span></span>
-<span><span class="fu"><a href="../reference/generate_weights_matrix.html">generate_weights_matrix</a></span><span class="op">(</span></span>
-<span>    <span class="va">data_list</span>,</span>
-<span>    nrow <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>    fill <span class="op">=</span> <span class="st">"exponential"</span></span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
+<span>    <span class="va">dl</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    min_k <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    max_k <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>    weights_fill <span class="op">=</span> <span class="st">"exponential"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;      household_income pubertal_status    colour cbcl_anxiety_r cbcl_depress_r</span></span>
-<span><span class="co">#&gt; [1,]        0.5123907       0.1624127 1.6042481      3.7447548     1.53441037</span></span>
-<span><span class="co">#&gt; [2,]        3.9471338       0.4178442 0.2354796      0.3647522     0.22186034</span></span>
-<span><span class="co">#&gt; [3,]        0.4215409       0.2394908 0.1519102      0.8262260     0.03348363</span></span>
-<span><span class="co">#&gt; [4,]        1.4107604       2.3230736 2.0428148      0.2279961     0.48877057</span></span>
-<span><span class="co">#&gt; [5,]        0.1756311       0.5256458 1.3623835      0.1072554     0.24304379</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
+<span></span>
+<span><span class="va">sc</span><span class="op">$</span><span class="st">"weights_matrix"</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Weights defined for 20 cluster solutions.</span></span></span>
+<span><span class="co">#&gt; $ household_income  2.27094485, 0.16919903, 0.18456918, 0.33487595, 1.167… </span></span>
+<span><span class="co">#&gt; $ pubertal_status  0.1528647, 0.4143784, 0.7710409, 1.7987298, 1.4162029… </span></span>
+<span><span class="co">#&gt; $ colour  1.54348805, 0.82288484, 2.54124213, 0.60145639, 1.089… </span></span>
+<span><span class="co">#&gt; $ cbcl_anxiety_r  0.21682983, 3.68043243, 1.25420312, 1.15417982, 0.102… </span></span>
+<span><span class="co">#&gt; $ cbcl_depress_r  0.1307026, 1.8525605, 4.1633331, 1.2926046, 1.6980694…</span></span></code></pre></div>
 <p>Once you’re happy with your weights_matrix, you can pass it into
 batch_snf:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
-<span>    data_list <span class="op">=</span> <span class="va">data_list</span>,</span>
-<span>    settings_matrix <span class="op">=</span> <span class="va">settings_matrix</span>,</span>
-<span>    weights_matrix <span class="op">=</span> <span class="va">weights_matrix</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span>dl <span class="op">=</span> <span class="va">dl</span>, sc <span class="op">=</span> <span class="va">sc</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="the-nitty-gritty-of-how-weights-are-used">The Nitty Gritty of How Weights are Used<a class="anchor" aria-label="anchor" href="#the-nitty-gritty-of-how-weights-are-used"></a>
@@ -183,9 +187,9 @@ learn more about in the <a href="https://branchlab.github.io/metasnf/articles/di
 metrics vignette</a>.</p>
 <p>The other aspect to understand if you want to know precisely how your
 weights are being used is related to the SNF schemes. Depending on which
-scheme is specified in the settings_matrix row, the feature columns that
-are involved at each distance matrix calculation can differ
-substantially.</p>
+scheme is specified in the corresponding <code>settings_df</code> of the
+SNF config, the feature columns that are involved at each distance
+matrix calculation can differ substantially.</p>
 <p>For example, in the domain scheme, all features of the same domain
 are concatenated prior to distance matrix calculation. If you have any
 domains with multiple types of features (e.g., continuous and
@@ -193,16 +197,16 @@ categorical), that will mean that the mixed distance metric (Gower’s
 method by default) will be used, and weights will be applied but only on
 a per-domain basis.</p>
 <p>Here’s a more concrete example on how data set-up and SNF scheme can
-influence the feature weighting process: consider generating a data_list
-where every single input dataframe contains only 1 input feature. If
-that data_list is processed exclusively using the “individual” SNF
-scheme, <em>feature weights won’t matter</em>. This is because the
-individual SNF scheme calculates individual distance metrics for every
-input dataframe separately before fusing them together with SNF. Anytime
-a distance matrix is calculated, it’ll be for a single feature only, and
-the purpose of feature weighting (changing the relative contributions of
-input features during the distance matrix calculations) will be
-lost.</p>
+influence the feature weighting process: consider generating a data list
+where every single input data frame contains only 1 input feature. If
+that data list is processed exclusively using the “individual” SNF
+scheme in this set-up, <em>feature weights won’t matter</em>. This is
+because the individual SNF scheme calculates individual distance metrics
+for every input data frame separately before fusing them together with
+SNF. Anytime a distance matrix is calculated, it’ll be for a single
+feature only, and the purpose of feature weighting (changing the
+relative contributions of input features during the distance matrix
+calculations) will be lost.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
