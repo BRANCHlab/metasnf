@@ -18,7 +18,7 @@ articles:
 
 - title: Essential objects
   contents:
-  - settings_matrix
+  - snf_config
   - data_list
 
 - title: Further customization
