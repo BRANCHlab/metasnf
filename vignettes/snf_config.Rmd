@@ -68,14 +68,14 @@ sc$"settings_df" |> as.data.frame()
 
 The columns in a `settings_df` class object include:
 
-* `solution`: A label to keep track of which generated cluster solution is which
+* `solution`: A label to keep track of each generated cluster solution.
 * `alpha`: The alpha (also referred to as sigma or eta in the original SNF paper) hyperparameter in SNF. This hyperparameter plays a role in converting distance matrices into similarity matrices. The process by which `SNFtool::affinityMatrix()` does this conversion essentially involves plugging the distance value as the x-coordinate of a normal distribution and pulling out the density at that point as the similarity. The thickness of the normal distribution is regulated by alpha, where a larger alpha leads to a broader normal distribution and a greater sensitivity to discriminating distances.
 * `k`: The k (nearest neighbours) hyperparameter in the distance matrix to similarity matrix conversion as well as in similarity network fusion. In the distance matrix to similarity matrix conversion (`SNFtool::affinityMatrix()`), k controls how many nearest neighbours to consider when calculating how similar each observation is to its nearest neighbours. The closer an observation is to its k nearest neighbours, the broader the normal distribution that is used for the distance to similarity conversion. For the similarity network fusion step (`SNFtool::SNF()`), k controls how intensely all the matrices should be sparsified before information is passed between them. With a very small k, say, k = 1, all the values in all the matrices will be reduced to 0 with the exception of one value between each observation and that observation's most similar neighbour.
 * `t`: The T (number of iterations) hyperparameter used in SNF. A larger `t` results in more rounds of information passing between similarity matrices. SNF eventually converges, so overshooting this value offers no benefit but undershooting can yield inaccurate results. The original SNF developers recommend leaving this value at 20.
-* `snf_scheme`: Which SNF "scheme" is being used to convert the initial provided data frames into a final fused network (more on this in the [SNF schemes vignette](https://branchlab.github.io/metasnf/articles/snf_schemes.html))
+* `snf_scheme`: Which SNF "scheme" is being used to convert the initial provided data frames into a final fused network (more on this in the [SNF schemes vignette](https://branchlab.github.io/metasnf/articles/snf_schemes.html)).
 * `clust_alg`: Which clustering algorithm function from the *clustering functions list* of the config will be applied to the final fused network. You can learn more about using this parameter in the [clustering algorithnms vignette](https://branchlab.github.io/metasnf/articles/clustering_algorithms.html).
-* Columns ending in `dist`: Which distance metric function from the *distance functions list* of the config will be used for each of the various types of features in the data list (more on this in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html))
-* Columns starting with `inc`: Whether or not the corresponding data frame will be included (1) or excluded (0) from this row
+* Columns ending in `dist`: Which distance metric function from the *distance functions list* of the config will be used for each of the various types of features in the data list (more on this in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html)).
+* Columns starting with `inc`: Whether or not the corresponding data frame will be included (1) or excluded (0) from this row.
 
 By default, the `alpha` and `k` hyperparameters are randomly varied from 0.3 to 0.8 and 10 to 100 respectively based on suggestions from the original SNF paper.
 The `t` hyperparameter by default stays fixed at 20.
@@ -99,10 +99,6 @@ dfl$"cnt_dist_fns"[[1]]
 ```
 
 You can learn more about customizing distance metrics in the [distance metrics vignette](https://branchlab.github.io/metasnf/articles/distance_metrics.html).
-
-
-* Columns ending in `dist`: Which distance metric is being used for the various types of features (more on this 
-
 
 ### The clustering functions list
 
@@ -137,7 +133,7 @@ By default, all the weights are set to 1, so no weighting occurs.
 
 ## Customizing an SNF config
 
-When not specifying any parameters beyond the number of rows that are created, the function will randomly (but sensibly) vary the values in the matrix.
+When not specifying any parameters beyond the number of rows that are created, the function will randomly vary the values in the matrix.
 
 ```{r}
 # Through minimums and maximums
@@ -161,9 +157,7 @@ sc <- snf_config(
     min_k = 10,
     max_k = 60,
     min_alpha = 0.3,
-    max_alpha = 0.8,
-    min_t = 15,
-    max_t = 30
+    max_alpha = 0.8
 )
 
 # Through specific value sampling
@@ -171,8 +165,7 @@ sc <- snf_config(
     dl,
     n_solutions = 20,
     k_values = c(10, 25, 50),
-    alpha_values = c(0.4, 0.8),
-    t_values = c(20, 30)
+    alpha_values = c(0.4, 0.8)
 )
 ```
 
@@ -264,14 +257,11 @@ sc_2 <- snf_config(
 )
 
 full_sc <- merge(sc_1, sc_2)
-
-full_sc
 ```
 
 ## "`settings_df` building failed to converge"
 
 `snf_config()` will never build duplicate rows.
 A consequence of this is that if you request a very large number of rows over a very small range of possible values to vary over, it will be impossible for the matrix to be built.
-For example, there's no way to generate 10 unique rows when the only thing allowed to vary is which clustering algorithm (1 or 2) is used - only 2 rows could ever be created.
-
+For example, there's no way to generate 10 unique rows when the only varying parameter is which of two clustering algorithms is used - only 2 rows could ever be created.
 If you encounter the error "Matrix building failed", try to generate fewer rows or to be a little less strict with what values are allowed.

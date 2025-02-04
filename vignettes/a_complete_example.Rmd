@@ -354,6 +354,8 @@ ari_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order
 )
+
+ari_hm
 ```
 
 ```{r eval = FALSE, echo = FALSE}
@@ -417,6 +419,8 @@ ari_mc_hm <- meta_cluster_heatmap(
     order = meta_cluster_order,
     split_vector = split_vec
 )
+
+ari_mc_hm
 ```
 
 ```{r eval = FALSE, echo = FALSE}
@@ -529,7 +533,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/annotated_ari_hm_l.png)
 </center>
 
 The `meta_cluster_heatmap` function wraps around a more generic `similarity_matrix_heatmap` function in this package, which itself is a wrapper around `ComplexHeatmap::Heatmap()`.
@@ -587,7 +591,7 @@ annotated_ari_hm2 <- meta_cluster_heatmap(
 ```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = annotated_ari_hm2,
-    path = "./annotated_ari_hm2.png",
+    path = "vignettes/annotated_ari_hm2.png",
     width = 700,
     height = 500,
     res = 100
@@ -621,7 +625,7 @@ mc_manhattan <- mc_manhattan_plot(
 
 ```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
-    "mc_manhattan.png",
+    "vignettes/mc_manhattan.png",
     mc_manhattan,
     height = 4,
     width = 8,
@@ -638,11 +642,7 @@ Let's take out the cortical thickness and surface area measures to make the plot
 We'll also be able to read some feature measures more clearly when we dial the number of features plotted back a bit, as well.
 
 ```{r eval = FALSE}
-rep_solutions_no_cort <- rep_solutions[, !grepl("mrisdp", colnames(rep_solutions))]
-rep_solutions_no_cort
-
-mtcars[c(1, 3)]
-
+rep_solutions_no_cort <- dplyr::select(rep_solutions, -dplyr::contains("mrisdp"))
 
 mc_manhattan2 <- mc_manhattan_plot(
     ext_sol_df = rep_solutions_no_cort,
@@ -661,7 +661,7 @@ mc_manhattan2 <- mc_manhattan_plot(
 
 ```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
-    "mc_manhattan2.png",
+    "vignettes/mc_manhattan2.png",
     mc_manhattan2,
     height = 8,
     width = 12,
@@ -685,22 +685,17 @@ Another option is to start by taking a first look at entire `settings_df`, sorte
 The settings can be passed in through either an `snf_config` or `settings_df` class object.
 
 ```{r eval = FALSE}
-
-
 config_hm <- config_heatmap(
     sc = my_sc,
     order = meta_cluster_order,
     hide_fixed = TRUE
 )
-
-
-
 ```
 
 ```{r eval = FALSE, echo = FALSE}
 save_heatmap(
-    heatmap = sm_hm,
-    path = "./settings_df_heatmap_ordered.png",
+    heatmap = config_hm,
+    path = "vignettes/config_hm.png",
     width = 400,
     height = 500,
     res = 75
@@ -708,7 +703,7 @@ save_heatmap(
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/settings_df_heatmap_ordered.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/config_hm.png)
 </center>
 
 This heatmap rescales all the columns in the settings_df to have a maximum value of 1.
@@ -728,10 +723,12 @@ annotation_data <- ext_sol_df |>
         )
     )
 
+annotation_data$"clust_alg" <- as.factor(annotation_data$"clust_alg")
+
 annotated_ari_hm3 <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order,
-    split_vector = c(11, 14),
+    split_vector = split_vec,
     data = annotation_data,
     top_hm = list(
         "Depression p-value" = "cbcl_depress_r_pval",
@@ -761,6 +758,8 @@ annotated_ari_hm3 <- meta_cluster_heatmap(
         )
     )
 )
+
+annotated_ari_hm3
 ```
 
 ### Quality measures
@@ -771,11 +770,7 @@ To calculate these values, we'll need not only the cluster results but also the 
 These similarity matrices can be collected from the `batch_snf` using the `return_sim_mats` parameter:
 
 ```{r}
-sol_df <- batch_snf(
-    dl = input_dl,
-    sc = my_sc,
-    return_sim_mats = TRUE
-)
+sol_df <- batch_snf(dl = input_dl, sc = my_sc, return_sim_mats = TRUE)
 ```
 
 Now, the solutions data frame contains a non-empty list of similarity matrices as one of its attributes. 
@@ -827,12 +822,14 @@ There is a heatmap for visualizing this too:
 
 ```{r eval = FALSE}
 pval_hm <- pval_heatmap(ext_sol_df, order = meta_cluster_order)
+
+pval_hm
 ```
 
 ```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = pval_hm,
-    path = "./pval_heatmap_ordered.png",
+    path = "vignettes/pval_heatmap_ordered.png",
     width = 400,
     height = 500,
     res = 100
@@ -935,8 +932,6 @@ ext_sol_df <- extend_solutions(
     train_sol_df,
     train_target_dl
 )
-
-ext_sol_df
 
 # The first row had the lowest minimum p-value across our outcomes
 lowest_min_pval <- min(ext_sol_df$"min_pval")

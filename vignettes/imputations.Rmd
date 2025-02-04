@@ -75,7 +75,7 @@ nrow(sol_df_imp1)
 
 # Create a stacked solution matrix that stores solutions from both imputations
 # Solutions 1:10 are for imputation 1, 11:20 are for imputation 2
-sol_df <- rbind(sol_df_imp1, sol_df_imp2)
+sol_df <- rbind(sol_df_imp1, sol_df_imp2, reset_indices = TRUE)
 
 sol_df
 
@@ -93,12 +93,13 @@ ari_hm <- meta_cluster_heatmap(
 
 # Identify meta cluster boundaries
 shiny_annotator(ari_hm)
+
 split_vec <- c(7, 13)
 
 ari_mc_hm <- meta_cluster_heatmap(
     sol_aris,
     order = meta_cluster_order,
-    split_vector = c(7, 13)
+    split_vector = split_vec
 )
 
 # Calculate how features are distributed across solutions

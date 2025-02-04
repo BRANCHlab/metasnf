@@ -343,14 +343,14 @@ subsample_pairwise_aris <- function(subsample_solutions,
 cocluster_density <- function(cocluster_df) {
     ###########################################################################
     # dplyr warning handling
-    sub_1_clust <- ""
-    sub_2_clust <- ""
+    obs_1_clust <- ""
+    obs_2_clust <- ""
     cocluster_frac <- ""
     scaled <- ""
     ###########################################################################
-    cocluster_df$"sub_1_clust" <- factor(cocluster_df$"sub_1_clust")
+    cocluster_df$"obs_1_clust" <- factor(cocluster_df$"obs_1_clust")
     cocluster_df <- cocluster_df |>
-        dplyr::filter(sub_1_clust == sub_2_clust)
+        dplyr::filter(obs_1_clust == obs_2_clust)
     # Coverage check
     n_missing <- sum(is.na(cocluster_df$"cocluster_frac"))
     if (n_missing > 0) {
@@ -369,7 +369,7 @@ cocluster_density <- function(cocluster_df) {
         ggplot2::ggplot(
             ggplot2::aes(
                 x = cocluster_frac,
-                colour = sub_1_clust
+                colour = obs_1_clust
             )
         ) +
         ggplot2::labs( x = "Co-clustering Fraction",
@@ -486,10 +486,10 @@ cocluster_heatmap <- function(cocluster_df,
     ###########################################################################
     # dplyr warning handling
     cluster <- ""
-    sub_1 <- ""
-    sub_1_clust <- ""
-    sub_2 <- ""
-    sub_2_clust <- ""
+    obs_1 <- ""
+    obs_1_clust <- ""
+    obs_2 <- ""
+    obs_2_clust <- ""
     uid <- ""
     ###########################################################################
     # Assemble any provided data
@@ -514,8 +514,8 @@ cocluster_heatmap <- function(cocluster_df,
     coclustering_coverage_check(cocluster_df, action = "stop")
     ###########################################################################
     # Reconstructing the original cluster solution
-    cluster_solution_s1 <- pick_cols(cocluster_df, c("sub_1", "sub_1_clust"))
-    cluster_solution_s2 <- pick_cols(cocluster_df, c("sub_2", "sub_2_clust"))
+    cluster_solution_s1 <- pick_cols(cocluster_df, c("obs_1", "obs_1_clust"))
+    cluster_solution_s2 <- pick_cols(cocluster_df, c("obs_2", "obs_2_clust"))
     colnames(cluster_solution_s1) <- c("uid", "cluster")
     colnames(cluster_solution_s2) <- c("uid", "cluster")
     cluster_solution <- rbind(cluster_solution_s1, cluster_solution_s2) |>
@@ -539,8 +539,8 @@ cocluster_heatmap <- function(cocluster_df,
     # Loop through the coclustering data frame and populate the matrices
     for (i in seq_len(nrow(cocluster_df))) {
         row <- cocluster_df[i, ]
-        s1 <- row$"sub_1"
-        s2 <- row$"sub_2"
+        s1 <- row$"obs_1"
+        s2 <- row$"obs_2"
         cocluster_mat[s1, s2]  <- row$"cocluster_frac"
         cocluster_mat[s2, s1]  <- row$"cocluster_frac"
     }

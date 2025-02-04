@@ -54,10 +54,14 @@ sc <- snf_config(
 )
 ```
 
-Information about the clustering used by default is stored in the settings data frame:
+The clustering functions that can be used are stored within the *clustering functions list* (`clust_fns_list` object) of the config, while the reference to which of those functions will be used for a particular solution is stored in the *settings data frame* (`settings_df` object) of the config:
 
 ```{r}
+# Available functions
 sc$"clust_fns_list"
+
+# Which functions will be used
+sc$"settings_df"$"clust_alg"
 ```
 
 The "1" corresponds to spectral clustering using the eigen-gap heuristic to determine the number of clusters, while the "2" corresponds to spectral clustering using the rotation cost heuristic to determine the number of clusters.
@@ -294,7 +298,6 @@ kNNdistplot(
     distance_matrix1,
     minPts = 10
 )
-
 ## Maybe there?
 abline(h=0.4872, col = "red", lty = 2)
 
@@ -328,4 +331,4 @@ for (i in seq(0.485, 0.488, by = 0.0001)) {
 
 In this specific instance, those hyperparameters are incredibly sensitive - a slight change will get very different results.
 That is likely due to the shape of the actual data being clustered.
-Your mileage may vary!
+Your mileage may vary.

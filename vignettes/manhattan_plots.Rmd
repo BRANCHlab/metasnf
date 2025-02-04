@@ -86,7 +86,7 @@ esm_manhattan <- esm_manhattan_plot(
 
 ```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
-    "esm_manhattan.png",
+    "vignettes/esm_manhattan.png",
     esm_manhattan,
     height = 5,
     width = 8,
@@ -122,7 +122,7 @@ ari_hm <- meta_cluster_heatmap(
 shiny_annotator(ari_hm)
 
 # Result of meta cluster examination
-split_vec <- c(2, 5, 12, 17)
+split_vec <- c(2, 5, 12, 16)
 
 # Create a base heatmap for visual meta clustering
 ari_hm <- meta_cluster_heatmap(
@@ -131,13 +131,17 @@ ari_hm <- meta_cluster_heatmap(
     split_vector = split_vec
 )
 
-# Extracting representative solutions from each defined meta cluster
-rep_solutions <- get_representative_solutions(
-    sol_aris,
+ari_hm
+
+# Label meta clusters based on the split vector
+mc_sol_df <- label_meta_clusters(
+    sol_df = ext_sol_df,
     split_vector = split_vec,
-    order = meta_cluster_order,
-    ext_sol_df
+    order = meta_cluster_order
 )
+
+# Extracting representative solutions from each defined meta cluster
+rep_solutions <- get_representative_solutions(sol_aris, mc_sol_df)
 
 mc_manhattan <- mc_manhattan_plot(
     rep_solutions,
@@ -153,7 +157,7 @@ mc_manhattan <- mc_manhattan_plot(
 
 ```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
-    "mc_manhattan_clean.png",
+    "vignettes/mc_manhattan_clean.png",
     mc_manhattan,
     height = 10,
     width = 10,
@@ -184,14 +188,14 @@ var_manhattan <- var_manhattan_plot(
 
 ```{r eval = FALSE, echo = FALSE}
 ggplot2::ggsave(
-    "var_manhattan.png",
+    "vignettes/var_manhattan.png",
     var_manhattan,
-    height = 7,
-    width = 12,
-    dpi = 100
+    height = 5,
+    width = 9,
+    dpi = 75
 )
 ```
 
 <center>
-![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/var_manhattan_l.png)
+![](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/var_manhattan.png)
 </center>

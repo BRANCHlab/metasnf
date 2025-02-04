@@ -239,10 +239,7 @@ mc_manhattan_plot <- function(ext_sol_df,
     ###########################################################################
     # Select solution, label, and p-value related columns only
     ###########################################################################
-    if (!"label" %in% colnames(ext_sol_df)) {
-        ext_sol_df$"label" <- ext_sol_df$"solution"
-    }
-    ext_sol_df <- gselect(ext_sol_df, c("^solution$", "^label$", "_pval$"))
+    ext_sol_df <- gselect(ext_sol_df, c("^solution$", "^mc$", "_pval$"))
     if (ncol(ext_sol_df) == 2) {
         metasnf_error(
             "ext_sol_df is missing p-value columns. Did you",
@@ -251,10 +248,10 @@ mc_manhattan_plot <- function(ext_sol_df,
     }
     ext_sol_df <- drop_cols(ext_sol_df, c("min_pval", "mean_pval", "max_pval"))
     ###########################################################################
-    # Convert solution and label to factors
+    # Convert solution and mc to factors
     ###########################################################################
     ext_sol_df$"solution" <- factor(ext_sol_df$"solution")
-    ext_sol_df$"label" <- factor(ext_sol_df$"label")
+    ext_sol_df$"mc" <- factor(ext_sol_df$"mc")
     ###########################################################################
     # Re-assign names to the data list and target list
     ###########################################################################
@@ -300,7 +297,7 @@ mc_manhattan_plot <- function(ext_sol_df,
     ext_sol_df[, var_cols] <- cutoff_var_cols
     summary_data <- ext_sol_df |>
         tidyr::pivot_longer(
-            !(c("solution", "label")),
+            !(c("solution", "mc")),
             names_to = "variable",
             values_to = "neg_log_pval"
         ) |>
@@ -369,7 +366,7 @@ mc_manhattan_plot <- function(ext_sol_df,
             plot.title = ggplot2::element_text(hjust = 0.5),
             text = ggplot2::element_text(size = text_size)
         ) +
-        ggplot2::facet_grid(label ~ .)
+        ggplot2::facet_grid(mc ~ .)
     ###########################################################################
     # Assigning colours to domains
     ###########################################################################

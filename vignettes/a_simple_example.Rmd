@@ -166,12 +166,11 @@ Recreating the example provided with the original `SNF` function will be an extr
 library(metasnf)
 ```
 
-### 2. Store the data in a *data_list*
+### 2. Store the data in a *data list*
 
-All the data we're working with will get stored in a single object called the `data_list`.
-The `data_list` is made by passing in each data frame into the `data_list` function, alongside information about the name of the data frame, the broader source (referred to in this package as a "domain") of information that data frame comes from, and the type of features that are stored inside that data frame (can be continuous, discrete, ordinal, categorical, or mixed).
-
-The `data_list` generation process also requires you to specify which column contains information about the ID of the patients.
+Data used for clustering will be stored in a `data_list` class object.
+The data list is made by passing each data frame into the `data_list()` function, alongside information about the name of the data frame, the broader source (referred to in this package as a "domain") of information that data frame comes from, and the type of features that are stored inside that data frame (can be continuous, discrete, ordinal, categorical, or mixed).
+The `data_list()` function also requires you to specify which column contains information about the ID of the patients.
 In this case, that information isn't there, so we'll have to add it ourselves.
 The added IDs span from 101 onwards (rather than from 1 onwards) purely for convenience: automatic sorting of patient names won't result in patient 199 being placed before patient 2.
 
@@ -197,29 +196,28 @@ my_dl <- data_list(
 )
 ```
 
-The first entries are all lists which contains the following elements:
+The entries are lists which contain the following elements:
 
-1. The actual data frame
-2. A name for the data frame (string)
-3. A name for the *domain* of information the data frame is representative of (string)
-4. The type of feature stored in the data frame (options are continuous, discrete, ordinal, categorical, and mixed)
+1. The data frame
+2. A user-determined name for the data frame (character)
+3. A user-determined name for the *domain* of information the data frame is representative of (character)
+4. The type of feature stored in the data frame (character; options are continuous, discrete, ordinal, categorical, and mixed)
 
 Finally, there's an argument for the `uid` (the column name that currently uniquely identifies all the observations in your data).
 
-Behind the scenes, this function is building a nested list that keeps track of all this information, but it is also:
+In the process of formatting the provided data frames, this function:
 
-- Converting the UID of the data into "uid"
-- Removing all observations that contain any NAs
-- Removing all observations who are not present in all input data frames
-- Arranging the observations in all the data frame by their UID
+- Converts the UID of the data into "uid"
 - Prefixing the UID values with the string "uid_" to help with cluster result characterization
+- Removes all observations that contain any missing values
+- Removes all observations that are not present in all data frames
+- Arranges the observations in all data frames by their UID
 
-Any rows containing NAs are removed.
-If you don't want a bunch of your data to get removed because there are a few NAs sprinkled around here and there, consider using [imputation](https://en.wikipedia.org/wiki/Imputation_(statistics)).
-The `mice` package in R is nice for this.
+To avoid losing a considerable amount of data during data list generation, consider using [imputation](https://en.wikipedia.org/wiki/Imputation_(statistics)) first.
+The `mice` package in R is helpful for this.
 
-Note that you do not need to name out every element explicitly.
-As long as you provide the objects within each list in the correct order (data, name, domain, type), you'll get the correct result:
+Also note that you do not need to name out every element explicitly;
+as long as you provide the objects within each list in the correct order (data, name, domain, type), you'll get the correct result:
 
 ```{r eval = FALSE}
 # Compactly:
@@ -232,9 +230,9 @@ my_dl <- data_list(
 
 ### 3. Store all the settings of the desired SNF runs in an *SNF config*
 
-The `snf_config` is an object storing all the information required to convert the raw data into a final cluster solution.
-It is composed of multiple parts, including a *settings data frame* which tracks one set of SNF hyperparameters per row, a *weights matrix* which 
-By varying the rows in this matrix, we can access a broader space of possible solutions and hopefully get closer to something that will be as useful as possible for our context.
+The SNF config is an object storing all the information required to convert the raw data into a final cluster solution.
+It is composed of multiple parts, including a *settings data frame* which tracks one set of SNF hyperparameters per row, a *weights matrix* which tracks one set of all the feature weights per row, a *distance functions list* which stores all the functions that will be uesd to convert raw data into a intermediate distance matrices, and a *clustering algorithms list* which stores all the functions that will be used to convert final SNF-fused networks into cluster solutions.
+By varying the elements in the SNF config, we can access a broader space of possible solutions and hopefully get closer to something that will be as useful as possible for our context.
 
 In this case, we're going to create only a single cluster solution using the same process outlined in the original SNFtool example above.
 
@@ -254,15 +252,13 @@ sc <- snf_config(
 sc
 ```
 
-The SNF config is made of 4 parts: a settings data frame (class `settings_df`), a distance functions list (class `dist_fns_list`), a clustering functions list (class `clust_fns_list`), and a weights matrix (class `weights_matrix`).
-For now, we'll only focus on the settings data frame part.
-It can be printed as a regular data frame by calling `as.data.frame()` on it:
+We can more clearly examine the settings data frame within the config as follows:
 
 ```{r}
 as.data.frame(sc$"settings_df")
 ```
 
-The columns in the `settings_df` account for the following:
+The columns in this `settings_df`-class object account for the following:
 
 * solution: A way to keep track of the different rows
 * alpha, k, t: The hyperparameters seen above

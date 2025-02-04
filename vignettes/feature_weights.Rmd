@@ -76,7 +76,6 @@ sc <- snf_config(
 
 sc$"weights_matrix"
 
-
 # Random exponentially distributed values
 sc <- snf_config(
     dl,

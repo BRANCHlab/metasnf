@@ -92,11 +92,12 @@ similarity_matrix_hm <- similarity_matrix_heatmap(
     heatmap_height = grid::unit(10, "cm"),
     heatmap_width = grid::unit(10, "cm")
 )
+```
 
-# Export heatmaps using the `save_heatmap` function
+```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = similarity_matrix_hm,
-    path = "similarity_matrix_heatmap.png",
+    path = "vignettes/similarity_matrix_heatmap.png",
     width = 410,
     height = 330,
     res = 80
@@ -112,12 +113,12 @@ Additionally, the similarity matrix gets reordered according to the provided clu
 
 ## Annotations
 
-One piece of functionality provided by `ComplexHeatmap::Heatmap` is the ability to supply visual annotations along the rows and columns of a heatmap.
+One piece of functionality provided by `ComplexHeatmap::Heatmap()` is the ability to supply visual annotations along the rows and columns of a heatmap.
 
 You can always build annotations using the standard approaches outline in the [ComplexHeatmap Complete Reference](https://jokergoo.github.io/ComplexHeatmap-reference/book/index.html).
 In addition to that, this package offers some convenient functionality to specify regular heatmap annotations and barplot annotations directly through a provided data frame or data_list (or both).
 
-In the example below, we make use of data supplied through a data_list.
+In the example below, we make use of data supplied through a data list.
 
 ```{r eval = FALSE}
 annotated_sm_hm <- similarity_matrix_heatmap(
@@ -154,7 +155,7 @@ annotated_sm_hm <- similarity_matrix_heatmap(
 ```{r eval = FALSE, echo = FALSE}
 save_heatmap(
     heatmap = annotated_sm_hm,
-    path = "./annotated_sm_heatmap.png",
+    path = "vignettes/annotated_sm_heatmap.png",
     width = 500,
     height = 440,
     res = 80

@@ -839,7 +839,7 @@ pval_heatmap <- function(ext_sol_df,
                          row_split = NULL,
                          ...) {
     rownames(ext_sol_df) <- ext_sol_df$"solutions"
-    pvals <- gexclude(ext_sol_df, "_pval$")
+    pvals <- gselect(ext_sol_df, "_pval$")
     if (!is.null(order)) {
         pvals <- pvals[order, ]
     }

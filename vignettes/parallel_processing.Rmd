@@ -70,7 +70,7 @@ sol_df <- batch_snf(
 Use the progressr package to visualize the progress of parallel batch_snf.
 
 ```{r eval = FALSE}
-with_progress({
+progressr::with_progress({
     sol_df <- batch_snf(
         dl,
         sc,
@@ -96,7 +96,5 @@ sol_df <- batch_snf(
 To find out how many processes you have access to (or at least, how many `metasnf` will think you have access to), use the `availableCores()` function from the future package:
 
 ```{r eval = FALSE}
-library(future)
-
-availableCores()
+future::availableCores()
 ```

@@ -55,7 +55,7 @@ city_df <- data.frame(
 )
 
 # Generating a data_list explicitly (Name each nested list element):
-data_list <- data_list(
+dl <- data_list(
     list(
         data = heart_rate_df,
         name = "heart_rate",
@@ -84,7 +84,7 @@ data_list <- data_list(
 )
 
 # Achieving the same result compactly:
-data_list <- data_list(
+dl <- data_list(
     list(heart_rate_df, "heart_rate", "clinical", "continuous"),
     list(personality_test_df, "personality_test", "surveys", "continuous"),
     list(survey_response_df, "survey_response", "surveys", "ordinal"),
@@ -93,7 +93,7 @@ data_list <- data_list(
 )
 
 # Printing data_list summaries
-summary(data_list)
+summary(dl)
 ```
 
 Depending on your data preprocessing, it may be more convenient to you to assemble the components of your data_list in an automated way and then provide that result to `data_list`.
