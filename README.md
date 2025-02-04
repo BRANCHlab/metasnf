@@ -1,14 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Meta clustering with Similarity Network Fusion
+# metaSNF: Meta clustering with Similarity Network Fusion
 
 <!-- badges: start -->
 <!-- badges: end -->
 
 ## Brief Overview
 
-*metasnf* is a package that facilitates usage of the meta clustering
+metaSNF is an R package that facilitates usage of the meta clustering
 paradigm described in ([Caruana et al. 2006](#ref-caruanaMeta2006)) with
 the similarity network fusion (SNF) data integration procedure developed
 in ([Wang et al. 2014](#ref-wangSimilarity2014)). The package offers a
@@ -19,21 +19,21 @@ context-specific utility and principled validation of results.
 
 ## Installation
 
-You will need R version 4.1.0 or higher to install this package.
-`metasnf` can be installed from CRAN:
+You will need R version 4.1.0 or higher to install this package. metaSNF
+can be installed from CRAN:
 
 ``` r
-#install.packages("metasnf")
+install.packages("metasnf")
 ```
 
 Development versions can be installed from GitHub:
 
 ``` r
 # Latest development version
-#devtools::install_github("BRANCHlab/metasnf")
-#
-## Install a specific tagged version
-#devtools::install_github("BRANCHlab/metasnf@v1.1.2")
+devtools::install_github("BRANCHlab/metasnf")
+
+# Install a specific tagged version
+devtools::install_github("BRANCHlab/metasnf@v2.0.0")
 ```
 
 ## Quick Start
@@ -45,7 +45,7 @@ Minimal usage of the package looks like this:
 library(metasnf)
 
 # Setting up the data
-data_list <- data_list(
+dl <- data_list(
     list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
     list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
     list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
@@ -53,17 +53,47 @@ data_list <- data_list(
     list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
     uid = "patient"
 )
+#> ℹ 176 observations dropped due to incomplete data.
 
 # Specifying 5 different sets of settings for SNF
 set.seed(42)
-settings_matrix <- generate_settings_matrix(
-    data_list,
-    nrow = 5,
+sc <- snf_config(
+    dl,
+    n_solutions = 5,
     max_k = 40
 )
+#> ℹ No distance functions specified. Using defaults.
+#> ℹ No clustering functions specified. Using defaults.
 
 # This matrix has clustering solutions for each of the 5 SNF runs!
-solutions_matrix <- batch_snf(data_list, settings_matrix)
+sol_df <- batch_snf(dl, sc)
+
+sol_df
+#> 5 cluster solutions of 101 observations:
+#> solution nclust mc uid_NDAR_INV0567T2Y9 uid_NDAR_INV0IZ157F8 
+#>        1      2  .                    1                    2 
+#>        2      2  .                    2                    1 
+#>        3     10  .                    1                    9 
+#>        4      2  .                    2                    1 
+#>        5      8  .                    1                    7 
+#> 98 observations not shown.
+#> Use `print(n = ...)` to change the number of rows printed.
+#> Use `t()` to view compact cluster solution format.
+
+t(sol_df)
+#> 5 cluster solutions of 100 observations:
+#>                  uid      s1    s2    s3    s4    s5 
+#> uid_NDAR_INV0567T2Y9       1     2     1     2     1
+#> uid_NDAR_INV0IZ157F8       2     1     9     1     7
+#> uid_NDAR_INV0J4PYA5F       1     2     7     2     3
+#> uid_NDAR_INV10OMKVLE       2     1     8     1     4
+#> uid_NDAR_INV15FPCW4O       1     2     2     2     5
+#> uid_NDAR_INV19NB4RJK       1     2     9     2     7
+#> uid_NDAR_INV1HLGR738       1     2     9     2     7
+#> uid_NDAR_INV1KR0EZFU       2     1     9     2     7
+#> uid_NDAR_INV1L3Y9EOP       1     2     2     2     5
+#> uid_NDAR_INV1TCP5GNM       1     2     8     2     4
+#> 90 observations not shown.
 ```
 
 Check out the tutorial vignettes below to learn about how the package
@@ -117,8 +147,8 @@ the purposes of clinical subtyping.
 
 ### Essential objects
 
-- [Settings
-  matrix](https://branchlab.github.io/metasnf/articles/settings_matrix.html)
+- [SNF
+  config](https://branchlab.github.io/metasnf/articles/snf_config.html)
 - [Data
   list](https://branchlab.github.io/metasnf/articles/data_list.html)
 
