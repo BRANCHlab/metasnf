@@ -96,65 +96,57 @@ can be obtained by providing a data list into the
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> 175 observations dropped due to incomplete data.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ 175 observations dropped due to incomplete data.</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span><span class="va">dl</span>, n_solutions <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No distance functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No clustering functions specified. Using defaults.</span></span></code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sc</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">                           1    2    3    4    5</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<pre><code><span><span class="co">## Settings Data Frame:</span></span>
+<span><span class="co">##                            1    2    3    4    5</span></span>
+<span><span class="co">## SNF hyperparameters:</span></span>
 <span><span class="co">## alpha                    0.6  0.8  0.4  0.6  0.6</span></span>
 <span><span class="co">## k                         39   75   51   77   25  </span></span>
 <span><span class="co">## t                         20   20   20   20   20  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">## SNF scheme:</span></span>
 <span><span class="co">##                            1    2    2    1    3  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">## Clustering functions:</span></span>
 <span><span class="co">##                            2    2    2    2    2  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">## Distance functions:</span></span>
 <span><span class="co">## CNT                        1    1    1    1    1  </span></span>
 <span><span class="co">## DSC                        1    1    1    1    1  </span></span>
 <span><span class="co">## ORD                        1    1    1    1    1  </span></span>
 <span><span class="co">## CAT                        1    1    1    1    1  </span></span>
 <span><span class="co">## MIX                        1    1    1    1    1  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Component dropout:</span></span></span>
-<span><span class="co">## cortical_thickness        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span> </span></span>
-<span><span class="co">## cortical_surface_area     <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## subcortical_volume        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## household_income          <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## pubertal_status           <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Distance Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #BBBB00;">Continuous (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Discrete (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Categorical (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Mixed (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Weights Matrix:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">Weights defined for 5 cluster solutions.</span></span></span>
-<span><span class="co">## $ mrisdp_1  1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## $ mrisdp_2  1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## $ mrisdp_3  1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## $ mrisdp_4  1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## $ mrisdp_5  1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## <span style="color: #555555;">…and 329 more features.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span></span></span></code></pre>
+<span><span class="co">## Component dropout:</span></span>
+<span><span class="co">## cortical_thickness         ✔    ✔    ✔    ✔    ✖  </span></span>
+<span><span class="co">## cortical_surface_area      ✔    ✔    ✖    ✔    ✔  </span></span>
+<span><span class="co">## subcortical_volume         ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## household_income           ✔    ✔    ✔    ✖    ✔  </span></span>
+<span><span class="co">## pubertal_status            ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## Distance Functions List:</span></span>
+<span><span class="co">## Continuous (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Discrete (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Ordinal (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Categorical (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Mixed (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Clustering Functions List:</span></span>
+<span><span class="co">## [1] spectral_eigen</span></span>
+<span><span class="co">## [2] spectral_rot</span></span>
+<span><span class="co">## Weights Matrix:</span></span>
+<span><span class="co">## Weights defined for 5 cluster solutions.</span></span>
+<span><span class="co">## $ mrisdp_1 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## $ mrisdp_2 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## $ mrisdp_3 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## $ mrisdp_4 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## $ mrisdp_5 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## …and 329 more features.</span></span></code></pre>
 <p>Similarity network fusion-based clustering pipelines require the
 following steps:</p>
 <ol style="list-style-type: decimal">
@@ -198,27 +190,27 @@ conversion step (step 2).</li>
 <p>You can view the settings data frame in closer detail as follows:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sc</span><span class="op">$</span><span class="st">"settings_df"</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #555555;">                           1    2    3    4    5</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<pre><code><span><span class="co">##                            1    2    3    4    5</span></span>
+<span><span class="co">## SNF hyperparameters:</span></span>
 <span><span class="co">## alpha                    0.6  0.8  0.4  0.6  0.6</span></span>
 <span><span class="co">## k                         39   75   51   77   25  </span></span>
 <span><span class="co">## t                         20   20   20   20   20  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">## SNF scheme:</span></span>
 <span><span class="co">##                            1    2    2    1    3  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">## Clustering functions:</span></span>
 <span><span class="co">##                            2    2    2    2    2  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">## Distance functions:</span></span>
 <span><span class="co">## CNT                        1    1    1    1    1  </span></span>
 <span><span class="co">## DSC                        1    1    1    1    1  </span></span>
 <span><span class="co">## ORD                        1    1    1    1    1  </span></span>
 <span><span class="co">## CAT                        1    1    1    1    1  </span></span>
 <span><span class="co">## MIX                        1    1    1    1    1  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Component dropout:</span></span></span>
-<span><span class="co">## cortical_thickness        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span> </span></span>
-<span><span class="co">## cortical_surface_area     <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## subcortical_volume        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## household_income          <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## pubertal_status           <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span></span></span></code></pre>
+<span><span class="co">## Component dropout:</span></span>
+<span><span class="co">## cortical_thickness         ✔    ✔    ✔    ✔    ✖  </span></span>
+<span><span class="co">## cortical_surface_area      ✔    ✔    ✖    ✔    ✔  </span></span>
+<span><span class="co">## subcortical_volume         ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## household_income           ✔    ✔    ✔    ✖    ✔  </span></span>
+<span><span class="co">## pubertal_status            ✔    ✔    ✔    ✔    ✔</span></span></code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Printed as a regular data frame</span></span>
 <span><span class="va">sc</span><span class="op">$</span><span class="st">"settings_df"</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -322,21 +314,16 @@ combination of the former 4).</p>
 <code class="sourceCode R"><span><span class="va">dfl</span> <span class="op">&lt;-</span> <span class="va">sc</span><span class="op">$</span><span class="st">"dist_fns_list"</span></span>
 <span></span>
 <span><span class="va">dfl</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #BBBB00;">Continuous (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Discrete (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Categorical (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Mixed (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span></code></pre>
+<pre><code><span><span class="co">## Continuous (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Discrete (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Ordinal (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Categorical (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Mixed (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span></code></pre>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dfl</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "cnt_dist_fns" "dsc_dist_fns" "ord_dist_fns" "cat_dist_fns" "mix_dist_fns"</span></span></code></pre>
@@ -349,7 +336,7 @@ combination of the former 4).</p>
 <span><span class="co">##     distance_matrix &lt;- as.matrix(stats::dist(weighted_df, method = "euclidean"))</span></span>
 <span><span class="co">##     return(distance_matrix)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x55b38af97cd8&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55f5c2e02478&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:metasnf&gt;</span></span></code></pre>
 <p>You can learn more about customizing distance metrics in the <a href="https://branchlab.github.io/metasnf/articles/distance_metrics.html">distance
 metrics vignette</a>.</p>
@@ -364,10 +351,8 @@ capable of converting a similarity matrix into a cluster solution
 <code class="sourceCode R"><span><span class="va">cfl</span> <span class="op">&lt;-</span> <span class="va">sc</span><span class="op">$</span><span class="st">"clust_fns_list"</span></span>
 <span></span>
 <span><span class="va">cfl</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
-<span><span class="co">## </span></span></code></pre>
+<pre><code><span><span class="co">## [1] spectral_eigen</span></span>
+<span><span class="co">## [2] spectral_rot</span></span></code></pre>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cfl</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "spectral_eigen" "spectral_rot"</span></span></code></pre>
@@ -382,7 +367,7 @@ capable of converting a similarity matrix into a cluster solution
 <span><span class="co">##         nclust_estimate)</span></span>
 <span><span class="co">##     return(solution)</span></span>
 <span><span class="co">## }</span></span>
-<span><span class="co">## &lt;bytecode: 0x55b38b07b6a0&gt;</span></span>
+<span><span class="co">## &lt;bytecode: 0x55f5c2edbc68&gt;</span></span>
 <span><span class="co">## &lt;environment: namespace:metasnf&gt;</span></span></code></pre>
 <p>You can learn more about customizing clustering functions in the <a href="https://branchlab.github.io/metasnf/articles/clustering_algorithms.html">clustering
 algorithnms vignette</a>.</p>
@@ -394,14 +379,13 @@ algorithnms vignette</a>.</p>
 <code class="sourceCode R"><span><span class="va">wm</span> <span class="op">&lt;-</span> <span class="va">sc</span><span class="op">$</span><span class="st">"weights_matrix"</span></span>
 <span></span>
 <span><span class="va">wm</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #555555;">Weights defined for 5 cluster solutions.</span></span></span>
-<span><span class="co">## $ mrisdp_1  1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## $ mrisdp_2  1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## $ mrisdp_3  1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## $ mrisdp_4  1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## $ mrisdp_5  1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## <span style="color: #555555;">…and 329 more features.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span></span></span></code></pre>
+<pre><code><span><span class="co">## Weights defined for 5 cluster solutions.</span></span>
+<span><span class="co">## $ mrisdp_1 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## $ mrisdp_2 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## $ mrisdp_3 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## $ mrisdp_4 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## $ mrisdp_5 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## …and 329 more features.</span></span></code></pre>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">wm</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"matrix"</span></span>
 <span></span>
@@ -429,63 +413,55 @@ created, the function will randomly vary the values in the matrix.</p>
 <span>    <span class="va">dl</span>,</span>
 <span>    n_solutions <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No distance functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No clustering functions specified. Using defaults.</span></span></code></pre>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sc</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">                           1    2    3    4    5    6    7    8    9   10</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<pre><code><span><span class="co">## Settings Data Frame:</span></span>
+<span><span class="co">##                            1    2    3    4    5    6    7    8    9   10</span></span>
+<span><span class="co">## SNF hyperparameters:</span></span>
 <span><span class="co">## alpha                    0.6  0.8  0.3  0.7  0.7  0.8  0.6  0.7  0.8  0.3</span></span>
 <span><span class="co">## k                         27   84   50   57   16   80   65   32   95   56  </span></span>
 <span><span class="co">## t                         20   20   20   20   20   20   20   20   20   20  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">## SNF scheme:</span></span>
 <span><span class="co">##                            2    2    3    3    1    3    2    1    3    2  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">## Clustering functions:</span></span>
 <span><span class="co">##                            2    1    1    1    1    1    1    1    1    2  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">## Distance functions:</span></span>
 <span><span class="co">## CNT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## DSC                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## ORD                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## CAT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## MIX                        1    1    1    1    1    1    1    1    1    1  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Component dropout:</span></span></span>
-<span><span class="co">## cortical_thickness        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## cortical_surface_area     <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## subcortical_volume        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## household_income          <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## pubertal_status           <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## <span style="color: #555555;">…and settings defined to create 90 more cluster solutions.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span><span style="color: #0000BB;">Distance Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #BBBB00;">Continuous (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Discrete (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Categorical (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Mixed (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Weights Matrix:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">Weights defined for 100 cluster solutions.</span></span></span>
-<span><span class="co">## $ mrisdp_1  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_2  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_3  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_4  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_5  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## <span style="color: #555555;">…and 329 more features.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span></span></span></code></pre>
+<span><span class="co">## Component dropout:</span></span>
+<span><span class="co">## cortical_thickness         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## cortical_surface_area      ✔    ✔    ✔    ✔    ✔    ✖    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## subcortical_volume         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## household_income           ✔    ✔    ✔    ✖    ✔    ✔    ✔    ✖    ✔    ✔  </span></span>
+<span><span class="co">## pubertal_status            ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## …and settings defined to create 90 more cluster solutions.</span></span>
+<span><span class="co">## Distance Functions List:</span></span>
+<span><span class="co">## Continuous (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Discrete (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Ordinal (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Categorical (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Mixed (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Clustering Functions List:</span></span>
+<span><span class="co">## [1] spectral_eigen</span></span>
+<span><span class="co">## [2] spectral_rot</span></span>
+<span><span class="co">## Weights Matrix:</span></span>
+<span><span class="co">## Weights defined for 100 cluster solutions.</span></span>
+<span><span class="co">## $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## …and 329 more features.</span></span></code></pre>
 <div class="section level3">
 <h3 id="alpha-k-and-t">Alpha, k, and t<a class="anchor" aria-label="anchor" href="#alpha-k-and-t"></a>
 </h3>
@@ -502,8 +478,8 @@ and maximum range.</p>
 <span>    min_alpha <span class="op">=</span> <span class="fl">0.3</span>,</span>
 <span>    max_alpha <span class="op">=</span> <span class="fl">0.8</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No distance functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No clustering functions specified. Using defaults.</span></span></code></pre>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Through specific value sampling</span></span>
 <span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
@@ -512,8 +488,8 @@ and maximum range.</p>
 <span>    k_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">25</span>, <span class="fl">50</span><span class="op">)</span>,</span>
 <span>    alpha_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.4</span>, <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No distance functions specified. Using defaults.</span></span>
+<span><span class="co">## ℹ No clustering functions specified. Using defaults.</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="inclusion-columns-and-data-frame-dropout">Inclusion columns and data frame dropout<a class="anchor" aria-label="anchor" href="#inclusion-columns-and-data-frame-dropout"></a>
@@ -538,63 +514,55 @@ much higher number of data frames being dropped on average) or “none”
 <span>    n_solutions <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    dropout_dist <span class="op">=</span> <span class="st">"exponential"</span> <span class="co"># the default behaviour</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No distance functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No clustering functions specified. Using defaults.</span></span></code></pre>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sc</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">                           1    2    3    4    5    6    7    8    9   10</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<pre><code><span><span class="co">## Settings Data Frame:</span></span>
+<span><span class="co">##                            1    2    3    4    5    6    7    8    9   10</span></span>
+<span><span class="co">## SNF hyperparameters:</span></span>
 <span><span class="co">## alpha                    0.4  0.7  0.5  0.8  0.5  0.4  0.8  0.3  0.4  0.5</span></span>
 <span><span class="co">## k                         46   64   27   33   74   32   85   63   10   17  </span></span>
 <span><span class="co">## t                         20   20   20   20   20   20   20   20   20   20  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">## SNF scheme:</span></span>
 <span><span class="co">##                            2    2    1    2    1    1    3    3    1    3  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">## Clustering functions:</span></span>
 <span><span class="co">##                            2    2    1    1    1    2    2    2    1    1  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">## Distance functions:</span></span>
 <span><span class="co">## CNT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## DSC                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## ORD                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## CAT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## MIX                        1    1    1    1    1    1    1    1    1    1  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Component dropout:</span></span></span>
-<span><span class="co">## cortical_thickness        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## cortical_surface_area     <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## subcortical_volume        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## household_income          <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## pubertal_status           <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## <span style="color: #555555;">…and settings defined to create 10 more cluster solutions.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span><span style="color: #0000BB;">Distance Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #BBBB00;">Continuous (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Discrete (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Categorical (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Mixed (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Weights Matrix:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">Weights defined for 20 cluster solutions.</span></span></span>
-<span><span class="co">## $ mrisdp_1  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_2  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_3  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_4  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_5  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## <span style="color: #555555;">…and 329 more features.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span></span></span></code></pre>
+<span><span class="co">## Component dropout:</span></span>
+<span><span class="co">## cortical_thickness         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## cortical_surface_area      ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## subcortical_volume         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## household_income           ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## pubertal_status            ✔    ✔    ✔    ✖    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## …and settings defined to create 10 more cluster solutions.</span></span>
+<span><span class="co">## Distance Functions List:</span></span>
+<span><span class="co">## Continuous (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Discrete (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Ordinal (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Categorical (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Mixed (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Clustering Functions List:</span></span>
+<span><span class="co">## [1] spectral_eigen</span></span>
+<span><span class="co">## [2] spectral_rot</span></span>
+<span><span class="co">## Weights Matrix:</span></span>
+<span><span class="co">## Weights defined for 20 cluster solutions.</span></span>
+<span><span class="co">## $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## …and 329 more features.</span></span></code></pre>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Uniform dropping</span></span>
 <span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
@@ -602,63 +570,55 @@ much higher number of data frames being dropped on average) or “none”
 <span>    n_solutions <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    dropout_dist <span class="op">=</span> <span class="st">"uniform"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No distance functions specified. Using defaults.</span></span>
+<span><span class="co">## ℹ No clustering functions specified. Using defaults.</span></span></code></pre>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sc</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">                           1    2    3    4    5    6    7    8    9   10</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<pre><code><span><span class="co">## Settings Data Frame:</span></span>
+<span><span class="co">##                            1    2    3    4    5    6    7    8    9   10</span></span>
+<span><span class="co">## SNF hyperparameters:</span></span>
 <span><span class="co">## alpha                    0.4  0.5  0.4  0.8  0.8  0.3  0.5  0.4  0.6  0.3</span></span>
 <span><span class="co">## k                         23   68   14   50   91   61   95   61   86   26  </span></span>
 <span><span class="co">## t                         20   20   20   20   20   20   20   20   20   20  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">## SNF scheme:</span></span>
 <span><span class="co">##                            2    3    1    3    2    2    3    2    1    2  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">## Clustering functions:</span></span>
 <span><span class="co">##                            2    1    1    2    2    1    1    2    1    1  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">## Distance functions:</span></span>
 <span><span class="co">## CNT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## DSC                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## ORD                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## CAT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## MIX                        1    1    1    1    1    1    1    1    1    1  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Component dropout:</span></span></span>
-<span><span class="co">## cortical_thickness        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## cortical_surface_area     <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## subcortical_volume        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## household_income          <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## pubertal_status           <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## <span style="color: #555555;">…and settings defined to create 10 more cluster solutions.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span><span style="color: #0000BB;">Distance Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #BBBB00;">Continuous (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Discrete (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Categorical (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Mixed (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Weights Matrix:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">Weights defined for 20 cluster solutions.</span></span></span>
-<span><span class="co">## $ mrisdp_1  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_2  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_3  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_4  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_5  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## <span style="color: #555555;">…and 329 more features.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span></span></span></code></pre>
+<span><span class="co">## Component dropout:</span></span>
+<span><span class="co">## cortical_thickness         ✔    ✖    ✔    ✖    ✔    ✔    ✖    ✖    ✔    ✔  </span></span>
+<span><span class="co">## cortical_surface_area      ✔    ✔    ✔    ✖    ✖    ✔    ✖    ✔    ✔    ✔  </span></span>
+<span><span class="co">## subcortical_volume         ✔    ✖    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## household_income           ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## pubertal_status            ✔    ✖    ✔    ✔    ✔    ✔    ✔    ✖    ✔    ✔  </span></span>
+<span><span class="co">## …and settings defined to create 10 more cluster solutions.</span></span>
+<span><span class="co">## Distance Functions List:</span></span>
+<span><span class="co">## Continuous (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Discrete (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Ordinal (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Categorical (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Mixed (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Clustering Functions List:</span></span>
+<span><span class="co">## [1] spectral_eigen</span></span>
+<span><span class="co">## [2] spectral_rot</span></span>
+<span><span class="co">## Weights Matrix:</span></span>
+<span><span class="co">## Weights defined for 20 cluster solutions.</span></span>
+<span><span class="co">## $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## …and 329 more features.</span></span></code></pre>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># No dropping</span></span>
 <span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
@@ -666,63 +626,55 @@ much higher number of data frames being dropped on average) or “none”
 <span>    n_solutions <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    dropout_dist <span class="op">=</span> <span class="st">"none"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No distance functions specified. Using defaults.</span></span>
+<span><span class="co">## ℹ No clustering functions specified. Using defaults.</span></span></code></pre>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sc</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">                           1    2    3    4    5    6    7    8    9   10</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<pre><code><span><span class="co">## Settings Data Frame:</span></span>
+<span><span class="co">##                            1    2    3    4    5    6    7    8    9   10</span></span>
+<span><span class="co">## SNF hyperparameters:</span></span>
 <span><span class="co">## alpha                    0.8  0.4  0.8  0.4  0.7  0.6  0.8  0.4  0.3  0.7</span></span>
 <span><span class="co">## k                         80   53   27   67   63   11   53   14   33   27  </span></span>
 <span><span class="co">## t                         20   20   20   20   20   20   20   20   20   20  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">## SNF scheme:</span></span>
 <span><span class="co">##                            1    2    1    1    1    3    2    2    1    2  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">## Clustering functions:</span></span>
 <span><span class="co">##                            1    2    2    1    2    1    2    1    2    2  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">## Distance functions:</span></span>
 <span><span class="co">## CNT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## DSC                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## ORD                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## CAT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## MIX                        1    1    1    1    1    1    1    1    1    1  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Component dropout:</span></span></span>
-<span><span class="co">## cortical_thickness        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## cortical_surface_area     <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## subcortical_volume        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## household_income          <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## pubertal_status           <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## <span style="color: #555555;">…and settings defined to create 10 more cluster solutions.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span><span style="color: #0000BB;">Distance Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #BBBB00;">Continuous (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Discrete (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Categorical (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Mixed (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Weights Matrix:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">Weights defined for 20 cluster solutions.</span></span></span>
-<span><span class="co">## $ mrisdp_1  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_2  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_3  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_4  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_5  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## <span style="color: #555555;">…and 329 more features.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span></span></span></code></pre>
+<span><span class="co">## Component dropout:</span></span>
+<span><span class="co">## cortical_thickness         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## cortical_surface_area      ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## subcortical_volume         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## household_income           ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## pubertal_status            ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## …and settings defined to create 10 more cluster solutions.</span></span>
+<span><span class="co">## Distance Functions List:</span></span>
+<span><span class="co">## Continuous (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Discrete (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Ordinal (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Categorical (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Mixed (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Clustering Functions List:</span></span>
+<span><span class="co">## [1] spectral_eigen</span></span>
+<span><span class="co">## [2] spectral_rot</span></span>
+<span><span class="co">## Weights Matrix:</span></span>
+<span><span class="co">## Weights defined for 20 cluster solutions.</span></span>
+<span><span class="co">## $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## …and 329 more features.</span></span></code></pre>
 <p>The bounds on the number of data frames that can be dropped can be
 controlled using the <code>min_removed_inputs</code> and
 <code>max_removed_inputs</code>:</p>
@@ -732,64 +684,56 @@ controlled using the <code>min_removed_inputs</code> and
 <span>    n_solutions <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    min_removed_inputs <span class="op">=</span> <span class="fl">3</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No distance functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No clustering functions specified. Using defaults.</span></span></code></pre>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># No row will exclude fewer than 3 data frames during SNF</span></span>
 <span><span class="va">sc</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">                           1    2    3    4    5    6    7    8    9   10</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<pre><code><span><span class="co">## Settings Data Frame:</span></span>
+<span><span class="co">##                            1    2    3    4    5    6    7    8    9   10</span></span>
+<span><span class="co">## SNF hyperparameters:</span></span>
 <span><span class="co">## alpha                    0.5  0.7  0.8  0.3  0.6  0.4  0.4  0.7  0.3  0.3</span></span>
 <span><span class="co">## k                         82   44   24   56   96   10   94   27   34   61  </span></span>
 <span><span class="co">## t                         20   20   20   20   20   20   20   20   20   20  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">## SNF scheme:</span></span>
 <span><span class="co">##                            1    1    1    2    2    3    2    1    2    2  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">## Clustering functions:</span></span>
 <span><span class="co">##                            1    2    2    1    1    1    2    1    1    1  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">## Distance functions:</span></span>
 <span><span class="co">## CNT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## DSC                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## ORD                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## CAT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## MIX                        1    1    1    1    1    1    1    1    1    1  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Component dropout:</span></span></span>
-<span><span class="co">## cortical_thickness        <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span> </span></span>
-<span><span class="co">## cortical_surface_area     <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## subcortical_volume        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span> </span></span>
-<span><span class="co">## household_income          <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span> </span></span>
-<span><span class="co">## pubertal_status           <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## <span style="color: #555555;">…and settings defined to create 10 more cluster solutions.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span><span style="color: #0000BB;">Distance Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #BBBB00;">Continuous (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Discrete (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Categorical (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Mixed (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Weights Matrix:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">Weights defined for 20 cluster solutions.</span></span></span>
-<span><span class="co">## $ mrisdp_1  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_2  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_3  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_4  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## $ mrisdp_5  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">## <span style="color: #555555;">…and 329 more features.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span></span></span></code></pre>
+<span><span class="co">## Component dropout:</span></span>
+<span><span class="co">## cortical_thickness         ✖    ✔    ✖    ✖    ✖    ✖    ✖    ✔    ✔    ✖  </span></span>
+<span><span class="co">## cortical_surface_area      ✖    ✖    ✔    ✖    ✖    ✔    ✖    ✔    ✖    ✔  </span></span>
+<span><span class="co">## subcortical_volume         ✔    ✖    ✖    ✔    ✔    ✖    ✔    ✖    ✔    ✖  </span></span>
+<span><span class="co">## household_income           ✔    ✖    ✖    ✔    ✔    ✖    ✔    ✖    ✖    ✖  </span></span>
+<span><span class="co">## pubertal_status            ✖    ✔    ✔    ✖    ✖    ✔    ✖    ✖    ✖    ✔  </span></span>
+<span><span class="co">## …and settings defined to create 10 more cluster solutions.</span></span>
+<span><span class="co">## Distance Functions List:</span></span>
+<span><span class="co">## Continuous (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Discrete (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Ordinal (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Categorical (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Mixed (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Clustering Functions List:</span></span>
+<span><span class="co">## [1] spectral_eigen</span></span>
+<span><span class="co">## [2] spectral_rot</span></span>
+<span><span class="co">## Weights Matrix:</span></span>
+<span><span class="co">## Weights defined for 20 cluster solutions.</span></span>
+<span><span class="co">## $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">## …and 329 more features.</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
@@ -806,62 +750,54 @@ parameters and keeping everything else fixed:</p>
 <span>    k_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">40</span>, <span class="fl">60</span><span class="op">)</span>,</span>
 <span>    dropout_dist <span class="op">=</span> <span class="st">"none"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No distance functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No clustering functions specified. Using defaults.</span></span></code></pre>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sc</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">                           1    2    3    4    5    6    7    8    9   10</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<pre><code><span><span class="co">## Settings Data Frame:</span></span>
+<span><span class="co">##                            1    2    3    4    5    6    7    8    9   10</span></span>
+<span><span class="co">## SNF hyperparameters:</span></span>
 <span><span class="co">## alpha                    0.8  0.5  0.3  0.8  0.3  0.3  0.3  0.3  0.8  0.3</span></span>
 <span><span class="co">## k                         40   20   40   40   60   40   20   20   20   40  </span></span>
 <span><span class="co">## t                         20   20   20   20   20   20   20   20   20   20  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">## SNF scheme:</span></span>
 <span><span class="co">##                            3    3    3    3    2    2    3    2    2    2  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">## Clustering functions:</span></span>
 <span><span class="co">##                            2    2    2    1    1    1    1    1    2    2  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">## Distance functions:</span></span>
 <span><span class="co">## CNT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## DSC                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## ORD                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## CAT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">## MIX                        1    1    1    1    1    1    1    1    1    1  </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Component dropout:</span></span></span>
-<span><span class="co">## cortical_thickness        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## cortical_surface_area     <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## subcortical_volume        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## household_income          <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## pubertal_status           <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Distance Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #BBBB00;">Continuous (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Discrete (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Categorical (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #BBBB00;">Mixed (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">## </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## <span style="color: #0000BB;">Weights Matrix:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">## </span><span style="color: #555555;">Weights defined for 10 cluster solutions.</span></span></span>
-<span><span class="co">## $ mrisdp_1  1, 1, 1, 1, 1, 1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## $ mrisdp_2  1, 1, 1, 1, 1, 1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## $ mrisdp_3  1, 1, 1, 1, 1, 1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## $ mrisdp_4  1, 1, 1, 1, 1, 1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## $ mrisdp_5  1, 1, 1, 1, 1, 1, 1, 1, 1, 1 </span></span>
-<span><span class="co">## <span style="color: #555555;">…and 329 more features.</span></span></span>
-<span><span class="co"><span style="color: #555555;">## </span></span></span></code></pre>
+<span><span class="co">## Component dropout:</span></span>
+<span><span class="co">## cortical_thickness         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## cortical_surface_area      ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## subcortical_volume         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## household_income           ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## pubertal_status            ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">## Distance Functions List:</span></span>
+<span><span class="co">## Continuous (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Discrete (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Ordinal (1):</span></span>
+<span><span class="co">## [1] euclidean_distance</span></span>
+<span><span class="co">## Categorical (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Mixed (1):</span></span>
+<span><span class="co">## [1] gower_distance</span></span>
+<span><span class="co">## Clustering Functions List:</span></span>
+<span><span class="co">## [1] spectral_eigen</span></span>
+<span><span class="co">## [2] spectral_rot</span></span>
+<span><span class="co">## Weights Matrix:</span></span>
+<span><span class="co">## Weights defined for 10 cluster solutions.</span></span>
+<span><span class="co">## $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 </span></span>
+<span><span class="co">## …and 329 more features.</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="assembling-an-snf-config-in-pieces">Assembling an SNF config in pieces<a class="anchor" aria-label="anchor" href="#assembling-an-snf-config-in-pieces"></a>
@@ -879,16 +815,16 @@ generated with k = 50 and look at another 25 solutions generated with k
 <span>    n_solutions <span class="op">=</span> <span class="fl">25</span>,</span>
 <span>    k_values <span class="op">=</span> <span class="fl">50</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No distance functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No clustering functions specified. Using defaults.</span></span></code></pre>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sc_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
 <span>    <span class="va">dl</span>,</span>
 <span>    n_solutions <span class="op">=</span> <span class="fl">25</span>,</span>
 <span>    k_values <span class="op">=</span> <span class="fl">80</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span></code></pre>
+<pre><code><span><span class="co">## ℹ No distance functions specified. Using defaults.</span></span>
+<span><span class="co">## ℹ No clustering functions specified. Using defaults.</span></span></code></pre>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">full_sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">sc_1</span>, <span class="va">sc_2</span><span class="op">)</span></span></code></pre></div>
 </div>

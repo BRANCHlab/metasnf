@@ -375,63 +375,55 @@ object.</p>
 <span>    min_k <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">50</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; ℹ No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; ℹ No clustering functions specified. Using defaults.</span></span>
 <span></span>
 <span><span class="va">my_sc</span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">Settings Data Frame:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">                           1    2    3    4    5    6    7    8    9   10</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<span><span class="co">#&gt; Settings Data Frame:</span></span>
+<span><span class="co">#&gt;                            1    2    3    4    5    6    7    8    9   10</span></span>
+<span><span class="co">#&gt; SNF hyperparameters:</span></span>
 <span><span class="co">#&gt; alpha                    0.5  0.4  0.3  0.3  0.5  0.4  0.7  0.8  0.3  0.6</span></span>
 <span><span class="co">#&gt; k                         29   26   44   43   29   26   36   21   29   35  </span></span>
 <span><span class="co">#&gt; t                         20   20   20   20   20   20   20   20   20   20  </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">#&gt; SNF scheme:</span></span>
 <span><span class="co">#&gt;                            2    1    2    1    2    2    2    3    1    3  </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">#&gt; Clustering functions:</span></span>
 <span><span class="co">#&gt;                            1    1    2    1    2    1    1    2    1    1  </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">#&gt; Distance functions:</span></span>
 <span><span class="co">#&gt; CNT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">#&gt; DSC                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">#&gt; ORD                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">#&gt; CAT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">#&gt; MIX                        1    1    1    1    1    1    1    1    1    1  </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">Component dropout:</span></span></span>
-<span><span class="co">#&gt; cortical_thickness        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">#&gt; cortical_surface_area     <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">#&gt; subcortical_volume        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">#&gt; household_income          <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span> </span></span>
-<span><span class="co">#&gt; pubertal_status           <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span> </span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">…and settings defined to create 10 more cluster solutions.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span><span style="color: #0000BB;">Distance Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #BBBB00;">Continuous (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">Discrete (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">Ordinal (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] euclidean_distance</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">Categorical (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">Mixed (1):</span></span></span>
-<span><span class="co"><span style="color: #BBBB00;">#&gt; </span><span style="color: #00BB00;">[1] gower_distance</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">Clustering Functions List:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #00BB00;">[1] spectral_eigen</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">[2] spectral_rot</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #0000BB;">Weights Matrix:</span></span></span>
-<span><span class="co"><span style="color: #0000BB;">#&gt; </span><span style="color: #555555;">Weights defined for 20 cluster solutions.</span></span></span>
-<span><span class="co">#&gt; $ mrisdp_1  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">#&gt; $ mrisdp_2  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">#&gt; $ mrisdp_3  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">#&gt; $ mrisdp_4  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">#&gt; $ mrisdp_5  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">…and 329 more features.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span></span></span></code></pre></div>
+<span><span class="co">#&gt; Component dropout:</span></span>
+<span><span class="co">#&gt; cortical_thickness         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">#&gt; cortical_surface_area      ✖    ✔    ✖    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">#&gt; subcortical_volume         ✔    ✔    ✖    ✖    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">#&gt; household_income           ✖    ✔    ✔    ✔    ✔    ✔    ✔    ✖    ✔    ✖  </span></span>
+<span><span class="co">#&gt; pubertal_status            ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✖  </span></span>
+<span><span class="co">#&gt; …and settings defined to create 10 more cluster solutions.</span></span>
+<span><span class="co">#&gt; Distance Functions List:</span></span>
+<span><span class="co">#&gt; Continuous (1):</span></span>
+<span><span class="co">#&gt; [1] euclidean_distance</span></span>
+<span><span class="co">#&gt; Discrete (1):</span></span>
+<span><span class="co">#&gt; [1] euclidean_distance</span></span>
+<span><span class="co">#&gt; Ordinal (1):</span></span>
+<span><span class="co">#&gt; [1] euclidean_distance</span></span>
+<span><span class="co">#&gt; Categorical (1):</span></span>
+<span><span class="co">#&gt; [1] gower_distance</span></span>
+<span><span class="co">#&gt; Mixed (1):</span></span>
+<span><span class="co">#&gt; [1] gower_distance</span></span>
+<span><span class="co">#&gt; Clustering Functions List:</span></span>
+<span><span class="co">#&gt; [1] spectral_eigen</span></span>
+<span><span class="co">#&gt; [2] spectral_rot</span></span>
+<span><span class="co">#&gt; Weights Matrix:</span></span>
+<span><span class="co">#&gt; Weights defined for 20 cluster solutions.</span></span>
+<span><span class="co">#&gt; $ mrisdp_1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">#&gt; $ mrisdp_2 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">#&gt; $ mrisdp_3 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">#&gt; $ mrisdp_4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">#&gt; $ mrisdp_5 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1… </span></span>
+<span><span class="co">#&gt; …and 329 more features.</span></span></code></pre></div>
 <p>The SNF config contains multiple parts that all play a role in
 determining how the data in a data list will be converted into a cluster
 solution.</p>
@@ -441,29 +433,28 @@ solution.</p>
 <p>The first part is the settings data frame:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_sc</span><span class="op">$</span><span class="st">"settings_df"</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">                           1    2    3    4    5    6    7    8    9   10</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF hyperparameters:</span></span></span>
+<span><span class="co">#&gt;                            1    2    3    4    5    6    7    8    9   10</span></span>
+<span><span class="co">#&gt; SNF hyperparameters:</span></span>
 <span><span class="co">#&gt; alpha                    0.5  0.4  0.3  0.3  0.5  0.4  0.7  0.8  0.3  0.6</span></span>
 <span><span class="co">#&gt; k                         29   26   44   43   29   26   36   21   29   35  </span></span>
 <span><span class="co">#&gt; t                         20   20   20   20   20   20   20   20   20   20  </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">SNF scheme:</span></span></span>
+<span><span class="co">#&gt; SNF scheme:</span></span>
 <span><span class="co">#&gt;                            2    1    2    1    2    2    2    3    1    3  </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">Clustering functions:</span></span></span>
+<span><span class="co">#&gt; Clustering functions:</span></span>
 <span><span class="co">#&gt;                            1    1    2    1    2    1    1    2    1    1  </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">Distance functions:</span></span></span>
+<span><span class="co">#&gt; Distance functions:</span></span>
 <span><span class="co">#&gt; CNT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">#&gt; DSC                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">#&gt; ORD                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">#&gt; CAT                        1    1    1    1    1    1    1    1    1    1  </span></span>
 <span><span class="co">#&gt; MIX                        1    1    1    1    1    1    1    1    1    1  </span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">Component dropout:</span></span></span>
-<span><span class="co">#&gt; cortical_thickness        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">#&gt; cortical_surface_area     <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">#&gt; subcortical_volume        <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span> </span></span>
-<span><span class="co">#&gt; household_income          <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span> </span></span>
-<span><span class="co">#&gt; pubertal_status           <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #00BB00;"> ✔ </span>  <span style="color: #BB0000;"> ✖ </span> </span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">…and settings defined to create 10 more cluster solutions.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span></span></span></code></pre></div>
+<span><span class="co">#&gt; Component dropout:</span></span>
+<span><span class="co">#&gt; cortical_thickness         ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">#&gt; cortical_surface_area      ✖    ✔    ✖    ✔    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">#&gt; subcortical_volume         ✔    ✔    ✖    ✖    ✔    ✔    ✔    ✔    ✔    ✔  </span></span>
+<span><span class="co">#&gt; household_income           ✖    ✔    ✔    ✔    ✔    ✔    ✔    ✖    ✔    ✖  </span></span>
+<span><span class="co">#&gt; pubertal_status            ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✔    ✖  </span></span>
+<span><span class="co">#&gt; …and settings defined to create 10 more cluster solutions.</span></span></code></pre></div>
 <p>The settings data frame stores information about:</p>
 <ul>
 <li>
@@ -572,39 +563,31 @@ solution.</p>
 <code class="sourceCode R"><span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">input_dl</span>, <span class="va">my_sc</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sol_df</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">20 cluster solutions of 88 observations:</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span><span style="color: #00BB00;">solution</span> <span style="color: #BBBB00;">nclust</span> <span style="color: #0000BB;">mc</span> uid_NDAR_INV0567T2Y9 uid_NDAR_INV0J4PYA5F </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">1</span> <span style="color: #0000BB;">  </span>  1      5 <span style="color: #BB0000;">NA</span>                       5                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">2</span> <span style="color: #0000BB;">  </span>  2      3 <span style="color: #BB0000;">NA</span>                       3                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">3</span> <span style="color: #0000BB;">  </span>  3      9 <span style="color: #BB0000;">NA</span>                       1                    7 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">4</span> <span style="color: #0000BB;">  </span>  4      2 <span style="color: #BB0000;">NA</span>                       1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">5</span> <span style="color: #0000BB;">  </span>  5      8 <span style="color: #BB0000;">NA</span>                       1                    6 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">6</span> <span style="color: #0000BB;">  </span>  6      2 <span style="color: #BB0000;">NA</span>                       1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">7</span> <span style="color: #0000BB;">  </span>  7      4 <span style="color: #BB0000;">NA</span>                       1                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">8</span> <span style="color: #0000BB;">  </span>  8      5 <span style="color: #BB0000;">NA</span>                       3                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">9</span> <span style="color: #0000BB;">  </span>  9      3 <span style="color: #BB0000;">NA</span>                       3                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">0</span> <span style="color: #0000BB;">  </span> 10      4 <span style="color: #BB0000;">NA</span>                       2                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">1</span> <span style="color: #0000BB;">  </span> 11      8 <span style="color: #BB0000;">NA</span>                       6                    5 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">2</span> <span style="color: #0000BB;">  </span> 12      8 <span style="color: #BB0000;">NA</span>                       1                    7 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">3</span> <span style="color: #0000BB;">  </span> 13      2 <span style="color: #BB0000;">NA</span>                       1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">4</span> <span style="color: #0000BB;">  </span> 14      3 <span style="color: #BB0000;">NA</span>                       3                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">5</span> <span style="color: #0000BB;">  </span> 15      3 <span style="color: #BB0000;">NA</span>                       2                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">6</span> <span style="color: #0000BB;">  </span> 16      8 <span style="color: #BB0000;">NA</span>                       1                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">7</span> <span style="color: #0000BB;">  </span> 17      3 <span style="color: #BB0000;">NA</span>                       1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">8</span> <span style="color: #0000BB;">  </span> 18      9 <span style="color: #BB0000;">NA</span>                       1                    7 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">9</span> <span style="color: #0000BB;">  </span> 19      2 <span style="color: #BB0000;">NA</span>                       1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">0</span> <span style="color: #0000BB;">  </span> 20      3 <span style="color: #BB0000;">NA</span>                       1                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;"> ℹ 85 </span> <span style="color: #0000BB;">or</span> riables: uid_NDAR_INV10OMKVLE &lt;dbl&gt;, uid_NDAR_INV15FPCW4O &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV19NB4RJK &lt;dbl&gt;, uid_NDAR_INV1HLGR738 &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1KR0EZFU &lt;dbl&gt;, uid_NDAR_INV1L3Y9EOP &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1TCP5GNM &lt;dbl&gt;, uid_NDAR_INV1ZHRDJ6B &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV2EJ41YSZ &lt;dbl&gt;, uid_NDAR_INV2PK6C85M &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV2XO1PHCT &lt;dbl&gt;, uid_NDAR_INV3CU5Y9BZ &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV3MBSY16V &lt;dbl&gt;, uid_NDAR_INV3N0QFDLO &lt;dbl&gt;, … </span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">-7 solutions and 85 observations not shown.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; Use `t()` to view compact cluster solution format.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span></span></span></code></pre></div>
+<span><span class="co">#&gt; 20 cluster solutions of 88 observations:</span></span>
+<span><span class="co">#&gt; solution nclust mc uid_NDAR_INV0567T2Y9 uid_NDAR_INV0J4PYA5F </span></span>
+<span><span class="co">#&gt;        1      5  .                    5                    2 </span></span>
+<span><span class="co">#&gt;        2      3  .                    3                    3 </span></span>
+<span><span class="co">#&gt;        3      9  .                    1                    7 </span></span>
+<span><span class="co">#&gt;        4      2  .                    1                    2 </span></span>
+<span><span class="co">#&gt;        5      8  .                    1                    6 </span></span>
+<span><span class="co">#&gt;        6      2  .                    1                    2 </span></span>
+<span><span class="co">#&gt;        7      4  .                    1                    4 </span></span>
+<span><span class="co">#&gt;        8      5  .                    3                    4 </span></span>
+<span><span class="co">#&gt;        9      3  .                    3                    3 </span></span>
+<span><span class="co">#&gt;       10      4  .                    2                    4 </span></span>
+<span><span class="co">#&gt;       11      8  .                    6                    5 </span></span>
+<span><span class="co">#&gt;       12      8  .                    1                    7 </span></span>
+<span><span class="co">#&gt;       13      2  .                    1                    2 </span></span>
+<span><span class="co">#&gt;       14      3  .                    3                    3 </span></span>
+<span><span class="co">#&gt;       15      3  .                    2                    2 </span></span>
+<span><span class="co">#&gt;       16      8  .                    1                    4 </span></span>
+<span><span class="co">#&gt;       17      3  .                    1                    2 </span></span>
+<span><span class="co">#&gt;       18      9  .                    1                    7 </span></span>
+<span><span class="co">#&gt;       19      2  .                    1                    2 </span></span>
+<span><span class="co">#&gt;       20      3  .                    1                    3 </span></span>
+<span><span class="co">#&gt; 85 observations not shown.</span></span>
+<span><span class="co">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span>
+<span><span class="co">#&gt; Use `t()` to view compact cluster solution format.</span></span></code></pre></div>
 <p>Just like that, 20 different cluster solutions have been generated!
 In practice, you may end up wanting to create hundreds or thousands of
 cluster solutions at a time. If you have access to a multi-core system,
@@ -617,25 +600,19 @@ convenient, transposed format using the <code><a href="https://rdrr.io/r/base/t.
 <code class="sourceCode R"><span><span class="va">cluster_solutions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cluster_solutions</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">20 cluster solutions of 87 observations:</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span><span style="color: #0000BB;">8;5;246m# A tibble: 87 × 21</span> </span></span>
-<span><span class="co">#&gt; `                 uid`    s1    s2    s3    s4    s5    s6    s7    s8    s9</span></span>
-<span><span class="co">#&gt; <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; 8;5;250m 1 uid_NDAR_INV0567T2Y9       5     3     1     1     1     1     1     3     3</span></span>
-<span><span class="co">#&gt; 8;5;250m 2 uid_NDAR_INV0J4PYA5F       2     3     7     2     6     2     4     4     3</span></span>
-<span><span class="co">#&gt; 8;5;250m 3 uid_NDAR_INV10OMKVLE       1     2     3     1     4     2     3     1     2</span></span>
-<span><span class="co">#&gt; 8;5;250m 4 uid_NDAR_INV15FPCW4O       1     2     5     2     5     2     3     1     2</span></span>
-<span><span class="co">#&gt; 8;5;250m 5 uid_NDAR_INV19NB4RJK       4     2     9     1     7     2     3     2     2</span></span>
-<span><span class="co">#&gt; 8;5;250m 6 uid_NDAR_INV1HLGR738       4     2     9     1     7     2     3     2     2</span></span>
-<span><span class="co">#&gt; 8;5;250m 7 uid_NDAR_INV1KR0EZFU       4     2     9     1     7     2     3     2     2</span></span>
-<span><span class="co">#&gt; 8;5;250m 8 uid_NDAR_INV1L3Y9EOP       1     2     5     2     5     2     3     1     2</span></span>
-<span><span class="co">#&gt; 8;5;250m 9 uid_NDAR_INV1TCP5GNM       1     2     3     1     4     2     3     1     2</span></span>
-<span><span class="co">#&gt; 8;5;250m10 uid_NDAR_INV1ZHRDJ6B       3     1     4     1     7     1     3     5     2</span></span>
-<span><span class="co">#&gt; 8;5;246m# ℹ 77 more rows</span></span>
-<span><span class="co">#&gt; 8;5;246m# ℹ 11 more variables: s10 &lt;dbl&gt;, s11 &lt;dbl&gt;, s12 &lt;dbl&gt;, s13 &lt;dbl&gt;, s14 &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; 8;5;246m#   s15 &lt;dbl&gt;, s16 &lt;dbl&gt;, s17 &lt;dbl&gt;, s18 &lt;dbl&gt;, s19 &lt;dbl&gt;, s20 &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">20 solutions and 72 observations not shown.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span></span></span></code></pre></div>
+<span><span class="co">#&gt; 20 cluster solutions of 87 observations:</span></span>
+<span><span class="co">#&gt;                  uid      s1    s2    s3    s4    s5    s6    s7    s8    s9 </span></span>
+<span><span class="co">#&gt; uid_NDAR_INV0567T2Y9       5     3     1     1     1     1     1     3     3</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV0J4PYA5F       2     3     7     2     6     2     4     4     3</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV10OMKVLE       1     2     3     1     4     2     3     1     2</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV15FPCW4O       1     2     5     2     5     2     3     1     2</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV19NB4RJK       4     2     9     1     7     2     3     2     2</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV1HLGR738       4     2     9     1     7     2     3     2     2</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV1KR0EZFU       4     2     9     1     7     2     3     2     2</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV1L3Y9EOP       1     2     5     2     5     2     3     1     2</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV1TCP5GNM       1     2     3     1     4     2     3     1     2</span></span>
+<span><span class="co">#&gt; uid_NDAR_INV1ZHRDJ6B       3     1     4     1     7     1     3     5     2</span></span>
+<span><span class="co">#&gt; 11 solutions and 77 observations not shown.</span></span></code></pre></div>
 <p>When transposed, the <code>solutions_df</code> class object is
 converted to a <code>t_solutions_df</code> class object, which only
 contains columns indicating what cluster each observation was assigned
@@ -781,39 +758,31 @@ more clearly.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mc_sol_df</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">20 cluster solutions of 88 observations:</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span><span style="color: #00BB00;">solution</span> <span style="color: #BBBB00;">nclust</span> <span style="color: #0000BB;">mc</span> uid_NDAR_INV0567T2Y9 uid_NDAR_INV0J4PYA5F </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">1</span> <span style="color: #0000BB;">  </span>  1      5 E                        5                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">2</span> <span style="color: #0000BB;">  </span>  2      3 D                        3                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">3</span> <span style="color: #0000BB;">  </span>  3      9 C                        1                    7 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">4</span> <span style="color: #0000BB;">  </span>  4      2 D                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">5</span> <span style="color: #0000BB;">  </span>  5      8 C                        1                    6 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">6</span> <span style="color: #0000BB;">  </span>  6      2 B                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">7</span> <span style="color: #0000BB;">  </span>  7      4 C                        1                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">8</span> <span style="color: #0000BB;">  </span>  8      5 E                        3                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">9</span> <span style="color: #0000BB;">  </span>  9      3 D                        3                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">0</span> <span style="color: #0000BB;">  </span> 10      4 A                        2                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">1</span> <span style="color: #0000BB;">  </span> 11      8 E                        6                    5 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">2</span> <span style="color: #0000BB;">  </span> 12      8 C                        1                    7 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">3</span> <span style="color: #0000BB;">  </span> 13      2 B                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">4</span> <span style="color: #0000BB;">  </span> 14      3 D                        3                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">5</span> <span style="color: #0000BB;">  </span> 15      3 D                        2                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">6</span> <span style="color: #0000BB;">  </span> 16      8 E                        1                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">7</span> <span style="color: #0000BB;">  </span> 17      3 C                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">8</span> <span style="color: #0000BB;">  </span> 18      9 C                        1                    7 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">9</span> <span style="color: #0000BB;">  </span> 19      2 B                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">0</span> <span style="color: #0000BB;">  </span> 20      3 C                        1                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;"> ℹ 85 </span> <span style="color: #0000BB;">or</span> riables: uid_NDAR_INV10OMKVLE &lt;dbl&gt;, uid_NDAR_INV15FPCW4O &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV19NB4RJK &lt;dbl&gt;, uid_NDAR_INV1HLGR738 &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1KR0EZFU &lt;dbl&gt;, uid_NDAR_INV1L3Y9EOP &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1TCP5GNM &lt;dbl&gt;, uid_NDAR_INV1ZHRDJ6B &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV2EJ41YSZ &lt;dbl&gt;, uid_NDAR_INV2PK6C85M &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV2XO1PHCT &lt;dbl&gt;, uid_NDAR_INV3CU5Y9BZ &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV3MBSY16V &lt;dbl&gt;, uid_NDAR_INV3N0QFDLO &lt;dbl&gt;, … </span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">-7 solutions and 85 observations not shown.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; Use `t()` to view compact cluster solution format.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span></span></span></code></pre></div>
+<span><span class="co">#&gt; 20 cluster solutions of 88 observations:</span></span>
+<span><span class="co">#&gt; solution nclust mc uid_NDAR_INV0567T2Y9 uid_NDAR_INV0J4PYA5F </span></span>
+<span><span class="co">#&gt;        1      5 E                     5                    2 </span></span>
+<span><span class="co">#&gt;        2      3 D                     3                    3 </span></span>
+<span><span class="co">#&gt;        3      9 C                     1                    7 </span></span>
+<span><span class="co">#&gt;        4      2 D                     1                    2 </span></span>
+<span><span class="co">#&gt;        5      8 C                     1                    6 </span></span>
+<span><span class="co">#&gt;        6      2 B                     1                    2 </span></span>
+<span><span class="co">#&gt;        7      4 C                     1                    4 </span></span>
+<span><span class="co">#&gt;        8      5 E                     3                    4 </span></span>
+<span><span class="co">#&gt;        9      3 D                     3                    3 </span></span>
+<span><span class="co">#&gt;       10      4 A                     2                    4 </span></span>
+<span><span class="co">#&gt;       11      8 E                     6                    5 </span></span>
+<span><span class="co">#&gt;       12      8 C                     1                    7 </span></span>
+<span><span class="co">#&gt;       13      2 B                     1                    2 </span></span>
+<span><span class="co">#&gt;       14      3 D                     3                    3 </span></span>
+<span><span class="co">#&gt;       15      3 D                     2                    2 </span></span>
+<span><span class="co">#&gt;       16      8 E                     1                    4 </span></span>
+<span><span class="co">#&gt;       17      3 C                     1                    2 </span></span>
+<span><span class="co">#&gt;       18      9 C                     1                    7 </span></span>
+<span><span class="co">#&gt;       19      2 B                     1                    2 </span></span>
+<span><span class="co">#&gt;       20      3 C                     1                    3 </span></span>
+<span><span class="co">#&gt; 85 observations not shown.</span></span>
+<span><span class="co">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span>
+<span><span class="co">#&gt; Use `t()` to view compact cluster solution format.</span></span></code></pre></div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ari_mc_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/meta_cluster_heatmap.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">sol_aris</span>,</span>
@@ -852,84 +821,76 @@ monitor its progress by setting <code>verbose = TRUE</code>.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ext_sol_df</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">20 cluster solutions, 87 observations, and p-values for 2 features.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span><span style="color: #00BBBB;">Cluster assignment columns:</span></span></span>
-<span><span class="co"><span style="color: #00BBBB;">#&gt; </span><span style="color: #00BB00;">solution</span> <span style="color: #BBBB00;">nclust</span> <span style="color: #0000BB;">mc</span> uid_NDAR_INV0567T2Y9 uid_NDAR_INV0J4PYA5F </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">1</span> <span style="color: #0000BB;">  </span>  1      5 E                        5                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">2</span> <span style="color: #0000BB;">  </span>  2      3 D                        3                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">3</span> <span style="color: #0000BB;">  </span>  3      9 C                        1                    7 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">4</span> <span style="color: #0000BB;">  </span>  4      2 D                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">5</span> <span style="color: #0000BB;">  </span>  5      8 C                        1                    6 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">6</span> <span style="color: #0000BB;">  </span>  6      2 B                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">7</span> <span style="color: #0000BB;">  </span>  7      4 C                        1                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">8</span> <span style="color: #0000BB;">  </span>  8      5 E                        3                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">9</span> <span style="color: #0000BB;">  </span>  9      3 D                        3                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">0</span> <span style="color: #0000BB;">  </span> 10      4 A                        2                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">1</span> <span style="color: #0000BB;">  </span> 11      8 E                        6                    5 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">2</span> <span style="color: #0000BB;">  </span> 12      8 C                        1                    7 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">3</span> <span style="color: #0000BB;">  </span> 13      2 B                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">4</span> <span style="color: #0000BB;">  </span> 14      3 D                        3                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">5</span> <span style="color: #0000BB;">  </span> 15      3 D                        2                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">6</span> <span style="color: #0000BB;">  </span> 16      8 E                        1                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">7</span> <span style="color: #0000BB;">  </span> 17      3 C                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">8</span> <span style="color: #0000BB;">  </span> 18      9 C                        1                    7 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">9</span> <span style="color: #0000BB;">  </span> 19      2 B                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">0</span> <span style="color: #0000BB;">  </span> 20      3 C                        1                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;"> ℹ 85 </span> <span style="color: #0000BB;">or</span> riables: uid_NDAR_INV10OMKVLE &lt;dbl&gt;, uid_NDAR_INV15FPCW4O &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV19NB4RJK &lt;dbl&gt;, uid_NDAR_INV1HLGR738 &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1KR0EZFU &lt;dbl&gt;, uid_NDAR_INV1L3Y9EOP &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1TCP5GNM &lt;dbl&gt;, uid_NDAR_INV1ZHRDJ6B &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV2EJ41YSZ &lt;dbl&gt;, uid_NDAR_INV2PK6C85M &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV2XO1PHCT &lt;dbl&gt;, uid_NDAR_INV3CU5Y9BZ &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV3MBSY16V &lt;dbl&gt;, uid_NDAR_INV3N0QFDLO &lt;dbl&gt;, … </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">Association p-value columns:</span></span></span>
-<span><span class="co"><span style="color: #00BBBB;">#&gt; </span><span style="color: #00BB00;">solution </span>cbcl_anxiety_r_pval cbcl_depress_r_pval</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>1        1 7.3443<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          7.2635<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>2        2 6.6445<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          3.2380<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>3        3 3.9613<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          6.8171<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>4        4 4.8438<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          7.5641<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>5        5 2.2567<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          7.8953<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>6        6 2.5664<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          1.3248<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>7        7 1.2296<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          2.8322<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>8        8 7.6478<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          7.1118<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>9        9 5.1104<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          8.6022<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>0       10 1.0338<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02          2.6313<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>1       11 1.9628<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          1.6880<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>2       12 2.3521<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          7.4583<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>3       13 7.1565<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02          3.6618<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>4       14 3.2599<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          4.9897<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>5       15 5.9020<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          9.1458<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>6       16 3.6360<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          4.1880<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>7       17 5.3258<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          3.7772<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>8       18 2.8001<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          2.8812<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>9       19 4.1679<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01          5.7198<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m2</span>0       20 7.0783<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02          9.2083<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01         </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">Summary p-value columns:</span></span></span>
-<span><span class="co"><span style="color: #00BBBB;">#&gt; </span><span style="color: #00BB00;">solution</span> min_pval  mean_pval max_pval  </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 1        1 7.263<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.304<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.344<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 2        2 3.238<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 4.941<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 6.644<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 3        3 3.961<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 5.389<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 6.817<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 4        4 4.844<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 6.204<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.564<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 5        5 2.257<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 5.076<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.895<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 6        6 1.325<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 1.946<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 2.566<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 7        7 1.230<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 2.031<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 2.832<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 8        8 7.112<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.380<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.648<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 9        9 5.110<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 6.856<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 8.602<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 0       10 1.034<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02 1.833<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02 2.631<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 1       11 1.688<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 1.825<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 1.963<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 2       12 2.352<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 4.905<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.458<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 3       13 7.157<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02 2.189<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 3.662<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 4       14 3.260<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 4.125<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 4.990<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 5       15 5.902<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.524<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 9.146<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 6       16 3.636<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 3.912<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 4.188<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 7       17 3.777<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 4.552<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 5.326<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 8       18 2.800<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 2.841<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 2.881<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 9       19 5.720<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02 2.370<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 4.168<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 0       20 7.078<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02 4.958<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 9.208<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Summaries calculated from 2 features. Use `summary_features(x)` to see them.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; Use `t()` to view compact cluster solution format.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span></span></span>
+<span><span class="co">#&gt; 20 cluster solutions, 87 observations, and p-values for 2 features.</span></span>
+<span><span class="co">#&gt; Cluster assignment columns:</span></span>
+<span><span class="co">#&gt; solution nclust mc uid_NDAR_INV0567T2Y9 uid_NDAR_INV0J4PYA5F </span></span>
+<span><span class="co">#&gt;        1      5 E                     5                    2 </span></span>
+<span><span class="co">#&gt;        2      3 D                     3                    3 </span></span>
+<span><span class="co">#&gt;        3      9 C                     1                    7 </span></span>
+<span><span class="co">#&gt;        4      2 D                     1                    2 </span></span>
+<span><span class="co">#&gt;        5      8 C                     1                    6 </span></span>
+<span><span class="co">#&gt;        6      2 B                     1                    2 </span></span>
+<span><span class="co">#&gt;        7      4 C                     1                    4 </span></span>
+<span><span class="co">#&gt;        8      5 E                     3                    4 </span></span>
+<span><span class="co">#&gt;        9      3 D                     3                    3 </span></span>
+<span><span class="co">#&gt;       10      4 A                     2                    4 </span></span>
+<span><span class="co">#&gt;       11      8 E                     6                    5 </span></span>
+<span><span class="co">#&gt;       12      8 C                     1                    7 </span></span>
+<span><span class="co">#&gt;       13      2 B                     1                    2 </span></span>
+<span><span class="co">#&gt;       14      3 D                     3                    3 </span></span>
+<span><span class="co">#&gt;       15      3 D                     2                    2 </span></span>
+<span><span class="co">#&gt;       16      8 E                     1                    4 </span></span>
+<span><span class="co">#&gt;       17      3 C                     1                    2 </span></span>
+<span><span class="co">#&gt;       18      9 C                     1                    7 </span></span>
+<span><span class="co">#&gt;       19      2 B                     1                    2 </span></span>
+<span><span class="co">#&gt;       20      3 C                     1                    3 </span></span>
+<span><span class="co">#&gt; Association p-value columns:</span></span>
+<span><span class="co">#&gt; solution cbcl_anxiety_r_pval cbcl_depress_r_pval</span></span>
+<span><span class="co">#&gt;        1 7.3443e-01          7.2635e-01         </span></span>
+<span><span class="co">#&gt;        2 6.6445e-01          3.2380e-01         </span></span>
+<span><span class="co">#&gt;        3 3.9613e-01          6.8171e-01         </span></span>
+<span><span class="co">#&gt;        4 4.8438e-01          7.5641e-01         </span></span>
+<span><span class="co">#&gt;        5 2.2567e-01          7.8953e-01         </span></span>
+<span><span class="co">#&gt;        6 2.5664e-01          1.3248e-01         </span></span>
+<span><span class="co">#&gt;        7 1.2296e-01          2.8322e-01         </span></span>
+<span><span class="co">#&gt;        8 7.6478e-01          7.1118e-01         </span></span>
+<span><span class="co">#&gt;        9 5.1104e-01          8.6022e-01         </span></span>
+<span><span class="co">#&gt;       10 1.0338e-02          2.6313e-02         </span></span>
+<span><span class="co">#&gt;       11 1.9628e-01          1.6880e-01         </span></span>
+<span><span class="co">#&gt;       12 2.3521e-01          7.4583e-01         </span></span>
+<span><span class="co">#&gt;       13 7.1565e-02          3.6618e-01         </span></span>
+<span><span class="co">#&gt;       14 3.2599e-01          4.9897e-01         </span></span>
+<span><span class="co">#&gt;       15 5.9020e-01          9.1458e-01         </span></span>
+<span><span class="co">#&gt;       16 3.6360e-01          4.1880e-01         </span></span>
+<span><span class="co">#&gt;       17 5.3258e-01          3.7772e-01         </span></span>
+<span><span class="co">#&gt;       18 2.8001e-01          2.8812e-01         </span></span>
+<span><span class="co">#&gt;       19 4.1679e-01          5.7198e-02         </span></span>
+<span><span class="co">#&gt;       20 7.0783e-02          9.2083e-01         </span></span>
+<span><span class="co">#&gt; Summary p-value columns:</span></span>
+<span><span class="co">#&gt; solution min_pval  mean_pval max_pval  </span></span>
+<span><span class="co">#&gt;        1 7.263e-01 7.304e-01 7.344e-01 </span></span>
+<span><span class="co">#&gt;        2 3.238e-01 4.941e-01 6.644e-01 </span></span>
+<span><span class="co">#&gt;        3 3.961e-01 5.389e-01 6.817e-01 </span></span>
+<span><span class="co">#&gt;        4 4.844e-01 6.204e-01 7.564e-01 </span></span>
+<span><span class="co">#&gt;        5 2.257e-01 5.076e-01 7.895e-01 </span></span>
+<span><span class="co">#&gt;        6 1.325e-01 1.946e-01 2.566e-01 </span></span>
+<span><span class="co">#&gt;        7 1.230e-01 2.031e-01 2.832e-01 </span></span>
+<span><span class="co">#&gt;        8 7.112e-01 7.380e-01 7.648e-01 </span></span>
+<span><span class="co">#&gt;        9 5.110e-01 6.856e-01 8.602e-01 </span></span>
+<span><span class="co">#&gt;       10 1.034e-02 1.833e-02 2.631e-02 </span></span>
+<span><span class="co">#&gt;       11 1.688e-01 1.825e-01 1.963e-01 </span></span>
+<span><span class="co">#&gt;       12 2.352e-01 4.905e-01 7.458e-01 </span></span>
+<span><span class="co">#&gt;       13 7.157e-02 2.189e-01 3.662e-01 </span></span>
+<span><span class="co">#&gt;       14 3.260e-01 4.125e-01 4.990e-01 </span></span>
+<span><span class="co">#&gt;       15 5.902e-01 7.524e-01 9.146e-01 </span></span>
+<span><span class="co">#&gt;       16 3.636e-01 3.912e-01 4.188e-01 </span></span>
+<span><span class="co">#&gt;       17 3.777e-01 4.552e-01 5.326e-01 </span></span>
+<span><span class="co">#&gt;       18 2.800e-01 2.841e-01 2.881e-01 </span></span>
+<span><span class="co">#&gt;       19 5.720e-02 2.370e-01 4.168e-01 </span></span>
+<span><span class="co">#&gt;       20 7.078e-02 4.958e-01 9.208e-01 </span></span>
+<span><span class="co">#&gt; Summaries calculated from 2 features. Use `summary_features(x)` to see them.</span></span>
+<span><span class="co">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span>
+<span><span class="co">#&gt; Use `t()` to view compact cluster solution format.</span></span>
 <span></span>
 <span><span class="co"># Re-running to calculate the p-value for every single input and out-of-model</span></span>
 <span><span class="co"># feature:</span></span>
@@ -940,92 +901,77 @@ monitor its progress by setting <code>verbose = TRUE</code>.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ext_sol_df</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">20 cluster solutions, 87 observations, and p-values for 336 features.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span><span style="color: #00BBBB;">Cluster assignment columns:</span></span></span>
-<span><span class="co"><span style="color: #00BBBB;">#&gt; </span><span style="color: #00BB00;">solution</span> <span style="color: #BBBB00;">nclust</span> <span style="color: #0000BB;">mc</span> uid_NDAR_INV0567T2Y9 uid_NDAR_INV0J4PYA5F </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">1</span> <span style="color: #0000BB;">  </span>  1      5 E                        5                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">2</span> <span style="color: #0000BB;">  </span>  2      3 D                        3                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">3</span> <span style="color: #0000BB;">  </span>  3      9 C                        1                    7 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">4</span> <span style="color: #0000BB;">  </span>  4      2 D                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">5</span> <span style="color: #0000BB;">  </span>  5      8 C                        1                    6 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">6</span> <span style="color: #0000BB;">  </span>  6      2 B                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">7</span> <span style="color: #0000BB;">  </span>  7      4 C                        1                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">8</span> <span style="color: #0000BB;">  </span>  8      5 E                        3                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">9</span> <span style="color: #0000BB;">  </span>  9      3 D                        3                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">0</span> <span style="color: #0000BB;">  </span> 10      4 A                        2                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">1</span> <span style="color: #0000BB;">  </span> 11      8 E                        6                    5 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">2</span> <span style="color: #0000BB;">  </span> 12      8 C                        1                    7 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">3</span> <span style="color: #0000BB;">  </span> 13      2 B                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">4</span> <span style="color: #0000BB;">  </span> 14      3 D                        3                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">5</span> <span style="color: #0000BB;">  </span> 15      3 D                        2                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">6</span> <span style="color: #0000BB;">  </span> 16      8 E                        1                    4 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">7</span> <span style="color: #0000BB;">  </span> 17      3 C                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">8</span> <span style="color: #0000BB;">  </span> 18      9 C                        1                    7 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">9</span> <span style="color: #0000BB;">  </span> 19      2 B                        1                    2 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">0</span> <span style="color: #0000BB;">  </span> 20      3 C                        1                    3 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;"> ℹ 85 </span> <span style="color: #0000BB;">or</span> riables: uid_NDAR_INV10OMKVLE &lt;dbl&gt;, uid_NDAR_INV15FPCW4O &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV19NB4RJK &lt;dbl&gt;, uid_NDAR_INV1HLGR738 &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1KR0EZFU &lt;dbl&gt;, uid_NDAR_INV1L3Y9EOP &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1TCP5GNM &lt;dbl&gt;, uid_NDAR_INV1ZHRDJ6B &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV2EJ41YSZ &lt;dbl&gt;, uid_NDAR_INV2PK6C85M &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV2XO1PHCT &lt;dbl&gt;, uid_NDAR_INV3CU5Y9BZ &lt;dbl&gt;, </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV3MBSY16V &lt;dbl&gt;, uid_NDAR_INV3N0QFDLO &lt;dbl&gt;, … </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">Association p-value columns:</span></span></span>
-<span><span class="co"><span style="color: #00BBBB;">#&gt; </span><span style="color: #00BB00;">solution </span>mrisdp_1_pval mrisdp_2_pval mrisdp_3_pval mrisdp_4_pval</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>1        1 4.0778<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    8.7353<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    1.8227<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    6.4527<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>2        2 2.9963<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    3.7253<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    6.0899<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    2.9392<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>3        3 2.4552<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    2.2052<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    1.1472<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    5.2578<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>4        4 2.0034<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    8.0738<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    3.5087<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    4.7769<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>5        5 1.8555<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    4.5421<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    1.0940<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    4.5550<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>6        6 7.9908<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    3.7914<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02    4.8240<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    7.0521<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>7        7 4.7354<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    3.7364<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    1.0889<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    8.1730<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>8        8 4.0837<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    6.6968<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    1.6713<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    6.7935<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m </span>9        9 2.5205<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    3.4546<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    3.6226<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    1.4636<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>0       10 5.2398<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    4.1312<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    2.9576<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    1.9681<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>1       11 7.0939<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    6.5038<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    1.8298<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    4.1306<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>2       12 8.9372<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02    5.4315<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    8.2658<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02    4.6838<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>3       13 8.0601<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    1.4606<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    4.2591<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    9.5444<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>4       14 5.7455<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    7.0770<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    7.9210<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    1.0353<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>5       15 2.1786<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    5.9972<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    4.7704<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    6.4758<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>6       16 8.5715<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    2.2775<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    4.6667<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    1.3886<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>7       17 3.2033<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    8.5910<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    2.8084<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02    6.1770<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>8       18 2.2032<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    7.6731<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    1.6478<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    2.1663<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m1</span>9       19 3.8095<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    5.3117<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02    9.6942<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    6.3366<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m2</span>0       20 6.3653<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    4.2646<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01    9.0177<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02    4.1032<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01   </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m#</span> ℹ 332 mor<span style="color: #555555;">e</span> variabl<span style="color: #555555;">e</span>s: mrisdp_5_pval &lt;chr&gt;, mrisdp_6_pval &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m#</span>   mrisdp_7_pval &lt;chr&gt;, mrisdp_8_pval &lt;chr&gt;, mrisdp_9_pval &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m#</span>   mrisdp_10_pval &lt;chr&gt;, mrisdp_11_pval &lt;chr&gt;, mrisdp_12_pval &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m#</span>   mrisdp_13_pval &lt;chr&gt;, mrisdp_14_pval &lt;chr&gt;, mrisdp_15_pval &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m#</span>   mrisdp_16_pval &lt;chr&gt;, mrisdp_17_pval &lt;chr&gt;, mrisdp_18_pval &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m#</span>   mrisdp_19_pval &lt;chr&gt;, mrisdp_20_pval &lt;chr&gt;, mrisdp_21_pval &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;246m#</span>   mrisdp_22_pval &lt;chr&gt;, mrisdp_23_pval &lt;chr&gt;, mrisdp_24_pval &lt;chr&gt;, …</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">Summary p-value columns:</span></span></span>
-<span><span class="co"><span style="color: #00BBBB;">#&gt; </span><span style="color: #00BB00;">solution</span> min_pval  mean_pval max_pval  </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 1        1 2.737<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 5.178<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.619<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 2        2 7.412<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.779<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 8.146<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 3        3 4.180<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 5.884<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.587<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 4        4 8.447<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 9.039<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 9.631<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 5        5 5.818<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 6.548<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.278<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 6        6 9.122<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02 2.492<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 4.072<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 7        7 2.293<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 2.909<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 3.525<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 8        8 2.996<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 5.332<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.668<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 9        9 8.830<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 9.217<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 9.603<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 0       10 3.217<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02 7.479<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02 1.174<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 1       11 3.330<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 5.596<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.862<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 2       12 6.489<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 6.800<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 7.111<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 3       13 1.069<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 1.625<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 2.181<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 4       14 7.489<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 8.121<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 8.753<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 5       15 8.957<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 9.221<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 9.485<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 6       16 4.265<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 4.360<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 4.455<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 7       17 2.662<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 6.249<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 9.835<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 8       18 8.011<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02 3.456<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 6.111<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 9       19 6.351<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>02 3.172<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 5.709<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">8;5;250m</span> 0       20 4.299<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 4.745<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 5.192<span style="color: #555555;">e</span><span style="color: #BB0000;">-</span>01 </span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Summaries calculated from 2 features. Use `summary_features(x)` to see them.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; -7 solutions and 332 features not shown.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; Use `t()` to view compact cluster solution format.</span></span></span>
-<span><span class="co"><span style="color: #555555;">#&gt; </span></span></span></code></pre></div>
+<span><span class="co">#&gt; 20 cluster solutions, 87 observations, and p-values for 336 features.</span></span>
+<span><span class="co">#&gt; Cluster assignment columns:</span></span>
+<span><span class="co">#&gt; solution nclust mc uid_NDAR_INV0567T2Y9 uid_NDAR_INV0J4PYA5F </span></span>
+<span><span class="co">#&gt;        1      5 E                     5                    2 </span></span>
+<span><span class="co">#&gt;        2      3 D                     3                    3 </span></span>
+<span><span class="co">#&gt;        3      9 C                     1                    7 </span></span>
+<span><span class="co">#&gt;        4      2 D                     1                    2 </span></span>
+<span><span class="co">#&gt;        5      8 C                     1                    6 </span></span>
+<span><span class="co">#&gt;        6      2 B                     1                    2 </span></span>
+<span><span class="co">#&gt;        7      4 C                     1                    4 </span></span>
+<span><span class="co">#&gt;        8      5 E                     3                    4 </span></span>
+<span><span class="co">#&gt;        9      3 D                     3                    3 </span></span>
+<span><span class="co">#&gt;       10      4 A                     2                    4 </span></span>
+<span><span class="co">#&gt;       11      8 E                     6                    5 </span></span>
+<span><span class="co">#&gt;       12      8 C                     1                    7 </span></span>
+<span><span class="co">#&gt;       13      2 B                     1                    2 </span></span>
+<span><span class="co">#&gt;       14      3 D                     3                    3 </span></span>
+<span><span class="co">#&gt;       15      3 D                     2                    2 </span></span>
+<span><span class="co">#&gt;       16      8 E                     1                    4 </span></span>
+<span><span class="co">#&gt;       17      3 C                     1                    2 </span></span>
+<span><span class="co">#&gt;       18      9 C                     1                    7 </span></span>
+<span><span class="co">#&gt;       19      2 B                     1                    2 </span></span>
+<span><span class="co">#&gt;       20      3 C                     1                    3 </span></span>
+<span><span class="co">#&gt; Association p-value columns:</span></span>
+<span><span class="co">#&gt; solution mrisdp_1_pval mrisdp_2_pval mrisdp_3_pval mrisdp_4_pval</span></span>
+<span><span class="co">#&gt;        1 4.0778e-01    8.7353e-01    1.8227e-01    6.4527e-01   </span></span>
+<span><span class="co">#&gt;        2 2.9963e-01    3.7253e-01    6.0899e-01    2.9392e-02   </span></span>
+<span><span class="co">#&gt;        3 2.4552e-01    2.2052e-01    1.1472e-01    5.2578e-01   </span></span>
+<span><span class="co">#&gt;        4 2.0034e-01    8.0738e-01    3.5087e-01    4.7769e-01   </span></span>
+<span><span class="co">#&gt;        5 1.8555e-01    4.5421e-01    1.0940e-01    4.5550e-01   </span></span>
+<span><span class="co">#&gt;        6 7.9908e-01    3.7914e-02    4.8240e-01    7.0521e-01   </span></span>
+<span><span class="co">#&gt;        7 4.7354e-01    3.7364e-01    1.0889e-01    8.1730e-01   </span></span>
+<span><span class="co">#&gt;        8 4.0837e-01    6.6968e-01    1.6713e-01    6.7935e-01   </span></span>
+<span><span class="co">#&gt;        9 2.5205e-01    3.4546e-01    3.6226e-01    1.4636e-02   </span></span>
+<span><span class="co">#&gt;       10 5.2398e-01    4.1312e-01    2.9576e-01    1.9681e-01   </span></span>
+<span><span class="co">#&gt;       11 7.0939e-01    6.5038e-01    1.8298e-01    4.1306e-01   </span></span>
+<span><span class="co">#&gt;       12 8.9372e-02    5.4315e-01    8.2658e-02    4.6838e-01   </span></span>
+<span><span class="co">#&gt;       13 8.0601e-01    1.4606e-01    4.2591e-01    9.5444e-01   </span></span>
+<span><span class="co">#&gt;       14 5.7455e-01    7.0770e-01    7.9210e-01    1.0353e-01   </span></span>
+<span><span class="co">#&gt;       15 2.1786e-01    5.9972e-01    4.7704e-01    6.4758e-01   </span></span>
+<span><span class="co">#&gt;       16 8.5715e-01    2.2775e-01    4.6667e-01    1.3886e-01   </span></span>
+<span><span class="co">#&gt;       17 3.2033e-01    8.5910e-01    2.8084e-02    6.1770e-01   </span></span>
+<span><span class="co">#&gt;       18 2.2032e-01    7.6731e-01    1.6478e-01    2.1663e-01   </span></span>
+<span><span class="co">#&gt;       19 3.8095e-01    5.3117e-02    9.6942e-01    6.3366e-01   </span></span>
+<span><span class="co">#&gt;       20 6.3653e-01    4.2646e-01    9.0177e-02    4.1032e-01   </span></span>
+<span><span class="co">#&gt; Summary p-value columns:</span></span>
+<span><span class="co">#&gt; solution min_pval  mean_pval max_pval  </span></span>
+<span><span class="co">#&gt;        1 2.737e-01 5.178e-01 7.619e-01 </span></span>
+<span><span class="co">#&gt;        2 7.412e-01 7.779e-01 8.146e-01 </span></span>
+<span><span class="co">#&gt;        3 4.180e-01 5.884e-01 7.587e-01 </span></span>
+<span><span class="co">#&gt;        4 8.447e-01 9.039e-01 9.631e-01 </span></span>
+<span><span class="co">#&gt;        5 5.818e-01 6.548e-01 7.278e-01 </span></span>
+<span><span class="co">#&gt;        6 9.122e-02 2.492e-01 4.072e-01 </span></span>
+<span><span class="co">#&gt;        7 2.293e-01 2.909e-01 3.525e-01 </span></span>
+<span><span class="co">#&gt;        8 2.996e-01 5.332e-01 7.668e-01 </span></span>
+<span><span class="co">#&gt;        9 8.830e-01 9.217e-01 9.603e-01 </span></span>
+<span><span class="co">#&gt;       10 3.217e-02 7.479e-02 1.174e-01 </span></span>
+<span><span class="co">#&gt;       11 3.330e-01 5.596e-01 7.862e-01 </span></span>
+<span><span class="co">#&gt;       12 6.489e-01 6.800e-01 7.111e-01 </span></span>
+<span><span class="co">#&gt;       13 1.069e-01 1.625e-01 2.181e-01 </span></span>
+<span><span class="co">#&gt;       14 7.489e-01 8.121e-01 8.753e-01 </span></span>
+<span><span class="co">#&gt;       15 8.957e-01 9.221e-01 9.485e-01 </span></span>
+<span><span class="co">#&gt;       16 4.265e-01 4.360e-01 4.455e-01 </span></span>
+<span><span class="co">#&gt;       17 2.662e-01 6.249e-01 9.835e-01 </span></span>
+<span><span class="co">#&gt;       18 8.011e-02 3.456e-01 6.111e-01 </span></span>
+<span><span class="co">#&gt;       19 6.351e-02 3.172e-01 5.709e-01 </span></span>
+<span><span class="co">#&gt;       20 4.299e-01 4.745e-01 5.192e-01 </span></span>
+<span><span class="co">#&gt; Summaries calculated from 2 features. Use `summary_features(x)` to see them.</span></span>
+<span><span class="co">#&gt; 332 features not shown.</span></span>
+<span><span class="co">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span>
+<span><span class="co">#&gt; Use `t()` to view compact cluster solution format.</span></span></code></pre></div>
 <p>Functionally, the only difference between the data list passed into
 the <code>dl</code> parameter and the one passed into the
 <code>target_dl</code> parameter is that the <code>target_dl</code>
@@ -1496,8 +1442,8 @@ beginning, with label propagation to validate our findings.</p>
 <span>    min_k <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">30</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; ℹ No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; ℹ No clustering functions specified. Using defaults.</span></span>
 <span></span>
 <span><span class="va">train_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    <span class="va">train_dl</span>,</span>

@@ -99,7 +99,7 @@ weights) object.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> 139 observations dropped due to incomplete data.</span></span>
+<span><span class="co">#&gt; ℹ 139 observations dropped due to incomplete data.</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">dl</span><span class="op">)</span></span>
 <span><span class="co">#&gt;               name        type       domain length width</span></span>
@@ -116,16 +116,16 @@ weights) object.</p>
 <span>    min_k <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">50</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; ℹ No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; ℹ No clustering functions specified. Using defaults.</span></span>
 <span></span>
 <span><span class="va">sc</span><span class="op">$</span><span class="st">"weights_matrix"</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Weights defined for 20 cluster solutions.</span></span></span>
-<span><span class="co">#&gt; $ household_income  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
-<span><span class="co">#&gt; $ pubertal_status  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
-<span><span class="co">#&gt; $ colour  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
-<span><span class="co">#&gt; $ cbcl_anxiety_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
-<span><span class="co">#&gt; $ cbcl_depress_r  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…</span></span></code></pre></div>
+<span><span class="co">#&gt; Weights defined for 20 cluster solutions.</span></span>
+<span><span class="co">#&gt; $ household_income 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
+<span><span class="co">#&gt; $ pubertal_status 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
+<span><span class="co">#&gt; $ colour 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
+<span><span class="co">#&gt; $ cbcl_anxiety_r 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,… </span></span>
+<span><span class="co">#&gt; $ cbcl_depress_r 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…</span></span></code></pre></div>
 <p>By default, the weights are all 1. This is what
 <code>batch_snf</code> uses when no weights_matrix is supplied.</p>
 <p>If you have custom feature weights you’d like to be used you can
@@ -144,16 +144,16 @@ weights:</p>
 <span>    max_k <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>    weights_fill <span class="op">=</span> <span class="st">"uniform"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; ℹ No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; ℹ No clustering functions specified. Using defaults.</span></span>
 <span></span>
 <span><span class="va">sc</span><span class="op">$</span><span class="st">"weights_matrix"</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Weights defined for 20 cluster solutions.</span></span></span>
-<span><span class="co">#&gt; $ household_income  0.08161542, 0.40378037, 0.83551451, 0.59499701, 0.351… </span></span>
-<span><span class="co">#&gt; $ pubertal_status  0.39553669, 0.95934650, 0.11323819, 0.23559680, 0.510… </span></span>
-<span><span class="co">#&gt; $ colour  0.07772700, 0.76282288, 0.15224422, 0.93752397, 0.745… </span></span>
-<span><span class="co">#&gt; $ cbcl_anxiety_r  0.15473680, 0.20350748, 0.14351450, 0.61093017, 0.516… </span></span>
-<span><span class="co">#&gt; $ cbcl_depress_r  0.02428327, 0.60967042, 0.47194860, 0.10858025, 0.864…</span></span>
+<span><span class="co">#&gt; Weights defined for 20 cluster solutions.</span></span>
+<span><span class="co">#&gt; $ household_income 0.08161542, 0.40378037, 0.83551451, 0.59499701, 0.351… </span></span>
+<span><span class="co">#&gt; $ pubertal_status 0.39553669, 0.95934650, 0.11323819, 0.23559680, 0.510… </span></span>
+<span><span class="co">#&gt; $ colour 0.07772700, 0.76282288, 0.15224422, 0.93752397, 0.745… </span></span>
+<span><span class="co">#&gt; $ cbcl_anxiety_r 0.15473680, 0.20350748, 0.14351450, 0.61093017, 0.516… </span></span>
+<span><span class="co">#&gt; $ cbcl_depress_r 0.02428327, 0.60967042, 0.47194860, 0.10858025, 0.864…</span></span>
 <span></span>
 <span><span class="co"># Random exponentially distributed values</span></span>
 <span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
@@ -163,16 +163,16 @@ weights:</p>
 <span>    max_k <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>    weights_fill <span class="op">=</span> <span class="st">"exponential"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; ℹ No distance functions specified. Using defaults.</span></span>
+<span><span class="co">#&gt; ℹ No clustering functions specified. Using defaults.</span></span>
 <span></span>
 <span><span class="va">sc</span><span class="op">$</span><span class="st">"weights_matrix"</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Weights defined for 20 cluster solutions.</span></span></span>
-<span><span class="co">#&gt; $ household_income  2.27094485, 0.16919903, 0.18456918, 0.33487595, 1.167… </span></span>
-<span><span class="co">#&gt; $ pubertal_status  0.1528647, 0.4143784, 0.7710409, 1.7987298, 1.4162029… </span></span>
-<span><span class="co">#&gt; $ colour  1.54348805, 0.82288484, 2.54124213, 0.60145639, 1.089… </span></span>
-<span><span class="co">#&gt; $ cbcl_anxiety_r  0.21682983, 3.68043243, 1.25420312, 1.15417982, 0.102… </span></span>
-<span><span class="co">#&gt; $ cbcl_depress_r  0.1307026, 1.8525605, 4.1633331, 1.2926046, 1.6980694…</span></span></code></pre></div>
+<span><span class="co">#&gt; Weights defined for 20 cluster solutions.</span></span>
+<span><span class="co">#&gt; $ household_income 2.27094485, 0.16919903, 0.18456918, 0.33487595, 1.167… </span></span>
+<span><span class="co">#&gt; $ pubertal_status 0.1528647, 0.4143784, 0.7710409, 1.7987298, 1.4162029… </span></span>
+<span><span class="co">#&gt; $ colour 1.54348805, 0.82288484, 2.54124213, 0.60145639, 1.089… </span></span>
+<span><span class="co">#&gt; $ cbcl_anxiety_r 0.21682983, 3.68043243, 1.25420312, 1.15417982, 0.102… </span></span>
+<span><span class="co">#&gt; $ cbcl_depress_r 0.1307026, 1.8525605, 4.1633331, 1.2926046, 1.6980694…</span></span></code></pre></div>
 <p>Once you’re happy with your weights_matrix, you can pass it into
 batch_snf:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
