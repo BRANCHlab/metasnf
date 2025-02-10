@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,20 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.0" id="metasnf-200">metasnf 2.0.0<a class="anchor" aria-label="anchor" href="#metasnf-200"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.0.1" id="metasnf-201">metasnf 2.0.1<a class="anchor" aria-label="anchor" href="#metasnf-201"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-2-0-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-0-1"></a></h3>
+<ul><li>
+<code>extend_solutions</code> was not assigning feature types properly during p-value calculations</li>
+<li>
+<code>rbind.ext_solutions_df</code> now takes <code>...</code> parameter before <code>reset_indices</code> parameter to avoid error during calls with unnamed parameters.</li>
+<li>
+<code>rbind.solutions_df</code> now takes <code>...</code> parameter before <code>reset_indices</code> parameter to avoid error during call without named parameters.</li>
+<li>slicing <code>snf_config</code> object made weights matrix lose its class</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.0" id="metasnf-200">metasnf 2.0.0<a class="anchor" aria-label="anchor" href="#metasnf-200"></a></h2><p class="text-muted">CRAN release: 2025-02-04</p>
 <div class="section level3">
 <h3 id="breaking-changes-2-0-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-2-0-0"></a></h3>
 <ul><li>Extensive changes as a result of a transition to making use of R’s S3 OOP system.</li>

@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -819,6 +819,7 @@ monitor its progress by setting <code>verbose = TRUE</code>.</p>
 <span>    <span class="va">mc_sol_df</span>,</span>
 <span>    target_dl <span class="op">=</span> <span class="va">target_dl</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; --</span></span>
 <span></span>
 <span><span class="va">ext_sol_df</span></span>
 <span><span class="co">#&gt; 20 cluster solutions, 87 observations, and p-values for 2 features.</span></span>
@@ -899,6 +900,7 @@ monitor its progress by setting <code>verbose = TRUE</code>.</p>
 <span>    dl <span class="op">=</span> <span class="va">input_dl</span>,</span>
 <span>    target_dl <span class="op">=</span> <span class="va">target_dl</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; --</span></span>
 <span></span>
 <span><span class="va">ext_sol_df</span></span>
 <span><span class="co">#&gt; 20 cluster solutions, 87 observations, and p-values for 336 features.</span></span>
@@ -948,26 +950,26 @@ monitor its progress by setting <code>verbose = TRUE</code>.</p>
 <span><span class="co">#&gt;       20 6.3653e-01    4.2646e-01    9.0177e-02    4.1032e-01   </span></span>
 <span><span class="co">#&gt; Summary p-value columns:</span></span>
 <span><span class="co">#&gt; solution min_pval  mean_pval max_pval  </span></span>
-<span><span class="co">#&gt;        1 2.737e-01 5.178e-01 7.619e-01 </span></span>
-<span><span class="co">#&gt;        2 7.412e-01 7.779e-01 8.146e-01 </span></span>
-<span><span class="co">#&gt;        3 4.180e-01 5.884e-01 7.587e-01 </span></span>
-<span><span class="co">#&gt;        4 8.447e-01 9.039e-01 9.631e-01 </span></span>
-<span><span class="co">#&gt;        5 5.818e-01 6.548e-01 7.278e-01 </span></span>
-<span><span class="co">#&gt;        6 9.122e-02 2.492e-01 4.072e-01 </span></span>
-<span><span class="co">#&gt;        7 2.293e-01 2.909e-01 3.525e-01 </span></span>
-<span><span class="co">#&gt;        8 2.996e-01 5.332e-01 7.668e-01 </span></span>
-<span><span class="co">#&gt;        9 8.830e-01 9.217e-01 9.603e-01 </span></span>
-<span><span class="co">#&gt;       10 3.217e-02 7.479e-02 1.174e-01 </span></span>
-<span><span class="co">#&gt;       11 3.330e-01 5.596e-01 7.862e-01 </span></span>
-<span><span class="co">#&gt;       12 6.489e-01 6.800e-01 7.111e-01 </span></span>
-<span><span class="co">#&gt;       13 1.069e-01 1.625e-01 2.181e-01 </span></span>
-<span><span class="co">#&gt;       14 7.489e-01 8.121e-01 8.753e-01 </span></span>
-<span><span class="co">#&gt;       15 8.957e-01 9.221e-01 9.485e-01 </span></span>
-<span><span class="co">#&gt;       16 4.265e-01 4.360e-01 4.455e-01 </span></span>
-<span><span class="co">#&gt;       17 2.662e-01 6.249e-01 9.835e-01 </span></span>
-<span><span class="co">#&gt;       18 8.011e-02 3.456e-01 6.111e-01 </span></span>
-<span><span class="co">#&gt;       19 6.351e-02 3.172e-01 5.709e-01 </span></span>
-<span><span class="co">#&gt;       20 4.299e-01 4.745e-01 5.192e-01 </span></span>
+<span><span class="co">#&gt;        1 7.263e-01 7.304e-01 7.344e-01 </span></span>
+<span><span class="co">#&gt;        2 3.238e-01 4.941e-01 6.644e-01 </span></span>
+<span><span class="co">#&gt;        3 3.961e-01 5.389e-01 6.817e-01 </span></span>
+<span><span class="co">#&gt;        4 4.844e-01 6.204e-01 7.564e-01 </span></span>
+<span><span class="co">#&gt;        5 2.257e-01 5.076e-01 7.895e-01 </span></span>
+<span><span class="co">#&gt;        6 1.325e-01 1.946e-01 2.566e-01 </span></span>
+<span><span class="co">#&gt;        7 1.230e-01 2.031e-01 2.832e-01 </span></span>
+<span><span class="co">#&gt;        8 7.112e-01 7.380e-01 7.648e-01 </span></span>
+<span><span class="co">#&gt;        9 5.110e-01 6.856e-01 8.602e-01 </span></span>
+<span><span class="co">#&gt;       10 1.034e-02 1.833e-02 2.631e-02 </span></span>
+<span><span class="co">#&gt;       11 1.688e-01 1.825e-01 1.963e-01 </span></span>
+<span><span class="co">#&gt;       12 2.352e-01 4.905e-01 7.458e-01 </span></span>
+<span><span class="co">#&gt;       13 7.157e-02 2.189e-01 3.662e-01 </span></span>
+<span><span class="co">#&gt;       14 3.260e-01 4.125e-01 4.990e-01 </span></span>
+<span><span class="co">#&gt;       15 5.902e-01 7.524e-01 9.146e-01 </span></span>
+<span><span class="co">#&gt;       16 3.636e-01 3.912e-01 4.188e-01 </span></span>
+<span><span class="co">#&gt;       17 3.777e-01 4.552e-01 5.326e-01 </span></span>
+<span><span class="co">#&gt;       18 2.800e-01 2.841e-01 2.881e-01 </span></span>
+<span><span class="co">#&gt;       19 5.720e-02 2.370e-01 4.168e-01 </span></span>
+<span><span class="co">#&gt;       20 7.078e-02 4.958e-01 9.208e-01 </span></span>
 <span><span class="co">#&gt; Summaries calculated from 2 features. Use `summary_features(x)` to see them.</span></span>
 <span><span class="co">#&gt; 332 features not shown.</span></span>
 <span><span class="co">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span>
@@ -1310,7 +1312,8 @@ from each other with the <code>uid</code> parameter.</p>
 regressing the <code>target_list</code> features onto our generated
 clusters.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span><span class="va">sol_df</span>, <span class="va">target_dl</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span><span class="va">sol_df</span>, <span class="va">target_dl</span><span class="op">)</span></span>
+<span><span class="co">#&gt; --</span></span></code></pre></div>
 <p>There is a heatmap for visualizing this too:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pval_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pval_heatmap.html">pval_heatmap</a></span><span class="op">(</span><span class="va">ext_sol_df</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span>
@@ -1454,6 +1457,7 @@ beginning, with label propagation to validate our findings.</p>
 <span>    <span class="va">train_sol_df</span>,</span>
 <span>    <span class="va">train_target_dl</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; --</span></span>
 <span></span>
 <span><span class="co"># The first row had the lowest minimum p-value across our outcomes</span></span>
 <span><span class="va">lowest_min_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">ext_sol_df</span><span class="op">$</span><span class="st">"min_pval"</span><span class="op">)</span></span>
