@@ -4,13 +4,13 @@
 \alias{rbind.solutions_df}
 \title{Row-binding of solutions data frame class objects.}
 \usage{
-\method{rbind}{solutions_df}(reset_indices = FALSE, ...)
+\method{rbind}{solutions_df}(..., reset_indices = FALSE)
 }
 \arguments{
+\item{...}{An arbitrary number of \code{solutions_df} class objects.}
+
 \item{reset_indices}{If TRUE, re-labels the "solutions" indices in
 the solutions data frame from 1 to the number of defined settings.}
-
-\item{...}{An arbitrary number of \code{solutions_df} class objects.}
 }
 \value{
 A \code{solutions_df} class object.

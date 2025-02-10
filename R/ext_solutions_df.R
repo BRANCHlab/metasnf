@@ -125,6 +125,7 @@ extend_solutions <- function(sol_df,
                              min_pval = 1e-10,
                              processes = 1,
                              verbose = FALSE) {
+    cat("--")
     # Remove nclust = 1 solutions
     single_cluster_solutions <- which(sol_df$"nclust" == 1)
     if (length(single_cluster_solutions) > 0) {
@@ -157,13 +158,12 @@ extend_solutions <- function(sol_df,
     }
     ###########################################################################
     # Calculate vector of all feature names
-    ###########################################################################
-    fts <- as.character(unlist(sapply(dl, function(x) colnames(x$"data")[-1])))
+    fts <- features(dl)
     n_fts <- length(fts)
     ###########################################################################
     # Calculate vector of all feature types
     ###########################################################################
-    feature_types <- sapply(dl, function(x) rep(x$"type", n_fts))
+    feature_types <- summary(dl, "feature")$"type"
     ###########################################################################
     # Construct base of extended solutions data frame by adding columns for
     # p-values of all fts
