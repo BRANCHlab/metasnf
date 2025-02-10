@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -819,7 +819,6 @@ monitor its progress by setting <code>verbose = TRUE</code>.</p>
 <span>    <span class="va">mc_sol_df</span>,</span>
 <span>    target_dl <span class="op">=</span> <span class="va">target_dl</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; --</span></span>
 <span></span>
 <span><span class="va">ext_sol_df</span></span>
 <span><span class="co">#&gt; 20 cluster solutions, 87 observations, and p-values for 2 features.</span></span>
@@ -900,7 +899,6 @@ monitor its progress by setting <code>verbose = TRUE</code>.</p>
 <span>    dl <span class="op">=</span> <span class="va">input_dl</span>,</span>
 <span>    target_dl <span class="op">=</span> <span class="va">target_dl</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; --</span></span>
 <span></span>
 <span><span class="va">ext_sol_df</span></span>
 <span><span class="co">#&gt; 20 cluster solutions, 87 observations, and p-values for 336 features.</span></span>
@@ -1312,8 +1310,7 @@ from each other with the <code>uid</code> parameter.</p>
 regressing the <code>target_list</code> features onto our generated
 clusters.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span><span class="va">sol_df</span>, <span class="va">target_dl</span><span class="op">)</span></span>
-<span><span class="co">#&gt; --</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span><span class="va">sol_df</span>, <span class="va">target_dl</span><span class="op">)</span></span></code></pre></div>
 <p>There is a heatmap for visualizing this too:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pval_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pval_heatmap.html">pval_heatmap</a></span><span class="op">(</span><span class="va">ext_sol_df</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span>
@@ -1457,7 +1454,6 @@ beginning, with label propagation to validate our findings.</p>
 <span>    <span class="va">train_sol_df</span>,</span>
 <span>    <span class="va">train_target_dl</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; --</span></span>
 <span></span>
 <span><span class="co"># The first row had the lowest minimum p-value across our outcomes</span></span>
 <span><span class="va">lowest_min_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">ext_sol_df</span><span class="op">$</span><span class="st">"min_pval"</span><span class="op">)</span></span>
