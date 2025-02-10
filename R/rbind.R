@@ -5,7 +5,7 @@
 #' @param ... An arbitrary number of `solutions_df` class objects.
 #' @return A `solutions_df` class object.
 #' @export
-rbind.solutions_df <- function(reset_indices = FALSE, ...) {
+rbind.solutions_df <- function(..., reset_indices = FALSE) {
     args <- list(...)   
     all_sol_dfs <- lapply(
         args,
