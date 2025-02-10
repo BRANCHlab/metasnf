@@ -125,7 +125,6 @@ extend_solutions <- function(sol_df,
                              min_pval = 1e-10,
                              processes = 1,
                              verbose = FALSE) {
-    cat("--")
     # Remove nclust = 1 solutions
     single_cluster_solutions <- which(sol_df$"nclust" == 1)
     if (length(single_cluster_solutions) > 0) {
