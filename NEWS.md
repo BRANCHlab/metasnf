@@ -1,3 +1,12 @@
+# metasnf 2.0.1
+
+## Bug fixes
+
+- `extend_solutions` was not assigning feature types properly during p-value calculations
+- `rbind.ext_solutions_df` now takes `...` parameter before `reset_indices` parameter to avoid error during calls with unnamed parameters.
+- `rbind.solutions_df` now takes `...` parameter before `reset_indices` parameter to avoid error during call without named parameters.
+-  slicing `snf_config` object made weights matrix lose its class
+
 # metasnf 2.0.0
 
 ## Breaking changes
