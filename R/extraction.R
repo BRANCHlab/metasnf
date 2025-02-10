@@ -60,6 +60,17 @@
 #' @export
 `[.weights_matrix` <- function(x, i, j, ...) {
     result <- NextMethod("[")
+    class(result) <- setdiff(class(result), "weights_matrix")
+    result <- tryCatch(
+        expr = {
+            result <- validate_weights_matrix(result)
+            result <- new_weights_matrix(result)
+            result
+        },
+        error = function(e) {
+            result
+        }
+    )
     return(result)
 }
 
