@@ -1,3 +1,9 @@
+# metasnf 2.0.2
+
+## Formatting
+
+- removed debugging dash lines from `extend_solutions()`
+
 # metasnf 2.0.1
 
 ## Bug fixes
