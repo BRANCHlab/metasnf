@@ -60,7 +60,7 @@ rbind.solutions_df <- function(..., reset_indices = FALSE) {
 #' @param ... An arbitrary number of `ext_solutions_df` class objects.
 #' @return An `ext_solutions_df` class object.
 #' @export
-rbind.ext_solutions_df <- function(reset_indices = FALSE, ...) {
+rbind.ext_solutions_df <- function(..., reset_indices = FALSE) {
     args <- list(...)   
     all_sol_dfs <- lapply(
         args,
