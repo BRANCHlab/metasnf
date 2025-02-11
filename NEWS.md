@@ -1,3 +1,8 @@
+# metasnf 2.0.3
+
+- bugfix: `estimate_nclust_given_graph` has more resiliency to floating point errors through tryCatch loop updating eigenvalue scaling
+- added functions: added `dplyr_row_slice()` functions for classes `solutions_df` and `ext_solutions_df`
+
 # metasnf 2.0.2
 
 ## Formatting

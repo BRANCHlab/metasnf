@@ -33,7 +33,7 @@ Development versions can be installed from GitHub:
 devtools::install_github("BRANCHlab/metasnf")
 
 # Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v2.0.2")
+devtools::install_github("BRANCHlab/metasnf@v2.0.3")
 ```
 
 ## Quick Start
