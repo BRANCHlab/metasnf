@@ -70,18 +70,27 @@ estimate_nclust_given_graph <- function(W, NUMC = 2:10) {
     eigengap <- abs(diff(eigs$values))
     quality <- list()
     for (c_index in 1:length(NUMC)) {
-        ck <- NUMC[c_index]
-        UU <- eigs$vectors[, 1:ck]
-        EigenvectorsDiscrete <- discretisation(UU)
-        EigenVectors <- EigenvectorsDiscrete^2
-        #MATLAB: sort(EigenVectors,2, 'descend');
-        temp1 <- EigenVectors[do.call(order, lapply(1:ncol(EigenVectors),
-             function(i) EigenVectors[, i])), ]
-        temp1 <- t(apply(temp1, 1, sort, TRUE))
-        quality[[c_index]] <- (1 - eigs$values[ck + 1]) /
-            (1 - eigs$values[ck]) *
-            sum( sum( diag(1 / (temp1[, 1] + .Machine$double.eps) ) %*%
-            temp1[, 1:max(2, ck-1)] ))
+        quality <- tryCatch(
+            {
+                ck <- NUMC[c_index]
+                UU <- eigs$vectors[, 1:ck]
+                EigenvectorsDiscrete <- discretisation(UU)
+                EigenVectors <- EigenvectorsDiscrete^2
+                #MATLAB: sort(EigenVectors,2, 'descend');
+                temp1 <- EigenVectors[do.call(order, lapply(1:ncol(EigenVectors),
+                     function(i) EigenVectors[, i])), ]
+                temp1 <- t(apply(temp1, 1, sort, TRUE))
+                quality[[c_index]] <- (1 - eigs$values[ck + 1]) /
+                    (1 - eigs$values[ck]) *
+                    sum( sum( diag(1 / (temp1[, 1] + .Machine$double.eps) ) %*%
+                    temp1[, 1:max(2, ck-1)] ))
+                quality
+            }, error = function(e) {
+                # Ignore this particular NUMC value if the above crashes
+                quality[[c_index]] <- Inf
+                quality
+            }
+        )
     }
     #Eigen-gap best two clusters
     t1 <- sort(eigengap[NUMC], decreasing=TRUE, index.return=T)$ix
