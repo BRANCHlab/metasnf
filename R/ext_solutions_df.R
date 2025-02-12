@@ -81,6 +81,10 @@ validate_ext_solutions_df <- function(ext_sol_dfl) {
 #' @return An `ext_solutions_df` object, which is a data frame with class
 #'  `ext_solutions_df`.
 new_ext_solutions_df <- function(ext_sol_dfl) {
+    pval_cols <- colnames(ext_sol_dfl)[grep("_pval$", colnames(ext_sol_dfl))]
+    feature_cols <- set_diff(pval_cols, c("min_pval", "mean_pval", "max_pval")))
+    fts <- gsub("_pval", "", feature_cols)
+    attr(ext_sol_df, "features") <- fts
     ext_sol_df <- structure(ext_sol_dfl, class = c("ext_solutions_df", "data.frame"))    
     return(ext_sol_df)
 }

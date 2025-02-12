@@ -115,6 +115,9 @@
         attr(result, "sim_mats_list") <- attr(x, "sim_mats_list")
         attr(result, "snf_config") <- attr(x, "snf_config")
     }
+    if (!is.null(attr(x, "summary_features"))) {
+        attr(result, "summary_features") <- attr(x, "summary_features")
+    }
     result <- tryCatch(
         expr = {
             result <- validate_ext_solutions_df(result)
