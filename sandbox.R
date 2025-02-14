@@ -32,5 +32,10 @@ cluster_label_swap <- function(solutions_matrix, c_a, c_b) {
     return(swapped_sm)
 }
 
-attributes(ext_sol_df)
+attributes(ext_sol_df) |> names()
+
+z1 <- attributes(cluster_label_swap(ext_sol_df, 2, 3))
+z2 <- attributes(ext_sol_df)
+
+
 
