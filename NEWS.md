@@ -1,3 +1,14 @@
+# metasnf 2.0.4
+
+## OOP
+
+- `merge_dls()` is superseded by `merge.data_lists()`
+
+## Bug fixes
+
+- `ext_solutions_df` manipulation won't drop `summary_features` and `features` attributes
+- `estimate_nclust_given_graph` has more resiliency to floating point errors through tryCatch statement during eigengap quality assignment
+
 # metasnf 2.0.3
 
 - bugfix: `estimate_nclust_given_graph` has more resiliency to floating point errors through tryCatch loop updating eigenvalue scaling
