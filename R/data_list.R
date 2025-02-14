@@ -372,41 +372,6 @@ dll_uid_first_col <- function(dll) {
     )
 }
 
-#' Horizontally merge compatible data lists
-#'
-#' Join two data lists with the same components (data frames) but separate
-#' observations. To instead merge two data lists that have the same
-#' observations but different components, simply use `c()`.
-#'
-#' @param dl_1 The first data list to merge.
-#' @param dl_2 The second data list to merge.
-#' @return A data list ("list"-class object) containing the observations of
-#'  both provided data lists.
-#' @export
-merge_dls <- function(dl_1, dl_2) {
-    dl_1_names <- summary(dl_1)$"name"
-    dl_2_names <- summary(dl_2)$"name"
-    names(dl_1) <- dl_1_names
-    names(dl_2) <- dl_2_names
-    if (!identical(sort(dl_1_names), sort(dl_2_names))) {
-        metasnf_error(
-            "The two data lists must have identical components."
-        )
-    }
-    merged_data_list <- lapply(
-        dl_1_names,
-        function(x) {
-            dl_1[[x]]$"data" <- dplyr::bind_rows(
-                dl_1[[x]]$"data",
-                dl_2[[x]]$"data"
-            )
-            return(dl_1[[x]])
-        }
-    )
-    names(merged_data_list) <- dl_1_names
-    return(merged_data_list)
-}
-
 #' Test if the object is a data list
 #'
 #' Given an object, returns `TRUE` if that object inherits from the `data_list`
