@@ -45,6 +45,11 @@ validate_solutions_df <- function(sol_dfl) {
             "`solutions_df` must have at least one observation (uid) column."
         )
     }
+    if (nrow(sol_dfl) == 0) {
+        metasnf_error(
+            "`solutions_df` must have at least one row."
+        )
+    }
     return(sol_dfl)
 }
 

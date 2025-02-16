@@ -71,6 +71,11 @@ validate_ext_solutions_df <- function(ext_sol_dfl) {
             "`ext_solutions_df` must have at least one observation (uid) column."
         )
     }
+    if (nrow(ext_sol_dfl) == 0) {
+        metasnf_error(
+            "`ext_solutions_df` must have at least one row."
+        )
+    }
     return(ext_sol_dfl)
 }
 
