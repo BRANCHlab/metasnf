@@ -252,6 +252,12 @@ mc_manhattan_plot <- function(ext_sol_df,
     ###########################################################################
     ext_sol_df$"solution" <- factor(ext_sol_df$"solution")
     ext_sol_df$"mc" <- factor(ext_sol_df$"mc")
+    if (all(is.na(ext_sol_df$"mc"))) {
+        metasnf_alert(
+            "Meta cluster labels not assigned. Using solution labels instead."
+        )
+        ext_sol_df$"mc" <- ext_sol_df$"solution"
+    }
     ###########################################################################
     # Re-assign names to the data list and target list
     ###########################################################################
