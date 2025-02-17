@@ -292,7 +292,7 @@ print.solutions_df <- function(x, n = NULL, tips = TRUE, ...) {
         } else {
             segment <- " cluster solutions of "
         }
-        cat(cli::col_grey(nrow(x), segment, ncol(x) - 2, " observations:\n"))
+        cat(cli::col_grey(nrow(x), segment, length(uids(x)), " observations:\n"))
     }
     assignment_df <- tibble::tibble(as.data.frame(x))
     output <- utils::capture.output(print(assignment_df, n = n))
