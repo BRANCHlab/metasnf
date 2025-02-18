@@ -45,6 +45,8 @@ merge.snf_config <- function(x, y, reset_indices = TRUE, ...) {
 #'  both provided data lists.
 #' @export
 merge.data_list <- function(x, y, ...) {
+    dl_1 <- x
+    dl_2 <- y
     dl_1_names <- summary(dl_1)$"name"
     dl_2_names <- summary(dl_2)$"name"
     names(dl_1) <- dl_1_names
