@@ -45,32 +45,30 @@ merge.snf_config <- function(x, y, reset_indices = TRUE, ...) {
 #'  both provided data lists.
 #' @export
 merge.data_list <- function(x, y, ...) {
-    dl_1 <- x
-    dl_2 <- y
-    dl_1_names <- summary(dl_1)$"name"
-    dl_2_names <- summary(dl_2)$"name"
-    names(dl_1) <- dl_1_names
-    names(dl_2) <- dl_2_names
-    if (!identical(sort(dl_1_names), sort(dl_2_names))) {
+    x_names <- summary(x)$"name"
+    y_names <- summary(y)$"name"
+    names(x) <- x_names
+    names(y) <- y_names
+    if (!identical(sort(x_names), sort(y_names))) {
         metasnf_error(
             "The two data lists must have identical components."
         )
     }
     merged_data_list <- lapply(
-        dl_1_names,
-        function(x) {
-            dl_1[[x]]$"data" <- dplyr::bind_rows(
-                dl_1[[x]]$"data",
-                dl_2[[x]]$"data"
+        x_names,
+        function(c) {
+            x[[c]]$"data" <- dplyr::bind_rows(
+                x[[c]]$"data",
+                y[[c]]$"data"
             )
-            dl_1[[x]]$"data" <- dplyr::arrange(
-                dl_1[[x]]$"data", 
-                dl_1[[x]]$"data"$"uid"
+            x[[c]]$"data" <- dplyr::arrange(
+                x[[c]]$"data", 
+                x[[c]]$"data"$"uid"
             )
-            return(dl_1[[x]])
+            return(x[[c]])
         }
     )
-    names(merged_data_list) <- dl_1_names
+    names(merged_data_list) <- x_names
     merged_data_list <- as_data_list(merged_data_list)
     return(merged_data_list)
 }
