@@ -72,8 +72,10 @@ generate_clust_algs_list <- function(..., disable_base = FALSE) {
 generate_settings_matrix <- function(...) {
     metasnf_deprecated(
         "2.0.0",
-        "Settings and hyperparameters are now handled in `snf_config` class o",
-        "bjects. To generate an SNF config object, please use `snf_config()`."
+        paste0(
+            "Settings and hyperparameters are now handled in `snf_config` class o",
+            "bjects. To generate an SNF config object, please use `snf_config()`."
+        )
     )
 }
 
