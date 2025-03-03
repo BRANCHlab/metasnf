@@ -246,6 +246,7 @@ print.clust_fns_list <- function(x, ...) {
 #' @return Function prints to console but does not return any value.
 #' @export
 print.weights_matrix <- function(x, ...) {
+    class(x) <- c("matrix", "array")
     all_output <- x |>
         data.frame() |>
         dplyr::glimpse() |>
