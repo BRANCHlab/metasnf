@@ -275,7 +275,7 @@ print.weights_matrix <- function(x, ...) {
     }
 }
 
-#' Print method for class `weights_matrix`
+#' Print method for class `solutions_df`
 #'
 #' Custom formatted print for weights matrices that outputs
 #' information about feature weights functions to the console.
