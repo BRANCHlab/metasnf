@@ -9,7 +9,6 @@ input_dl <- data_list(
 sc <- snf_config(input_dl, n_solutions = 10)
 
 sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
-
 ext_sol_df <- extend_solutions(sol_df, input_dl)
 
 # In anticipation of the upcoming cluster swaps
@@ -37,5 +36,4 @@ attributes(ext_sol_df) |> names()
 z1 <- attributes(cluster_label_swap(ext_sol_df, 2, 3))
 z2 <- attributes(ext_sol_df)
 
-
-
+my_sc

@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.R
 \name{print.solutions_df}
 \alias{print.solutions_df}
-\title{Print method for class \code{weights_matrix}}
+\title{Print method for class \code{solutions_df}}
 \usage{
 \method{print}{solutions_df}(x, n = NULL, tips = TRUE, ...)
 }

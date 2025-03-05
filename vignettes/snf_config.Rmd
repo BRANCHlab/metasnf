@@ -137,10 +137,9 @@ By default, all the weights are set to 1, so no weighting occurs.
 
 ## Customizing an SNF config
 
-When not specifying any parameters beyond the number of rows that are created, the function will randomly vary the values in the matrix.
+When not specifying any parameters beyond the number of rows that are created, the function will randomly vary most configurable values in the config within sensible default ranges.
 
 ```{r}
-# Through minimums and maximums
 sc <- snf_config(
     dl,
     n_solutions = 100
