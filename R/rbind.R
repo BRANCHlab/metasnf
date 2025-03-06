@@ -30,7 +30,9 @@ rbind.solutions_df <- function(..., reset_indices = FALSE) {
     wms <- lapply(
         args,
         function(x) {
-            attributes(x)$"snf_config"$"weights_matrix"
+            as.matrix(
+                attributes(x)$"snf_config"$"weights_matrix"
+            )
         }
     )
     smls <- lapply(
@@ -85,7 +87,9 @@ rbind.ext_solutions_df <- function(..., reset_indices = FALSE) {
     wms <- lapply(
         args,
         function(x) {
-            attributes(x)$"snf_config"$"weights_matrix"
+            as.matrix(
+                attributes(x)$"snf_config"$"weights_matrix"
+            )
         }
     )
     smls <- lapply(
