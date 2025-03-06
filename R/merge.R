@@ -21,7 +21,11 @@ merge.snf_config <- function(x, y, reset_indices = TRUE, ...) {
         )
     }
     new_sdf <- rbind(x$"settings_df", y$"settings_df")
-    new_wm <- rbind(x$"weights_matrix", y$"weights_matrix")
+    new_wm <- rbind(
+        as.matrix(x$"weights_matrix"),
+        as.matrix(y$"weights_matrix")
+    ) |>
+        as_weights_matrix()
     x$"settings_df" <- new_sdf
     x$"weights_matrix" <- new_wm
     if (reset_indices) {
