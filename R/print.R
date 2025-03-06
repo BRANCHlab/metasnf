@@ -296,6 +296,9 @@ print.solutions_df <- function(x, n = NULL, tips = TRUE, ...) {
         cat(cli::col_grey(nrow(x), segment, length(uids(x)), " observations:\n"))
     }
     assignment_df <- tibble::tibble(as.data.frame(x))
+    if (nrow(assignment_df) > 10 & is.null(n)) {
+        n <- 10
+    }
     output <- utils::capture.output(print(assignment_df, n = n))
     output <- output[-c(1, 3)]
     output <- output[!grepl("^#", output)]
