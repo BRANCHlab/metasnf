@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,40 @@
       <small>Source: <a href="https://github.com/BRANCHlab/metasnf/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.5" id="metasnf-205">metasnf 2.0.5<a class="anchor" aria-label="anchor" href="#metasnf-205"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-2-0-5">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-0-5"></a></h3>
+<ul><li>calc_aris (as of v2, v1 is still fine) incorrectly excluded the first observation from ARI calculations.</li>
+<li>merge.data_list wasn’t properly integrating updated parameter names</li>
+<li>prevent solutions_df and ext_solutions_df from having 0 rows</li>
+<li>use <code>solution</code> column in <code><a href="../reference/mc_manhattan_plot.html">mc_manhattan_plot()</a></code> when extended solutions data frame has no MC labels</li>
+</ul></div>
+<div class="section level3">
+<h3 id="code-formatting-2-0-5">Code formatting<a class="anchor" aria-label="anchor" href="#code-formatting-2-0-5"></a></h3>
+<ul><li>print.solutions_df title was set as print method for <code>weights matrix</code>
+</li>
+<li>replace dl_1/dl_2 with x&amp;y for consistency in <code><a href="../reference/merge.data_list.html">merge.data_list()</a></code>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-functions-2-0-5">New functions<a class="anchor" aria-label="anchor" href="#new-functions-2-0-5"></a></h3>
+<ul><li>added <code><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list()</a></code> for <code>dist_fns_list</code>, <code>clust_fns_list</code>, and <code>data_list</code> objects</li>
+</ul></div>
+<div class="section level3">
+<h3 id="performance-improvements-2-0-5">Performance improvements<a class="anchor" aria-label="anchor" href="#performance-improvements-2-0-5"></a></h3>
+<ul><li>convert weights matrix to a regular matrix prior to printing reduces print time</li>
+<li>same as last commit</li>
+<li>weights matrix rbinding is faster when treated as a matrix</li>
+</ul></div>
+<div class="section level3">
+<h3 id="print-formatting-2-0-5">Print formatting<a class="anchor" aria-label="anchor" href="#print-formatting-2-0-5"></a></h3>
+<ul><li>deprecated message on <code>generate_settings_matrix</code> needed paste0</li>
+<li>solutions data frame printing above 10 rows will default to 10 rows</li>
+<li>
+<code><a href="../reference/print.solutions_df.html">print.solutions_df()</a></code> misprinted the number of observations in the solutions data frame</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.4" id="metasnf-204">metasnf 2.0.4<a class="anchor" aria-label="anchor" href="#metasnf-204"></a></h2>
 <div class="section level3">
