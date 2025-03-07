@@ -1,3 +1,32 @@
+# metasnf 2.0.5
+
+## Bug fixes
+- calc_aris (as of v2, v1 is still fine) incorrectly excluded the first observation from ARI calculations.
+- merge.data_list wasn't properly integrating updated parameter names
+- prevent solutions_df and ext_solutions_df from having 0 rows
+- use `solution` column in `mc_manhattan_plot()` when extended solutions data frame has no MC labels
+
+## Code formatting
+
+- print.solutions_df title was set as print method for `weights matrix`
+- replace dl_1/dl_2 with x&y for consistency in `merge.data_list()`
+
+## New functions
+
+- added `as.list()` for `dist_fns_list`, `clust_fns_list`, and `data_list` objects
+
+## Performance improvements
+
+- convert weights matrix to a regular matrix prior to printing reduces print time
+- same as last commit
+- weights matrix rbinding is faster when treated as a matrix
+
+## Print formatting
+
+- deprecated message on `generate_settings_matrix` needed paste0
+- solutions data frame printing above 10 rows will default to 10 rows
+- `print.solutions_df()` misprinted the number of observations in the solutions data frame
+
 # metasnf 2.0.4
 
 ## OOP
