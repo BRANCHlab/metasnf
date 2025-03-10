@@ -43,7 +43,7 @@ rbind.solutions_df <- function(..., reset_indices = FALSE) {
     )
     result <- rbind.data.frame(...)
     merged_sdf <- do.call(rbind, sdfs)
-    merged_wm <- do.call(rbind, wms)
+    merged_wm <- as_weights_matrix(do.call(rbind, wms))
     merged_sml <- do.call(c, smls)
     if (reset_indices) {
         result$"solution" <- seq_len(nrow(result))
