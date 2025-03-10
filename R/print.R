@@ -458,6 +458,9 @@ print.t_ext_solutions_df <- function(x, ...) {
 #' @return Function prints to console but does not return any value.
 #' @export
 print.ext_solutions_df <- function(x, n = NULL, ...) {
+    if (nrow(x) > 10 & is.null(n)) {
+        n <- 10
+    }
     cat(
         cli::col_grey(
             nrow(x), " cluster solutions, ", length(uids(x)), " observations,",
