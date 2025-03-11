@@ -1,39 +1,31 @@
 devtools::load_all()
 
-input_dl <- data_list(
-    list(gender_df, "gender", "demographics", "categorical"),
-    list(diagnosis_df, "diagnosis", "clinical", "categorical"),
-    uid = "patient_id"
+# `data_list` class object stores data frames and metadata
+dl <- data_list(
+    list(cort_sa, "cortical_sa", "neuroimaging", "continuous"),
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
 )
 
-sc <- snf_config(input_dl, n_solutions = 10)
+set.seed(42)
+config <- snf_config(
+    dl,
+    n_solutions = 50,
+    dropout_dist = "none",
+    max_k = 40
+)
 
-sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
-ext_sol_df <- extend_solutions(sol_df, input_dl)
 
-# In anticipation of the upcoming cluster swaps
-cluster_label_swap <- function(solutions_matrix, c_a, c_b) {
-    swapped_sm <- dplyr::mutate(
-        solutions_matrix,
-        across(
-            dplyr::starts_with("subject"),
-            ~ ifelse(
-                . == c_a,
-                c_b,
-                ifelse(
-                    . == c_b,
-                    c_a,
-                    .
-                )
-            )
-        )
-    )
-    return(swapped_sm)
-}
+devtools::load_all()
+start <- Sys.time()
+sol_df <- batch_snf(dl, config)
+print(Sys.time() - start)
 
-attributes(ext_sol_df) |> names()
+nested_list <- lapply(
+  split(dl, sapply(dl, `[[`, "domain")),
+  function(lst) lapply(lst, `[[`, "data")
+)
 
-z1 <- attributes(cluster_label_swap(ext_sol_df, 2, 3))
-z2 <- attributes(ext_sol_df)
-
-my_sc
+nested_list[[1]]

@@ -59,13 +59,14 @@ To begin start calculating resampling-based stability measures, we'll build subs
 ```{r eval = FALSE}
 my_dl_subsamples <- subsample_dl(
     my_dl,
-    n_subsamples = 100,
+    n_subsamples = 50,
     subsample_fraction = 0.85
 )
 ```
 
-`my_dl_subsamples` contains a list of 100 subsamples of the full data list.
+`my_dl_subsamples` contains a list of 50 subsamples of the full data list.
 Each variation only has a random 85% of the original observations.
+Once the subsamples of the data list have been created, a cluster solution must be
 
 ```{r eval = FALSE}
 batch_subsample_results <- batch_snf_subsamples(
