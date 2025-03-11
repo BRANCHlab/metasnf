@@ -109,12 +109,13 @@ function.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_dl_subsamples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subsample_dl.html">subsample_dl</a></span><span class="op">(</span></span>
 <span>    <span class="va">my_dl</span>,</span>
-<span>    n_subsamples <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>    n_subsamples <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>    subsample_fraction <span class="op">=</span> <span class="fl">0.85</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><code>my_dl_subsamples</code> contains a list of 100 subsamples of
-the full data list. Each variation only has a random 85% of the original
-observations.</p>
+<p><code>my_dl_subsamples</code> contains a list of 50 subsamples of the
+full data list. Each variation only has a random 85% of the original
+observations. Once the subsamples of the data list have been created, a
+cluster solution must be</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch_subsample_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf_subsamples.html">batch_snf_subsamples</a></span><span class="op">(</span></span>
 <span>    <span class="va">my_dl_subsamples</span>,</span>
