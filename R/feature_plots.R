@@ -125,35 +125,24 @@ bar_plot <- function(df, feature) {
 #' jitter plots based on feature types.
 #'
 #' @param sol_df_row A single row of a solutions data frame.
-#'
 #' @param dl A data list containing data to plot.
-#'
 #' @param cluster_df Directly provide a cluster_df rather than a solutions
-#' matrix. Useful if plotting data from label propagated results.
-#'
+#'  matrix. Useful if plotting data from label propagated results.
 #' @param return_plots If `TRUE`, the function will return a list of plots.
-#' If FALSE, the function will instead return the full data frame used for
-#' plotting.
-#'
+#'  If FALSE, the function will instead return the full data frame used for
+#'  plotting.
 #' @param save If a string is provided, plots will be saved and this string
-#' will be used to prefix plot names.
-#'
+#'  will be used to prefix plot names.
 #' @param jitter_width Width of jitter plots if save is specified.
-#'
 #' @param jitter_height Height of jitter plots if save is specified.
-#'
 #' @param bar_width Width of bar plots if save is specified.
-#'
 #' @param bar_height Height of bar plots if save is specified.
-#'
 #' @param verbose If TRUE, output progress to console.
-#'
 #' @return By default, returns a list of plots (class "gg", "ggplot") with
-#' one plot for every feature in the provided data list and/or target list.
-#' If `return_plots` is FALSE, will instead return a single "data.frame"
-#' object containing every provided feature for every observation in long
-#' format.
-#'
+#'  one plot for every feature in the provided data list and/or target list.
+#'  If `return_plots` is FALSE, will instead return a single "data.frame"
+#'  object containing every provided feature for every observation in long
+#'  format.
 #' @export
 auto_plot <- function(sol_df_row = NULL,
                       dl = NULL,
