@@ -1,3 +1,17 @@
+# metasnf 2.0.6
+
+## Bug fixes
+
+- fixed `rbind` for classes `solutions_df` and `ext_solutions_df` not preserving the class type of the contained `weights_matrix`
+
+## Print formatting
+
+- printing `solutions_df` or `ext_solutions_df` restricts output to 10 line max by default
+
+## Other
+
+- update for CRAN resubmission
+
 # metasnf 2.0.5
 
 ## Bug fixes
