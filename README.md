@@ -33,7 +33,7 @@ Development versions can be installed from GitHub:
 devtools::install_github("BRANCHlab/metasnf")
 
 # Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v2.0.4")
+devtools::install_github("BRANCHlab/metasnf@v2.0.6")
 ```
 
 ## Quick Start
@@ -69,7 +69,7 @@ sc <- snf_config(
 sol_df <- batch_snf(dl, sc)
 
 sol_df
-#> 5 cluster solutions of 101 observations:
+#> 5 cluster solutions of 100 observations:
 #> solution nclust mc uid_NDAR_INV0567T2Y9 uid_NDAR_INV0IZ157F8 
 #>        1      2  .                    1                    2 
 #>        2      2  .                    2                    1 
