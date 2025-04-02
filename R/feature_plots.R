@@ -179,6 +179,7 @@ auto_plot <- function(sol_df_row = NULL,
     if (is.null(cluster_df)) {
         sol_df_row <- sol_df_row[1, ]
         cluster_df <- t(sol_df_row)
+        colnames(cluster_df)[2] <- "cluster"
     }
     ###########################################################################
     # Generating the feature data frame
