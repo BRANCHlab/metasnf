@@ -29,3 +29,15 @@ nested_list <- lapply(
 )
 
 nested_list[[1]]
+
+
+# below may help for extending filter
+#' @export
+#' @importFrom dplyr filter
+filter.solutions_df <- function(.data, ...) {
+    NextMethod()
+}
+
+#' @export
+#'
+dplyr::filter
