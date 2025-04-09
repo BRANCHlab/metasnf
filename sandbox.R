@@ -1,3 +1,15 @@
+#' '# below may help for extending filter
+#' '#' @export
+#' '#' @importFrom dplyr filter
+#' 'filter.solutions_df <- function(.data, ...) {
+#' '    NextMethod()
+#' '}
+#' '
+#' '#' @export
+#' '#'
+#' 'dplyr::filter
+
+
 devtools::load_all()
 
 # `data_list` class object stores data frames and metadata
@@ -12,32 +24,23 @@ dl <- data_list(
 set.seed(42)
 config <- snf_config(
     dl,
-    n_solutions = 50,
+    n_solutions = 20,
     dropout_dist = "none",
     max_k = 40
 )
 
-
-devtools::load_all()
-start <- Sys.time()
 sol_df <- batch_snf(dl, config)
-print(Sys.time() - start)
 
-nested_list <- lapply(
-  split(dl, sapply(dl, `[[`, "domain")),
-  function(lst) lapply(lst, `[[`, "data")
+
+circlize::colorRamp2(
+    c(0.001, 0.01, 0.05, 1),
+    c("red2", "purple", "lightblue", "grey")
 )
 
-nested_list[[1]]
+ari_mat <- calc_aris(sol_df)
+sol_mat <- sol_df |>
+    as.data.frame() |>
+    dplyr::select(dplyr::starts_with("uid")) |>
+    as.matrix()
 
-
-# below may help for extending filter
-#' @export
-#' @importFrom dplyr filter
-filter.solutions_df <- function(.data, ...) {
-    NextMethod()
-}
-
-#' @export
-#'
-dplyr::filter
+plot(sol_df, cluster_rows = TRUE)

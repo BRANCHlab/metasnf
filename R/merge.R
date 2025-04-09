@@ -76,4 +76,3 @@ merge.data_list <- function(x, y, ...) {
     merged_data_list <- as_data_list(merged_data_list)
     return(merged_data_list)
 }
-
