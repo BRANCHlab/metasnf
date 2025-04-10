@@ -5,3 +5,4 @@ docs
 shared-code
 *.html
 Session.vim
+ignore
