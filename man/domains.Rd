@@ -10,7 +10,7 @@ domains(dl)
 \item{dl}{A nested list of input data from \code{data_list()}.}
 }
 \value{
-domain_list list of domains
+A character vector of domains.
 }
 \description{
 Pull domains from a data list

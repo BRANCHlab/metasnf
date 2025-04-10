@@ -10,10 +10,9 @@ get_cluster_solutions(sol_df)
 \item{sol_df}{A sol_df.}
 }
 \value{
-A "data.frame" object where each row is an
-observation and each column (apart from the uid column) indicates
-the cluster that observation was assigned to for the corresponding
-solutions data frame row.
+A "data.frame" object where each row is an observation and each
+column (apart from the uid column) indicates the cluster that observation
+as assigned to for the corresponding solutions data frame row.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
@@ -27,3 +26,4 @@ of cluster assignments' and \code{get_cluster_df()}, which takes a solutions
 matrix with only one row and returns a data frame with two columns: "cluster"
 and "uid" (the UID of the observation).
 }
+\keyword{internal}

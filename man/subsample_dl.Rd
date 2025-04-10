@@ -32,16 +32,16 @@ can be passed into \code{batch_snf_subsamples()} to obtain a list of resampled
 solutions data frames.
 }
 \examples{
-# my_dl <- data_list(
-#     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#     list(income, "household_income", "demographics", "continuous"),
-#     list(pubertal, "pubertal_status", "demographics", "continuous"),
-#     uid = "unique_id"
-# )
-# 
-# my_dl_subsamples <- subsample_dl(
-#     my_dl,
-#     n_subsamples = 20,
-#     subsample_fraction = 0.85
-# )
+my_dl <- data_list(
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+
+my_dl_subsamples <- subsample_dl(
+    my_dl,
+    n_subsamples = 20,
+    subsample_fraction = 0.85
+)
 }

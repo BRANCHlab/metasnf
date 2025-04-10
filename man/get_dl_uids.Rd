@@ -20,3 +20,4 @@ A character vector of the UID labels contained in a data list.
 Deprecated function for extracting UIDs from a data list.
 Please use \code{uids()} instead.
 }
+\keyword{internal}

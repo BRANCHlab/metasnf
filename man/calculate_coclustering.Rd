@@ -42,32 +42,34 @@ information is formatted as a data frame with one row per cluster solution.
 Calculate co-clustering data
 }
 \examples{
-# my_dl <- data_list(
-#     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#     list(income, "household_income", "demographics", "continuous"),
-#     list(pubertal, "pubertal_status", "demographics", "continuous"),
-#     uid = "unique_id"
-# )
-# 
-# sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
-# 
-# sol_df <- batch_snf(my_dl, sc)
-# 
-# my_dl_subsamples <- subsample_dl(
-#     my_dl,
-#     n_subsamples = 20,
-#     subsample_fraction = 0.85
-# )
-# 
-# batch_subsample_results <- batch_snf_subsamples(
-#     my_dl_subsamples,
-#     sc,
-#     verbose = TRUE
-# )
-# 
-# coclustering_results <- calculate_coclustering(
-#     batch_subsample_results,
-#     sol_df,
-#     verbose = TRUE
-# )
+\dontrun{
+    my_dl <- data_list(
+        list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+        list(income, "household_income", "demographics", "continuous"),
+        list(pubertal, "pubertal_status", "demographics", "continuous"),
+        uid = "unique_id"
+    )
+    
+    sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+    
+    sol_df <- batch_snf(my_dl, sc)
+    
+    my_dl_subsamples <- subsample_dl(
+        my_dl,
+        n_subsamples = 20,
+        subsample_fraction = 0.85
+    )
+    
+    batch_subsample_results <- batch_snf_subsamples(
+        my_dl_subsamples,
+        sc,
+        verbose = TRUE
+    )
+    
+    coclustering_results <- calculate_coclustering(
+        batch_subsample_results,
+        sol_df,
+        verbose = TRUE
+    )
+}
 }

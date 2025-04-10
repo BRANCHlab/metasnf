@@ -18,3 +18,4 @@ domain of every variable in a data list.
 Defunct function to summarize a data list. Please use \code{summary()} with
 argument \code{scope = "feature"} instead.
 }
+\keyword{internal}

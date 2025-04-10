@@ -59,24 +59,26 @@ stability calculations.
 Run SNF clustering pipeline on a list of subsampled data lists
 }
 \examples{
-# my_dl <- data_list(
-#     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#     list(income, "household_income", "demographics", "continuous"),
-#     list(pubertal, "pubertal_status", "demographics", "continuous"),
-#     uid = "unique_id"
-# )
-# 
-# sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
-# 
-# my_dl_subsamples <- subsample_dl(
-#     my_dl,
-#     n_subsamples = 20,
-#     subsample_fraction = 0.85
-# )
-# 
-# batch_subsample_results <- batch_snf_subsamples(
-#     my_dl_subsamples,
-#     sc,
-#     verbose = TRUE
-# )
+\donttest{
+my_dl <- data_list(
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+
+sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+
+my_dl_subsamples <- subsample_dl(
+    my_dl,
+    n_subsamples = 20,
+    subsample_fraction = 0.85
+)
+
+batch_subsample_results <- batch_snf_subsamples(
+    my_dl_subsamples,
+    sc,
+    verbose = TRUE
+)
+}
 }

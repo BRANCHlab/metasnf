@@ -10,7 +10,7 @@ prefix_dll_uid(dll)
 \item{dll}{A data list-like \code{list} class object.}
 }
 \value{
-dl A data list with UIDs prefixed with the string "uid_"
+A data list with UIDs prefixed with the string "uid_".
 }
 \description{
 Add "uid_" prefix to all UID values in uid column

@@ -17,3 +17,4 @@ A "data.frame"-formatted version of the provided data list.
 Defunct function for converting a data list into a data frame. Please
 use \code{as.data.frame()} instead.
 }
+\keyword{internal}

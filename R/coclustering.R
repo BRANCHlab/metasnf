@@ -14,18 +14,18 @@
 #'  fraction of the observations of the provided data list.
 #' @export
 #' @examples
-#' # my_dl <- data_list(
-#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#' #     list(income, "household_income", "demographics", "continuous"),
-#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
-#' #     uid = "unique_id"
-#' # )
-#' # 
-#' # my_dl_subsamples <- subsample_dl(
-#' #     my_dl,
-#' #     n_subsamples = 20,
-#' #     subsample_fraction = 0.85
-#' # )
+#' my_dl <- data_list(
+#'     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#'     list(income, "household_income", "demographics", "continuous"),
+#'     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'     uid = "unique_id"
+#' )
+#' 
+#' my_dl_subsamples <- subsample_dl(
+#'     my_dl,
+#'     n_subsamples = 20,
+#'     subsample_fraction = 0.85
+#' )
 subsample_dl <- function(dl,
                          n_subsamples,
                          subsample_fraction = NULL,
@@ -101,26 +101,28 @@ subsample_dl <- function(dl,
 #'  stability calculations.
 #' @export
 #' @examples
-#' # my_dl <- data_list(
-#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#' #     list(income, "household_income", "demographics", "continuous"),
-#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
-#' #     uid = "unique_id"
-#' # )
-#' # 
-#' # sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
-#' # 
-#' # my_dl_subsamples <- subsample_dl(
-#' #     my_dl,
-#' #     n_subsamples = 20,
-#' #     subsample_fraction = 0.85
-#' # )
-#' # 
-#' # batch_subsample_results <- batch_snf_subsamples(
-#' #     my_dl_subsamples,
-#' #     sc,
-#' #     verbose = TRUE
-#' # )
+#' \donttest{
+#' my_dl <- data_list(
+#'     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#'     list(income, "household_income", "demographics", "continuous"),
+#'     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'     uid = "unique_id"
+#' )
+#' 
+#' sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+#' 
+#' my_dl_subsamples <- subsample_dl(
+#'     my_dl,
+#'     n_subsamples = 20,
+#'     subsample_fraction = 0.85
+#' )
+#' 
+#' batch_subsample_results <- batch_snf_subsamples(
+#'     my_dl_subsamples,
+#'     sc,
+#'     verbose = TRUE
+#' )
+#' }
 batch_snf_subsamples <- function(dl_subsamples,
                                  sc,
                                  processes = 1,
@@ -175,43 +177,45 @@ batch_snf_subsamples <- function(dl_subsamples,
 #'  original cluster solution.
 #' @export
 #' @examples
-#' # my_dl <- data_list(
-#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#' #     list(income, "household_income", "demographics", "continuous"),
-#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
-#' #     uid = "unique_id"
-#' # )
-#' # 
-#' # sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
-#' # 
-#' # my_dl_subsamples <- subsample_dl(
-#' #     my_dl,
-#' #     n_subsamples = 20,
-#' #     subsample_fraction = 0.85
-#' # )
-#' # 
-#' # batch_subsample_results <- batch_snf_subsamples(
-#' #     my_dl_subsamples,
-#' #     sc,
-#' #     verbose = TRUE
-#' # )
-#' # 
-#' # pairwise_aris <- subsample_pairwise_aris(
-#' #     batch_subsample_results
-#' #     verbose = TRUE
-#' # )
-#' #
-#' # # Visualize ARIs 
-#' # ComplexHeatmap::Heatmap(
-#' #     pairwise_aris[[1]],
-#' #     heatmap_legend_param = list(
-#' #         color_bar = "continuous",
-#' #         title = "Inter-Subsample\nARI",
-#' #         at = c(0, 0.5, 1)
-#' #     ),
-#' #     show_column_names = FALSE,
-#' #     show_row_names = FALSE
-#' # )
+#' \donttest{
+#' my_dl <- data_list(
+#'     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#'     list(income, "household_income", "demographics", "continuous"),
+#'     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'     uid = "unique_id"
+#' )
+#' 
+#' sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+#' 
+#' my_dl_subsamples <- subsample_dl(
+#'     my_dl,
+#'     n_subsamples = 20,
+#'     subsample_fraction = 0.85
+#' )
+#' 
+#' batch_subsample_results <- batch_snf_subsamples(
+#'     my_dl_subsamples,
+#'     sc,
+#'     verbose = TRUE
+#' )
+#' 
+#' pairwise_aris <- subsample_pairwise_aris(
+#'     batch_subsample_results,
+#'     verbose = TRUE
+#' )
+#' 
+#' # Visualize ARIs 
+#' ComplexHeatmap::Heatmap(
+#'     pairwise_aris$"raw_aris"[[1]],
+#'     heatmap_legend_param = list(
+#'         color_bar = "continuous",
+#'         title = "Inter-Subsample\nARI",
+#'         at = c(0, 0.5, 1)
+#'     ),
+#'     show_column_names = FALSE,
+#'     show_row_names = FALSE
+#' )
+#' }
 subsample_pairwise_aris <- function(subsample_solutions,
                                     verbose = FALSE) {
     ###########################################################################
@@ -310,36 +314,40 @@ subsample_pairwise_aris <- function(subsample_solutions,
 #'  co-clustering across pairs and subsamples of the data.
 #' @export
 #' @examples
-#' # my_dl <- data_list(
-#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#' #     list(income, "household_income", "demographics", "continuous"),
-#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
-#' #     uid = "unique_id"
-#' # )
-#' # 
-#' # sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
-#' # 
-#' # sol_df <- batch_snf(my_dl, sc)
-#' # 
-#' # my_dl_subsamples <- subsample_dl(
-#' #     my_dl,
-#' #     n_subsamples = 20,
-#' #     subsample_fraction = 0.85
-#' # )
-#' # 
-#' # batch_subsample_results <- batch_snf_subsamples(
-#' #     my_dl_subsamples,
-#' #     sc,
-#' #     verbose = TRUE
-#' # )
-#' # 
-#' # coclustering_results <- calculate_coclustering(
-#' #     batch_subsample_results,
-#' #     sol_df,
-#' #     verbose = TRUE
-#' # )
-#' # 
-#' # cocluster_density(cocluster_dfs[[1]])
+#' \donttest{
+#' my_dl <- data_list(
+#'     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#'     list(income, "household_income", "demographics", "continuous"),
+#'     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'     uid = "unique_id"
+#' )
+#' 
+#' sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+#' 
+#' sol_df <- batch_snf(my_dl, sc)
+#' 
+#' my_dl_subsamples <- subsample_dl(
+#'     my_dl,
+#'     n_subsamples = 20,
+#'     subsample_fraction = 0.85
+#' )
+#' 
+#' batch_subsample_results <- batch_snf_subsamples(
+#'     my_dl_subsamples,
+#'     sc,
+#'     verbose = TRUE
+#' )
+#'
+#' coclustering_results <- calculate_coclustering(
+#'     batch_subsample_results,
+#'     sol_df,
+#'     verbose = TRUE
+#' )
+#'
+#' cocluster_dfs <- coclustering_results$"cocluster_dfs"
+#'
+#' cocluster_density(cocluster_dfs[[1]])
+#' }
 cocluster_density <- function(cocluster_df) {
     ###########################################################################
     # dplyr warning handling
@@ -413,57 +421,59 @@ cocluster_density <- function(cocluster_df) {
 #'  distribution of observation co-clustering across resampled data.
 #' @export
 #' @examples
-#' # my_dl <- data_list(
-#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#' #     list(income, "household_income", "demographics", "continuous"),
-#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
-#' #     uid = "unique_id"
-#' # )
-#' # 
-#' # sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
-#' # 
-#' # sol_df <- batch_snf(my_dl, sc)
-#' # 
-#' # my_dl_subsamples <- subsample_dl(
-#' #     my_dl,
-#' #     n_subsamples = 20,
-#' #     subsample_fraction = 0.85
-#' # )
-#' # 
-#' # batch_subsample_results <- batch_snf_subsamples(
-#' #     my_dl_subsamples,
-#' #     sc,
-#' #     verbose = TRUE
-#' # )
-#' # 
-#' # coclustering_results <- calculate_coclustering(
-#' #     batch_subsample_results, 
-#' #     sol_df,
-#' #     verbose = TRUE
-#' # )
-#' # 
-#' # cocluster_dfs <- coclustering_results$"cocluster_dfs"
-#' # 
-#' # cocluster_heatmap(
-#' #     cocluster_dfs[[1]],
-#' #     dl = my_dl,
-#' #     top_hm = list(
-#' #         "Income" = "household_income",
-#' #         "Pubertal Status" = "pubertal_status"
-#' #     ),
-#' #     annotation_colours = list(
-#' #         "Pubertal Status" = colour_scale(
-#' #             c(1, 4),
-#' #             min_colour = "black",
-#' #             max_colour = "purple"
-#' #         ),
-#' #         "Income" = colour_scale(
-#' #             c(0, 4),
-#' #             min_colour = "black",
-#' #             max_colour = "red"
-#' #         )
-#' #     )
-#' # )
+#' \dontrun{
+#'     my_dl <- data_list(
+#'         list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#'         list(income, "household_income", "demographics", "continuous"),
+#'         list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'         uid = "unique_id"
+#'     )
+#'     
+#'     sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+#'     
+#'     sol_df <- batch_snf(my_dl, sc)
+#'     
+#'     my_dl_subsamples <- subsample_dl(
+#'         my_dl,
+#'         n_subsamples = 20,
+#'         subsample_fraction = 0.85
+#'     )
+#'     
+#'     batch_subsample_results <- batch_snf_subsamples(
+#'         my_dl_subsamples,
+#'         sc,
+#'         verbose = TRUE
+#'     )
+#'     
+#'     coclustering_results <- calculate_coclustering(
+#'         batch_subsample_results, 
+#'         sol_df,
+#'         verbose = TRUE
+#'     )
+#'     
+#'     cocluster_dfs <- coclustering_results$"cocluster_dfs"
+#'     
+#'     cocluster_heatmap(
+#'         cocluster_dfs[[1]],
+#'         dl = my_dl,
+#'         top_hm = list(
+#'             "Income" = "household_income",
+#'             "Pubertal Status" = "pubertal_status"
+#'         ),
+#'         annotation_colours = list(
+#'             "Pubertal Status" = colour_scale(
+#'                 c(1, 4),
+#'                 min_colour = "black",
+#'                 max_colour = "purple"
+#'             ),
+#'             "Income" = colour_scale(
+#'                 c(0, 4),
+#'                 min_colour = "black",
+#'                 max_colour = "red"
+#'             )
+#'         )
+#'     )
+#' }
 cocluster_heatmap <- function(cocluster_df,
                               cluster_rows = TRUE,
                               cluster_columns = TRUE,
@@ -627,34 +637,36 @@ cocluster_heatmap <- function(cocluster_df,
 #' @importFrom data.table := setnames setkey as.data.table
 #' @export
 #' @examples
-#' # my_dl <- data_list(
-#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#' #     list(income, "household_income", "demographics", "continuous"),
-#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
-#' #     uid = "unique_id"
-#' # )
-#' # 
-#' # sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
-#' # 
-#' # sol_df <- batch_snf(my_dl, sc)
-#' # 
-#' # my_dl_subsamples <- subsample_dl(
-#' #     my_dl,
-#' #     n_subsamples = 20,
-#' #     subsample_fraction = 0.85
-#' # )
-#' # 
-#' # batch_subsample_results <- batch_snf_subsamples(
-#' #     my_dl_subsamples,
-#' #     sc,
-#' #     verbose = TRUE
-#' # )
-#' # 
-#' # coclustering_results <- calculate_coclustering(
-#' #     batch_subsample_results,
-#' #     sol_df,
-#' #     verbose = TRUE
-#' # )
+#' \dontrun{
+#'     my_dl <- data_list(
+#'         list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#'         list(income, "household_income", "demographics", "continuous"),
+#'         list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'         uid = "unique_id"
+#'     )
+#'     
+#'     sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+#'     
+#'     sol_df <- batch_snf(my_dl, sc)
+#'     
+#'     my_dl_subsamples <- subsample_dl(
+#'         my_dl,
+#'         n_subsamples = 20,
+#'         subsample_fraction = 0.85
+#'     )
+#'     
+#'     batch_subsample_results <- batch_snf_subsamples(
+#'         my_dl_subsamples,
+#'         sc,
+#'         verbose = TRUE
+#'     )
+#'     
+#'     coclustering_results <- calculate_coclustering(
+#'         batch_subsample_results,
+#'         sol_df,
+#'         verbose = TRUE
+#'     )
+#' }
 calculate_coclustering <- function(subsample_solutions,
                                    sol_df,
                                    verbose = FALSE) {

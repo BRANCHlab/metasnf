@@ -38,22 +38,20 @@
 #'  in the output.
 #' @export
 #' @examples
-#' \dontrun{ 
-#'     input_dl <- data_list(
-#'         list(gender_df, "gender", "demographics", "categorical"),
-#'         list(diagnosis_df, "diagnosis", "clinical", "categorical"),
-#'         uid = "patient_id"
-#'     )
+#' input_dl <- data_list(
+#'     list(gender_df, "gender", "demographics", "categorical"),
+#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'     uid = "patient_id"
+#' )
 #'
-#'     sc <- snf_config(input_dl, n_solutions = 3)
+#' sc <- snf_config(input_dl, n_solutions = 3)
 #'
-#'     # A solutions data frame without similarity matrices:
-#'     sol_df <- batch_snf(input_dl, sc)
+#' # A solutions data frame without similarity matrices:
+#' sol_df <- batch_snf(input_dl, sc)
 #'
-#'     # A solutions data frame with similarity matrices:
-#'     sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
-#'     sim_mats_list(sol_df)
-#' }
+#' # A solutions data frame with similarity matrices:
+#' sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+#' sim_mats_list(sol_df)
 batch_snf <- function(dl,
                       sc,
                       processes = 1,

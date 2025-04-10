@@ -27,41 +27,43 @@ two subsamples only factors in observations that were present in both
 subsamples.
 }
 \examples{
-# my_dl <- data_list(
-#     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#     list(income, "household_income", "demographics", "continuous"),
-#     list(pubertal, "pubertal_status", "demographics", "continuous"),
-#     uid = "unique_id"
-# )
-# 
-# sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
-# 
-# my_dl_subsamples <- subsample_dl(
-#     my_dl,
-#     n_subsamples = 20,
-#     subsample_fraction = 0.85
-# )
-# 
-# batch_subsample_results <- batch_snf_subsamples(
-#     my_dl_subsamples,
-#     sc,
-#     verbose = TRUE
-# )
-# 
-# pairwise_aris <- subsample_pairwise_aris(
-#     batch_subsample_results
-#     verbose = TRUE
-# )
-#
-# # Visualize ARIs 
-# ComplexHeatmap::Heatmap(
-#     pairwise_aris[[1]],
-#     heatmap_legend_param = list(
-#         color_bar = "continuous",
-#         title = "Inter-Subsample\nARI",
-#         at = c(0, 0.5, 1)
-#     ),
-#     show_column_names = FALSE,
-#     show_row_names = FALSE
-# )
+\donttest{
+my_dl <- data_list(
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+
+sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+
+my_dl_subsamples <- subsample_dl(
+    my_dl,
+    n_subsamples = 20,
+    subsample_fraction = 0.85
+)
+
+batch_subsample_results <- batch_snf_subsamples(
+    my_dl_subsamples,
+    sc,
+    verbose = TRUE
+)
+
+pairwise_aris <- subsample_pairwise_aris(
+    batch_subsample_results,
+    verbose = TRUE
+)
+
+# Visualize ARIs 
+ComplexHeatmap::Heatmap(
+    pairwise_aris$"raw_aris"[[1]],
+    heatmap_legend_param = list(
+        color_bar = "continuous",
+        title = "Inter-Subsample\nARI",
+        at = c(0, 0.5, 1)
+    ),
+    show_column_names = FALSE,
+    show_row_names = FALSE
+)
+}
 }

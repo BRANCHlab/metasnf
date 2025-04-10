@@ -12,7 +12,7 @@ convert_uids(dll, uid)
 \item{uid}{(string) the name of the uid column currently used data}
 }
 \value{
-dll The provided nested list with "uid" as UID.
+The provided nested list with "uid" as UID.
 }
 \description{
 Column name "uid" is reserved for the unique identifier of observations.

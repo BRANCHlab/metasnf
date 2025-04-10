@@ -16,6 +16,9 @@ library(metasnf)
 help(package = "metasnf")
 
 
+help(package = "metasnf")
+
+
 # `data_list` class object stores data frames and metadata
 dl <- data_list(
     list(cort_sa, "cortical_sa", "neuroimaging", "continuous"),
@@ -34,7 +37,6 @@ config <- snf_config(
 )
 
 sol_df <- batch_snf(dl, config)
-
 
 circlize::colorRamp2(
     c(0.001, 0.01, 0.05, 1),
@@ -97,3 +99,47 @@ cache_a_complete_example_sol_df
 cache_a_complete_example_lp_ext_sol_df
 
 system.time( rmarkdown::render("vignettes/my-vignette.Rmd"))
+
+
+library(metasnf)
+
+my_dl <- data_list(
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+
+sc <- snf_config(my_dl, n_solutions = 5, max_k = 40)
+
+my_dl_subsamples <- subsample_dl(
+    my_dl,
+    n_subsamples = 20,
+    subsample_fraction = 0.85
+)
+
+batch_subsample_results <- batch_snf_subsamples(
+    my_dl_subsamples,
+    sc,
+    verbose = TRUE
+)
+
+pairwise_aris <- subsample_pairwise_aris(
+    batch_subsample_results,
+    verbose = TRUE
+)
+
+pairwise_aris$"raw_aris"[[1]]
+
+# Visualize ARIs 
+ComplexHeatmap::Heatmap(
+    pairwise_aris$"raw_aris"[[1]],
+    heatmap_legend_param = list(
+        color_bar = "continuous",
+        title = "Inter-Subsample\nARI",
+        at = c(0, 0.5, 1)
+    ),
+    show_column_names = FALSE,
+    show_row_names = FALSE
+)
+

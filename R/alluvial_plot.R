@@ -17,31 +17,29 @@
 #' a feature across varying number cluster solutions.
 #' @export
 #' @examples
-#' \dontrun{
-#'     input_dl <- data_list(
-#'         list(gender_df, "gender", "demographics", "categorical"),
-#'         list(diagnosis_df, "diagnosis", "clinical", "categorical"),
-#'         uid = "patient_id"
-#'     )
-#'     
-#'     sc <- snf_config(input_dl, n_solutions = 1)
-#'     
-#'     sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
-#'     
-#'     sim_mats <- sim_mats_list(sol_df)
-#'     
-#'     clust_fn_sequence <- list(spectral_two, spectral_four)
-#'     
-#'     alluvial_cluster_plot(
-#'         cluster_sequence = clust_fn_sequence,
-#'         similarity_matrix = sim_mats[[1]],
-#'         dl = input_dl,
-#'         key_outcome = "gender",
-#'         key_label = "Gender",
-#'         extra_outcomes = "diagnosis",
-#'         title = "Gender Across Cluster Counts"
-#'     )
-#' }
+#' input_dl <- data_list(
+#'     list(gender_df, "gender", "demographics", "categorical"),
+#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'     uid = "patient_id"
+#' )
+#' 
+#' sc <- snf_config(input_dl, n_solutions = 1)
+#' 
+#' sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+#' 
+#' sim_mats <- sim_mats_list(sol_df)
+#' 
+#' clust_fn_sequence <- list(spectral_two, spectral_four)
+#' 
+#' alluvial_cluster_plot(
+#'     cluster_sequence = clust_fn_sequence,
+#'     similarity_matrix = sim_mats[[1]],
+#'     dl = input_dl,
+#'     key_outcome = "gender",
+#'     key_label = "Gender",
+#'     extra_outcomes = "diagnosis",
+#'     title = "Gender Across Cluster Counts"
+#' )
 alluvial_cluster_plot <- function(cluster_sequence,
                                   similarity_matrix,
                                   dl = NULL,

@@ -27,19 +27,17 @@
 #'  each feature-solution combination.
 #' @export
 #' @examples
-#' \dontrun{
-#'     input_dl <- data_list(
-#'         list(gender_df, "gender", "demographics", "categorical"),
-#'         list(diagnosis_df, "diagnosis", "clinical", "categorical"),
-#'         uid = "patient_id"
-#'     )
-#'     
-#'     sc <- snf_config(input_dl, n_solutions = 2)
-#'     
-#'     sol_df <- batch_snf(input_dl, sc)
-#'     
-#'     calc_nmis(input_dl, sol_df)
-#' }
+#' input_dl <- data_list(
+#'     list(gender_df, "gender", "demographics", "categorical"),
+#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'     uid = "patient_id"
+#' )
+#' 
+#' sc <- snf_config(input_dl, n_solutions = 2)
+#' 
+#' sol_df <- batch_snf(input_dl, sc)
+#' 
+#' calc_nmis(input_dl, sol_df)
 calc_nmis <- function(dl,
                       sol_df,
                       transpose = TRUE,

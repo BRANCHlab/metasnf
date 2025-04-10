@@ -25,3 +25,4 @@ row and returns a data frame with two columns: "cluster" and "uid"
 solutions data frame with any number of rows and returns a data frame indicating
 the cluster assignments for each of those rows.
 }
+\keyword{internal}

@@ -35,3 +35,4 @@ A nested and named list of distance metrics functions.
 Deprecated function for building a distance metrics list. Please use
 \code{dist_fns_list()} (or better yet, \code{snf_config()}) instead.
 }
+\keyword{internal}

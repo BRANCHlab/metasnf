@@ -23,3 +23,4 @@ be passed into the batch_snf and generate_settings_list functions.
 Deprecated function for building a clustering algorithms list. Please use
 \code{clust_fns_list()} (or better yet, \code{snf_config()}) instead.
 }
+\keyword{internal}

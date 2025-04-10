@@ -51,3 +51,4 @@ the cluster solutions of the provided solutions data frame.
 Defunct function to create an ARI heatmap. Please use
 \code{meta_cluster_heatmap()} instead.
 }
+\keyword{internal}

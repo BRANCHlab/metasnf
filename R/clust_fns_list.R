@@ -158,20 +158,6 @@ check_cfll_fn_args <- function(cfll) {
     }
 }
 
-#' Summarize a clust_fns_list object
-#'
-#' @param cfl A `clust_fns_list` class object.
-#' @return summary_df "data.frame" class object containing the name and index
-#'  of each clustering algorithm in the provided `clust_fns_list`.
-#' @export
-summarize_clust_fns_list <- function(cfl) {
-    summary_df <- data.frame(
-        alg_number = seq_along(cfl),
-        algorithm = names(cfl)
-    )
-    return(summary_df)
-}
-
 #' Built-in clustering algorithms
 #'
 #' These functions can be used when building a `metasnf` clustering functions

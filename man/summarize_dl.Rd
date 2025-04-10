@@ -24,3 +24,4 @@ scope == "component").
 Defunct function for summarizing a data list. Please
 use \code{summary()} instead.
 }
+\keyword{internal}

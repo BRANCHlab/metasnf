@@ -5,6 +5,7 @@
 #' Deprecated function for building a distance metrics list. Please use
 #' `dist_fns_list()` (or better yet, `snf_config()`) instead.
 #'
+#' @keywords internal
 #' @param continuous_distances A named list of distance metric functions
 #' @param discrete_distances A named list of distance metric functions
 #' @param ordinal_distances A named list of distance metric functions
@@ -41,6 +42,7 @@ generate_distance_metrics_list <- function(continuous_distances = NULL,
 #' Deprecated function for building a clustering algorithms list. Please use
 #' `clust_fns_list()` (or better yet, `snf_config()`) instead.
 #'
+#' @keywords internal
 #' @param ... An arbitrary number of named clustering functions
 #' @param disable_base If TRUE, do not prepend the base clustering algorithms
 #'  (spectral_eigen and spectral_rot, which apply spectral clustering and use
@@ -66,6 +68,7 @@ generate_clust_algs_list <- function(..., disable_base = FALSE) {
 #' Deprecated function for building a settings matrix. Please use
 #' `settings_df()` instead.
 #'
+#' @keywords internal
 #' @param ... Arguments used to generate a settings matrix.
 #' @return Raises a deprecated error.
 #' @export
@@ -86,6 +89,7 @@ generate_settings_matrix <- function(...) {
 #' Defunct function for converting a data list into a data frame. Please
 #'  use `as.data.frame()` instead.
 #'
+#' @keywords internal
 #' @param data_list A nested list of input data from `generate_data_list()`.
 #' @return A "data.frame"-formatted version of the provided data list.
 #' @export
@@ -111,6 +115,7 @@ collapse_dl <- function(data_list) {
 #' Defunct function for summarizing a data list. Please
 #'  use `summary()` instead.
 #'
+#' @keywords internal
 #' @param data_list A nested list of input data from `data_list()`.
 #' @param scope The level of detail for the summary. Options are:
 #' - "component" (default): One row per component (data frame) in the data list.
@@ -126,6 +131,34 @@ summarize_dl <- function(data_list, scope = "component") {
     }
 }
 
+#' Summarize a clust_fns_list object
+#'
+#' @keywords internal
+#' @param cfl A `clust_fns_list` class object.
+#' @return summary_df "data.frame" class object containing the name and index
+#'  of each clustering algorithm in the provided `clust_fns_list`.
+#' @export
+summarize_clust_fns_list <- function(cfl) {
+    metasnf_deprecated("2.0.0", "Please use `summary()` instead.")
+    if (inherits(cfl, "clust_fns_list")) {
+        summary(cfl)
+    }
+}
+
+#' Summarize a distance functions list
+#'
+#' @keywords internal
+#' @param dfl A dist_fns_list.
+#' @return "data.frame"-class object summarizing items in a distance metrics
+#'  list.
+#' @export
+summarize_dfl <- function(dfl) {
+    metasnf_deprecated("2.0.0", "Please use `summary()` instead.")
+    if (inherits(dfl, "dist_fns_list")) {
+        summary(dfl)
+    }
+}
+
 #' Variable-level summary of a data list
 #'
 #' @description
@@ -133,10 +166,10 @@ summarize_dl <- function(data_list, scope = "component") {
 #' Defunct function to summarize a data list. Please use `summary()` with
 #' argument `scope = "feature"` instead.
 #'
+#' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
 #' @return variable_level_summary A data frame containing the name, type, and
 #' domain of every variable in a data list.
-#'
 #' @export
 dl_variable_summary <- function(dl) {
     metasnf_deprecated(
@@ -156,6 +189,7 @@ dl_variable_summary <- function(dl) {
 #' Defunct function to create an ARI heatmap. Please use
 #' `meta_cluster_heatmap()` instead.
 #'
+#' @keywords internal
 #' @param aris Matrix of adjusted rand indices from `calc_aris()`
 #' @param order Numeric vector containing row order of the heatmap.
 #' @param cluster_rows Whether rows should be clustered.
@@ -214,11 +248,11 @@ adjusted_rand_index_heatmap <- function(aris,
 #' matrix with only one row and returns a data frame with two columns: "cluster"
 #' and "uid" (the UID of the observation).
 #'
+#' @keywords internal
 #' @param sol_df A sol_df.
-#' @return A "data.frame" object where each row is an
-#'  observation and each column (apart from the uid column) indicates
-#'  the cluster that observation was assigned to for the corresponding
-#'  solutions data frame row.
+#' @return A "data.frame" object where each row is an observation and each
+#'  column (apart from the uid column) indicates the cluster that observation
+#'  as assigned to for the corresponding solutions data frame row.
 #' @export
 get_cluster_solutions <- function(sol_df) {
     metasnf_deprecated("2.0.0", "Please use `t()` instead.")
@@ -241,6 +275,7 @@ get_cluster_solutions <- function(sol_df) {
 #' which takes a solutions data frame with any number of rows and returns a
 #' data frame indicating the cluster assignments for each of those rows.
 #'
+#' @keywords internal
 #' @param sol_df_row One row from a solutions data frame.
 #' @return cluster_df data frame of cluster and uid.
 #' @export
@@ -266,6 +301,7 @@ get_cluster_df <- function(sol_df_row) {
 #' solutions data frame with any number of rows and returns a data frame indicating
 #' the cluster assignments for each of those rows.
 #'
+#' @keywords internal
 #' @param sol_df_row Output matrix row.
 #' @return clusters Vector of assigned clusters.
 #' @export
@@ -283,6 +319,7 @@ get_clusters <- function(sol_df_row) {
 #' Deprecated function for extracting UIDs from a data list.
 #' Please use `uids()` instead.
 #'
+#' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
 #' @param prefix If TRUE, preserves the "uid_" prefix added to UIDs when
 #'  creating a data list.
@@ -292,4 +329,3 @@ get_dl_uids <- function(dl, prefix = FALSE) {
     metasnf_deprecated("2.0.0", "Please use `uids()` instead.")
     return(uids(dl))
 }
-

@@ -168,7 +168,7 @@ ensure_dll_df <- function(dll) {
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
 #' @param uid (string) the name of the uid column currently used data
-#' @return dll The provided nested list with "uid" as UID.
+#' @return The provided nested list with "uid" as UID.
 convert_uids <- function(dll, uid) {
     dll <- lapply(dll,
         function(x, uid) {
@@ -206,8 +206,7 @@ convert_uids <- function(dll, uid) {
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
-#' @return dll The provided data list-like object with missing observations
-#'  removed.
+#' @return The provided dll with missing observations removed.
 remove_dll_incomplete <- function(dll) {
     all_uids <- unique(unlist(lapply(dll, function(x) x$"data"$"uid")))
     uids_no_na <- lapply(dll, function(x) stats::na.omit(x$"data")$"uid")
@@ -237,7 +236,7 @@ remove_dll_incomplete <- function(dll) {
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
-#' @return dl A data list with UIDs prefixed with the string "uid_"
+#' @return A data list with UIDs prefixed with the string "uid_".
 prefix_dll_uid <- function(dll) {
     dll_prefixed <- lapply(
         dll,
@@ -253,8 +252,7 @@ prefix_dll_uid <- function(dll) {
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
-#' @return arranged_dl The data list-like object with all data frames sorted
-#'  by uid.
+#' @return The data list-like object with all data frames sorted by uid.
 arrange_dll <- function(dll) {
     data_objects <- lapply(dll, function(x) x[[1]])
     arranged_data_objects <- data_objects |>
@@ -274,7 +272,7 @@ arrange_dll <- function(dll) {
 #'
 #' @keywords internal
 #' @param dl A nested list of input data from `data_list()`.
-#' @return domain_list list of domains
+#' @return A character vector of domains.
 domains <- function(dl) {
     domain_list <- lapply(dl, function(x) x$"domain")
     return(domain_list)
@@ -307,8 +305,6 @@ reorder_dl_uids <- function(dl, ordered_uids) {
 #' @return A data list ("list"-class object) with adjusted feature names.
 #' @export
 #' @examples
-#' library(metasnf)
-#'
 #' dl <- data_list(
 #'     list(pubertal, "pubertal_status", "demographics", "continuous"),
 #'     list(anxiety, "anxiety", "behaviour", "ordinal"),

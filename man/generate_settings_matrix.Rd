@@ -17,3 +17,4 @@ Raises a deprecated error.
 Deprecated function for building a settings matrix. Please use
 \code{settings_df()} instead.
 }
+\keyword{internal}

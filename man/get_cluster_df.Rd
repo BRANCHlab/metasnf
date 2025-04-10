@@ -24,3 +24,4 @@ returns a vector of cluster assignments' and \code{get_cluster_solutions()},
 which takes a solutions data frame with any number of rows and returns a
 data frame indicating the cluster assignments for each of those rows.
 }
+\keyword{internal}

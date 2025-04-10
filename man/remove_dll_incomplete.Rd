@@ -10,8 +10,7 @@ remove_dll_incomplete(dll)
 \item{dll}{A data list-like \code{list} class object.}
 }
 \value{
-dll The provided data list-like object with missing observations
-removed.
+The provided dll with missing observations removed.
 }
 \description{
 Helper function during \code{data_list} class initialization. First applies
