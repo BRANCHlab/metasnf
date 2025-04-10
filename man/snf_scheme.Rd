@@ -77,7 +77,7 @@ data frame separately before a single call to SNF fuses them into the final
 fused network.
 
 domain_merge: Given a data list, returns a new data list where all data objects of
-a particlar domain have been concatenated.
+a particular domain have been concatenated.
 
 two_step_merge: Individual data frames into individual similarity matrices into one fused
 network per domain into one final fused network.

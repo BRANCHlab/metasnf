@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_list.R
 \name{ensure_dll_df}
 \alias{ensure_dll_df}
-\title{Ensure the data subitem of each component is a \code{data.frame} class object}
+\title{Ensure the data item of each component is a \code{data.frame} class object}
 \usage{
 ensure_dll_df(dll)
 }
@@ -10,10 +10,10 @@ ensure_dll_df(dll)
 \item{dll}{A data list-like \code{list} class object.}
 }
 \value{
-The provided dll with the data subitem of each component as a
+The provided dll with the data item of each component as a
 data frame.
 }
 \description{
-Ensure the data subitem of each component is a \code{data.frame} class object
+Ensure the data item of each component is a \code{data.frame} class object
 }
 \keyword{internal}

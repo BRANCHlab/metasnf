@@ -2,7 +2,7 @@
 % Please edit documentation in R/rbind.R
 \name{rbind.solutions_df}
 \alias{rbind.solutions_df}
-\title{Row-binding of solutions data frame class objects.}
+\title{Row-binding of solutions data frame class objects}
 \usage{
 \method{rbind}{solutions_df}(..., reset_indices = FALSE)
 }
@@ -16,5 +16,5 @@ the solutions data frame from 1 to the number of defined settings.}
 A \code{solutions_df} class object.
 }
 \description{
-Row-binding of solutions data frame class objects.
+Row-binding of solutions data frame class objects
 }

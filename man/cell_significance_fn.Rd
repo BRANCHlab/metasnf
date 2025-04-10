@@ -2,7 +2,7 @@
 % Please edit documentation in R/heatmaps.R
 \name{cell_significance_fn}
 \alias{cell_significance_fn}
-\title{Place significance stars on ComplexHeatmap cells.}
+\title{Place significance stars on ComplexHeatmap cells}
 \usage{
 cell_significance_fn(data)
 }

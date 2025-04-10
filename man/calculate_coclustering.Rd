@@ -2,7 +2,7 @@
 % Please edit documentation in R/coclustering.R
 \name{calculate_coclustering}
 \alias{calculate_coclustering}
-\title{Calculate coclustering data.}
+\title{Calculate co-clustering data}
 \usage{
 calculate_coclustering(subsample_solutions, sol_df, verbose = FALSE)
 }
@@ -39,7 +39,7 @@ information is formatted as a data frame with one row per cluster solution.
 }
 }
 \description{
-Calculate coclustering data.
+Calculate co-clustering data
 }
 \examples{
 # my_dl <- data_list(

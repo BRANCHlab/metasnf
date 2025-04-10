@@ -2,7 +2,7 @@
 % Please edit documentation in R/coclustering.R
 \name{batch_snf_subsamples}
 \alias{batch_snf_subsamples}
-\title{Run SNF clustering pipeline on a list of subsampled data lists.}
+\title{Run SNF clustering pipeline on a list of subsampled data lists}
 \usage{
 batch_snf_subsamples(
   dl_subsamples,
@@ -56,7 +56,7 @@ those cluster solutions, should you require these objects for your own
 stability calculations.
 }
 \description{
-Run SNF clustering pipeline on a list of subsampled data lists.
+Run SNF clustering pipeline on a list of subsampled data lists
 }
 \examples{
 # my_dl <- data_list(

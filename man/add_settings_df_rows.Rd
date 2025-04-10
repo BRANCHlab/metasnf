@@ -98,7 +98,7 @@ parameters.}
 \item{possible_snf_schemes}{A vector containing the possible snf_schemes to
 uniformly randomly select from. By default, the vector contains all
 3 possible schemes: c(1, 2, 3). 1 corresponds to the "individual" scheme,
-2 corresponds to the "domain" scheme, and 3 corresponds to the "twostep"
+2 corresponds to the "domain" scheme, and 3 corresponds to the "two-step"
 scheme.}
 
 \item{clustering_algorithms}{A list of clustering algorithms to uniformly

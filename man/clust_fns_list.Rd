@@ -2,7 +2,7 @@
 % Please edit documentation in R/clust_fns_list.R
 \name{clust_fns_list}
 \alias{clust_fns_list}
-\title{Build a clusteing algorithms list}
+\title{Build a clustering algorithms list}
 \usage{
 clust_fns_list(clust_fns = NULL, use_default_clust_fns = FALSE)
 }

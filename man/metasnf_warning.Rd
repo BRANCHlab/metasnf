@@ -2,7 +2,7 @@
 % Please edit documentation in R/signal.R
 \name{metasnf_warning}
 \alias{metasnf_warning}
-\title{Helper function for raising warnings.}
+\title{Helper function for raising warnings}
 \usage{
 metasnf_warning(..., env = 1)
 }
@@ -16,6 +16,6 @@ message.}
 Returns no value. Raises a warning through cli::cli_warn
 }
 \description{
-Helper function for raising warnings.
+Helper function for raising warnings
 }
 \keyword{internal}

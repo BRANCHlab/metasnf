@@ -2,7 +2,7 @@
 % Please edit documentation in R/signal.R
 \name{metasnf_defunct}
 \alias{metasnf_defunct}
-\title{Helper function for defunct function errors.}
+\title{Helper function for defunct function errors}
 \usage{
 metasnf_defunct(version, alternative, env = 1)
 }
@@ -17,6 +17,6 @@ metasnf_defunct(version, alternative, env = 1)
 Returns no value. Raises an error through cli::cli_abort.
 }
 \description{
-Helper function for defunct function errors.
+Helper function for defunct function errors
 }
 \keyword{internal}

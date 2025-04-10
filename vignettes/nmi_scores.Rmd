@@ -52,7 +52,7 @@ dl <- data_list(
 set.seed(42)
 sc <- snf_config(
     dl = dl,
-    n_solutions = 20,
+    n_solutions = 2,
     min_k = 20,
     max_k = 50
 )
@@ -62,7 +62,7 @@ sol_df <- batch_snf(dl, sc)
 
 # Let's just calculate NMIs of the anxiety and depression data types for the
 # first 5 cluster solutions to save time:
-feature_nmis <- calc_nmis(dl[4:5], sol_df[1:5, ])
+feature_nmis <- calc_nmis(dl[4:5], sol_df)
 
 print(feature_nmis)
 ```

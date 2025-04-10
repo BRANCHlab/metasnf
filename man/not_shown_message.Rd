@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.R
 \name{not_shown_message}
 \alias{not_shown_message}
-\title{Helper function for creating what hidden ft/obs/sols message.}
+\title{Helper function for creating what hidden ft/obs/sols message}
 \usage{
 not_shown_message(
   hidden_solutions = NULL,
@@ -23,6 +23,6 @@ neatly formatted string indicating how many observations, features, and/or
 observations were not shown.
 }
 \description{
-Helper function for creating what hidden ft/obs/sols message.
+Helper function for creating what hidden ft/obs/sols message
 }
 \keyword{internal}

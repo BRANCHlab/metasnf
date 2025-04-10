@@ -19,7 +19,7 @@ order by \code{stats::hclust}. Options include "ward.D", "ward.D2", "single",
 "complete", "average", "mcquitty", "median", or "centroid".}
 }
 \value{
-A numeric vector of the ordering derivied by the specified
+A numeric vector of the ordering derived by the specified
 hierarchical clustering method applied to the provided matrix.
 }
 \description{

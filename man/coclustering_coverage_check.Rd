@@ -2,12 +2,12 @@
 % Please edit documentation in R/coclustering.R
 \name{coclustering_coverage_check}
 \alias{coclustering_coverage_check}
-\title{Coclustering coverage check}
+\title{Co-clustering coverage check}
 \usage{
 coclustering_coverage_check(cocluster_df, action = "warn")
 }
 \arguments{
-\item{cocluster_df}{data frame containing coclustering data.}
+\item{cocluster_df}{data frame containing co-clustering data.}
 
 \item{action}{Control if parent function should warn or stop.}
 }
@@ -18,7 +18,7 @@ Will raise a warning or error if coverage is incomplete depending on the
 value of the action parameter.
 }
 \description{
-Check if coclustered data has at least one subsample in which every pair
+Check if co-clustered data has at least one subsample in which every pair
 of observations were a part of simultaneously.
 }
 \keyword{internal}

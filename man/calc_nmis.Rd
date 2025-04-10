@@ -47,15 +47,17 @@ solution may still have a high NMI with that cluster solution (typically
 because it was highly correlated with a different feature that was used).
 }
 \examples{
-input_dl <- data_list(
-    list(gender_df, "gender", "demographics", "categorical"),
-    list(diagnosis_df, "diagnosis", "clinical", "categorical"),
-    uid = "patient_id"
-)
-
-sc <- snf_config(input_dl, n_solutions = 2)
-
-sol_df <- batch_snf(input_dl, sc)
-
-calc_nmis(input_dl, sol_df)
+\dontrun{
+    input_dl <- data_list(
+        list(gender_df, "gender", "demographics", "categorical"),
+        list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+        uid = "patient_id"
+    )
+    
+    sc <- snf_config(input_dl, n_solutions = 2)
+    
+    sol_df <- batch_snf(input_dl, sc)
+    
+    calc_nmis(input_dl, sol_df)
+}
 }

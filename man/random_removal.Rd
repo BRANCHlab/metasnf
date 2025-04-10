@@ -26,10 +26,11 @@ and max removed inputs), or "exponential" (like uniform, but using an
 exponential distribution; default).}
 }
 \value{
-inclusions_df data frame that can be rbind'ed to the settings_df
+Settings data frame row containing inclusion information.
 }
 \description{
 Helper function to contribute to rows within the settings data frame. Number
 of columns removed follows a uniform or exponential probability
 distribution.
 }
+\keyword{internal}

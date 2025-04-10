@@ -2,7 +2,7 @@
 % Please edit documentation in R/manhattan_plot.R
 \name{mc_manhattan_plot}
 \alias{mc_manhattan_plot}
-\title{Manhattan plot of feature-meta cluster associaiton p-values}
+\title{Manhattan plot of feature-meta cluster association p-values}
 \usage{
 mc_manhattan_plot(
   ext_sol_df,

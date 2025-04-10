@@ -98,7 +98,7 @@ parameters.}
 \item{possible_snf_schemes}{A vector containing the possible snf_schemes to
 uniformly randomly select from. By default, the vector contains all
 3 possible schemes: c(1, 2, 3). 1 corresponds to the "individual" scheme,
-2 corresponds to the "domain" scheme, and 3 corresponds to the "twostep"
+2 corresponds to the "domain" scheme, and 3 corresponds to the "two-step"
 scheme.}
 
 \item{clustering_algorithms}{A list of clustering algorithms to uniformly
@@ -170,7 +170,7 @@ diversity of the generated cluster solutions.
 frames are directly merged by SNF into the final fused network. This
 scheme corresponds to the approach shown in the original SNF paper.
 \item A value of 2 corresponds to the "two-step" scheme, in which all data
-frames witin a domain are first merged into a domain-specific fused
+frames within a domain are first merged into a domain-specific fused
 network. Next, domain-specific networks are fused once more by SNF
 into the final fused network. This scheme is useful for fairly
 re-weighting SNF pipelines with unequal numbers of data frames across

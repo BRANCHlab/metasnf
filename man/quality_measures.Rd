@@ -45,6 +45,7 @@ above. You can learn more about interpreting the results of this function by
 calling \code{?clv::clv.Davies.Bouldin}.
 }
 \examples{
+\dontrun{
 input_dl <- data_list(
     list(gender_df, "gender", "demographics", "categorical"),
     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
@@ -63,4 +64,5 @@ dunn_indices <- calculate_dunn_indices(sol_df)
 
 # calculate silhouette scores
 silhouette_scores <- calculate_silhouettes(sol_df)
+}
 }

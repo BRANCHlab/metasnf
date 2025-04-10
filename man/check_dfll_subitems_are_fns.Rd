@@ -2,7 +2,7 @@
 % Please edit documentation in R/dist_fns_list.R
 \name{check_dfll_subitems_are_fns}
 \alias{check_dfll_subitems_are_fns}
-\title{Check if subitems of a distance metrics list-like object are functions}
+\title{Check if items of a distance metrics list-like object are functions}
 \usage{
 check_dfll_subitems_are_fns(dfll)
 }
@@ -10,10 +10,10 @@ check_dfll_subitems_are_fns(dfll)
 \item{dfll}{A distance metrics list-like list object to be validated.}
 }
 \value{
-Doesn't return any value. Raises error if the subitems of dfll are
+Doesn't return any value. Raises error if the items of dfll are
 not functions.
 }
 \description{
-Check if subitems of a distance metrics list-like object are functions
+Check if items of a distance metrics list-like object are functions
 }
 \keyword{internal}

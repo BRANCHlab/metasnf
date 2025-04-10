@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{gselect}
 \alias{gselect}
-\title{Helper function to pick columns from a data frame by grepl search}
+\title{Helper function to pick columns from a data frame by \code{grepl} search}
 \usage{
 gselect(x, pattern)
 }
@@ -15,6 +15,6 @@ gselect(x, pattern)
 x with only columns matching pattern.
 }
 \description{
-Helper function to pick columns from a data frame by grepl search
+Helper function to pick columns from a data frame by \code{grepl} search
 }
 \keyword{internal}

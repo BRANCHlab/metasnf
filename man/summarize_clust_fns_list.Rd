@@ -11,7 +11,7 @@ summarize_clust_fns_list(cfl)
 }
 \value{
 summary_df "data.frame" class object containing the name and index
-of each clustering algorithm in te provided \code{clust_fns_list}.
+of each clustering algorithm in the provided \code{clust_fns_list}.
 }
 \description{
 Summarize a clust_fns_list object

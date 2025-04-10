@@ -12,7 +12,7 @@ arrange(.data, ...)
 \item{...}{Additional arguments for arranging.}
 }
 \value{
-Object with arrangeed columns.
+Object with arranged columns.
 }
 \description{
 Arrange rows in an object

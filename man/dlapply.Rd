@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_list.R
 \name{dlapply}
 \alias{dlapply}
-\title{Lapply-like function for data list objects}
+\title{Apply-like function for data list objects}
 \usage{
 dlapply(X, FUN, ...)
 }

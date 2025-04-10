@@ -2,7 +2,7 @@
 % Please edit documentation in R/ext_solutions_df.R
 \name{ext_solutions_df}
 \alias{ext_solutions_df}
-\title{Constructor for \code{ext_solutions_df} class object.}
+\title{Constructor for \code{ext_solutions_df} class object}
 \usage{
 ext_solutions_df(ext_sol_dfl, sol_df, fts, target_dl)
 }

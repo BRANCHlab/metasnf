@@ -2,7 +2,7 @@
 % Please edit documentation in R/label_propagation.R
 \name{label_propagate}
 \alias{label_propagate}
-\title{Label propagate cluster solutions to unclustered observations}
+\title{Label propagate cluster solutions to non-clustered observations}
 \usage{
 label_propagate(partial_sol_df, full_dl, verbose = FALSE)
 }
@@ -25,10 +25,10 @@ Given a solutions data frame containing clustered observations and a
 data list containing those clustered observations as well as additional
 to-be-clustered observations, this function will re-run SNF to generate a
 similarity matrix of all observations and use the label propagation
-algorithm to assigned predicted clusters to the unclustered observations.
+algorithm to assigned predicted clusters to the non-clustered observations.
 }
 \examples{
-## Function to identify obervations with complete data
+## Function to identify observations with complete data
 #uids_with_complete_obs <- get_complete_uids(
 #    list(subc_v, income, pubertal, anxiety, depress),
 #    uid = "unique_id"

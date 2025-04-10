@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_list.R
 \name{check_dll_empty_input}
 \alias{check_dll_empty_input}
-\title{Error if empty input provided during data list initalization}
+\title{Error if empty input provided during data list initialization}
 \usage{
 check_dll_empty_input(data_list_input)
 }
@@ -13,6 +13,6 @@ check_dll_empty_input(data_list_input)
 Raises an error if data_list_input has 0 length.
 }
 \description{
-Error if empty input provided during data list initalization
+Error if empty input provided during data list initialization
 }
 \keyword{internal}

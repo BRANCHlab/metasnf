@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{resample}
 \alias{resample}
-\title{Helper resample function found in ?sample}
+\title{Helper resampling function found in ?sample}
 \usage{
 resample(x, ...)
 }

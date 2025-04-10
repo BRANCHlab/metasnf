@@ -10,7 +10,7 @@ discretisation_evec_data(eigenvector)
 \item{eigenvector}{Matrix of eigenvectors}
 }
 \value{
-"Matrix" class object discretizing provided eigenvector to values 0
+"Matrix" class object of discretized provided eigenvector to values 0
 or 1.
 }
 \description{

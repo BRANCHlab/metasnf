@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_list.R
 \name{check_dll_subitem_names}
 \alias{check_dll_subitem_names}
-\title{Check valid subitem names for a data list-like list}
+\title{Check valid item names for a data list-like list}
 \usage{
 check_dll_subitem_names(dll)
 }

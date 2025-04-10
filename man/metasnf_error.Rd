@@ -2,7 +2,7 @@
 % Please edit documentation in R/signal.R
 \name{metasnf_error}
 \alias{metasnf_error}
-\title{Helper function for raising errors.}
+\title{Helper function for raising errors}
 \usage{
 metasnf_error(..., env = 1)
 }
@@ -16,6 +16,6 @@ message.}
 Returns no value. Raises an error through cli::cli_abort.
 }
 \description{
-Helper function for raising errors.
+Helper function for raising errors
 }
 \keyword{internal}
