@@ -382,7 +382,7 @@ cocluster_density <- function(cocluster_df) {
     return(dist_plot)
 }
 
-#' Heatmap of observation co-clustering across resampled data.
+#' Heatmap of observation co-clustering across resampled data
 #'
 #' Create a heatmap that shows the distribution of observation co-clustering
 #' across resampled data.

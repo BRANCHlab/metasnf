@@ -1,4 +1,4 @@
-#' Build a clusteing algorithms list
+#' Build a clustering algorithms list
 #'
 #' This function can be used to specify custom clustering algorithms to apply
 #' to the final similarity matrices produced by each run of the batch_snf

@@ -9,7 +9,6 @@
 #' '#'
 #' 'dplyr::filter
 
-
 devtools::load_all()
 
 # `data_list` class object stores data frames and metadata
