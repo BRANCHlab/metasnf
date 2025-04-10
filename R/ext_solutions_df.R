@@ -1,4 +1,4 @@
-#' Constructor for `ext_solutions_df` class object.
+#' Constructor for `ext_solutions_df` class object
 #'
 #' The extended solutions data frame is a column-extended variation of the
 #' solutions data frame. It contains association p-values relating cluster
@@ -101,7 +101,7 @@ new_ext_solutions_df <- function(ext_sol_dfl) {
 #' @param target_dl A data list with features to calculate p-values for.
 #'  Features in the target list will be included during p-value summary
 #'  measure calculations.
-#' @param dl A data list with features to calcualte p-values for, but
+#' @param dl A data list with features to calculate p-values for, but
 #'  that should not be incorporated into p-value summary measure columns (i.e.,
 #'  min/mean/max p-value columns).
 #' @param cat_test String indicating which statistical test will be used to
@@ -116,17 +116,19 @@ new_ext_solutions_df <- function(ext_sol_dfl) {
 #' @param verbose If TRUE, output progress to console.
 #' @export
 #' @examples
-#' input_dl <- data_list(
-#'     list(gender_df, "gender", "demographics", "categorical"),
-#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
-#'     uid = "patient_id"
-#' )
-#' 
-#' sc <- snf_config(input_dl, n_solutions = 2)
-#' 
-#' sol_df <- batch_snf(input_dl, sc)
-#' 
-#' ext_sol_df <- extend_solutions(sol_df, input_dl)
+#' \dontrun{
+#'     input_dl <- data_list(
+#'         list(gender_df, "gender", "demographics", "categorical"),
+#'         list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'         uid = "patient_id"
+#'     )
+#'     
+#'     sc <- snf_config(input_dl, n_solutions = 2)
+#'     
+#'     sol_df <- batch_snf(input_dl, sc)
+#'     
+#'     ext_sol_df <- extend_solutions(sol_df, input_dl)
+#' }
 extend_solutions <- function(sol_df,
                              target_dl = NULL,
                              dl = NULL,

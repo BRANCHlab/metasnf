@@ -94,7 +94,7 @@ get_representative_solutions <- function(aris,
         rep_solution$"total_aris" <- NULL
         rep_solutions <- rbind(rep_solutions, rep_solution)
     }
-    # Assign mcs to the representative solutions
+    # Assign meta clusters to the representative solutions
     rep_solutions <- rep_solutions[order(rep_solutions$"solution"), ]
     return(rep_solutions)
 }

@@ -27,7 +27,7 @@ estimate_nclust_given_graph <- function(W, NUMC = 2:10) {
     # Symmetrize
     W <- (W + t(W))/2
     diag(W) <- 0
-    # compute unnormalized Laplacian
+    # compute non-normalized Laplacian
     degs <- rowSums(W)
     degs[degs == 0] <- .Machine$double.eps
     D <- diag(degs)
@@ -76,7 +76,6 @@ estimate_nclust_given_graph <- function(W, NUMC = 2:10) {
                 UU <- eigs$vectors[, 1:ck]
                 EigenvectorsDiscrete <- discretisation(UU)
                 EigenVectors <- EigenvectorsDiscrete^2
-                #MATLAB: sort(EigenVectors,2, 'descend');
                 temp1 <- EigenVectors[do.call(order, lapply(1:ncol(EigenVectors),
                      function(i) EigenVectors[, i])), ]
                 temp1 <- t(apply(temp1, 1, sort, TRUE))
@@ -157,7 +156,7 @@ discretisation <- function(eigenvectors) {
 #'
 #' @keywords internal
 #' @param eigenvector Matrix of eigenvectors
-#' @return "Matrix" class object discretizing provided eigenvector to values 0
+#' @return "Matrix" class object of discretized provided eigenvector to values 0
 #'  or 1.
 discretisation_evec_data <- function(eigenvector) {
     Y <- matrix(0, nrow(eigenvector), ncol(eigenvector))

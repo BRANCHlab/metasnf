@@ -79,7 +79,6 @@ generate_settings_matrix <- function(...) {
     )
 }
 
-
 #' Convert a data list into a data frame
 #'
 #' @description

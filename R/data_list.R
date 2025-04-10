@@ -130,7 +130,7 @@ data_list <- function(...,
     }
     # Additional formatting
     dll <- dll |>
-        ensure_dll_df() |> # format the "data" subitem as a data frame
+        ensure_dll_df() |> # format the "data" item as a data frame
         convert_uids(uid) |> # Convert data frame UID column to "uid"
         remove_dll_incomplete() |> # drop observations without complete data
         prefix_dll_uid() |> # append "uid_" to the literal UID values
@@ -144,11 +144,11 @@ data_list <- function(...,
     return(dl)
 }
 
-#' Ensure the data subitem of each component is a `data.frame` class object
+#' Ensure the data item of each component is a `data.frame` class object
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
-#' @return The provided dll with the data subitem of each component as a 
+#' @return The provided dll with the data item of each component as a 
 #'  data frame.
 ensure_dll_df <- function(dll) {
     lapply(
@@ -249,7 +249,7 @@ prefix_dll_uid <- function(dll) {
     return(dll_prefixed)
 }
 
-#' Sort data frames in a data list by their unique ID values.
+#' Sort data frames in a data list by their unique ID values
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
@@ -533,7 +533,7 @@ check_dll_four_subitems <- function(dll) {
     }
 }
 
-#' Check valid subitem names for a data list-like list
+#' Check valid item names for a data list-like list
 #'
 #' Error if data list-like structure doesn't have nested names of "data",
 #' "name", "domain", and "type".
@@ -676,7 +676,7 @@ check_dll_types <- function(dll) {
     }
 }
 
-#' Error if empty input provided during data list initalization
+#' Error if empty input provided during data list initialization
 #'
 #' @keywords internal
 #' @param data_list_input Input data provided for data list initialization.
@@ -691,7 +691,7 @@ check_dll_empty_input <- function(data_list_input) {
     }
 }
 
-#' Lapply-like function for data list objects
+#' Apply-like function for data list objects
 #'
 #' This function enables manipulating a `data_list` class object with lapply
 #' syntax without removing that object's `data_list` class attribute. The

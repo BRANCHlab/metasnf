@@ -182,7 +182,7 @@ similarity_matrix_path <- function(similarity_matrix_dir, i) {
     path <- paste0(
         similarity_matrix_dir,
         "/",
-        gsub("-", "_", Sys.Date()), # Today's datej
+        gsub("-", "_", Sys.Date()), # Today's date
         "_",
         "similarity_matrix_",
         i,
@@ -192,7 +192,7 @@ similarity_matrix_path <- function(similarity_matrix_dir, i) {
     return(path)
 }
 
-#' Helper resample function found in ?sample
+#' Helper resampling function found in ?sample
 #'
 #' Like sample, but when given a single value x, returns back that single
 #'  value instead of a random value from 1 to x.
@@ -309,7 +309,7 @@ pick_cols <- function(x, cols) {
     return(x)
 }
 
-#' Helper function to pick columns from a data frame by grepl search
+#' Helper function to pick columns from a data frame by `grepl` search
 #'
 #' @keywords internal
 #' @param x Data frame to select columns from.

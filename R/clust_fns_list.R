@@ -162,7 +162,7 @@ check_cfll_fn_args <- function(cfll) {
 #'
 #' @param cfl A `clust_fns_list` class object.
 #' @return summary_df "data.frame" class object containing the name and index
-#'  of each clustering algorithm in te provided `clust_fns_list`.
+#'  of each clustering algorithm in the provided `clust_fns_list`.
 #' @export
 summarize_clust_fns_list <- function(cfl) {
     summary_df <- data.frame(

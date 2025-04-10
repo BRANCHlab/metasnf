@@ -129,7 +129,7 @@ var_manhattan_plot <- function(dl,
     return(plot)
 }
 
-#' Manhattan plot of feature-meta cluster associaiton p-values
+#' Manhattan plot of feature-meta cluster association p-values
 #'
 #' Given a data frame of representative meta cluster solutions (see
 #' `get_representative_solutions()`, returns a Manhattan plot for showing
@@ -310,7 +310,7 @@ mc_manhattan_plot <- function(ext_sol_df,
         data.frame()
     summary_data$"variable" <- sub("_pval$", "", summary_data$"variable")
     ###########################################################################
-    # Merge the summmary plot with domain information from the data list
+    # Merge the summary plot with domain information from the data list
     ###########################################################################
     dl_metadata <- summary(dl, "feature") |> drop_cols("type")
     summary_data <- merge(

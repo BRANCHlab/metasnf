@@ -1,11 +1,15 @@
-#' TITLE
+#' Plot of cluster assignments in a solutions data frame
 #'
-#' SHORT DESCRIPTION
+#' This plot, built on `ComplexHeatmap::Heatmap()`, visualizes the cluster
+#' assignments in a solutions data frame as a categorical heatmap with
+#' observations along the columns and clusters along the rows.
 #'
-#' @param PARAM1
-#'
-#' @return RETURN
-#'
+#' @inheritParams ComplexHeatmap::Heatmap
+#' @param x A `solutions_df` object.
+#' @param y Optional argument to `plot`, not used in this method.
+#' @param ... Additional arguments passed to `ComplexHeatmap::Heatmap()`.
+#' @return A `ComplexHeatmap::Heatmap()` object visualization of cluster
+#'  assignments.
 #' @export
 plot.solutions_df <- function(x,
                               y = NULL,

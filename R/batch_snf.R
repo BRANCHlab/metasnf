@@ -1,4 +1,4 @@
-#' Run variations of SNF.
+#' Run variations of SNF
 #'
 #' This is the core function of the `metasnf` package. Using the information
 #' stored in a settings_df (see ?settings_df) and a data list
@@ -38,20 +38,22 @@
 #'  in the output.
 #' @export
 #' @examples
-#' input_dl <- data_list(
-#'     list(gender_df, "gender", "demographics", "categorical"),
-#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
-#'     uid = "patient_id"
-#' )
+#' \dontrun{ 
+#'     input_dl <- data_list(
+#'         list(gender_df, "gender", "demographics", "categorical"),
+#'         list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'         uid = "patient_id"
+#'     )
 #'
-#' sc <- snf_config(input_dl, n_solutions = 3)
+#'     sc <- snf_config(input_dl, n_solutions = 3)
 #'
-#' # A solutions data frame without similarity matrices:
-#' sol_df <- batch_snf(input_dl, sc)
+#'     # A solutions data frame without similarity matrices:
+#'     sol_df <- batch_snf(input_dl, sc)
 #'
-#' # A solutions data frame with similarity matrices:
-#' # sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
-#' # sim_mats_list(sol_df)
+#'     # A solutions data frame with similarity matrices:
+#'     sol_df <- batch_snf(input_dl, sc, return_sim_mats = TRUE)
+#'     sim_mats_list(sol_df)
+#' }
 batch_snf <- function(dl,
                       sc,
                       processes = 1,
@@ -295,7 +297,7 @@ get_dist_matrix <- function(df,
                             cat_dist_fn,
                             mix_dist_fn,
                             weights_row) {
-    # Move subject keys into data frame rownames
+    # Move subject keys into data frame row names
     df <- data.frame(df, row.names = "uid")
     # Trim down of the full weights row
     weights_row_trim <-
@@ -373,7 +375,7 @@ snf_step <- function(dl,
 #' fused network.
 #'
 #' domain_merge: Given a data list, returns a new data list where all data objects of
-#' a particlar domain have been concatenated.
+#' a particular domain have been concatenated.
 #'
 #' two_step_merge: Individual data frames into individual similarity matrices into one fused
 #' network per domain into one final fused network.

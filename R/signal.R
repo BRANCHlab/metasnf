@@ -1,4 +1,4 @@
-#' Helper function for raising errors.
+#' Helper function for raising errors
 #'
 #' @keywords internal
 #' @param ... Arbitrary number of strings to be pasted together into error
@@ -16,7 +16,7 @@ metasnf_error <- function(..., env = 1) {
     )
 }
 
-#' Helper function for raising warnings.
+#' Helper function for raising warnings
 #'
 #' @keywords internal
 #' @param ... Arbitrary number of strings to be pasted together into warning
@@ -48,7 +48,7 @@ metasnf_alert <- function(..., env = 1) {
     )
 }
 
-#' Helper function for deprecated function warnings.
+#' Helper function for deprecated function warnings
 #'
 #' @keywords internal
 #' @param version Version of `metasnf` in which function has been deprecated.
@@ -67,7 +67,7 @@ metasnf_deprecated <- function(version, alternative, env = 1) {
     )
 }
 
-#' Helper function for defunct function errors.
+#' Helper function for defunct function errors
 #'
 #' @keywords internal
 #' @param version Version of `metasnf` in which function has been made defunct.

@@ -1,4 +1,4 @@
-#' Row-binding of solutions data frame class objects.
+#' Row-binding of solutions data frame class objects
 #'
 #' @param reset_indices If TRUE, re-labels the "solutions" indices in
 #'  the solutions data frame from 1 to the number of defined settings.
@@ -55,7 +55,7 @@ rbind.solutions_df <- function(..., reset_indices = FALSE) {
     return(result)
 }
 
-#' Row-binding of solutions data frame class objects.
+#' Row-binding of solutions data frame class objects
 #'
 #' @param reset_indices If TRUE, re-labels the "solutions" indices in
 #'  the solutions data frame from 1 to the number of defined settings.

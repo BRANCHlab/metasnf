@@ -328,10 +328,7 @@ meta_cluster_heatmap <- function(aris,
 #'  colours.
 #' @param labels_colour Vector of colours to use for the columns and rows
 #'  of the heatmap.
-#' @param split_by_domain The results of `dl_var_summar` - a data frame that has
-#'  the domain of every feature in the plotted data.
-#'  columns of the correlation_matrix. Will be used to "slice" the heatmap into
-#'  visually separated sections.
+#' @param split_by_domain Visually slice the heatmap based on feature domains.
 #' @param dl A nested list of input data from `data_list()`.
 #' @param significance_stars If TRUE (default), plots significance stars on
 #'  heatmap cells
@@ -947,7 +944,7 @@ shiny_annotator <- function(ari_heatmap) {
     }
 }
 
-#' Place significance stars on ComplexHeatmap cells.
+#' Place significance stars on ComplexHeatmap cells
 #'
 #' This is an internal function meant to be used to by the
 #' assoc_pval_heatmap function.
@@ -1499,7 +1496,7 @@ save_heatmap <- function(heatmap,
 #' @param hclust_method Agglomerative method to use when calculating sorting
 #'  order by `stats::hclust`. Options include "ward.D", "ward.D2", "single",
 #'  "complete", "average", "mcquitty", "median", or "centroid".
-#' @return A numeric vector of the ordering derivied by the specified
+#' @return A numeric vector of the ordering derived by the specified
 #'  hierarchical clustering method applied to the provided matrix.
 #' @export
 #' @examples

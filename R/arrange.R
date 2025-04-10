@@ -2,7 +2,7 @@
 #'
 #' @param .data The object to arrange columns from.
 #' @param ... Additional arguments for arranging.
-#' @return Object with arrangeed columns.
+#' @return Object with arranged columns.
 #' @export
 arrange <- function(.data, ...) {
     UseMethod("arrange")

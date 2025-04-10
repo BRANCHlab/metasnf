@@ -175,7 +175,7 @@ get_mean_pval <- function(sol_df_row) {
 #' Ordinal regression p-value
 #'
 #' Returns the overall p-value of an ordinal regression on a categorical
-#' predictor and response vetors. If the ordinal response
+#' predictor and response vectors.
 #'
 #' @keywords internal
 #' @param predictor A categorical or numeric feature.

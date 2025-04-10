@@ -69,7 +69,7 @@
 #' # - Random alternation between 2-cluster and 5-cluster solutions
 #' # - When continuous or discrete data frames are being processed,
 #' #   randomly alternate between standardized/normalized Euclidean
-#' #   distance vs. regular Euclidean distance
+#' #   distance and regular Euclidean distance
 #' my_sc <- snf_config(
 #'     dl = input_dl,
 #'     n_solutions = 5,

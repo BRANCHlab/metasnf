@@ -26,6 +26,7 @@
 #' @return A list of `silhouette` class objects, a vector of Dunn indices, or a
 #'  vector of Davies-Bouldin indices depending on which function was used.
 #' @examples
+#' \dontrun{
 #' input_dl <- data_list(
 #'     list(gender_df, "gender", "demographics", "categorical"),
 #'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
@@ -44,6 +45,7 @@
 #' 
 #' # calculate silhouette scores
 #' silhouette_scores <- calculate_silhouettes(sol_df)
+#' }
 #' @name quality_measures
 NULL
 
@@ -73,7 +75,7 @@ calculate_silhouettes <- function(sol_df) {
     #  along the columns, and which cluster the patient was assigned to in the
     #  values.
     cluster_solutions_df <- t(sol_df)
-    # cluster_solutions is a list of... cluster solutions. Each element in the
+    # cluster_solutions is a list of cluster solutions. Each element in the
     #  list is a column from cluster_solutions_df, excluding the uid
     #  column.
     cluster_solutions <- sapply(
@@ -85,7 +87,7 @@ calculate_silhouettes <- function(sol_df) {
     silhouette_scores <- Map(
         function(cluster_solution, dissimilarity_matrix) {
             # Note: the cluster package should not be converted to an optional
-            #  package in "Suggests". cluster::daisy is a default distance
+            #  package in "Suggests". `cluster::daisy` is a default distance
             #  measure required for categorical and mixed data.
             silhouette_score <- cluster::silhouette(
                 x = as.integer(cluster_solution),
@@ -138,7 +140,7 @@ calculate_dunn_indices <- function(sol_df) {
     #  along the columns, and which cluster the patient was assigned to in the
     #  values.
     cluster_solutions_df <- t(sol_df)
-    # cluster_solutions is a list of... cluster solutions. Each element in the
+    # cluster_solutions is a list of cluster solutions. Each element in the
     #  list is a column from cluster_solutions_df, excluding the uid
     #  column.
     cluster_solutions <- sapply(
@@ -153,21 +155,21 @@ calculate_dunn_indices <- function(sol_df) {
             #  cls.scatt.diss.mx
             cluster_solution <- as.integer(cluster_solution)
             # The cls.scatt.diss.mx takes in a dissimilarity matrix and returns
-            #  an object storing popular inter and intracluster distances. This
-            #  object is referred to in clv documentation as the index.list, so
-            #  that name is used here.
+            #  an object storing popular inter and intra-cluster distances.
+            #  This object is referred to in clv documentation as the
+            #  index.list, so that name is used here.
             index_list <- clv::cls.scatt.diss.mx(
                 diss.mx = dissimilarity_matrix,
                 clust = cluster_solution
             )
             dunn_index <- clv::clv.Dunn(
                 index.list = index_list,
-                # the intracluster distance methods to evaluate
+                # the intra-cluster distance methods to evaluate
                 intracls = c(
                     "complete",
                     "average"
                 ),
-                # the intercluster distance methods to evaluate
+                # the inter-cluster distance methods to evaluate
                 intercls = c(
                     "single",
                     "complete",
@@ -219,12 +221,12 @@ calculate_db_indices <- function(sol_df) {
             }
         )
     # Dataframe that contains patients along the rows, sol_df rows
-    #  along the columns, and which cluster the patient was assigned to in the
-    #  values.
+    # along the columns, and which cluster the patient was assigned to in the
+    # values.
     cluster_solutions_df <- t(sol_df)
-    # cluster_solutions is a list of... cluster solutions. Each element in the
-    #  list is a column from cluster_solutions_df, excluding the uid
-    #  column.
+    # cluster_solutions is a list of cluster solutions. Each element in the
+    # list is a column from cluster_solutions_df, excluding the uid
+    # column.
     cluster_solutions <- sapply(
         cluster_solutions_df[, -1],
         function(column) {
@@ -234,24 +236,24 @@ calculate_db_indices <- function(sol_df) {
     davies_bouldin_indices <- Map(
         function(cluster_solution, dissimilarity_matrix) {
             # Vector of solutions must be in integer form to use
-            #  cls.scatt.diss.mx
+            # cls.scatt.diss.mx
             cluster_solution <- as.integer(cluster_solution)
             # The cls.scatt.diss.mx takes in a dissimilarity matrix and returns
-            #  an object storing popular inter and intracluster distances. This
-            #  object is referred to in clv documentation as the index.list, so
-            #  that name is used here.
+            # an object storing popular inter and intra-cluster distances.
+            # This object is referred to in clv documentation as the
+            # index.list, so that name is used here.
             index_list <- clv::cls.scatt.diss.mx(
                 diss.mx = dissimilarity_matrix,
                 clust = cluster_solution
             )
             davies_bouldin_index <- clv::clv.Davies.Bouldin(
                 index.list = index_list,
-                # the intracluster distance methods to evaluate
+                # the intra-cluster distance methods to evaluate
                 intracls = c(
                     "complete",
                     "average"
                 ),
-                # the intercluster distance methods to evaluate
+                # the inter-cluster distance methods to evaluate
                 intercls = c(
                     "single",
                     "complete",

@@ -21,7 +21,7 @@
 #'       frames are directly merged by SNF into the final fused network. This
 #'       scheme corresponds to the approach shown in the original SNF paper.
 #'     * A value of 2 corresponds to the "two-step" scheme, in which all data
-#'       frames witin a domain are first merged into a domain-specific fused
+#'       frames within a domain are first merged into a domain-specific fused
 #'       network. Next, domain-specific networks are fused once more by SNF
 #'       into the final fused network. This scheme is useful for fairly
 #'       re-weighting SNF pipelines with unequal numbers of data frames across
@@ -106,7 +106,7 @@
 #' @param possible_snf_schemes A vector containing the possible snf_schemes to
 #'  uniformly randomly select from. By default, the vector contains all
 #'  3 possible schemes: c(1, 2, 3). 1 corresponds to the "individual" scheme,
-#'  2 corresponds to the "domain" scheme, and 3 corresponds to the "twostep"
+#'  2 corresponds to the "domain" scheme, and 3 corresponds to the "two-step"
 #'  scheme.
 #' @param clustering_algorithms A list of clustering algorithms to uniformly
 #'  randomly pick from when clustering. When not specified, randomly select
@@ -599,6 +599,7 @@ add_settings_df_rows <- function(sdf,
 #'  of columns removed follows a uniform or exponential probability
 #'  distribution.
 #'
+#' @keywords internal
 #' @param columns Columns of the settings_df that are passed in
 #' @param min_removed_inputs The smallest number of input data frames that may
 #'  be randomly removed.
@@ -608,7 +609,7 @@ add_settings_df_rows <- function(sdf,
 #'  can be "none" (no dropout), "uniform" (uniformly draw number between min
 #'  and max removed inputs), or "exponential" (like uniform, but using an
 #'  exponential distribution; default).
-#' @return inclusions_df data frame that can be rbind'ed to the settings_df
+#' @return Settings data frame row containing inclusion information.
 #' @export
 random_removal <- function(columns,
                            min_removed_inputs,
@@ -668,21 +669,21 @@ random_removal <- function(columns,
         # 10000 randomly distributed values
         rand_vals <- stats::rexp(10000)
         # Scale the values to have a maximum of 1. Because there are so many
-        #  exponentially distributed numbers, the min value will be quite
-        #  close to 0.
+        # exponentially distributed numbers, the min value will be quite
+        # close to 0.
         rand_vals <- rand_vals / max(rand_vals)
         # Difference indicates how many possible inputs may be dropped
         difference <- max_removed_inputs - min_removed_inputs
-        #  E.g. if we are dropping between 5 and 20 input data frames, this will
-        #  ensure the largest value is 15. Because of the large amount of
-        #  numbers, the smallest value will still be quite close to 0.
+        # E.g. if we are dropping between 5 and 20 input data frames, this will
+        # ensure the largest value is 15. Because of the large amount of
+        # numbers, the smallest value will still be quite close to 0.
         rand_vals <- rand_vals * difference
         # After this addition, we can expect the smallest value to be close to
-        #  the minimum number of removed inputs (e.g, 5) and the biggest value
-        #  to be quite close to the maximum number of removed inputs (e.g., 20)
+        # the minimum number of removed inputs (e.g, 5) and the biggest value
+        # to be quite close to the maximum number of removed inputs (e.g., 20)
         rand_vals <- rand_vals + min_removed_inputs
-        # From here, simply round the pool of numbers to make them all ints and
-        #  select one uniformly at random.
+        # From here, simply round the pool of numbers to make them all integers
+        # and select one uniformly at random.
         rand_vals <- round(rand_vals)
         num_removed <- sample(rand_vals, 1)
         # There very likely could be a much simpler way to achieve this goal.
@@ -698,7 +699,7 @@ random_removal <- function(columns,
     unshuffled_removals <- c(remove_placeholders, keep_placeholders)
     shuffled_removals <- sample(unshuffled_removals)
     # Turn that shuffled vector into a data frame row and return that row to be
-    #  merged into the rest of the settings_df
+    # merged into the rest of the settings_df
     inclusions_df <- shuffled_removals |>
         data.frame() |>
         t()

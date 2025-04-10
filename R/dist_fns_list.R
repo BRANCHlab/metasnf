@@ -178,11 +178,11 @@ check_dfll_item_names <- function(dfll) {
     }
 }
 
-#' Check if subitems of a distance metrics list-like object are functions
+#' Check if items of a distance metrics list-like object are functions
 #'
 #' @keywords internal
 #' @inheritParams validate_dist_fns_list
-#' @return Doesn't return any value. Raises error if the subitems of dfll are
+#' @return Doesn't return any value. Raises error if the items of dfll are
 #'  not functions.
 check_dfll_subitems_are_fns <- function(dfll) {
     subitems_are_fns <- lapply(

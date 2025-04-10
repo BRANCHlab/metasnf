@@ -27,17 +27,19 @@
 #'  each feature-solution combination.
 #' @export
 #' @examples
-#' input_dl <- data_list(
-#'     list(gender_df, "gender", "demographics", "categorical"),
-#'     list(diagnosis_df, "diagnosis", "clinical", "categorical"),
-#'     uid = "patient_id"
-#' )
-#' 
-#' sc <- snf_config(input_dl, n_solutions = 2)
-#' 
-#' sol_df <- batch_snf(input_dl, sc)
-#' 
-#' calc_nmis(input_dl, sol_df)
+#' \dontrun{
+#'     input_dl <- data_list(
+#'         list(gender_df, "gender", "demographics", "categorical"),
+#'         list(diagnosis_df, "diagnosis", "clinical", "categorical"),
+#'         uid = "patient_id"
+#'     )
+#'     
+#'     sc <- snf_config(input_dl, n_solutions = 2)
+#'     
+#'     sol_df <- batch_snf(input_dl, sc)
+#'     
+#'     calc_nmis(input_dl, sol_df)
+#' }
 calc_nmis <- function(dl,
                       sol_df,
                       transpose = TRUE,
@@ -47,7 +49,8 @@ calc_nmis <- function(dl,
     features <- attributes(dl)$"features"
     # An `snf_config` object used to create sol_df
     sc <- attributes(sol_df)$"snf_config"
-    # A data frame with the same nrows as sol_df and column name "solution"
+    # A data frame with the same number of rows as sol_df and column name
+    # "solution"
     nmi_df <- sol_df[, "solution", drop = FALSE]
     ###########################################################################
     # If ignore_inclusions is TRUE, all inclusion columns will be set to 1

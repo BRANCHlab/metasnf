@@ -382,7 +382,7 @@ print.t_solutions_df <- function(x, ...) {
     header <- sub("`", "  ", header)
     rest <- output[-1]
     cat(cli::col_blue(header), "\n")
-    # Calculating shown vs. hidden solutions
+    # Calculating shown and hidden solutions
     shown_sols <- sum(startsWith(strsplit(header, "\\s+")[[1]], "s"))
     hidden_sols <- n_sols - shown_sols
     hidden_obs <- nrow(x) - length(rest)
@@ -409,7 +409,7 @@ print.t_ext_solutions_df <- function(x, ...) {
     header <- output[1]
     rest <- output[-1]
     cat(cli::col_blue(header), "\n")
-    # Calculating shown vs. hidden solutions
+    # Calculating shown and hidden solutions
     shown_sols <- length(strsplit(header, "\\s+")[[1]]) - 1
     hidden_sols <- n_sols - shown_sols
     if (hidden_sols == 1) {
@@ -419,7 +419,7 @@ print.t_ext_solutions_df <- function(x, ...) {
     } else {
         sols_message <- ""
     }
-    # Calculating shown vs. hidden observations
+    # Calculating shown and hidden observations
     if (length(rest) > 10) {
         hidden_obs <- n_obs - 10
         if (hidden_obs == 1) {
@@ -612,7 +612,7 @@ print.sim_mats_list <- function(x, ...) {
     }
 }
 
-#' Helper function for creating what hidden ft/obs/sols message.
+#' Helper function for creating what hidden ft/obs/sols message
 #'
 #' @keywords internal
 #' @param hidden_solutions Number of hidden solutions.
