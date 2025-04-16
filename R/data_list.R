@@ -165,7 +165,7 @@ data_list <- function(...,
 #'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
-#' @return The provided dll with the data item of each component as a 
+#' @return The provided dll with the data item of each component as a
 #'  data frame.
 ensure_dll_df <- function(dll) {
     lapply(
@@ -217,7 +217,7 @@ convert_uids <- function(dll, uid) {
 
 #' Remove observations with incomplete data from a data list-like list object
 #'
-#' Helper function during `data_list` class initialization. First applies 
+#' Helper function during `data_list` class initialization. First applies
 #' `stats::na.omit()` to the data frames named "data" within a nested list.
 #' Then removes any observations that are not present across all data frames.
 #'
@@ -398,7 +398,7 @@ is_data_list <- function(x) {
 }
 
 #' Constructor for `data_list` class object
-#' 
+#'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
 #' @return A `data_list` object, which is a nested list with class `data_list`.
@@ -450,10 +450,10 @@ new_data_list <- function(dll) {
 }
 
 #' Validator for data_list class object
-#' 
+#'
 #' @keywords internal
 #' @param dll A data list-like `list` class object.
-#' @return If dll has a valid structure for a `data_list` class object, 
+#' @return If dll has a valid structure for a `data_list` class object,
 #'  returns the input unchanged. Otherwise, raises an error.
 validate_data_list <- function(dll) {
     class(dll) <- setdiff(class(dll), "data_list")
@@ -560,7 +560,7 @@ check_dll_subitem_names <- function(dll) {
         function(x) {
             identical(names(x), c("data", "name", "domain", "type"))
         }
-    ) |> 
+    ) |>
         unlist() |>
         all()
     if (!correct_names) {
@@ -670,7 +670,7 @@ check_dll_types <- function(dll) {
         dll,
         function(x) {
             x$"type" %in% c(
-                "continuous", 
+                "continuous",
                 "discrete",
                 "ordinal",
                 "categorical",
@@ -724,7 +724,7 @@ check_dll_empty_input <- function(data_list_input) {
 #'     list(abcd_colour, "colour", "likes", "categorical"),
 #'     uid = "patient"
 #' )
-#' 
+#'
 #' dl_lower <- dlapply(
 #'     dl,
 #'     function(x) {
