@@ -113,15 +113,32 @@ data_list <- function(...,
         }
     }
     # Assign names to the nested list elements
-    named_entries <- dll |> lapply(
+    all_correct_names <- dll |>
+        lapply(
+            function(x) {
+                all(c("data", "name", "domain", "type") %in% names(x))
+            }
+        ) |>
+        unlist() |>
+        all()
+    all_null_names <- dll |> lapply(
         function(x) {
-            return(sum(names(x) == ""))
+            is.null(names(x))
         }
-    )
-    if (all(named_entries == 0)) {
+    ) |>
+        unlist() |>
+        all()
+    if (all_null_names) {
         dll_names <- c("data", "name", "domain", "type")
         dll <- lapply(dll, stats::setNames, dll_names)
-    } else if (!(all(named_entries == 4))) {
+    } else if (all_correct_names) {
+        dll <- lapply(
+            dll,
+            function(x) {
+                x[c("data", "name", "domain", "type")]
+            }
+        )
+    } else {
         metasnf_error(
             "Please either specify names (i.e., data = ...,",
             " name = ..., domain = ..., type = ...) for all of the",
