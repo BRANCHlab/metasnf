@@ -339,8 +339,7 @@ subsample_pairwise_aris <- function(subsample_solutions,
 #' 
 #' batch_subsample_results <- batch_snf_subsamples(
 #'     my_dl_subsamples,
-#'     sc,
-#'     verbose = TRUE
+#'     sc
 #' )
 #'
 #' coclustering_results <- calculate_coclustering(
@@ -446,8 +445,7 @@ cocluster_density <- function(cocluster_df) {
 #'     
 #'     batch_subsample_results <- batch_snf_subsamples(
 #'         my_dl_subsamples,
-#'         sc,
-#'         verbose = TRUE
+#'         sc
 #'     )
 #'     
 #'     coclustering_results <- calculate_coclustering(
@@ -662,8 +660,7 @@ cocluster_heatmap <- function(cocluster_df,
 #'     
 #'     batch_subsample_results <- batch_snf_subsamples(
 #'         my_dl_subsamples,
-#'         sc,
-#'         verbose = TRUE
+#'         sc
 #'     )
 #'     
 #'     coclustering_results <- calculate_coclustering(
