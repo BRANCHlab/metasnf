@@ -485,24 +485,6 @@
 #' This data comes from the metasnf package.
 "mock_t_solutions_df"
 
-#' Mock example of a `ari_hm` metasnf object
-#'
-#' @format ## `mock_ari_hm`
-#' A `Heatmap` class object from the `ComplexHeatmap` package of 20 pairwise ARIs.
-#' Derived by calling `meta_cluster_heatmap()` on the object `mock_aris`.
-#' @source
-#' This data comes from the metasnf package.
-"mock_ari_hm"
-
-#' Mock example of a `ari_mc_hm` metasnf object
-#'
-#' @format ## `mock_ari_mc_hm`
-#' A `Heatmap` class object from the `ComplexHeatmap` package of 20 pairwise ARIs.
-#' Derived by calling `meta_cluster_heatmap()` on the object `mock_aris` with a split vector.
-#' @source
-#' This data comes from the metasnf package.
-"mock_ari_mc_hm"
-
 #' Mock example of a `clust_fns_list` metasnf object
 #'
 #' @format ## `mock_clust_fns_list`
