@@ -20,7 +20,6 @@
 #' @param ignore_inclusions If TRUE, will ignore the inclusion columns in the
 #'  solutions data frame and calculate NMIs for all features. If FALSE, will
 #'  give NAs for features that were dropped on a given settings_df row.
-#' @param verbose If TRUE, output progress to console.
 #' @return A "data.frame" class object containing one row for every feature
 #'  in the provided data list and one column for every solution in the provided
 #'  solutions data frame. Populated values show the calculated NMI score for
@@ -42,106 +41,67 @@ calc_nmis <- function(dl,
                       sol_df,
                       transpose = TRUE,
                       ignore_inclusions = TRUE,
-                      verbose = FALSE) {
-    # A vector of features from the data list
-    features <- attributes(dl)$"features"
-    # An `snf_config` object used to create sol_df
-    sc <- attributes(sol_df)$"snf_config"
-    # A data frame with the same number of rows as sol_df and column name
-    # "solution"
-    nmi_df <- sol_df[, "solution", drop = FALSE]
-    ###########################################################################
-    # If ignore_inclusions is TRUE, all inclusion columns will be set to 1
-    if (ignore_inclusions) {
-        sc$"settings_df" <- sc$"settings_df" |>
-            dplyr::mutate(
-                dplyr::across(
-                    dplyr::starts_with("inc_"), ~ 1
-                )
-            )
+                      processes = 1) {
+    dl_df <- as.data.frame(dl)
+    dl_df$"uid" <- gsub("uid_", "", dl_df$"uid")
+    dl_ft_summary <- summary(dl, "feature")
+    dl_summary <- summary(dl)
+    df_names <- rep(dl_summary$"name", dl_summary$"width")
+    type_lookup <- setNames(dl_ft_summary$"type", dl_ft_summary$"name")
+    inc_lookup <- setNames(df_names, dl_ft_summary$"name")
+    sc <- attr(sol_df, "snf_config")
+    t_sol_df <- t(sol_df)
+    p <- progressr::progressor(steps = length(features(dl)))
+    if (processes == "max") {
+        processes <- max(future::availableCores())
     }
-    ###########################################################################
-    # Loop through each feature
-    for (i in seq_along(features)) {
-        feature <- features[i]
-        if (verbose) {
-            cat(
-                "Calculating NMI for ",
-                feature, " (feature ", i, "/", length(features), ")...\n",
-                sep = ""
+    if (processes > 1) {
+        future::plan(future::multisession, workers = processes)
+        apply_fn <- future.apply::future_lapply
+    } else {
+        apply_fn <- lapply
+    }
+    all_nmi_list <- apply_fn(
+        colnames(dl_df)[-1],
+        function(x) {
+            mini_dl <- data_list(
+                list(
+                    data = dl_df[, c("uid", x)],
+                    name = inc_lookup[x][[1]],
+                    domain = "x",
+                    type = "continuous"
+                ),
+                uid = "uid"
             )
-        }
-        #######################################################################
-        # Reduced data list containing only the current feature
-        feature_dl <- lapply(
-            dl,
-            function(component) {
-                if (feature %in% colnames(component$"data")) {
-                    component$"data" <- component$"data"[, c("uid", feature)]
-                    return(component)
+            this_sc <- sc
+            new_sc_cols <- c(sdf_cols, paste0("inc_", inc_lookup[features(mini_dl)][[1]]))
+            this_sc$"settings_df" <- this_sc$"settings_df"[, new_sc_cols]
+            mini_sol_df <- batch_snf(
+                mini_dl,
+                this_sc
+            )
+            mini_t_sol_df <- t(mini_sol_df)
+            nmi_feature_list <- lapply(
+                (seq_len(ncol(mini_t_sol_df) - 1) + 1),
+                function(j) {
+                    SNFtool::calNMI(
+                        mini_t_sol_df[, j],
+                        t_sol_df[, j]
+                    )
                 }
-            }
-        )
-        #######################################################################
-        # Stripping away other inclusion columns
-        feature_dl <- feature_dl[!sapply(feature_dl, is.null)]
-        feature_dl <- as_data_list(feature_dl)
-        inc_this_data_type <- paste0("inc_", feature_dl[[1]]$"name")
-        inc_columns <- startsWith(colnames(sc$"settings_df"), "inc_")
-        is_this_inc <- colnames(sc$"settings_df") == inc_this_data_type
-        keep_cols <- is_this_inc | !inc_columns
-        feature_settings_df <- sc$"settings_df"[, keep_cols]
-        #######################################################################
-        # Vector storing this feature's NMIs
-        feature_nmis <- c()
-        #######################################################################
-        # Loop through the settings data frame and run solo-feature SNFs
-        for (j in seq_len(nrow(feature_settings_df))) {
-            this_sc <- sc[j]
-            this_inclusion <- this_sc$"settings_df"[, inc_this_data_type]
-            if (!ignore_inclusions && this_inclusion == 0) {
-                # If feature is dropped and inc not ignored, the NMI is NA
-                feature_nmis <- c(feature_nmis, NA)
-            } else {
-                # Running SNF
-                this_sol_df <- batch_snf(
-                    dl = feature_dl,
-                    sc = this_sc
-                )
-                # Inner join to ensure consistent subject order
-                solo_solution <- t(this_sol_df)
-                full_solution <- t(sol_df[j, ])
-                colnames(solo_solution) <- c("uid", "solo_cluster")
-                joint_solution <- dplyr::inner_join(
-                    solo_solution,
-                    full_solution,
-                    by = "uid"
-                )
-                # Calculate NMI
-                nmi <- SNFtool::calNMI(
-                    joint_solution$"solo_cluster",
-                    joint_solution[, 3]
-                )
-                # Append to this feature's NMI vector
-                feature_nmis <- c(feature_nmis, nmi)
-            }
+            )
+            p()
+            return(nmi_feature_list)
         }
-        #######################################################################
-        # Combine this feature's NMIs with the overall NMI data frame
-        nmi_df <- data.frame(nmi_df, new_feature = feature_nmis)
-        colnames(nmi_df)[ncol(nmi_df)] <- feature
-    }
-    ###########################################################################
-    # Transpose and clean
-    ###########################################################################
-    if (transpose) {
-        solution_idx <- nmi_df$"solution"
-        nmi_df <- t(nmi_df)
-        nmi_df <- nmi_df[-1, , drop = FALSE]
-        nmi_df <- data.frame(rownames(nmi_df), nmi_df)
-        rownames(nmi_df) <- NULL
-        colnames(nmi_df) <- c("feature", paste0("s", solution_idx))
-        return(nmi_df)
-    }
+    )
+    names(all_nmi_list) <- features(dl)
+    data_matrix <- do.call(rbind, lapply(all_nmi_list, function(x) unlist(x)))
+    # Add the row names as a column
+    nmi_df <- data.frame(
+        feature = rownames(data_matrix),
+        data_matrix,
+        row.names = NULL
+    )
+    colnames(nmi_df) <- c("feature", paste0("s", sc$"settings_df"$"solution"))
     return(nmi_df)
 }
