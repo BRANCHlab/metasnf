@@ -47,10 +47,24 @@ calc_nmis <- function(dl,
     dl_ft_summary <- summary(dl, "feature")
     dl_summary <- summary(dl)
     df_names <- rep(dl_summary$"name", dl_summary$"width")
-    type_lookup <- setNames(dl_ft_summary$"type", dl_ft_summary$"name")
-    inc_lookup <- setNames(df_names, dl_ft_summary$"name")
+    type_lookup <- stats::setNames(dl_ft_summary$"type", dl_ft_summary$"name")
+    inc_lookup <- stats::setNames(df_names, dl_ft_summary$"name")
     sc <- attr(sol_df, "snf_config")
     t_sol_df <- t(sol_df)
+    # Base columns in a settings data frame
+    sdf_cols <- c(
+        "solution",
+        "alpha",
+        "k",
+        "t",
+        "snf_scheme",
+        "clust_alg",
+        "cnt_dist",
+        "dsc_dist",
+        "ord_dist",
+        "cat_dist",
+        "mix_dist"
+    )
     p <- progressr::progressor(steps = length(features(dl)))
     if (processes == "max") {
         processes <- max(future::availableCores())
@@ -69,7 +83,7 @@ calc_nmis <- function(dl,
                     data = dl_df[, c("uid", x)],
                     name = inc_lookup[x][[1]],
                     domain = "x",
-                    type = "continuous"
+                    type = type_lookup[x][[1]]
                 ),
                 uid = "uid"
             )
