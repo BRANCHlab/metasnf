@@ -62,8 +62,7 @@ Calculate co-clustering data
     
     batch_subsample_results <- batch_snf_subsamples(
         my_dl_subsamples,
-        sc,
-        verbose = TRUE
+        sc
     )
     
     coclustering_results <- calculate_coclustering(

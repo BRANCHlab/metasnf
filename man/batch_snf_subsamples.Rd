@@ -9,8 +9,7 @@ batch_snf_subsamples(
   sc,
   processes = 1,
   return_sim_mats = FALSE,
-  sim_mats_dir = NULL,
-  verbose = TRUE
+  sim_mats_dir = NULL
 )
 }
 \arguments{
@@ -42,8 +41,6 @@ of similarity matrices for each row in the sol_df. Default FALSE.}
 
 \item{sim_mats_dir}{If specified, this directory will be used to
 save all generated similarity matrices.}
-
-\item{verbose}{If TRUE, output progress to console.}
 }
 \value{
 By default, returns a one-element list: \code{cluster_solutions}, which
@@ -77,8 +74,7 @@ my_dl_subsamples <- subsample_dl(
 
 batch_subsample_results <- batch_snf_subsamples(
     my_dl_subsamples,
-    sc,
-    verbose = TRUE
+    sc
 )
 }
 }

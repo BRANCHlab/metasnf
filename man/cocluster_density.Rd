@@ -21,6 +21,7 @@ observations that originally clustered together, the distribution of the
 the fractions that those pairs clustered together across subsampled data.
 }
 \examples{
+\donttest{
 my_dl <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),
@@ -40,8 +41,7 @@ my_dl_subsamples <- subsample_dl(
 
 batch_subsample_results <- batch_snf_subsamples(
     my_dl_subsamples,
-    sc,
-    verbose = TRUE
+    sc
 )
 
 coclustering_results <- calculate_coclustering(
@@ -53,4 +53,5 @@ coclustering_results <- calculate_coclustering(
 cocluster_dfs <- coclustering_results$"cocluster_dfs"
 
 cocluster_density(cocluster_dfs[[1]])
+}
 }

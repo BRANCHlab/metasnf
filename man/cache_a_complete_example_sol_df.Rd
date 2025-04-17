@@ -7,8 +7,7 @@
 \format{
 \subsection{\code{cache_a_complete_example_sol_df}}{
 
-An extended solutions data frame with 20 cluster solutions and 87 observations.
-Used as a cached example in the "a_complete_example.Rmd" vignette.
+A solutions data frame with 20 cluster solutions and 87 observations.
 }
 }
 \source{
@@ -18,6 +17,6 @@ This data came from the metasnf package.
 cache_a_complete_example_sol_df
 }
 \description{
-Cached example solutions data frame
+An solutions data frame used as a cached example in the "a_complete_example.Rmd" vignette.
 }
 \keyword{datasets}

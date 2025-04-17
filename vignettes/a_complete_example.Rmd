@@ -859,7 +859,7 @@ Here's a quick step through of the complete procedure, from the beginning, with 
 
 The `metasnf` package comes equipped with the function `train_test_assign` to provide random splitting for you.
 
-```{r eval = FALSE}
+```{r eval}
 # All the observations present in all data frames with no NAs
 all_observations <- uids(input_dl)
 
@@ -919,7 +919,9 @@ train_target_dl <- data_list(
     list(train_depress, "depressed", "behaviour", "ordinal"),
     uid = "unique_id"
 )
+```
 
+```{r eval = FALSE}
 # Find a clustering solution in your training data
 set.seed(42)
 my_sc <- snf_config(

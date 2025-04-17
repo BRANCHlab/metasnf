@@ -9,7 +9,7 @@ calc_nmis(
   sol_df,
   transpose = TRUE,
   ignore_inclusions = TRUE,
-  verbose = FALSE
+  processes = 1
 )
 }
 \arguments{
@@ -25,7 +25,18 @@ in the original call to \code{batch_snf()}.}
 solutions data frame and calculate NMIs for all features. If FALSE, will
 give NAs for features that were dropped on a given settings_df row.}
 
-\item{verbose}{If TRUE, output progress to console.}
+\item{processes}{Specify number of processes used to complete SNF iterations
+\itemize{
+\item \code{1} (default) Sequential processing: function will iterate through the
+\code{settings_df} one row at a time with a for loop. This option will
+not make use of multiple CPU cores, but will show a progress bar.
+\item \code{2} or higher: Parallel processing will use the
+\code{future.apply::future_apply} to distribute the SNF iterations across
+the specified number of CPU cores. If higher than the number of
+available cores, a warning will be raised and the maximum number of
+cores will be used.
+\item \code{max}: All available cores will be used.
+}}
 }
 \value{
 A "data.frame" class object containing one row for every feature

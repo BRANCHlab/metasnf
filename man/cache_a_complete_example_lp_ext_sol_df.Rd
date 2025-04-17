@@ -7,17 +7,16 @@
 \format{
 \subsection{\code{cache_a_complete_example_lp_ext_sol_df}}{
 
-An extended solutions data frame with 5 cluster solutions, 74 observations, and p-values for 2 features.
-Used as a cached example in the "a_complete_example.Rmd" vignette.
+Contains 5 cluster solutions, 74 observations, and p-values for 2 features.
 }
 }
 \source{
-This data came from the metasnf package.
+This data comes from the metasnf package.
 }
 \usage{
 cache_a_complete_example_lp_ext_sol_df
 }
 \description{
-Cached example extended solutions data frame
+An extended solutions data frame used as a cached example in the "a_complete_example.Rmd" vignette.
 }
 \keyword{datasets}

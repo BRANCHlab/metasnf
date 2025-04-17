@@ -45,8 +45,7 @@ my_dl_subsamples <- subsample_dl(
 
 batch_subsample_results <- batch_snf_subsamples(
     my_dl_subsamples,
-    sc,
-    verbose = TRUE
+    sc
 )
 
 pairwise_aris <- subsample_pairwise_aris(
