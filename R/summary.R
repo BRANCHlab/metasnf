@@ -30,7 +30,11 @@ summary.ari_matrix <- function(object, ...) {
 #' @return Returns no value. Outputs a message to the console.
 #' @export
 summary.clust_fns_list <- function(object, ...) {
-    cat("A list of", length(object), "clustering functions.\n")
+    return(
+        list(
+            "length" = length(object)
+        )
+    )
 }
 
 #' Summary method for class `dist_fns_list`
@@ -43,7 +47,11 @@ summary.clust_fns_list <- function(object, ...) {
 #' @return Returns no value. Outputs a message to the console.
 #' @export
 summary.dist_fns_list <- function(object, ...) {
-    cat("A list of", length(object), "distance functions.\n")
+    return(
+        list(
+            "length" = length(object)
+        )
+    )
 }
 
 #' Summary method for class `ext_solutions_df`
@@ -133,6 +141,16 @@ summary.sim_mats_list <- function(object, ...) {
     cat("A list of", length(object), "similarity matrices.\n")
 }
 
+#' Summary method for class `snf_config`
+#'
+#' This summary function provides a summary of the `snf_config` class object,
+#' including the settings data frame, clustering functions list, distance
+#' functions list, and weights matrix.
+#'
+#' @param object A `snf_config` class object.
+#' @param ... Other arguments passed to `summary` (not used in this function).
+#' @return A named list containing the summaries of objects within the config.
+#' @export
 summary.snf_config <- function(object, ...) {
     sdf <- object$"settings_df"
     cfl <- object$"clust_fns_list"
@@ -147,8 +165,6 @@ summary.snf_config <- function(object, ...) {
         )
     )
 }
-
-summary(mock_snf_config)
 
 #' Summary method for class `solutions_df`
 #'
@@ -226,25 +242,63 @@ summary.data_list <- function(object, scope = "component", ...) {
     return(dl_summary)
 }
 
+#' Summary method for class `t_ext_solutions_df`
+#'
+#' This summary function provides a summary of the `t_ext_solutions_df` class
+#' object, including the number of solutions, the distribution of the number of
+#' clusters, the number of features, the number of observations, and the
+#' distribution of p-values.
+#'
+#' @param object A `t)ext_solutions_df` class object.
+#' @param ... Other arguments passed to `summary` (not used in this function).
+#' @return A named list containing the number of solutions, the distribution of
+#' the number of clusters, the number of features, the number of observations,
+#' and the distribution of p-values.
+#' @export    
+summary.t_ext_solutions_df <- function(object, ...) {
+    esdf <- t(object)
+    return(summary(esdf))
+}
+
+z <- mock_ext_solutions_df
+
+mock_ext_solutions_df |> attributes()
+
+
+t(tz)
+
+attributes(tz)$"pvals"
+
+t(tz)
+
+mock_ext_solutions_df |> colnames()
+
+#' Summary method for class `weights_matrix`
+#'
+#' This summary function provides a summary of the `weights_matrix` class
+#' object, including the minimum, maximum, mean, and standard deviation of the
+#' feature weights.
+#'
+#' @param object A `weights_matrix` class object.
+#' @param ... Other arguments passed to `summary` (not used in this function).
+#' @return A named list containing the summary statistics of the weights matrix,
+#'  the number of solutions, and the number of features.
+#' @export
 summary.weights_matrix <- function(object, ...) {
     summary_stats <- data.frame(
         feature = colnames(object),
+        min = apply(object, 2, min),
+        max = apply(object, 2, max),
         mean = colMeans(object),
-        sd = apply(object, 2, sd),
-        median = apply(object, 2, median),
-        mad = apply(object, 2, mad),
-        non_zero_prop = colMeans(object != 0)
+        sd = apply(object, 2, sd)
     )
-    summary_stats
+    rownames(summary_stats) <- NULL
+    return(
+        list(
+            "summary_stats" = summary_stats,
+            "n_solutions" = nrow(object),
+            "n_features" = ncol(object)
+        )
+    )
+    return(summary_stats)
 }
-
-mock_weights_matrix |> summary()
-
-mock_weights_matrix |>
-    as.matrix() |>
-    summary()
-
-
-    unlist() |>
-    as.numeric() |>
-    summary()
