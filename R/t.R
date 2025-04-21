@@ -20,7 +20,7 @@ t.solutions_df <- function(x) {
 
 #' @export
 t.t_solutions_df <- function(x) {
-    sol_df <- x
+    t_sol_df <- x
     x <- NextMethod()
     x <- data.frame(x)
     colnames(x) <- x[1, ]
@@ -36,11 +36,11 @@ t.t_solutions_df <- function(x) {
         drop_cols("solution") |>
         apply(1, function(y) length(unique(y))) |>
         as.integer()
-    x$"mc" <- as.character(attributes(sol_df)$"mc_labels")
+    x$"mc" <- as.character(attributes(t_sol_df)$"mc_labels")
     x <- sol_df_col_order(x)
     class(x) <- c("solutions_df", "data.frame")
-    attributes(x)$"sim_mats_list" <- attributes(sol_df)$"sim_mats_list"
-    attributes(x)$"snf_config" <- attributes(sol_df)$"snf_config"
+    attributes(x)$"sim_mats_list" <- attributes(t_sol_df)$"sim_mats_list"
+    attributes(x)$"snf_config" <- attributes(t_sol_df)$"snf_config"
     rownames(x) <- NULL
     x
 }
@@ -60,7 +60,7 @@ t.ext_solutions_df <- function(x) {
     attributes(x)$"snf_config" <- attributes(ext_sol_df)$"snf_config"
     attributes(x)$"features" <- attributes(ext_sol_df)$"features"
     attributes(x)$"summary_features" <- attributes(ext_sol_df)$"summary_features"
-    attributes(x)$"pvals" <- gexclude(ext_sol_df, "_pval$")
+    attributes(x)$"pvals" <- gselect(ext_sol_df, "_pval$")
     attributes(x)$"mc_labels" <- ext_sol_df$"mc"
     x <- numcol_to_numeric(x)
     class(x) <- c("t_ext_solutions_df", "data.frame")
@@ -69,7 +69,7 @@ t.ext_solutions_df <- function(x) {
 
 #' @export
 t.t_ext_solutions_df <- function(x) {
-    ext_sol_df <- x
+    t_ext_sol_df <- x
     x <- NextMethod()
     x <- data.frame(x)
     colnames(x) <- x[1, ]
@@ -85,17 +85,18 @@ t.t_ext_solutions_df <- function(x) {
         drop_cols("solution") |>
         apply(1, function(y) length(unique(y))) |>
         as.integer()
-    x$"mc" <- as.character(attributes(ext_sol_df)$"mc_labels")
-    x <- cbind(x, attributes(ext_sol_df)$"pvals")
-    if (!is.null(attributes(ext_sol_df)$"summary_features")) {
+    x$"mc" <- as.character(attributes(t_ext_sol_df)$"mc_labels")
+    x <- cbind(x, attributes(t_ext_sol_df)$"pvals")
+    if (!is.null(attributes(t_ext_sol_df)$"summary_features")) {
         summary_cols <- c("min_pval", "mean_pval", "max_pval")
     } else {
         summary_cols <- NULL
     }
     x <- x[, unique(c("solution", "nclust", "mc", summary_cols, colnames(x)))]
-    attributes(x)$"snf_config" <- attributes(ext_sol_df)$"snf_config"
-    attributes(x)$"features" <- attributes(ext_sol_df)$"features"
-    attributes(x)$"summary_features" <- attributes(ext_sol_df)$"summary_features"
+    attributes(x)$"snf_config" <- attributes(t_ext_sol_df)$"snf_config"
+    attributes(x)$"features" <- attributes(t_ext_sol_df)$"features"
+    attributes(x)$"sim_mats_list" <- attributes(t_ext_sol_df)$"sim_mats_list"
+    attributes(x)$"summary_features" <- attributes(t_ext_sol_df)$"summary_features"
     rownames(x) <- NULL
     class(x) <- c("ext_solutions_df", "data.frame")
     x
