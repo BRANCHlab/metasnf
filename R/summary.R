@@ -79,7 +79,10 @@ summary.ext_solutions_df <- function(object, ...) {
     pvals <- as.numeric(unlist(df))
     ecdf_vec <- stats::ecdf(pvals)
     p_qt <- ecdf_vec(0.05)
-    quantiles <- stats::quantile(pvals, probs = sort(c(p_qt, 0, 0.25, 0.5, 0.75, 1)))
+    quantiles <- stats::quantile(
+        pvals,
+        probs = sort(c(p_qt, 0, 0.25, 0.5, 0.75, 1))
+    )
     return(
         list(
             "n_solutions" = nrow(df),
