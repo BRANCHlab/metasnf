@@ -403,6 +403,10 @@ plot.snf_config <- function(x,
 
 #' @rdname plot.snf_config
 #' @export
+config_heatmap <- plot.snf_config
+
+#' @rdname plot.snf_config
+#' @export
 plot.settings_df <- plot.snf_config
 
 #' @rdname plot.snf_config
@@ -455,14 +459,14 @@ plot.solutions_df <- function(x,
 }
 
 #' @rdname plot.solutions_df
-#' export
+#' @export
 plot.t_solutions_df <- function(x, ...) {
     sol_df <- t(x)
     plot(sol_df, ...)
 }
 
 #' @rdname plot.ext_solutions_df
-#' export
+#' @export
 plot.t_ext_solutions_df <- function(x, ...) {
     ext_sol_df <- t(x)
     plot(ext_sol_df, ...)
