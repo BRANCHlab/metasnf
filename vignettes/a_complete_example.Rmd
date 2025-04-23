@@ -692,7 +692,7 @@ The settings can be passed in through either an `snf_config` or `settings_df` cl
 
 ```{r eval = FALSE}
 config_hm <- config_heatmap(
-    sc = my_sc,
+    my_sc,
     order = meta_cluster_order,
     hide_fixed = TRUE
 )
