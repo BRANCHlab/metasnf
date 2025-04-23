@@ -48,8 +48,12 @@ calc_nmis <- function(dl,
     dl_summary <- summary(dl)
     df_names <- rep(dl_summary$"name", dl_summary$"width")
     type_lookup <- stats::setNames(dl_ft_summary$"type", dl_ft_summary$"name")
-    inc_lookup <- stats::setNames(df_names, dl_ft_summary$"name")
+    name_lookup <- stats::setNames(df_names, dl_ft_summary$"name")
     sc <- attr(sol_df, "snf_config")
+    if (ignore_inclusions) {
+        # Turn off feature inclusion/exclusion (drop no data)
+        sc$"settings_df"[, grepl("inc_", colnames(sc$"settings_df"))] <- 1
+    }
     t_sol_df <- t(sol_df)
     # Base columns in a settings data frame
     sdf_cols <- c(
@@ -81,14 +85,14 @@ calc_nmis <- function(dl,
             mini_dl <- data_list(
                 list(
                     data = dl_df[, c("uid", x)],
-                    name = inc_lookup[x][[1]],
+                    name = name_lookup[x][[1]],
                     domain = "x",
                     type = type_lookup[x][[1]]
                 ),
                 uid = "uid"
             )
             this_sc <- sc
-            new_sc_cols <- c(sdf_cols, paste0("inc_", inc_lookup[features(mini_dl)][[1]]))
+            new_sc_cols <- c(sdf_cols, paste0("inc_", name_lookup[features(mini_dl)][[1]]))
             this_sc$"settings_df" <- this_sc$"settings_df"[, new_sc_cols]
             mini_sol_df <- batch_snf(
                 mini_dl,
