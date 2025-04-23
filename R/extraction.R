@@ -28,11 +28,19 @@
 
 #' @export
 `[.dist_fns_list` <- function(x, i, ...) {
-    metasnf_warning(
-        "Indexing a dist_fns_list object is not supported.",
-        " Please convert the object to a regular list to enable indexing."
+    result <- NextMethod()
+    class(result) <- "list"
+    result <- tryCatch(
+        expr = {
+            result <- validate_dist_fns_list(result)
+            result <- new_dist_fns_list(result)
+            result
+        },
+        error = function(e) {
+            result
+        }
     )
-    x
+    return(result)
 }
 
 #' @export
