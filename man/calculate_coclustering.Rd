@@ -42,7 +42,7 @@ information is formatted as a data frame with one row per cluster solution.
 Calculate co-clustering data
 }
 \examples{
-\dontrun{
+\donttest{
     my_dl <- data_list(
         list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
         list(income, "household_income", "demographics", "continuous"),

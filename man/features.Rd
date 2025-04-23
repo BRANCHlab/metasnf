@@ -15,3 +15,4 @@ A character vector of features in x.
 \description{
 Return character vector of features stored in an object
 }
+\keyword{internal}

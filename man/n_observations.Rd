@@ -15,3 +15,4 @@ The number of observations in x.
 \description{
 Extract number of observations stored in an object
 }
+\keyword{internal}

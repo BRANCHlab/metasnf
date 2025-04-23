@@ -56,7 +56,7 @@ stability calculations.
 Run SNF clustering pipeline on a list of subsampled data lists
 }
 \examples{
-\dontrun{
+\donttest{
 my_dl <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),

@@ -76,7 +76,7 @@ Create a heatmap that shows the distribution of observation co-clustering
 across resampled data.
 }
 \examples{
-\dontrun{
+\donttest{
     my_dl <- data_list(
         list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
         list(income, "household_income", "demographics", "continuous"),

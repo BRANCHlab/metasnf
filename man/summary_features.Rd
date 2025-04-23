@@ -15,3 +15,4 @@ A character vector of summary features.
 \description{
 Pull features used to calculate summary p-values from an object
 }
+\keyword{internal}

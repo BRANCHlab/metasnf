@@ -2,6 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot.solutions_df}
 \alias{plot.solutions_df}
+\alias{plot.t_solutions_df}
 \title{Plot of cluster assignments in a solutions data frame}
 \usage{
 \method{plot}{solutions_df}(
@@ -14,6 +15,8 @@
   column_title = "Observation",
   ...
 )
+
+\method{plot}{t_solutions_df}(x, ...)
 }
 \arguments{
 \item{x}{A \code{solutions_df} object.}

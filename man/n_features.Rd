@@ -15,3 +15,4 @@ The number of features in x.
 \description{
 Extract number of features stored in an object
 }
+\keyword{internal}
