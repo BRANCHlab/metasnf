@@ -1,3 +1,33 @@
+#' @export
+rbind.ari_matrix <- function(...) {
+    metasnf_error("`rbind` cannot be applied to ari_matrix class objects.")
+}
+
+#' @export
+rbind.clust_fns_list <- function(...) {
+    metasnf_error("`rbind` cannot be applied to clust_fns_list class objects.")
+}
+
+#' @export
+rbind.dist_fns_list <- function(...) {
+    metasnf_error("`rbind` cannot be applied to dist_fns_list class objects.")
+}
+
+#' @export
+rbind.data_list <- function(...) {
+    metasnf_error("`rbind` cannot be applied to data_list class objects.")
+}
+
+#' @export
+rbind.sim_mats_list <- function(...) {
+    metasnf_error("`rbind` cannot be applied to sim_mats_list class objects.")
+}
+
+#' @export
+rbind.snf_config <- function(...) {
+    metasnf_error("`rbind` cannot be applied to snf_config class objects.")
+}
+
 #' Row-binding of solutions data frame class objects
 #'
 #' @param reset_indices If TRUE, re-labels the "solutions" indices in
@@ -112,6 +142,40 @@ rbind.ext_solutions_df <- function(..., reset_indices = FALSE) {
     return(result)
 }
 
+#' Row-binding of t_solutions_df class objects
+#'
+#' Vertically stack two or more `t_solutions_df` class objects.
+#'
+#' @param ... An arbitrary number of `t_solutions_df` class objects.
+#' @return A `t_solutions_df` class object.
+#' @export
+rbind.t_solutions_df <- function(...) {
+    args <- list(...)
+    all_t_sol_dfs <- lapply(
+        args,
+        function(x) {
+            inherits(x, "t_solutions_df")
+        }
+    ) |>
+        unlist() |>
+        all()
+    if (!all_t_sol_dfs) {
+        metasnf_error(
+            "`rbind` cannot be applied to mixed t_solutions_df and other",
+            " object types."
+        )
+    }
+    sol_dfs <- lapply(args, t)
+    stacked_sol_df <- rbind.solutions_df(sol_dfs)
+    return(t(stacked_sol_df))
+}
+
+#' Row-bind weights matrices
+#'
+#' Vertically stack two or more `weights_matrix` class objects.
+#'
+#' @param ... An arbitrary number of `weights_matrix` class objects.
+#' @return A `weights_matrix` class object.
 #' @export
 rbind.weights_matrix <- function(...) {
     result <- as.matrix(rbind.data.frame(...))
