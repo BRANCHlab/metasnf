@@ -10,7 +10,7 @@
 #' of ARI values.
 #' @export
 summary.ari_matrix <- function(object, ...) {
-    ari_quantiles <- quantile(object)
+    ari_quantiles <- stats::quantile(object)
     ari_dim <- dim(object)[[1]]
     return(
         list(
@@ -77,9 +77,9 @@ summary.ext_solutions_df <- function(object, ...) {
     df <- df[, keep_cols] |>
         dplyr::select(dplyr::ends_with("_pval"))
     pvals <- as.numeric(unlist(df))
-    ecdf_vec <- ecdf(pvals)
+    ecdf_vec <- stats::ecdf(pvals)
     p_qt <- ecdf_vec(0.05)
-    quantiles <- quantile(pvals, probs = sort(c(p_qt, 0, 0.25, 0.5, 0.75, 1)))
+    quantiles <- stats::quantile(pvals, probs = sort(c(p_qt, 0, 0.25, 0.5, 0.75, 1)))
     return(
         list(
             "n_solutions" = nrow(df),
@@ -103,8 +103,8 @@ summary.ext_solutions_df <- function(object, ...) {
 #'  frame.
 #' @export
 summary.settings_df <- function(object, ...) {
-    alpha_dist <- quantile(object$"alpha")
-    k_dist <- quantile(object$"k")
+    alpha_dist <- stats::quantile(object$"alpha")
+    k_dist <- stats::quantile(object$"k")
     scheme_dist <- table(object$"snf_scheme")
     clst_fn_dist <- table(object$"clust_alg")
     cnt_dist_dist <- table(object$"cnt_dist")
@@ -242,6 +242,24 @@ summary.data_list <- function(object, scope = "component", ...) {
     return(dl_summary)
 }
 
+#' Summary method for class `t_solutions_df`
+#'
+#' This summary function provides a summary of the `t_solutions_df` class
+#' object, including the number of solutions, the distribution of the number of
+#' clusters, the number of features, the number of observations, and the
+#' distribution of p-values.
+#'
+#' @param object A `t_solutions_df` class object.
+#' @param ... Other arguments passed to `summary` (not used in this function).
+#' @return A named list containing the number of solutions, the distribution of
+#' the number of clusters, the number of features, the number of observations,
+#' and the distribution of p-values.
+#' @export    
+summary.t_solutions_df <- function(object, ...) {
+    sdf <- t(object)
+    return(summary(sdf))
+}
+
 #' Summary method for class `t_ext_solutions_df`
 #'
 #' This summary function provides a summary of the `t_ext_solutions_df` class
@@ -249,7 +267,7 @@ summary.data_list <- function(object, scope = "component", ...) {
 #' clusters, the number of features, the number of observations, and the
 #' distribution of p-values.
 #'
-#' @param object A `t)ext_solutions_df` class object.
+#' @param object A `t_ext_solutions_df` class object.
 #' @param ... Other arguments passed to `summary` (not used in this function).
 #' @return A named list containing the number of solutions, the distribution of
 #' the number of clusters, the number of features, the number of observations,
@@ -259,19 +277,6 @@ summary.t_ext_solutions_df <- function(object, ...) {
     esdf <- t(object)
     return(summary(esdf))
 }
-
-z <- mock_ext_solutions_df
-
-mock_ext_solutions_df |> attributes()
-
-
-t(tz)
-
-attributes(tz)$"pvals"
-
-t(tz)
-
-mock_ext_solutions_df |> colnames()
 
 #' Summary method for class `weights_matrix`
 #'
@@ -290,7 +295,7 @@ summary.weights_matrix <- function(object, ...) {
         min = apply(object, 2, min),
         max = apply(object, 2, max),
         mean = colMeans(object),
-        sd = apply(object, 2, sd)
+        sd = apply(object, 2, stats::sd)
     )
     rownames(summary_stats) <- NULL
     return(
