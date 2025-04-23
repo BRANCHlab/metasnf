@@ -21,7 +21,7 @@ observations that originally clustered together, the distribution of the
 the fractions that those pairs clustered together across subsampled data.
 }
 \examples{
-\donttest{
+\dontrun{
 my_dl <- data_list(
     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
     list(income, "household_income", "demographics", "continuous"),

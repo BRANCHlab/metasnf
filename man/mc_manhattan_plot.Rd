@@ -89,7 +89,7 @@ feature separation across all features in provided data/target lists.
 # meta_cluster_order <- get_matrix_order(sol_aris)
 # 
 # # Identify meta cluster boundaries with shiny app or trial and error
-# # ari_hm <- meta_cluster_heatmap(sol_aris, order = meta_cluster_order)
+# # ari_hm <- plot(sol_aris, order = meta_cluster_order)
 # # shiny_annotator(ari_hm)
 # 
 # # Result of meta cluster examination

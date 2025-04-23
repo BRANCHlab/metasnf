@@ -13,19 +13,41 @@ devtools::load_all()
 
 library(metasnf)
 
-# `data_list` class object stores data frames and metadata
 dl <- data_list(
-    list(methylation_df, "cortical_sa", "neuroimaging", "continuous"),
-    list(expression_df, "cortical_t", "neuroimaging", "continuous"),
-    uid = "patient_id"
-)
-
-# `data_list` class object stores data frames and metadata
-dl <- data_list(
-    list(income_df, "cortical_sa", "neuroimaging", "continuous"),
-    list(, "cortical_t", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "ordinal"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(fav_colour, "favourite_colour", "demographics", "categorical"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
     uid = "unique_id"
 )
 
+sc <- snf_config(
+    dl,
+    n_solutions = 10,
+    dropout_dist = "uniform"
+)
 
-help(package = "metasnf")
+plot(sc)
+
+summary(mock_snf_config$"dist_fns_list")
+
+plot(mock_settings_df)
+
+splot(mock_snf_config)
+
+plot(mock_weights_matrix)
+
+plot(mock_snf_config)
+
+summary(mock_solutions_df)
+
+summary(t(mock_ext_solutions_df))
+
+(mock_weights_matrix)
+
+mock_aris
+
+plot(mock_ari_matrix)
+
+meta_cluster_heatmap(mock_ari_matrix)
