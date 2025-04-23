@@ -1,3 +1,15 @@
+#' Coerce a `ari_matrix` class object into a `matrix` class object
+#'
+#' @param x A `ari_matrix` class object.
+#' @param ... Additional parameter passed to `as.matrix()`.
+#' @return A `matrix` and `array` class object.
+#' @export
+as.matrix.ari_matrix <- function(x,
+                                     ...) {
+    class(x) <- c("matrix", "array")
+    return(x)
+}
+
 #' Coerce a `weights_matrix` class object into a `matrix` class object
 #'
 #' @param x A `weights_matrix` class object.
