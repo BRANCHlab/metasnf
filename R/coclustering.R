@@ -425,7 +425,7 @@ cocluster_density <- function(cocluster_df) {
 #'  distribution of observation co-clustering across resampled data.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'     my_dl <- data_list(
 #'         list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
 #'         list(income, "household_income", "demographics", "continuous"),
@@ -640,7 +640,7 @@ cocluster_heatmap <- function(cocluster_df,
 #' @importFrom data.table := setnames setkey as.data.table
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'     my_dl <- data_list(
 #'         list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
 #'         list(income, "household_income", "demographics", "continuous"),
