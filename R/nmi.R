@@ -92,7 +92,10 @@ calc_nmis <- function(dl,
                 uid = "uid"
             )
             this_sc <- sc
-            new_sc_cols <- c(sdf_cols, paste0("inc_", name_lookup[features(mini_dl)][[1]]))
+            new_sc_cols <- c(
+                sdf_cols,
+                paste0("inc_", name_lookup[features(mini_dl)][[1]])
+            )
             this_sc$"settings_df" <- this_sc$"settings_df"[, new_sc_cols]
             mini_sol_df <- batch_snf(
                 mini_dl,
