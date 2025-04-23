@@ -383,6 +383,8 @@ print.settings_df <- function(x, ...) {
 #'
 #' Custom formatted print for similarity matrix list
 #'
+#' @param x A `sim_mats_list` class object.
+#' @param ... Other arguments passed to `print` (not used in this function).
 #' @export
 print.sim_mats_list <- function(x, ...) {
     if (is.null(x[[1]])) {
