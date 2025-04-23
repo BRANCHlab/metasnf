@@ -2,11 +2,31 @@
 % Please edit documentation in R/plot.R
 \name{plot.snf_config}
 \alias{plot.snf_config}
+\alias{config_heatmap}
 \alias{plot.settings_df}
 \alias{plot.weights_matrix}
 \title{Heatmap for visualizing an SNF config}
 \usage{
 \method{plot}{snf_config}(
+  x,
+  order = NULL,
+  hide_fixed = FALSE,
+  show_column_names = TRUE,
+  show_row_names = TRUE,
+  rect_gp = grid::gpar(col = "black"),
+  colour_breaks = c(0, 1),
+  colours = c("black", "darkseagreen"),
+  column_split_vector = NULL,
+  row_split_vector = NULL,
+  column_split = NULL,
+  row_split = NULL,
+  column_title = NULL,
+  include_weights = TRUE,
+  include_settings = TRUE,
+  ...
+)
+
+config_heatmap(
   x,
   order = NULL,
   hide_fixed = FALSE,
