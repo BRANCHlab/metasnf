@@ -1,4 +1,17 @@
 #' @export
+`[.clust_fns_list` <- function(x, i, ...) {
+    extra_args <- list(...)
+    if (length(extra_args) > 0) {
+        metasnf_error(
+            "Incorrect number of dimensions for clust_fns_list subsetting."
+        )
+    }
+    result <- NextMethod()
+    class(result) <- c("clust_fns_list", "list")
+    result
+}
+
+#' @export
 `[.data_list` <- function(x, i, ...) {
     extra_args <- list(...)
     if (length(extra_args) > 0) {
@@ -14,8 +27,21 @@
 }
 
 #' @export
+`[.dist_fns_list` <- function(x, i, ...) {
+    metasnf_warning(
+        "Indexing a dist_fns_list object is not supported.",
+        " Please convert the object to a regular list to enable indexing."
+    )
+    x
+}
+
+#' @export
 `[.settings_df` <- function(x, i, j, ...) {
-    result <- NextMethod()
+    if (missing(j) & nargs() == 2) {
+        return(x[i, ])
+    } else {
+        result <- NextMethod()
+    }
     class(result) <- setdiff(class(result), "settings_df")
     result <- tryCatch(
         expr = {
