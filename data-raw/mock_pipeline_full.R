@@ -71,15 +71,15 @@ mock_t_solutions_df <- t(mock_solutions_df)
 
 #usethis::use_data(mock_t_solutions_df, overwrite = TRUE)
 
-mock_aris <- calc_aris(mock_solutions_df)
+mock_ari_matrix <- calc_aris(mock_solutions_df)
 
-#usethis::use_data(mock_aris, overwrite = TRUE)
+#usethis::use_data(mock_ari_matrix, overwrite = TRUE)
 
-meta_cluster_order <- get_matrix_order(mock_aris)
+meta_cluster_order <- get_matrix_order(mock_ari_matrix)
 meta_cluster_order
 
 mock_ari_hm <- meta_cluster_heatmap(
-    mock_aris,
+    mock_ari_matrix,
     order = meta_cluster_order
 )
 
@@ -89,7 +89,7 @@ shiny_annotator(mock_ari_hm)
 
 split_vec <- c(7, 12, 15)
 mock_ari_mc_hm <- meta_cluster_heatmap(
-   mock_aris,
+   mock_ari_matrix,
    order = meta_cluster_order,
    split_vector = split_vec
 )
@@ -107,7 +107,7 @@ usethis::use_data(mock_mc_solutions_df, overwrite = TRUE)
 ### Identifying representative solutions
 
 mock_rep_solutions_df <- get_representative_solutions(
-    mock_aris,
+    mock_ari_matrix,
     mock_mc_solutions_df
 )
 mock_rep_solutions_df
@@ -1100,7 +1100,6 @@ ComplexHeatmap::Heatmap(
 
 
 
-
 library(metasnf)
 
 dl <- data_list(
@@ -1126,6 +1125,3 @@ sol_df <- batch_snf(dl, sc)
 # Let's just calculate NMIs of the anxiety and depression data types for the
 # first 5 cluster solutions to save time:
 feature_nmis <- calc_nmis(dl[4:5], sol_df[1:5, ])
-
-print(feature_nmis)
-

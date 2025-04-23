@@ -433,11 +433,11 @@
 #' An `ari_matrix` class object containing adjusted Rand indices (ARIs) between 20 cluster solutions.
 #' Used as an example of an `ari_matrix` metasnf object.
 #'
-#' @format ## `mock_aris`
+#' @format ## `mock_ari_matrix`
 #' A 20 by 20 ARI matrix.
 #' @source
 #' This data comes from the metasnf package.
-"mock_aris"
+"mock_ari_matrix"
 
 #' Mock example of a `data_list` metasnf object
 #'
@@ -547,3 +547,14 @@
 #' @source
 #' This data comes from the metasnf package.
 "mock_ext_solutions_df"
+
+#' Mock example of an `sim_mats_list` metasnf object
+#'
+#' Used as an example of an `sim_mats_list` metasnf object.
+#'
+#' @format ## `mock_sim_mats_list`
+#' A `sim_mats_list` class object containing pairwise similarities between 100
+#' observations across 20 cluster solutions.
+#' @source
+#' This data comes from the metasnf package.
+"mock_sim_mats_list"
