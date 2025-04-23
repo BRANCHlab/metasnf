@@ -115,6 +115,15 @@ batch_snf <- function(dl,
 #'  is NULL if return_sim_mats is FALSE.
 run_snf <- function(i, dl, sc, return_sim_mats, sim_mats_dir, p) {
     sdf_row <- sc[["settings_df"]][i, ]
+    filtered_dl <- drop_inputs(sdf_row, dl)
+    if (isTRUE(is.na(filtered_dl))) {
+        return(
+            list(
+                "solution" = rep(NA, n_observations(dl)),
+                "fused_network" = NULL
+            )
+        )
+    }
     fused_network <- snf_step(
         dl = drop_inputs(sdf_row, dl),
         scheme = sdf_row$"snf_scheme",
@@ -265,6 +274,13 @@ drop_inputs <- function(sdf_row, dl) {
         }
     ) # Converting to a logical type to do the selection
     in_keeps_log <- c(unlist(in_keeps_list))
+    if (!any(as.logical(in_keeps_log) == TRUE)) {
+        metasnf_warning(
+            "No data list components selected for inclusion in solution ",
+            sdf_row$"solution", "." 
+        )
+        return(NA)
+    }
     # The selection
     selected_dl <- dl[in_keeps_log]
     return(selected_dl)
