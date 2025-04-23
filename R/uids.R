@@ -8,9 +8,39 @@ uids <- function(x) {
 }
 
 #' @export
-uids.default <- function(x) {
+uids.data_list <- function(x) {
     uid_vec <- attributes(x)$"uids"
     return(uid_vec)
+}
+
+#' @export
+uids.default <- function(x) {
+    uid_vec <- attributes(x)$"uids"
+    if (is.null(uid_vec)) {
+        metasnf_warning(
+            "No UIDs in object of type: ", class(x)[[1]], "\n"
+        )
+    } else {
+        return(uid_vec)
+    }
+}
+
+#' @export
+uids.ext_solutions_df <- function(x) {
+    uid_vec <- colnames(x)[grepl("^uid_", colnames(x))]
+    return(uid_vec)
+}
+
+#' @export
+uids.sim_mats_list <- function(x) {
+    if (length(x) >= 1) {
+        uid_vec <- colnames(x[[1]])
+        return(uid_vec)
+    } else {
+        metasnf_warning(
+            "No UIDs in empty `sim_mats_list`."
+        )
+    }
 }
 
 #' @export
@@ -25,13 +55,6 @@ uids.t_solutions_df <- function(x) {
 }
 
 #' @export
-uids.data_list <- function(x) {
-    uid_vec <- attributes(x)$"uids"
-    return(uid_vec)
-}
-
-#' @export
-uids.ext_solutions_df <- function(x) {
-    uid_vec <- colnames(x)[grepl("^uid_", colnames(x))]
-    return(uid_vec)
+uids.t_ext_solutions_df <- function(x) {
+    uids(t(x))
 }
