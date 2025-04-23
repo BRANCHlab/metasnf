@@ -14,31 +14,6 @@ add_columns <- function(df, cols, value = NA) {
     return(df)
 }
 
-#' Convert columns of a data frame to numeric type (if possible)
-#'
-#' Converts all columns in a data frame that can be converted to numeric type to
-#' numeric type.
-#'
-#' @keywords internal
-#' @param df A data frame.
-#' @return The data frame coercible columns converted to type numeric.
-numcol_to_numeric <- function(df) {
-    df[] <- lapply(df,
-        function(x) {
-            tryCatch(
-                {
-                    return(as.numeric(x))
-                }, warning = function(cond) {
-                    if (cond$"message" == "NAs introduced by coercion") {
-                        return(x)
-                    }
-                }
-            )
-        }
-    )
-    return(df)
-}
-
 #' Convert character-type columns of a data frame to factor-type
 #'
 #' @keywords internal
@@ -56,42 +31,66 @@ char_to_fac <- function(df) {
     return(df)
 }
 
-#' Merge list of data frames into a single data frame
+#' Check validity of similarity matrices
 #'
-#' This helper function combines all data frames in a single-level list into a
-#' single data frame.
+#' Check to see if similarity matrices in a list have the following properties:
+#'  1. The maximum value in the entire matrix is 0.5
+#'  2. Every value in the diagonal is 0.5
 #'
-#' @param df_list list of data frames.
-#' @param join String indicating if join should be "inner" or "full".
-#' @param uid Column name to join on. Default is "uid".
-#' @param no_na Whether to remove NA values from the merged data frame.
-#' @return Inner join of all data frames in list.
+#' @param similarity_matrices A list of similarity matrices
+#' @return valid_matrices Boolean indicating if properties are met by all
+#'  similarity matrices
 #' @export
-#' @examples
-#' merge_df_list(list(income, pubertal), uid = "unique_id")
-merge_df_list <- function(df_list,
-                          join = "inner",
-                          uid = "uid",
-                          no_na = FALSE) {
-    if (join == "inner") {
-        merged_df <- df_list |> purrr::reduce(
-            dplyr::inner_join,
-            by = uid
+check_similarity_matrices <- function(similarity_matrices) {
+    invalid_mats <- similarity_matrices |>
+        lapply(
+            function(x) {
+                length(unique(diag(x))) != 1 | max(diag(x)) != 0.5
+            }
+        ) |>
+        unlist() |>
+        which()
+    if (length(invalid_mats) > 0) {
+        metasnf_warning(
+            length(invalid_mats), "/", length(similarity_matrices),
+            " SNF runs yielded irregularly structured similarity matrices: ",
+            cli::col_red(invalid_mats)
         )
-    } else if (join == "full") {
-        merged_df <- df_list |> purrr::reduce(
-            dplyr::full_join,
-            by = uid
-        )
+        return(FALSE)
     } else {
-        metasnf_error(
-            "Invalid join type specified. Options are 'inner' and 'full'."
-        )
+        return(TRUE)
     }
-    if (no_na) {
-        merged_df <- stats::na.omit(merged_df)
-    }
-    return(merged_df)
+}
+
+#' Return a colour ramp for a given vector
+#'
+#' Given a numeric vector and min and max colour values, return a colour ramp
+#' that assigns a colour to each element in the vector. This function is a
+#' wrapper for `circlize::colorRamp2`.'
+#'
+#' @param data Vector of numeric values.
+#' @param min_colour Minimum colour value.
+#' @param max_colour Maximum colour value.
+#' @return A "function" class object that can build a circlize-style colour
+#' ramp.
+#' @export
+colour_scale <- function(data, min_colour, max_colour) {
+    colours <- circlize::colorRamp2(
+        c(min(data), max(data)),
+        c(min_colour, max_colour)
+    )
+    return(colours)
+}
+
+#' Helper function to remove columns from a data frame
+#'
+#' @keywords internal
+#' @param x A data frame
+#' @param cols Vector of column names to be removed
+#' @return x without columns in cols
+drop_cols <- function(x, cols) {
+    x <- x[, !(colnames(x) %in% cols), drop = FALSE]
+    return(x)
 }
 
 #' Pull complete-data UIDs from a list of data frames
@@ -146,30 +145,131 @@ get_complete_uids <- function(list_of_dfs, uid) {
     return(complete_uids)
 }
 
-#' Training and testing split
+#' Helper function to drop columns from a data frame by grepl search
 #'
-#' Given a vector of uid_id and a threshold, returns a list of which members
-#'  should be in the training set and which should be in the testing set. The
-#'  function relies on whether or not the absolute value of the Jenkins's
-#'  one_at_a_time hash function exceeds the maximum possible value
-#'  (2147483647) multiplied by the threshold.
+#' @keywords internal
+#' @param x Data frame to drop columns from.
+#' @param pattern Pattern used to match columns to drop.
+#' @return x without columns matching pattern.
+gexclude <- function(x, pattern) {
+    drop_cols <- unlist(
+        lapply(pattern, function(p) colnames(x)[grepl(p, colnames(x))])
+    )
+    keep_cols <- setdiff(colnames(x), drop_cols)
+    x <- x[ , keep_cols, drop = FALSE]
+    return(x)
+}
+
+#' Helper function to pick columns from a data frame by `grepl` search
 #'
-#' @param train_frac The fraction (0 to 1) of observations for training
-#' @param uids A character vector of UIDs to be distributed into training and
-#'  test sets.
-#' @param seed Seed used for Jenkins's one_at_a_time hash function.
-#' @return A named list containing the training and testing uid_ids.
+#' @keywords internal
+#' @param x Data frame to select columns from.
+#' @param pattern Pattern used to match columns to select.
+#' @return x with only columns matching pattern.
+gselect <- function(x, pattern) {
+    keep_cols <- unlist(
+        lapply(pattern, function(p) colnames(x)[grepl(p, colnames(x))])
+    )
+    x <- x[ , keep_cols, drop = FALSE]
+    return(x)
+}
+
+#' Merge list of data frames into a single data frame
+#'
+#' This helper function combines all data frames in a single-level list into a
+#' single data frame.
+#'
+#' @param df_list list of data frames.
+#' @param join String indicating if join should be "inner" or "full".
+#' @param uid Column name to join on. Default is "uid".
+#' @param no_na Whether to remove NA values from the merged data frame.
+#' @return Inner join of all data frames in list.
 #' @export
-train_test_assign <- function(train_frac, uids, seed = 42) {
-    train_thresh <- 2147483647 * train_frac
-    hash <- abs(digest::digest2int(uids, seed = seed))
-    train <- uids[hash < train_thresh]
-    test <- uids[hash >= train_thresh]
-    assigned_obs <- list(train = train, test = test)
-    if (length(train) == 0 || length(test) == 0) {
-        metasnf_warning("Empty train or test set.")
+#' @examples
+#' merge_df_list(list(income, pubertal), uid = "unique_id")
+merge_df_list <- function(df_list,
+                          join = "inner",
+                          uid = "uid",
+                          no_na = FALSE) {
+    if (join == "inner") {
+        merged_df <- df_list |> purrr::reduce(
+            dplyr::inner_join,
+            by = uid
+        )
+    } else if (join == "full") {
+        merged_df <- df_list |> purrr::reduce(
+            dplyr::full_join,
+            by = uid
+        )
+    } else {
+        metasnf_error(
+            "Invalid join type specified. Options are 'inner' and 'full'."
+        )
     }
-    return(assigned_obs)
+    if (no_na) {
+        merged_df <- stats::na.omit(merged_df)
+    }
+    return(merged_df)
+}
+
+#' Convert columns of a data frame to numeric type (if possible)
+#'
+#' Converts all columns in a data frame that can be converted to numeric type to
+#' numeric type.
+#'
+#' @keywords internal
+#' @param df A data frame.
+#' @return The data frame coercible columns converted to type numeric.
+numcol_to_numeric <- function(df) {
+    df[] <- lapply(df,
+        function(x) {
+            tryCatch(
+                {
+                    return(as.numeric(x))
+                }, warning = function(cond) {
+                    if (cond$"message" == "NAs introduced by coercion") {
+                        return(x)
+                    }
+                }
+            )
+        }
+    )
+    return(df)
+}
+
+#' Helper function to pick columns from a data frame
+#'
+#' @keywords internal
+#' @param x A data frame
+#' @param cols Vector of column names to be picked
+#' @return x with only columns in cols
+pick_cols <- function(x, cols) {
+    x <- x[, colnames(x) %in% cols, drop = FALSE]
+    return(x)
+}
+
+#' Helper function to pluralize a string
+#'
+#' @keywords internal
+#' @param x A vector of length 1 or greater.
+#' @return A string "s" if the length of x is greater than 1, otherwise an
+#' empty string.
+#' @export
+pl <- function(x) {
+    if (x == 1) "" else "s"
+}
+
+#' Helper resampling function found in ?sample
+#'
+#' Like sample, but when given a single value x, returns back that single
+#'  value instead of a random value from 1 to x.
+#'
+#' @param x Vector or single value to sample from
+#' @param ... Remaining arguments for base::sample function
+#' @return Numeric vector result of running base::sample.
+#' @export
+resample <- function(x, ...) {
+    return(x[sample.int(length(x), ...)])
 }
 
 #' Generate a complete path and filename to store an similarity matrix
@@ -190,50 +290,6 @@ similarity_matrix_path <- function(similarity_matrix_dir, i) {
     )
     path <- gsub("//", "/", path)
     return(path)
-}
-
-#' Helper resampling function found in ?sample
-#'
-#' Like sample, but when given a single value x, returns back that single
-#'  value instead of a random value from 1 to x.
-#'
-#' @param x Vector or single value to sample from
-#' @param ... Remaining arguments for base::sample function
-#' @return Numeric vector result of running base::sample.
-#' @export
-resample <- function(x, ...) {
-    return(x[sample.int(length(x), ...)])
-}
-
-#' Check validity of similarity matrices
-#'
-#' Check to see if similarity matrices in a list have the following properties:
-#'  1. The maximum value in the entire matrix is 0.5
-#'  2. Every value in the diagonal is 0.5
-#'
-#' @param similarity_matrices A list of similarity matrices
-#' @return valid_matrices Boolean indicating if properties are met by all
-#'  similarity matrices
-#' @export
-check_similarity_matrices <- function(similarity_matrices) {
-    invalid_mats <- similarity_matrices |>
-        lapply(
-            function(x) {
-                length(unique(diag(x))) != 1 | max(diag(x)) != 0.5
-            }
-        ) |>
-        unlist() |>
-        which()
-    if (length(invalid_mats) > 0) {
-        metasnf_warning(
-            length(invalid_mats), "/", length(similarity_matrices),
-            " SNF runs yielded irregularly structured similarity matrices: ",
-            cli::col_red(invalid_mats)
-        )
-        return(FALSE)
-    } else {
-        return(TRUE)
-    }
 }
 
 #' Adjust the diagonals of a matrix
@@ -267,73 +323,28 @@ scale_diagonals <- function(matrix, method = "mean") {
     return(matrix)
 }
 
-#' Return a colour ramp for a given vector
+#' Training and testing split
 #'
-#' Given a numeric vector and min and max colour values, return a colour ramp
-#' that assigns a colour to each element in the vector. This function is a
-#' wrapper for `circlize::colorRamp2`.'
+#' Given a vector of uid_id and a threshold, returns a list of which members
+#'  should be in the training set and which should be in the testing set. The
+#'  function relies on whether or not the absolute value of the Jenkins's
+#'  one_at_a_time hash function exceeds the maximum possible value
+#'  (2147483647) multiplied by the threshold.
 #'
-#' @param data Vector of numeric values.
-#' @param min_colour Minimum colour value.
-#' @param max_colour Maximum colour value.
-#' @return A "function" class object that can build a circlize-style colour
-#' ramp.
+#' @param train_frac The fraction (0 to 1) of observations for training
+#' @param uids A character vector of UIDs to be distributed into training and
+#'  test sets.
+#' @param seed Seed used for Jenkins's one_at_a_time hash function.
+#' @return A named list containing the training and testing uid_ids.
 #' @export
-colour_scale <- function(data, min_colour, max_colour) {
-    colours <- circlize::colorRamp2(
-        c(min(data), max(data)),
-        c(min_colour, max_colour)
-    )
-    return(colours)
-}
-
-#' Helper function to remove columns from a data frame
-#'
-#' @keywords internal
-#' @param x A data frame
-#' @param cols Vector of column names to be removed
-#' @return x without columns in cols
-drop_cols <- function(x, cols) {
-    x <- x[, !(colnames(x) %in% cols), drop = FALSE]
-    return(x)
-}
-
-#' Helper function to pick columns from a data frame
-#'
-#' @keywords internal
-#' @param x A data frame
-#' @param cols Vector of column names to be picked
-#' @return x with only columns in cols
-pick_cols <- function(x, cols) {
-    x <- x[, colnames(x) %in% cols, drop = FALSE]
-    return(x)
-}
-
-#' Helper function to pick columns from a data frame by `grepl` search
-#'
-#' @keywords internal
-#' @param x Data frame to select columns from.
-#' @param pattern Pattern used to match columns to select.
-#' @return x with only columns matching pattern.
-gselect <- function(x, pattern) {
-    keep_cols <- unlist(
-        lapply(pattern, function(p) colnames(x)[grepl(p, colnames(x))])
-    )
-    x <- x[ , keep_cols, drop = FALSE]
-    return(x)
-}
-
-#' Helper function to drop columns from a data frame by grepl search
-#'
-#' @keywords internal
-#' @param x Data frame to drop columns from.
-#' @param pattern Pattern used to match columns to drop.
-#' @return x without columns matching pattern.
-gexclude <- function(x, pattern) {
-    drop_cols <- unlist(
-        lapply(pattern, function(p) colnames(x)[grepl(p, colnames(x))])
-    )
-    keep_cols <- setdiff(colnames(x), drop_cols)
-    x <- x[ , keep_cols, drop = FALSE]
-    return(x)
+train_test_assign <- function(train_frac, uids, seed = 42) {
+    train_thresh <- 2147483647 * train_frac
+    hash <- abs(digest::digest2int(uids, seed = seed))
+    train <- uids[hash < train_thresh]
+    test <- uids[hash >= train_thresh]
+    assigned_obs <- list(train = train, test = test)
+    if (length(train) == 0 || length(test) == 0) {
+        metasnf_warning("Empty train or test set.")
+    }
+    return(assigned_obs)
 }
