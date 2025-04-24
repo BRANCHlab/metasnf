@@ -55,7 +55,7 @@ attribute of the data frame.
 #
 ## `split_vec` found by iteratively plotting ari_hm or by ?shiny_annotator()
 #split_vec <- c(6, 10, 16)
-#ari_hm <- plot(
+#ari_hm <- meta_cluster_heatmap(
 #    sol_aris,
 #    order = meta_cluster_order,
 #    split_vector = split_vec
