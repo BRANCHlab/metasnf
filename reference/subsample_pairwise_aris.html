@@ -15,7 +15,7 @@ subsamples."><meta name="google-site-verification" content="Xzz1SIDqvPwru_mXKCXA
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,43 +86,53 @@ original cluster solution.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># my_dl &lt;- data_list(</span></span></span>
-<span class="r-in"><span><span class="co">#     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#     list(income, "household_income", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#     list(pubertal, "pubertal_status", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#     uid = "unique_id"</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># sc &lt;- snf_config(my_dl, n_solutions = 5, max_k = 40)</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># my_dl_subsamples &lt;- subsample_dl(</span></span></span>
-<span class="r-in"><span><span class="co">#     my_dl,</span></span></span>
-<span class="r-in"><span><span class="co">#     n_subsamples = 20,</span></span></span>
-<span class="r-in"><span><span class="co">#     subsample_fraction = 0.85</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># batch_subsample_results &lt;- batch_snf_subsamples(</span></span></span>
-<span class="r-in"><span><span class="co">#     my_dl_subsamples,</span></span></span>
-<span class="r-in"><span><span class="co">#     sc,</span></span></span>
-<span class="r-in"><span><span class="co">#     verbose = TRUE</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># pairwise_aris &lt;- subsample_pairwise_aris(</span></span></span>
-<span class="r-in"><span><span class="co">#     batch_subsample_results</span></span></span>
-<span class="r-in"><span><span class="co">#     verbose = TRUE</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co"># # Visualize ARIs </span></span></span>
-<span class="r-in"><span><span class="co"># ComplexHeatmap::Heatmap(</span></span></span>
-<span class="r-in"><span><span class="co">#     pairwise_aris[[1]],</span></span></span>
-<span class="r-in"><span><span class="co">#     heatmap_legend_param = list(</span></span></span>
-<span class="r-in"><span><span class="co">#         color_bar = "continuous",</span></span></span>
-<span class="r-in"><span><span class="co">#         title = "Inter-Subsample\nARI",</span></span></span>
-<span class="r-in"><span><span class="co">#         at = c(0, 0.5, 1)</span></span></span>
-<span class="r-in"><span><span class="co">#     ),</span></span></span>
-<span class="r-in"><span><span class="co">#     show_column_names = FALSE,</span></span></span>
-<span class="r-in"><span><span class="co">#     show_row_names = FALSE</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">my_dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="data_list.html">data_list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 175 observations dropped due to incomplete data.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="snf_config.html">snf_config</a></span><span class="op">(</span><span class="va">my_dl</span>, n_solutions <span class="op">=</span> <span class="fl">5</span>, max_k <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">my_dl_subsamples</span> <span class="op">&lt;-</span> <span class="fu"><a href="subsample_dl.html">subsample_dl</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">my_dl</span>,</span></span>
+<span class="r-in"><span>    n_subsamples <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>    subsample_fraction <span class="op">=</span> <span class="fl">0.85</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">batch_subsample_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="batch_snf_subsamples.html">batch_snf_subsamples</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">my_dl_subsamples</span>,</span></span>
+<span class="r-in"><span>    <span class="va">sc</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">pairwise_aris</span> <span class="op">&lt;-</span> <span class="fu">subsample_pairwise_aris</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">batch_subsample_results</span>,</span></span>
+<span class="r-in"><span>    verbose <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating pairwise ARIs for solution 1/5...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating pairwise ARIs for solution 2/5...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating pairwise ARIs for solution 3/5...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating pairwise ARIs for solution 4/5...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calculating pairwise ARIs for solution 5/5...</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Visualize ARIs </span></span></span>
+<span class="r-in"><span><span class="fu">ComplexHeatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">pairwise_aris</span><span class="op">$</span><span class="st">"raw_aris"</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>    heatmap_legend_param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        color_bar <span class="op">=</span> <span class="st">"continuous"</span>,</span></span>
+<span class="r-in"><span>        title <span class="op">=</span> <span class="st">"Inter-Subsample\nARI"</span>,</span></span>
+<span class="r-in"><span>        at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span>,</span></span>
+<span class="r-in"><span>    show_column_names <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>    show_row_names <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="subsample_pairwise_aris-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

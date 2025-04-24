@@ -13,7 +13,7 @@ solutions data frames."><meta name="google-site-verification" content="Xzz1SIDqv
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,18 +93,19 @@ fraction of the observations of the provided data list.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># my_dl &lt;- data_list(</span></span></span>
-<span class="r-in"><span><span class="co">#     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#     list(income, "household_income", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#     list(pubertal, "pubertal_status", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#     uid = "unique_id"</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># my_dl_subsamples &lt;- subsample_dl(</span></span></span>
-<span class="r-in"><span><span class="co">#     my_dl,</span></span></span>
-<span class="r-in"><span><span class="co">#     n_subsamples = 20,</span></span></span>
-<span class="r-in"><span><span class="co">#     subsample_fraction = 0.85</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">my_dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="data_list.html">data_list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 175 observations dropped due to incomplete data.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">my_dl_subsamples</span> <span class="op">&lt;-</span> <span class="fu">subsample_dl</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">my_dl</span>,</span></span>
+<span class="r-in"><span>    n_subsamples <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>    subsample_fraction <span class="op">=</span> <span class="fl">0.85</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

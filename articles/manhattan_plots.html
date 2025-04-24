@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -173,7 +173,7 @@ cluster solutions.</p>
 <span><span class="va">meta_cluster_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_matrix_order.html">get_matrix_order</a></span><span class="op">(</span><span class="va">sol_aris</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a base heatmap for visual meta clustering</span></span>
-<span><span class="va">ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/meta_cluster_heatmap.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
+<span><span class="va">ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot.ari_matrix.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">sol_aris</span>,</span>
 <span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span></span>
 <span><span class="op">)</span></span>
@@ -186,7 +186,7 @@ cluster solutions.</p>
 <span><span class="va">split_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">5</span>, <span class="fl">12</span>, <span class="fl">16</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a base heatmap for visual meta clustering</span></span>
-<span><span class="va">ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/meta_cluster_heatmap.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
+<span><span class="va">ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot.ari_matrix.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">sol_aris</span>,</span>
 <span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span>,</span>
 <span>    split_vector <span class="op">=</span> <span class="va">split_vec</span></span>

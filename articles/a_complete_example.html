@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -562,8 +562,8 @@ solution.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">input_dl</span>, <span class="va">my_sc</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">sol_df</span></span>
-<span><span class="co">#&gt; 20 cluster solutions of 87 observations:</span></span>
+<span><span class="va">sol_df</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; 20 cluster solutions of 87 observations:</span></span>
 <span><span class="co">#&gt; solution nclust mc uid_NDAR_INV0567T2Y9 uid_NDAR_INV0J4PYA5F </span></span>
 <span><span class="co">#&gt;        1      5  .                    5                    2 </span></span>
 <span><span class="co">#&gt;        2      3  .                    3                    3 </span></span>
@@ -577,7 +577,7 @@ solution.</p>
 <span><span class="co">#&gt;       10      4  .                    2                    4 </span></span>
 <span><span class="co">#&gt; 10 solutions and 85 observations not shown.</span></span>
 <span><span class="co">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span>
-<span><span class="co">#&gt; Use `t()` to view compact cluster solution format.</span></span></code></pre></div>
+<span><span class="co">#&gt; Use `t()` to view compact cluster solution format.</span></span></code></pre>
 <p>Just like that, 20 different cluster solutions have been generated!
 In practice, you may end up wanting to create hundreds or thousands of
 cluster solutions at a time. If you have access to a multi-core system,
@@ -586,7 +586,7 @@ cluster solutions at a time. If you have access to a multi-core system,
 processing vignette</a> for more information.</p>
 <p>You can pull the clustering results out of each row in a more
 convenient, transposed format using the <code><a href="https://rdrr.io/r/base/t.html" class="external-link">t()</a></code> function:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cluster_solutions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cluster_solutions</span></span>
@@ -633,7 +633,7 @@ cluster solution for the user’s context.</p>
 (ARI) between each pair of cluster solutions. This metric tells us how
 similar the solutions are to each other, thereby allowing us to find
 clusters of cluster solutions.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sol_aris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_aris.html">calc_aris</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sol_aris</span><span class="op">)</span></span>
@@ -645,19 +645,19 @@ clusters of cluster solutions.</p>
 <span><span class="co">#&gt; 5  0.334171519 0.103993559 0.92174950  0.10584388 1.0000000  0.143121635</span></span>
 <span><span class="co">#&gt; 6 -0.007786117 0.005037111 0.15193358 -0.01028649 0.1431216  1.000000000</span></span>
 <span><span class="co">#&gt;           7            8            9           10         11        12</span></span>
-<span><span class="co">#&gt; 1 0.3095424  0.984996843  0.173570236 -0.008291469 0.32698058 0.3277556</span></span>
-<span><span class="co">#&gt; 2 0.2180615  0.207053236  0.742919434  0.119121651 0.10527161 0.0994686</span></span>
-<span><span class="co">#&gt; 3 0.4061717  0.351467717  0.109726652  0.024347436 0.34609196 0.8702064</span></span>
-<span><span class="co">#&gt; 4 0.1483474  0.092275681  0.357480715  0.049185641 0.06403676 0.1004719</span></span>
-<span><span class="co">#&gt; 5 0.4326083  0.328021336  0.106684760  0.025637930 0.36873261 0.9504758</span></span>
-<span><span class="co">#&gt; 6 0.1174148 -0.007273901 -0.009726332  0.086328628 0.03492596 0.1316234</span></span>
+<span><span class="co">#&gt; 1 0.3095424  0.984996843  0.173570236 -0.008291469 0.26446742 0.3277556</span></span>
+<span><span class="co">#&gt; 2 0.2180615  0.207053236  0.742919434  0.119121651 0.15904082 0.0994686</span></span>
+<span><span class="co">#&gt; 3 0.4061717  0.351467717  0.109726652  0.024347436 0.35114505 0.8702064</span></span>
+<span><span class="co">#&gt; 4 0.1483474  0.092275681  0.357480715  0.049185641 0.06721613 0.1004719</span></span>
+<span><span class="co">#&gt; 5 0.4326083  0.328021336  0.106684760  0.025637930 0.38456913 0.9504758</span></span>
+<span><span class="co">#&gt; 6 0.1174148 -0.007273901 -0.009726332  0.086328628 0.05714430 0.1316234</span></span>
 <span><span class="co">#&gt;              13         14          15         16          17        18</span></span>
-<span><span class="co">#&gt; 1 -0.0009799544 0.25499764 0.437073421 0.34137600 0.041135495 0.3316678</span></span>
-<span><span class="co">#&gt; 2  0.0162998361 0.82849035 0.545739614 0.07772569 0.335193515 0.1057690</span></span>
-<span><span class="co">#&gt; 3  0.1328440074 0.15531558 0.140709877 0.37665488 0.310391344 0.8359247</span></span>
-<span><span class="co">#&gt; 4 -0.0103687805 0.31077999 0.242348254 0.08182966 0.343463054 0.1004081</span></span>
-<span><span class="co">#&gt; 5  0.1231197909 0.15255002 0.120769892 0.40940502 0.324817033 0.9036594</span></span>
-<span><span class="co">#&gt; 6  0.8224548172 0.01926518 0.005752549 0.06120804 0.003771545 0.1204243</span></span>
+<span><span class="co">#&gt; 1 -0.0009799544 0.25499764 0.437073421 0.26422634 0.041135495 0.3316678</span></span>
+<span><span class="co">#&gt; 2  0.0162998361 0.82849035 0.545739614 0.11631006 0.335193515 0.1057690</span></span>
+<span><span class="co">#&gt; 3  0.1328440074 0.15531558 0.140709877 0.31546400 0.310391344 0.8359247</span></span>
+<span><span class="co">#&gt; 4 -0.0103687805 0.31077999 0.242348254 0.07525907 0.343463054 0.1004081</span></span>
+<span><span class="co">#&gt; 5  0.1231197909 0.15255002 0.120769892 0.36587352 0.324817033 0.9036594</span></span>
+<span><span class="co">#&gt; 6  0.8224548172 0.01926518 0.005752549 0.07237411 0.003771545 0.1204243</span></span>
 <span><span class="co">#&gt;             19           20</span></span>
 <span><span class="co">#&gt; 1 -0.008745923 -0.003030507</span></span>
 <span><span class="co">#&gt; 2  0.004419775  0.213610067</span></span>
@@ -672,7 +672,7 @@ and <a href="https://bioconductor.org/packages/release/bioc/html/InteractiveComp
 packages from <a href="https://bioconductor.org/" class="external-link">Bioconductor</a>. If
 you don’t already have these packages, you can install them with the
 following code:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://bioconductor.github.io/BiocManager/" class="external-link">"BiocManager"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
 <span></span>
@@ -683,7 +683,7 @@ following code:</p>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">"InteractiveComplexHeatmap"</span><span class="op">)</span></span></code></pre></div>
 <p>First, call <code><a href="../reference/get_matrix_order.html">get_matrix_order()</a></code> to get a hierarchical
 clustering-based ordering of the rows in the adjusted rand indices.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">meta_cluster_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_matrix_order.html">get_matrix_order</a></span><span class="op">(</span><span class="va">sol_aris</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Just a vector of numbers</span></span>
@@ -691,8 +691,8 @@ clustering-based ordering of the rows in the adjusted rand indices.</p>
 <span><span class="co">#&gt;  [1] 10 19  6 13  3 18  5 12  7 17 20  4 15  9  2 14  1  8 11 16</span></span></code></pre></div>
 <p>This order can be passed into the <code>meta_cluster_heatmap</code>
 function to get a clearer view of existing meta clusters.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/meta_cluster_heatmap.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot.ari_matrix.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">sol_aris</span>,</span>
 <span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span></span>
 <span><span class="op">)</span></span>
@@ -730,17 +730,17 @@ indices (printed to the R console as well as displayed in the app) can
 get us the following vector:</p>
 <p>A demonstration of the shiny app can be seen here: <a href="https://pvelayudhan.shinyapps.io/shiny/" class="external-link">Meta Cluster
 Identification</a></p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/shiny_annotator.html">shiny_annotator</a></span><span class="op">(</span><span class="va">ari_hm</span><span class="op">)</span></span></code></pre></div>
 <center>
 <img src="https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/meta_cluster_shiny_l.png">
 </center>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">split_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">5</span>, <span class="fl">12</span>, <span class="fl">17</span><span class="op">)</span></span></code></pre></div>
 <p>This vector can be used to populate the meta cluster column in our
 solutions data frame as well as visualize our meta cluster boundaries
 more clearly.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mc_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/label_meta_clusters.html">label_meta_clusters</a></span><span class="op">(</span></span>
 <span>    <span class="va">sol_df</span>,</span>
 <span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span>,</span>
@@ -763,8 +763,8 @@ more clearly.</p>
 <span><span class="co">#&gt; 10 solutions and 85 observations not shown.</span></span>
 <span><span class="co">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span>
 <span><span class="co">#&gt; Use `t()` to view compact cluster solution format.</span></span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ari_mc_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/meta_cluster_heatmap.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ari_mc_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot.ari_matrix.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">sol_aris</span>,</span>
 <span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span>,</span>
 <span>    split_vector <span class="op">=</span> <span class="va">split_vec</span></span>
@@ -793,66 +793,15 @@ feature present in a provided data list and/or target_list.</p>
 (min, mean, and max) of any features present in the target list. This
 function can be quite slow depending on how large your data is; you can
 monitor its progress by setting <code>verbose = TRUE</code>.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Only looking at our out-of-model p-values</span></span>
-<span><span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
-<span>    <span class="va">mc_sol_df</span>,</span>
-<span>    target_dl <span class="op">=</span> <span class="va">target_dl</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ext_sol_df</span></span>
-<span><span class="co">#&gt; 20 cluster solutions, 87 observations, and p-values for 2 features.</span></span>
-<span><span class="co">#&gt; Cluster assignment columns:</span></span>
-<span><span class="co">#&gt; solution nclust mc uid_NDAR_INV0567T2Y9 uid_NDAR_INV0J4PYA5F </span></span>
-<span><span class="co">#&gt;        1      5 E                     5                    2 </span></span>
-<span><span class="co">#&gt;        2      3 D                     3                    3 </span></span>
-<span><span class="co">#&gt;        3      9 C                     1                    7 </span></span>
-<span><span class="co">#&gt;        4      2 D                     1                    2 </span></span>
-<span><span class="co">#&gt;        5      8 C                     1                    6 </span></span>
-<span><span class="co">#&gt;        6      2 B                     1                    2 </span></span>
-<span><span class="co">#&gt;        7      4 C                     1                    4 </span></span>
-<span><span class="co">#&gt;        8      5 E                     3                    4 </span></span>
-<span><span class="co">#&gt;        9      3 D                     3                    3 </span></span>
-<span><span class="co">#&gt;       10      4 A                     2                    4 </span></span>
-<span><span class="co">#&gt; Association p-value columns:</span></span>
-<span><span class="co">#&gt; solution cbcl_anxiety_r_pval cbcl_depress_r_pval</span></span>
-<span><span class="co">#&gt;        1 7.3443e-01          7.2635e-01         </span></span>
-<span><span class="co">#&gt;        2 6.6445e-01          3.2380e-01         </span></span>
-<span><span class="co">#&gt;        3 3.9613e-01          6.8171e-01         </span></span>
-<span><span class="co">#&gt;        4 4.8438e-01          7.5641e-01         </span></span>
-<span><span class="co">#&gt;        5 2.2567e-01          7.8953e-01         </span></span>
-<span><span class="co">#&gt;        6 2.5664e-01          1.3248e-01         </span></span>
-<span><span class="co">#&gt;        7 1.2296e-01          2.8322e-01         </span></span>
-<span><span class="co">#&gt;        8 7.6478e-01          7.1118e-01         </span></span>
-<span><span class="co">#&gt;        9 5.1104e-01          8.6022e-01         </span></span>
-<span><span class="co">#&gt;       10 1.0338e-02          2.6313e-02         </span></span>
-<span><span class="co">#&gt; Summary p-value columns:</span></span>
-<span><span class="co">#&gt; solution min_pval  mean_pval max_pval  </span></span>
-<span><span class="co">#&gt;        1 7.263e-01 7.304e-01 7.344e-01 </span></span>
-<span><span class="co">#&gt;        2 3.238e-01 4.941e-01 6.644e-01 </span></span>
-<span><span class="co">#&gt;        3 3.961e-01 5.389e-01 6.817e-01 </span></span>
-<span><span class="co">#&gt;        4 4.844e-01 6.204e-01 7.564e-01 </span></span>
-<span><span class="co">#&gt;        5 2.257e-01 5.076e-01 7.895e-01 </span></span>
-<span><span class="co">#&gt;        6 1.325e-01 1.946e-01 2.566e-01 </span></span>
-<span><span class="co">#&gt;        7 1.230e-01 2.031e-01 2.832e-01 </span></span>
-<span><span class="co">#&gt;        8 7.112e-01 7.380e-01 7.648e-01 </span></span>
-<span><span class="co">#&gt;        9 5.110e-01 6.856e-01 8.602e-01 </span></span>
-<span><span class="co">#&gt;       10 1.034e-02 1.833e-02 2.631e-02 </span></span>
-<span><span class="co">#&gt; Summaries calculated from 2 features. Use `summary_features(x)` to see them.</span></span>
-<span><span class="co">#&gt; 10 solutions not shown.</span></span>
-<span><span class="co">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span>
-<span><span class="co">#&gt; Use `t()` to view compact cluster solution format.</span></span>
-<span></span>
-<span><span class="co"># Re-running to calculate the p-value for every single input and out-of-model</span></span>
-<span><span class="co"># feature:</span></span>
-<span><span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
 <span>    <span class="va">mc_sol_df</span>,</span>
 <span>    dl <span class="op">=</span> <span class="va">input_dl</span>,</span>
 <span>    target_dl <span class="op">=</span> <span class="va">target_dl</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">ext_sol_df</span></span>
-<span><span class="co">#&gt; 20 cluster solutions, 87 observations, and p-values for 336 features.</span></span>
+<span><span class="va">ext_sol_df</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; 20 cluster solutions, 87 observations, and p-values for 336 features.</span></span>
 <span><span class="co">#&gt; Cluster assignment columns:</span></span>
 <span><span class="co">#&gt; solution nclust mc uid_NDAR_INV0567T2Y9 uid_NDAR_INV0J4PYA5F </span></span>
 <span><span class="co">#&gt;        1      5 E                     5                    2 </span></span>
@@ -892,13 +841,12 @@ monitor its progress by setting <code>verbose = TRUE</code>.</p>
 <span><span class="co">#&gt; Summaries calculated from 2 features. Use `summary_features(x)` to see them.</span></span>
 <span><span class="co">#&gt; 10 solutions and 332 features not shown.</span></span>
 <span><span class="co">#&gt; Use `print(n = ...)` to change the number of rows printed.</span></span>
-<span><span class="co">#&gt; Use `t()` to view compact cluster solution format.</span></span></code></pre></div>
-<p>Functionally, the only difference between the data list passed into
-the <code>dl</code> parameter and the one passed into the
-<code>target_dl</code> parameter is that the <code>target_dl</code>
-features are the only ones used for generating the p-value summary
-columns.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<span><span class="co">#&gt; Use `t()` to view compact cluster solution format.</span></span></code></pre>
+<p>The difference between the data list passed into the <code>dl</code>
+parameter and the one passed into the <code>target_dl</code> parameter
+is that the <code>target_dl</code> features are the only ones used for
+generating the p-value summary columns.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># No features are used to calculate summary p-values</span></span>
 <span><span class="va">ext_sol_df_no_summaries</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
 <span>    <span class="va">mc_sol_df</span>,</span>
@@ -919,8 +867,8 @@ standard data frame and passed into the
 <code>meta_cluster_heatmap</code> function to easily visualize the level
 of separation on each of our features for each of our cluster
 solutions.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">annotated_ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/meta_cluster_heatmap.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">annotated_ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot.ari_matrix.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">sol_aris</span>,</span>
 <span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span>,</span>
 <span>    split_vector <span class="op">=</span> <span class="va">split_vec</span>,</span>
@@ -975,7 +923,7 @@ from the <code>solutions_df</code> side of things, and
 the embedded original SNF config.</p>
 <p>Then, we can use <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code> to create a new column
 flagging when two observations co-cluster.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">annotation_data</span> <span class="op">&lt;-</span> <span class="va">ext_sol_df</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span>keep_attributes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -985,7 +933,7 @@ flagging when two observations co-cluster.</p>
 <span>        <span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span></span>
-<span><span class="va">annotated_ari_hm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/meta_cluster_heatmap.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
+<span><span class="va">annotated_ari_hm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot.ari_matrix.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">sol_aris</span>,</span>
 <span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span>,</span>
 <span>    split_vector <span class="op">=</span> <span class="va">split_vec</span>,</span>
@@ -1031,7 +979,7 @@ solution from each meta cluster.</p>
 function, which extracts one cluster solution per meta cluster based on
 having the highest average ARI with the other solutions in that meta
 cluster.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rep_solutions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_representative_solutions.html">get_representative_solutions</a></span><span class="op">(</span><span class="va">sol_aris</span>, <span class="va">ext_sol_df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mc_manhattan</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mc_manhattan_plot.html">mc_manhattan_plot</a></span><span class="op">(</span></span>
@@ -1052,7 +1000,7 @@ ROIs are present. Let’s take out the cortical thickness and surface area
 measures to make the plot a little clearer.</p>
 <p>We’ll also be able to read some feature measures more clearly when we
 dial the number of features plotted back a bit, as well.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rep_solutions_no_cort</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">rep_solutions</span>, <span class="op">-</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"mrisdp"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mc_manhattan2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mc_manhattan_plot.html">mc_manhattan_plot</a></span><span class="op">(</span></span>
@@ -1089,9 +1037,9 @@ there are. Another option is to start by taking a first look at entire
 the <code>settings_df_heatmap</code> function. The settings can be
 passed in through either an <code>snf_config</code> or
 <code>settings_df</code> class object.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">config_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/config_heatmap.html">config_heatmap</a></span><span class="op">(</span></span>
-<span>    sc <span class="op">=</span> <span class="va">my_sc</span>,</span>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">config_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot.snf_config.html">config_heatmap</a></span><span class="op">(</span></span>
+<span>    <span class="va">my_sc</span>,</span>
 <span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span>,</span>
 <span>    hide_fixed <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -1110,7 +1058,7 @@ adjusted rand index heatmap annotations. Recall that the
 as an attribute, so no further data manipulation is needed to add a
 setting as a heatmap annotation.</p>
 <p>Give it a try with the code below:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">annotation_data</span> <span class="op">&lt;-</span> <span class="va">ext_sol_df</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span>keep_attributes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -1122,7 +1070,7 @@ setting as a heatmap annotation.</p>
 <span></span>
 <span><span class="va">annotation_data</span><span class="op">$</span><span class="st">"clust_alg"</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">annotation_data</span><span class="op">$</span><span class="st">"clust_alg"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">annotated_ari_hm3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/meta_cluster_heatmap.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
+<span><span class="va">annotated_ari_hm3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot.ari_matrix.html">meta_cluster_heatmap</a></span><span class="op">(</span></span>
 <span>    <span class="va">sol_aris</span>,</span>
 <span>    order <span class="op">=</span> <span class="va">meta_cluster_order</span>,</span>
 <span>    split_vector <span class="op">=</span> <span class="va">split_vec</span>,</span>
@@ -1170,13 +1118,13 @@ network (the similarity matrices produced by SNF) that the clusters came
 from. These similarity matrices can be collected from the
 <code>batch_snf</code> using the <code>return_sim_mats</code>
 parameter:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span>dl <span class="op">=</span> <span class="va">input_dl</span>, sc <span class="op">=</span> <span class="va">my_sc</span>, return_sim_mats <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Now, the solutions data frame contains a non-empty list of similarity
 matrices as one of its attributes. These similarity matrices are the
 final SNF-derived networks from each SNF run. Using that attribute, we
 can calculate the above mentioned quality metrics:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">silhouette_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quality_measures.html">calculate_silhouettes</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
 <span><span class="va">dunn_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quality_measures.html">calculate_dunn_indices</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
 <span><span class="va">db_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quality_measures.html">calculate_db_indices</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span></code></pre></div>
@@ -1230,10 +1178,10 @@ from each other with the <code>uid</code> parameter.</p>
 <p>We will next extend our <code>sol_df</code> with p-values from
 regressing the <code>target_list</code> features onto our generated
 clusters.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span><span class="va">sol_df</span>, <span class="va">target_dl</span><span class="op">)</span></span></code></pre></div>
 <p>There is a heatmap for visualizing this too:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pval_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pval_heatmap.html">pval_heatmap</a></span><span class="op">(</span><span class="va">ext_sol_df</span>, order <span class="op">=</span> <span class="va">meta_cluster_order</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">pval_hm</span></span></code></pre></div>
@@ -1265,7 +1213,7 @@ solution seemed to have worked.</p>
 beginning, with label propagation to validate our findings.</p>
 <p>The <code>metasnf</code> package comes equipped with the function
 <code>train_test_assign</code> to provide random splitting for you.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># All the observations present in all data frames with no NAs</span></span>
 <span><span class="va">all_observations</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/uids.html">uids</a></span><span class="op">(</span><span class="va">input_dl</span><span class="op">)</span></span>
 <span></span>
@@ -1353,9 +1301,9 @@ beginning, with label propagation to validate our findings.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span>
 <span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Find a clustering solution in your training data</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Find a clustering solution in your training data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">my_sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
 <span>    <span class="va">train_dl</span>,</span>
@@ -1363,8 +1311,6 @@ beginning, with label propagation to validate our findings.</p>
 <span>    min_k <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">30</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; ℹ No distance functions specified. Using defaults.</span></span>
-<span><span class="co">#&gt; ℹ No clustering functions specified. Using defaults.</span></span>
 <span></span>
 <span><span class="va">train_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/batch_snf.html">batch_snf</a></span><span class="op">(</span></span>
 <span>    <span class="va">train_dl</span>,</span>
@@ -1374,9 +1320,9 @@ beginning, with label propagation to validate our findings.</p>
 <span><span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span>
 <span>    <span class="va">train_sol_df</span>,</span>
 <span>    <span class="va">train_target_dl</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># The first row had the lowest minimum p-value across our outcomes</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># The first row had the lowest minimum p-value across our outcomes</span></span>
 <span><span class="va">lowest_min_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">ext_sol_df</span><span class="op">$</span><span class="st">"min_pval"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">ext_sol_df</span><span class="op">$</span><span class="st">"min_pval"</span> <span class="op">==</span> <span class="va">lowest_min_pval</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1</span></span>
@@ -1408,28 +1354,11 @@ beginning, with label propagation to validate our findings.</p>
 solutions propagate to the test set, but that would mean reusing your
 test set and removing the protection against overfitting conferred by
 this procedure.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">propagated_labels_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/label_propagate.html">label_propagate</a></span><span class="op">(</span></span>
 <span>    <span class="va">ext_sol_df</span>,</span>
 <span>    <span class="va">full_dl</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                    uid     group 1 2 3 4  5</span></span>
-<span><span class="co">#&gt; 1 uid_NDAR_INV0567T2Y9 clustered 1 1 5 1 10</span></span>
-<span><span class="co">#&gt; 2 uid_NDAR_INV0J4PYA5F clustered 2 1 5 1  3</span></span>
-<span><span class="co">#&gt; 3 uid_NDAR_INV10OMKVLE clustered 1 1 3 2  5</span></span>
-<span><span class="co">#&gt; 4 uid_NDAR_INV15FPCW4O clustered 1 1 4 1  4</span></span>
-<span><span class="co">#&gt; 5 uid_NDAR_INV19NB4RJK clustered 1 1 8 2  9</span></span>
-<span><span class="co">#&gt; 6 uid_NDAR_INV1HLGR738 clustered 1 2 8 1  9</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                     uid       group 1 2 3 4 5</span></span>
-<span><span class="co">#&gt; 82 uid_NDAR_INVG5CI7XK4 unclustered 1 1 2 1 2</span></span>
-<span><span class="co">#&gt; 83 uid_NDAR_INVGDBYXWV4 unclustered 1 1 4 1 4</span></span>
-<span><span class="co">#&gt; 84 uid_NDAR_INVHEUWA52I unclustered 2 1 1 2 1</span></span>
-<span><span class="co">#&gt; 85 uid_NDAR_INVK9ULDQA2 unclustered 1 1 1 1 1</span></span>
-<span><span class="co">#&gt; 86 uid_NDAR_INVKYH529RD unclustered 1 1 7 1 7</span></span>
-<span><span class="co">#&gt; 87 uid_NDAR_INVLDQH8ATK unclustered 1 1 6 2 8</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p>That’s all!</p>
 <p>If you have any questions, comments, suggestions, bugs, etc. feel
 free to post an issue at <a href="https://github.com/BRANCHlab/metasnf" class="external-link">https://github.com/BRANCHlab/metasnf</a>.</p>

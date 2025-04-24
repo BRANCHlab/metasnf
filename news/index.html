@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,39 @@
       <small>Source: <a href="https://github.com/BRANCHlab/metasnf/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.1.0" id="metasnf-210">metasnf 2.1.0<a class="anchor" aria-label="anchor" href="#metasnf-210"></a></h2>
+<div class="section level3">
+<h3 id="improvements-2-1-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-2-1-0"></a></h3>
+<ul><li>calc_nmis now supports parallel processing, progress reported through progressr</li>
+<li>batch_snf_subsamples re-written to parallelize along subsamples rather than cluster solutions, now uses progressr for progress instead of verbose cat statements</li>
+<li>speed up parallelization test</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-data-2-1-0">New data<a class="anchor" aria-label="anchor" href="#new-data-2-1-0"></a></h3>
+<ul><li>New mock data objects in the format of <code>mock_(class name)</code>, e.g., <code>mock_data_list</code> and <code>mock_ext_solutions_df</code>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-functions-2-1-0">New functions<a class="anchor" aria-label="anchor" href="#new-functions-2-1-0"></a></h3>
+<ul><li>Add several new S3 methods for plot, rbind, str, summary, t, c, extraction, merge, assignment, and type-coercion</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-2-1-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-1-0"></a></h3>
+<ul><li>
+<code>auto_plot</code> output data frame doesn’t duplicate cluster column</li>
+<li>error catching: data list sub-item name checking improvement</li>
+<li>double transposing <code>ext_solutions_df</code> no longer loses <code>sim_mats_list</code> attribute</li>
+</ul></div>
+<div class="section level3">
+<h3 id="other-2-1-0">Other<a class="anchor" aria-label="anchor" href="#other-2-1-0"></a></h3>
+<ul><li>Typo fixes</li>
+<li>Code formatting</li>
+<li>Computationally intensive examples are now wrapped in <code>donttest</code> rather than commented out</li>
+<li>
+<code>observations()</code>, <code><a href="../reference/summary_features.html">summary_features()</a></code>, <code><a href="../reference/features.html">features()</a></code>, <code><a href="../reference/uids.html">uids()</a></code> marked as internal</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.6" id="metasnf-206">metasnf 2.0.6<a class="anchor" aria-label="anchor" href="#metasnf-206"></a></h2><p class="text-muted">CRAN release: 2025-03-25</p>
 <div class="section level3">

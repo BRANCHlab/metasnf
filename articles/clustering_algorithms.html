@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -336,11 +336,7 @@ intervention (e.g., judgement for clustering hyperparameters).</p>
 <span><span class="co"># Similarity matrices are in the list below:</span></span>
 <span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_mats_list.html">sim_mats_list</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">similarity_matrices</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 5</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">similarity_matrices</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 87 87</span></span>
+<span><span class="va">first_similarity_matrix</span> <span class="op">&lt;-</span> <span class="va">similarity_matrices</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Your manual clustering goes here...</span></span></code></pre></div>
 </div>
@@ -427,10 +423,7 @@ value.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
-<span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
-<span>    n_solutions <span class="op">=</span> <span class="fl">5</span></span>
-<span><span class="op">)</span></span>
+<span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span>dl <span class="op">=</span> <span class="va">dl</span>, n_solutions <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ No distance functions specified. Using defaults.</span></span>
 <span><span class="co">#&gt; ℹ No clustering functions specified. Using defaults.</span></span>
 <span></span>
@@ -443,8 +436,6 @@ value.</p>
 <span><span class="va">similarity_matrices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sim_mats_list.html">sim_mats_list</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">representative_sm</span> <span class="op">&lt;-</span> <span class="va">similarity_matrices</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span></span>
-<span><span class="va">representative_sms</span> <span class="op">&lt;-</span> <span class="va">similarity_matrices</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">]</span></span>
 <span></span>
 <span><span class="va">distance_matrix1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">representative_sm</span><span class="op">)</span> <span class="op">-</span> <span class="va">representative_sm</span></span>

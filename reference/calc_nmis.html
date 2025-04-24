@@ -27,7 +27,7 @@ because it was highly correlated with a different feature that was used)."><meta
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,7 +82,7 @@ because it was highly correlated with a different feature that was used).</p>
 <span>  <span class="va">sol_df</span>,</span>
 <span>  transpose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  ignore_inclusions <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  processes <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -110,8 +110,17 @@ solutions data frame and calculate NMIs for all features. If FALSE, will
 give NAs for features that were dropped on a given settings_df row.</p></dd>
 
 
-<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>If TRUE, output progress to console.</p></dd>
+<dt id="arg-processes">processes<a class="anchor" aria-label="anchor" href="#arg-processes"></a></dt>
+<dd><p>Specify number of processes used to complete SNF iterations</p><ul><li><p><code>1</code> (default) Sequential processing: function will iterate through the
+<code>settings_df</code> one row at a time with a for loop. This option will
+not make use of multiple CPU cores, but will show a progress bar.</p></li>
+<li><p><code>2</code> or higher: Parallel processing will use the
+<code><a href="https://future.apply.futureverse.org/reference/future_apply.html" class="external-link">future.apply::future_apply</a></code> to distribute the SNF iterations across
+the specified number of CPU cores. If higher than the number of
+available cores, a warning will be raised and the maximum number of
+cores will be used.</p></li>
+<li><p><code>max</code>: All available cores will be used.</p></li>
+</ul></dd>
 
 </dl></div>
     <div class="section level2">
@@ -138,8 +147,8 @@ each feature-solution combination.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">calc_nmis</span><span class="op">(</span><span class="va">input_dl</span>, <span class="va">sol_df</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     feature        s1        s2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    gender 0.2120130 0.2684083</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 diagnosis 0.9240358 0.9035042</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    gender 0.2684083 0.2120130</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 diagnosis 0.9035042 0.9240358</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

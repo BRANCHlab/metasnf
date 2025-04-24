@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,7 +113,7 @@ all-feature solutions as comparable as possible.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/snf_config.html">snf_config</a></span><span class="op">(</span></span>
 <span>    dl <span class="op">=</span> <span class="va">dl</span>,</span>
-<span>    n_solutions <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    n_solutions <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>    min_k <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>    max_k <span class="op">=</span> <span class="fl">50</span></span>
 <span><span class="op">)</span></span>
@@ -125,12 +125,12 @@ all-feature solutions as comparable as possible.</p>
 <span></span>
 <span><span class="co"># Let's just calculate NMIs of the anxiety and depression data types for the</span></span>
 <span><span class="co"># first 5 cluster solutions to save time:</span></span>
-<span><span class="va">feature_nmis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_nmis.html">calc_nmis</a></span><span class="op">(</span><span class="va">dl</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="va">sol_df</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">feature_nmis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_nmis.html">calc_nmis</a></span><span class="op">(</span><span class="va">dl</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="va">sol_df</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">feature_nmis</span><span class="op">)</span></span>
-<span><span class="co">#&gt;          feature         s1        s2        s3        s4        s5</span></span>
-<span><span class="co">#&gt; 1 cbcl_anxiety_r 0.08307759 0.3825622 0.5532495 0.4068634 0.2532882</span></span>
-<span><span class="co">#&gt; 2 cbcl_depress_r 0.30514882 0.3348474 0.4058227 0.2307721 0.1486859</span></span></code></pre></div>
+<span><span class="co">#&gt;          feature         s1        s2</span></span>
+<span><span class="co">#&gt; 1 cbcl_anxiety_r 0.08307759 0.3825622</span></span>
+<span><span class="co">#&gt; 2 cbcl_depress_r 0.30514882 0.3348474</span></span></code></pre></div>
 <p>One important thing to note is that if the cluster space you
 initially set up when calling <code>batch_snf</code> relied on custom
 distance metrics, clustering algorithms, or the
