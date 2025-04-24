@@ -1,3 +1,32 @@
+# metasnf 2.1.0
+
+## Improvements
+
+- calc_nmis now supports parallel processing, progress reported through progressr
+- batch_snf_subsamples re-written to parallelize along subsamples rather than cluster solutions, now uses progressr for progress instead of verbose cat statements
+- speed up parallelization test
+
+## New data
+
+- New mock data objects in the format of `mock_(class name)`, e.g., `mock_data_list` and `mock_ext_solutions_df`
+
+## New functions
+
+- Add several new S3 methods for plot, rbind, str, summary, t, c, extraction, merge, assignment, and type-coercion
+
+## Bug fixes
+
+- `auto_plot` output data frame doesn't duplicate cluster column
+- error catching: data list sub-item name checking improvement
+- double transposing `ext_solutions_df` no longer loses `sim_mats_list` attribute
+
+## Other
+
+- Typo fixes
+- Code formatting
+- Computationally intensive examples are now wrapped in `donttest` rather than commented out
+- `observations()`, `summary_features()`, `features()`, `uids()` marked as internal
+
 # metasnf 2.0.6
 
 ## Bug fixes
