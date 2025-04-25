@@ -547,14 +547,3 @@
 #' @source
 #' This data comes from the metasnf package.
 "mock_ext_solutions_df"
-
-#' Mock example of an `sim_mats_list` metasnf object
-#'
-#' Used as an example of an `sim_mats_list` metasnf object.
-#'
-#' @format ## `mock_sim_mats_list`
-#' A `sim_mats_list` class object containing pairwise similarities between 100
-#' observations across 20 cluster solutions.
-#' @source
-#' This data comes from the metasnf package.
-"mock_sim_mats_list"

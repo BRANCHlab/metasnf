@@ -53,18 +53,6 @@ mock_solutions_df <- batch_snf(
     mock_snf_config
 )
 
-progressr::with_progress({
-    mock_solutions_df2 <- batch_snf(
-        mock_data_list,
-        mock_snf_config,
-        return_sim_mats = TRUE
-    )
-})
-
-mock_sim_mats_list <- sim_mats_list(mock_solutions_df2)
-
-usethis::use_data(mock_sim_mats_list, overwrite = TRUE)
-
 #usethis::use_data(mock_solutions_df, overwrite = TRUE)
 
 mock_t_solutions_df <- t(mock_solutions_df)
