@@ -89,91 +89,111 @@ indicating the original and propagated clusters.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Function to identify observations with complete data</span></span></span>
-<span class="r-in"><span><span class="co">#uids_with_complete_obs &lt;- get_complete_uids(</span></span></span>
-<span class="r-in"><span><span class="co">#    list(subc_v, income, pubertal, anxiety, depress),</span></span></span>
-<span class="r-in"><span><span class="co">#    uid = "unique_id"</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">## Dataframe assigning 80% of observations to train and 20% to test</span></span></span>
-<span class="r-in"><span><span class="co">#train_test_split &lt;- train_test_assign(</span></span></span>
-<span class="r-in"><span><span class="co">#    train_frac = 0.8,</span></span></span>
-<span class="r-in"><span><span class="co">#    uids = uids_with_complete_obs</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">## Pulling the training and testing observations specifically</span></span></span>
-<span class="r-in"><span><span class="co">#train_obs &lt;- train_test_split$"train"</span></span></span>
-<span class="r-in"><span><span class="co">#test_obs &lt;- train_test_split$"test"</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">## Partition a training set</span></span></span>
-<span class="r-in"><span><span class="co">#train_subc_v &lt;- subc_v[subc_v$"unique_id" %in% train_obs, ]</span></span></span>
-<span class="r-in"><span><span class="co">#train_income &lt;- income[income$"unique_id" %in% train_obs, ]</span></span></span>
-<span class="r-in"><span><span class="co">#train_pubertal &lt;- pubertal[pubertal$"unique_id" %in% train_obs, ]</span></span></span>
-<span class="r-in"><span><span class="co">#train_anxiety &lt;- anxiety[anxiety$"unique_id" %in% train_obs, ]</span></span></span>
-<span class="r-in"><span><span class="co">#train_depress &lt;- depress[depress$"unique_id" %in% train_obs, ]</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">## Partition a test set</span></span></span>
-<span class="r-in"><span><span class="co">#test_subc_v &lt;- subc_v[subc_v$"unique_id" %in% test_obs, ]</span></span></span>
-<span class="r-in"><span><span class="co">#test_income &lt;- income[income$"unique_id" %in% test_obs, ]</span></span></span>
-<span class="r-in"><span><span class="co">#test_pubertal &lt;- pubertal[pubertal$"unique_id" %in% test_obs, ]</span></span></span>
-<span class="r-in"><span><span class="co">#test_anxiety &lt;- anxiety[anxiety$"unique_id" %in% test_obs, ]</span></span></span>
-<span class="r-in"><span><span class="co">#test_depress &lt;- depress[depress$"unique_id" %in% test_obs, ]</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">## Find cluster solutions in the training set</span></span></span>
-<span class="r-in"><span><span class="co">#train_dl &lt;- data_list(</span></span></span>
-<span class="r-in"><span><span class="co">#    list(train_subc_v, "subc_v", "neuroimaging", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#    list(train_income, "household_income", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#    list(train_pubertal, "pubertal_status", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#    uid = "unique_id"</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">## We'll pick a solution that has good separation over our target features</span></span></span>
-<span class="r-in"><span><span class="co">#train_target_dl &lt;- data_list(</span></span></span>
-<span class="r-in"><span><span class="co">#    list(train_anxiety, "anxiety", "behaviour", "ordinal"),</span></span></span>
-<span class="r-in"><span><span class="co">#    list(train_depress, "depressed", "behaviour", "ordinal"),</span></span></span>
-<span class="r-in"><span><span class="co">#    uid = "unique_id"</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#sc &lt;- snf_config(</span></span></span>
-<span class="r-in"><span><span class="co">#    train_dl,</span></span></span>
-<span class="r-in"><span><span class="co">#    n_solutions = 5,</span></span></span>
-<span class="r-in"><span><span class="co">#    min_k = 10,</span></span></span>
-<span class="r-in"><span><span class="co">#    max_k = 30</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#train_sol_df &lt;- batch_snf(</span></span></span>
-<span class="r-in"><span><span class="co">#    train_dl,</span></span></span>
-<span class="r-in"><span><span class="co">#    sc,</span></span></span>
-<span class="r-in"><span><span class="co">#    return_sim_mats = TRUE</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#ext_sol_df &lt;- extend_solutions(</span></span></span>
-<span class="r-in"><span><span class="co">#    train_sol_df,</span></span></span>
-<span class="r-in"><span><span class="co">#    train_target_dl</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">## Determining solution with the lowest minimum p-value</span></span></span>
-<span class="r-in"><span><span class="co">#lowest_min_pval &lt;- min(ext_sol_df$"min_pval")</span></span></span>
-<span class="r-in"><span><span class="co">#which(ext_sol_df$"min_pval" == lowest_min_pval)</span></span></span>
-<span class="r-in"><span><span class="co">#top_row &lt;- ext_sol_df[1, ]</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">## Propagate that solution to the observations in the test set</span></span></span>
-<span class="r-in"><span><span class="co">## data list below has both training and testing observations</span></span></span>
-<span class="r-in"><span><span class="co">#full_dl &lt;- data_list(</span></span></span>
-<span class="r-in"><span><span class="co">#    list(subc_v, "subc_v", "neuroimaging", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#    list(income, "household_income", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#    list(pubertal, "pubertal_status", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#    uid = "unique_id"</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">## Use the solutions data frame from the training observations and the data list</span></span></span>
-<span class="r-in"><span><span class="co">## from the training and testing observations to propagate labels to the test observations</span></span></span>
-<span class="r-in"><span><span class="co">#propagated_labels &lt;- label_propagate(top_row, full_dl)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#propagated_labels_all &lt;- label_propagate(ext_sol_df, full_dl)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#head(propagated_labels_all)</span></span></span>
-<span class="r-in"><span><span class="co">#tail(propagated_labels_all)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># Function to identify observations with complete data</span></span></span>
+<span class="r-in"><span><span class="va">uids_with_complete_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_complete_uids.html">get_complete_uids</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">subc_v</span>, <span class="va">income</span>, <span class="va">pubertal</span>, <span class="va">anxiety</span>, <span class="va">depress</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Dataframe assigning 80% of observations to train and 20% to test</span></span></span>
+<span class="r-in"><span><span class="va">train_test_split</span> <span class="op">&lt;-</span> <span class="fu"><a href="train_test_assign.html">train_test_assign</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    train_frac <span class="op">=</span> <span class="fl">0.8</span>,</span></span>
+<span class="r-in"><span>    uids <span class="op">=</span> <span class="va">uids_with_complete_obs</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Pulling the training and testing observations specifically</span></span></span>
+<span class="r-in"><span><span class="va">train_obs</span> <span class="op">&lt;-</span> <span class="va">train_test_split</span><span class="op">$</span><span class="st">"train"</span></span></span>
+<span class="r-in"><span><span class="va">test_obs</span> <span class="op">&lt;-</span> <span class="va">train_test_split</span><span class="op">$</span><span class="st">"test"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Partition a training set</span></span></span>
+<span class="r-in"><span><span class="va">train_subc_v</span> <span class="op">&lt;-</span> <span class="va">subc_v</span><span class="op">[</span><span class="va">subc_v</span><span class="op">$</span><span class="st">"unique_id"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">train_obs</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">train_income</span> <span class="op">&lt;-</span> <span class="va">income</span><span class="op">[</span><span class="va">income</span><span class="op">$</span><span class="st">"unique_id"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">train_obs</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">train_pubertal</span> <span class="op">&lt;-</span> <span class="va">pubertal</span><span class="op">[</span><span class="va">pubertal</span><span class="op">$</span><span class="st">"unique_id"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">train_obs</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">train_anxiety</span> <span class="op">&lt;-</span> <span class="va">anxiety</span><span class="op">[</span><span class="va">anxiety</span><span class="op">$</span><span class="st">"unique_id"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">train_obs</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">train_depress</span> <span class="op">&lt;-</span> <span class="va">depress</span><span class="op">[</span><span class="va">depress</span><span class="op">$</span><span class="st">"unique_id"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">train_obs</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Partition a test set</span></span></span>
+<span class="r-in"><span><span class="va">test_subc_v</span> <span class="op">&lt;-</span> <span class="va">subc_v</span><span class="op">[</span><span class="va">subc_v</span><span class="op">$</span><span class="st">"unique_id"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">test_obs</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">test_income</span> <span class="op">&lt;-</span> <span class="va">income</span><span class="op">[</span><span class="va">income</span><span class="op">$</span><span class="st">"unique_id"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">test_obs</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">test_pubertal</span> <span class="op">&lt;-</span> <span class="va">pubertal</span><span class="op">[</span><span class="va">pubertal</span><span class="op">$</span><span class="st">"unique_id"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">test_obs</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">test_anxiety</span> <span class="op">&lt;-</span> <span class="va">anxiety</span><span class="op">[</span><span class="va">anxiety</span><span class="op">$</span><span class="st">"unique_id"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">test_obs</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">test_depress</span> <span class="op">&lt;-</span> <span class="va">depress</span><span class="op">[</span><span class="va">depress</span><span class="op">$</span><span class="st">"unique_id"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">test_obs</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Find cluster solutions in the training set</span></span></span>
+<span class="r-in"><span><span class="va">train_dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="data_list.html">data_list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_subc_v</span>, <span class="st">"subc_v"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># We'll pick a solution that has good separation over our target features</span></span></span>
+<span class="r-in"><span><span class="va">train_target_dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="data_list.html">data_list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">train_depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="snf_config.html">snf_config</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">train_dl</span>,</span></span>
+<span class="r-in"><span>    n_solutions <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>    min_k <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>    max_k <span class="op">=</span> <span class="fl">30</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">train_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="batch_snf.html">batch_snf</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">train_dl</span>,</span></span>
+<span class="r-in"><span>    <span class="va">sc</span>,</span></span>
+<span class="r-in"><span>    return_sim_mats <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">train_sol_df</span>,</span></span>
+<span class="r-in"><span>    <span class="va">train_target_dl</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Determining solution with the lowest minimum p-value</span></span></span>
+<span class="r-in"><span><span class="va">lowest_min_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">ext_sol_df</span><span class="op">$</span><span class="st">"min_pval"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">ext_sol_df</span><span class="op">$</span><span class="st">"min_pval"</span> <span class="op">==</span> <span class="va">lowest_min_pval</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
+<span class="r-in"><span><span class="va">top_row</span> <span class="op">&lt;-</span> <span class="va">ext_sol_df</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Propagate that solution to the observations in the test set</span></span></span>
+<span class="r-in"><span><span class="co"># data list below has both training and testing observations</span></span></span>
+<span class="r-in"><span><span class="va">full_dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="data_list.html">data_list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">subc_v</span>, <span class="st">"subc_v"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 175 observations dropped due to incomplete data.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Use the solutions data frame from the training observations and the data list</span></span></span>
+<span class="r-in"><span><span class="co"># from the training and testing observations to propagate labels to the test observations</span></span></span>
+<span class="r-in"><span><span class="va">propagated_labels</span> <span class="op">&lt;-</span> <span class="fu">label_propagate</span><span class="op">(</span><span class="va">top_row</span>, <span class="va">full_dl</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">propagated_labels_all</span> <span class="op">&lt;-</span> <span class="fu">label_propagate</span><span class="op">(</span><span class="va">ext_sol_df</span>, <span class="va">full_dl</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    uid     group 1 2 3 4 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 uid_NDAR_INV0567T2Y9 clustered 1 1 1 3 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 uid_NDAR_INV0J4PYA5F clustered 4 2 1 4 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 uid_NDAR_INV10OMKVLE clustered 3 2 2 7 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 uid_NDAR_INV15FPCW4O clustered 4 2 1 6 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 uid_NDAR_INV19NB4RJK clustered 3 2 2 1 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 uid_NDAR_INV1HLGR738 clustered 3 2 2 1 5</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      uid       group 1 2 3 4 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 95  uid_NDAR_INVJEV61XIU unclustered 3 2 2 4 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 96  uid_NDAR_INVJR3S271G unclustered 4 2 1 7 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 97  uid_NDAR_INVK9ULDQA2 unclustered 1 1 1 1 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 98  uid_NDAR_INVKYH529RD unclustered 1 1 1 4 8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 99  uid_NDAR_INVL045Z1TY unclustered 3 1 2 7 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 100 uid_NDAR_INVLDQH8ATK unclustered 3 2 1 7 4</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

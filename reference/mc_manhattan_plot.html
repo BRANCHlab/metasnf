@@ -133,59 +133,64 @@ stratified by meta cluster label.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># dl &lt;- data_list(</span></span></span>
-<span class="r-in"><span><span class="co">#     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#     list(income, "household_income", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#     list(pubertal, "pubertal_status", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#     list(anxiety, "anxiety", "behaviour", "ordinal"),</span></span></span>
-<span class="r-in"><span><span class="co">#     list(depress, "depressed", "behaviour", "ordinal"),</span></span></span>
-<span class="r-in"><span><span class="co">#     uid = "unique_id"</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># sc &lt;- snf_config(</span></span></span>
-<span class="r-in"><span><span class="co">#     dl = dl,</span></span></span>
-<span class="r-in"><span><span class="co">#     n_solutions = 20,</span></span></span>
-<span class="r-in"><span><span class="co">#     min_k = 20,</span></span></span>
-<span class="r-in"><span><span class="co">#     max_k = 50</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># sol_df &lt;- batch_snf(dl, sc)</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># ext_sol_df &lt;- extend_solutions(</span></span></span>
-<span class="r-in"><span><span class="co">#     sol_df,</span></span></span>
-<span class="r-in"><span><span class="co">#     dl = dl,</span></span></span>
-<span class="r-in"><span><span class="co">#     min_pval = 1e-10 # p-values below 1e-10 will be thresholded to 1e-10</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># # Calculate pairwise similarities between cluster solutions</span></span></span>
-<span class="r-in"><span><span class="co"># sol_aris &lt;- calc_aris(sol_df)</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># # Extract hierarchical clustering order of the cluster solutions</span></span></span>
-<span class="r-in"><span><span class="co"># meta_cluster_order &lt;- get_matrix_order(sol_aris)</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># # Identify meta cluster boundaries with shiny app or trial and error</span></span></span>
-<span class="r-in"><span><span class="co"># # ari_hm &lt;- meta_cluster_heatmap(sol_aris, order = meta_cluster_order)</span></span></span>
-<span class="r-in"><span><span class="co"># # shiny_annotator(ari_hm)</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># # Result of meta cluster examination</span></span></span>
-<span class="r-in"><span><span class="co"># split_vec &lt;- c(2, 5, 12, 17)</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># ext_sol_df &lt;- label_meta_clusters(ext_sol_df, split_vec, meta_cluster_order)</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># # Extracting representative solutions from each defined meta cluster</span></span></span>
-<span class="r-in"><span><span class="co"># rep_solutions &lt;- get_representative_solutions(sol_aris, ext_sol_df)</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># mc_manhattan &lt;- mc_manhattan_plot(</span></span></span>
-<span class="r-in"><span><span class="co">#     rep_solutions,</span></span></span>
-<span class="r-in"><span><span class="co">#     dl = dl,</span></span></span>
-<span class="r-in"><span><span class="co">#     point_size = 3,</span></span></span>
-<span class="r-in"><span><span class="co">#     text_size = 12,</span></span></span>
-<span class="r-in"><span><span class="co">#     plot_title = "Feature-Meta Cluster Associations",</span></span></span>
-<span class="r-in"><span><span class="co">#     threshold = 0.05,</span></span></span>
-<span class="r-in"><span><span class="co">#     neg_log_pval_thresh = 5</span></span></span>
-<span class="r-in"><span><span class="co"># )</span></span></span>
-<span class="r-in"><span><span class="co"># </span></span></span>
-<span class="r-in"><span><span class="co"># mc_manhattan</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span>    <span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="data_list.html">data_list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        uid <span class="op">=</span> <span class="st">"unique_id"</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 188 observations dropped due to incomplete data.</span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="snf_config.html">snf_config</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        dl <span class="op">=</span> <span class="va">dl</span>,</span></span>
+<span class="r-in"><span>        n_solutions <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>        min_k <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>        max_k <span class="op">=</span> <span class="fl">50</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">dl</span>, <span class="va">sc</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="extend_solutions.html">extend_solutions</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        <span class="va">sol_df</span>,</span></span>
+<span class="r-in"><span>        dl <span class="op">=</span> <span class="va">dl</span>,</span></span>
+<span class="r-in"><span>        min_pval <span class="op">=</span> <span class="fl">1e-10</span> <span class="co"># p-values below 1e-10 will be thresholded to 1e-10</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="co"># Calculate pairwise similarities between cluster solutions</span></span></span>
+<span class="r-in"><span>    <span class="va">sol_aris</span> <span class="op">&lt;-</span> <span class="fu"><a href="calc_aris.html">calc_aris</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="co"># Extract hierarchical clustering order of the cluster solutions</span></span></span>
+<span class="r-in"><span>    <span class="va">meta_cluster_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_matrix_order.html">get_matrix_order</a></span><span class="op">(</span><span class="va">sol_aris</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="co"># Identify meta cluster boundaries with shiny app or trial and error</span></span></span>
+<span class="r-in"><span>    <span class="co"># ari_hm &lt;- meta_cluster_heatmap(sol_aris, order = meta_cluster_order)</span></span></span>
+<span class="r-in"><span>    <span class="co"># shiny_annotator(ari_hm)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="co"># Result of meta cluster examination</span></span></span>
+<span class="r-in"><span>    <span class="va">split_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">5</span>, <span class="fl">12</span>, <span class="fl">17</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">ext_sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="label_meta_clusters.html">label_meta_clusters</a></span><span class="op">(</span><span class="va">ext_sol_df</span>, <span class="va">split_vec</span>, <span class="va">meta_cluster_order</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="co"># Extracting representative solutions from each defined meta cluster</span></span></span>
+<span class="r-in"><span>    <span class="va">rep_solutions</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_representative_solutions.html">get_representative_solutions</a></span><span class="op">(</span><span class="va">sol_aris</span>, <span class="va">ext_sol_df</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">mc_manhattan</span> <span class="op">&lt;-</span> <span class="fu">mc_manhattan_plot</span><span class="op">(</span></span></span>
+<span class="r-in"><span>        <span class="va">rep_solutions</span>,</span></span>
+<span class="r-in"><span>        dl <span class="op">=</span> <span class="va">dl</span>,</span></span>
+<span class="r-in"><span>        point_size <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>        text_size <span class="op">=</span> <span class="fl">12</span>,</span></span>
+<span class="r-in"><span>        plot_title <span class="op">=</span> <span class="st">"Feature-Meta Cluster Associations"</span>,</span></span>
+<span class="r-in"><span>        threshold <span class="op">=</span> <span class="fl">0.05</span>,</span></span>
+<span class="r-in"><span>        neg_log_pval_thresh <span class="op">=</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">mc_manhattan</span></span></span>
+<span class="r-plt img"><img src="mc_manhattan_plot-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

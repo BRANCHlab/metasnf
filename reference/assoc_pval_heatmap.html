@@ -156,17 +156,21 @@ correlation_matrix.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#data_list &lt;- data_list(</span></span></span>
-<span class="r-in"><span><span class="co">#    list(income, "household_income", "demographics", "ordinal"),</span></span></span>
-<span class="r-in"><span><span class="co">#    list(pubertal, "pubertal_status", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#    list(fav_colour, "favourite_colour", "demographics", "categorical"),</span></span></span>
-<span class="r-in"><span><span class="co">#    list(anxiety, "anxiety", "behaviour", "ordinal"),</span></span></span>
-<span class="r-in"><span><span class="co">#    list(depress, "depressed", "behaviour", "ordinal"),</span></span></span>
-<span class="r-in"><span><span class="co">#    uid = "unique_id"</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#assoc_pval_matrix &lt;- calc_assoc_pval_matrix(data_list)</span></span></span>
-<span class="r-in"><span><span class="co">#ap_heatmap &lt;- assoc_pval_heatmap(assoc_pval_matrix)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="data_list.html">data_list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">fav_colour</span>, <span class="st">"favourite_colour"</span>, <span class="st">"demographics"</span>, <span class="st">"categorical"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">anxiety</span>, <span class="st">"anxiety"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">depress</span>, <span class="st">"depressed"</span>, <span class="st">"behaviour"</span>, <span class="st">"ordinal"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    uid <span class="op">=</span> <span class="st">"unique_id"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 139 observations dropped due to incomplete data.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">assoc_pval_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="calc_assoc_pval_matrix.html">calc_assoc_pval_matrix</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ap_heatmap</span> <span class="op">&lt;-</span> <span class="fu">assoc_pval_heatmap</span><span class="op">(</span><span class="va">assoc_pval_matrix</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="assoc_pval_heatmap-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -87,45 +87,97 @@ can be obtained by calling <code><a href="calc_aris.html">calc_aris()</a></code>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#dl &lt;- data_list(</span></span></span>
-<span class="r-in"><span><span class="co">#    list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#    list(income, "household_income", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#    list(pubertal, "pubertal_status", "demographics", "continuous"),</span></span></span>
-<span class="r-in"><span><span class="co">#    uid = "unique_id"</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#set.seed(42)</span></span></span>
-<span class="r-in"><span><span class="co">#my_sc &lt;- snf_config(</span></span></span>
-<span class="r-in"><span><span class="co">#    dl = dl,</span></span></span>
-<span class="r-in"><span><span class="co">#    n_solutions = 20,</span></span></span>
-<span class="r-in"><span><span class="co">#    min_k = 20,</span></span></span>
-<span class="r-in"><span><span class="co">#    max_k = 50</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#sol_df &lt;- batch_snf(dl, my_sc)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#sol_df</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#sol_aris &lt;- calc_aris(sol_df)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#meta_cluster_order &lt;- get_matrix_order(sol_aris)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">## `split_vec` found by iteratively plotting ari_hm or by ?shiny_annotator()</span></span></span>
-<span class="r-in"><span><span class="co">#split_vec &lt;- c(6, 10, 16)</span></span></span>
-<span class="r-in"><span><span class="co">#ari_hm &lt;- meta_cluster_heatmap(</span></span></span>
-<span class="r-in"><span><span class="co">#    sol_aris,</span></span></span>
-<span class="r-in"><span><span class="co">#    order = meta_cluster_order,</span></span></span>
-<span class="r-in"><span><span class="co">#    split_vector = split_vec</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#mc_sol_df &lt;- label_meta_clusters(</span></span></span>
-<span class="r-in"><span><span class="co">#    sol_df,</span></span></span>
-<span class="r-in"><span><span class="co">#    order = meta_cluster_order,</span></span></span>
-<span class="r-in"><span><span class="co">#    split_vector = split_vec</span></span></span>
-<span class="r-in"><span><span class="co">#)</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-<span class="r-in"><span><span class="co">#mc_sol_df</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span>    <span class="va">dl</span> <span class="op">&lt;-</span> <span class="fu"><a href="data_list.html">data_list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cort_sa</span>, <span class="st">"cortical_surface_area"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">subc_v</span>, <span class="st">"subcortical_volume"</span>, <span class="st">"neuroimaging"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">income</span>, <span class="st">"household_income"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">pubertal</span>, <span class="st">"pubertal_status"</span>, <span class="st">"demographics"</span>, <span class="st">"continuous"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        uid <span class="op">=</span> <span class="st">"unique_id"</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 175 observations dropped due to incomplete data.</span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">my_sc</span> <span class="op">&lt;-</span> <span class="fu"><a href="snf_config.html">snf_config</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        dl <span class="op">=</span> <span class="va">dl</span>,</span></span>
+<span class="r-in"><span>        n_solutions <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>        min_k <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>        max_k <span class="op">=</span> <span class="fl">50</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> No distance functions specified. Using defaults.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> No clustering functions specified. Using defaults.</span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">sol_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="batch_snf.html">batch_snf</a></span><span class="op">(</span><span class="va">dl</span>, <span class="va">my_sc</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">sol_df</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">20 cluster solutions of 100 observations:</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">solution</span> <span style="color: #BBBB00;">nclust</span> <span style="color: #0000BB;">mc</span> uid_NDAR_INV0567T2Y9 uid_NDAR_INV0IZ157F8 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">1</span> <span style="color: #0000BB;">  </span>  1      8 <span style="color: #BB0000;">NA</span>                       5                    2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">2</span> <span style="color: #0000BB;">  </span>  2      4 <span style="color: #BB0000;">NA</span>                       1                    3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">3</span> <span style="color: #0000BB;">  </span>  3      2 <span style="color: #BB0000;">NA</span>                       2                    1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">4</span> <span style="color: #0000BB;">  </span>  4      2 <span style="color: #BB0000;">NA</span>                       2                    1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">5</span> <span style="color: #0000BB;">  </span>  5      3 <span style="color: #BB0000;">NA</span>                       3                    1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">6</span> <span style="color: #0000BB;">  </span>  6      2 <span style="color: #BB0000;">NA</span>                       2                    1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">7</span> <span style="color: #0000BB;">  </span>  7      4 <span style="color: #BB0000;">NA</span>                       1                    2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">8</span> <span style="color: #0000BB;">  </span>  8      6 <span style="color: #BB0000;">NA</span>                       5                    4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">9</span> <span style="color: #0000BB;">  </span>  9      2 <span style="color: #BB0000;">NA</span>                       1                    2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">0</span> <span style="color: #0000BB;">  </span> 10      2 <span style="color: #BB0000;">NA</span>                       2                    1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;"> ℹ 10 </span> <span style="color: #0000BB;">or</span> ws </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;"> ℹ 98 </span> <span style="color: #0000BB;">or</span> riables: uid_NDAR_INV0J4PYA5F &lt;dbl&gt;, uid_NDAR_INV10OMKVLE &lt;dbl&gt;, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV15FPCW4O &lt;dbl&gt;, uid_NDAR_INV19NB4RJK &lt;dbl&gt;, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1HLGR738 &lt;dbl&gt;, uid_NDAR_INV1KR0EZFU &lt;dbl&gt;, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1L3Y9EOP &lt;dbl&gt;, uid_NDAR_INV1TCP5GNM &lt;dbl&gt;, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1ZHRDJ6B &lt;dbl&gt;, uid_NDAR_INV2EJ41YSZ &lt;dbl&gt;, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV2PK6C85M &lt;dbl&gt;, uid_NDAR_INV2XO1PHCT &lt;dbl&gt;, … </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">3 solutions and 98 observations not shown.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">Use `print(n = ...)` to change the number of rows printed.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">Use `t()` to view compact cluster solution format.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">sol_aris</span> <span class="op">&lt;-</span> <span class="fu"><a href="calc_aris.html">calc_aris</a></span><span class="op">(</span><span class="va">sol_df</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">meta_cluster_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_matrix_order.html">get_matrix_order</a></span><span class="op">(</span><span class="va">sol_aris</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="co"># `split_vec` found by iteratively plotting ari_hm or by ?shiny_annotator()</span></span></span>
+<span class="r-in"><span>    <span class="va">split_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">10</span>, <span class="fl">16</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">ari_hm</span> <span class="op">&lt;-</span> <span class="fu"><a href="plot.ari_matrix.html">meta_cluster_heatmap</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        <span class="va">sol_aris</span>,</span></span>
+<span class="r-in"><span>        order <span class="op">=</span> <span class="va">meta_cluster_order</span>,</span></span>
+<span class="r-in"><span>        split_vector <span class="op">=</span> <span class="va">split_vec</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Sorting by order.</span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">mc_sol_df</span> <span class="op">&lt;-</span> <span class="fu">label_meta_clusters</span><span class="op">(</span></span></span>
+<span class="r-in"><span>        <span class="va">sol_df</span>,</span></span>
+<span class="r-in"><span>        order <span class="op">=</span> <span class="va">meta_cluster_order</span>,</span></span>
+<span class="r-in"><span>        split_vector <span class="op">=</span> <span class="va">split_vec</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">mc_sol_df</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">20 cluster solutions of 100 observations:</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">solution</span> <span style="color: #BBBB00;">nclust</span> <span style="color: #0000BB;">mc</span> uid_NDAR_INV0567T2Y9 uid_NDAR_INV0IZ157F8 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">1</span> <span style="color: #0000BB;">  </span>  1      8 C                        5                    2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">2</span> <span style="color: #0000BB;">  </span>  2      4 C                        1                    3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">3</span> <span style="color: #0000BB;">  </span>  3      2 A                        2                    1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">4</span> <span style="color: #0000BB;">  </span>  4      2 A                        2                    1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">5</span> <span style="color: #0000BB;">  </span>  5      3 B                        3                    1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">6</span> <span style="color: #0000BB;">  </span>  6      2 A                        2                    1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">7</span> <span style="color: #0000BB;">  </span>  7      4 D                        1                    2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">8</span> <span style="color: #0000BB;">  </span>  8      6 C                        5                    4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">9</span> <span style="color: #0000BB;">  </span>  9      2 B                        1                    2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;250m</span> <span style="color: #BBBB00;">0</span> <span style="color: #0000BB;">  </span> 10      2 A                        2                    1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;"> ℹ 10 </span> <span style="color: #0000BB;">or</span> ws </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;"> ℹ 98 </span> <span style="color: #0000BB;">or</span> riables: uid_NDAR_INV0J4PYA5F &lt;dbl&gt;, uid_NDAR_INV10OMKVLE &lt;dbl&gt;, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV15FPCW4O &lt;dbl&gt;, uid_NDAR_INV19NB4RJK &lt;dbl&gt;, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1HLGR738 &lt;dbl&gt;, uid_NDAR_INV1KR0EZFU &lt;dbl&gt;, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1L3Y9EOP &lt;dbl&gt;, uid_NDAR_INV1TCP5GNM &lt;dbl&gt;, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV1ZHRDJ6B &lt;dbl&gt;, uid_NDAR_INV2EJ41YSZ &lt;dbl&gt;, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">8;5;246m</span> <span style="color: #BBBB00;">   uid</span> <span style="color: #0000BB;">ND</span> NV2PK6C85M &lt;dbl&gt;, uid_NDAR_INV2XO1PHCT &lt;dbl&gt;, … </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">3 solutions and 98 observations not shown.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">Use `print(n = ...)` to change the number of rows printed.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">Use `t()` to view compact cluster solution format.</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
