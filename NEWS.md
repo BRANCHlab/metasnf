@@ -1,4 +1,10 @@
+# metasnf 2.1.2
+
+- Wrap additional examples in `donttest`
+
 # metasnf 2.1.1
+
+- Remove excessively sized mock_sim_mats_list.rda
 
 # metasnf 2.1.0
 
