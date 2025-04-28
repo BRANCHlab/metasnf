@@ -24,38 +24,40 @@ positions are printed to the console and also shown within the app. This
 function can only run from an interactive session of R.
 }
 \examples{
-#dl <- data_list(
-#    list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
-#    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#    list(income, "household_income", "demographics", "continuous"),
-#    list(pubertal, "pubertal_status", "demographics", "continuous"),
-#    uid = "unique_id"
-#)
-#
-#set.seed(42)
-#my_sc <- snf_config(
-#    dl = dl,
-#    n_solutions = 20,
-#    min_k = 20,
-#    max_k = 50
-#)
-#
-#sol_df <- batch_snf(dl, my_sc)
-#
-#sol_aris <- calc_aris(sol_df)
-#
-#meta_cluster_order <- get_matrix_order(sol_aris)
-#
-#ari_hm <- meta_cluster_heatmap(sol_aris, order = meta_cluster_order)
-#
-## Click on meta cluster boundaries to obtain `split_vec` values
-#shiny_annotator(ari_hm)
-#
-#split_vec <- c(6, 10, 16)
-#
-#ari_hm <- meta_cluster_heatmap(
-#    sol_aris,
-#    order = meta_cluster_order,
-#    split_vector = split_vec
-#)
+\donttest{
+dl <- data_list(
+    list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+
+set.seed(42)
+my_sc <- snf_config(
+    dl = dl,
+    n_solutions = 20,
+    min_k = 20,
+    max_k = 50
+)
+
+sol_df <- batch_snf(dl, my_sc)
+
+sol_aris <- calc_aris(sol_df)
+
+meta_cluster_order <- get_matrix_order(sol_aris)
+
+ari_hm <- meta_cluster_heatmap(sol_aris, order = meta_cluster_order)
+
+# Click on meta cluster boundaries to obtain `split_vec` values
+shiny_annotator(ari_hm)
+
+split_vec <- c(6, 10, 16)
+
+ari_hm <- meta_cluster_heatmap(
+    sol_aris,
+    order = meta_cluster_order,
+    split_vector = split_vec
+)
+}
 }

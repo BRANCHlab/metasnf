@@ -58,17 +58,19 @@ assemble_data <- function(data, dl) {
 #'  correlation_matrix.
 #' @export
 #' @examples
-#' #data_list <- data_list(
-#' #    list(income, "household_income", "demographics", "ordinal"),
-#' #    list(pubertal, "pubertal_status", "demographics", "continuous"),
-#' #    list(fav_colour, "favourite_colour", "demographics", "categorical"),
-#' #    list(anxiety, "anxiety", "behaviour", "ordinal"),
-#' #    list(depress, "depressed", "behaviour", "ordinal"),
-#' #    uid = "unique_id"
-#' #)
-#' #
-#' #assoc_pval_matrix <- calc_assoc_pval_matrix(data_list)
-#' #ap_heatmap <- assoc_pval_heatmap(assoc_pval_matrix)
+#' \donttest{
+#' data_list <- data_list(
+#'     list(income, "household_income", "demographics", "ordinal"),
+#'     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'     list(fav_colour, "favourite_colour", "demographics", "categorical"),
+#'     list(anxiety, "anxiety", "behaviour", "ordinal"),
+#'     list(depress, "depressed", "behaviour", "ordinal"),
+#'     uid = "unique_id"
+#' )
+#' 
+#' assoc_pval_matrix <- calc_assoc_pval_matrix(data_list)
+#' ap_heatmap <- assoc_pval_heatmap(assoc_pval_matrix)
+#' }
 assoc_pval_heatmap <- function(correlation_matrix,
                                scale_diag = "max",
                                cluster_rows = TRUE,
@@ -851,35 +853,37 @@ get_heatmap_order <- function(heatmap, type = "rows") {
 #'  hierarchical clustering method applied to the provided matrix.
 #' @export
 #' @examples
-#' # dl <- data_list(
-#' #     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#' #     list(income, "household_income", "demographics", "continuous"),
-#' #     list(pubertal, "pubertal_status", "demographics", "continuous"),
-#' #     list(anxiety, "anxiety", "behaviour", "ordinal"),
-#' #     list(depress, "depressed", "behaviour", "ordinal"),
-#' #     uid = "unique_id"
-#' # )
-#' # 
-#' # sc <- snf_config(
-#' #     dl = dl,
-#' #     n_solutions = 20,
-#' #     min_k = 20,
-#' #     max_k = 50
-#' # )
-#' # 
-#' # sol_df <- batch_snf(dl, sc)
-#' # 
-#' # ext_sol_df <- extend_solutions(
-#' #     sol_df,
-#' #     dl = dl,
-#' #     min_pval = 1e-10 # p-values below 1e-10 will be thresholded to 1e-10
-#' # )
-#' # 
-#' # # Calculate pairwise similarities between cluster solutions
-#' # sol_aris <- calc_aris(sol_df)
-#' # 
-#' # # Extract hierarchical clustering order of the cluster solutions
-#' # meta_cluster_order <- get_matrix_order(sol_aris)
+#' \donttest{
+#' dl <- data_list(
+#'     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#'     list(income, "household_income", "demographics", "continuous"),
+#'     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'     list(anxiety, "anxiety", "behaviour", "ordinal"),
+#'     list(depress, "depressed", "behaviour", "ordinal"),
+#'     uid = "unique_id"
+#' )
+#' 
+#' sc <- snf_config(
+#'     dl = dl,
+#'     n_solutions = 20,
+#'     min_k = 20,
+#'     max_k = 50
+#' )
+#' 
+#' sol_df <- batch_snf(dl, sc)
+#' 
+#' ext_sol_df <- extend_solutions(
+#'     sol_df,
+#'     dl = dl,
+#'     min_pval = 1e-10 # p-values below 1e-10 will be thresholded to 1e-10
+#' )
+#' 
+#' # Calculate pairwise similarities between cluster solutions
+#' sol_aris <- calc_aris(sol_df)
+#' 
+#' # Extract hierarchical clustering order of the cluster solutions
+#' meta_cluster_order <- get_matrix_order(sol_aris)
+#' }
 get_matrix_order <- function(matrix,
                              dist_method = "euclidean",
                              hclust_method = "complete") {
@@ -938,27 +942,29 @@ label_splits <- function(split_vector, nrow) {
 #'  that displays the provided p-values.
 #' @export
 #' @examples
-#' #dl <- data_list(
-#' #    list(income, "household_income", "demographics", "ordinal"),
-#' #    list(pubertal, "pubertal_status", "demographics", "continuous"),
-#' #    list(fav_colour, "favourite_colour", "demographics", "categorical"),
-#' #    list(anxiety, "anxiety", "behaviour", "ordinal"),
-#' #    list(depress, "depressed", "behaviour", "ordinal"),
-#' #    uid = "unique_id"
-#' #)
-#' #
-#' #sc <- snf_config(
-#' #    dl,
-#' #    n_solutions = 4,
-#' #    dropout_dist = "uniform",
-#' #    max_k = 50
-#' #)
-#' #
-#' #sol_df <- batch_snf(dl, sc)
-#' #
-#' #ext_sol_df <- extend_solutions(sol_df, dl)
-#' #
-#' #pval_heatmap(ext_sol_df)
+#' \donttest{
+#' dl <- data_list(
+#'     list(income, "household_income", "demographics", "ordinal"),
+#'     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'     list(fav_colour, "favourite_colour", "demographics", "categorical"),
+#'     list(anxiety, "anxiety", "behaviour", "ordinal"),
+#'     list(depress, "depressed", "behaviour", "ordinal"),
+#'     uid = "unique_id"
+#' )
+#' 
+#' sc <- snf_config(
+#'     dl,
+#'     n_solutions = 4,
+#'     dropout_dist = "uniform",
+#'     max_k = 50
+#' )
+#' 
+#' sol_df <- batch_snf(dl, sc)
+#' 
+#' ext_sol_df <- extend_solutions(sol_df, dl)
+#' 
+#' pval_heatmap(ext_sol_df)
+#' }
 pval_heatmap <- function(ext_sol_df,
                          order = NULL,
                          cluster_columns = TRUE,
@@ -1058,40 +1064,42 @@ save_heatmap <- function(heatmap,
 #' @return Does not return any value. Launches interactive shiny applet.
 #' @export
 #' @examples
-#' #dl <- data_list(
-#' #    list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
-#' #    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#' #    list(income, "household_income", "demographics", "continuous"),
-#' #    list(pubertal, "pubertal_status", "demographics", "continuous"),
-#' #    uid = "unique_id"
-#' #)
-#' #
-#' #set.seed(42)
-#' #my_sc <- snf_config(
-#' #    dl = dl,
-#' #    n_solutions = 20,
-#' #    min_k = 20,
-#' #    max_k = 50
-#' #)
-#' #
-#' #sol_df <- batch_snf(dl, my_sc)
-#' #
-#' #sol_aris <- calc_aris(sol_df)
-#' #
-#' #meta_cluster_order <- get_matrix_order(sol_aris)
-#' #
-#' #ari_hm <- meta_cluster_heatmap(sol_aris, order = meta_cluster_order)
-#' #
-#' ## Click on meta cluster boundaries to obtain `split_vec` values
-#' #shiny_annotator(ari_hm)
-#' #
-#' #split_vec <- c(6, 10, 16)
-#' #
-#' #ari_hm <- meta_cluster_heatmap(
-#' #    sol_aris,
-#' #    order = meta_cluster_order,
-#' #    split_vector = split_vec
-#' #)
+#' \donttest{
+#' dl <- data_list(
+#'     list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+#'     list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+#'     list(income, "household_income", "demographics", "continuous"),
+#'     list(pubertal, "pubertal_status", "demographics", "continuous"),
+#'     uid = "unique_id"
+#' )
+#' 
+#' set.seed(42)
+#' my_sc <- snf_config(
+#'     dl = dl,
+#'     n_solutions = 20,
+#'     min_k = 20,
+#'     max_k = 50
+#' )
+#' 
+#' sol_df <- batch_snf(dl, my_sc)
+#' 
+#' sol_aris <- calc_aris(sol_df)
+#' 
+#' meta_cluster_order <- get_matrix_order(sol_aris)
+#' 
+#' ari_hm <- meta_cluster_heatmap(sol_aris, order = meta_cluster_order)
+#' 
+#' # Click on meta cluster boundaries to obtain `split_vec` values
+#' shiny_annotator(ari_hm)
+#' 
+#' split_vec <- c(6, 10, 16)
+#' 
+#' ari_hm <- meta_cluster_heatmap(
+#'     sol_aris,
+#'     order = meta_cluster_order,
+#'     split_vector = split_vec
+#' )
+#' }
 shiny_annotator <- function(ari_heatmap) {
     if (interactive()) {
         drawn_heatmap <- ComplexHeatmap::draw(ari_heatmap)
@@ -1156,32 +1164,34 @@ shiny_annotator <- function(ari_heatmap) {
 #'  that displays the similarities between observations in the provided matrix.
 #' @export
 #' @examples
-#' #my_dl <- data_list(
-#' #    list(
-#' #        data = expression_df,
-#' #        name = "expression_data",
-#' #        domain = "gene_expression",
-#' #        type = "continuous"
-#' #    ),
-#' #    list(
-#' #        data = methylation_df,
-#' #        name = "methylation_data",
-#' #        domain = "gene_methylation",
-#' #        type = "continuous"
-#' #    ),
-#' #    uid = "patient_id"
-#' #)
-#' #
-#' #sc <- snf_config(my_dl, n_solutions = 10)
-#' #
-#' #sol_df <- batch_snf(my_dl, sc, return_sim_mats = TRUE)
-#' #
-#' #sim_mats <- sim_mats_list(sol_df)
-#' #
-#' #similarity_matrix_heatmap(
-#' #    sim_mats[[1]],
-#' #    cluster_solution = sol_df[1, ]
-#' #)
+#' \donttest{
+#' my_dl <- data_list(
+#'     list(
+#'         data = expression_df,
+#'         name = "expression_data",
+#'         domain = "gene_expression",
+#'         type = "continuous"
+#'     ),
+#'     list(
+#'         data = methylation_df,
+#'         name = "methylation_data",
+#'         domain = "gene_methylation",
+#'         type = "continuous"
+#'     ),
+#'     uid = "patient_id"
+#' )
+#' 
+#' sc <- snf_config(my_dl, n_solutions = 10)
+#' 
+#' sol_df <- batch_snf(my_dl, sc, return_sim_mats = TRUE)
+#' 
+#' sim_mats <- sim_mats_list(sol_df)
+#' 
+#' similarity_matrix_heatmap(
+#'     sim_mats[[1]],
+#'     cluster_solution = sol_df[1, ]
+#' )
+#' }
 similarity_matrix_heatmap <- function(similarity_matrix,
                                       order = NULL,
                                       cluster_solution = NULL,

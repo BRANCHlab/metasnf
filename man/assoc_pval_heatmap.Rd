@@ -77,15 +77,17 @@ correlation_matrix.
 Heatmap of pairwise associations between features
 }
 \examples{
-#data_list <- data_list(
-#    list(income, "household_income", "demographics", "ordinal"),
-#    list(pubertal, "pubertal_status", "demographics", "continuous"),
-#    list(fav_colour, "favourite_colour", "demographics", "categorical"),
-#    list(anxiety, "anxiety", "behaviour", "ordinal"),
-#    list(depress, "depressed", "behaviour", "ordinal"),
-#    uid = "unique_id"
-#)
-#
-#assoc_pval_matrix <- calc_assoc_pval_matrix(data_list)
-#ap_heatmap <- assoc_pval_heatmap(assoc_pval_matrix)
+\donttest{
+data_list <- data_list(
+    list(income, "household_income", "demographics", "ordinal"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(fav_colour, "favourite_colour", "demographics", "categorical"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+
+assoc_pval_matrix <- calc_assoc_pval_matrix(data_list)
+ap_heatmap <- assoc_pval_heatmap(assoc_pval_matrix)
+}
 }

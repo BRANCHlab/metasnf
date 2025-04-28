@@ -100,30 +100,32 @@ that displays the similarities between observations in the provided matrix.
 Plot heatmap of similarity matrix
 }
 \examples{
-#my_dl <- data_list(
-#    list(
-#        data = expression_df,
-#        name = "expression_data",
-#        domain = "gene_expression",
-#        type = "continuous"
-#    ),
-#    list(
-#        data = methylation_df,
-#        name = "methylation_data",
-#        domain = "gene_methylation",
-#        type = "continuous"
-#    ),
-#    uid = "patient_id"
-#)
-#
-#sc <- snf_config(my_dl, n_solutions = 10)
-#
-#sol_df <- batch_snf(my_dl, sc, return_sim_mats = TRUE)
-#
-#sim_mats <- sim_mats_list(sol_df)
-#
-#similarity_matrix_heatmap(
-#    sim_mats[[1]],
-#    cluster_solution = sol_df[1, ]
-#)
+\donttest{
+my_dl <- data_list(
+    list(
+        data = expression_df,
+        name = "expression_data",
+        domain = "gene_expression",
+        type = "continuous"
+    ),
+    list(
+        data = methylation_df,
+        name = "methylation_data",
+        domain = "gene_methylation",
+        type = "continuous"
+    ),
+    uid = "patient_id"
+)
+
+sc <- snf_config(my_dl, n_solutions = 10)
+
+sol_df <- batch_snf(my_dl, sc, return_sim_mats = TRUE)
+
+sim_mats <- sim_mats_list(sol_df)
+
+similarity_matrix_heatmap(
+    sim_mats[[1]],
+    cluster_solution = sol_df[1, ]
+)
+}
 }

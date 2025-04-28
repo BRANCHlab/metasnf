@@ -29,43 +29,45 @@ clusters, assigns meta clustering information to the "meta_clusters"
 attribute of the data frame.
 }
 \examples{
-#dl <- data_list(
-#    list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
-#    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
-#    list(income, "household_income", "demographics", "continuous"),
-#    list(pubertal, "pubertal_status", "demographics", "continuous"),
-#    uid = "unique_id"
-#)
-#
-#set.seed(42)
-#my_sc <- snf_config(
-#    dl = dl,
-#    n_solutions = 20,
-#    min_k = 20,
-#    max_k = 50
-#)
-#
-#sol_df <- batch_snf(dl, my_sc)
-#
-#sol_df
-#
-#sol_aris <- calc_aris(sol_df)
-#
-#meta_cluster_order <- get_matrix_order(sol_aris)
-#
-## `split_vec` found by iteratively plotting ari_hm or by ?shiny_annotator()
-#split_vec <- c(6, 10, 16)
-#ari_hm <- meta_cluster_heatmap(
-#    sol_aris,
-#    order = meta_cluster_order,
-#    split_vector = split_vec
-#)
-#
-#mc_sol_df <- label_meta_clusters(
-#    sol_df,
-#    order = meta_cluster_order,
-#    split_vector = split_vec
-#)
-#
-#mc_sol_df
+\donttest{
+    dl <- data_list(
+        list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+        list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+        list(income, "household_income", "demographics", "continuous"),
+        list(pubertal, "pubertal_status", "demographics", "continuous"),
+        uid = "unique_id"
+    )
+    
+    set.seed(42)
+    my_sc <- snf_config(
+        dl = dl,
+        n_solutions = 20,
+        min_k = 20,
+        max_k = 50
+    )
+    
+    sol_df <- batch_snf(dl, my_sc)
+    
+    sol_df
+    
+    sol_aris <- calc_aris(sol_df)
+    
+    meta_cluster_order <- get_matrix_order(sol_aris)
+    
+    # `split_vec` found by iteratively plotting ari_hm or by ?shiny_annotator()
+    split_vec <- c(6, 10, 16)
+    ari_hm <- meta_cluster_heatmap(
+        sol_aris,
+        order = meta_cluster_order,
+        split_vector = split_vec
+    )
+    
+    mc_sol_df <- label_meta_clusters(
+        sol_df,
+        order = meta_cluster_order,
+        split_vector = split_vec
+    )
+    
+    mc_sol_df
+}
 }
