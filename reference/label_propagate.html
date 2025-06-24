@@ -15,7 +15,7 @@ algorithm to assigned predicted clusters to the non-clustered observations."><me
 
     <a class="navbar-brand me-2" href="../index.html">metasnf</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.1.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -158,7 +158,7 @@ indicating the original and propagated clusters.</p>
 <span class="r-in"><span><span class="co"># Determining solution with the lowest minimum p-value</span></span></span>
 <span class="r-in"><span><span class="va">lowest_min_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">ext_sol_df</span><span class="op">$</span><span class="st">"min_pval"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">ext_sol_df</span><span class="op">$</span><span class="st">"min_pval"</span> <span class="op">==</span> <span class="va">lowest_min_pval</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4</span>
 <span class="r-in"><span><span class="va">top_row</span> <span class="op">&lt;-</span> <span class="va">ext_sol_df</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Propagate that solution to the observations in the test set</span></span></span>
@@ -179,20 +179,20 @@ indicating the original and propagated clusters.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    uid     group 1 2 3 4 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 uid_NDAR_INV0567T2Y9 clustered 1 1 1 3 6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 uid_NDAR_INV0J4PYA5F clustered 4 2 1 4 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 uid_NDAR_INV10OMKVLE clustered 3 2 2 7 4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 uid_NDAR_INV15FPCW4O clustered 4 2 1 6 4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 uid_NDAR_INV19NB4RJK clustered 3 2 2 1 4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 uid_NDAR_INV1HLGR738 clustered 3 2 2 1 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 uid_NDAR_INV0567T2Y9 clustered 4 1 1 3 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 uid_NDAR_INV0J4PYA5F clustered 3 2 1 4 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 uid_NDAR_INV10OMKVLE clustered 2 2 2 7 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 uid_NDAR_INV15FPCW4O clustered 2 1 1 6 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 uid_NDAR_INV19NB4RJK clustered 2 2 2 1 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 uid_NDAR_INV1HLGR738 clustered 2 2 2 1 5</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">propagated_labels_all</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      uid       group 1 2 3 4 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 95  uid_NDAR_INVJEV61XIU unclustered 3 2 2 4 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 96  uid_NDAR_INVJR3S271G unclustered 4 2 1 7 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 95  uid_NDAR_INVJEV61XIU unclustered 4 2 2 4 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 96  uid_NDAR_INVJR3S271G unclustered 2 2 1 7 4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 97  uid_NDAR_INVK9ULDQA2 unclustered 1 1 1 1 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 98  uid_NDAR_INVKYH529RD unclustered 1 1 1 4 8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 99  uid_NDAR_INVL045Z1TY unclustered 3 1 2 7 4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 100 uid_NDAR_INVLDQH8ATK unclustered 3 2 1 7 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 98  uid_NDAR_INVKYH529RD unclustered 3 1 1 4 8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 99  uid_NDAR_INVL045Z1TY unclustered 2 2 2 7 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 100 uid_NDAR_INVLDQH8ATK unclustered 2 2 1 7 4</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
@@ -205,7 +205,7 @@ indicating the original and propagated clusters.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
