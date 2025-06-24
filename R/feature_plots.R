@@ -78,9 +78,6 @@ bar_plot <- function(df, feature) {
         dplyr::count(keycol) |>
         dplyr::mutate(percent = n / sum(n) * 100)
     df$"keycol" <- factor(df$"keycol")
-    if (all(df$"keycol" %in% c(0, 1))) {
-        levels(df$"keycol") <- c("1", "0")
-    }
     plot <- df |>
         ggplot2::ggplot(
             ggplot2::aes(

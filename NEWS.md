@@ -1,3 +1,9 @@
+# metasnf 2.1.3
+
+## Bug fixes
+
+- Fixed `auto_plot()` function incorrectly inverting labels on bar plots of binary features.
+
 # metasnf 2.1.2
 
 - Wrap additional examples in `donttest`
