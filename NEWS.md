@@ -1,3 +1,9 @@
+# metasnf 2.2.0
+
+## Bug fixes
+
+- `snf_config()` would only sample from the first 2 functions available in the `clust_fns_list` unless further specified with the `clustering_algorithms` parameter. This unintuitive behaviour has been resolved. The `clustering_algorithms` parameter in `snf_config()` has been deprecated and clustering algorithm sampling is now based entirely on the available `clust_fns_list`.
+
 # metasnf 2.1.3
 
 ## Bug fixes

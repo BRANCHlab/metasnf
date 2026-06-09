@@ -151,6 +151,19 @@ snf_config <- function(dl = NULL,
             weights_fill = weights_fill
         )
     }
+    if (!is.null(clustering_algorithms)) {
+        cli::cli_warn(
+            message = c(
+                "!" = paste0(
+                    "Direct usage of the `clustering_algorithms` parameter",
+                    " has been deprecated as of `metasnf` version 2.2.0.",
+                    " To bypass random sampling of clustering algorithms,",
+                    " please update the created snf_config() manually."
+                )
+            ),
+            .envir = rlang::caller_env(1)
+        )
+    }
     if (is.null(sdf)) {
         sdf <- settings_df(
             dl,
@@ -168,7 +181,7 @@ snf_config <- function(dl = NULL,
             k_values = k_values,
             t_values = t_values,
             possible_snf_schemes = possible_snf_schemes,
-            clustering_algorithms = clustering_algorithms,
+            clustering_algorithms = cfl,
             continuous_distances = continuous_distances,
             discrete_distances = discrete_distances,
             ordinal_distances = ordinal_distances,

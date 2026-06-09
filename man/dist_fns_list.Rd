@@ -47,8 +47,7 @@ categorical, and mixed), and the second layer can hold an arbitrary number
 of distance functions for each of those types.
 }
 \details{
-Call ?distance_metrics to see all distance metric functions provided in
-metasnf.
+Call ?dist_fns to see all distance metric functions provided in metasnf.
 }
 \examples{
 # Using just the base distance metrics  ------------------------------------
@@ -74,7 +73,7 @@ dist_fns_list <- dist_fns_list(
 )
 
 # Using default base metrics------------------------------------------------
-# Call ?distance_metrics to see all distance metric functions provided in
+# Call ?dist_fns to see all distance metric functions provided in
 # metasnf. The code below will contain a mix of user-provided and built-in
 # distance metric functions.
 dist_fns_list <- dist_fns_list(

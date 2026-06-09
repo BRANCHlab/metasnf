@@ -1,53 +1,70 @@
-#' '# below may help for extending filter
-#' '#' @export
-#' '#' @importFrom dplyr filter
-#' 'filter.solutions_df <- function(.data, ...) {
-#' '    NextMethod()
-#' '}
-#' '
-#' '#' @export
-#' '#'
-#' 'dplyr::filter
-
 devtools::load_all()
 
 library(metasnf)
 
 dl <- data_list(
-    list(income, "household_income", "demographics", "ordinal"),
-    list(pubertal, "pubertal_status", "demographics", "continuous"),
-    list(fav_colour, "favourite_colour", "demographics", "categorical"),
     list(anxiety, "anxiety", "behaviour", "ordinal"),
     list(depress, "depressed", "behaviour", "ordinal"),
     uid = "unique_id"
 )
 
+# The default list:
 sc <- snf_config(
-    dl,
-    n_solutions = 10,
-    dropout_dist = "uniform"
+    dl = dl,
+    n_solutions = 5,
+    use_default_clust_fns = TRUE
 )
 
-plot(sc)
+sc
 
-summary(mock_snf_config$"dist_fns_list")
+sc$"clust_fns_list"
 
-plot(mock_settings_df)
+# Adding algorithms provided by the package
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 3,
+    clust_fns = list(
+        "a" = spectral_two,
+        "b" = spectral_three,
+        "c" = spectral_four,
+        "d" = spectral_five
+    )
+)
 
-splot(mock_snf_config)
 
-plot(mock_weights_matrix)
+sc$"settings_df"$"clust_alg"
 
-plot(mock_snf_config)
+sc
 
-summary(mock_solutions_df)
+sc
 
-summary(t(mock_ext_solutions_df))
+sc
 
-(mock_weights_matrix)
+?clust_fns_list
 
-mock_aris
+# Note that this one has the default algorithms as well as the newly added ones
+sc$"clust_fns_list"
 
-plot(mock_ari_matrix)
+# This list has only the newly added ones
+my <- snf_config(
+    dl = dl,
+    n_solutions = 50,
+    clust_fns = list(
+        "two_cluster_spectral" = spectral_two,
+        "five_cluster_spectral" = spectral_five
+    ),
+    use_default_clust_fns = T
+)
 
-meta_cluster_heatmap(mock_ari_matrix)
+my_set
+
+my_settings$"settings_df"$"clust_alg" <- sample(
+    1:length(my_settings$"clust_fns_list"),
+    size = nrow(my_settings$"settings_df"),
+    replace = TRUE
+)
+
+sc$"settings_df"
+
+
+

@@ -8,8 +8,7 @@
 #' categorical, and mixed), and the second layer can hold an arbitrary number
 #' of distance functions for each of those types.
 #'
-#' Call ?distance_metrics to see all distance metric functions provided in
-#' metasnf.
+#' Call ?dist_fns to see all distance metric functions provided in metasnf.
 #'
 #' @param cnt_dist_fns A named list of continuous distance metric functions.
 #' @param dsc_dist_fns A named list of discrete distance metric functions.
@@ -49,7 +48,7 @@
 #' )
 #'
 #' # Using default base metrics------------------------------------------------
-#' # Call ?distance_metrics to see all distance metric functions provided in
+#' # Call ?dist_fns to see all distance metric functions provided in
 #' # metasnf. The code below will contain a mix of user-provided and built-in
 #' # distance metric functions.
 #' dist_fns_list <- dist_fns_list(

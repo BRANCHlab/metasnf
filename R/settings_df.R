@@ -108,11 +108,8 @@
 #'  3 possible schemes: c(1, 2, 3). 1 corresponds to the "individual" scheme,
 #'  2 corresponds to the "domain" scheme, and 3 corresponds to the "two-step"
 #'  scheme.
-#' @param clustering_algorithms A list of clustering algorithms to uniformly
-#'  randomly pick from when clustering. When not specified, randomly select
-#'  between spectral clustering using the eigen-gap heuristic and spectral
-#'  clustering using the rotation cost heuristic. See ?clust_fns_list
-#'  for more details on running custom clustering algorithms.
+#' @param clustering_algorithms (DEPRECATED) Clustering algorithms to uniformly
+#'  randomly pick from when clustering. See ?clust_fns_list for more details.
 #' @param continuous_distances A vector of continuous distance metrics to use
 #'  when a custom dist_fns_list is provided.
 #' @param discrete_distances A vector of categorical distance metrics to use
@@ -503,16 +500,14 @@ add_settings_df_rows <- function(sdf,
         #  is only a single value, this syntax will avoid sampling from 1 to
         #  that value.
         snf_scheme <- sample(possible_snf_schemes, 1)
+        # The redundant line below is needed for backwards compatibility.
+        # It was committed in a prior version and must remain to keep sampling
+        # below consistent for a given set.seed() call. 
         clust_alg <- sample(1:2, 1)
         alpha <- alpha_values[sample.int(length(alpha_values), 1)]
         k <- k_values[sample.int(length(k_values), 1)]
         t <- t_values[sample.int(length(t_values), 1)]
-        if (is.null(clustering_algorithms)) {
-            # there are currently 2 defaults (spectral_eig/rot) to choose from
-            clust_alg <- sample(1:2, 1)
-        } else {
-            clust_alg <- sample(1:length(clustering_algorithms), 1)
-        }
+        clust_alg <- sample(1:length(clustering_algorithms), 1)
         #######################################################################
         # 8. Distance metrics
         #######################################################################

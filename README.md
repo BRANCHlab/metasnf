@@ -33,7 +33,7 @@ Development versions can be installed from GitHub:
 devtools::install_github("BRANCHlab/metasnf")
 
 # Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v2.1.3")
+devtools::install_github("BRANCHlab/metasnf@v2.2.0")
 ```
 
 ## Quick Start
@@ -192,7 +192,8 @@ the purposes of clinical subtyping.
 
 ## References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-caruanaMeta2006" class="csl-entry">
 
