@@ -1,0 +1,28 @@
+# Label Propagation
+
+The label propagation procedure can be used to predict cluster
+membership for new, unlabeled observations based on their similarity to
+previously labeled observations. These unlabeled observations could be a
+held out test set from your original sample or a new sample entirely.
+
+The process involves the following steps:
+
+1.  Assign clusters to some group of observations
+2.  Calculate all the pairwise similarities amongst all the already
+    clustered and to-be-labeled observations
+3.  Run the label propagation algorithm to predict cluster membership in
+    the to-be-labeled observations
+
+There is a lot of room for flexibility in how steps 1 and 2 are
+conducted. SNF is not necessary at any part of the process. For example,
+step one could be done by assigning clusters in your training set
+manually or by a simple clustering method like k-means. Step two could
+be done just by calculating the euclidean distances across all the
+training and testing observations for a small subset of features. The
+features used to calculate the similarities in step 2 don’t necessarily
+need to be the same ones used to derive the cluster solution in the
+training set either.
+
+A worked example of the label propagation process can be found at [the
+end of the complete example
+vignette](https://branchlab.github.io/metasnf/articles/a_complete_example.html#validating-results-with-label-propagation).

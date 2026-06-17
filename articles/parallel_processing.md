@@ -1,0 +1,88 @@
+# Parallel Processing
+
+Download a copy of the vignette to follow along here:
+[parallel_processing.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/parallel_processing.Rmd)
+
+metasnf can use [future apply](https://future.apply.futureverse.org/) to
+run the rows of a settings data frame in parallel.
+
+Parallel processing has some overhead cost, so it’s possible that your
+particular situation won’t greatly benefit (or may even run slower) with
+parallel processing enabled.
+
+However, if you have access to multiple cores and each integration you
+are running is quite intensive, the parallel processing will likely help
+speed things up quite a lot.
+
+## Basic usage
+
+``` r
+
+# Load the package
+library(metasnf)
+
+# Setting up the data
+dl <- data_list(
+    list(cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "unique_id"
+)
+
+# Specifying 10 different sets of settings for SNF
+set.seed(42)
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 10,
+    max_k = 40
+)
+
+sol_df <- batch_snf(
+    dl,
+    sc,
+    processes = "max" # Can also be a specific integer
+)
+```
+
+## Including a progress bar
+
+Use the progressr package to visualize the progress of parallel
+batch_snf.
+
+``` r
+
+progressr::with_progress({
+    sol_df <- batch_snf(
+        dl,
+        sc,
+        processes = "max"
+    )
+})
+```
+
+## Number of processes
+
+Setting processes to “max” will make use of as many cores as R can find.
+
+If you want to dial things back a little, you can specify more precisely
+the number of processes you want:
+
+``` r
+
+sol_df <- batch_snf(
+    dl,
+    sc,
+    processes = 4
+)
+```
+
+To find out how many processes you have access to (or at least, how many
+`metasnf` will think you have access to), use the `availableCores()`
+function from the future package:
+
+``` r
+
+future::availableCores()
+```

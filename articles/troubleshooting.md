@@ -1,0 +1,7 @@
+# Troubleshooting
+
+If you encounter a problem, believe some part of the documentation could
+be improved for clarity, or have some suggestions for how the package
+could be improved, please do not hesitate to post about it in the
+[issues tab](https://github.com/BRANCHlab/metasnf/issues) of the
+`metasnf` GitHub page.

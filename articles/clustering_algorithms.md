@@ -1,0 +1,449 @@
+# Clustering Algorithms
+
+Download a copy of the vignette to follow along here:
+[clustering_algorithms.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/clustering_algorithms.Rmd)
+
+## Clustering Algorithms
+
+SNF produces a single similarity matrix that is meant to describe how
+similar all the observations are to each other across all the provided
+input features. Dividing that similarity matrix into subtypes requires
+can be done using clustering algorithms. Within the `metasnf` package,
+clustering is done by default using the spectral clustering algorithm
+(as implemented by the original SNFtool package). The code below goes
+over what the default clustering looks like.
+
+### Default clustering
+
+``` r
+
+# Load the package
+library(metasnf)
+
+dl <- data_list(
+    list(subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(income, "household_income", "demographics", "continuous"),
+    list(pubertal, "pubertal_status", "demographics", "continuous"),
+    list(anxiety, "anxiety", "behaviour", "ordinal"),
+    list(depress, "depressed", "behaviour", "ordinal"),
+    uid = "unique_id"
+)
+#> ℹ 188 observations dropped due to incomplete data.
+
+set.seed(42)
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 5,
+    max_k = 40
+)
+#> ℹ No distance functions specified. Using defaults.
+#> ℹ No clustering functions specified. Using defaults.
+```
+
+The clustering functions that can be used are stored within the
+*clustering functions list* (`clust_fns_list` object) of the config,
+while the reference to which of those functions will be used for a
+particular solution is stored in the *settings data frame*
+(`settings_df` object) of the config:
+
+``` r
+
+# Available functions
+sc$"clust_fns_list"
+#> [1] spectral_eigen
+#> [2] spectral_rot
+
+# Which functions will be used
+sc$"settings_df"$"clust_alg"
+#> [1] 1 1 2 1 2
+```
+
+The “1” corresponds to spectral clustering using the eigen-gap heuristic
+to determine the number of clusters, while the “2” corresponds to
+spectral clustering using the rotation cost heuristic to determine the
+number of clusters. You can find this information by running
+[`?snf_config`](https://branchlab.github.io/metasnf/reference/snf_config.md).
+
+### Other built-in clustering options
+
+Currently, the available clustering algorithms are:
+
+- `spectral_eigen`
+- `spectral_rot`
+- `spectral_two`
+- `spectral_three`
+- `spectral_four`
+- `spectral_five`
+- `spectral_six`
+- `spectral_seven`
+- `spectral_eight`
+
+The first two are the defaults, and the remaining ones specifically use
+2, 3, 4, … and so on as their number of clusters rather than whatever is
+calculated by a separate heuristic function.
+
+To make use of any of these alternative algorithms, you’ll need to
+customize the `clust_fns_list` generated during the call to
+[`snf_config()`](https://branchlab.github.io/metasnf/reference/snf_config.md).
+Here’s what that looks like:
+
+``` r
+
+# The default list:
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 5,
+    use_default_clust_fns = TRUE
+)
+#> ℹ No distance functions specified. Using defaults.
+
+sc$"clust_fns_list"
+#> [1] spectral_eigen
+#> [2] spectral_rot
+
+# Adding algorithms provided by the package
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 5,
+    clust_fns = list(
+        "two_cluster_spectral" = spectral_two,
+        "five_cluster_spectral" = spectral_five
+    ),
+    use_default_clust_fns = TRUE
+)
+#> ℹ No distance functions specified. Using defaults.
+
+# Note that this one has the default algorithms as well as the newly added ones
+sc$"clust_fns_list"
+#> [1] spectral_eigen
+#> [2] spectral_rot
+#> [3] two_cluster_spectral
+#> [4] five_cluster_spectral
+
+# This list has only the newly added ones
+sc <- snf_config(
+    dl = dl,
+    n_solutions = 5,
+    clust_fns = list(
+        "two_cluster_spectral" = spectral_two,
+        "five_cluster_spectral" = spectral_five
+    )
+)
+#> ℹ No distance functions specified. Using defaults.
+
+sc$"clust_fns_list"
+#> [1] two_cluster_spectral
+#> [2] five_cluster_spectral
+```
+
+When looking at the clustering functions values in the settings part of
+an SNF config, you can see that there is some random fluctuation between
+1 and 2:
+
+``` r
+
+sc
+#> Settings Data Frame:
+#>                         1    2    3    4    5
+#> SNF hyperparameters:
+#> alpha                 0.4  0.8  0.4  0.7  0.3
+#> k                      46   75   18   64   16  
+#> t                      20   20   20   20   20  
+#> SNF scheme:
+#>                         2    3    3    1    1  
+#> Clustering functions:
+#>                         2    2    2    1    1  
+#> Distance functions:
+#> CNT                     1    1    1    1    1  
+#> DSC                     1    1    1    1    1  
+#> ORD                     1    1    1    1    1  
+#> CAT                     1    1    1    1    1  
+#> MIX                     1    1    1    1    1  
+#> Component dropout:
+#> subcortical_volume      ✔    ✔    ✔    ✔    ✔  
+#> household_income        ✔    ✔    ✔    ✔    ✔  
+#> pubertal_status         ✔    ✔    ✔    ✔    ✔  
+#> anxiety                 ✔    ✔    ✔    ✔    ✖  
+#> depressed               ✔    ✔    ✔    ✔    ✔  
+#> Distance Functions List:
+#> Continuous (1):
+#> [1] euclidean_distance
+#> Discrete (1):
+#> [1] euclidean_distance
+#> Ordinal (1):
+#> [1] euclidean_distance
+#> Categorical (1):
+#> [1] gower_distance
+#> Mixed (1):
+#> [1] gower_distance
+#> Clustering Functions List:
+#> [1] two_cluster_spectral
+#> [2] five_cluster_spectral
+#> Weights Matrix:
+#> Weights defined for 5 cluster solutions.
+#> $ smri_vol_scs_cbwmatterlh 1, 1, 1, 1, 1 
+#> $ smri_vol_scs_ltventriclelh 1, 1, 1, 1, 1 
+#> $ smri_vol_scs_inflatventlh 1, 1, 1, 1, 1 
+#> $ smri_vol_scs_crbwmatterlh 1, 1, 1, 1, 1 
+#> $ smri_vol_scs_crbcortexlh 1, 1, 1, 1, 1 
+#> …and 29 more features.
+```
+
+The settings segment contains pointers to which clustering function to
+use, while the clustering functions list stores the actual functions.
+
+When you are satisfied with the clustering functions you’ve specified,
+you can try them out with a typical call to
+[`batch_snf()`](https://branchlab.github.io/metasnf/reference/batch_snf.md):
+
+``` r
+
+sol_df <- batch_snf(
+    dl = dl,
+    sc = sc
+)
+```
+
+### Structure of a clustering algorithm function
+
+Any clustering algorithm can be used as long as you can write a function
+for it with the following format:
+
+1.  Takes a single N\*N similarity_matrix as its only input
+2.  Returns a named list:
+    - The first item (named “solution”) is a single N-dimensional vector
+      of numbers corresponding to the observations in the similarity
+      matrix
+    - The second item (named “nclust”) is a single integer indicating
+      the number of clusters that the algorithm is supposed to have
+      generated
+
+Note that the number of clusters parameter fed into
+[`SNFtool::spectralClustering`](https://rdrr.io/pkg/SNFtool/man/spectralClustering.html)
+doesn’t always return a solution containing that many clusters. For
+example, an affinity matrix where every observation is identical to all
+other observations could not yield more than a 1 cluster solution,
+regardless of how many clusters were requested.
+
+Also note that the function should *not* take number of clusters as an
+argument - if you want to explore the same clustering algorithm with a
+varying number of clusters, you’ll need to provide a separate function
+for each number of clusters you’re interested in.
+
+The source code for the two default functions are shown below:
+
+``` r
+
+# Default clustering algorithm #1
+spectral_eigen <- function(similarity_matrix) {
+    estimated_n <- estimate_nclust_given_graph(
+        W = similarity_matrix,
+        NUMC = 2:10
+    )
+    nclust_estimate <- estimated_n$`Eigen-gap best`
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        nclust_estimate
+    )
+    return(solution)
+}
+
+# Default clustering algorithm #2
+spectral_rot <- function(similarity_matrix) {
+    estimated_n <- estimate_nclust_given_graph(
+        W = similarity_matrix,
+        NUMC = 2:10
+    )
+    nclust_estimate <- estimated_n$`Rotation cost best`
+    solution <- SNFtool::spectralClustering(
+        similarity_matrix,
+        nclust_estimate
+    )
+    return(solution)
+}
+```
+
+### Non-automated clustering
+
+You can also extract the similarity matrices for each computed row of
+the settings data frame and perform the clustering more “manually”. This
+is particularly useful for clustering procedures where the transition
+from a similarity matrix to the final solution requires human
+intervention (e.g., judgement for clustering hyperparameters).
+
+``` r
+
+sol_df <- batch_snf(
+    dl,
+    sc,
+    return_sim_mats = TRUE
+)
+
+# Similarity matrices are in the list below:
+similarity_matrices <- sim_mats_list(sol_df)
+
+first_similarity_matrix <- similarity_matrices[[1]]
+
+# Your manual clustering goes here...
+```
+
+### Example of non-automated clustering: DBSCAN
+
+Let’s say we wanted to cluster our similarity matrices with DBSCAN
+rather than with spectral clustering. Start by taking a look at the
+documentation for running the DBSCAN function from the dbscan R package
+<https://cran.r-project.org/package=dbscan>:
+
+DBSCAN is about as challenging as custom clustering can get, as the
+suggested process for specifying the number of clusters is recommended
+to involve human intervention and the function itself operates on
+dissimilarity (distance) matrices rather than similarity matrices.
+
+Below is a slightly adjusted form of their `dbscan` example. You can
+work through this on your own.
+
+``` r
+
+library(dbscan)
+## Example 1: use dbscan on the iris data set
+data(iris)
+iris <- as.matrix(iris[, 1:4])
+iris_dist <- dist(iris)
+
+## Find suitable DBSCAN parameters:
+## 1. We use minPts = dim + 1 = 5 for iris. A larger value can also be used.
+## 2. We inspect the k-NN distance plot for k = minPts - 1 = 4
+kNNdistplot(iris, minPts = 5)
+
+## Noise seems to start around a 4-NN distance of .7
+abline(h=.7, col = "red", lty = 2)
+
+results <- dbscan(iris_dist, eps = 0.7, minPts = 5)
+
+# The 1 is added to ensure that those with no cluster (cluster 0) are still
+# plotted.
+pairs(iris, col = results$cluster + 1)
+```
+
+After some poking around, you will often see people mentioning that
+DBSCAN just isn’t meant to be automated. You need to look at your data
+to have a good idea of what values to use for the hyperparameters `eps`
+and `minPts`. When you need to get involved manually, that’s the perfect
+time to manage the many similarity matrices you’ve created with
+`batch_snf` through meta clustering. Generate a wide range of similarity
+matrices and apply meta clustering to find a few representative
+similarity matrices. One way to do this would be based on how the
+spectral-clustering derived solutions end up clustering together (see
+[example](https://branchlab.github.io/metasnf/articles/a_complete_example.html#examining-meta-clusters)).
+Then take the corresponding affinity matrices and go through the dbscan
+clustering process manually.
+
+Based on [`?dbscan`](https://rdrr.io/pkg/dbscan/man/dbscan.html), it
+looks like the function can accept precomputed distance matrices
+(instead of `precomputed_nn_object`s) as long as they actually are
+`dist` objects (which can be done using the
+[`as.dist()`](https://rdrr.io/r/stats/dist.html) function). There are
+many formulas to convert between similarity matrices and distance
+matrices which have their own pros and cons. Here, we’ll use a common
+approach of `distance = max(similarity) - similarity`. Whichever matrix
+values had the maximum similarity will now have a distance of 0, and
+whichever matrix values had the lowest amount of similarity will have
+distance values that are the closest to the former maximum similarity
+value.
+
+``` r
+
+library(dbscan)
+#> 
+#> Attaching package: 'dbscan'
+#> The following object is masked from 'package:stats':
+#> 
+#>     as.dendrogram
+library(ggplot2)
+
+dl <- data_list(
+    list(
+        data = expression_df,
+        name = "genes_1_and_2_exp",
+        domain = "gene_expression",
+        type = "continuous"
+    ),
+    list(
+        data = methylation_df,
+        name = "genes_1_and_2_meth",
+        domain = "gene_methylation",
+        type = "continuous"
+    ),
+    uid = "patient_id"
+)
+
+set.seed(42)
+sc <- snf_config(dl = dl, n_solutions = 1)
+#> ℹ No distance functions specified. Using defaults.
+#> ℹ No clustering functions specified. Using defaults.
+
+sol_df <- batch_snf(
+    dl = dl,
+    sc = sc,
+    return_sim_mats = TRUE
+)
+
+similarity_matrices <- sim_mats_list(sol_df)
+
+representative_sm <- similarity_matrices[[1]]
+
+distance_matrix1 <- as.dist(
+    max(representative_sm) - representative_sm
+)
+
+kNNdistplot(
+    distance_matrix1,
+    minPts = 10
+)
+## Maybe there?
+abline(h=0.4872, col = "red", lty = 2)
+```
+
+![](clustering_algorithms_files/figure-html/unnamed-chunk-11-1.png)
+
+``` r
+
+
+dbscan_results <- dbscan(distance_matrix1, eps = 0.4872, minPts = 10)$"cluster"
+
+spectral_results <- t(sol_df[1, ])[, 2]
+
+dbscan_vs_spectral <- data.frame(
+    dbscan = dbscan_results,
+    spectral = spectral_results
+)
+
+ggplot(dbscan_vs_spectral, aes(x = dbscan, y = spectral)) +
+    geom_jitter(height = 0.1, width = 0.1, alpha = 0.5) +
+    theme_bw()
+```
+
+![](clustering_algorithms_files/figure-html/unnamed-chunk-11-2.png)
+
+There’s one bold lie in the code chunk above, which is how easy it was
+to find that magic hyperparameter combination of `minPts = 10` and
+`eps = 0.487` parameter value of 0.4872. It wasn’t based off of the
+visual inspection of the kNNdistplot, but rather through a lot of trial
+and error.
+
+Something along the lines of:
+
+``` r
+
+for (i in seq(0.485, 0.488, by = 0.0001)) {
+    results <- dbscan(distance_matrix1, eps = i, minPts = 10)
+    if (length(unique(results$"cluster")) == 3) {
+        print(i)
+    }
+}
+```
+
+In this specific instance, those hyperparameters are incredibly
+sensitive - a slight change will get very different results. That is
+likely due to the shape of the actual data being clustered. Your mileage
+may vary.

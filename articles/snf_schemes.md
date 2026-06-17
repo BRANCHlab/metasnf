@@ -1,0 +1,62 @@
+# SNF Schemes
+
+Download a copy of the vignette to follow along here:
+[snf_schemes.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/snf_schemes.Rmd)
+
+This vignette describes how individual input data frames are converted
+into a final fused network in different ways using the `snf_scheme`
+parameter. Ultimately, variation across schemes gives the user access to
+a broader (but still sensible) space of similarity networks and
+clustering solutions.
+
+There are currently 3 available schemes.
+
+## (1) “Individual”
+
+`snf_scheme = 1`:
+
+Each individual input data frame provided in the data list is combined
+into a final network by SNF directly. This is identical to treating your
+data list like the WALL parameter in the original SNF function.
+
+The limitation (or strength) of this approach is that the integration is
+biased towards information sources (domains) that have the most
+representation within the list. For example, if you happened to have 5
+demographic data frames but 10 neuroimaging data frames, you will get an
+integration that is biased towards neuroimaging data.
+
+## (2) “Two-step”
+
+`snf_scheme = 2`:
+
+Input data frames are combined within user-specified data domains by one
+round of SNF and then combined across domains by a second round of SNF.
+
+This scheme was intended to reduce some of the weighting issues in the
+individual approach. The final integration is done by combining a single
+demographic similarity matrix with a single neuroimaging similarity
+matrix, resulting in a balanced integration at the domain level.
+
+There is no “three-step” or greater SNF scheme accounting for data frame
+subdomains or subsubdomains at this time, but ultimately this approach
+should serve well to increase the space of clustering solutions you have
+access to.
+
+## (3) “Domain”
+
+`snf_scheme = 3`:
+
+Input data frames are combined within domains by concatenation and then
+combined into a single fused network by SNF. This in some way is also
+quite similar to this spirit of the original SNF examples, but where
+each initial distance matrix is done an entire domain at a time. This
+approach can lead to the greatest information loss during the distance
+matrix calculation step, but still offers an additional way to generate
+distinct cluster solutions.
+
+## Custom SNF schemes
+
+There is no simple interface to add custom SNF schemes at this time. If
+there is a different scheme you would like to use, feel free to submit a
+suggestion in the package’s [issues
+page](https://github.com/BRANCHlab/metasnf/issues).

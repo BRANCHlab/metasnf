@@ -124,6 +124,7 @@
 <url><loc>https://branchlab.github.io/metasnf/reference/cort_sa.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/cort_t.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/data_list.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/db_manual.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/depress.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/diagnosis_df.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/discretisation.html</loc></url>
@@ -138,6 +139,7 @@
 <url><loc>https://branchlab.github.io/metasnf/reference/dplyr_row_slice.solutions_df.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/drop_cols.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/drop_inputs.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/dunn_manual.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/ensure_dll_df.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/esm_manhattan_plot.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/estimate_nclust_given_graph.html</loc></url>
@@ -264,6 +266,7 @@
 <url><loc>https://branchlab.github.io/metasnf/reference/settings_df.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/shiny_annotator.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/sim_mats_list.html</loc></url>
+<url><loc>https://branchlab.github.io/metasnf/reference/sim_to_dist.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/similarity_matrix_heatmap.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/similarity_matrix_path.html</loc></url>
 <url><loc>https://branchlab.github.io/metasnf/reference/siw_euclidean_distance.html</loc></url>

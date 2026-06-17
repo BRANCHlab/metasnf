@@ -1,0 +1,129 @@
+# The Data List
+
+Download a copy of the vignette to follow along here:
+[data_list.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/data_list.Rmd)
+
+## The data_list
+
+This vignette outlines the importance, structure, and creation of the
+data_list object. You can find much of this info by running
+[`?data_list`](https://branchlab.github.io/metasnf/reference/data_list.md)
+after loading the `metasnf` package.
+
+The data_list is the main object used in the `metasnf` package to store
+data. It is a named and nested list containing input data frames (data),
+the name of that input data frame (for the user’s reference), the
+‘domain’ of that data frame (the broader source of information that the
+input data frame is capturing, determined by user’s domain knowledge),
+and the type of feature stored in the data frame (continuous, discrete,
+ordinal, categorical, or mixed).
+
+Some examples of data_list generation and usage are below:
+
+``` r
+
+library(metasnf)
+
+# Preparing some mock data
+heart_rate_df <- data.frame(
+    patient_id = c("1", "2", "3"),
+    var1 = c(0.04, 0.1, 0.3),
+    var2 = c(30, 2, 0.3)
+)
+
+personality_test_df <- data.frame(
+    patient_id = c("1", "2", "3"),
+    var3 = c(900, 1990, 373),
+    var4 = c(509, 2209, 83)
+)
+
+survey_response_df <- data.frame(
+    patient_id = c("1", "2", "3"),
+    var5 = c(1, 3, 3),
+    var6 = c(2, 3, 3)
+)
+
+city_df <- data.frame(
+    patient_id = c("1", "2", "3"),
+    var7 = c("toronto", "montreal", "vancouver")
+)
+
+# Generating a data_list explicitly (Name each nested list element):
+dl <- data_list(
+    list(
+        data = heart_rate_df,
+        name = "heart_rate",
+        domain = "clinical",
+        type = "continuous"
+    ),
+    list(
+        data = personality_test_df,
+        name = "personality_test",
+        domain = "surveys",
+        type = "continuous"
+    ),
+    list(
+        data = survey_response_df,
+        name = "survey_response",
+        domain = "surveys",
+        type = "ordinal"
+    ),
+    list(
+        data = city_df,
+        name = "city",
+        domain = "location",
+        type = "categorical"
+    ),
+    uid = "patient_id"
+)
+
+# Achieving the same result compactly:
+dl <- data_list(
+    list(heart_rate_df, "heart_rate", "clinical", "continuous"),
+    list(personality_test_df, "personality_test", "surveys", "continuous"),
+    list(survey_response_df, "survey_response", "surveys", "ordinal"),
+    list(city_df, "city", "location", "categorical"),
+    uid = "patient_id"
+)
+
+# Printing data_list summaries
+summary(dl)
+```
+
+    ##               name        type   domain length width
+    ## 1       heart_rate  continuous clinical      3     2
+    ## 2 personality_test  continuous  surveys      3     2
+    ## 3  survey_response     ordinal  surveys      3     2
+    ## 4             city categorical location      3     1
+
+Depending on your data preprocessing, it may be more convenient to you
+to assemble the components of your data_list in an automated way and
+then provide that result to `data_list`.
+
+For example, your code could have generated a list like the one below:
+
+``` r
+
+list_of_lists <- list(
+    list(heart_rate_df, "data1", "domain1", "continuous"),
+    list(personality_test_df, "data2", "domain2", "continuous")
+)
+```
+
+If `data_list` receives only a single list, it’ll treat that list as
+containing all the components required to construct a properly formatted
+data_list:
+
+``` r
+
+dl <- data_list(
+    list_of_lists,
+    uid = "patient_id"
+)
+
+summary(dl)
+```
+
+    ##    name       type  domain length width
+    ## 1 data1 continuous domain1      3     2
+    ## 2 data2 continuous domain2      3     2

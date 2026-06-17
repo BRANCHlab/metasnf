@@ -1,0 +1,1055 @@
+# metaSNF: Meta clustering with Similarity Network Fusion
+
+## Brief Overview
+
+metaSNF is an R package that facilitates usage of the meta clustering
+paradigm described in ([Caruana et al. 2006](#ref-caruanaMeta2006)) with
+the similarity network fusion (SNF) data integration procedure developed
+in ([Wang et al. 2014](#ref-wangSimilarity2014)). The package offers a
+comprehensive suite of tools to assist users in transforming multi-modal
+tabular data into cluster solutions, decision making in the clustering
+process, and visualization along the way with a strong emphasis on
+context-specific utility and principled validation of results.
+
+## Installation
+
+You will need R version 4.1.0 or higher to install this package. metaSNF
+can be installed from CRAN:
+
+``` r
+
+install.packages("metasnf")
+```
+
+Development versions can be installed from GitHub:
+
+``` r
+
+# Latest development version
+devtools::install_github("BRANCHlab/metasnf")
+
+# Install a specific tagged version
+devtools::install_github("BRANCHlab/metasnf@v2.2.1")
+```
+
+## Quick Start
+
+Minimal usage of the package looks like this:
+
+``` r
+
+# Load the package
+library(metasnf)
+
+# Setting up the data
+dl <- data_list(
+    list(abcd_cort_t, "cortical_thickness", "neuroimaging", "continuous"),
+    list(abcd_cort_sa, "cortical_surface_area", "neuroimaging", "continuous"),
+    list(abcd_subc_v, "subcortical_volume", "neuroimaging", "continuous"),
+    list(abcd_income, "household_income", "demographics", "continuous"),
+    list(abcd_pubertal, "pubertal_status", "demographics", "continuous"),
+    uid = "patient"
+)
+#> ℹ 176 observations dropped due to incomplete data.
+
+# Specifying 5 different sets of settings for SNF
+set.seed(42)
+sc <- snf_config(
+    dl,
+    n_solutions = 5,
+    max_k = 40
+)
+#> ℹ No distance functions specified. Using defaults.
+#> ℹ No clustering functions specified. Using defaults.
+
+# This matrix has clustering solutions for each of the 5 SNF runs!
+sol_df <- batch_snf(dl, sc)
+
+sol_df
+#> 5 cluster solutions of 100 observations:
+#> solution nclust mc uid_NDAR_INV0567T2Y9 uid_NDAR_INV0IZ157F8 
+#>        1      2  .                    1                    2 
+#>        2      2  .                    2                    1 
+#>        3     10  .                    1                    9 
+#>        4      2  .                    2                    1 
+#>        5      8  .                    1                    7 
+#> 98 observations not shown.
+#> Use `print(n = ...)` to change the number of rows printed.
+#> Use `t()` to view compact cluster solution format.
+
+t(sol_df)
+#> 5 cluster solutions of 100 observations:
+#>                  uid      s1    s2    s3    s4    s5 
+#> uid_NDAR_INV0567T2Y9       1     2     1     2     1
+#> uid_NDAR_INV0IZ157F8       2     1     9     1     7
+#> uid_NDAR_INV0J4PYA5F       1     2     7     2     3
+#> uid_NDAR_INV10OMKVLE       2     1     8     1     4
+#> uid_NDAR_INV15FPCW4O       1     2     2     2     5
+#> uid_NDAR_INV19NB4RJK       1     2     9     2     7
+#> uid_NDAR_INV1HLGR738       1     2     9     2     7
+#> uid_NDAR_INV1KR0EZFU       2     1     9     2     7
+#> uid_NDAR_INV1L3Y9EOP       1     2     2     2     5
+#> uid_NDAR_INV1TCP5GNM       1     2     8     2     4
+#> 90 observations not shown.
+```
+
+Check out the tutorial vignettes below to learn about how the package
+can be used:
+
+- [Simple usage of the
+  package](https://branchlab.github.io/metasnf/articles/a_simple_example.html)
+- [Complex usage of the
+  package](https://branchlab.github.io/metasnf/articles/a_complete_example.html)
+
+And more tutorials can be found under the “articles” section of the
+documentation home page:
+<https://branchlab.github.io/metasnf/index.html>
+
+## Background
+
+**Why use meta clustering?**
+
+Clustering algorithms seek solutions where members of the same cluster
+are very similar to each other and members of distinct clusters are very
+dissimilar to each other. In sufficiently noisy datasets where many
+qualitatively distinct solutions with similar scores of clustering
+quality exist, it is not necessarily the case that the top solution
+selected by a clustering algorithm will also be the most useful one for
+the user’s context.
+
+To address this issue, the original meta clustering procedure [Caruana
+et al., 2006](https://doi.org/10.1109/ICDM.2006.103) involved generating
+a large number of reasonable clustering solutions, clustering those
+solutions into qualitatively similar ones, and having the user examine
+those “meta clusters” to find something that seems like it’ll be the
+most useful.
+
+**Why use SNF?**
+
+In the clinical data setting, we often have access to patient data
+across a wide range of domains, such as imaging, genetics, biomarkers,
+demographics. When trying to extract subtypes out of all this
+information, direct concatenation of the data followed by cluster
+analysis can result in a substantial amount of lost (valuable) signal
+contained in each individual domain. Empirically, SNF has been
+demonstrated to effectively integrate highly diverse patient data for
+the purposes of clinical subtyping.
+
+## Documentation
+
+### Example workflows
+
+- [Simple](https://branchlab.github.io/metasnf/articles/a_simple_example.html)
+- [Complex](https://branchlab.github.io/metasnf/articles/a_complete_example.html)
+
+### Essential objects
+
+- [SNF
+  config](https://branchlab.github.io/metasnf/articles/snf_config.html)
+- [Data
+  list](https://branchlab.github.io/metasnf/articles/data_list.html)
+
+### Further customization of generated solutions
+
+- [SNF
+  schemes](https://branchlab.github.io/metasnf/articles/snf_schemes.html)
+- [Distance
+  metrics](https://branchlab.github.io/metasnf/articles/distance_metrics.html)
+- [Clustering
+  algorithms](https://branchlab.github.io/metasnf/articles/clustering_algorithms.html)
+- [Feature
+  weighting](https://branchlab.github.io/metasnf/articles/feature_weights.html)
+
+### Additional functionality
+
+- [Stability measures and consensus
+  clustering](https://branchlab.github.io/metasnf/articles/stability_measures.html)
+- [Removing unwanted
+  signal](https://branchlab.github.io/metasnf/articles/confounders.html)
+- [Parallel
+  processing](https://branchlab.github.io/metasnf/articles/parallel_processing.html)
+- [Label
+  propagation](https://branchlab.github.io/metasnf/articles/label_propagation.html)
+- [Imputations](https://branchlab.github.io/metasnf/articles/imputations.html)
+- [NMI
+  scores](https://branchlab.github.io/metasnf/articles/nmi_scores.html)
+
+### Plotting
+
+- [Correlation
+  plots](https://branchlab.github.io/metasnf/articles/correlation_plots.html)
+- [Similarity matrix
+  heatmaps](https://branchlab.github.io/metasnf/articles/similarity_matrix_heatmap.html)
+- [Manhattan
+  plots](https://branchlab.github.io/metasnf/articles/manhattan_plots.html)
+- [Alluvial
+  plots](https://branchlab.github.io/metasnf/articles/alluvial_plots.html)
+- [Feature
+  plots](https://branchlab.github.io/metasnf/articles/feature_plots.html)
+
+## References
+
+Caruana, Rich, Mohamed Elhawary, Nam Nguyen, and Casey Smith. 2006.
+“Meta Clustering.” In *Sixth International Conference on Data Mining
+(ICDM’06)*, 107–18. <https://doi.org/10.1109/ICDM.2006.103>.
+
+Wang, Bo, Aziz M. Mezlini, Feyyaz Demir, Marc Fiume, Zhuowen Tu, Michael
+Brudno, Benjamin Haibe-Kains, and Anna Goldenberg. 2014. “Similarity
+Network Fusion for Aggregating Data Types on a Genomic Scale.” *Nature
+Methods* 11 (3): 333–37. <https://doi.org/10.1038/nmeth.2810>.
+
+# Package index
+
+## All functions
+
+- [`abcd_anxiety`](https://branchlab.github.io/metasnf/reference/abcd_anxiety.md)
+  : Mock ABCD anxiety data
+
+- [`abcd_colour`](https://branchlab.github.io/metasnf/reference/abcd_colour.md)
+  : Mock ABCD "colour" data
+
+- [`abcd_cort_sa`](https://branchlab.github.io/metasnf/reference/abcd_cort_sa.md)
+  : Mock ABCD cortical surface area data
+
+- [`abcd_cort_t`](https://branchlab.github.io/metasnf/reference/abcd_cort_t.md)
+  : Mock ABCD cortical thickness data
+
+- [`abcd_depress`](https://branchlab.github.io/metasnf/reference/abcd_depress.md)
+  : Mock ABCD depression data
+
+- [`abcd_h_income`](https://branchlab.github.io/metasnf/reference/abcd_h_income.md)
+  : Mock ABCD income data
+
+- [`abcd_income`](https://branchlab.github.io/metasnf/reference/abcd_income.md)
+  : Mock ABCD income data
+
+- [`abcd_pubertal`](https://branchlab.github.io/metasnf/reference/abcd_pubertal.md)
+  : Mock ABCD pubertal status data
+
+- [`abcd_subc_v`](https://branchlab.github.io/metasnf/reference/abcd_subc_v.md)
+  : Mock ABCD subcortical volumes data
+
+- [`add_settings_df_rows()`](https://branchlab.github.io/metasnf/reference/add_settings_df_rows.md)
+  : Add rows to a settings_df
+
+- [`age_df`](https://branchlab.github.io/metasnf/reference/age_df.md) :
+  Mock age data
+
+- [`alluvial_cluster_plot()`](https://branchlab.github.io/metasnf/reference/alluvial_cluster_plot.md)
+  : Alluvial plot of patients across cluster counts and important
+  features
+
+- [`anxiety`](https://branchlab.github.io/metasnf/reference/anxiety.md)
+  : Mock ABCD anxiety data
+
+- [`as.data.frame(`*`<data_list>`*`)`](https://branchlab.github.io/metasnf/reference/as.data.frame.data_list.md)
+  :
+
+  Coerce a `data_list` class object into a `data.frame` class object
+
+- [`as.data.frame(`*`<ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/as.data.frame.ext_solutions_df.md)
+  :
+
+  Coerce a `ext_solutions_df` class object into a `data.frame` class
+  object
+
+- [`as.data.frame(`*`<settings_df>`*`)`](https://branchlab.github.io/metasnf/reference/as.data.frame.settings_df.md)
+  :
+
+  Coerce a `settings_df` class object into a `data.frame` class object
+
+- [`as.data.frame(`*`<snf_config>`*`)`](https://branchlab.github.io/metasnf/reference/as.data.frame.snf_config.md)
+  :
+
+  Coerce a `settings_df` class object into a `data.frame` class object
+
+- [`as.data.frame(`*`<solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/as.data.frame.solutions_df.md)
+  :
+
+  Coerce a `solutions_df` class object into a `data.frame` class object
+
+- [`as.data.frame(`*`<t_ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/as.data.frame.t_ext_solutions_df.md)
+  :
+
+  Coerce a `t_ext_solutions_df` class object into a `data.frame` class
+  object
+
+- [`as.data.frame(`*`<t_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/as.data.frame.t_solutions_df.md)
+  :
+
+  Coerce a `t_solutions_df` class object into a `data.frame` class
+  object
+
+- [`as.data.frame(`*`<weights_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/as.data.frame.weights_matrix.md)
+  :
+
+  Coerce a `weights_matrix` class object into a `data.frame` class
+  object
+
+- [`as.list(`*`<clust_fns_list>`*`)`](https://branchlab.github.io/metasnf/reference/as.list.clust_fns_list.md)
+  :
+
+  Coerce a `clust_fns_list` class object into a `list` class object
+
+- [`as.list(`*`<data_list>`*`)`](https://branchlab.github.io/metasnf/reference/as.list.data_list.md)
+  :
+
+  Coerce a `data_list` class object into a `list` class object
+
+- [`as.list(`*`<dist_fns_list>`*`)`](https://branchlab.github.io/metasnf/reference/as.list.dist_fns_list.md)
+  :
+
+  Coerce a `dist_fns_list` class object into a `list` class object
+
+- [`as.list(`*`<sim_mats_list>`*`)`](https://branchlab.github.io/metasnf/reference/as.list.sim_mats_list.md)
+  :
+
+  Coerce a `sim_mats_list` class object into a `list` class object
+
+- [`as.list(`*`<snf_config>`*`)`](https://branchlab.github.io/metasnf/reference/as.list.snf_config.md)
+  :
+
+  Coerce a `snf_config` class object into a `list` class object
+
+- [`as.matrix(`*`<ari_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/as.matrix.ari_matrix.md)
+  :
+
+  Coerce a `ari_matrix` class object into a `matrix` class object
+
+- [`as.matrix(`*`<weights_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/as.matrix.weights_matrix.md)
+  :
+
+  Coerce a `weights_matrix` class object into a `matrix` class object
+
+- [`as_ari_matrix()`](https://branchlab.github.io/metasnf/reference/as_ari_matrix.md)
+  : Convert an object to an ARI matrix
+
+- [`as_data_list()`](https://branchlab.github.io/metasnf/reference/as_data_list.md)
+  : Convert an object to a data list
+
+- [`as_settings_df()`](https://branchlab.github.io/metasnf/reference/as_settings_df.md)
+  : Convert an object to a settings data frame
+
+- [`as_sim_mats_list()`](https://branchlab.github.io/metasnf/reference/as_sim_mats_list.md)
+  : Convert an object to a similarity matrix list
+
+- [`as_snf_config()`](https://branchlab.github.io/metasnf/reference/as_snf_config.md)
+  : Convert an object to a snf config
+
+- [`as_weights_matrix()`](https://branchlab.github.io/metasnf/reference/as_weights_matrix.md)
+  : Convert an object to a weights matrix
+
+- [`assemble_data()`](https://branchlab.github.io/metasnf/reference/assemble_data.md)
+  : Collapse a data frame and/or a data list into a single data frame
+
+- [`assoc_pval_heatmap()`](https://branchlab.github.io/metasnf/reference/assoc_pval_heatmap.md)
+  : Heatmap of pairwise associations between features
+
+- [`auto_plot()`](https://branchlab.github.io/metasnf/reference/auto_plot.md)
+  : Automatically plot features across clusters
+
+- [`bar_plot()`](https://branchlab.github.io/metasnf/reference/bar_plot.md)
+  : Bar plot separating a feature by cluster
+
+- [`batch_snf()`](https://branchlab.github.io/metasnf/reference/batch_snf.md)
+  : Run variations of SNF
+
+- [`batch_snf_subsamples()`](https://branchlab.github.io/metasnf/reference/batch_snf_subsamples.md)
+  : Run SNF clustering pipeline on a list of subsampled data lists
+
+- [`cache_a_complete_example_ext_sol_df`](https://branchlab.github.io/metasnf/reference/cache_a_complete_example_ext_sol_df.md)
+  : Cached example extended solutions data frame
+
+- [`cache_a_complete_example_lp_ext_sol_df`](https://branchlab.github.io/metasnf/reference/cache_a_complete_example_lp_ext_sol_df.md)
+  : Cached example extended solutions data frame
+
+- [`cache_a_complete_example_sol_df`](https://branchlab.github.io/metasnf/reference/cache_a_complete_example_sol_df.md)
+  : Cached example solutions data frame
+
+- [`calc_aris()`](https://branchlab.github.io/metasnf/reference/calc_aris.md)
+  : Construct an ARI matrix storing inter-solution similarities
+
+- [`calc_assoc_pval_matrix()`](https://branchlab.github.io/metasnf/reference/calc_assoc_pval_matrix.md)
+  : Calculate p-values for all pairwise associations of features in a
+  data list
+
+- [`calc_nmis()`](https://branchlab.github.io/metasnf/reference/calc_nmis.md)
+  : Calculate feature NMIs for a data list and a solutions data frame
+
+- [`calculate_coclustering()`](https://branchlab.github.io/metasnf/reference/calculate_coclustering.md)
+  : Calculate co-clustering data
+
+- [`cancer_diagnosis_df`](https://branchlab.github.io/metasnf/reference/cancer_diagnosis_df.md)
+  : Mock diagnosis data
+
+- [`cell_significance_fn()`](https://branchlab.github.io/metasnf/reference/cell_significance_fn.md)
+  : Place significance stars on ComplexHeatmap cells
+
+- [`check_dataless_annotations()`](https://branchlab.github.io/metasnf/reference/check_dataless_annotations.md)
+  : Helper function to stop annotation building when no data was
+  provided
+
+- [`check_hm_dependencies()`](https://branchlab.github.io/metasnf/reference/check_hm_dependencies.md)
+  : Check for ComplexHeatmap and circlize dependencies
+
+- [`check_similarity_matrices()`](https://branchlab.github.io/metasnf/reference/check_similarity_matrices.md)
+  : Check validity of similarity matrices
+
+- [`spectral_eigen()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  [`spectral_rot()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  [`spectral_eigen_classic()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  [`spectral_rot_classic()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  [`spectral_two()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  [`spectral_three()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  [`spectral_four()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  [`spectral_five()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  [`spectral_six()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  [`spectral_seven()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  [`spectral_eight()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  [`spectral_nine()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  [`spectral_ten()`](https://branchlab.github.io/metasnf/reference/clust_fns.md)
+  : Built-in clustering algorithms
+
+- [`clust_fns_list()`](https://branchlab.github.io/metasnf/reference/clust_fns_list.md)
+  : Build a clustering algorithms list
+
+- [`cocluster_density()`](https://branchlab.github.io/metasnf/reference/cocluster_density.md)
+  : Density plot of co-clustering stability across subsampled data
+
+- [`cocluster_heatmap()`](https://branchlab.github.io/metasnf/reference/cocluster_heatmap.md)
+  : Heatmap of observation co-clustering across resampled data
+
+- [`colour_scale()`](https://branchlab.github.io/metasnf/reference/colour_scale.md)
+  : Return a colour ramp for a given vector
+
+- [`cort_sa`](https://branchlab.github.io/metasnf/reference/cort_sa.md)
+  : Mock ABCD cortical surface area data
+
+- [`cort_t`](https://branchlab.github.io/metasnf/reference/cort_t.md) :
+  Mock ABCD cortical thickness data
+
+- [`data_list()`](https://branchlab.github.io/metasnf/reference/data_list.md)
+  :
+
+  Build a `data_list` class object
+
+- [`depress`](https://branchlab.github.io/metasnf/reference/depress.md)
+  : Mock ABCD depression data
+
+- [`diagnosis_df`](https://branchlab.github.io/metasnf/reference/diagnosis_df.md)
+  : Mock diagnosis data
+
+- [`euclidean_distance()`](https://branchlab.github.io/metasnf/reference/dist_fns.md)
+  [`gower_distance()`](https://branchlab.github.io/metasnf/reference/dist_fns.md)
+  [`sn_euclidean_distance()`](https://branchlab.github.io/metasnf/reference/dist_fns.md)
+  [`sew_euclidean_distance()`](https://branchlab.github.io/metasnf/reference/dist_fns.md)
+  [`hamming_distance()`](https://branchlab.github.io/metasnf/reference/dist_fns.md)
+  : Built-in distance functions
+
+- [`dist_fns_list()`](https://branchlab.github.io/metasnf/reference/dist_fns_list.md)
+  : Build a distance metrics list
+
+- [`dlapply()`](https://branchlab.github.io/metasnf/reference/dlapply.md)
+  : Apply-like function for data list objects
+
+- [`dplyr_row_slice.ext_solutions_df()`](https://branchlab.github.io/metasnf/reference/dplyr_row_slice.ext_solutions_df.md)
+  : Function to extend dplyr to extended solutions data frame objects
+
+- [`dplyr_row_slice.solutions_df()`](https://branchlab.github.io/metasnf/reference/dplyr_row_slice.solutions_df.md)
+  : Function to extend dplyr to solutions data frame objects
+
+- [`esm_manhattan_plot()`](https://branchlab.github.io/metasnf/reference/esm_manhattan_plot.md)
+  : Manhattan plot of feature-cluster association p-values
+
+- [`estimate_nclust_given_graph()`](https://branchlab.github.io/metasnf/reference/estimate_nclust_given_graph.md)
+  : Estimate number of clusters for a similarity matrix
+
+- [`expression_df`](https://branchlab.github.io/metasnf/reference/expression_df.md)
+  : Modification of SNFtool mock data frame "Data1"
+
+- [`extend_solutions()`](https://branchlab.github.io/metasnf/reference/extend_solutions.md)
+  : Extend a solutions data frame to include outcome evaluations
+
+- [`fav_colour`](https://branchlab.github.io/metasnf/reference/fav_colour.md)
+  : Mock ABCD "colour" data
+
+- [`gender_df`](https://branchlab.github.io/metasnf/reference/gender_df.md)
+  : Mock gender data
+
+- [`get_complete_uids()`](https://branchlab.github.io/metasnf/reference/get_complete_uids.md)
+  : Pull complete-data UIDs from a list of data frames
+
+- [`get_heatmap_order()`](https://branchlab.github.io/metasnf/reference/get_heatmap_order.md)
+  : Return the row or column ordering present in a heatmap
+
+- [`get_matrix_order()`](https://branchlab.github.io/metasnf/reference/get_matrix_order.md)
+  : Return the hierarchical clustering order of a matrix
+
+- [`get_pvals()`](https://branchlab.github.io/metasnf/reference/get_pvals.md)
+  : Get p-values from an extended solutions data frame
+
+- [`get_representative_solutions()`](https://branchlab.github.io/metasnf/reference/get_representative_solutions.md)
+  : Extract representative solutions from a matrix of ARIs
+
+- [`income`](https://branchlab.github.io/metasnf/reference/income.md) :
+  Mock ABCD income data
+
+- [`is_data_list()`](https://branchlab.github.io/metasnf/reference/is_data_list.md)
+  : Test if the object is a data list
+
+- [`jitter_plot()`](https://branchlab.github.io/metasnf/reference/jitter_plot.md)
+  : Jitter plot separating a feature by cluster
+
+- [`label_meta_clusters()`](https://branchlab.github.io/metasnf/reference/label_meta_clusters.md)
+  : Assign meta cluster labels to rows of a solutions data frame or
+  extended solutions data frame
+
+- [`label_propagate()`](https://branchlab.github.io/metasnf/reference/label_propagate.md)
+  : Label propagate cluster solutions to non-clustered observations
+
+- [`linear_adjust()`](https://branchlab.github.io/metasnf/reference/linear_adjust.md)
+  : Linearly correct data list by features with unwanted signal
+
+- [`mc_manhattan_plot()`](https://branchlab.github.io/metasnf/reference/mc_manhattan_plot.md)
+  : Manhattan plot of feature-meta cluster association p-values
+
+- [`merge(`*`<clust_fns_list>`*`)`](https://branchlab.github.io/metasnf/reference/merge.clust_fns_list.md)
+  :
+
+  Merge `clust_fns_list` objects
+
+- [`merge(`*`<data_list>`*`)`](https://branchlab.github.io/metasnf/reference/merge.data_list.md)
+  : Merge observations between two compatible data lists
+
+- [`merge(`*`<dist_fns_list>`*`)`](https://branchlab.github.io/metasnf/reference/merge.dist_fns_list.md)
+  :
+
+  Merge `dist_fns_list` objects
+
+- [`merge(`*`<ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/merge.ext_solutions_df.md)
+  :
+
+  Merge `ext_solutions_df` objects
+
+- [`merge(`*`<settings_df>`*`)`](https://branchlab.github.io/metasnf/reference/merge.settings_df.md)
+  :
+
+  Merge `settings_df` objects
+
+- [`merge(`*`<sim_mats_list>`*`)`](https://branchlab.github.io/metasnf/reference/merge.sim_mats_list.md)
+  :
+
+  Merge `sim_mats_list` objects
+
+- [`merge(`*`<snf_config>`*`)`](https://branchlab.github.io/metasnf/reference/merge.snf_config.md)
+  : Merge method for SNF config objects
+
+- [`merge(`*`<solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/merge.solutions_df.md)
+  :
+
+  Merge `solutions_df` objects
+
+- [`merge(`*`<t_ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/merge.t_ext_solutions_df.md)
+  :
+
+  Merge `t_ext_solutions_df` objects
+
+- [`merge(`*`<t_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/merge.t_solutions_df.md)
+  :
+
+  Merge `t_solutions_df` objects
+
+- [`merge(`*`<weights_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/merge.weights_matrix.md)
+  :
+
+  Merge `weights_matrix` objects
+
+- [`merge_df_list()`](https://branchlab.github.io/metasnf/reference/merge_df_list.md)
+  : Merge list of data frames into a single data frame
+
+- [`methylation_df`](https://branchlab.github.io/metasnf/reference/methylation_df.md)
+  : Modification of SNFtool mock data frame "Data2"
+
+- [`mock_ari_matrix`](https://branchlab.github.io/metasnf/reference/mock_ari_matrix.md)
+  :
+
+  Mock example of an `ari_matrix` metasnf object
+
+- [`mock_clust_fns_list`](https://branchlab.github.io/metasnf/reference/mock_clust_fns_list.md)
+  :
+
+  Mock example of a `clust_fns_list` metasnf object
+
+- [`mock_data_list`](https://branchlab.github.io/metasnf/reference/mock_data_list.md)
+  :
+
+  Mock example of a `data_list` metasnf object
+
+- [`mock_dist_fns_list`](https://branchlab.github.io/metasnf/reference/mock_dist_fns_list.md)
+  :
+
+  Mock example of a `dist_fns_list` metasnf object
+
+- [`mock_ext_solutions_df`](https://branchlab.github.io/metasnf/reference/mock_ext_solutions_df.md)
+  :
+
+  Mock example of a `ext_solutions_df` metasnf object
+
+- [`mock_mc_solutions_df`](https://branchlab.github.io/metasnf/reference/mock_mc_solutions_df.md)
+  :
+
+  Mock example of a `mc_solutions_df` metasnf object
+
+- [`mock_rep_solutions_df`](https://branchlab.github.io/metasnf/reference/mock_rep_solutions_df.md)
+  :
+
+  Mock example of a `rep_solutions_df` metasnf object
+
+- [`mock_settings_df`](https://branchlab.github.io/metasnf/reference/mock_settings_df.md)
+  :
+
+  Mock example of a `settings_df` metasnf object
+
+- [`mock_snf_config`](https://branchlab.github.io/metasnf/reference/mock_snf_config.md)
+  :
+
+  Mock example of a `snf_config` metasnf object
+
+- [`mock_solutions_df`](https://branchlab.github.io/metasnf/reference/mock_solutions_df.md)
+  :
+
+  Mock example of a `solutions_df` metasnf object
+
+- [`mock_t_solutions_df`](https://branchlab.github.io/metasnf/reference/mock_t_solutions_df.md)
+  :
+
+  Mock example of a `t_solutions_df` metasnf object
+
+- [`mock_weights_matrix`](https://branchlab.github.io/metasnf/reference/mock_weights_matrix.md)
+  :
+
+  Mock example of a `weights_matrix` metasnf object
+
+- [`new_solutions_df()`](https://branchlab.github.io/metasnf/reference/new_solutions_df.md)
+  :
+
+  Constructor for `solutions_df` class object
+
+- [`plot(`*`<ari_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/plot.ari_matrix.md)
+  [`meta_cluster_heatmap()`](https://branchlab.github.io/metasnf/reference/plot.ari_matrix.md)
+  : Heatmap of pairwise adjusted rand indices between solutions
+
+- [`plot(`*`<data_list>`*`)`](https://branchlab.github.io/metasnf/reference/plot.data_list.md)
+  : Plot of feature values in a data list
+
+- [`plot(`*`<ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/plot.ext_solutions_df.md)
+  [`plot(`*`<t_ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/plot.ext_solutions_df.md)
+  : Plot of cluster assignments in an extended solutions data frame
+
+- [`plot(`*`<snf_config>`*`)`](https://branchlab.github.io/metasnf/reference/plot.snf_config.md)
+  [`config_heatmap()`](https://branchlab.github.io/metasnf/reference/plot.snf_config.md)
+  [`plot(`*`<settings_df>`*`)`](https://branchlab.github.io/metasnf/reference/plot.snf_config.md)
+  [`plot(`*`<weights_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/plot.snf_config.md)
+  : Heatmap for visualizing an SNF config
+
+- [`plot(`*`<solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/plot.solutions_df.md)
+  [`plot(`*`<t_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/plot.solutions_df.md)
+  : Plot of cluster assignments in a solutions data frame
+
+- [`print(`*`<ari_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/print.ari_matrix.md)
+  :
+
+  Print method for class `ari_matrix`
+
+- [`print(`*`<clust_fns_list>`*`)`](https://branchlab.github.io/metasnf/reference/print.clust_fns_list.md)
+  :
+
+  Print method for class `clust_fns_list`
+
+- [`print(`*`<data_list>`*`)`](https://branchlab.github.io/metasnf/reference/print.data_list.md)
+  :
+
+  Print method for class `data_list`
+
+- [`print(`*`<dist_fns_list>`*`)`](https://branchlab.github.io/metasnf/reference/print.dist_fns_list.md)
+  :
+
+  Print method for class `dist_fns_list`
+
+- [`print(`*`<ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/print.ext_solutions_df.md)
+  :
+
+  Print method for class `ext_solutions_df`
+
+- [`print(`*`<settings_df>`*`)`](https://branchlab.github.io/metasnf/reference/print.settings_df.md)
+  :
+
+  Print method for class `settings_df`
+
+- [`print(`*`<sim_mats_list>`*`)`](https://branchlab.github.io/metasnf/reference/print.sim_mats_list.md)
+  :
+
+  Print method for class `sim_mats_list`
+
+- [`print(`*`<snf_config>`*`)`](https://branchlab.github.io/metasnf/reference/print.snf_config.md)
+  :
+
+  Print method for class `snf_config`
+
+- [`print(`*`<solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/print.solutions_df.md)
+  :
+
+  Print method for class `solutions_df`
+
+- [`print(`*`<t_ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/print.t_ext_solutions_df.md)
+  :
+
+  Print method for class `t_ext_solutions_df`
+
+- [`print(`*`<t_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/print.t_solutions_df.md)
+  :
+
+  Print method for class `t_solutions_df`
+
+- [`print(`*`<weights_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/print.weights_matrix.md)
+  :
+
+  Print method for class `weights_matrix`
+
+- [`pubertal`](https://branchlab.github.io/metasnf/reference/pubertal.md)
+  : Mock ABCD pubertal status data
+
+- [`pval_heatmap()`](https://branchlab.github.io/metasnf/reference/pval_heatmap.md)
+  : Heatmap of p-values
+
+- [`calculate_silhouettes()`](https://branchlab.github.io/metasnf/reference/quality_measures.md)
+  [`calculate_dunn_indices()`](https://branchlab.github.io/metasnf/reference/quality_measures.md)
+  [`calculate_db_indices()`](https://branchlab.github.io/metasnf/reference/quality_measures.md)
+  : Quality metrics
+
+- [`rbind(`*`<ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/rbind.ext_solutions_df.md)
+  : Row-binding of solutions data frame class objects
+
+- [`rbind(`*`<solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/rbind.solutions_df.md)
+  : Row-binding of solutions data frame class objects
+
+- [`rbind(`*`<t_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/rbind.t_solutions_df.md)
+  : Row-binding of t_solutions_df class objects
+
+- [`rbind(`*`<weights_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/rbind.weights_matrix.md)
+  : Row-bind weights matrices
+
+- [`rename_dl()`](https://branchlab.github.io/metasnf/reference/rename_dl.md)
+  : Rename features in a data list
+
+- [`resample()`](https://branchlab.github.io/metasnf/reference/resample.md)
+  : Helper resampling function found in ?sample
+
+- [`save_heatmap()`](https://branchlab.github.io/metasnf/reference/save_heatmap.md)
+  : Save a heatmap object to a file
+
+- [`settings_df()`](https://branchlab.github.io/metasnf/reference/settings_df.md)
+  : Build a settings data frame
+
+- [`shiny_annotator()`](https://branchlab.github.io/metasnf/reference/shiny_annotator.md)
+  : Launch a shiny app to identify meta cluster boundaries
+
+- [`sim_mats_list()`](https://branchlab.github.io/metasnf/reference/sim_mats_list.md)
+  :
+
+  Create or extract a `sim_mats_list` class object
+
+- [`similarity_matrix_heatmap()`](https://branchlab.github.io/metasnf/reference/similarity_matrix_heatmap.md)
+  : Plot heatmap of similarity matrix
+
+- [`siw_euclidean_distance()`](https://branchlab.github.io/metasnf/reference/siw_euclidean_distance.md)
+  : Squared (including weights) Euclidean distance
+
+- [`snf_config()`](https://branchlab.github.io/metasnf/reference/snf_config.md)
+  : Define configuration for generating a set of SNF-based cluster
+  solutions
+
+- [`split_parser()`](https://branchlab.github.io/metasnf/reference/split_parser.md)
+  : Helper function to determine which row and columns to split on
+
+- [`str(`*`<ari_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/str.ari_matrix.md)
+  :
+
+  Structure of a `ari_matrix` object
+
+- [`str(`*`<clust_fns_list>`*`)`](https://branchlab.github.io/metasnf/reference/str.clust_fns_list.md)
+  :
+
+  Structure of a `clust_fns_list` object
+
+- [`str(`*`<data_list>`*`)`](https://branchlab.github.io/metasnf/reference/str.data_list.md)
+  :
+
+  Structure of a `data_list` object
+
+- [`str(`*`<dist_fns_list>`*`)`](https://branchlab.github.io/metasnf/reference/str.dist_fns_list.md)
+  :
+
+  Structure of a `dist_fns_list` object
+
+- [`str(`*`<ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/str.ext_solutions_df.md)
+  :
+
+  Structure of a `ext_solutions_df` object
+
+- [`str(`*`<settings_df>`*`)`](https://branchlab.github.io/metasnf/reference/str.settings_df.md)
+  :
+
+  Structure of a `settings_df` object
+
+- [`str(`*`<sim_mats_list>`*`)`](https://branchlab.github.io/metasnf/reference/str.sim_mats_list.md)
+  :
+
+  Structure of a `sim_mats_list` object
+
+- [`str(`*`<snf_config>`*`)`](https://branchlab.github.io/metasnf/reference/str.snf_config.md)
+  :
+
+  Structure of a `snf_config` object
+
+- [`str(`*`<solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/str.solutions_df.md)
+  :
+
+  Structure of a `solutions_df` object
+
+- [`str(`*`<t_ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/str.t_ext_solutions_df.md)
+  :
+
+  Structure of a `t_ext_solutions_df` object
+
+- [`str(`*`<t_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/str.t_solutions_df.md)
+  :
+
+  Structure of a `t_solutions_df` object
+
+- [`str(`*`<weights_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/str.weights_matrix.md)
+  :
+
+  Structure of a `weights_matrix` object
+
+- [`subc_v`](https://branchlab.github.io/metasnf/reference/subc_v.md) :
+  Mock ABCD subcortical volumes data
+
+- [`subsample_dl()`](https://branchlab.github.io/metasnf/reference/subsample_dl.md)
+  : Create subsamples of a data list
+
+- [`subsample_pairwise_aris()`](https://branchlab.github.io/metasnf/reference/subsample_pairwise_aris.md)
+  : Calculate pairwise adjusted Rand indices across subsamples of data
+
+- [`summary(`*`<ari_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/summary.ari_matrix.md)
+  :
+
+  Summary method for class `ari_matrix`
+
+- [`summary(`*`<clust_fns_list>`*`)`](https://branchlab.github.io/metasnf/reference/summary.clust_fns_list.md)
+  :
+
+  Summary method for class `clust_fns_list`
+
+- [`summary(`*`<data_list>`*`)`](https://branchlab.github.io/metasnf/reference/summary.data_list.md)
+  :
+
+  Summary method for class `data_list`
+
+- [`summary(`*`<dist_fns_list>`*`)`](https://branchlab.github.io/metasnf/reference/summary.dist_fns_list.md)
+  :
+
+  Summary method for class `dist_fns_list`
+
+- [`summary(`*`<ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/summary.ext_solutions_df.md)
+  :
+
+  Summary method for class `ext_solutions_df`
+
+- [`summary(`*`<settings_df>`*`)`](https://branchlab.github.io/metasnf/reference/summary.settings_df.md)
+  :
+
+  Summary method for class `settings_df`
+
+- [`summary(`*`<sim_mats_list>`*`)`](https://branchlab.github.io/metasnf/reference/summary.sim_mats_list.md)
+  :
+
+  Summary method for class `sim_mats_list`
+
+- [`summary(`*`<snf_config>`*`)`](https://branchlab.github.io/metasnf/reference/summary.snf_config.md)
+  :
+
+  Summary method for class `snf_config`
+
+- [`summary(`*`<solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/summary.solutions_df.md)
+  :
+
+  Summary method for class `solutions_df`
+
+- [`summary(`*`<t_ext_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/summary.t_ext_solutions_df.md)
+  :
+
+  Summary method for class `t_ext_solutions_df`
+
+- [`summary(`*`<t_solutions_df>`*`)`](https://branchlab.github.io/metasnf/reference/summary.t_solutions_df.md)
+  :
+
+  Summary method for class `t_solutions_df`
+
+- [`summary(`*`<weights_matrix>`*`)`](https://branchlab.github.io/metasnf/reference/summary.weights_matrix.md)
+  :
+
+  Summary method for class `weights_matrix`
+
+- [`train_test_assign()`](https://branchlab.github.io/metasnf/reference/train_test_assign.md)
+  : Training and testing split
+
+- [`uids()`](https://branchlab.github.io/metasnf/reference/uids.md) :
+  Pull UIDs from an object
+
+- [`validate_solutions_df()`](https://branchlab.github.io/metasnf/reference/validate_solutions_df.md)
+  :
+
+  Validator for `solutions_df` class object
+
+- [`var_manhattan_plot()`](https://branchlab.github.io/metasnf/reference/var_manhattan_plot.md)
+  : Manhattan plot of feature-feature association p-values
+
+- [`weights_matrix()`](https://branchlab.github.io/metasnf/reference/weights_matrix.md)
+  : Generate a matrix to store feature weights
+
+# Articles
+
+### Getting Started
+
+- [Getting
+  Started](https://branchlab.github.io/metasnf/articles/getting_started.md):
+
+  An introduction to the `metasnf` package and installation
+  instructions.
+
+### Example Workflows
+
+- [A Simple
+  Example](https://branchlab.github.io/metasnf/articles/a_simple_example.md):
+
+  A minimal example of generating cluster solutions.
+
+- [A Complete
+  Example](https://branchlab.github.io/metasnf/articles/a_complete_example.md):
+
+  Step through a complex subtyping workflow.
+
+### Essential objects
+
+- [The SNF
+  Config](https://branchlab.github.io/metasnf/articles/snf_config.md):
+
+  The object that controls all settings for converting data into a set
+  of cluster solutions.
+
+- [The Data
+  List](https://branchlab.github.io/metasnf/articles/data_list.md):
+
+  The main object used to store data in the `metasnf` package.
+
+### Further customization
+
+- [SNF
+  Schemes](https://branchlab.github.io/metasnf/articles/snf_schemes.md):
+
+  Controlling the way that individual input data frames are combined
+  into a final fused network.
+
+- [Distance
+  Metrics](https://branchlab.github.io/metasnf/articles/distance_metrics.md):
+
+  Vary distance metrics to expand or refine the space of generated
+  cluster solutions.
+
+- [Clustering
+  Algorithms](https://branchlab.github.io/metasnf/articles/clustering_algorithms.md):
+
+  Vary clustering algorithm to expand or refine the space of generated
+  cluster solutions.
+
+- [Feature
+  Weighting](https://branchlab.github.io/metasnf/articles/feature_weights.md):
+
+  Vary feature weights to expand or refine the space of generated
+  cluster solutions.
+
+### Additional functionality
+
+- [Stability
+  Measures](https://branchlab.github.io/metasnf/articles/stability_measures.md):
+
+  Evaluating robustness of cluster solutions through resampling methods.
+
+- [Quality
+  Measures](https://branchlab.github.io/metasnf/articles/quality_measures.md):
+
+  Calculate context-agnostic measures of clustering compactness and
+  separation.
+
+- [Confounders](https://branchlab.github.io/metasnf/articles/confounders.md):
+
+  Linearly regress out unwanted signal from features for clustering.
+
+- [Parallel
+  Processing](https://branchlab.github.io/metasnf/articles/parallel_processing.md):
+
+  Leverage parallel processing to speed up the `metasnf` pipeline.
+
+- [Label
+  Propagation](https://branchlab.github.io/metasnf/articles/label_propagation.md):
+
+  Validate or extend cluster insights to new observations through
+  semi-supervised label propagation.
+
+- [Imputations](https://branchlab.github.io/metasnf/articles/imputations.md):
+
+  Incorporate imputation approach as another source of variability in
+  the generated space of cluster solutions.
+
+- [NMI
+  Scores](https://branchlab.github.io/metasnf/articles/nmi_scores.md):
+
+  Calculate how important various features were to the final SNF cluster
+  solution.
+
+### Plotting
+
+- [Correlation
+  Plots](https://branchlab.github.io/metasnf/articles/correlation_plots.md):
+
+  Visualize correlations between data prior to clustering.
+
+- [Similarity
+  Matrices](https://branchlab.github.io/metasnf/articles/similarity_matrix_heatmap.md):
+
+  Visualize the affinity matrices produced by SNF and how they associate
+  with other data attributes.
+
+- [Manhattan
+  Plots](https://branchlab.github.io/metasnf/articles/manhattan_plots.md):
+
+  Visualize a summary of the association between cluster-feature and
+  feature-feature relationships.
+
+- [Feature
+  Plots](https://branchlab.github.io/metasnf/articles/feature_plots.md):
+
+  Visualize how features are distributed within a cluster solution.
+
+- [Alluvial
+  Plots](https://branchlab.github.io/metasnf/articles/alluvial_plots.md):
+
+  Visualize how cluster number influences the distribution of
+  observations.
+
+### Troubleshooting
+
+- [Troubleshooting](https://branchlab.github.io/metasnf/articles/troubleshooting.md):
+
+  What to do when things aren’t working.
