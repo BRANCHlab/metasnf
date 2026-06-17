@@ -103,6 +103,11 @@ calculate_silhouettes <- function(sol_df) {
 #' @rdname quality_measures
 #' @export
 calculate_dunn_indices <- function(sol_df) {
+    # avoid visible binding problems for tidyr
+    s_type <- ""
+    s_complete <- ""
+    s_average <- ""
+    dunn <- ""
     sim_mats <- attributes(sol_df)$"sim_mats_list"
     all_is_null <- lapply(
         sim_mats,
@@ -156,7 +161,7 @@ calculate_dunn_indices <- function(sol_df) {
 #' Calculate Dunn index
 #'
 #' @keywords internal
-#' @param distance A dissimilarity matrix.
+#' @param dist_mat A dissimilarity matrix.
 #' @param clusters An integer vector of cluster assignments for that matrix.
 #' @return Dunn index (numeric).
 dunn_manual <- function(dist_mat, clusters) {
@@ -231,6 +236,11 @@ dunn_manual <- function(dist_mat, clusters) {
 #' @rdname quality_measures
 #' @export
 calculate_db_indices <- function(sol_df) {
+    # avoid visible binding problems for tidyr
+    s_type <- ""
+    s_complete <- ""
+    s_average <- ""
+    r <- ""
     # 1. Generate dissimilarity matrix
     sim_mats <- attributes(sol_df)$"sim_mats_list"
     all_is_null <- lapply(
@@ -287,10 +297,12 @@ calculate_db_indices <- function(sol_df) {
 #' Calculate Davies-Bouldin index
 #'
 #' @keywords internal
-#' @param distance A dissimilarity matrix.
+#' @param dist_mat A dissimilarity matrix.
 #' @param clusters An integer vector of cluster assignments for that matrix.
 #' @return Davies-Bouldin index (numeric).
 db_manual <- function(dist_mat, clusters) {
+    # avoid visible binding problems for tidyr
+    r_i <- ""
     n_clusters <- max(clusters)
     # calculating intra-cluster dispersion metric s
     s_complete <- lapply(
