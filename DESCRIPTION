@@ -1,6 +1,6 @@
 Package: metasnf
 Title: Meta Clustering with Similarity Network Fusion
-Version: 2.2.0
+Version: 2.3.0
 Authors@R:
     c(
         person(
@@ -59,7 +59,6 @@ Suggests:
     circlize,
     ComplexHeatmap,
     InteractiveComplexHeatmap,
-    clv,
     future,
     future.apply,
     knitr,

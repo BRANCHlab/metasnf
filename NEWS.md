@@ -1,3 +1,9 @@
+# metasnf 2.2.1
+
+## Other
+
+- As a result of the package `clv` being archived from CRAN and thus no longer usable as a dependency, the functions responsible for calculating the quality Dunn indices and Davies-Bouldin indices have been rewritten. Previously, these functions presented a grid of metrics across various combinations of inter- and intra-distance methods to use when processing dissimilarity matrices.
+
 # metasnf 2.2.0
 
 ## Bug fixes

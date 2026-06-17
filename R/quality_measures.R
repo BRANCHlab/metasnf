@@ -15,6 +15,11 @@
 #' calculate_db_indices: Calculates Davies-Bouldin indices for all cluster
 #' solutions in a provided solutions data frame.
 #'
+#' For Dunn and Davies-Bouldin index calculations, a grid of values is presented
+#' based on multiple combinations of intra-cluster distance methods (complete
+#' or average distance) and inter-cluster distance methods (single-linkage,
+#' complete-linkage, average distance, and Hausdorff distance).
+#'
 #' @param sol_df A `solutions_df` class object created by `batch_snf()` with
 #'  the parameter `return_sim_mats = TRUE`.
 #' @return A list of `silhouette` class objects, a vector of Dunn indices, or a
