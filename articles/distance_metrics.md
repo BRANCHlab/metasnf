@@ -373,7 +373,7 @@ euclidean_distance
 #>     distance_matrix <- as.matrix(stats::dist(weighted_df, method = "euclidean"))
 #>     return(distance_matrix)
 #> }
-#> <bytecode: 0x55bc3492bd50>
+#> <bytecode: 0x561b80be2df8>
 #> <environment: namespace:metasnf>
 ```
 

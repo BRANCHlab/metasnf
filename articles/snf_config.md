@@ -289,7 +289,7 @@ dfl$"cnt_dist_fns"[[1]]
     ##     distance_matrix <- as.matrix(stats::dist(weighted_df, method = "euclidean"))
     ##     return(distance_matrix)
     ## }
-    ## <bytecode: 0x5628aedadee8>
+    ## <bytecode: 0x558fdd7c5e50>
     ## <environment: namespace:metasnf>
 
 You can learn more about customizing distance metrics in the [distance
@@ -333,7 +333,7 @@ cfl[[1]]
     ##         nclust_estimate)
     ##     return(solution)
     ## }
-    ## <bytecode: 0x5628af3de058>
+    ## <bytecode: 0x558fdddf5fc0>
     ## <environment: namespace:metasnf>
 
 You can learn more about customizing clustering functions in the
