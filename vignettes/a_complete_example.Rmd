@@ -789,15 +789,13 @@ dunn_indices <- calculate_dunn_indices(sol_df)
 db_indices <- calculate_db_indices(sol_df)
 ```
 
-The first function is a wrapper around `cluster::silhouette` while the second and third come from the *clv* package.
-*clv* isn't set as a mandatory part of the installation, so you'll ned to install it yourself to calculate these two metrics.
+Silhouette scores are calculated using the function `cluster::silhouette`.
 
-The original documentation on these functions can be helpful for interpreting and working with them:
+You can learn more about these functions here:
 
-1. [`cluster::silhouette` documentation](https://www.rdocumentation.org/packages/cluster/versions/2.1.4/topics/silhouette)
-2. [`clv::clv.Dunn` documentation](https://www.rdocumentation.org/packages/clv/versions/0.3-2.1/topics/clv.Dunn)
-3. [`clv::clv.Davies.Bouldin` documentation](https://www.rdocumentation.org/packages/clv/versions/0.3-2.1/topics/clv.Davies.Bouldin)
-
+1. [Silhouette](https://en.wikipedia.org/wiki/Silhouette_(clustering))
+2. [Dunn](https://en.wikipedia.org/wiki/Dunn_index)
+3. [Davies Bouldin](https://en.wikipedia.org/wiki/Davies%E2%80%93Bouldin_index)
 
 ### Stability measures
 
@@ -807,7 +805,6 @@ metasnf offers tools to evaluate two different measures of stability:
 2. Fraction clustered together (what is the average fraction of times that observations who clustered together in the full results clustered together in resampled results?)
 
 You can learn more about running stability calculations in the [stability and coclustering vignette](https://branchlab.github.io/metasnf/articles/stability_measures.html).
-
 
 ### Evaluating separation across "target features" of importance
 

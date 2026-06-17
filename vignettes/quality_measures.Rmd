@@ -28,9 +28,7 @@ options(crayon.enabled = FALSE, cli.num_colors = 0)
 
 Download a copy of the vignette to follow along here: [quality_measures.Rmd](https://raw.githubusercontent.com/BRANCHlab/metasnf/main/vignettes/quality_measures.Rmd)
 
-This vignette walks through calculation of silhouette scores, Dunn indices, and Davies-Boulding indices a we will highlight the main stability measure options in the `metasnf` package.
-
-To use these functions, you will need to have the `clv` package installed.
+This vignette walks through calculation of silhouette scores, Dunn indices, and Davies-Bouldin indices a we will highlight the main stability measure options in the `metasnf` package.
 
 ```{r eval = FALSE}
 # load package

@@ -32,17 +32,17 @@ of how close together observations within a cluster are to how far apart
 observations across clusters are. You can learn more about interpreting
 the results of this function by calling \code{?cluster::silhouette}.
 
-calculate_dunn_indices: A wrapper for \code{clv::clv.Dunn} that calculates
+calculate_dunn_indices: A wrapper for \code{clValid::dunn} that calculates
 Dunn indices for all cluster solutions in a provided solutions data
-frame. Dunn indices, like silhouette scores, similarly reflect similarity
-within clusters and separation across clusters. You can learn more about
-interpreting the results of this function by calling \code{?clv::clv.Dunn}.
+frame. Metric is based on single-linkage inter-distances and
+complete-linkage intra-distances. Dunn indices, like silhouette scores,
+reflect similarity within clusters and separation across clusters. You can
+learn more about interpreting the results of this function by calling
+'\code{clValid::dunn}.
 
-calculate_db_indices: A wrapper for \code{clv::clv.Davies.Bouldin} that
-calculates Davies-Bouldin indices for all cluster solutions in a provided
-solutions data frame. These values can be interpreted similarly as those
-above. You can learn more about interpreting the results of this function by
-calling \code{?clv::clv.Davies.Bouldin}.
+calculate_db_indices: Calculates Davies-Bouldin indices for all cluster
+solutions in a provided solutions data frame. Metric is based on
+single-linkage inter-distances and complete-linkage intra-distances.
 }
 \examples{
 \dontrun{
