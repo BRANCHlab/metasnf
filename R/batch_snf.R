@@ -137,7 +137,10 @@ run_snf <- function(i, dl, sc, return_sim_mats, sim_mats_dir, p) {
         mix_dist_fn = sc$"dist_fns_list"$"mix_dist_fns"[[sdf_row$"mix_dist"]],
         weights_row = sc$"weights_matrix"[i, , drop = FALSE]
     )
-    solution <- sc$"clust_fns_list"[[sdf_row$"clust_alg"]](fused_network)
+    solution <- try(sc$"clust_fns_list"[[sdf_row$"clust_alg"]](fused_network))
+    if (class(solution) == "try-error") {
+        solution <- rep(NA, nrow(fused_network))
+    }
     if (!is.null(sim_mats_dir)) {
         path <- similarity_matrix_path(sim_mats_dir, i)
         if (!dir.exists(sim_mats_dir)) {

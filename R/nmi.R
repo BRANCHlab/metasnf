@@ -20,6 +20,7 @@
 #' @param ignore_inclusions If TRUE, will ignore the inclusion columns in the
 #'  solutions data frame and calculate NMIs for all features. If FALSE, will
 #'  give NAs for features that were dropped on a given settings_df row.
+#' @param verbose If TRUE, output progress to console.
 #' @return A "data.frame" class object containing one row for every feature
 #'  in the provided data list and one column for every solution in the provided
 #'  solutions data frame. Populated values show the calculated NMI score for
@@ -41,7 +42,8 @@ calc_nmis <- function(dl,
                       sol_df,
                       transpose = TRUE,
                       ignore_inclusions = TRUE,
-                      processes = 1) {
+                      processes = 1,
+                      verbose = FALSE) {
     dl_df <- as.data.frame(dl)
     dl_df$"uid" <- gsub("uid_", "", dl_df$"uid")
     dl_ft_summary <- summary(dl, "feature")
@@ -97,6 +99,9 @@ calc_nmis <- function(dl,
                 paste0("inc_", name_lookup[features(mini_dl)][[1]])
             )
             this_sc$"settings_df" <- this_sc$"settings_df"[, new_sc_cols]
+            if (verbose) {
+                cat("Processing feature ", x, ".\n", sep = "")
+            }
             mini_sol_df <- batch_snf(
                 mini_dl,
                 this_sc
@@ -124,5 +129,6 @@ calc_nmis <- function(dl,
         row.names = NULL
     )
     colnames(nmi_df) <- c("feature", paste0("s", sc$"settings_df"$"solution"))
+    nmi_df[nmi_df == 0] <- NA
     return(nmi_df)
 }
