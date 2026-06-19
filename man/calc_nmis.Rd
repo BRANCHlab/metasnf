@@ -9,7 +9,8 @@ calc_nmis(
   sol_df,
   transpose = TRUE,
   ignore_inclusions = TRUE,
-  processes = 1
+  processes = 1,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ available cores, a warning will be raised and the maximum number of
 cores will be used.
 \item \code{max}: All available cores will be used.
 }}
+
+\item{verbose}{If TRUE, output progress to console.}
 }
 \value{
 A "data.frame" class object containing one row for every feature

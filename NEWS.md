@@ -1,3 +1,10 @@
+# metasnf 2.3.1
+
+## Improvements
+
+- Error handling in `run_snf()` (within `batch_snf()`) allows failed clustering to return a set of zeros rather than crash. This is helpful for shielding against issues common from solo-feature clustering during NMI calculations.
+- Add "verbose" flag to `calc_nmis()`
+
 # metasnf 2.3.0
 
 ## Other
