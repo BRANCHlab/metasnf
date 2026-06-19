@@ -42,13 +42,13 @@ Source:
 Velayudhan P, Xu X, Kallurkar P, Balbon A, Secara M, Taback A, Sabac D,
 Chan N, Ma S, Wang B, Felsky D, Ameis S, Cox B, Hawco C, Erdman L,
 Wheeler A (2026). *metasnf: Meta Clustering with Similarity Network
-Fusion*. R package version 2.3.0,
+Fusion*. R package version 2.3.1,
 <https://branchlab.github.io/metasnf/>.
 
     @Manual{,
       title = {metasnf: Meta Clustering with Similarity Network Fusion},
       author = {Prashanth S Velayudhan and Xiaoqiao Xu and Prajkta Kallurkar and Ana Patricia Balbon and Maria T Secara and Adam Taback and Denise Sabac and Nicholas Chan and Shihao Ma and Bo Wang and Daniel Felsky and Stephanie H Ameis and Brian Cox and Colin Hawco and Lauren Erdman and Anne L Wheeler},
       year = {2026},
-      note = {R package version 2.3.0},
+      note = {R package version 2.3.1},
       url = {https://branchlab.github.io/metasnf/},
     }

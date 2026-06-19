@@ -26,10 +26,10 @@ Development versions can be installed from GitHub:
 ``` r
 
 # Latest development version
-devtools::install_github("BRANCHlab/metasnf")
+pak::pak("BRANCHlab/metasnf")
 
 # Install a specific tagged version
-devtools::install_github("BRANCHlab/metasnf@v2.3.0")
+pak::pak("BRANCHlab/metasnf@v2.3.1")
 ```
 
 ## Quick Start

@@ -1,6 +1,22 @@
 # Changelog
 
+## metasnf 2.3.1
+
+### Improvements
+
+- Error handling in
+  [`run_snf()`](https://branchlab.github.io/metasnf/reference/run_snf.md)
+  (within
+  [`batch_snf()`](https://branchlab.github.io/metasnf/reference/batch_snf.md))
+  allows failed clustering to return a set of zeros rather than crash.
+  This is helpful for shielding against issues common from solo-feature
+  clustering during NMI calculations.
+- Add “verbose” flag to
+  [`calc_nmis()`](https://branchlab.github.io/metasnf/reference/calc_nmis.md)
+
 ## metasnf 2.3.0
+
+CRAN release: 2026-06-19
 
 ### Other
 
